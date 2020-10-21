@@ -30,7 +30,7 @@ class TimeOffs extends Component {
                                     <a>Delete</a>
                                 </Popconfirm>
                             </Menu.Item >
-                            <Menu.Item onClick={()=>this.editRecord(record)}>Edit</Menu.Item>
+                            <Menu.Item onClick={()=>this.getRecord(record)}>Edit</Menu.Item>
                         </Menu>
                     }>
                         <Button  size="small">
@@ -57,6 +57,7 @@ class TimeOffs extends Component {
                 },
             ],
             openModal: false,
+            editTimeoff: false,
             FormFields: {
                 formId: 'time_off',
                 justify : 'center',
@@ -90,37 +91,60 @@ class TimeOffs extends Component {
     }
 
     toggelModal =(status)=>{
-        if (!status){
-            this.dynamoForm.current.refs.time_off.resetFields();
-        }
         this.setState({openModal:status})
-    }
 
-    editRecord = (data) => {
-
-        this.setState({
-            FormFields: {...this.state.FormFields, initialValues: {obj:data}}
-        })
-        
-        this.toggelModal(true)
+        if (this.state.openModal){
+            this.dynamoForm.current.refs.time_off.resetFields(); // to reset file
+            delete this.state.FormFields.initialValues // to delete intilize if not written    
+            this.setState({  // set state
+                FormFields: this.state.FormFields,
+                editTimeoff:false 
+            })
+        }
     }
 
     Callback =(vake)=>{ // this will work after I get the Object from the form
-        vake.obj.key = this.state.data.length + 1
-        this.setState({
-            data: [...this.state.data, vake.obj],
-        }, () => {
-            this.toggelModal(false)
-            console.log("Data Rendered");
-        });
+        if (!this.state.editTimeoff){ // to add new datas
+            vake.obj.key = this.state.data.length + 1
+            this.setState({
+                data: [...this.state.data, vake.obj],
+            }, () => {
+                this.toggelModal(false)
+                console.log("Data Rendered");
+            });
+        }else{ // to edit pervoius data
+            this.editRecord(vake.obj)
+        }
     }
 
     submit = () =>{
-        console.log('submit')
         this.dynamoForm.current.refs.time_off.submit();
     }
 
+    getRecord = (data) => {
 
+        this.setState({
+            FormFields: {...this.state.FormFields, initialValues: {obj:data}},
+            editTimeoff: data.key
+        }, ()=>{
+            this.toggelModal(true)
+
+        })   
+    }
+
+    editRecord = (obj) =>{
+        obj.key =  this.state.editTimeoff
+        this.state.data[obj.key - 1] = obj
+
+        this.setState({
+            data: [...this.state.data],
+            mergeObj:{},
+        },()=>{
+            this.toggelModal(false)
+        })
+    }
+
+    
     render(){
         const data = this.state.data
         const columns = this.columns
@@ -137,16 +161,19 @@ class TimeOffs extends Component {
                         <Table columns={columns} dataSource={data} size="small"/>
                     </Col>
                 </Row>
-                <Modal
-                    title="Add Time Off"
-                    centered
-                    visible={this.state.openModal}
-                    onOk={()=>{this.submit()}}
-                    onCancel={()=>{this.toggelModal(false)}}
-                    width={600}
-                >
-                    <Form ref={this.dynamoForm} Callback={this.Callback} FormFields= {this.state.FormFields} />   
-                </Modal>
+                {this.state.openModal?
+                    <Modal
+                        title="Add Time Off"
+                        centered
+                        visible={this.state.openModal}
+                        onOk={()=>{this.submit()}}
+                        okText={this.state.editTimeoff? 'Edit' : 'Save'}
+                        onCancel={()=>{this.toggelModal(false)}}
+                        width={600}
+                    >
+                        <Form ref={this.dynamoForm} Callback={this.Callback} FormFields = {this.state.FormFields} />   
+                    </Modal>:null
+                }
             </>
         )
     }

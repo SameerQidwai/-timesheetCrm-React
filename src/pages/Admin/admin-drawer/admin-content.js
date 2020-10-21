@@ -5,7 +5,7 @@ import { Route } from 'react-router-dom' // Route Library
 import { Breadcrumb, Col } from "antd";
 
 
-import Global from '../Global'
+import Global from '../global'
 import CalenderHoldays from '../calender-holidays'
 import CalenderList from '../calenders'
 import TimeOffs from '../time-offs'

@@ -10,10 +10,10 @@ const NavItem = [
     {
         text: 'Contacts',
         items: [
-            {text:'con-1',
-            link: '/forms'},
-            {text:'con-2',
-            link: '/con-2'},
+            {text:'Organizations',
+            link: '/organizations'},
+            {text:'Contact',
+            link: '/contact'},
             {text:'con-3',
             link: '/con-3'},
             {text:'con-4',
@@ -22,7 +22,7 @@ const NavItem = [
     },
     {
         text: 'Lead',
-        link: '/lead'
+        link: '/leads'
     },
     {
         text: 'Resources',
@@ -75,6 +75,7 @@ class Navbar extends Component{
         return (
             <Menu>
             {items.map((item,j) => (
+                
                 <Menu.Item key={`${j+i}`} icon={item.icon}>
                     <Link to={item.link} className="nav-link">
                          {item.text}
@@ -94,7 +95,10 @@ class Navbar extends Component{
                 </Dropdown> 
             :
             <span className="navItem" key={i}>
-                {item.text}
+                <Link to={item.link} className="nav-link">
+                    {item.text}
+                </Link>
+                
             </span>
         );
     }

@@ -8,8 +8,12 @@ import { Layout } from "antd";
 import Calender from '../Calender/Calender'
 import Froms from '../Form'
 import Login from '../../pages/Login/login-page'
+import Organizations from '../../pages/Contacts/organizaion'
+import Contact from '../../pages/Contacts/contact'
+import Leads from '../../pages/Contacts/leads'
 
 import Admin from '../../pages/Admin/admin-drawer/admin-sidebar'
+
 
 const { Content } = Layout;
 
@@ -53,6 +57,18 @@ const pageLinks = [ // Page link and router
     {
         component: Admin,
         link: '/check'
+    },
+    {
+        component: Organizations,
+        link: '/organizations'
+    },
+    {
+        component: Contact,
+        link: '/contact'
+    },
+    {
+        component: Contact,
+        link: '/leads'
     },
 ]
 

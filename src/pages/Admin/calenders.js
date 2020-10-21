@@ -42,7 +42,7 @@ class CalenderList extends Component {
             render: (record, text) => (
                     <Dropdown overlay={
                         <Menu>
-                            <Menu.Item onClick={()=>this.editRecord(record, text)}>Edit</Menu.Item>
+                            <Menu.Item onClick={()=>this.getRecord(record, text)}>Edit</Menu.Item>
                             <Menu.Item >
                                 <Link to={{ pathname: '/admin/calender/holidays' ,query: record.key}} className="nav-link">
                                     Holidays
@@ -121,31 +121,55 @@ class CalenderList extends Component {
     }
 
     toggelModal =(status)=>{
-
-        if (!status){
-            this.state.calenderForm.current.refs.calenderId.resetFields();
-        }
-
         this.setState({openModal:status})
+
+        if (this.state.openModal){
+            this.state.calenderForm.current.refs.calenderId.resetFields();// to reset file
+            delete this.state.FormFields.initialValues // to delete intilize if not written    
+            this.setState({  // set state
+                FormFields: this.state.FormFields,
+                editTimeoff:false 
+            })
+        }
     }
 
-    editRecord = (data, text) => {
+    getRecord = (data, text) => {
         this.setState({
-            FormFields: {...this.state.FormFields, initialValues: {obj:data}}
-        })
-        this.toggelModal(true)
+            FormFields: {...this.state.FormFields, initialValues: {obj:data}},
+            editTimeoff: data.key
+        }, ()=>{
+            this.toggelModal(true)
 
+        })   
+
+    }
+
+    editRecord = (obj) =>{
+        console.log(this.state.editTimeoff)
+        obj.key =  this.state.editTimeoff
+        this.state.data[obj.key - 1] = obj
+
+        this.setState({
+            data: [...this.state.data],
+            mergeObj:{},
+        },()=>{
+            this.toggelModal(false)
+        })
     }
 
     Callback =(vake)=>{ // this will work after I get the Object from the form
-        vake.obj.key = this.state.data.length + 1
-        this.setState({
-            data: [...this.state.data, vake.obj],
-        }, () => {
-            this.toggelModal(false)
-            this.state.calenderForm.current.refs.calenderId.resetFields();
-            console.log("Data Rendered");
-        });
+        if(!this.state.editTimeoff){
+            vake.obj.key = this.state.data.length + 1
+            this.setState({
+                data: [...this.state.data, vake.obj],
+            }, () => {
+                this.toggelModal(false)
+                this.state.calenderForm.current.refs.calenderId.resetFields();
+                console.log("Data Rendered");
+            });
+        }else{
+            this.editRecord(vake.obj)
+        }
     }
 
     submit = () =>{
@@ -178,6 +202,7 @@ class CalenderList extends Component {
                         centered
                         visible={this.state.openModal}
                         onOk={()=>{this.submit()}}
+                        okText={this.state.editTimeoff? 'Edit' : 'Save'}
                         onCancel={()=>{this.toggelModal(false)}}
                         width={600}
                     >

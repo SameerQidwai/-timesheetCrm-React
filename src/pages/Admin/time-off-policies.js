@@ -9,7 +9,6 @@ import '../styles/table.css'
 const { Title } = Typography
 
 
-
 class TimeOffsPolicy extends Component {
     constructor(props) {
     super(props);
@@ -34,7 +33,7 @@ class TimeOffsPolicy extends Component {
                                     <a>Delete</a>
                                 </Popconfirm>
                             </Menu.Item >
-                            <Menu.Item onClick={()=>this.editRecord(record, text)}>Edit</Menu.Item>
+                            <Menu.Item onClick={()=>this.getRecord(record, text)}>Edit</Menu.Item>
                         </Menu>
                     }>
                         <Button size="small">
@@ -50,10 +49,12 @@ class TimeOffsPolicy extends Component {
                 {
                     key: 1,
                     title: 'Standards',
+                    offs: {hours0:1, timeoff0:'Vacations', hours1:11, timeoff1:'Sick Leave'}
                 },
                 {
                     key: 2,
                     title: 'Executives',
+                    offs: {hours0:2, timeoff0:'Vacations', hours1:22, timeoff1:'Sick Leave'}
                 },
             ],
             openModal: false,
@@ -61,7 +62,7 @@ class TimeOffsPolicy extends Component {
             },
             form1Submitted: false,
             form2Submitted: false,
-
+            
             FormFields: {
                 formId: 'title_form',
                 justify : 'center',
@@ -79,7 +80,7 @@ class TimeOffsPolicy extends Component {
                         key: 'title',
                         label:'Title',
                         size:'small',
-                        // rules:[{ required: true }],
+                        rules:[{ required: true, message:'You are not good to go' }],
                         type: 'input',
                         labelAlign: 'left',
                         formStyle:{ marginBottom:'5px' }
@@ -94,7 +95,7 @@ class TimeOffsPolicy extends Component {
                         size:'small',
                         func: function func (value, e){
                             let obj = this.state.FormFields_1.fields[this.state.FormFields_1.fields.length-1]// get the inster number for keys
-                            const item_no = obj ? parseInt(obj.key) + 1 :0
+                            const item_no = obj ? parseInt(obj.key) :0
                             this.state.FormFields_1.fields = this.state.FormFields_1.fields.concat(...this.newField(item_no));
                             this.setState({
                                 FormFields_1: this.state.FormFields_1
@@ -176,7 +177,9 @@ class TimeOffsPolicy extends Component {
                         }.bind(this)
                     },
                 ],
-            }
+            },
+
+            editTimeoff: false,
         }
     }
 
@@ -239,10 +242,24 @@ class TimeOffsPolicy extends Component {
     }
     
     toggelModal =(status)=>{
-        this.setState({openModal:status})
+        this.setState({
+            openModal:status
+        })
+
         if (this.state.openModal){
-            this.dynamoForm_1.current.refs.title_form.resetFields()
-            this.dynamoForm_2.current.refs.hours_form.resetFields()
+            
+            this.dynamoForm_1.current.refs.title_form.resetFields();
+            this.dynamoForm_2.current.refs.hours_form.resetFields();
+    
+            delete this.state.FormFields.initialValues
+            delete this.state.FormFields_1.initialValues
+            this.state.FormFields_1.fields = this.newField(0)
+
+            this.setState({
+                FormFields: this.state.FormFields,
+                FormFields_1: this.state.FormFields_1,
+                editTimeoff:false
+            })
         }
     }
 
@@ -251,12 +268,18 @@ class TimeOffsPolicy extends Component {
             mergeObj: {
                 ...this.state.mergeObj,
                 title: vake.obj.title,
-                key: this.state.data.length + 1
+                // key: vake.obj.key? vake.obj.key:this.state.data.length + 1
             },
             form1Submitted: true,
         }, () => {
             if(this.state.form1Submitted && this.state.form2Submitted) {
-                this.renderTable();
+                if(!this.state.editTimeoff){
+                    console.log('emes')
+                    this.renderTable();
+                }else{
+                    console.log('edit')
+                    this.editRecord()
+                }
             }
         })
     }
@@ -270,32 +293,55 @@ class TimeOffsPolicy extends Component {
             form2Submitted: true,
         }, () => {
             if(this.state.form1Submitted && this.state.form2Submitted) {
-                this.renderTable();
+                if(!this.state.editTimeoff){
+                    console.log('emes')
+                    this.renderTable();
+                }else{
+                    console.log('edit')
+                    this.editRecord()
+                }
             }
         });
     }
 
-    submit = () =>{
+    submit = () =>{ 
         this.dynamoForm_1.current.refs.title_form.submit();
         this.dynamoForm_2.current.refs.hours_form.submit();
     }
 
-    editRecord = (data, text) => {
-        var offs = data.offs
+    getRecord = (data, text) => {
+
+        let result = Object.keys(data.offs).length/2;
+        for (let i=1 ;i<result; i++){
+            this.state.FormFields_1.fields = this.state.FormFields_1.fields.concat(this.newField(i))
+        }
+        
         var obj = {key: data.key, title:data.title}
         this.setState({
             FormFields: {...this.state.FormFields, initialValues: {obj:obj}},
-            FormFields_1: {...this.state.FormFields_1, initialValues: {obj:offs}}
+            FormFields_1: {...this.state.FormFields_1, initialValues:{obj: data.offs}},
+            editTimeoff: data.key
+            
         },()=>{
-            console.log(this.state.FormFields)
-            console.log(this.state.FormFields_1)
+            this.toggelModal(true)
         })
-        this.toggelModal(true)
+    }
 
+    editRecord = () =>{
+
+        this.state.mergeObj.key =  this.state.editTimeoff
+        this.state.data[this.state.editTimeoff-1] = this.state.mergeObj 
+
+        this.setState({
+            data: [...this.state.data],
+            mergeObj:{}
+        },()=>{
+            this.toggelModal(false)
+            console.log(this.state.data)
+        })
     }
 
     renderTable = () => {
-        console.log(this.state.mergeObj)
         this.setState({
             data: [...this.state.data, this.state.mergeObj],
             mergeObj: {},
@@ -303,7 +349,6 @@ class TimeOffsPolicy extends Component {
             this.toggelModal(false)
             console.log("Data Rendered");
         });
-
     }
     
     render(){
@@ -322,17 +367,20 @@ class TimeOffsPolicy extends Component {
                         <Table columns={columns} dataSource={data} size="small"/>
                     </Col>
                 </Row>
-                <Modal
-                    title="Add Time Off Policy"
-                    centered
-                    visible={this.state.openModal}
-                    onOk={() => { this.submit() }}
-                    onCancel={() => { this.toggelModal(false) }}
-                    width={600}
-                >
-                    <Form ref={this.dynamoForm_1} Callback = {this.Callback} FormFields={this.state.FormFields} />
-                    <Form ref={this.dynamoForm_2} Callback = {this.Callback2} FormFields={this.state.FormFields_1} />
-                </Modal>
+                {this.state.openModal?
+                    <Modal
+                        title="Add Time Off Policy"
+                        centered
+                        visible={this.state.openModal}
+                        onOk={() => { this.submit() }}
+                        okText={this.state.editTimeoff? 'Edit' : 'Save'}
+                        onCancel={() => { this.toggelModal(false) }}
+                        width={600}
+                    >
+                        <Form ref={this.dynamoForm_1} Callback = {this.Callback} FormFields={this.state.FormFields} />
+                        <Form ref={this.dynamoForm_2} Callback = {this.Callback2} FormFields={this.state.FormFields_1} />
+                    </Modal> : null
+                }
             </>
         )
     }

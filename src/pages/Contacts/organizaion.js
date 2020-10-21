@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import { Table, Menu, Dropdown, Button, Popconfirm, Row, Col,Typography, Modal } from 'antd'
-import { DownOutlined, SettingOutlined, PlusSquareOutlined} from '@ant-design/icons'; //Icons
+import { DownOutlined, SettingOutlined, PlusSquareOutlined, FilterOutlined} from '@ant-design/icons'; //Icons
 import { Link } from 'react-router-dom'
 
 
@@ -9,23 +9,29 @@ import '../styles/table.css'
 
 const { Title } = Typography
 
-
-
-class Roles extends Component {
+class Organizations extends Component {
     constructor(props) {
     super(props);
-        this.roleForm = React.createRef();
+        this.orgForm = React.createRef();
         this.columns = [
             {
-                title: 'Title',
-                dataIndex: 'title',
-                key: 'title',
+                title: 'Code',
+                dataIndex: 'key',
+                key: 'key',
+                render:(record) =>(
+                    `00${record}`
+                ),
+            },
+            {
+                title: 'Name',
+                dataIndex: 'name',
+                key: 'name',
             },
             {
                 title: 'Action',
                 key: 'action',
                 align: 'right',
-            render: (record) => (
+                render: (record) => (
                     <Dropdown overlay={
                         <Menu>
                             <Menu.Item danger>
@@ -33,10 +39,10 @@ class Roles extends Component {
                                     <a>Delete</a>
                                 </Popconfirm>
                             </Menu.Item >
-                            <Menu.Item onClick={()=>{this.getRecord(record)}}>Edit</Menu.Item>
+                            <Menu.Item >Edit</Menu.Item>
                             <Menu.Item >
                                 {/* <Link to={{ pathname: '/admin/calender/holidays' ,query: record.key}} className="nav-link"> */}
-                                    Permissions
+                                    View
                                 {/* </Link> */}
                             </Menu.Item >
                         </Menu>
@@ -52,22 +58,22 @@ class Roles extends Component {
         this.state={
             data : [
                 {
-                    key: 1,
-                    title: 'Admin',
+                    key:1,
+                    name: 'One_LM',
                 },
                 {
-                    key: 2,
-                    title: 'Team Lead',
+                    key:2,
+                    name: 'Org A',
                 },
                 {
-                    key: 3,
-                    title: 'Project Manager',
+                    key:3,
+                    name: 'Org B',
                 },
             ],
             openModal: false,
             editTimeoff:false,
             FormFields: {
-                formId: 'role_form',
+                formId: 'org_form',
                 justify : 'center',
                 FormCol: 20,
                 FieldSpace: { xs: 12, sm: 16, md: 122},
@@ -81,7 +87,7 @@ class Roles extends Component {
                         filedCol:20,
                         layout:  {labelCol: { span: 4 },
                         wrapperCol: { span: 0 }},
-                        key: 'title',
+                        key: 'name',
                         label:'Title',
                         size: 'small',            
                         // rules:[{ required: true }],
@@ -93,16 +99,16 @@ class Roles extends Component {
         }
     }
 
-    handleDelete =  (key)=>{
+    handleDelete =  (code)=>{
         const dataSource = [...this.state.data];
-        this.setState({ data: dataSource.filter(item => item.key !== key) });
+        this.setState({ data: dataSource.filter(item => item.code !== code) });
     }
 
     toggelModal =(status)=>{
         this.setState({openModal:status})
 
         if (this.state.openModal){
-            this.roleForm.current.refs.role_form.resetFields(); // to reset file
+            this.orgForm.current.refs.org_form.resetFields(); // to reset file
             delete this.state.FormFields.initialValues // to delete intilize if not written    
             this.setState({  // set state
                 FormFields: this.state.FormFields,
@@ -119,7 +125,7 @@ class Roles extends Component {
                 data: [...this.state.data, vake.obj],
             }, () => {
                 this.toggelModal(false)
-                this.roleForm.current.refs.role_form.resetFields();
+                this.orgForm.current.refs.org_form.resetFields();
                 console.log("Data Rendered");
             });
         }else{
@@ -150,7 +156,7 @@ class Roles extends Component {
     }
 
     submit = () =>{
-        this.roleForm.current.refs.role_form.submit();
+        this.orgForm.current.refs.org_form.submit();
     }
 
     render(){
@@ -160,10 +166,17 @@ class Roles extends Component {
             <>
                 <Row justify="space-between">
                     <Col>
-                        <Title level={4}>Roles</Title>
+                        <Title level={4}>Organizations</Title>
                     </Col>
-                    <Col style={{textAlign:'end'}}>
-                        <Button type="primary" onClick={()=>{this.toggelModal(true)}} size='small'> <PlusSquareOutlined />Add Roles</Button>
+                    <Col style={{textAlign:'end'}} span={4} >
+                        <Row justify="space-between">
+                            <Col>
+                                <Button type="default"size='small'> <FilterOutlined />Filter</Button>
+                            </Col>
+                            <Col>
+                                <Button type="primary" onClick={()=>{this.toggelModal(true)}} size='small'> <PlusSquareOutlined />Organizations</Button>
+                            </Col>
+                        </Row>
                     </Col>
                     <Col span={24}>
                         <Table columns={columns} dataSource={data} size='small'/>
@@ -171,7 +184,7 @@ class Roles extends Component {
                 </Row>
                 {this.state.openModal ? 
                     <Modal
-                        title="Add Time Off"
+                        title="Add Organizations"
                         centered
                         visible={this.state.openModal}
                         onOk={()=>{this.submit()}}
@@ -179,7 +192,7 @@ class Roles extends Component {
                         onCancel={()=>{this.toggelModal(false)}}
                         width={600}
                     >
-                        <Form ref={this.roleForm} Callback={this.Callback} FormFields= {this.state.FormFields} />   
+                        <Form ref={this.orgForm} Callback={this.Callback} FormFields= {this.state.FormFields} />   
                     </Modal> : null
                 }
             </>
@@ -187,4 +200,4 @@ class Roles extends Component {
     }
 }
 
-export default Roles
+export default Organizations
