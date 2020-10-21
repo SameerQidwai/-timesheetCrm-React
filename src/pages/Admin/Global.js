@@ -241,12 +241,12 @@ class Global extends Component{
                 <Row justify="end">
                     <Space size="large">
                     <Popconfirm placement="bottom" title='Are you sure want to save new Settings?' onConfirm={()=>this.submit()} okText="Yes" cancelText="No">
-                        <Button type="primary"  htmlType='submit' size='small' >
+                        <Button type="primary"  size='small' >
                             Save
                         </Button>
                     </Popconfirm>
                         
-                        <Button   htmlType='button' size='small' onClick={()=>this.reset()}>
+                        <Button    size='small' onClick={()=>this.reset()}>
                             Cancel
                         </Button>
                     </Space>

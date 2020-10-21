@@ -73,6 +73,7 @@ class CalenderList extends Component {
             ],
             calenderForm: React.createRef(),
             openModal: false,
+
             FormFields: {
                 formId: 'calenderId',
                 justify : 'center',
@@ -105,6 +106,7 @@ class CalenderList extends Component {
                         type: 'Switch',
                         layout: {labelCol: { span: 4}},
                         labelAlign: 'left',
+                        valuePropName: 'checked'
                         // hidden: false    
                     }
                 ],
@@ -119,23 +121,18 @@ class CalenderList extends Component {
     }
 
     toggelModal =(status)=>{
-        this.setState({openModal:status})
 
-        console.log("calenderForm:",this.state.calenderForm);
         if (!status){
             this.state.calenderForm.current.refs.calenderId.resetFields();
         }
+
+        this.setState({openModal:status})
     }
 
     editRecord = (data, text) => {
-        console.log(data, text)
-        // this.state.calenderForm.current.FormFields.initialValues={obj:data}
-        // this.state.FormFields.initialValues = {obj:data};
         this.setState({
             FormFields: {...this.state.FormFields, initialValues: {obj:data}}
         })
-        // this.forceUpdate()
-        console.log(this.state.FormFields.initialValues)
         this.toggelModal(true)
 
     }
@@ -185,7 +182,8 @@ class CalenderList extends Component {
                         width={600}
                     >
                         <Form  ref={this.state.calenderForm} Callback={this.Callback} FormFields= {this.state.FormFields} />   
-                    </Modal>: null
+                    </Modal>: null    //adding a commit
+                    
                 }
             </>
         )

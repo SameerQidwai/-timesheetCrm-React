@@ -56,33 +56,32 @@ class TimeOffs extends Component {
                     title: 'Training',
                 },
             ],
-            openModal: false
-        }
-        
-        this.FormFields = {
-            formId: 'time_off',
-            justify : 'center',
-            FormCol: 20,
-            FieldSpace: { xs: 12, sm: 16, md: 122},
-            layout: {labelCol: { span: 12 }},
-            justifyField:'center',
-            // FormLayout:'inline', 
-            size: 'middle',
-            fields:[
-                {
-                    object:'obj',
-                    filedCol:20,
-                    layout:  {labelCol: { span: 4 },
-                    wrapperCol: { span: 0 }},
-                    key: 'title',
-                    label:'Title',
-                    size:'small',
-                    // rules:[{ required: true }],
-                    type: 'input',
-                    labelAlign: 'left',
-                },
-            ],
-        }
+            openModal: false,
+            FormFields: {
+                formId: 'time_off',
+                justify : 'center',
+                FormCol: 20,
+                FieldSpace: { xs: 12, sm: 16, md: 122},
+                layout: {labelCol: { span: 12 }},
+                justifyField:'center',
+                // FormLayout:'inline', 
+                size: 'middle',
+                fields:[
+                    {
+                        object:'obj',
+                        filedCol:20,
+                        layout:  {labelCol: { span: 4 },
+                        wrapperCol: { span: 0 }},
+                        key: 'title',
+                        label:'Title',
+                        size:'small',
+                        // rules:[{ required: true }],
+                        type: 'input',
+                        labelAlign: 'left',
+                    },
+                ],
+            }
+        } 
     }
 
     handleDelete =  (key)=>{
@@ -91,21 +90,23 @@ class TimeOffs extends Component {
     }
 
     toggelModal =(status)=>{
-        this.setState({openModal:status})
         if (!status){
             this.dynamoForm.current.refs.time_off.resetFields();
         }
+        this.setState({openModal:status})
     }
 
     editRecord = (data) => {
-        const obj = Object.assign({}, data);
-        this.FormFields.initialValues={obj:obj}
-        this.forceUpdate()
+
+        this.setState({
+            FormFields: {...this.state.FormFields, initialValues: {obj:data}}
+        })
+        
         this.toggelModal(true)
     }
 
     Callback =(vake)=>{ // this will work after I get the Object from the form
-        vake.obj.key = this.state.data.length
+        vake.obj.key = this.state.data.length + 1
         this.setState({
             data: [...this.state.data, vake.obj],
         }, () => {
@@ -144,7 +145,7 @@ class TimeOffs extends Component {
                     onCancel={()=>{this.toggelModal(false)}}
                     width={600}
                 >
-                    <Form ref={this.dynamoForm} Callback={this.Callback} FormFields= {this.FormFields} />   
+                    <Form ref={this.dynamoForm} Callback={this.Callback} FormFields= {this.state.FormFields} />   
                 </Modal>
             </>
         )

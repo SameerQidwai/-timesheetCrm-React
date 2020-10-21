@@ -64,31 +64,31 @@ class Roles extends Component {
                     title: 'Project Manager',
                 },
             ],
-            openModal: false
-        }
-        this.FormFields = {
-            formId: 'role_form',
-            justify : 'center',
-            FormCol: 20,
-            FieldSpace: { xs: 12, sm: 16, md: 122},
-            layout: {labelCol: { span: 12 }},
-            justifyField:'center',
-            // FormLayout:'inline', 
-            size: 'middle',
-            fields:[
-                {
-                    object:'obj', 
-                    filedCol:20,
-                    layout:  {labelCol: { span: 4 },
-                    wrapperCol: { span: 0 }},
-                    key: 'title',
-                    label:'Title',
-                    size: 'small',            
-                    // rules:[{ required: true }],
-                    type: 'input',
-                    labelAlign: 'left',
-                },
-            ],
+            openModal: false,
+            FormFields: {
+                formId: 'role_form',
+                justify : 'center',
+                FormCol: 20,
+                FieldSpace: { xs: 12, sm: 16, md: 122},
+                layout: {labelCol: { span: 12 }},
+                justifyField:'center',
+                // FormLayout:'inline', 
+                size: 'middle',
+                fields:[
+                    {
+                        object:'obj', 
+                        filedCol:20,
+                        layout:  {labelCol: { span: 4 },
+                        wrapperCol: { span: 0 }},
+                        key: 'title',
+                        label:'Title',
+                        size: 'small',            
+                        // rules:[{ required: true }],
+                        type: 'input',
+                        labelAlign: 'left',
+                    },
+                ],
+            }
         }
     }
 
@@ -113,10 +113,11 @@ class Roles extends Component {
     }
 
     editRecord = (data) => {
-        const obj = Object.assign({}, data);
-        this.setState()
-        this.FormFields.initialValues={obj:obj}
-        this.forceUpdate()
+
+        this.setState({
+            FormFields: {...this.state.FormFields, initialValues: {obj:data}}
+        })
+        
         this.toggelModal(true)
     }
 
@@ -140,16 +141,18 @@ class Roles extends Component {
                         <Table columns={columns} dataSource={data} size='small'/>
                     </Col>
                 </Row>
-                <Modal
-                    title="Add Time Off"
-                    centered
-                    visible={this.state.openModal}
-                    onOk={()=>{this.submit()}}
-                    onCancel={()=>{this.toggelModal(false)}}
-                    width={600}
-                >
-                    <Form ref={this.roleForm} Callback={this.Callback} FormFields= {this.FormFields} />   
-                </Modal>
+                {this.state.openModal ? 
+                    <Modal
+                        title="Add Time Off"
+                        centered
+                        visible={this.state.openModal}
+                        onOk={()=>{this.submit()}}
+                        onCancel={()=>{this.toggelModal(false)}}
+                        width={600}
+                    >
+                        <Form ref={this.roleForm} Callback={this.Callback} FormFields= {this.state.FormFields} />   
+                    </Modal> : null
+                }
             </>
         )
     }

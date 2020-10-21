@@ -1,14 +1,41 @@
-fieldStyle = 'style directly to the field '
-backstyle = 'style on the Row'
-Formstyle =' style on the Form '
-FormCol = 'form Column'
-FieldSpace = 'Spaces between fields'
-layout = 'set label column for alignment'
-FormLayout = 'ant desingn has 3 layout // horizonta, vertical, inline'
-fields= { //fileds
-    
+fields={
+    backstyle: 'style on the Row',
+    Formstyle:' style on the Form ',
+    FormCol: 'form Column',
+    FieldSpace: 'Spaces between fields i.e={ xs: 12, sm: 16, md: 122}',
+    layout: 'set label column for alignment',
+    FormLayout: 'ant desingn has 3 layout // horizonta, vertical, inline',
+    justify: 'form',
+    initialValues:{obj:{key:'value'}},
+    fields:[ 
+        { //fileds
+            object: 'Object in what value to get objec',
+            filedCol: 'how manu column should get',
+            key: 'key of the object to get',
+            Placeholder: 'placeholder to show in the input fields && span to put things also i.e <Icons/>',
+            label: 'Label of the fields ',
+            rules:[{types:'types of rules', message:'to show on rule'}],
+            type: `Input, Password, Textarea, InputNumber, Select, Switch, Radio, 
+                    DatePicker, TimePicker, TimeRange,RangePicker CheckboxGroup Checkbox 
+                    Title Span Divider Button `,
+            layout:  {
+                labelCol: { span: 'number for the label column by the froms' },
+                wrapperCol: { span: 'number for the column by Froms ' } 
+            },
+            size: 'size of the input fields',
+            mode: 'changes according to the input option i.e type, level ',
+            labelAlign: 'label  align in the column of Form ',
+            hint: 'hint',
+            data: 'Option for the fields that needs i.e checkbox selectbox',
+            formStyle: 'put style on from item for the field',
+            fieldStyle = 'put style directly to the field ',
+            valuePropName:'"checked" for the field name as checkbox and switch',
+            func : ' (value, e) function on the field onChange or click'  
+        } 
+    ]
 }
-const FormFields = {
+
+const Example = {
     // Title: 'OneLM CRM',
     justify : 'center',
     FormCol: 10,

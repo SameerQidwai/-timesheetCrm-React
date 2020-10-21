@@ -62,7 +62,7 @@ class AdminContent extends Component {
         path = path.split('/')
         return(
             path.map((item,i) => (
-                item != "" ?<Breadcrumb.Item key={i}>{item}</Breadcrumb.Item>: <span/>
+                item != "" ?<Breadcrumb.Item key={i}>{item}</Breadcrumb.Item>: null
             ))
         );
     }

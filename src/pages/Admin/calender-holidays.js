@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, {Component,  useState } from 'react'
 import { Table, Menu, Dropdown, Button, Popconfirm, Row, Col,Typography, Modal } from 'antd'
 import { DownOutlined, SettingOutlined, PlusSquareOutlined} from '@ant-design/icons'; //Icons
 
@@ -124,45 +124,44 @@ class CalenerHolidays extends Component {
                 },
             ],
             data: null,
-            openModal: false
-        }
-
-        this.FormFields = {
-            formId: 'form',
-            justify : 'center',
-            FormCol: 20,
-            FieldSpace: { xs: 12, sm: 16, md: 122},
-            layout: {labelCol: { span: 12 }},
-            justifyField:'center',
-            // FormLayout:'inline', 
-            size: 'middle',
-            fields:[
-                {
-                    object:'obj',
-                    filedCol:20,
-                    layout:  {labelCol: { span: 4 },
-                    wrapperCol: { span: 0 }},
-                    key: 'title',
-                    label:'Title',
-                    size:'small',
-                    // rules:[{ required: true }],
-                    type: 'input',
-                    labelAlign: 'left',
-                },
-                {
-                    object:'obj',
-                    filedCol:20,
-                    key: 'date',
-                    label:'Date',
-                    size:'small',
-                    // rules:[{ required: true, message: 'Insert your Password Please' }],
-                    type: 'DatePicker',
-                    layout: {labelCol: { span: 4}},
-                    labelAlign: 'left',
-                    // hidden: false    
-                }
-            ]
-        }
+            openModal: false,
+            FormFields: {
+                formId: 'form',
+                justify : 'center',
+                FormCol: 20,
+                FieldSpace: { xs: 12, sm: 16, md: 122},
+                layout: {labelCol: { span: 12 }},
+                justifyField:'center',
+                // FormLayout:'inline', 
+                size: 'middle',
+                fields:[
+                    {
+                        object:'obj',
+                        filedCol:20,
+                        layout:  {labelCol: { span: 4 },
+                        wrapperCol: { span: 0 }},
+                        key: 'title',
+                        label:'Title',
+                        size:'small',
+                        // rules:[{ required: true }],
+                        type: 'input',
+                        labelAlign: 'left',
+                    },
+                    {
+                        object:'obj',
+                        filedCol:20,
+                        key: 'date',
+                        label:'Date',
+                        size:'small',
+                        // rules:[{ required: true, message: 'Insert your Password Please' }],
+                        type: 'DatePicker',
+                        layout: {labelCol: { span: 4}},
+                        labelAlign: 'left',
+                        // hidden: false    
+                    }
+                ]
+            }
+        }        
     }
 
     handleDelete =  (key)=>{
@@ -171,7 +170,8 @@ class CalenerHolidays extends Component {
     }
 
     toggelModal =(status)=>{
-        this.holidayForm.current.refs.form.resetFields();
+        if(!status)this.holidayForm.current.refs.form.resetFields();
+
         this.setState({openModal:status})
     }
 
@@ -187,11 +187,13 @@ class CalenerHolidays extends Component {
     }
 
     editRecord = (data) => {
-        console.log(data)
         const obj = Object.assign({}, data);
         obj.date = moment(obj.date)
-        this.FormFields.initialValues={obj:obj}
-        this.forceUpdate()
+
+        this.setState({
+            FormFields: {...this.state.FormFields, initialValues: {obj:obj}}
+        })
+
         this.toggelModal(true)
     }
     
@@ -215,20 +217,23 @@ class CalenerHolidays extends Component {
                         <Table columns={columns} dataSource={data} size='small'/>
                     </Col>
                 </Row>
-                <Modal
-                    title="Add Holiday"
-                    centered
-                    visible={this.state.openModal}
-                    onOk={()=>{this.submit()}}
-                    onCancel={()=>{this.toggelModal(false)}}
-                    width={600}
-                >
-                    <Form 
-                        ref={this.holidayForm}
-                        Callback = {this.Callback} 
-                        FormFields= {this.FormFields} 
-                    />   
-                </Modal>
+                { this.state.openModal ?
+                    <Modal
+                        title="Add Holiday"
+                        centered
+                        visible={this.state.openModal}
+                        onOk={()=>{this.submit()}}
+                        onCancel={()=>{this.toggelModal(false)}}
+                        width={600}
+                    >
+                        <Form 
+                            ref={this.holidayForm}
+                            Callback = {this.Callback} 
+                            FormFields= {this.state.FormFields} 
+                        />   
+                    </Modal> :
+                    null
+                }
             </>
         )
     }

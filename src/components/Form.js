@@ -39,7 +39,6 @@ class Forms extends Component {
     constructor(props){
         super(props);
         // this.FormFields = this.props.FormFields
-        console.log("FORM props:",this.props);
         // console.log(this.FormFields)
     }
 
@@ -52,9 +51,7 @@ class Forms extends Component {
     };
 
     content = () => {
-        console.log("FORM RENDER:", this.props.FormFields);
         const {FormFields} = this.props;
-        // console.log(Rows)
         const fields = FormFields.fields
         const btns = FormFields.btns ? FormFields.btns : {}
         const subBtn = btns.btn ? btns.btn : []
@@ -161,7 +158,7 @@ s                                                >
                 item = <Input /> // is not working just to remember
                 break;
             case 'Switch':
-                item =  <Switch size={size} defaultValue={defaultValue}/>
+                item =  <Switch size={size} />
                 break;
             case 'Radio':
                 item =  <Radio.Group options={data} optionType={mode} size={size} defaultValue={defaultValue}/>
@@ -179,10 +176,10 @@ s                                                >
                 item = <RangePicker picker={mode} showTime={showTime}  size={size} defaultValue={defaultValue}/>
                 break;
             case 'CheckboxGroup':
-                item = <Checkbox.Group options={data} size={size} defaultValue={defaultValue} />
+                item = <Checkbox.Group options={data} size={size} />
                 break;
             case 'Checkbox':
-                item = <Checkbox options={data}  size={size} defaultValue={defaultValue}/>
+                item = <Checkbox options={data}  size={size}  />
                 break;
             case 'Title':
                 item = <Title level={mode} size={size} defaultValue={defaultValue}>{placeholder}</Title>

@@ -34,7 +34,7 @@ class TimeOffsPolicy extends Component {
                                     <a>Delete</a>
                                 </Popconfirm>
                             </Menu.Item >
-                            <Menu.Item>Edit</Menu.Item>
+                            <Menu.Item onClick={()=>this.editRecord(record, text)}>Edit</Menu.Item>
                         </Menu>
                     }>
                         <Button size="small">
@@ -61,169 +61,176 @@ class TimeOffsPolicy extends Component {
             },
             form1Submitted: false,
             form2Submitted: false,
-        }
 
-        this.FormFields = {
-            formId: 'title_form',
-            justify : 'center',
-            FormCol: 24,
-            FieldSpace: { xs: 12, sm: 16, md: 12},
-            layout: {labelCol: { span: 8 }},
-            justifyField:'center',
-            FormLayout:'inline', 
-            size: 'small',
-            fields:[
-                { 
-                    object:'obj',
-                    filedCol:24,
-                    layout:  { wrapperCol: { span: 22 } },
-                    key: 'title',
-                    label:'Title',
-                    size:'small',
-                    // rules:[{ required: true }],
-                    type: 'input',
-                    labelAlign: 'left',
-                    formStyle:{ marginBottom:'5px' }
-                },
-                {
-                    filedCol:24,         
-                    layout:  { wrapperCol: { span: 0 }},
-                    Placeholder: 'Insert Time Off',
-                    type: 'Button',
-                    mode: 'primary',
-                    style: {textAlign:'right'},
-                    size:'small',
-                    func: function func (value, e){
-                        let obj = this.FormFields_1.fields[this.FormFields_1.fields.length-1]// get the inster number for keys
-                        const item_no = obj ? parseInt(obj.key) + 1 :0
-                        const splice_key = [`timeoff${item_no}`, `hours${item_no}`, item_no] 
-                        const fields=[
-                            { 
-                                object:'obj',
-                                filedCol:11,
-                                layout:  { wrapperCol: { span: 23 } },
-                                key: `timeoff${item_no}`,
-                                size:'small',
-                                // rules:[{ required: true }],
-                                type: 'Select',
-                                labelAlign: 'left',
-                                formStyle:{ marginBottom:'5px' },
-                                data:[{value:'Sick Leave',label:'Sick Leave'}, {value:'Vacations',label:'Vacations'},{ value:'Traning',label:'Traning'}],
-                            },
-                            { 
-                                object:'obj',
-                                filedCol:5,
-                                layout:  { wrapperCol: { span: 20, offset:2} },
-                                key: `hours${item_no}`,
-                                size:'small',
-                                // rules:[{ required: true }],
-                                type: 'InputNumber',
-                                labelAlign: 'left',
-                                formStyle:{ marginBottom:'5px' }
-                            },
-                            { 
-                                filedCol:3,
-                                size:'small',
-                                Placeholder:<CloseOutlined />,
-                                key: item_no,
-                                // rules:[{ required: true }],
-                                type: 'Span',
-                                style: {
-                                    textAlign:'right',
-                                },
-                                fieldStyle:{
-                                    cursor:'pointer'
-                                },
-                                func: function func (value, e){
-                                    this.FormFields_1.fields = this.FormFields_1.fields.filter(obj => {
-                                        return obj.key != splice_key[0] && obj.key != splice_key[1] && obj.key != splice_key[2];
-                                    });
-                                    this.forceUpdate()
-                                }.bind(this)
-                            }
-                        ]
-                        for (const field of fields) {
-                            // this.dynamoForm_2.current.props.FormFields.fields.push(field)
-                            this.FormFields_1.fields.push(field)
-                        }
-    
-                        this.forceUpdate()
-                    }.bind(this)
-                },
-                {
-                    filedCol:11,
-                    Placeholder: 'Time Off',
-                    type: 'Span',
-                    size:'small',
-                },
-                {
-                    filedCol:11,
-                    layout:  {
-                        wrapperCol: { offset:1}
+            FormFields: {
+                formId: 'title_form',
+                justify : 'center',
+                FormCol: 24,
+                FieldSpace: { xs: 12, sm: 16, md: 12},
+                layout: {labelCol: { span: 8 }},
+                justifyField:'center',
+                FormLayout:'inline', 
+                size: 'small',
+                fields:[
+                    { 
+                        object:'obj',
+                        filedCol:24,
+                        layout:  { wrapperCol: { span: 22 } },
+                        key: 'title',
+                        label:'Title',
+                        size:'small',
+                        // rules:[{ required: true }],
+                        type: 'input',
+                        labelAlign: 'left',
+                        formStyle:{ marginBottom:'5px' }
                     },
-                    Placeholder: 'Hours',
-                    type: 'Span',
-                    size:'small',
-                },
-            ],
-        }
+                    {
+                        filedCol:24,         
+                        layout:  { wrapperCol: { span: 0 }},
+                        Placeholder: 'Insert Time Off',
+                        type: 'Button',
+                        mode: 'primary',
+                        style: {textAlign:'right'},
+                        size:'small',
+                        func: function func (value, e){
+                            let obj = this.state.FormFields_1.fields[this.state.FormFields_1.fields.length-1]// get the inster number for keys
+                            const item_no = obj ? parseInt(obj.key) + 1 :0
+                            this.state.FormFields_1.fields = this.state.FormFields_1.fields.concat(...this.newField(item_no));
+                            this.setState({
+                                FormFields_1: this.state.FormFields_1
+                            })
+                        }.bind(this)
+                    },
+                    {
+                        filedCol:16,
+                        Placeholder: 'Time Off',
+                        type: 'Span',
+                        size:'small',
+                    },
+                    {
+                        filedCol:5,
+                        layout:  {
+                            wrapperCol: { offset:1}
+                        },
+                        Placeholder: 'Hours',
+                        type: 'Span',
+                        size:'small',
+                    },
+                ],
+            },
 
-        this.FormFields_1 = {
-            formId: 'hours_form',
-            justify : 'center',
-            FormCol: 24,
-            FieldSpace: { xs: 12, sm: 16, md: 12},
-            layout: {labelCol: { span: 12 }},
-            justifyField:'center',
-            FormLayout:'inline', 
-            size: 'small',
-            backstyle: {maxHeight:'100px',overflowY: 'auto'},
-            fields:[
-                { 
-                    object:'obj',
-                    filedCol:11,
-                    layout:  { wrapperCol: { span: 23 } },
-                    key: 'timeoff0',
-                    size:'small',
-                    // rules:[{ required: true }],
-                    type: 'Select',
-                    labelAlign: 'left',
-                    formStyle:{ marginBottom:'5px' },
-                    data:[{value:'Sick Leave',label:'Sick Leave'}, {value:'Vacations',label:'Vacations'},{ value:'Traning',label:'Traning'}],
-                },
-                { 
-                    object:'obj',
-                    filedCol:5,
-                    layout:  { wrapperCol: { span: 20, offset:2} },
-                    key: 'hours0',
-                    size:'small',
-                    // rules:[{ required: true }],
-                    type: 'InputNumber',
-                    labelAlign: 'left',
-                    formStyle:{ marginBottom:'5px' }
-                },
-                { 
-                    filedCol:3,
-                    size:'small',
-                    Placeholder:<CloseOutlined />,
-                    key: 0,
-                    // rules:[{ required: true }],
-                    type: 'Span',
-                    style: {
-                        textAlign:'right',
+            FormFields_1: {
+                formId: 'hours_form',
+                justify : 'center',
+                FormCol: 24,
+                FieldSpace: { xs: 12, sm: 16, md: 12},
+                layout: {labelCol: { span: 12 }},
+                justifyField:'center',
+                FormLayout:'inline', 
+                size: 'small',
+                backstyle: {maxHeight:'100px',overflowY: 'auto'},
+                fields:[
+                    { 
+                        object:'obj',
+                        filedCol:16,
+                        layout:  { wrapperCol: { span: 23 } },
+                        key: 'timeoff0',
+                        size:'small',
+                        // rules:[{ required: true }],
+                        type: 'Select',
+                        labelAlign: 'left',
+                        formStyle:{ marginBottom:'5px' },
+                        data:[{value:'Sick Leave',label:'Sick Leave'}, {value:'Vacations',label:'Vacations'},{ value:'Traning',label:'Traning'}],
                     },
-                    fieldStyle:{
-                        cursor:'pointer'
+                    { 
+                        object:'obj',
+                        filedCol:5,
+                        layout:  { wrapperCol: { span: 20, offset:2} },
+                        key: 'hours0',
+                        size:'small',
+                        // rules:[{ required: true }],
+                        type: 'InputNumber',
+                        labelAlign: 'left',
+                        formStyle:{ marginBottom:'5px' }
                     },
-                    func: function func (value, e){
-                        this.FormFields_1.fields = this.FormFields_1.fields.filter(obj => {
-                            return obj.key != 'timeoff0' && obj.key != 'hours0' && obj.key != 0;
-                        });
-                        this.forceUpdate()
-                    }.bind(this)
-                },
-            ],
+                    { 
+                        filedCol:3,
+                        size:'small',
+                        Placeholder:<CloseOutlined />,
+                        key: 0,
+                        // rules:[{ required: true }],
+                        type: 'Span',
+                        style: {
+                            textAlign:'right',
+                        },
+                        fieldStyle:{
+                            cursor:'pointer'
+                        },
+                        func: function func (value, e){
+                            this.state.FormFields_1.fields = this.state.FormFields_1.fields.filter(obj => {
+                                return obj.key != 'timeoff0' && obj.key != 'hours0' && obj.key != 0;
+                            });
+                            this.setState({
+                                FormFields_1: this.state.FormFields_1
+                            })
+                        }.bind(this)
+                    },
+                ],
+            }
         }
+    }
+
+    newField = (item_no) =>{ //inserting new fields in modals
+        const splice_key = [`timeoff${item_no}`, `hours${item_no}`, item_no] 
+        return [
+            { 
+                object:'obj',
+                filedCol:16,
+                layout:  { wrapperCol: { span: 23 } },
+                key: `timeoff${item_no}`,
+                size:'small',
+                // rules:[{ required: true }],
+                type: 'Select',
+                labelAlign: 'left',
+                formStyle:{ marginBottom:'5px' },
+                data:[{value:'Sick Leave',label:'Sick Leave'}, {value:'Vacations',label:'Vacations'},{ value:'Traning',label:'Traning'}],
+            },
+            { 
+                object:'obj',
+                filedCol:5,
+                layout:  { wrapperCol: { span: 20, offset:2} },
+                key: `hours${item_no}`,
+                size:'small',
+                // rules:[{ required: true }],
+                type: 'InputNumber',
+                labelAlign: 'left',
+                formStyle:{ marginBottom:'5px' }
+            },
+            { 
+                filedCol:3,
+                size:'small',
+                Placeholder:<CloseOutlined />,
+                key: item_no,
+                // rules:[{ required: true }],
+                type: 'Span',
+                style: {
+                    textAlign:'right',
+                },
+                fieldStyle:{
+                    cursor:'pointer'
+                },
+                func: function func (value, e){
+
+                    this.state.FormFields_1.fields = this.state.FormFields_1.fields.filter(obj => {
+                        return obj.key != splice_key[0] && obj.key != splice_key[1] && obj.key != splice_key[2];
+                    });
+
+                    this.setState({
+                        FormFields_1 : this.state.FormFields_1
+                    })
+                }.bind(this)
+            }
+        ]
     }
 
     handleDelete =  (key)=>{
@@ -258,7 +265,7 @@ class TimeOffsPolicy extends Component {
         this.setState({
             mergeObj: {
                 ...this.state.mergeObj,
-                offs: [vake.obj]
+                offs: vake.obj
             },
             form2Submitted: true,
         }, () => {
@@ -273,7 +280,22 @@ class TimeOffsPolicy extends Component {
         this.dynamoForm_2.current.refs.hours_form.submit();
     }
 
+    editRecord = (data, text) => {
+        var offs = data.offs
+        var obj = {key: data.key, title:data.title}
+        this.setState({
+            FormFields: {...this.state.FormFields, initialValues: {obj:obj}},
+            FormFields_1: {...this.state.FormFields_1, initialValues: {obj:offs}}
+        },()=>{
+            console.log(this.state.FormFields)
+            console.log(this.state.FormFields_1)
+        })
+        this.toggelModal(true)
+
+    }
+
     renderTable = () => {
+        console.log(this.state.mergeObj)
         this.setState({
             data: [...this.state.data, this.state.mergeObj],
             mergeObj: {},
@@ -308,8 +330,8 @@ class TimeOffsPolicy extends Component {
                     onCancel={() => { this.toggelModal(false) }}
                     width={600}
                 >
-                    <Form ref={this.dynamoForm_1} Callback = {this.Callback} FormFields={this.FormFields} />
-                    <Form ref={this.dynamoForm_2} Callback = {this.Callback2} FormFields={this.FormFields_1} />
+                    <Form ref={this.dynamoForm_1} Callback = {this.Callback} FormFields={this.state.FormFields} />
+                    <Form ref={this.dynamoForm_2} Callback = {this.Callback2} FormFields={this.state.FormFields_1} />
                 </Modal>
             </>
         )
