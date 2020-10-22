@@ -114,7 +114,7 @@ class Navbar extends Component{
                     </Col>
                     <Col xs={{span:2}} md={{span:2}}>
                         <Space size="large">
-                            <Link to='/admin/global-settings' className="nav-link">
+                            <Link to='/admin/global-settings' className="nav-drop">
                                 <SettingOutlined />
                             </Link>
 
