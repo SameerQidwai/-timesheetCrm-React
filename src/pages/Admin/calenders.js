@@ -50,7 +50,7 @@ class CalenderList extends Component {
                             </Menu.Item >
                         </Menu>
                     }>
-                        <Button size='small'>
+                        <Button size='small' >
                             <SettingOutlined/> Option <DownOutlined/>
                         </Button>
                     </Dropdown>  
