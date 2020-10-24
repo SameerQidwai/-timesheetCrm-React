@@ -1,4 +1,4 @@
-import React, {Component,  useState } from 'react'
+import React, {Component } from 'react'
 import { Table, Menu, Dropdown, Button, Popconfirm, Row, Col,Typography, Modal } from 'antd'
 import { DownOutlined, SettingOutlined, PlusSquareOutlined} from '@ant-design/icons'; //Icons
 
@@ -8,47 +8,11 @@ import '../styles/table.css'
 
 const { Title } = Typography
 
-const FormFields = {
-    justify : 'center',
-    FormCol: 20,
-    FieldSpace: { xs: 12, sm: 16, md: 122},
-    layout: {labelCol: { span: 12 }},
-    justifyField:'center',
-    // FormLayout:'inline', 
-    size: 'middle',
-    fields:[
-        {
-            object:'obj',
-            filedCol:20,
-            layout:  {labelCol: { span: 4 },
-            wrapperCol: { span: 0 }},
-            key: 'title',
-            label:'Title',
-            size:'small',
-            // rules:[{ required: true }],
-            type: 'input',
-            labelAlign: 'left',
-        },
-        {
-            object:'obj',
-            filedCol:20,
-            key: 'date',
-            label:'Date',
-            size:'small',
-            // rules:[{ required: true, message: 'Insert your Password Please' }],
-            type: 'DatePicker',
-            layout: {labelCol: { span: 4}},
-            labelAlign: 'left',
-            // hidden: false    
-        }
-    ]
-}
-
 class CalenerHolidays extends Component {
 
     componentDidMount(){
-        var query = this.props.location.query
-        if (query=='1'){
+        var {id} = this.props.match.params
+        if (id ==='1'){
             this.setState({ data: this.state.data1 });
         }else{
             this.setState({ data: this.state.data2 });
@@ -79,7 +43,7 @@ class CalenerHolidays extends Component {
                         <Menu>
                             <Menu.Item danger>
                                 <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete(record.key)}>
-                                    <a>Delete</a>
+                                    Delete
                                 </Popconfirm>
                             </Menu.Item >
                             <Menu.Item onClick={()=>this.getRecord(record)}>Edit</Menu.Item>

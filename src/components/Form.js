@@ -38,15 +38,9 @@ const validateMessages = {
 class Forms extends Component {
     constructor(props){
         super(props);
-        // this.FormFields = this.props.FormFields
-        // console.log(this.FormFields)
     }
 
     onFinishs = (value) => {
-        // console.log(this.props)
-        // value ={
-        //     ...value,
-        // }
         this.props.Callback(value);
     };
 

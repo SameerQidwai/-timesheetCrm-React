@@ -1,10 +1,10 @@
 import React, {Component} from 'react'
-import { Table, Menu, Dropdown, Button, Popconfirm, Row, Col,Typography } from 'antd'
+import { Table, Menu, Dropdown, Button, Popconfirm, Row, Col,Typography, Modal } from 'antd'
 import { DownOutlined, SettingOutlined, PlusSquareOutlined, FilterOutlined} from '@ant-design/icons'; //Icons
-// import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 
-// import Form from '../../components/Form';
+import Form from '../../components/Form';
 import '../styles/table.css'
 
 const { Title } = Typography
@@ -17,25 +17,35 @@ class Organizations extends Component {
         this.contactForm = React.createRef();
         this.columns = [
             {
-                title: 'Code',
+                title: 'Type',
                 dataIndex: 'key',
                 key: 'key',
-                render:(record) =>(
+                render:(record) =>( 
                     `00${record}`
                 ),
             },
             {
-                title: 'Name',
+                title: 'Descriptions',
                 dataIndex: 'name',
                 key: 'name',
             },
             {
-                title: 'Email',
+                title: 'Hours off',
                 dataIndex: 'email',
                 key: 'email',
             },
             {
-                title: 'Organization',
+                title: 'Days Off',
+                dataIndex: 'org',
+                key: 'org',
+            },
+            {
+                title: 'Hours off',
+                dataIndex: 'email',
+                key: 'email',
+            },
+            {
+                title: 'Days Off',
                 dataIndex: 'org',
                 key: 'org',
             },
@@ -66,6 +76,10 @@ class Organizations extends Component {
                 ),
             },
         ];
+
+        this.status_columns = [
+
+        ]
 
         this.state={
             data : [
@@ -186,7 +200,25 @@ class Organizations extends Component {
             <>
                 <Row justify="space-between">
                     <Col>
-                        <Title level={4}>Contact Persons</Title>
+                        <Title level={4}>Time Offs</Title>
+                    </Col>
+                    <Col style={{textAlign:'end'}} span={4} >
+                        <Row justify="space-between">
+                            <Col>
+                                <Button type="default"size='small'> <FilterOutlined />Filter</Button>
+                            </Col>
+                            <Col>
+                                <Button type="primary" size='small'> <PlusSquareOutlined />Add Timeoff</Button>
+                            </Col>
+                        </Row>
+                    </Col>
+                    <Col span={24}>
+                        <Table columns={columns} dataSource={data} size='small'/>
+                    </Col>
+                </Row>
+                <Row justify="space-between">
+                    <Col>
+                        <Title level={4}>Time Offs Status</Title>
                     </Col>
                     <Col style={{textAlign:'end'}} span={4} >
                         <Row justify="space-between">

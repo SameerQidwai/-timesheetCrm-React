@@ -11,6 +11,9 @@ import CalenderList from '../calenders'
 import TimeOffs from '../time-offs'
 import TimeOffsPolicy from '../time-off-policies'
 import Roles from '../roles'
+import Panels from '../Panels/panels'
+import PanelInfo from '../Panels/panel-info'
+
 import check from '../admin-drawer/admin-sidebar'
 
 
@@ -25,9 +28,8 @@ const pageLinks = [ // Page link and router
     },
     {
         component: CalenderHoldays,
-        link: '/admin/calender/holidays'
+        link: '/admin/calender/holidays/:id'
     },
-
     {
         component: TimeOffs,
         link: '/admin/time-offs'
@@ -39,6 +41,14 @@ const pageLinks = [ // Page link and router
     {
         component: Roles,
         link: '/admin/roles'
+    },
+    {
+        component: Panels,
+        link: '/admin/panels'
+    },
+    {
+        component: PanelInfo,
+        link: '/admin/panels/info/:id'
     },
     {
         component: check,
@@ -62,7 +72,7 @@ class AdminContent extends Component {
         path = path.split('/')
         return(
             path.map((item,i) => (
-                item != "" ?<Breadcrumb.Item key={i}>{item}</Breadcrumb.Item>: null
+                item !== "" ?<Breadcrumb.Item key={i}>{item}</Breadcrumb.Item>: null
             ))
         );
     }

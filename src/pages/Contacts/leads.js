@@ -48,7 +48,7 @@ class Organizations extends Component {
                         <Menu>
                             <Menu.Item danger>
                                 <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete(record.code)} >
-                                    <a>Delete</a>
+                                    Delete
                                 </Popconfirm>
                             </Menu.Item >
                             <Menu.Item >Edit</Menu.Item>

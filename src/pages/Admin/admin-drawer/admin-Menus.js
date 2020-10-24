@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import { Menu } from 'antd'
 import { Link, withRouter } from 'react-router-dom'
 
-import { FieldTimeOutlined, UserOutlined, CalendarOutlined, GlobalOutlined} from '@ant-design/icons'; //Icons
+import { FieldTimeOutlined, UserOutlined, CalendarOutlined, GlobalOutlined, AppstoreOutlined} from '@ant-design/icons'; //Icons
 
 // import './Menus.css'
 
@@ -38,6 +38,12 @@ const listData= [
         icon: <UserOutlined />,
         link: "/admin/roles",
         key: "/admin/roles"
+    },
+    {
+        text:'Panels',
+        icon: <AppstoreOutlined />,
+        link: "/admin/panels",
+        key: "/admin/panels"
     },
 ];
 

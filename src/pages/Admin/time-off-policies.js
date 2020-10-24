@@ -30,7 +30,7 @@ class TimeOffsPolicy extends Component {
                         <Menu>
                             <Menu.Item danger>
                                 <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete(record.key)}>
-                                    <a>Delete</a>
+                                    Delete
                                 </Popconfirm>
                             </Menu.Item >
                             <Menu.Item onClick={()=>this.getRecord(record, text)}>Edit</Menu.Item>
@@ -129,7 +129,7 @@ class TimeOffsPolicy extends Component {
                 justifyField:'center',
                 FormLayout:'inline', 
                 size: 'small',
-                backstyle: {maxHeight:'100px',overflowY: 'auto'},
+                backstyle: {maxHeight:'115px',overflowY: 'auto'},
                 fields:[
                     { 
                         object:'obj',
@@ -169,7 +169,7 @@ class TimeOffsPolicy extends Component {
                         },
                         func: function func (value, e){
                             this.state.FormFields_1.fields = this.state.FormFields_1.fields.filter(obj => {
-                                return obj.key != 'timeoff0' && obj.key != 'hours0' && obj.key != 0;
+                                return obj.key !== 'timeoff0' && obj.key !== 'hours0' && obj.key !== 0;
                             });
                             this.setState({
                                 FormFields_1: this.state.FormFields_1
@@ -225,7 +225,7 @@ class TimeOffsPolicy extends Component {
                 func: function func (value, e){
 
                     this.state.FormFields_1.fields = this.state.FormFields_1.fields.filter(obj => {
-                        return obj.key != splice_key[0] && obj.key != splice_key[1] && obj.key != splice_key[2];
+                        return obj.key !== splice_key[0] && obj.key !== splice_key[1] && obj.key !== splice_key[2];
                     });
 
                     this.setState({

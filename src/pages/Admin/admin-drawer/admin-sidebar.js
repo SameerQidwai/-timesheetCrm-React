@@ -1,6 +1,6 @@
 import React, { Component  } from "react";
 
-import { Layout, Breadcrumb, Row, Col} from 'antd';
+import { Layout, Row } from 'antd';
 import { MenuUnfoldOutlined, MenuFoldOutlined} from '@ant-design/icons'; //Icons
 
 import AdminMenus from './admin-Menus'
@@ -13,7 +13,7 @@ const { Sider, Content } = Layout;
 
 class AdminSidebar extends Component{
     state = {
-        collapsed: true,
+        collapsed: false,
     };
 
     toggle = () => {

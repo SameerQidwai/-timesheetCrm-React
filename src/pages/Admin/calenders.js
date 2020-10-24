@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom'
 import Form from '../../components/Form';
 import '../styles/table.css'
 
+import { getList, addToList } from '../../service/calender'
 
 const { Title } = Typography
 
@@ -44,7 +45,7 @@ class CalenderList extends Component {
                         <Menu>
                             <Menu.Item onClick={()=>this.getRecord(record, text)}>Edit</Menu.Item>
                             <Menu.Item >
-                                <Link to={{ pathname: '/admin/calender/holidays' ,query: record.key}} className="nav-link">
+                                <Link to={{ pathname: `/admin/calender/holidays/${record.key}`}} className="nav-link">
                                     Holidays
                                 </Link>
                             </Menu.Item >
@@ -115,6 +116,28 @@ class CalenderList extends Component {
         
     }
 
+    // componentDidMount=()=>{
+    //     this.getAll()
+    // }
+
+    // getAll = () => { //creating API's
+    //     getList().then(data => {
+    //         console.log('calender')
+    //         if(data.status !== 'success'){
+    //             // localStorage.removeItem('usertoken')
+    //             // this.props.history.push(`/login`)
+    //         }else{
+    //             this.setState(
+    //                 {
+    //                     data: [...data]
+    //                 },() => {
+    //                     console.log(this.state.items)
+    //                 }
+    //             )
+    //         }
+    //     })
+    // }
+
     handleDelete =  (key) => {
         const dataSource = [...this.state.data];
         this.setState({ data: dataSource.filter(item => item.key !== key) });
@@ -159,7 +182,7 @@ class CalenderList extends Component {
 
     Callback =(vake)=>{ // this will work after I get the Object from the form
         if(!this.state.editTimeoff){
-            vake.obj.key = this.state.data.length + 1
+            vake.obj.key = this.state.data.length + 1 //frontEnd changes
             this.setState({
                 data: [...this.state.data, vake.obj],
             }, () => {
@@ -167,6 +190,10 @@ class CalenderList extends Component {
                 this.state.calenderForm.current.refs.calenderId.resetFields();
                 console.log("Data Rendered");
             });
+            // console.log(vake.obj)
+            // addToList(vake.obj).then(() => {
+            //     this.getAll() // refresh list
+            // })
         }else{
             this.editRecord(vake.obj)
         }
