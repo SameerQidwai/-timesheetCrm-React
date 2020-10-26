@@ -163,7 +163,7 @@ class TimeOffs extends Component {
                 </Row>
                 {this.state.openModal?
                     <Modal
-                        title="Add Time Off"
+                        title={this.state.editTimeoff? 'Edit Time Off' : "Add Time Off" }
                         centered
                         visible={this.state.openModal}
                         onOk={()=>{this.submit()}}

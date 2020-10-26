@@ -51,7 +51,7 @@ class Forms extends Component {
         const subBtn = btns.btn ? btns.btn : []
         return (
             <div>
-            <Row justify={FormFields.justify} style={FormFields.backstyle}>
+            {/* <Row justify={FormFields.justify} style={FormFields.backstyle} gutter={FormFields.FieldSpace}> */}
                 <Col span={FormFields.FormCol}>
                     <Form
                         id= {FormFields.formId}
@@ -63,11 +63,12 @@ class Forms extends Component {
                         scrollToFirstError={true} 
                         size={FormFields.size}
                         layout={FormFields.FormLayout}
+                        {...FormFields.layout}
                         initialValues={FormFields.initialValues}
                     >
                         {FormFields.fields?
                             // <Col span={FormFields.RowFiledCol}>
-                            <>
+                            <Row justify={FormFields.justify} style={FormFields.backstyle} gutter={FormFields.FieldSpace}>
                                 {fields.map((item,j) => (
                                     <Col span={item.filedCol}  offset={item.filedOffset} key={j+1} style={item.style} >
                                         <Item 
@@ -75,11 +76,13 @@ class Forms extends Component {
                                             name={[item.object, item.key]} 
                                             extra={item.hint} 
                                             labelAlign={item.labelAlign} 
-                                            label={item.label} 
+                                            label={item.label}
+                                            labelCol={item.labelCol}
+                                            wrapperCol={item.wrapperCol}
                                             rules={item.rules}
                                             valuePropName={item.valuePropName}
                                             hidden={item.hidden===true}
-                                            style={item.formStyle}
+                                            style={item.itemStyle}
                                         >
                                             {this.filedformat(
                                                 item.type, 
@@ -99,7 +102,7 @@ class Forms extends Component {
                                     </Col>
                                 ))
                                 }
-                            </>
+                            </Row>
                         :
                             <span/>
                         }
@@ -128,7 +131,7 @@ s                                                >
                         }
                     </Form>
                 </Col>
-            </Row>
+            {/* </Row> */}
             </div>
         )
     }

@@ -83,7 +83,7 @@ class TimeOffsPolicy extends Component {
                         rules:[{ required: true, message:'You are not good to go' }],
                         type: 'input',
                         labelAlign: 'left',
-                        formStyle:{ marginBottom:'5px' }
+                        itemStyle:{ marginBottom:'5px' }
                     },
                     {
                         filedCol:24,         
@@ -140,7 +140,7 @@ class TimeOffsPolicy extends Component {
                         // rules:[{ required: true }],
                         type: 'Select',
                         labelAlign: 'left',
-                        formStyle:{ marginBottom:'5px' },
+                        itemStyle:{ marginBottom:'5px' },
                         data:[{value:'Sick Leave',label:'Sick Leave'}, {value:'Vacations',label:'Vacations'},{ value:'Traning',label:'Traning'}],
                     },
                     { 
@@ -152,7 +152,7 @@ class TimeOffsPolicy extends Component {
                         // rules:[{ required: true }],
                         type: 'InputNumber',
                         labelAlign: 'left',
-                        formStyle:{ marginBottom:'5px' }
+                        itemStyle:{ marginBottom:'5px' }
                     },
                     { 
                         filedCol:3,
@@ -195,7 +195,7 @@ class TimeOffsPolicy extends Component {
                 // rules:[{ required: true }],
                 type: 'Select',
                 labelAlign: 'left',
-                formStyle:{ marginBottom:'5px' },
+                itemStyle:{ marginBottom:'5px' },
                 data:[{value:'Sick Leave',label:'Sick Leave'}, {value:'Vacations',label:'Vacations'},{ value:'Traning',label:'Traning'}],
             },
             { 
@@ -207,7 +207,7 @@ class TimeOffsPolicy extends Component {
                 // rules:[{ required: true }],
                 type: 'InputNumber',
                 labelAlign: 'left',
-                formStyle:{ marginBottom:'5px' }
+                itemStyle:{ marginBottom:'5px' }
             },
             { 
                 filedCol:3,
@@ -369,7 +369,7 @@ class TimeOffsPolicy extends Component {
                 </Row>
                 {this.state.openModal?
                     <Modal
-                        title="Add Time Off Policy"
+                        title= {this.state.editTimeoff? 'Edit Time Off Policy' : "Add Time Off Policy" }
                         centered
                         visible={this.state.openModal}
                         onOk={() => { this.submit() }}

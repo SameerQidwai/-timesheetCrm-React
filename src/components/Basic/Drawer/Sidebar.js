@@ -27,7 +27,7 @@ class Drawers extends Component {
   render() {
     const {collapsed} =this.state;
       return (
-        <Layout>
+        <Layout className="setMinWidth">
           {/* collapsedWidth={0} prop to hide full sidebar */}
             <Sider 
               trigger={null} 

@@ -197,7 +197,7 @@ class PanelInfo extends Component {
                         type: 'Select',
                         data:this.skill_select,
                         labelAlign: 'left',
-                        formStyle:{ marginBottom:'5px' }
+                        itemStyle:{ marginBottom:'5px' }
                     },
                     {
                         filedCol:24,         
@@ -207,7 +207,7 @@ class PanelInfo extends Component {
                         mode: 'primary',
                         style: {textAlign:'right'},
                         size:'small',
-                        formStyle:{ marginBottom:'10px' },
+                        itemStyle:{ marginBottom:'10px' },
                         func: function func (value, e){
                             let obj = this.state.FormFields_1.fields[this.state.FormFields_1.fields.length-1]// get the inster number for keys
                             console.log(obj)
@@ -298,7 +298,7 @@ class PanelInfo extends Component {
                 // rules:[{ required: true }],
                 type: 'Input',
                 labelAlign: 'left',
-                formStyle:{ marginBottom:'5px' },
+                itemStyle:{ marginBottom:'5px' },
             },
             { 
                 object:'obj',
@@ -309,7 +309,7 @@ class PanelInfo extends Component {
                 // rules:[{ required: true }],
                 type: 'InputNumber',
                 labelAlign: 'left',
-                formStyle:{ marginBottom:'5px' }
+                itemStyle:{ marginBottom:'5px' }
             },
             { 
                 object:'obj',
@@ -320,7 +320,7 @@ class PanelInfo extends Component {
                 // rules:[{ required: true }],
                 type: 'InputNumber',
                 labelAlign: 'left',
-                formStyle:{ marginBottom:'5px' }
+                itemStyle:{ marginBottom:'5px' }
             },
             { 
                 object:'obj',
@@ -331,7 +331,7 @@ class PanelInfo extends Component {
                 // rules:[{ required: true }],
                 type: 'InputNumber',
                 labelAlign: 'left',
-                formStyle:{ marginBottom:'5px' }
+                itemStyle:{ marginBottom:'5px' }
             },
             { 
                 filedCol:1,
@@ -492,7 +492,7 @@ class PanelInfo extends Component {
                 <Table columns={this.columns} dataSource={skills} size="small"/>
                 {this.state.openModal?
                     <Modal
-                        title="Skill"
+                        title={this.state.editTimeoff? 'Edit Skill' : "Add Skill"}
                         centered
                         visible={this.state.openModal}
                         onOk={()=>{this.submit()}}

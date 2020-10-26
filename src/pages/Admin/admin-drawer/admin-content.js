@@ -10,7 +10,7 @@ import CalenderHoldays from '../calender-holidays'
 import CalenderList from '../calenders'
 import TimeOffs from '../time-offs'
 import TimeOffsPolicy from '../time-off-policies'
-import Roles from '../roles'
+import Roles from '../../Role & Permission/roles'
 import Panels from '../Panels/panels'
 import PanelInfo from '../Panels/panel-info'
 

@@ -225,7 +225,7 @@ class CalenderList extends Component {
                 </Row>
                 {this.state.openModal ? 
                     <Modal
-                        title="Add Calender"
+                        title={this.state.editTimeoff? 'Edit Calender' : "Add New Calender" }
                         centered
                         visible={this.state.openModal}
                         onOk={()=>{this.submit()}}

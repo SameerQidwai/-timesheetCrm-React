@@ -9,14 +9,14 @@ import Login from './pages/Login/login-page'
 function App() {
   const login = 'sameer'
   return (
-    <Router>
-      {
-        login !== 'sameer' ?
-        <Login/>
-        :
-          <Layout/>
-      }
-    </Router>
+      <Router>
+        {
+          login !== 'sameer' ?
+          <Login/>
+          :
+            <Layout/>
+        }
+      </Router>
     );
 }
 

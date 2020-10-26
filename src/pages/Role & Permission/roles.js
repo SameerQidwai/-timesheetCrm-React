@@ -1,11 +1,11 @@
 import React, {Component} from 'react'
 import { Table, Menu, Dropdown, Button, Popconfirm, Row, Col,Typography, Modal } from 'antd'
 import { DownOutlined, SettingOutlined, PlusSquareOutlined} from '@ant-design/icons'; //Icons
-import { Link } from 'react-router-dom'
 
 
 import Form from '../../components/Form';
 import '../styles/table.css'
+import Permission from './permissions';
 
 const { Title } = Typography
 
@@ -34,7 +34,7 @@ class Roles extends Component {
                                 </Popconfirm>
                             </Menu.Item >
                             <Menu.Item onClick={()=>{this.getRecord(record)}}>Edit</Menu.Item>
-                            <Menu.Item >
+                            <Menu.Item onClick={this.callPermission}>
                                 {/* <Link to={{ pathname: '/admin/calender/holidays' ,query: record.key}} className="nav-link"> */}
                                     Permissions
                                 {/* </Link> */}
@@ -64,8 +64,60 @@ class Roles extends Component {
                     title: 'Project Manager',
                 },
             ],
+            perData : [
+                {
+                    key: 1,
+                    category: 'Skills',
+                    create: true,
+                    update: false,
+                    read: true,
+                    delete: false
+                },
+                {
+                    key: 2,
+                    category: 'Employees',
+                    create: true,
+                    update: true,
+                    read: true,
+                    delete: true
+                },
+                {
+                    key: 3,
+                    category: 'Projects',
+                    create: true,
+                    update: false,
+                    read: true,
+                    delete: false
+                },
+                {
+                    key: 4,
+                    category: 'Time Off',
+                    create: true,
+                    update: false,
+                    read: false,
+                    delete: false
+                },
+                {
+                    key: 5,
+                    category: 'Travler',
+                    create: false,
+                    update: true,
+                    read: true,
+                    delete: false
+                },
+                {
+                    key: 6,
+                    category: 'opportunity',
+                    create: false,
+                    update: true,
+                    read: false,
+                    delete: true
+                },
+            ],
+
             openModal: false,
             editTimeoff:false,
+            perModal:false,
             FormFields: {
                 formId: 'role_form',
                 justify : 'center',
@@ -91,12 +143,8 @@ class Roles extends Component {
                 ],
             }
         }
-    }
+    }    
 
-    handleDelete =  (key)=>{
-        const dataSource = [...this.state.data];
-        this.setState({ data: dataSource.filter(item => item.key !== key) });
-    }
 
     toggelModal =(status)=>{
         this.setState({openModal:status})
@@ -149,6 +197,10 @@ class Roles extends Component {
         })
     }
 
+    callPermission = () =>{
+        this.setState({perModal:true})
+    }
+
     submit = () =>{
         this.roleForm.current.refs.role_form.submit();
     }
@@ -171,7 +223,7 @@ class Roles extends Component {
                 </Row>
                 {this.state.openModal ? 
                     <Modal
-                        title="Add Time Off"
+                        title= {this.state.editTimeoff? "Edit Role" : "Add New Role"}
                         centered
                         visible={this.state.openModal}
                         onOk={()=>{this.submit()}}
@@ -179,9 +231,10 @@ class Roles extends Component {
                         onCancel={()=>{this.toggelModal(false)}}
                         width={600}
                     >
-                        <Form ref={this.roleForm} Callback={this.Callback} FormFields= {this.state.FormFields} />   
+                        <Form ref={this.roleForm} Callback={() => this.Callback()} FormFields= {this.state.FormFields} />   
                     </Modal> : null
                 }
+                <Permission isVisible={this.state.perModal} Callback={()=>{this.setState({perModal:false})}} data={this.state.perData}/>
             </>
         )
     }

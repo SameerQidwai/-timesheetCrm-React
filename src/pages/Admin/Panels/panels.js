@@ -189,7 +189,7 @@ class Panels extends Component {
                 </Row>
                 {this.state.openModal?
                     <Modal
-                        title="Add Time Off"
+                        title={this.state.editTimeoff? 'Edit Panel' : 'Add New Panel'}
                         centered
                         visible={this.state.openModal}
                         onOk={()=>{this.submit()}}

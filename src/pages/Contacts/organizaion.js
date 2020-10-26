@@ -39,7 +39,7 @@ class Organizations extends Component {
                                     Delete
                                 </Popconfirm>
                             </Menu.Item >
-                            <Menu.Item >Edit</Menu.Item>
+                            <Menu.Item onClick={()=>{this.getRecord(record)}}>Edit</Menu.Item>
                             <Menu.Item >
                                 {/* <Link to={{ pathname: '/admin/calender/holidays' ,query: record.key}} className="nav-link"> */}
                                     View
@@ -74,25 +74,333 @@ class Organizations extends Component {
             editTimeoff:false,
             FormFields: {
                 formId: 'org_form',
-                justify : 'center',
-                FormCol: 20,
-                FieldSpace: { xs: 12, sm: 16, md: 122},
-                layout: {labelCol: { span: 12 }},
+                FormCol: 24,
+                FieldSpace:24,
                 justifyField:'center',
-                // FormLayout:'inline', 
+                FormLayout:'vertical', 
                 size: 'middle',
                 fields:[
                     {
                         object:'obj', 
-                        filedCol:20,
-                        layout:  {labelCol: { span: 4 },
-                        wrapperCol: { span: 0 }},
+                        filedCol:8,
                         key: 'name',
-                        label:'Title',
+                        label:'Name',
                         size: 'small',            
                         // rules:[{ required: true }],
                         type: 'input',
                         labelAlign: 'left',
+                        itemStyle:{marginBottom:'10px'},
+
+                    },
+                    {
+                        object:'obj', 
+                        filedCol:8,
+                        key: 'address',
+                        label:'Address',
+                        size: 'small',            
+                        // rules:[{ required: true }],
+                        type: 'input',
+                        labelAlign: 'left',
+                        itemStyle:{marginBottom:'10px'},
+
+                    },
+                    {
+                        object:'obj', 
+                        filedCol:8,
+                        key: 'phone',
+                        label:'Phone',
+                        size: 'small',            
+                        // rules:[{ required: true }],
+                        type: 'input',
+                        labelAlign: 'left',
+                        itemStyle:{marginBottom:'10px'},
+
+                    },
+                    {
+                        object:'obj', 
+                        filedCol:8,
+                        key: 'email',
+                        label:'Email',
+                        size: 'small',            
+                        // rules:[{ required: true }],
+                        type: 'input',
+                        labelAlign: 'left',
+                        itemStyle:{marginBottom:'10px'},
+
+                    },
+                    {
+                        object:'obj', 
+                        filedCol:8,
+                        key: 'contactName',
+                        label:'Contant Name',
+                        size: 'small',            
+                        // rules:[{ required: true }],
+                        type: 'input',
+                        labelAlign: 'left',
+                        itemStyle:{marginBottom:'10px'},
+
+                    },
+                    {
+                        object:'obj', 
+                        filedCol:8,
+                        key: 'contact_Name',
+                        label:'Contact Mobile',
+                        size: 'small',            
+                        // rules:[{ required: true }],
+                        type: 'input',
+                        labelAlign: 'left',
+                        itemStyle:{marginBottom:'10px'},
+
+                    },
+                    {
+                        object:'obj', 
+                        filedCol:8,
+                        key: 'ABN',
+                        label:'ABN',
+                        size: 'small',            
+                        // rules:[{ required: true }],
+                        type: 'input',
+                        labelAlign: 'left',
+                        itemStyle:{marginBottom:'10px'},
+
+                    },
+                    {
+                        object:'obj', 
+                        filedCol:8,
+                        key: 'Tax_Code',
+                        label:'Tax Code',
+                        size: 'small',            
+                        // rules:[{ required: true }],
+                        type: 'input',
+                        labelAlign: 'left',
+                        itemStyle:{marginBottom:'10px'},
+
+                    },
+                    {
+                        object:'obj', 
+                        filedCol:8,
+                        key: 'EBA',
+                        label:'Expected Business Amount',
+                        size: 'small',            
+                        // rules:[{ required: true }],
+                        type: 'input',
+                        labelAlign: 'left',
+                        itemStyle:{marginBottom:'10px'},
+
+                    },
+                    {
+                        object:'obj', 
+                        filedCol:8,
+                        key: 'CTI',
+                        label:'Client Terms Info',
+                        size: 'small',            
+                        // rules:[{ required: true }],
+                        type: 'input',
+                        labelAlign: 'left',
+                        itemStyle:{marginBottom:'10px'},
+
+                    },
+                    {
+                        object:'obj', 
+                        filedCol:8,
+                        key: 'invoice_email',
+                        label:'Invoice Email',
+                        size: 'small',            
+                        // rules:[{ required: true }],
+                        type: 'input',
+                        labelAlign: 'left',
+                        itemStyle:{marginBottom:'10px'},
+
+                    },
+                    {
+                        object:'obj', 
+                        filedCol:8,
+                        key: 'website',
+                        label:'Website',
+                        size: 'small',            
+                        // rules:[{ required: true }],
+                        type: 'input',
+                        labelAlign: 'left',
+                        itemStyle:{marginBottom:'10px'},
+
+                    },
+                    {
+                        object:'obj', 
+                        filedCol:8,
+                        key: 'insurer_PI',
+                        label:'Insurer PI',
+                        size: 'small',            
+                        // rules:[{ required: true }],
+                        type: 'input',
+                        labelAlign: 'left',
+                        itemStyle:{marginBottom:'10px'},
+
+                    },
+                    {
+                        object:'obj', 
+                        filedCol:8,
+                        key: 'insurer_PL',
+                        label:'Insurer PL',
+                        size: 'small',            
+                        // rules:[{ required: true }],
+                        type: 'input',
+                        labelAlign: 'left',
+                        itemStyle:{marginBottom:'10px'},
+
+                    },
+                    {
+                        object:'obj', 
+                        filedCol:8,
+                        key: 'insurer_WC',
+                        label:'Insurer WC',
+                        size: 'small',            
+                        // rules:[{ required: true }],
+                        type: 'input',
+                        labelAlign: 'left',
+                        itemStyle:{marginBottom:'10px'},
+
+                    },
+                    {
+                        object:'obj', 
+                        filedCol:8,
+                        key: 'policy_PI',
+                        label:'Policy Number PI',
+                        size: 'small',            
+                        type: 'input',
+                        labelAlign: 'left',
+                        itemStyle:{marginBottom:'10px'},
+
+                    },
+                    {
+                        object:'obj', 
+                        filedCol:8,
+                        key: 'policy_PL',
+                        label:'Policy Number PL',
+                        size: 'small',            
+                        // rules:[{ required: true }],
+                        type: 'input',
+                        labelAlign: 'left',
+                        itemStyle:{marginBottom:'10px'},
+
+                    },
+                    {
+                        object:'obj', 
+                        filedCol:8,
+                        key: 'policy_WC',
+                        label:'Policy Number WC',
+                        size: 'small',            
+                        // rules:[{ required: true }],
+                        type: 'input',
+                        labelAlign: 'left',
+                        itemStyle:{marginBottom:'10px'},
+
+                    },
+                    {
+                        object:'obj', 
+                        filedCol:8,
+                        key: 'Coverage_WC',
+                        label:'Coverage WC',
+                        size: 'small',            
+                        // rules:[{ required: true }],
+                        type: 'Select',
+                        labelAlign: 'left',
+                        itemStyle:{marginBottom:'10px'},
+
+                    },
+                    {
+                        object:'obj', 
+                        filedCol:8,
+                        key: 'parent_id',
+                        label:'Parent Organization',
+                        size: 'small',            
+                        // rules:[{ required: true }],
+                        type: 'Select',
+                        labelAlign: 'left',
+                        itemStyle:{marginBottom:'10px'},
+
+                    },
+                    {
+                        size: 'small', 
+                        filedCol:8,           
+                        type: 'Span',
+                        labelAlign: 'right',
+                        itemStyle:{marginBottom:'10px'},
+
+                    },
+                    {
+                        Placeholder: 'Sum Insured:',
+                        label:'.',
+                        size: 'small',            
+                        type: 'Span',
+                        labelAlign: 'right',
+                        itemStyle:{marginBottom:'10px'},
+
+                    },
+                    {
+                        object:'obj', 
+                        key: 'SumIns_PI',
+                        label:'PI',
+                        size: 'small',            
+                        type: 'InputNumber',
+                        labelAlign: 'left',
+                        itemStyle:{marginBottom:'10px'},
+
+                    },
+                    {
+                        object:'obj', 
+                        filedCol:4,
+                        key: 'SumIns_PL',
+                        label:'PL',
+                        size: 'small',            
+                        // rules:[{ required: true }],
+                        type: 'InputNumber',
+                        labelAlign: 'left',
+                        itemStyle:{marginBottom:'10px'},
+
+                    },
+                    {
+                        Placeholder: 'Insurance Expiry:',
+                        label:'.',
+                        size: 'small',            
+                        type: 'Span',
+                        labelAlign: 'right',
+                        itemStyle:{marginBottom:'10px'},
+
+                    },
+                    {
+                        object:'obj', 
+                        // filedCol:4,
+                        key: 'expiry_PI',
+                        label:'PI',
+                        size: 'small',            
+                        type: 'DatePicker',
+                        labelAlign: 'left',
+                        itemStyle:{marginBottom:'10px'},
+
+                    },
+                    {
+                        object:'obj', 
+                        // filedCol:4,
+                        key: 'expiry_PL',
+                        label:'PL',
+                        size: 'small',            
+                        // rules:[{ required: true }],
+                        type: 'DatePicker',
+                        labelAlign: 'left',
+                        itemStyle:{marginBottom:'10px'},
+
+                    },
+                    {
+                        object:'obj', 
+                        // filedCol:4,
+                        key: 'SumIns_Wc',
+                        label:'Wc',
+                        size: 'small',            
+                        // rules:[{ required: true }],
+                        type: 'DatePicker',
+                        labelAlign: 'left',
+                        itemStyle:{marginBottom:'10px'},
+
                     },
                 ],
             }
@@ -134,7 +442,7 @@ class Organizations extends Component {
     }
 
     getRecord = (data) => {
-
+        console.log(data)
         this.setState({
             FormFields: {...this.state.FormFields, initialValues: {obj:data}},
             editTimeoff:data.key
@@ -184,13 +492,13 @@ class Organizations extends Component {
                 </Row>
                 {this.state.openModal ? 
                     <Modal
-                        title="Add Organizations"
+                        title= {this.state.editTimeoff? 'Edit Organization' : "Add New Organization"}
                         centered
                         visible={this.state.openModal}
                         onOk={()=>{this.submit()}}
                         okText={this.state.editTimeoff? 'Edit' : 'Save'}
                         onCancel={()=>{this.toggelModal(false)}}
-                        width={600}
+                        width={1200}
                     >
                         <Form ref={this.orgForm} Callback={this.Callback} FormFields= {this.state.FormFields} />   
                     </Modal> : null

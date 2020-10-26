@@ -27,7 +27,7 @@ fields={
             labelAlign: 'label  align in the column of Form ',
             hint: 'hint',
             data: 'Option for the fields that needs i.e checkbox selectbox',
-            formStyle: 'put style on from item for the field',
+            itemStyle: 'put style on from item for the field',
             fieldStyle = 'put style directly to the field ',
             valuePropName:'"checked" for the field name as checkbox and switch',
             func : ' (value, e) function on the field onChange or click'  

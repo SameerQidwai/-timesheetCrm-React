@@ -212,7 +212,7 @@ class CalenerHolidays extends Component {
                 </Row>
                 { this.state.openModal ?
                     <Modal
-                        title="Add Holiday"
+                        title= {this.state.editTimeoff? 'Edit Holiday' : "Add New Holiday"}
                         centered
                         visible={this.state.openModal}
                         onOk={()=>{this.submit()}}

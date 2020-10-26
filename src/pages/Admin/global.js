@@ -23,7 +23,7 @@ class Global extends Component{
             justify : 'center',
             FormCol: 20,
             FieldSpace: { xs: 12, sm: 16, md: 122},
-            // layout: {labelCol: { span: 12 }},
+            layout: {labelCol: { span: 3 }},
             justifyField:'right',
             // FormLayout:'inline', 
             size: 'small',
@@ -34,9 +34,6 @@ class Global extends Component{
                 {
                     object:'obj',
                     filedCol:20,
-                    layout:  {
-                        wrapperCol: { span: 0 }
-                    },
                     Placeholder: 'Organization Information',
                     type: 'Title',
                     size:'small',
@@ -46,15 +43,13 @@ class Global extends Component{
                 {
                     object:'obj',
                     filedCol:20,
-                    layout:  {labelCol: { span: 4 },
-                    wrapperCol: { span: 0 }},
                     key: 'email',
                     Placeholder: 'Email Address',
                     label:'Email',
                     size:'small',
                     // rules:[{ required: true }],
                     type: 'input',
-                    labelAlign: 'left',
+                    labelAlign: 'right',
                     // hint: 'write your Name',
                 },
                 {
@@ -68,8 +63,7 @@ class Global extends Component{
                     // rules:[{ required: true, message: 'Insert your Password Please' }],
                     type: 'Select',
                     data:[{value:'P',label:'Pakistan'}, {value:'A',label:'America'},{ value:'C',label:'Canada'}],
-                    layout: {labelCol: { span: 4}},
-                    labelAlign: 'left',
+                    labelAlign: 'right',
                     func: function func (value, e){
                             switch (value) {
                                 case 'P':
@@ -101,8 +95,7 @@ class Global extends Component{
                     data3: [{value:'Toronto'}],
                     // rules:[{ required: true, message: 'Insert your Password Please' }],
                     type: 'Select',
-                    layout: {labelCol: { span: 4}},
-                    labelAlign: 'left',
+                    labelAlign: 'right',
                     // hidden: false    
                 },
                 {
@@ -114,8 +107,7 @@ class Global extends Component{
                     size:'small',
                     // rules:[{ required: true, message: 'Insert your Password Please' }],
                     type: 'Select',
-                    layout: {labelCol: { span: 4}},
-                    labelAlign: 'left',
+                    labelAlign: 'right',
                     // hidden: false    
                 },
                 {
@@ -127,8 +119,7 @@ class Global extends Component{
                     size:'small',
                     // rules:[{ required: true, message: 'Insert your Password Please' }],
                     type: 'textarea',
-                    layout: {labelCol: { span: 4}},
-                    labelAlign: 'left',
+                    labelAlign: 'right',
                     // hidden: false    
                 },
                 {
@@ -140,8 +131,7 @@ class Global extends Component{
                     size:'small',
                     // rules:[{ required: true, message: 'Insert your Password Please' }],
                     type: 'input',
-                    layout: {labelCol: { span: 4}},
-                    labelAlign: 'left',
+                    labelAlign: 'right',
                     // hidden: false    
                 },
                 {
@@ -153,16 +143,12 @@ class Global extends Component{
                     size:'small',
                     // rules:[{ required: true, message: 'Insert your Password Please' }],
                     type: 'input',
-                    layout: {labelCol: { span: 4}},
-                    labelAlign: 'left',
+                    labelAlign: 'right',
                     // hidden: false    
                 },
                 {
                     // object:'obj',
                     filedCol:20,
-                    layout:  {
-                        wrapperCol: { span: 0 }
-                    },
                     Placeholder: 'General Settings',
                     type: 'Title',
                     mode: 4,
@@ -176,8 +162,8 @@ class Global extends Component{
                     size:'small',
                     // rules:[{ required: true, message: 'Insert your Password Please' }],
                     type: 'inputNumber',
-                    layout: {labelCol: { span: 4}},
-                    labelAlign: 'left',
+                    labelCol: { span: 4},
+                    labelAlign: 'right',
                     // hidden: false    
                 },
                 {
@@ -189,8 +175,8 @@ class Global extends Component{
                     size:'small',
                     // rules:[{ required: true, message: 'Insert your Password Please' }],
                     type: 'input',
-                    layout: {labelCol: { span: 4}},
-                    labelAlign: 'left',
+                    labelCol: { span: 3},
+                    labelAlign: 'right',
                     // hidden: false    
                 },
                 {
@@ -202,15 +188,15 @@ class Global extends Component{
                     size:'small',
                     // rules:[{ required: true, message: 'Insert your Password Please' }],
                     type: 'input',
-                    layout: {labelCol: { span: 4}},
-                    labelAlign: 'left',
+                    labelCol: { span: 3},
+                    labelAlign: 'right',
                     // hidden: false    
                 },
                 {
                     filedCol:20,
                     mode:'horizontal',
                     type: 'Divider',
-                    formStyle:{padding:'0px', margin:'0px'}
+                    itemStyle:{padding:'0px', margin:'0px'}
                     // hidden: false    
                 },
             ]
