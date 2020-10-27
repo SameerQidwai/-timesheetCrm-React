@@ -11,6 +11,7 @@ import Login from '../../pages/Login/login-page'
 import Organizations from '../../pages/Contacts/organizaion'
 import Contact from '../../pages/Contacts/contact'
 // import Leads from '../../pages/Contacts/leads'
+import TimeSheet from '../../pages/time_sheet'
 
 import Admin from '../../pages/Admin/admin-drawer/admin-sidebar'
 
@@ -77,6 +78,10 @@ const pageLinks = [ // Page link and router
     {
         component: Contact,
         link: '/leads'
+    },
+    {
+        component: TimeSheet,
+        link: '/time-sheet'
     },
 ]
 

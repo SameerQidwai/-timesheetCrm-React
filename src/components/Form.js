@@ -108,7 +108,7 @@ class Forms extends Component {
                         }
                         {  btns.btn? //NAt in use corrently.. save it for sometime
                             <Col span={btns.filedCol} offset={btns.filedOffset}>
-                                <Row justify={btns.justify}>
+                                <Row justify={btns.justify} style={btns.backstyle} >
                                     <Item style={btns.style}>
                                         <Space size={btns.size}>
                                             {subBtn.map((item,j) => (

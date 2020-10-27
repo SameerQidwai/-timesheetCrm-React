@@ -12,7 +12,7 @@ function App() {
       <Router>
         {
           login !== 'sameer' ?
-          <Login/>
+          <Login />
           :
             <Layout/>
         }
