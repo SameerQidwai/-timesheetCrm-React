@@ -30,7 +30,15 @@ fields={
             itemStyle: 'put style on from item for the field',
             fieldStyle = 'put style directly to the field ',
             valuePropName:'"checked" for the field name as checkbox and switch',
-            func : ' (value, e) function on the field onChange or click'  
+            func : ' (value, e) function on the field onChange or click',
+            rangMin: 'To set min number to a input field',
+            rangMax: 'To set max number to a input field',
+            default: 'might work n something... form initial value is working at the time',
+            showTime: 'boolean for datePicker to show Time as well and string for TimePicker for format...',
+            shape: 'to set shape for Button ',
+            size: 'set Size of any element',
+            func: 'onChange function on anyFiled',
+            fieldStyle: 'style on the field'
         } 
     ]
 }

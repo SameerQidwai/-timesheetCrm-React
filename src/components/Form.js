@@ -50,8 +50,8 @@ class Forms extends Component {
         const btns = FormFields.btns ? FormFields.btns : {}
         const subBtn = btns.btn ? btns.btn : []
         return (
-            <div>
-            {/* <Row justify={FormFields.justify} style={FormFields.backstyle} gutter={FormFields.FieldSpace}> */}
+            // <div>
+            // {/* <Row justify={FormFields.justify} style={FormFields.backstyle} gutter={FormFields.FieldSpace}> */}
                 <Col span={FormFields.FormCol}>
                     <Form
                         id= {FormFields.formId}
@@ -131,8 +131,8 @@ s                                                >
                         }
                     </Form>
                 </Col>
-            {/* </Row> */}
-            </div>
+            // {/* </Row> */}
+            // </div>
         )
     }
 
@@ -164,10 +164,10 @@ s                                                >
                 item = <DatePicker picker={mode} showTime={showTime} size={size} defaultValue={defaultValue} />
                 break;
             case 'TimePicker':
-                item = <TimePicker format="h:mm a" use12Hours={mode==='use12Hours'} size={size} defaultValue={defaultValue}/>
+                item = <TimePicker format={showTime} use12Hours={mode==='use12Hours'} size={size} defaultValue={defaultValue}/>
                 break;
             case 'TimeRange':
-                item = <TimeRange format="h:mm a" use12Hours={mode==='use12Hours'} size={size} defaultValue={defaultValue}/>
+                item = <TimeRange format={showTime} use12Hours={mode==='use12Hours'} size={size} defaultValue={defaultValue}/>
                 break;
             case 'RangePicker':
                 item = <RangePicker picker={mode} showTime={showTime}  size={size} defaultValue={defaultValue}/>
@@ -185,7 +185,7 @@ s                                                >
                 item = <span style={style} onClick={func}>{placeholder}</span>
                 break;
             case 'Divider':
-                item = <Divider type={mode} style={shape}></Divider>
+                item = <Divider type={mode} style={style}></Divider>
                 break;
             case 'Button':
                 item = <Button type={mode} shape={shape} block={max} onClick={func} size={size} >{placeholder}</Button>

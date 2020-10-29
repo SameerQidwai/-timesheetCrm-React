@@ -1,9 +1,7 @@
 import React, { Component } from "react";
 
-import { Row, Col, Table, Typography, Modal, Popconfirm } from "antd";
+import { Row, Col, Table, Typography, Popconfirm, Form, Input } from "antd";
 import { CloseCircleOutlined, EditFilled } from "@ant-design/icons"; //Icons
-import Form from "../components/Form";
-import moment from "moment";
 
 const { Title } = Typography;
 //inTable insert
@@ -21,7 +19,20 @@ class TimeSheet extends Component {
         width: 300,
         render: (value, record, dataIndex) => (
           <Row justify="space-between">
-            <Col span={20}>{value}</Col>
+            <Col span={20}>
+              {record.edit ? (
+                <Form.Item
+                  style={{
+                    margin: 0,
+                  }}
+                  name={dataIndex}
+                >
+                  <Input />
+                </Form.Item>
+              ) : (
+                value
+              )}
+            </Col>
             <Col span={3}>
               <Row justify="space-between">
                 <Col>
@@ -35,7 +46,12 @@ class TimeSheet extends Component {
                   </Popconfirm>
                 </Col>
                 <Col>
-                  <EditFilled style={{ color: "blue", fontSize: "1.2em" }} />
+                  <EditFilled
+                    onClick={() => {
+                      this.editProject("project", dataIndex);
+                    }}
+                    style={{ color: "blue", fontSize: "1.2em" }}
+                  />
                 </Col>
               </Row>
             </Col>
@@ -82,6 +98,7 @@ class TimeSheet extends Component {
         },
         {
           project: "Project 2",
+          edit: false,
           1: {
             start: "HH:MM",
             end: "HH:MM",
@@ -115,6 +132,7 @@ class TimeSheet extends Component {
         },
         {
           project: "Project 3",
+          edit: false,
           1: {
             start: "HH:MM",
             end: "HH:MM",
@@ -146,14 +164,15 @@ class TimeSheet extends Component {
             break: "MM",
           },
         },
-        { project: "Project 4" },
-        { project: "Project 5" },
-        { project: "Project 6" },
-        { project: "Project 7" },
-        { project: "Project 8" },
-        { project: "Project 9" },
+        { project: "Project 4", edit: false },
+        { project: "Project 5", edit: false },
+        { project: "Project 6", edit: false },
+        { project: "Project 7", edit: false },
+        { project: "Project 8", edit: false },
+        { project: "Project 9", edit: false },
         {
           project: "Project 10",
+          edit: false,
           31: {
             start: "HH:MM",
             end: "HH:MM",
@@ -162,40 +181,9 @@ class TimeSheet extends Component {
         },
         {
           project: "Project 11",
+          edit: false,
         },
       ],
-
-      FormFields: {
-        formId: "time_form",
-        justify: "center",
-        FormCol: 24,
-        FieldSpace: { xs: 12, sm: 16, md: 122 },
-        // layout: { labelCol: { span: 8 } },
-        // FormLayout:'inline',
-        size: "middle",
-        fields: [
-          {
-            object: "obj",
-            filedCol: 15,
-            // layout: { labelCol: { span: 4 }, wrapperCol: { span: 0 } },
-            key: "start",
-            label: "Time",
-            labelAlign: "right",
-            type: "TimeRange",
-            showTime: "hh:mm a",
-          },
-          {
-            object: "obj",
-            filedCol: 15,
-            // labelCol: { span: 4 },
-            key: "break",
-            label: "Break",
-            labelAlign: "right",
-            type: "TimePicker",
-            showTime: "HH",
-          },
-        ],
-      },
     };
   }
 
@@ -204,8 +192,8 @@ class TimeSheet extends Component {
   };
 
   Columns = () => {
-    let date = new Date("2020/2/1").setDate(1);
-    let month = new Date(date).getMonth();
+    let month = 9;
+    let date = new Date().setDate(1);
     const monthChnage = month;
 
     while (month === monthChnage) {
@@ -218,24 +206,14 @@ class TimeSheet extends Component {
         key: `${numDate}`,
         width: 200,
         align: "center",
-        render: (value, record, rowIndex, numDate) =>
+        render: (value, record, rowIndex) =>
           value ? (
-            <Row
-              style={{ border: "1px solid" }}
-              onClick={() => console.log(value, rowIndex, numDate)}
-            >
+            <Row style={{ border: "1px solid" }}>
               <Col span={24}>Start Time: {value["start"]}</Col>
               <Col span={24}>End Time: {value["end"]}</Col>
               <Col span={24}>Break: {value["break"]}</Col>
             </Row>
           ) : null,
-        onCell: (record, rowIndex) => ({
-          record,
-          onClick: (event) => {
-            console.log("onClick", record, rowIndex, numDate);
-            // this.getRecord(record, rowIndex);
-          },
-        }),
       });
 
       date = new Date(date).setDate(new Date(date).getDate() + 1);
@@ -261,23 +239,21 @@ class TimeSheet extends Component {
 
     this.setState({ data: data });
   }
+  editProject(column, row) {
+    console.log(column, row);
+    let data = this.state.data;
+    data.forEach((el, index) => {
+      if (index === row) {
+        el.edit = true;
+      } else {
+        el.edit = false;
+      }
+    });
 
-  getRecord = (data, index, colkey) => {
-    console.log(data, index, colkey);
-    // this.setState({
-    //   FormFields: {...this.state.FormFields, initialValues: {obj:data}},
-    //   editTimeoff:data.key
-    // })
-
-    // this.toggelModal(true)
-  };
-  submit = () => {
-    this.dynamoForm.current.refs.time_form.submit();
-  };
-  // getData = () => {};
-  Callback = (value) => {
-    console.log(value);
-  };
+    this.setState({
+      data: data,
+    });
+  }
 
   render() {
     return (
@@ -290,36 +266,6 @@ class TimeSheet extends Component {
           bordered
           dataSource={this.state.data}
         />
-        <Modal
-          title="Edit TimeSheet"
-          centered
-          visible={this.state.isVisible}
-          okText="Save"
-          width={640}
-          pagination={false}
-          onCancel={() => {
-            this.setState({ isVisible: false });
-          }}
-          onOk={() => {
-            this.submit();
-          }}
-        >
-          <Row>
-            <Form
-              ref={this.dynamoForm}
-              Callback={this.Callback}
-              FormFields={this.state.FormFields}
-              onCell={(record, rowIndex) => {
-                return {
-                  onClick: () => {
-                    console.log("record", record, "rowIndex", rowIndex);
-                    this.getRecord(record, rowIndex);
-                  }, // click header row
-                };
-              }}
-            />
-          </Row>
-        </Modal>
       </div>
     );
   }
