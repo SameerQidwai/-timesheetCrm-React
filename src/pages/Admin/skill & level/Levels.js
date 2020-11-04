@@ -48,28 +48,23 @@ class Levels extends Component {
             data:[
                 {
                     key:1,
-                    level: 'item_1',
-                    priority: 1
+                    level: 'Superstar',
                 },
                 {
                     key:2,
-                    level: 'item_2',
-                    priority: 3
+                    level: 'Senior',
                 },
                 {
                     key:3,
-                    level: 'item_3',
-                    priority: 2
+                    level: 'Middle',
                 },
                 {
                     key:4,
-                    level: 'item_4',
-                    priority: 4
+                    level: 'Junior',
                 },
                 {
                     key:5,
-                    level: 'item_5',
-                    priority: 5
+                    level: 'Trainee',
                 }
             ],
             editLevel:false,

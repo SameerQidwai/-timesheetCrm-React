@@ -58,13 +58,40 @@ class PanelInfo extends Component {
             {value:'Stuff',label:'Stuff'},
         ]
 
+        this.skill_pirority =[
+            {
+                value:1,
+                label: 'Superstar',
+            },
+            {
+                value:2,
+                label: 'Senior',
+            },
+            {
+                value:3,
+                label: 'Middle',
+            },
+            {
+                value:4,
+                label: 'Junior',
+            },
+            {
+                value:5,
+                label: 'Trainee',
+            }
+        ]
         this.state = {
             openModal:false,
+            mergeObj: {},
+            form1Submitted: false,
+            form2Submitted: false,
+            editTimeoff: false,
 
             data1:[
                 {
                     key:1,
                     skill: 'Ux Developer',
+                    standard: 'Front developer',
                     levels: {
                         level0: 'Beginner', pirority0: 1, stceil0: 11, ltceil0: 12,
                         level1: 'Intermediate Class 1', pirority1: 2, stceil1: 11, ltceil1: 12,
@@ -76,6 +103,7 @@ class PanelInfo extends Component {
                 {
                     key:2,
                     skill: 'UI developer',
+                    standard: 'Actors',
                     levels: {
                         level0: 'Beginner', pirority0: 1, stceil0: 11, ltceil0: 12,
                         level1: 'Intermediate Class 1', pirority1: 2, stceil1: 11, ltceil1: 12,
@@ -101,6 +129,7 @@ class PanelInfo extends Component {
                 {
                     key:1,
                     skill: 'Producer',
+                    standard: 'Producer',
                     levels: {
                         level0: 'Beginner', pirority0: 1, stceil0: 11, ltceil0: 12,
                         level1: 'Intermediate Class 1', pirority1: 2, stceil1: 11, ltceil1: 12,
@@ -112,6 +141,7 @@ class PanelInfo extends Component {
                 {
                     key:2,
                     skill: 'Director',
+                    standard: 'Director',
                     levels: {
                         level0: 'Beginner', pirority0: 1, stceil0: 11, ltceil0: 12,
                         level1: 'Intermediate Class 1', pirority1: 2, stceil1: 11, ltceil1: 12,
@@ -122,6 +152,7 @@ class PanelInfo extends Component {
                 {
                     key:3,
                     skill: 'Actors',
+                    standard: 'Actors',
                     levels: {
                         level0: 'Beginner', pirority0: 1, stceil0: 11, ltceil0: 12,
                         level1: 'Intermediate ', pirority1: 2, stceil1: 11, ltceil1: 12,
@@ -131,6 +162,7 @@ class PanelInfo extends Component {
                 {
                     key:4,
                     skill: 'Camera Man',
+                    standard: 'Camera Man',
                     levels: {
                         
                         level0: 'Intermediate Class 2', pirority0: 1, stceil0: 11, ltceil0: 12,
@@ -141,6 +173,7 @@ class PanelInfo extends Component {
                 {
                     key:1,
                     skill: 'civil Engineer',
+                    standard: 'civil Engineer',
                     levels: {
                         level0: 'Beginner', pirority0: 1, stceil0: 11, ltceil0: 12,
                         level1: 'Expert', pirority1: 3, stceil1: 11, ltceil1: 12,
@@ -149,6 +182,7 @@ class PanelInfo extends Component {
                 {
                     key:2,
                     skill: 'Technician',
+                    standard: 'Camera Man',
                     levels: {
                         level0: 'Beginner', pirority0: 1, stceil0: 11, ltceil0: 12,
                         level1: 'Intermediate Class 1', pirority1: 2, stceil1: 11, ltceil1: 12,
@@ -158,6 +192,7 @@ class PanelInfo extends Component {
                 {
                     key:3,
                     skill: 'Labour',
+                    standard: 'Actors',
                     levels: {
                         level0: 'Beginner', pirority0: 1, stceil0: 11, ltceil0: 12,
                     }
@@ -165,6 +200,7 @@ class PanelInfo extends Component {
                 {
                     key:4,
                     skill: 'Stuff',
+                    standard: 'Stuff',
                     levels: {
                         level0: 'Expert', pirority0: 3, stceil0: 11, ltceil0: 12,
                     }
@@ -172,26 +208,34 @@ class PanelInfo extends Component {
             ],
             data: [],
 
-            mergeObj: {},
-            form1Submitted: false,
-            form2Submitted: false,
-            
             FormFields: {
                 formId: 'title_form',
                 justify : 'center',
                 FormCol: 24,
                 FieldSpace: { xs: 12, sm: 16, md: 12},
-                layout: {labelCol: { span: 2 }},
+                layout: {labelCol: { span: 4 }},
                 justifyField:'center',
                 FormLayout:'inline', 
                 size: 'small',
                 fields:[
                     { 
                         object:'obj',
-                        filedCol:24,
-                        layout:  { wrapperCol: { span: 22 } },
+                        filedCol:12,
+                        wrapperCol: { span: 20 },
                         key: 'skill',
                         label:'Skill',
+                        size:'small',
+                        rules:[{ required: true, message:'You are not good to go' }],
+                        type: 'Input',
+                        labelAlign: 'left',
+                        itemStyle:{ marginBottom:'5px' }
+                    },
+                    { 
+                        object:'obj',
+                        filedCol:12,
+                        labelCol:{ span:7} ,
+                        key: 'standard',
+                        label:'Standard',
                         size:'small',
                         rules:[{ required: true, message:'You are not good to go' }],
                         type: 'Select',
@@ -201,7 +245,6 @@ class PanelInfo extends Component {
                     },
                     {
                         filedCol:24,         
-                        layout:  { wrapperCol: { span: 0 }},
                         Placeholder: 'Add Level',
                         type: 'Button',
                         mode: 'primary',
@@ -225,7 +268,7 @@ class PanelInfo extends Component {
                         size:'small',
                     },
                     {
-                        filedCol:5,
+                        filedCol:7,
                         layout:  {
                             wrapperCol: { offset:1}
                         },
@@ -234,7 +277,7 @@ class PanelInfo extends Component {
                         size:'small',
                     },
                     {
-                        filedCol:5,
+                        filedCol:4,
                         layout:  {
                             wrapperCol: { offset:1}
                         },
@@ -243,7 +286,7 @@ class PanelInfo extends Component {
                         size:'small',
                     },
                     {
-                        filedCol:5,
+                        filedCol:4,
                         layout:  {
                             wrapperCol: { offset:1}
                         },
@@ -266,7 +309,6 @@ class PanelInfo extends Component {
                 // backstyle: {maxHeight:'145px',overflowY: 'auto'},
                 fields: this.newField(0)
             },
-            editTimeoff: false,
         }
     }
 
@@ -292,7 +334,7 @@ class PanelInfo extends Component {
             { 
                 object:'obj',
                 filedCol:8,
-                layout:  { wrapperCol: { span: 23 } },
+                layout:  { wrapperCol: { span: 20 } },
                 key: `level${item_no}`,
                 size:'small',
                 // rules:[{ required: true }],
@@ -302,19 +344,20 @@ class PanelInfo extends Component {
             },
             { 
                 object:'obj',
-                filedCol:5,
+                filedCol:7,
                 layout:  { wrapperCol: { span: 20} },
                 key: `pirority${item_no}`,
                 size:'small',
                 // rules:[{ required: true }],
-                type: 'InputNumber',
+                data: this.skill_pirority,
+                type: 'Select',
                 labelAlign: 'left',
                 itemStyle:{ marginBottom:'5px' }
             },
             { 
                 object:'obj',
-                filedCol:5,
-                layout:  { wrapperCol: { span: 24} },
+                filedCol:4,
+                layout:  { wrapperCol: { span: 20} },
                 key: `stceil${item_no}`,
                 size:'small',
                 // rules:[{ required: true }],
@@ -324,8 +367,8 @@ class PanelInfo extends Component {
             },
             { 
                 object:'obj',
-                filedCol:5,
-                layout:  { wrapperCol: { span: 24} },
+                filedCol:4,
+                layout:  { wrapperCol: { span: 20} },
                 key: `ltceil${item_no}`,
                 size:'small',
                 // rules:[{ required: true }],
@@ -389,13 +432,12 @@ class PanelInfo extends Component {
     }
 
     getRecord = (data, text) => {
-        console.log(data)
-        let result = Object.keys(data.levels).length/4;
+        let result = data.levels ? Object.keys(data.levels).length/4 : 0
         for (let i=1 ;i<result; i++){
             this.state.FormFields_1.fields = this.state.FormFields_1.fields.concat(this.newField(i))
         }
         
-        var obj = {key: data.key, skill:data.skill}
+        var obj = {key: data.key, skill:data.skill, standard:data.standard}
         this.setState({
             FormFields: {...this.state.FormFields, initialValues: {obj:obj}},
             FormFields_1: {...this.state.FormFields_1, initialValues:{obj: data.levels}},
@@ -498,7 +540,7 @@ class PanelInfo extends Component {
                         onOk={()=>{this.submit()}}
                         okText={this.state.editTimeoff? 'Edit' : 'Save'}
                         onCancel={()=>{this.toggelModal(false)}}
-                        width={650}
+                        width={700}
                     >
                         <Row>
                             <Form ref={this.dynamoForm_1} Callback = {this.Callback} FormFields={this.state.FormFields} />

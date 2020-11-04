@@ -41,7 +41,8 @@ class Panels extends Component {
                                 {/* <Link to={{ pathname: `/admin/panels/info/${record.key}` }} className="nav-link"> */}
                                 <Link to={{ pathname: `/admin/panels/info/${record.key}` }}>
                                     Skills
-                                </Link></Menu.Item>
+                                </Link>
+                            </Menu.Item>
                         </Menu>
                     }>
                         <Button  size="small">
@@ -76,35 +77,31 @@ class Panels extends Component {
                 formId: 'time_off',
                 justify : 'center',
                 FormCol: 20,
-                FieldSpace: { xs: 12, sm: 16, md: 122},
-                layout: {labelCol: { span: 12 }},
+                // FieldSpace: { xs: 12, sm: 16, md: 122},
+                layout: {labelCol: { span: 6 }},
                 justifyField:'center',
                 // FormLayout:'inline', 
                 size: 'middle',
                 fields:[
                     {
                         object:'obj',
-                        filedCol:20,
-                        layout:  {labelCol: { span: 4 },
-                        wrapperCol: { span: 0 }},
+                        filedCol:24,
                         key: 'name',
                         label:'Name',
                         size:'small',
                         // rules:[{ required: true }],
                         type: 'input',
-                        labelAlign: 'left',
+                        labelAlign: 'right',
                     },
                     {
                         object:'obj',
-                        filedCol:20,
-                        layout:  {labelCol: { span: 4 },
-                        wrapperCol: { span: 0 }},
+                        filedCol:24,
                         key: 'contact',
                         label:'Contact',
                         size:'small',
                         // rules:[{ required: true }],
                         type: 'input',
-                        labelAlign: 'left',
+                        labelAlign: 'right',
                     },
                 ],
             }
@@ -195,7 +192,7 @@ class Panels extends Component {
                         onOk={()=>{this.submit()}}
                         okText={this.state.editTimeoff? 'Edit' : 'Save'}
                         onCancel={()=>{this.toggelModal(false)}}
-                        width={600}
+                        width={400}
                     >
                         <Form ref={this.dynamoForm} Callback={this.Callback} FormFields = {this.state.FormFields} />   
                     </Modal>:null

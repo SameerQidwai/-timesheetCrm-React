@@ -63,7 +63,7 @@ class TimeOffsPolicy extends Component {
             form1Submitted: false,
             form2Submitted: false,
             
-            FormFields: {
+            FormFields: {//this is for insert new fields
                 formId: 'title_form',
                 justify : 'center',
                 FormCol: 24,
@@ -312,7 +312,7 @@ class TimeOffsPolicy extends Component {
 
     getRecord = (data, text) => {
 
-        let result = Object.keys(data.offs).length/2;
+        let result = data.offs ? Object.keys(data.offs).length/2 : 0
         for (let i=1 ;i<result; i++){
             this.state.FormFields_1.fields = this.state.FormFields_1.fields.concat(this.newField(i))
         }
@@ -376,7 +376,7 @@ class TimeOffsPolicy extends Component {
                         onOk={() => { this.submit() }}
                         okText={this.state.editTimeoff? 'Edit' : 'Save'}
                         onCancel={() => { this.toggelModal(false) }}
-                        width={600}
+                        width={500}
                     >
                         <Row>
                             <Form ref={this.dynamoForm_1} Callback = {this.Callback} FormFields={this.state.FormFields} />
