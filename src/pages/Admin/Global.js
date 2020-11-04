@@ -10,7 +10,7 @@ import '../styles/table.css'
 
 class Global extends Component{
     constructor(props){
-        super(props);
+    super(props);
         this.dynamoForm_1 = React.createRef();
         this.dynamoForm_2 = React.createRef();
 
@@ -25,7 +25,6 @@ class Global extends Component{
             FieldSpace: { xs: 12, sm: 16, md: 122},
             layout: {labelCol: { span: 3 }},
             justifyField:'right',
-            // FormLayout:'inline', 
             size: 'small',
             // Formstyle:{backgroundColor:'white'},
             // backstyle:{backgroundColor:'green'},

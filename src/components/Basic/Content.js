@@ -7,11 +7,11 @@ import { Layout } from "antd";
 
 import Calender from '../Calender/Calender'
 import Froms from '../Form'
-import Login from '../../pages/Login/login-page'
-import Organizations from '../../pages/Contacts/organizaion'
-import Contact from '../../pages/Contacts/contact'
+import Login from '../../pages/Login/Login'
+import Organizations from '../../pages/Contacts/Organizations'
+import Contact from '../../pages/Contacts/Contact'
 // import Leads from '../../pages/Contacts/leads'
-import TimeSheet from '../../pages/time_sheet'
+import TimeSheet from '../../pages/TimeSheet'
 
 import Admin from '../../pages/Admin/admin-drawer/admin-sidebar'
 
@@ -54,6 +54,14 @@ const pageLinks = [ // Page link and router
     {
         component: Admin,
         link: '/admin/roles'
+    },
+    {
+        component: Admin,
+        link: '/admin/standard-levels'
+    },
+    {
+        component: Admin,
+        link: '/admin/skills'
     },
     {
         component: Admin,

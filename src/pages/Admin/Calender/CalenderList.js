@@ -3,10 +3,10 @@ import { Table, Menu, Dropdown, Button, Tag, Row, Col,Typography, Modal } from '
 import { DownOutlined, SettingOutlined, PlusSquareOutlined} from '@ant-design/icons'; //Icons
 import { Link } from 'react-router-dom'
 
-import Form from '../../components/Form';
-import '../styles/table.css'
+import Form from '../../../components/Form';
+import '../../styles/table.css'
 
-import { getList, addToList } from '../../service/calender'
+// import { getList, addToList } from '../../../service/calender'
 
 const { Title } = Typography
 
@@ -19,15 +19,15 @@ class CalenderList extends Component {
 
         this.columns = [
             {
-            title: 'Title',
-            dataIndex: 'title',
-            key: 'title',
+                title: 'Title',
+                dataIndex: 'title',
+                key: 'title',
             },
             {
-            title: 'Status',
-            dataIndex: 'status',
-            key: 'status',
-            align: 'right',
+                title: 'Status',
+                dataIndex: 'status',
+                key: 'status',
+                align: 'right',
             render: status => (
                 <> {
                     <Tag color={!status ? '#7d7b7b': 'green'} key={status}>
@@ -82,7 +82,6 @@ class CalenderList extends Component {
                 FieldSpace: { xs: 12, sm: 16, md: 122},
                 layout: {labelCol: { span: 12 }},
                 justifyField:'center',
-                // FormLayout:'inline', 
                 size: 'middle',
                 fields:[
                     {

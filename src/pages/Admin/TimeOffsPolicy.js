@@ -95,7 +95,8 @@ class TimeOffsPolicy extends Component {
                         size:'small',
                         func: function func (value, e){
                             let obj = this.state.FormFields_1.fields[this.state.FormFields_1.fields.length-1]// get the inster number for keys
-                            const item_no = obj ? parseInt(obj.key) :0
+                            console.log(obj)
+                            const item_no = obj ? parseInt(obj.key) +1:0
                             this.state.FormFields_1.fields = this.state.FormFields_1.fields.concat(...this.newField(item_no));
                             this.setState({
                                 FormFields_1: this.state.FormFields_1
@@ -122,20 +123,19 @@ class TimeOffsPolicy extends Component {
 
             FormFields_1: {
                 formId: 'hours_form',
-                justify : 'center',
+                justify : 'space-between',
                 FormCol: 24,
                 FieldSpace: { xs: 12, sm: 16, md: 12},
                 layout: {labelCol: { span: 12 }},
-                justifyField:'center',
                 FormLayout:'inline', 
                 size: 'small',
-                backstyle: {maxHeight:'115px',overflowY: 'auto'},
+                // backstyle: {maxHeight:'115px',overflowY: 'auto'},
                 fields:[
                     { 
                         object:'obj',
                         filedCol:16,
                         layout:  { wrapperCol: { span: 23 } },
-                        key: 'timeoff0',
+                        key: `timeoff0`,
                         size:'small',
                         // rules:[{ required: true }],
                         type: 'Select',
@@ -147,7 +147,7 @@ class TimeOffsPolicy extends Component {
                         object:'obj',
                         filedCol:5,
                         layout:  { wrapperCol: { span: 20, offset:2} },
-                        key: 'hours0',
+                        key: `hours0`,
                         size:'small',
                         // rules:[{ required: true }],
                         type: 'InputNumber',
@@ -185,6 +185,7 @@ class TimeOffsPolicy extends Component {
 
     newField = (item_no) =>{ //inserting new fields in modals
         const splice_key = [`timeoff${item_no}`, `hours${item_no}`, item_no] 
+        // console.log(splice_key)
         return [
             { 
                 object:'obj',
@@ -377,8 +378,12 @@ class TimeOffsPolicy extends Component {
                         onCancel={() => { this.toggelModal(false) }}
                         width={600}
                     >
-                        <Form ref={this.dynamoForm_1} Callback = {this.Callback} FormFields={this.state.FormFields} />
-                        <Form ref={this.dynamoForm_2} Callback = {this.Callback2} FormFields={this.state.FormFields_1} />
+                        <Row>
+                            <Form ref={this.dynamoForm_1} Callback = {this.Callback} FormFields={this.state.FormFields} />
+                        </Row>
+                        <Row style={{maxHeight:'115px',overflowY: 'auto'}}>
+                            <Form ref={this.dynamoForm_2} Callback = {this.Callback2} FormFields={this.state.FormFields_1} />
+                        </Row>
                     </Modal> : null
                 }
             </>

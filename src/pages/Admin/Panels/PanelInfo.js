@@ -181,7 +181,7 @@ class PanelInfo extends Component {
                 justify : 'center',
                 FormCol: 24,
                 FieldSpace: { xs: 12, sm: 16, md: 12},
-                layout: {labelCol: { span: 8 }},
+                layout: {labelCol: { span: 2 }},
                 justifyField:'center',
                 FormLayout:'inline', 
                 size: 'small',
@@ -263,7 +263,7 @@ class PanelInfo extends Component {
                 justifyField:'center',
                 FormLayout:'inline', 
                 size: 'small',
-                backstyle: {maxHeight:'145px',overflowY: 'auto'},
+                // backstyle: {maxHeight:'145px',overflowY: 'auto'},
                 fields: this.newField(0)
             },
             editTimeoff: false,
@@ -500,8 +500,13 @@ class PanelInfo extends Component {
                         onCancel={()=>{this.toggelModal(false)}}
                         width={650}
                     >
-                        <Form ref={this.dynamoForm_1} Callback = {this.Callback} FormFields={this.state.FormFields} />
-                        <Form ref={this.dynamoForm_2} Callback = {this.Callback2} FormFields={this.state.FormFields_1} />                    </Modal>:null
+                        <Row>
+                            <Form ref={this.dynamoForm_1} Callback = {this.Callback} FormFields={this.state.FormFields} />
+                        </Row>
+                        <Row style={{maxHeight:'145px',overflowY: 'auto'}}>
+                            <Form ref={this.dynamoForm_2} Callback = {this.Callback2} FormFields={this.state.FormFields_1} />
+                        </Row >
+                        </Modal>:null
                 }
             </>
         );

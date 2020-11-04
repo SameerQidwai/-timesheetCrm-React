@@ -5,14 +5,16 @@ import { Route } from 'react-router-dom' // Route Library
 import { Breadcrumb, Col } from "antd";
 
 
-import Global from '../global'
-import CalenderHoldays from '../calender-holidays'
-import CalenderList from '../calenders'
-import TimeOffs from '../time-offs'
-import TimeOffsPolicy from '../time-off-policies'
-import Roles from '../../Role & Permission/roles'
-import Panels from '../Panels/panels'
-import PanelInfo from '../Panels/panel-info'
+import Global from '../Global'
+import CalenderHoldays from '../Calender/CalenerHolidays'
+import CalenderList from '../Calender/CalenderList'
+import TimeOffs from '../TimeOffs'
+import TimeOffsPolicy from '../TimeOffsPolicy'
+import Roles from '../../Role & Permission/Roles'
+import Panels from '../Panels/Panels'
+import PanelInfo from '../Panels/PanelInfo'
+import Levels from '../skill & level/Levels.js'
+import Skills from '../skill & level/Skills.js'
 
 import check from '../admin-drawer/admin-sidebar'
 
@@ -53,6 +55,14 @@ const pageLinks = [ // Page link and router
     {
         component: check,
         link: '/admin/check'
+    },
+    {
+        component: Levels,
+        link: '/admin/standard-levels'
+    },
+    {
+        component: Skills,
+        link: '/admin/skills'
     },
 ]
 

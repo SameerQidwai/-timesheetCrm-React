@@ -68,7 +68,8 @@ class Forms extends Component {
                     >
                         {FormFields.fields?
                             // <Col span={FormFields.RowFiledCol}>
-                            <Row justify={FormFields.justify} style={FormFields.backstyle} gutter={FormFields.FieldSpace}>
+                            // <Row justify={FormFields.justify} style={FormFields.backstyle} gutter={FormFields.FieldSpace} wrap={false}>
+                            <>    
                                 {fields.map((item,j) => (
                                     <Col span={item.filedCol}  offset={item.filedOffset} key={j+1} style={item.style} >
                                         <Item 
@@ -102,7 +103,7 @@ class Forms extends Component {
                                     </Col>
                                 ))
                                 }
-                            </Row>
+                            </>
                         :
                             <span/>
                         }
@@ -143,13 +144,13 @@ s                                                >
                 item = <Input.Password placeholder={placeholder} size={size}/>
                 break;
             case 'Textarea': 
-                item = <Input.TextArea placeholder={placeholder}  allowClear size={size} defaultValue={defaultValue}/>
+                item = <Input.TextArea placeholder={placeholder}  allowClear autoSize={mode} asize={size} />
                 break;
             case 'InputNumber': 
-                item = <InputNumber placeholder={placeholder} min={min} max={max}  size={size} defaultValue={defaultValue}/>
+                item = <InputNumber placeholder={placeholder} min={min} max={max}  size={size} />
                 break;
             case 'Select': 
-                item = <Select placeholder={placeholder} options={data} mode={mode}  showArrow size={size} allowClear onChange={func} defaultValue={defaultValue}/>
+                item = <Select placeholder={placeholder} options={data} mode={mode}  showArrow size={size} allowClear onChange={func}/>
                 break;
             case 'shouldUpdate':  // can compare field value while typing via Should Update check it here https://ant.design/components/form/#components-form-demo-dynamic-rule
                 item = <Input /> // is not working just to remember
@@ -158,19 +159,19 @@ s                                                >
                 item =  <Switch size={size} />
                 break;
             case 'Radio':
-                item =  <Radio.Group options={data} optionType={mode} size={size} defaultValue={defaultValue}/>
+                item =  <Radio.Group options={data} optionType={mode} size={size} />
                 break;
             case 'DatePicker':
-                item = <DatePicker picker={mode} showTime={showTime} size={size} defaultValue={defaultValue} />
+                item = <DatePicker picker={mode} showTime={showTime} size={size}  />
                 break;
             case 'TimePicker':
-                item = <TimePicker format={showTime} use12Hours={mode==='use12Hours'} size={size} defaultValue={defaultValue}/>
+                item = <TimePicker format={showTime} use12Hours={mode==='use12Hours'} size={size} />
                 break;
             case 'TimeRange':
-                item = <TimeRange format={showTime} use12Hours={mode==='use12Hours'} size={size} defaultValue={defaultValue}/>
+                item = <TimeRange format={showTime} use12Hours={mode==='use12Hours'} size={size} />
                 break;
             case 'RangePicker':
-                item = <RangePicker picker={mode} showTime={showTime}  size={size} defaultValue={defaultValue}/>
+                item = <RangePicker picker={mode} showTime={showTime}  size={size} />
                 break;
             case 'CheckboxGroup':
                 item = <Checkbox.Group options={data} size={size} />
@@ -179,7 +180,7 @@ s                                                >
                 item = <Checkbox options={data}  size={size}  />
                 break;
             case 'Title':
-                item = <Title level={mode} size={size} defaultValue={defaultValue}>{placeholder}</Title>
+                item = <Title level={mode} size={size} >{placeholder}</Title>
                 break;
             case 'Span':
                 item = <span style={style} onClick={func}>{placeholder}</span>
@@ -191,7 +192,7 @@ s                                                >
                 item = <Button type={mode} shape={shape} block={max} onClick={func} size={size} >{placeholder}</Button>
                 break;
             default: 
-                item = <Input placeholder={placeholder} defaultValue={size} size={size} defaultValue={defaultValue}/>
+                item = <Input placeholder={placeholder}  size={size} />
         }
         return item
     }

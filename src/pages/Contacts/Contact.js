@@ -1,20 +1,20 @@
 import React, {Component} from 'react'
-import { Table, Menu, Dropdown, Button, Popconfirm, Row, Col,Typography, Modal } from 'antd'
+import { Table, Menu, Dropdown, Button, Popconfirm, Row, Col,Typography } from 'antd'
 import { DownOutlined, SettingOutlined, PlusSquareOutlined, FilterOutlined} from '@ant-design/icons'; //Icons
-import { Link } from 'react-router-dom'
+// import { Link } from 'react-router-dom'
 
 
-import Form from '../../components/Form';
+// import Form from '../../components/Form';
 import '../styles/table.css'
 
 const { Title } = Typography
 
 
 
-class Organizations extends Component {
+class Contact extends Component {
     constructor(props) {
     super(props);
-        this.leadForm = React.createRef();
+        this.contactForm = React.createRef();
         this.columns = [
             {
                 title: 'Code',
@@ -25,19 +25,19 @@ class Organizations extends Component {
                 ),
             },
             {
-                title: 'Organization Name',
+                title: 'Name',
+                dataIndex: 'name',
+                key: 'name',
+            },
+            {
+                title: 'Email',
+                dataIndex: 'email',
+                key: 'email',
+            },
+            {
+                title: 'Organization',
                 dataIndex: 'org',
                 key: 'org',
-            },
-            {
-                title: 'Revenue',
-                dataIndex: 'revenue',
-                key: 'revenue',
-            },
-            {
-                title: 'Last Comment',
-                dataIndex: 'l_comment',
-                key: 'l_comment',
             },
             {
                 title: 'Action',
@@ -72,26 +72,26 @@ class Organizations extends Component {
                 {
                     key:1,
                     org: 'One_LM',
-                    Revenue:'$3000',
-                    l_comment: 'they are evaluating'
+                    name:'Micheal Boltz',
+                    email: 'm.boltz@gmail.com'
                 },
                 {
-                    key:1,
-                    org: 'lead Carot',
-                    Revenue:'$4000',
-                    l_comment: 'they want demo'
+                    key:2,
+                    org: 'Org A',
+                    name: 'Bob Tuner',
+                    email: 'b.tuner@gmail.com'
                 },
                 {
-                    key:1,
-                    org: 'Jubliee',
-                    Revenue:'$1000',
-                    l_comment: 'Need to gether req'
+                    key:3,
+                    org: 'Org B',
+                    name: 'Richard Tim',
+                    email: 'r.tim@gmail.com'
                 },
             ],
             openModal: false,
             editTimeoff:false,
             FormFields: {
-                formId: 'lead_Form',
+                formId: 'contact_form',
                 justify : 'center',
                 FormCol: 20,
                 FieldSpace: { xs: 12, sm: 16, md: 122},
@@ -126,7 +126,7 @@ class Organizations extends Component {
         this.setState({openModal:status})
 
         if (this.state.openModal){
-            this.leadForm.current.refs.lead_Form.resetFields(); // to reset file
+            this.contactForm.current.refs.contact_form.resetFields(); // to reset file
             delete this.state.FormFields.initialValues // to delete intilize if not written    
             this.setState({  // set state
                 FormFields: this.state.FormFields,
@@ -144,7 +144,7 @@ class Organizations extends Component {
                 data: [...this.state.data, vake.obj],
             }, () => {
                 this.toggelModal(false)
-                this.leadForm.current.refs.lead_Form.resetFields();
+                this.contactForm.current.refs.contact_form.resetFields();
                 console.log("Data Rendered");
             });
         }else{
@@ -176,7 +176,7 @@ class Organizations extends Component {
     }
 
     submit = () =>{
-        this.leadForm.current.refs.lead_Form.submit();
+        this.contactForm.current.refs.contact_form.submit();
     }
 
     render(){
@@ -186,7 +186,7 @@ class Organizations extends Component {
             <>
                 <Row justify="space-between">
                     <Col>
-                        <Title level={4}>Lead</Title>
+                        <Title level={4}>Contact Persons</Title>
                     </Col>
                     <Col style={{textAlign:'end'}} span={4} >
                         <Row justify="space-between">
@@ -194,7 +194,7 @@ class Organizations extends Component {
                                 <Button type="default"size='small'> <FilterOutlined />Filter</Button>
                             </Col>
                             <Col>
-                                <Button type="primary" size='small'> <PlusSquareOutlined />Add Lead</Button>
+                                <Button type="primary" size='small'> <PlusSquareOutlined />Contact Person</Button>
                             </Col>
                         </Row>
                     </Col>
@@ -212,7 +212,7 @@ class Organizations extends Component {
                         onCancel={()=>{this.toggelModal(false)}}
                         width={600}
                     >
-                        <Form ref={this.leadForm} Callback={this.Callback} FormFields= {this.state.FormFields} />   
+                        <Form ref={this.contactForm} Callback={this.Callback} FormFields= {this.state.FormFields} />   
                     </Modal> : null
                 } */}
             </>
@@ -220,4 +220,4 @@ class Organizations extends Component {
     }
 }
 
-export default Organizations
+export default Contact

@@ -1,27 +1,17 @@
-import React, {Component } from 'react'
+import React, {Component} from 'react'
 import { Table, Menu, Dropdown, Button, Popconfirm, Row, Col,Typography, Modal } from 'antd'
 import { DownOutlined, SettingOutlined, PlusSquareOutlined} from '@ant-design/icons'; //Icons
 
 import Form from '../../components/Form';
-import moment from 'moment'
 import '../styles/table.css'
 
 const { Title } = Typography
 
-class CalenerHolidays extends Component {
-
-    componentDidMount(){
-        var {id} = this.props.match.params
-        if (id ==='1'){
-            this.setState({ data: this.state.data1 });
-        }else{
-            this.setState({ data: this.state.data2 });
-        }
-
-    }
+class TimeOffs extends Component {
     constructor(props) {
-    super(props);
-        this.holidayForm = React.createRef();
+        super(props);
+        this.dynamoForm = React.createRef();
+
         this.columns = [
             {
                 title: 'Title',
@@ -29,16 +19,10 @@ class CalenerHolidays extends Component {
                 key: 'title',
             },
             {
-                title: 'Date',
-                dataIndex: 'date',
-                key: 'date',
-                align: 'right'
-            },
-            {
                 title: 'Action',
                 key: 'action',
                 align: 'right',
-                render: (text, record) => (
+            render: (text, record) => (
                     <Dropdown overlay={
                         <Menu>
                             <Menu.Item danger>
@@ -49,7 +33,7 @@ class CalenerHolidays extends Component {
                             <Menu.Item onClick={()=>this.getRecord(record)}>Edit</Menu.Item>
                         </Menu>
                     }>
-                        <Button size='small'>
+                        <Button  size="small">
                             <SettingOutlined/> Option <DownOutlined/>
                         </Button>
                     </Dropdown>  
@@ -57,47 +41,30 @@ class CalenerHolidays extends Component {
             },
         ];
 
-        this.state = {
-            data1 : [
+        this.state={
+            data : [
                 {
                     key: 1,
-                    title: 'Easter',
-                    date: '12-Apr-2020',
+                    title: 'Sick Leaves',
                 },
                 {
                     key: 2,
-                    title: 'Labour Day',
-                    date: '01-May-2020',
+                    title: 'Vacations',
                 },
                 {
                     key: 3,
-                    title: 'Chirstmas',
-                    date: '25-Dec-2020',
+                    title: 'Training',
                 },
             ],
-            data2 : [
-                {
-                    key: 1,
-                    title: 'Eid-ul-fiter',
-                    date: '13-May-2020',
-                },
-                {
-                    key: 2,
-                    title: 'Eid-ul-azha',
-                    date: '12-jul-2020',
-                },
-            ],
-            data: null,
             openModal: false,
             editTimeoff: false,
             FormFields: {
-                formId: 'form',
+                formId: 'time_off',
                 justify : 'center',
                 FormCol: 20,
                 FieldSpace: { xs: 12, sm: 16, md: 122},
                 layout: {labelCol: { span: 12 }},
                 justifyField:'center',
-                // FormLayout:'inline', 
                 size: 'middle',
                 fields:[
                     {
@@ -112,21 +79,9 @@ class CalenerHolidays extends Component {
                         type: 'input',
                         labelAlign: 'left',
                     },
-                    {
-                        object:'obj',
-                        filedCol:20,
-                        key: 'date',
-                        label:'Date',
-                        size:'small',
-                        // rules:[{ required: true, message: 'Insert your Password Please' }],
-                        type: 'DatePicker',
-                        layout: {labelCol: { span: 4}},
-                        labelAlign: 'left',
-                        // hidden: false    
-                    }
-                ]
+                ],
             }
-        }        
+        } 
     }
 
     handleDelete =  (key)=>{
@@ -138,48 +93,46 @@ class CalenerHolidays extends Component {
         this.setState({openModal:status})
 
         if (this.state.openModal){
-            this.holidayForm.current.refs.form.resetFields();// to reset file
+            this.dynamoForm.current.refs.time_off.resetFields(); // to reset file
             delete this.state.FormFields.initialValues // to delete intilize if not written    
             this.setState({  // set state
                 FormFields: this.state.FormFields,
                 editTimeoff:false 
             })
         }
-
     }
 
-    Callback =(vake)=>{ // this will work after I get the Object
+    Callback =(vake)=>{ // this will work after I get the Object from the form
         if (!this.state.editTimeoff){ // to add new datas
-            vake.obj.date = moment(vake.obj.date).format('DD-MMM-YYYY')
             vake.obj.key = this.state.data.length + 1
             this.setState({
                 data: [...this.state.data, vake.obj],
             }, () => {
                 this.toggelModal(false)
-                // this.holidayForm.current.refs.form.resetFields();
                 console.log("Data Rendered");
             });
-        }else{
+        }else{ // to edit pervoius data
             this.editRecord(vake.obj)
         }
     }
 
+    submit = () =>{
+        this.dynamoForm.current.refs.time_off.submit();
+    }
+
     getRecord = (data) => {
-        const obj = Object.assign({}, data);
-        obj.date = moment(obj.date)
 
         this.setState({
-            FormFields: {...this.state.FormFields, initialValues: {obj:obj}},
-            editTimeoff: obj.key
-        },()=>{
+            FormFields: {...this.state.FormFields, initialValues: {obj:data}},
+            editTimeoff: data.key
+        }, ()=>{
             this.toggelModal(true)
-        })
+
+        })   
     }
 
     editRecord = (obj) =>{
         obj.key =  this.state.editTimeoff
-        obj.date = moment(obj.date).format('DD-MMM-YYYY')
-
         this.state.data[obj.key - 1] = obj
 
         this.setState({
@@ -189,48 +142,40 @@ class CalenerHolidays extends Component {
             this.toggelModal(false)
         })
     }
-    
-    submit = () =>{
-        this.holidayForm.current.refs.form.submit();
-    }
 
+    
     render(){
         const data = this.state.data
         const columns = this.columns
         return(
             <>
                 <Row justify="space-between">
-                    <Col >
-                        <Title level={4}>Holidays</Title>
+                    <Col>
+                        <Title level={4}>Time Offs</Title>
                     </Col>
                     <Col style={{textAlign:'end'}}>
-                        <Button type="primary" size='small' onClick={()=>{this.toggelModal(true)}}> <PlusSquareOutlined /> Add Holiday</Button>
+                        <Button type="primary" onClick={()=>{this.toggelModal(true)}} size="small"> <PlusSquareOutlined />Add Time Off</Button>
                     </Col>
                     <Col span={24}>
-                        <Table columns={columns} dataSource={data} size='small'/>
+                        <Table columns={columns} dataSource={data} size="small"/>
                     </Col>
                 </Row>
-                { this.state.openModal ?
+                {this.state.openModal?
                     <Modal
-                        title= {this.state.editTimeoff? 'Edit Holiday' : "Add New Holiday"}
+                        title={this.state.editTimeoff? 'Edit Time Off' : "Add Time Off" }
                         centered
                         visible={this.state.openModal}
                         onOk={()=>{this.submit()}}
-                        onCancel={()=>{this.toggelModal(false)}}
                         okText={this.state.editTimeoff? 'Edit' : 'Save'}
+                        onCancel={()=>{this.toggelModal(false)}}
                         width={600}
                     >
-                        <Form 
-                            ref={this.holidayForm}
-                            Callback = {this.Callback} 
-                            FormFields= {this.state.FormFields} 
-                        />   
-                    </Modal> :
-                    null
+                        <Form ref={this.dynamoForm} Callback={this.Callback} FormFields = {this.state.FormFields} />   
+                    </Modal>:null
                 }
             </>
         )
     }
 }
 
-export default CalenerHolidays
+export default TimeOffs

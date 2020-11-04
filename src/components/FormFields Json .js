@@ -23,7 +23,7 @@ fields={
                 wrapperCol: { span: 'number for the column by Froms ' } 
             },
             size: 'size of the input fields',
-            mode: 'changes according to the input option i.e type, level ',
+            mode: 'changes according to the input option i.e type, level, autosize ',
             labelAlign: 'label  align in the column of Form ',
             hint: 'hint',
             data: 'Option for the fields that needs i.e checkbox selectbox',
