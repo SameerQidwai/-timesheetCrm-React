@@ -35,11 +35,11 @@ class OrgInfo extends Component {
                 layout="horizontal"
                 // extra={<Button type="primary">Edit</Button>}
             >
-                <Item label={ <ContactsOutlined />} >{data.contact}</Item>
-                <Item label={<MailOutlined />} >{data.email}</Item>
-                <Item label={<TranslationOutlined />}>{data.address}</Item>
-                <Item label={<AliwangwangOutlined />} >{data.website}</Item>
-                <Item label={<DollarOutlined />} >{data.EBA}</Item>
+                <Item label="Contact" >{data.contact}</Item>
+                <Item label="Email" >{data.email}</Item>
+                <Item label="Address">{data.address}</Item>
+                <Item label="Website" >{data.website}</Item>
+                <Item label="EBA" >{data.EBA}</Item>
             </Descriptions>
             <Tabs type="card" style={{marginTop:'50px'}}>
                 <TabPane tab="Project" key="1">

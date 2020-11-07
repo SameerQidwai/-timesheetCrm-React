@@ -1,18 +1,21 @@
-// import React, { Component, useState } from 'react'
 import React, { Component } from 'react'
 
-import { Comment, Tooltip, Avatar } from 'antd'
+import { Row, Col, Comment, Tooltip, Avatar, Popconfirm, Form, Input } from 'antd'
 
 import moment from 'moment';
 
-import { DeleteOutlined, DeleteFilled } from '@ant-design/icons';
+import { DeleteOutlined, DeleteFilled, SendOutlined } from '@ant-design/icons';
 
+import './comment.css'
+
+const { TextArea } = Input
 // const { Panel } = Collapse;
-const hover = false
 class Comments extends Component{
   constructor (){
     super ()
+    this.com_field = React.createRef();
     this.state= {
+      isHovered:{},
       data:[
         {
           author: 'Han Solo',
@@ -86,92 +89,131 @@ class Comments extends Component{
           ]
         }
       ],
+      value: null
     }
   }
-  deleteIcon = (e,filled) =>{
-    if (filled){
-      return <DeleteFilled/>
-    }else{
-      return <DeleteOutlined/>
+  deleteIcon = (index,filled) =>{
+    this.setState(prevState => {
+      return { isHovered: { ...prevState.isHovered, [index]: filled } };
+    });
+  }
+  deleteComment = ()=>{
+    console.log('deleted')
+  }
+
+  comChange = (e) =>{
+    this.setState({
+      value: e.target.value
+    })
+  }
+
+  addComent = (e) =>{
+    const { value, data } = this.state
+    if (!e.shiftKey && value){
+      let comment = {
+          author: 'You',
+          content: value,
+          date: moment().format(),
+      }
+      this.setState({
+        data: [...data, comment],
+      },()=>{
+        this.setState({
+          value:null
+        })
+      })
     }
   }
 
   render () { 
-    // const { actions } = Demo
-    const { data } = this.state
+    const { data, isHovered, value } = this.state
     return (
-      <div style={{maxHeight:'500px'}}>
-      {
-        data.map((item,j) => (
-          <Comment
-            key={j}
-          author={<a>{item.author}</a>}
-            avatar={
-              <Avatar
-                alt={item.author}
-              >
-                {item.author[0].toUpperCase()}
-              </Avatar>
-            }
-            content={
-              <p>{item.content}</p>
-            }
-            datetime={
-              <>
-                <Tooltip title={moment(item.date).format('YYYY-MM-DD HH:mm:ss')}>
-                  <span>
-                    {moment(item.date).fromNow()}
-                  </span>
-                </Tooltip>
-                <Tooltip key="comment-basic-delete" title="Delete">
-                  <span
-                  style={{paddingLeft:'10px', cursor:'pointer'}}
-                    // onMouseOver={this.deleteIcon(true)}
-                    // onMouseOut={this.deleteIcon(false)}
-                  >
-                    {this.deleteIcon}
-                  </span>
-                </Tooltip>
-              </>
-            }
-          >
-            {/* { item.reply &&
-              <Collapse
-                bordered={false}
-                expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
-                className="site-collapse-custom-collapse"
-               >
-                <Panel header="repy" key="1" className="site-collapse-custom-panel">
-                  {item.reply.map((reply,i) => (
-                    <Comment
-                      key={i}
-                      actions={actions}
-                      author={<a>{reply.author}</a>}
-                      avatar={
-                        <Avatar
-                          alt={reply.author}
-                        >
-                          {reply.author[0].toUpperCase()}
-                        </Avatar>
-                      }
-                      content={
-                        <p>{reply.content}</p>
-                      }
-                      datetime={
-                        <Tooltip title={moment(reply.date).format('YYYY-MM-DD HH:mm:ss')}>
-                          <span>{moment(reply.date).fromNow()}</span>
-                        </Tooltip>
-                      } 
-                    />
-                  ))}
-                </Panel>
-              </Collapse>
-            } */}
-          </Comment>
-          ))
-        }
-      </div>
+      <Row justify="space-around">
+        <Col style={styles.cSec} span={24}>
+        {
+          data.map((item,index) => (
+            <Comment
+              key={index}
+            author={<a>{item.author}</a>}
+              avatar={
+                <Avatar
+                  alt={item.author}
+                >
+                  {item.author[0].toUpperCase()}
+                </Avatar>
+              }
+              content={
+                <p>{item.content}</p>
+              }
+              datetime={
+                <>
+                  <Tooltip title={moment(item.date).format('YYYY-MM-DD HH:mm:ss')}>
+                    <span>
+                      {moment(item.date).fromNow()}
+                    </span>
+                  </Tooltip>
+                  <Tooltip key="comment-basic-delete" title="Delete">
+                    <span
+                      style={styles.delIcon}
+                      onMouseOver={()=>{this.deleteIcon(index,true)}}
+                      onMouseLeave={()=>{this.deleteIcon(index,false)}}
+                    >
+                      <Popconfirm  title="You Want to delete comment?" onConfirm={this.deleteComment} okText="Yes" cancelText="No">
+                        {isHovered[index]? <DeleteFilled style={{fontSize:'18px'}} /> : <DeleteOutlined/>}
+                      </Popconfirm>
+                    </span>
+                  </Tooltip>
+                </>
+              }
+            >
+            </Comment>
+            ))
+          }
+          </Col>
+        <Col span={23} style={styles.cBox}>
+            <Form.Item 
+              colon={false}
+              label={ <Avatar alt='A' > A </Avatar>}
+            >
+              <TextArea 
+                placeholder="Enter Your Comment...." 
+                autoSize={ {minRows: 1, maxRows: 5} }
+                // allowClear
+                onPressEnter={this.addComent}
+                onChange={this.comChange}
+                value={value}
+              />
+            </Form.Item>
+          </Col>
+          <Col span="1" style={styles.sendBox}>
+            <Form.Item>
+              <SendOutlined onClick={this.addComent} className="sendIcon" style={styles.sendIcon} /> 
+            </Form.Item>
+          </Col>
+        {/* <Col span={1}> <SendOutlined/> </Col> */}
+      </Row>
     );
   }
 }
 export default Comments
+
+const styles = {
+  cSec:{
+    maxHeight:500,
+    overflowY:'auto'
+  },
+  delIcon:{
+    paddingLeft: "10px",
+    cursor: "pointer",
+  },
+  cBox: {
+    paddingLeft: "40px"
+  },
+  sendBox: {
+    alignSelf: "flex-end"
+  },
+  sendIcon: {
+    fontSize: "24px",
+    paddingLeft: "10px",
+  }
+}
