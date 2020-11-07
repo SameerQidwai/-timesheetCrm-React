@@ -4,16 +4,14 @@ import { Route } from 'react-router-dom' // Route Library
 
 import { Layout } from "antd";
 
-
-import Calender from '../Calender/Calender'
-import Froms from '../Form'
-import Login from '../../pages/Login/Login'
-import Organizations from '../../pages/Contacts/Organizations'
-import Contact from '../../pages/Contacts/Contact'
-// import Leads from '../../pages/Contacts/leads'
-import TimeSheet from '../../pages/TimeSheet'
-
+import Organizations from '../../pages/Contacts/Org & Info/Organizations'
 import Admin from '../../pages/Admin/admin-drawer/admin-sidebar'
+import OrgInfo from '../../pages/Contacts/Org & Info/OrgInfo'
+import Contact from '../../pages/Contacts/Contact'
+import Leads from '../../pages/Contacts/Leads'
+import TimeSheet from '../../pages/TimeSheet'
+import Calender from '../Calender/Calender'
+import Login from '../../pages/Login/Login'
 
 
 const { Content } = Layout;
@@ -23,10 +21,10 @@ const pageLinks = [ // Page link and router
         component: Calender,
         link: '/calender'
     },
-    {
-        component: Froms,
-        link: '/forms'
-    },
+    // {
+    //     component: Froms,
+    //     link: '/forms'
+    // },
     {
         component: Login,
         link: '/login'
@@ -80,11 +78,15 @@ const pageLinks = [ // Page link and router
         link: '/organizations'
     },
     {
+        component: OrgInfo,
+        link: '/organizations/info/:id'
+    },
+    {
         component: Contact,
         link: '/contact'
     },
     {
-        component: Contact,
+        component: Leads,
         link: '/leads'
     },
     {

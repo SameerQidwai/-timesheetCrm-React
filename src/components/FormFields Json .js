@@ -10,7 +10,7 @@ fields={
     fields:[ 
         { //fileds
             object: 'Object in what value to get objec',
-            filedCol: 'how manu column should get',
+            fieldCol: 'how manu column should get',
             key: 'key of the object to get',
             Placeholder: 'placeholder to show in the input fields && span to put things also i.e <Icons/>',
             label: 'Label of the fields ',
@@ -57,7 +57,7 @@ const Example = {
     fields:[
         {
             object:'obj',
-            filedCol:13,
+            fieldCol:13,
             variable: 'name',
             Placeholder: 'Your Good Name',
             label:'Name',
@@ -69,7 +69,7 @@ const Example = {
         },
         {
             object:'obj',
-            filedCol:13,
+            fieldCol:13,
             variable: 'password',
             label:'Password',
             Placeholder: "You Don't Have Any",
@@ -82,7 +82,7 @@ const Example = {
         {
             object:'obj',
             Placeholder: "You Don't Have Any",
-            filedCol:12,
+            fieldCol:12,
             variable: 'age',
             label:'Age',
             // rules:[{ type: 'number', min: 0, max: 99 }],
@@ -95,7 +95,7 @@ const Example = {
         },
         {
             object:'obj',
-            filedCol:10,
+            fieldCol:10,
             variable: 'age',
             label:'Age',
             // rules:[{ required: true }],
@@ -106,7 +106,7 @@ const Example = {
         },
         {
             object:'obj',
-            filedCol:10,
+            fieldCol:10,
             variable: 'age',
             label:'Age',
             // rules:[{ required: true }],
@@ -117,7 +117,7 @@ const Example = {
         },
         {
             object:'obj',
-            filedCol:10,
+            fieldCol:10,
             variable: 'select1',
             label:'Select Me',
             // rules:[{ required: true }],
@@ -134,7 +134,7 @@ const Example = {
         },
         {
             object:'obj',
-            filedCol:10,
+            fieldCol:10,
             variable: 'select2',
             label:'Select Me',
             // rules:[{ required: true }],
@@ -151,7 +151,7 @@ const Example = {
         },
         {
             object:'obj',
-            filedCol:10,
+            fieldCol:10,
             variable: 'switch',
             label:'Switch',
             // rules:[{ required: true,  message: 'do it' }],
@@ -163,7 +163,7 @@ const Example = {
         },
         {
             object:'obj',
-            filedCol:10,
+            fieldCol:10,
             variable: 'radio',
             label:'Radio-Group',
             // rules:[{ required: true }],
@@ -181,7 +181,7 @@ const Example = {
         },
         {
             object:'obj',
-            filedCol:10,
+            fieldCol:10,
             variable: 'date',
             label:'Date',
             // rules:[{ required: true }],
@@ -193,7 +193,7 @@ const Example = {
         },
         {
             object:'obj',
-            filedCol:10,
+            fieldCol:10,
             variable: 'range',
             label:'Range Date',
             // rules:[{ required: true }],
@@ -205,7 +205,7 @@ const Example = {
         },
         {
             object:'obj2',
-            filedCol:10,
+            fieldCol:10,
             variable: 'check',
             label:'Checking',
             // rules:[{ required: true }],
@@ -222,7 +222,7 @@ const Example = {
         },
         {
             object:'obj4',
-            filedCol:10,
+            fieldCol:10,
             variable: 'checkBox',
             label:'Checking',
             // rules:[{ required: true }],
@@ -234,7 +234,7 @@ const Example = {
         },
         { //lables
             object:'obj',
-            filedCol:20,
+            fieldCol:20,
             layout:  {
                 wrapperCol: { span: 0 }
             },

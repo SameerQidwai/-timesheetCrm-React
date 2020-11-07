@@ -220,7 +220,7 @@ class PanelInfo extends Component {
                 fields:[
                     { 
                         object:'obj',
-                        filedCol:12,
+                        fieldCol:12,
                         wrapperCol: { span: 20 },
                         key: 'skill',
                         label:'Skill',
@@ -232,7 +232,7 @@ class PanelInfo extends Component {
                     },
                     { 
                         object:'obj',
-                        filedCol:12,
+                        fieldCol:12,
                         labelCol:{ span:7} ,
                         key: 'standard',
                         label:'Standard',
@@ -244,7 +244,7 @@ class PanelInfo extends Component {
                         itemStyle:{ marginBottom:'5px' }
                     },
                     {
-                        filedCol:24,         
+                        fieldCol:24,         
                         Placeholder: 'Add Level',
                         type: 'Button',
                         mode: 'primary',
@@ -262,36 +262,36 @@ class PanelInfo extends Component {
                         }.bind(this)
                     },
                     {
-                        filedCol:8,
+                        fieldCol:8,
                         Placeholder: 'Level',
-                        type: 'Span',
+                        type: 'Text',
                         size:'small',
                     },
                     {
-                        filedCol:7,
+                        fieldCol:7,
                         layout:  {
                             wrapperCol: { offset:1}
                         },
                         Placeholder: 'Pirority',
-                        type: 'Span',
+                        type: 'Text',
                         size:'small',
                     },
                     {
-                        filedCol:4,
+                        fieldCol:4,
                         layout:  {
                             wrapperCol: { offset:1}
                         },
                         Placeholder: 'ST Ceil',
-                        type: 'Span',
+                        type: 'Text',
                         size:'small',
                     },
                     {
-                        filedCol:4,
+                        fieldCol:4,
                         layout:  {
                             wrapperCol: { offset:1}
                         },
                         Placeholder: 'LT Ceil',
-                        type: 'Span',
+                        type: 'Text',
                         size:'small',
                     },
                 ],
@@ -333,7 +333,7 @@ class PanelInfo extends Component {
         return [
             { 
                 object:'obj',
-                filedCol:8,
+                fieldCol:8,
                 layout:  { wrapperCol: { span: 20 } },
                 key: `level${item_no}`,
                 size:'small',
@@ -344,7 +344,7 @@ class PanelInfo extends Component {
             },
             { 
                 object:'obj',
-                filedCol:7,
+                fieldCol:7,
                 layout:  { wrapperCol: { span: 20} },
                 key: `pirority${item_no}`,
                 size:'small',
@@ -356,7 +356,7 @@ class PanelInfo extends Component {
             },
             { 
                 object:'obj',
-                filedCol:4,
+                fieldCol:4,
                 layout:  { wrapperCol: { span: 20} },
                 key: `stceil${item_no}`,
                 size:'small',
@@ -367,7 +367,7 @@ class PanelInfo extends Component {
             },
             { 
                 object:'obj',
-                filedCol:4,
+                fieldCol:4,
                 layout:  { wrapperCol: { span: 20} },
                 key: `ltceil${item_no}`,
                 size:'small',
@@ -377,12 +377,12 @@ class PanelInfo extends Component {
                 itemStyle:{ marginBottom:'5px' }
             },
             { 
-                filedCol:1,
+                fieldCol:1,
                 size:'small',
                 Placeholder:<CloseOutlined />,
                 key: item_no,
                 // rules:[{ required: true }],
-                type: 'Span',
+                type: 'Text',
                 style: {
                     textAlign:'right',
                 },

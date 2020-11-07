@@ -75,7 +75,7 @@ class TimeOffsPolicy extends Component {
                 fields:[
                     { 
                         object:'obj',
-                        filedCol:24,
+                        fieldCol:24,
                         layout:  { wrapperCol: { span: 22 } },
                         key: 'title',
                         label:'Title',
@@ -86,7 +86,7 @@ class TimeOffsPolicy extends Component {
                         itemStyle:{ marginBottom:'5px' }
                     },
                     {
-                        filedCol:24,         
+                        fieldCol:24,         
                         layout:  { wrapperCol: { span: 0 }},
                         Placeholder: 'Insert Time Off',
                         type: 'Button',
@@ -104,18 +104,18 @@ class TimeOffsPolicy extends Component {
                         }.bind(this)
                     },
                     {
-                        filedCol:16,
+                        fieldCol:16,
                         Placeholder: 'Time Off',
-                        type: 'Span',
+                        type: 'Text',
                         size:'small',
                     },
                     {
-                        filedCol:5,
+                        fieldCol:5,
                         layout:  {
                             wrapperCol: { offset:1}
                         },
                         Placeholder: 'Hours',
-                        type: 'Span',
+                        type: 'Text',
                         size:'small',
                     },
                 ],
@@ -130,53 +130,7 @@ class TimeOffsPolicy extends Component {
                 FormLayout:'inline', 
                 size: 'small',
                 // backstyle: {maxHeight:'115px',overflowY: 'auto'},
-                fields:[
-                    { 
-                        object:'obj',
-                        filedCol:16,
-                        layout:  { wrapperCol: { span: 23 } },
-                        key: `timeoff0`,
-                        size:'small',
-                        // rules:[{ required: true }],
-                        type: 'Select',
-                        labelAlign: 'left',
-                        itemStyle:{ marginBottom:'5px' },
-                        data:[{value:'Sick Leave',label:'Sick Leave'}, {value:'Vacations',label:'Vacations'},{ value:'Traning',label:'Traning'}],
-                    },
-                    { 
-                        object:'obj',
-                        filedCol:5,
-                        layout:  { wrapperCol: { span: 20, offset:2} },
-                        key: `hours0`,
-                        size:'small',
-                        // rules:[{ required: true }],
-                        type: 'InputNumber',
-                        labelAlign: 'left',
-                        itemStyle:{ marginBottom:'5px' }
-                    },
-                    { 
-                        filedCol:3,
-                        size:'small',
-                        Placeholder:<CloseOutlined />,
-                        key: 0,
-                        // rules:[{ required: true }],
-                        type: 'Span',
-                        style: {
-                            textAlign:'right',
-                        },
-                        fieldStyle:{
-                            cursor:'pointer'
-                        },
-                        func: function func (value, e){
-                            this.state.FormFields_1.fields = this.state.FormFields_1.fields.filter(obj => {
-                                return obj.key !== 'timeoff0' && obj.key !== 'hours0' && obj.key !== 0;
-                            });
-                            this.setState({
-                                FormFields_1: this.state.FormFields_1
-                            })
-                        }.bind(this)
-                    },
-                ],
+                fields: this.newField(0),
             },
 
             editTimeoff: false,
@@ -189,7 +143,7 @@ class TimeOffsPolicy extends Component {
         return [
             { 
                 object:'obj',
-                filedCol:16,
+                fieldCol:16,
                 layout:  { wrapperCol: { span: 23 } },
                 key: `timeoff${item_no}`,
                 size:'small',
@@ -201,7 +155,7 @@ class TimeOffsPolicy extends Component {
             },
             { 
                 object:'obj',
-                filedCol:5,
+                fieldCol:5,
                 layout:  { wrapperCol: { span: 20, offset:2} },
                 key: `hours${item_no}`,
                 size:'small',
@@ -211,12 +165,12 @@ class TimeOffsPolicy extends Component {
                 itemStyle:{ marginBottom:'5px' }
             },
             { 
-                filedCol:3,
+                fieldCol:3,
                 size:'small',
                 Placeholder:<CloseOutlined />,
                 key: item_no,
                 // rules:[{ required: true }],
-                type: 'Span',
+                type: 'Text',
                 style: {
                     textAlign:'right',
                 },

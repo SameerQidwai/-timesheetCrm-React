@@ -86,7 +86,7 @@ class CalenderList extends Component {
                 fields:[
                     {
                         object:'obj',
-                        filedCol:20,
+                        fieldCol:20,
                         layout:  {labelCol: { span: 4 },
                         wrapperCol: { span: 0 }},
                         key: 'title',
@@ -98,7 +98,7 @@ class CalenderList extends Component {
                     },
                     {
                         object:'obj',
-                        filedCol:20,
+                        fieldCol:20,
                         key: 'status',
                         label:'Status',
                         size:'small',

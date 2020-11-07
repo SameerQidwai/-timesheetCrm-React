@@ -79,7 +79,7 @@ class Levels extends Component {
                 fields: [
                   {
                     object: "obj",
-                    filedCol: 24,
+                    fieldCol: 24,
                     key: "level",
                     label: "Name",
                     labelAlign: "right",
@@ -88,7 +88,7 @@ class Levels extends Component {
                   },
                 //   {
                 //     object: "obj",
-                //     filedCol: 8,
+                //     fieldCol: 8,
                 //     key: "priority",
                 //     data: [
                 //         {

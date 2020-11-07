@@ -130,7 +130,7 @@ class Roles extends Component {
                 fields:[
                     {
                         object:'obj', 
-                        filedCol:20,
+                        fieldCol:20,
                         layout:  {labelCol: { span: 4 },
                         wrapperCol: { span: 0 }},
                         key: 'title',

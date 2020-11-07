@@ -38,7 +38,6 @@ class Panels extends Component {
                             </Menu.Item >
                             <Menu.Item onClick={()=>this.getRecord(record)}>Edit</Menu.Item>
                             <Menu.Item >
-                                {/* <Link to={{ pathname: `/admin/panels/info/${record.key}` }} className="nav-link"> */}
                                 <Link to={{ pathname: `/admin/panels/info/${record.key}` }}>
                                     Skills
                                 </Link>
@@ -85,7 +84,7 @@ class Panels extends Component {
                 fields:[
                     {
                         object:'obj',
-                        filedCol:24,
+                        fieldCol:24,
                         key: 'name',
                         label:'Name',
                         size:'small',
@@ -95,7 +94,7 @@ class Panels extends Component {
                     },
                     {
                         object:'obj',
-                        filedCol:24,
+                        fieldCol:24,
                         key: 'contact',
                         label:'Contact',
                         size:'small',

@@ -582,7 +582,7 @@ class TimeSheet extends Component {
         fields: [
           {
             object: "obj",
-            filedCol: 8,
+            fieldCol: 8,
             // layout: { labelCol: { span: 4 }, wrapperCol: { span: 0 } },
             key: "start",
             label: "Strat",
@@ -593,7 +593,7 @@ class TimeSheet extends Component {
           },
           {
             object: "obj",
-            filedCol: 8,
+            fieldCol: 8,
             // layout: { labelCol: { span: 4 }, wrapperCol: { span: 0 } },
             key: "end",
             label: "End",
@@ -604,7 +604,7 @@ class TimeSheet extends Component {
           },
           {
             object: "obj",
-            filedCol: 6,
+            fieldCol: 6,
             // labelCol: { span: 4 },
             key: "break",
             label: "Break",
@@ -614,7 +614,7 @@ class TimeSheet extends Component {
           },
           {
             object: "obj",
-            filedCol: 24,
+            fieldCol: 24,
             // labelCol: { span: 4 },
             style:{
               marginTop:'2%'

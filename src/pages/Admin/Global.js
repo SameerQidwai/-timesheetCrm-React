@@ -32,7 +32,7 @@ class Global extends Component{
             fields:[
                 {
                     object:'obj',
-                    filedCol:20,
+                    fieldCol:20,
                     Placeholder: 'Organization Information',
                     type: 'Title',
                     size:'small',
@@ -41,7 +41,7 @@ class Global extends Component{
                 },
                 {
                     object:'obj',
-                    filedCol:20,
+                    fieldCol:20,
                     key: 'email',
                     Placeholder: 'Email Address',
                     label:'Email',
@@ -53,7 +53,7 @@ class Global extends Component{
                 },
                 {
                     object:'obj',
-                    filedCol:20,
+                    fieldCol:20,
                     key: 'country',
                     Placeholder: 'Select Country',
         
@@ -83,7 +83,7 @@ class Global extends Component{
                 },
                 {
                     object:'obj',
-                    filedCol:20,
+                    fieldCol:20,
                     key: 'city',
                     Placeholder: 'Select City',
                     label:'City',
@@ -99,7 +99,7 @@ class Global extends Component{
                 },
                 {
                     object:'obj',
-                    filedCol:20,
+                    fieldCol:20,
                     key: 'timezone',
                     Placeholder: 'Select Timezone',
                     label:'Timezone',
@@ -111,7 +111,7 @@ class Global extends Component{
                 },
                 {
                     object:'obj',
-                    filedCol:20,
+                    fieldCol:20,
                     key: 'address',
                     Placeholder: 'Full Address',
                     label:'Address',
@@ -123,7 +123,7 @@ class Global extends Component{
                 },
                 {
                     object:'obj',
-                    filedCol:20,
+                    fieldCol:20,
                     key: 'zcode',
                     Placeholder: 'Enter Zip Code',
                     label:'Zip Code',
@@ -135,7 +135,7 @@ class Global extends Component{
                 },
                 {
                     object:'obj',
-                    filedCol:20,
+                    fieldCol:20,
                     key: 'phone',
                     Placeholder: 'Phone Number',
                     label:'Phone No',
@@ -147,7 +147,7 @@ class Global extends Component{
                 },
                 {
                     // object:'obj',
-                    filedCol:20,
+                    fieldCol:20,
                     Placeholder: 'General Settings',
                     type: 'Title',
                     mode: 4,
@@ -155,7 +155,7 @@ class Global extends Component{
                 },
                 {
                     object:'obj',
-                    filedCol:20,
+                    fieldCol:20,
                     key: 'rpPage',
                     label:'Records Per Page',
                     size:'small',
@@ -167,7 +167,7 @@ class Global extends Component{
                 },
                 {
                     object:'obj',
-                    filedCol:20,
+                    fieldCol:20,
                     key: 'displayEmail',
                     Placeholder: 'Display Name In Email',
                     label:'Display Email',
@@ -180,7 +180,7 @@ class Global extends Component{
                 },
                 {
                     object:'obj',
-                    filedCol:20,
+                    fieldCol:20,
                     key: 'fromEmail',
                     Placeholder: 'From Email Address',
                     label:'From Email',
@@ -192,7 +192,7 @@ class Global extends Component{
                     // hidden: false    
                 },
                 {
-                    filedCol:20,
+                    fieldCol:20,
                     mode:'horizontal',
                     type: 'Divider',
                     itemStyle:{padding:'0px', margin:'0px'}

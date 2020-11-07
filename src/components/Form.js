@@ -20,7 +20,7 @@ import {
 const { Item } = Form;
 const { RangePicker } = DatePicker;
 const TimeRange = TimePicker.RangePicker
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 const validateMessages = {
     required: '${label} is required!',
@@ -67,11 +67,11 @@ class Forms extends Component {
                         initialValues={FormFields.initialValues}
                     >
                         {FormFields.fields?
-                            // <Col span={FormFields.RowFiledCol}>
+                            // <Col span={FormFields.RowfieldCol}>
                             // <Row justify={FormFields.justify} style={FormFields.backstyle} gutter={FormFields.FieldSpace} wrap={false}>
                             <>    
                                 {fields.map((item,j) => (
-                                    <Col span={item.filedCol}  offset={item.filedOffset} key={j+1} style={item.style} >
+                                    <Col span={item.fieldCol}  offset={item.filedOffset} key={j+1} style={item.style} >
                                         <Item 
                                             {...item.layout} 
                                             name={[item.object, item.key]} 
@@ -108,7 +108,7 @@ class Forms extends Component {
                             <span/>
                         }
                         {  btns.btn? //NAt in use corrently.. save it for sometime
-                            <Col span={btns.filedCol} offset={btns.filedOffset}>
+                            <Col span={btns.fieldCol} offset={btns.filedOffset}>
                                 <Row justify={btns.justify} style={btns.backstyle} >
                                     <Item style={btns.style}>
                                         <Space size={btns.size}>
@@ -141,58 +141,55 @@ s                                                >
         let item =null
         switch (type) { 
             case 'Password': 
-                item = <Input.Password placeholder={placeholder} size={size}/>
+                item = <Input.Password placeholder={placeholder} size={size} style={style}/>
                 break;
             case 'Textarea': 
-                item = <Input.TextArea placeholder={placeholder}  allowClear autoSize={mode} asize={size} />
+                item = <Input.TextArea placeholder={placeholder}  allowClear autoSize={mode} asize={size} style={style}/>
                 break;
             case 'InputNumber': 
-                item = <InputNumber placeholder={placeholder} min={min} max={max}  size={size} />
+                item = <InputNumber placeholder={placeholder} min={min} max={max}  size={size} style={style}/>
                 break;
             case 'Select': 
-                item = <Select placeholder={placeholder} options={data} mode={mode}  showArrow size={size} allowClear onChange={func}/>
-                break;
-            case 'shouldUpdate':  // can compare field value while typing via Should Update check it here https://ant.design/components/form/#components-form-demo-dynamic-rule
-                item = <Input /> // is not working just to remember
+                item = <Select placeholder={placeholder} options={data} mode={mode}  showArrow size={size} allowClear onChange={func} style={style}/>
                 break;
             case 'Switch':
-                item =  <Switch size={size} />
+                item =  <Switch size={size} style={style} />
                 break;
             case 'Radio':
-                item =  <Radio.Group options={data} optionType={mode} size={size} />
+                item =  <Radio.Group options={data} optionType={mode} size={size} style={style} />
                 break;
             case 'DatePicker':
-                item = <DatePicker picker={mode} showTime={showTime} size={size}  />
+                item = <DatePicker picker={mode} showTime={showTime} size={size}  style={style}/>
                 break;
             case 'TimePicker':
-                item = <TimePicker format={showTime} use12Hours={mode==='use12Hours'} size={size} />
+                item = <TimePicker format={showTime} use12Hours={mode==='use12Hours'} size={size} style={style} />
                 break;
             case 'TimeRange':
-                item = <TimeRange format={showTime} use12Hours={mode==='use12Hours'} size={size} />
+                item = <TimeRange format={showTime} use12Hours={mode==='use12Hours'} size={size} style={style} />
                 break;
             case 'RangePicker':
-                item = <RangePicker picker={mode} showTime={showTime}  size={size} />
+                item = <RangePicker picker={mode} showTime={showTime}  size={size} style={style}/>
                 break;
             case 'CheckboxGroup':
-                item = <Checkbox.Group options={data} size={size} />
+                item = <Checkbox.Group options={data} size={size} style={style}/>
                 break;
             case 'Checkbox':
-                item = <Checkbox options={data}  size={size}  />
+                item = <Checkbox options={data}  size={size}  style={style}/>
                 break;
             case 'Title':
-                item = <Title level={mode} size={size} >{placeholder}</Title>
+                item = <Title level={mode} size={size} style={style}>{placeholder}</Title>
                 break;
-            case 'Span':
-                item = <span style={style} onClick={func}>{placeholder}</span>
+            case 'Text':
+                item = <Text strong={mode} onClick={func} style={style}>{placeholder}</Text>
                 break;
             case 'Divider':
                 item = <Divider type={mode} style={style}></Divider>
                 break;
             case 'Button':
-                item = <Button type={mode} shape={shape} block={max} onClick={func} size={size} >{placeholder}</Button>
+                item = <Button type={mode} shape={shape} block={max} style={style} onClick={func} size={size} >{placeholder}</Button>
                 break;
             default: 
-                item = <Input placeholder={placeholder}  size={size} />
+                item = <Input placeholder={placeholder}  style={style} size={size} />
         }
         return item
     }
