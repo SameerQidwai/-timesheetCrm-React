@@ -1,15 +1,12 @@
 import React, { Component } from 'react'
 
-import { Row, Col, Comment, Tooltip, Avatar, Popconfirm, Form, Input, Pagination } from 'antd'
+import { Row, Col, Comment, Tooltip, Avatar, Popconfirm, Form, Input, List } from 'antd'
 
 import moment from 'moment';
 
 import { DeleteOutlined, DeleteFilled, SendOutlined } from '@ant-design/icons';
 
 import './comment.css'
-
-import {List, AutoSizer } from 'react-virtualized';
-import 'react-virtualized/styles.css'; // only needs to be imported once
 
 const { TextArea } = Input
 // const { Panel } = Collapse;
@@ -61,7 +58,6 @@ class Comments extends Component{
       value: null
     }
   }
-  
   componentDidMount () {
     this.scrollToBottom()  //scroll to bottom
   }
@@ -108,123 +104,85 @@ class Comments extends Component{
     }
   }
 
-  // logScroll = (e) =>{
-  //   if (!e.target.scrollTop){ //check the value of scroll if it is not 0 don't run
-  //     e.persist(e.target.scrollTop) // allow change of event and use it after
-  //     setTimeout(() => { // when to add
-  //       if(!e.target.scrollTop){ // check if the scroll value is still Zero
-  //         const { data } = this.state 
-  //         console.log('done')
-  //         this.setState({
-  //           data:[...data,...data] //data inserted
-  //         })
-  //       }
-  //     }, 1000); 
-  //   }
-  // }
-  logScroll = ({ scrollTop }) =>{
-    console.log(scrollTop)
-    if (!scrollTop)
-      setTimeout(() => {
-        if(!scrollTop)
-          console.log('Once upon a time I was Scrolled')
-      }, 2000);
+  logScroll = (e) =>{
+    if (!e.target.scrollTop){ //check the value of scroll if it is not 0 don't run
+      e.persist(e.target.scrollTop) // allow change of event and use it after
+      setTimeout(() => { // when to add
+        const { data } = this.state 
+        if(!e.target.scrollTop && data.length<500){ // check if the scroll value is still Zero
+          console.log('done')
+          this.setState({
+            data:[...data,...data] //data inserted
+          })
+        }else{
+          console.log('Empty')
+        }
+      }, 1000);
+    }
   }
 
-  CommentRow = ({ index, key, style }) => {
-    const {data, isHovered} = this.state
-    return(
-        <Comment
-          key={key}
-          author={<a>{data[index].author}</a>}
-          avatar={
-            <Avatar
-              style={{backgroundColor:colors[index.toString()[index.toString().length-1]]}}
-              alt={data[index].author}
-            >
-              {data[index].author[0].toUpperCase()}
-            </Avatar>
-          }
-          content={
-            <p>{data[index].content}</p>
-          }
-          datetime={
-            <>
-              <Tooltip title={moment(data[index].date).format('YYYY-MM-DD HH:mm:ss')}>
-                <span>
-                  {moment(data[index].date).fromNow()}
-                </span>
-              </Tooltip>
-              <Tooltip key="comment-basic-delete" title="Delete">
-                <span
-                  style={styles.delCol}
-                  onMouseOver={()=>{this.deleteIcon(index,true)}}
-                  onMouseLeave={()=>{this.deleteIcon(index,false)}}
-                >
-                  <Popconfirm  title="You Want to delete comment?" onConfirm={this.handleDelete} okText="Yes" cancelText="No">
-                    {isHovered[index]? <DeleteFilled style={styles.delIcon}/> : <DeleteOutlined/>}
-                  </Popconfirm>
-                </span>
-              </Tooltip>
-            </>
-          }
-        />
+  commentRender = (item,index,isHovered) =>{
+    return (
+      <Comment
+        key={index}
+        author={<a>{item.author}</a>}
+        avatar={
+          <Avatar
+          style={{backgroundColor:colors[index.toString()[index.toString().length-1]]}}
+            alt={item.author}
+          >
+            {item.author[0].toUpperCase()}
+          </Avatar>
+        }
+        content={
+          <p>{item.content}</p>
+        }
+        datetime={
+          <>
+            <Tooltip title={moment(item.date).format('YYYY-MM-DD HH:mm:ss')}>
+              <span>
+                {moment(item.date).fromNow()}
+              </span>
+            </Tooltip>
+            <Tooltip key="comment-basic-delete" title="Delete">
+              <span
+                style={styles.delCol}
+                onMouseOver={()=>{this.deleteIcon(index,true)}}
+                onMouseLeave={()=>{this.deleteIcon(index,false)}}
+              >
+                <Popconfirm  title="You Want to delete comment?" onConfirm={this.handleDelete} okText="Yes" cancelText="No">
+                  {isHovered[index]? <DeleteFilled style={styles.delIcon}/> : <DeleteOutlined/>}
+                </Popconfirm>
+              </span>
+            </Tooltip>
+          </>
+        }
+      >
+      </Comment>
     )
-  }
- 
-  cellSizeAndPositionGetter = ({index})=> {  
-    return {
-      height: 500 ,
-      width: 1000 ,
-      x: 13,
-      y: 38*index,
-    };
-  }
-
-  onSectionRendered = ({ indices }) =>{
-    console.log(indices)
   }
 
   render () { 
     const { data, isHovered, value } = this.state
-    
     return (
       <Row justify="space-around">
         <Col 
           style={styles.cSec}
           span={24} 
           order={1}
-          // onScroll={this.logScroll}
+          onScroll={this.logScroll}
         >
-          {/* <AutoSizer>
-          {({ height, width }) => (
-          <Collection
-            cellCount={data.length}
-            cellRenderer={this.CommentRow}
-            cellSizeAndPositionGetter={this.cellSizeAndPositionGetter}
-            // onScroll={this.logScroll}
-            height={500}
-            width={1399}
-            scrollToCell={data.length-1}
-            onSectionRendered={this.onSectionRendered}
-          />
-          )}
-          </AutoSizer> */}
-          <AutoSizer>
-            {({ height, width }) => (
-              
-              <List
-                width={width}
-                height={height}
-                rowCount={data.length}
-                rowHeight={76}
-                rowRenderer={this.CommentRow}
-                overscanRowCount={3}
-              />
+          <List
+            itemLayout="horizontal"
+            dataSource={data}
+            renderItem={(item,index) => (
+            <li>
+              {this.commentRender(item,index, isHovered)}
+            </li>
             )}
-          </AutoSizer>
+          />
           {/* to scroll till down when new text is done */}
-          {/* <div ref={this.messagesEnd} />  */}
+          <div ref={this.messagesEnd} /> 
           </Col>
         <Col span={23} style={styles.cBox} order={3}>
             <Form.Item 
@@ -274,8 +232,8 @@ const colors=[
 
 const styles = {
   cSec:{
-    minHeight:500,
-    // overflowY:'auto'
+    maxHeight:500,
+    overflowY:'auto'
   },
   delCol:{
     paddingLeft: "10px",
