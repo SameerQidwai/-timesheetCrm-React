@@ -56,7 +56,10 @@ class Skills extends Component {
         ]
 
         this.state = {
-            projects:[
+            mergeObj: {}, // merge submit results into object
+            formSubmitted: false, //check if got data from skill submit
+            levelSubmitted: false, //check if got data from level submit
+            data_skill:[
                 {
                     key:1,
                     name: 'Website Maintainance',
@@ -84,33 +87,15 @@ class Skills extends Component {
                     fDate: moment('11-1-2021').format('ddd MMM DD YYYY'),
                     pMan: 'Noor'
                 },
-                {
-                    key:4,
-                    name: 'Software Quality Assurance',
-                    eValue: 50000,
-                    eDate: moment().format('ddd MMM DD YYYY'),
-                    sDate: moment('12-9-2020').format('ddd MMM DD YYYY'),
-                    fDate: moment('6-1-2023').fromNow(),
-                    pMan: 'Fiaz'
-                },
-                {
-                    key:5,
-                    name: 'Office Boy',
-                    eValue: 50000,
-                    eDate: moment().format('ddd MMM DD YYYY'),
-                    sDate: moment('12-9-2020').format('ddd MMM DD YYYY'),
-                    fDate: moment('11-1-2021').fromNow(),
-                    pMan: 'Shujat'
-                }
             ]
         }
     }
 
     render(){
-        const { projects } = this.state
+        const { data_skill } = this.state
         return (
             <>
-                <Table columns={this.columns} dataSource={projects} size="small"/>
+                <Table columns={this.columns} dataSource={data_skill} size="small"/>
             </>
         )
     }
