@@ -9,6 +9,15 @@ textarea {
   border: 1px solid #ccc;
   box-shadow: 1px 1px 1px #999;
 }
+.upload-list-inline .ant-upload-list-item {
+  float: left;
+  width: 300px;
+  margin-right: 8px;
+}
+
+.upload-list-inline [class*="-upload-list-rtl"] .ant-upload-list-item {
+  float: right;
+}
 /* label {
   display: block;
   margin-bottom: 10px;
