@@ -323,8 +323,8 @@ class InfoModal extends Component {
                         label: "Gender",
                         size: "small",
                         data: [
-                            { label: "Male", value: "M" },
-                            { label: "Female", value: "F" },
+                            { label: "Male", value: "Male" },
+                            { label: "Female", value: "Female" },
                         ],
                         // rules:[{ required: true }],
                         type: "Radio",
@@ -526,7 +526,7 @@ class InfoModal extends Component {
                     {
                         object: "exit",
                         fieldCol: 12,
-                        key: "fc_contact",
+                        key: "lw_date",
                         size: "small",
                         // rules:[{ required: true }],
                         type: "lw_date",
@@ -566,11 +566,12 @@ class InfoModal extends Component {
 
     BasicCall = (vake) => {
         // this will work after  got  Object from the skill from
+        console.log(vake);
         this.setState(
             {
                 mergeObj: {
                     ...this.state.mergeObj,
-                    ...vake.obj,
+                    ...vake.basic,
                 },
                 basicSubmitted: true, // skill form submitted
             },
@@ -597,11 +598,12 @@ class InfoModal extends Component {
 
     BillingCall = (vake) => {
         // this will work after  getting the Object from level form
+        console.log(vake);
         this.setState(
             {
                 mergeObj: {
                     ...this.state.mergeObj,
-                    ...vake.obj,
+                    ...vake.billing,
                 },
                 billingSubmitted: true, // level form submitted
             },
@@ -628,11 +630,12 @@ class InfoModal extends Component {
 
     DetailCall = (vake) => {
         // this will work after I get the Object from the form
+        console.log(vake);
         this.setState(
             {
                 mergeObj: {
                     ...this.state.mergeObj,
-                    ...vake.obj,
+                    ...vake.detail,
                 },
                 detailSubmitted: true, // level form submitted
             },
@@ -659,11 +662,12 @@ class InfoModal extends Component {
 
     SkillCall = (vake) => {
         // this will work after I get the Object from the form
+        console.log(vake);
         this.setState(
             {
                 mergeObj: {
                     ...this.state.mergeObj,
-                    ...vake.obj,
+                    ...vake.skill,
                 },
                 skillSubmitted: true, // level form submitted
             },
@@ -690,11 +694,12 @@ class InfoModal extends Component {
 
     ExitCall = (vake) => {
         // this will work after I get the Object from the form
+        console.log(vake);
         this.setState(
             {
                 mergeObj: {
                     ...this.state.mergeObj,
-                    ...vake.obj,
+                    ...vake.exit,
                 },
                 exitSubmitted: true, // level form submitted
             },
