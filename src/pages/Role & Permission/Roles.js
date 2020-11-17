@@ -3,7 +3,7 @@ import { Table, Menu, Dropdown, Button, Popconfirm, Row, Col,Typography, Modal }
 import { DownOutlined, SettingOutlined, PlusSquareOutlined} from '@ant-design/icons'; //Icons
 
 
-import Form from '../../components/Form';
+import Form from '../../components/Core/Form';
 import '../styles/table.css'
 import Permission from './Permission';
 

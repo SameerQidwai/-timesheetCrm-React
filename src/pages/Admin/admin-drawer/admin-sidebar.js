@@ -1,55 +1,65 @@
-import React, { Component  } from "react";
+import React, { Component } from "react";
 
-import { Layout, Row } from 'antd';
-import { MenuUnfoldOutlined, MenuFoldOutlined} from '@ant-design/icons'; //Icons
+import { Layout, Row } from "antd";
+import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons"; //Icons
 
-import AdminMenus from './admin-Menus'
-import AdminContent from './admin-content'
+import AdminMenus from "./admin-Menus";
+import AdminContent from "./admin-content";
 
-import './sidebar.css'
+import "../../styles/sidebar.css";
 
 const { Sider, Content } = Layout;
 
-
-class AdminSidebar extends Component{
+class AdminSidebar extends Component {
     state = {
         collapsed: false,
     };
 
     toggle = () => {
-      this.setState({
-          collapsed:  !this.state.collapsed,
-      })
-  }
+        this.setState({
+            collapsed: !this.state.collapsed,
+        });
+    };
 
-    render(){
-        const {collapsed} =this.state;
+    render() {
+        const { collapsed } = this.state;
         return (
             <Layout>
-                <Content style={{ padding: '0 0px' }}>
-                    <Layout className="site-layout-background" style={{ padding: '0px 0' }}>
-                        <Sider 
-                            className="site-layout-background" 
+                <Content style={{ padding: "0 0px" }}>
+                    <Layout
+                        className="site-layout-background"
+                        style={{ padding: "0px 0" }}
+                    >
+                        <Sider
+                            className="site-layout-background"
                             width={200}
-                            trigger={null} 
-                            collapsible 
+                            trigger={null}
+                            collapsible
                             collapsed={this.state.collapsed}
-                        
                         >
-                            <AdminMenus/>
+                            <AdminMenus />
                         </Sider>
-                        <Content style={{ padding: '0 0px', minHeight: 640 }}>
-                            <Row style={{paddingLeft:'10px'}}>
-                                <span className= 'admin-trigger' onClick={ this.toggle }>
-                                    {collapsed ?<MenuUnfoldOutlined/> : < MenuFoldOutlined />}
+                        <Content style={{ padding: "0 0px", minHeight: 640 }}>
+                            <Row style={{ paddingLeft: "10px" }}>
+                                <span
+                                    className="admin-trigger"
+                                    onClick={this.toggle}
+                                >
+                                    {collapsed ? (
+                                        <MenuUnfoldOutlined />
+                                    ) : (
+                                        <MenuFoldOutlined />
+                                    )}
                                 </span>
-                                <AdminContent location = {this.props.location.pathname}/>
+                                <AdminContent
+                                    location={this.props.location.pathname}
+                                />
                             </Row>
                         </Content>
                     </Layout>
                 </Content>
             </Layout>
-        )
+        );
     }
 }
-export default AdminSidebar
+export default AdminSidebar;

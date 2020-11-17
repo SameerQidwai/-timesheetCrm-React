@@ -23,7 +23,7 @@ import {
     PaperClipOutlined,
 } from "@ant-design/icons";
 
-import "./comment.css";
+import "../Styles/comment.css";
 
 const { TextArea } = Input;
 // const { Panel } = Collapse;

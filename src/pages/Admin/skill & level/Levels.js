@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Typography, Row, Col, Popconfirm, Modal, Button, Table, Dropdown, Menu} from 'antd'
 import { SettingOutlined, DownOutlined} from '@ant-design/icons'; //Icons
-import Forms from '../../../components/Form'
+import Forms from '../../../components/Core/Form'
 const {Title} = Typography
 
 class Levels extends Component {

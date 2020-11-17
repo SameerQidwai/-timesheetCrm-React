@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import { Row, Button, Space, Popconfirm } from 'antd';
 
-import Form from '../../components/Form';
+import Form from '../../components/Core/Form';
 
 import '../styles/table.css'
 

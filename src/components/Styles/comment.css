@@ -18,7 +18,3 @@ textarea {
 .upload-list-inline [class*="-upload-list-rtl"] .ant-upload-list-item {
   float: right;
 }
-/* label {
-  display: block;
-  margin-bottom: 10px;
-} */

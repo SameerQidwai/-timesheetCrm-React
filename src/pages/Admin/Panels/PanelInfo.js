@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import {Row, Col, Typography, Button, Table, Menu, Dropdown, Popconfirm, Modal} from 'antd'
 import { DownOutlined, SettingOutlined, PlusSquareOutlined, CloseOutlined} from '@ant-design/icons'; //Icons
 
-import Form from '../../../components/Form';
+import Form from '../../../components/Core/Form';
 
 const { Title } = Typography
 

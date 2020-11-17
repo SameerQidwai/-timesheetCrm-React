@@ -23,7 +23,7 @@ fields={
                 wrapperCol: { span: 'number for the column by Froms ' } 
             },
             size: 'size of the input fields',
-            mode: 'changes according to the input option i.e type, level, autosize ',
+            mode: 'changes according to the input option i.e type (where type is needed), level(in Title), autosize(in text field), visibilityToggle(in password) ',
             labelAlign: 'label  align in the column of Form ',
             hint: 'hint',
             data: 'Option for the fields that needs i.e checkbox selectbox',
@@ -35,7 +35,7 @@ fields={
             rangMax: 'To set max number to a input field and if multiple allowed',
             // default: 'might work n something... form initial value is working at the time',
             showTime: 'boolean for datePicker to show Time as well and string for TimePicker for format...',
-            shape: 'to set shape for Button ',
+            shape: 'to set shape for Button and buttonStle for Radio prop and suffix in input fields',
             size: 'set Size of any element',
             func: 'onChange function on anyFiled',
             fieldStyle: 'style on the field',

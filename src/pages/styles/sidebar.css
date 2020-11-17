@@ -1,6 +1,6 @@
-@import '~antd/dist/antd.css';
+@import "~antd/dist/antd.css";
 
-.admin-trigger{
+.admin-trigger {
     /* font-size: 18px; */
     padding: 0 5x;
     cursor: pointer;

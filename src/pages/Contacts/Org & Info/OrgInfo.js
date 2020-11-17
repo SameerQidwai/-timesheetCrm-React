@@ -1,20 +1,36 @@
-import React, { Component } from 'react'
-// import { ContactsOutlined, MailOutlined, TranslationOutlined, AliwangwangOutlined, DollarOutlined } from '@ant-design/icons'; 
+import React, { Component } from "react";
+// import { ContactsOutlined, MailOutlined, TranslationOutlined, AliwangwangOutlined, DollarOutlined } from '@ant-design/icons';
 
-import { Descriptions, Tabs } from 'antd'
+import {
+    Row,
+    Col,
+    Menu,
+    Tabs,
+    Button,
+    Dropdown,
+    Popconfirm,
+    Descriptions,
+} from "antd";
 
-import Comments from '../../../components/Core/Comments/Comments'
-import Projects from '../../../components/Core/Projects'
-import Opportunity from '../../../components/Core/Opportunities'
+import { SettingOutlined, DownOutlined } from "@ant-design/icons"; //Icons
 
-const { Item } = Descriptions
-const { TabPane } = Tabs
+import Comments from "../../../components/Core/Comments";
+import Projects from "../../../components/Core/Projects";
+import Opportunity from "../../../components/Core/Opportunities";
+
+import InfoModal from "./InfoModal";
+
+const { Item } = Descriptions;
+const { TabPane } = Tabs;
 
 class OrgInfo extends Component {
-    constructor () {
-        super()
-        this.state={
-            data:{
+    constructor() {
+        super();
+        this.state = {
+            infoModal: false,
+            editOrg: false,
+            data: {
+                key: 2,
                 EBA: "89898987",
                 address: "New York",
                 contact: "+923316785557",
@@ -22,45 +38,111 @@ class OrgInfo extends Component {
                 email: "son's@g.com",
                 name: "Musab & sons ",
                 phone: "+921218967889",
-                website: "M&S.com.us"
-            }
-        }
+                website: "M&S.com.us",
+            },
+        };
     }
-    render () {
-        const { data } = this.state
+    closeModal = () => {
+        this.setState({
+            infoModal: false,
+            editOrg: false,
+        });
+    };
+
+    callBack = (value, key) => {
+        console.log(value);
+        this.setState({
+            data: value,
+        });
+    };
+
+    render() {
+        const { data, infoModal, editOrg } = this.state;
+        const DescTitle = (
+            <Row justify="space-between">
+                <Col>{data.name}</Col>
+                <Col>
+                    {" "}
+                    <Dropdown
+                        overlay={
+                            <Menu>
+                                <Menu.Item danger>
+                                    <Popconfirm
+                                        title="Sure to delete?"
+                                        // onConfirm={() =>
+                                        //     this.handleDelete(
+                                        //     )
+                                        // }
+                                    >
+                                        Delete
+                                    </Popconfirm>
+                                </Menu.Item>
+                                <Menu.Item
+                                    onClick={() => {
+                                        this.setState({
+                                            infoModal: true,
+                                            editOrg: data.key,
+                                        });
+                                    }}
+                                >
+                                    Edit
+                                </Menu.Item>
+                            </Menu>
+                        }
+                    >
+                        <Button size="small">
+                            <SettingOutlined /> Option <DownOutlined />
+                        </Button>
+                    </Dropdown>
+                </Col>
+            </Row>
+        );
         return (
             <>
                 <Descriptions
-                title={data.name}
-                size='small'
-                bordered
-                layout="horizontal"
-                // extra={<Button type="primary">Edit</Button>}
-            >
-                <Item label="Contact" >{data.contact}</Item>
-                <Item label="Email" >{data.email}</Item>
-                <Item label="Address">{data.address}</Item>
-                <Item label="Website" >{data.website}</Item>
-                <Item label="EBA" >{data.EBA}</Item>
-            </Descriptions>
-            <Tabs type="card" style={{marginTop:'50px'}} defaultActiveKey="3">
-                <TabPane tab="Project" key="1">
-                    <Projects id={this.props.match.params} />
-                </TabPane>
-                <TabPane tab="Opportunity" key="2">
-                    <Opportunity id={this.props.match.params} />
-                </TabPane>
-                <TabPane tab="Comments" key="3">
-                    <Comments id={this.props.match.params} />
-                </TabPane>
-                <TabPane tab="Sub-organization" key="4">
-                <span><a>Musab & sons -onelm</a></span>
-                    
-                </TabPane>
-            </Tabs>
-          </>
-        )
+                    title={DescTitle}
+                    size="small"
+                    bordered
+                    layout="horizontal"
+                    // extra={<Button type="primary">Edit</Button>}
+                >
+                    <Item label="Contact">{data.contact}</Item>
+                    <Item label="Email">{data.email}</Item>
+                    <Item label="Address">{data.address}</Item>
+                    <Item label="Website">{data.website}</Item>
+                    <Item label="EBA">{data.EBA}</Item>
+                </Descriptions>
+                <Tabs
+                    type="card"
+                    style={{ marginTop: "50px" }}
+                    defaultActiveKey="3"
+                >
+                    <TabPane tab="Project" key="1">
+                        <Projects id={this.props.match.params} />
+                    </TabPane>
+                    <TabPane tab="Opportunity" key="2">
+                        <Opportunity id={this.props.match.params} />
+                    </TabPane>
+                    <TabPane tab="Comments" key="3">
+                        <Comments id={this.props.match.params} />
+                    </TabPane>
+                    <TabPane tab="Sub-organization" key="4">
+                        <span>
+                            <a>Musab & sons -onelm</a>
+                        </span>
+                    </TabPane>
+                </Tabs>
+                {infoModal && (
+                    <InfoModal
+                        visible={infoModal}
+                        editOrg={editOrg}
+                        close={this.closeModal}
+                        callBack={this.callBack}
+                    />
+                )}
+            </>
+        );
     }
 }
 
-export default OrgInfo
+export default OrgInfo;

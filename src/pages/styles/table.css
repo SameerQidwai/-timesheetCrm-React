@@ -1,4 +1,47 @@
 .ant-table-container table > thead > tr th {
-    font-weight: 600; 
-    font-size: medium;     
+    font-weight: 600;
+    font-size: medium;
+}
+
+/* .ant-table-wrapper.TimeSheetTable {
+    height: 75vh;
+} */
+
+/* .ant-table-wrapper.TimeSheetTable
+    table
+    tbody.ant-table-tbody
+    tr.ant-table-row.ant-table-row-level-0
+    td.ant-table-cell
+     {
+    padding: 0;
+} */
+
+div.timeSheet-table div.ant-table-content {
+    overflow-x: hidden !important;
+}
+
+div.timeSheet-table div.ant-table-content:hover {
+    overflow-x: scroll !important;
+}
+
+div.timeSheet-table div.ant-table-content::-webkit-scrollbar-track-piece {
+    margin-left: 300px;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 1px grey;
+    border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #d8d2d2;
+    border-radius: 10px;
 }

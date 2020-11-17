@@ -188,10 +188,25 @@ class Forms extends Component {
     ) => {
         let item = null;
         switch (type) {
+            case "Title":
+                item = (
+                    <Title level={mode} size={size} style={style}>
+                        {placeholder}
+                    </Title>
+                );
+                break;
+            case "Text":
+                item = (
+                    <Text strong={mode} onClick={func} style={style}>
+                        {placeholder}
+                    </Text>
+                );
+                break;
             case "Password":
                 item = (
                     <Input.Password
                         placeholder={placeholder}
+                        visibilityToggle={mode}
                         size={size}
                         style={style}
                     />
@@ -215,6 +230,8 @@ class Forms extends Component {
                         min={min}
                         max={max}
                         size={size}
+                        formatter={(value) => `${value}${shape}`}
+                        parser={(value) => value.replace(shape, "")}
                         style={style}
                     />
                 );
@@ -241,9 +258,18 @@ class Forms extends Component {
                     <Radio.Group
                         options={data}
                         optionType={mode}
+                        buttonStyle={shape}
                         size={size}
                         style={style}
                     />
+                );
+                break;
+            case "Checkbox":
+                item = <Checkbox options={data} size={size} style={style} />;
+                break;
+            case "CheckboxGroup":
+                item = (
+                    <Checkbox.Group options={data} size={size} style={style} />
                 );
                 break;
             case "DatePicker":
@@ -284,28 +310,6 @@ class Forms extends Component {
                         size={size}
                         style={style}
                     />
-                );
-                break;
-            case "CheckboxGroup":
-                item = (
-                    <Checkbox.Group options={data} size={size} style={style} />
-                );
-                break;
-            case "Checkbox":
-                item = <Checkbox options={data} size={size} style={style} />;
-                break;
-            case "Title":
-                item = (
-                    <Title level={mode} size={size} style={style}>
-                        {placeholder}
-                    </Title>
-                );
-                break;
-            case "Text":
-                item = (
-                    <Text strong={mode} onClick={func} style={style}>
-                        {placeholder}
-                    </Text>
                 );
                 break;
             case "Divider":
