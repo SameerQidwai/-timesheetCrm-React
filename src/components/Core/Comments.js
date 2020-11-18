@@ -10,7 +10,6 @@ import {
     Form,
     Input,
     List,
-    Space,
     Upload,
 } from "antd";
 
@@ -85,6 +84,7 @@ class Comments extends Component {
     }
     componentDidMount() {
         this.scrollToBottom(); //scroll to bottom
+        console.log(this.props);
     }
 
     scrollToBottom = () => {
@@ -314,6 +314,7 @@ class Comments extends Component {
             },
             listType: "text",
             beforeUpload: (file) => {
+                console.log(file);
                 this.setState(
                     (state) => ({
                         fileList: [...state.fileList, file],

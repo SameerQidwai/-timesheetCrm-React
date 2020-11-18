@@ -9,6 +9,7 @@ import Login from "../../pages/Login/Login";
 import Organizations from "../../pages/Contacts/Org & Info/Organizations";
 import OrgInfo from "../../pages/Contacts/Org & Info/OrgInfo";
 import Employees from "../../pages/Employees & Info/Employees";
+import EmpInfo from "../../pages/Employees & Info/EmpInfo";
 import Contact from "../../pages/Contacts/Contact";
 import TimeSheet from "../../pages/TimeSheet";
 
@@ -91,6 +92,10 @@ const pageLinks = [
     {
         component: Employees,
         link: "/Employees",
+    },
+    {
+        component: EmpInfo,
+        link: "/Employees/info/:id",
     },
     {
         component: Leads,

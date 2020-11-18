@@ -220,6 +220,7 @@ class Forms extends Component {
                         autoSize={mode}
                         asize={size}
                         style={style}
+                        prefix={mode}
                     />
                 );
                 break;
