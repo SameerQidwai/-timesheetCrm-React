@@ -10,6 +10,8 @@ import Organizations from "../../pages/Contacts/Org & Info/Organizations";
 import OrgInfo from "../../pages/Contacts/Org & Info/OrgInfo";
 import Employees from "../../pages/Employees & Info/Employees";
 import EmpInfo from "../../pages/Employees & Info/EmpInfo";
+import Contractors from "../../pages/Contractors & Info/Contractors";
+import ContInfo from "../../pages/Contractors & Info/ContInfo";
 import Contact from "../../pages/Contacts/Contact";
 import TimeSheet from "../../pages/TimeSheet";
 
@@ -98,6 +100,14 @@ const pageLinks = [
         link: "/Employees/info/:id",
     },
     {
+        component: Contractors,
+        link: "/Contractors",
+    },
+    {
+        component: ContInfo,
+        link: "/Contractors/info/:id",
+    },
+    {
         component: Leads,
         link: "/leads",
     },
@@ -119,9 +129,9 @@ class content extends Component {
             <Content
                 className="site-layout-background"
                 style={{
-                    margin: "24px 16px",
-                    padding: 24,
-                    minHeight: "86vh",
+                    margin: "16px 16px 10px 16px",
+                    padding: "24px 24px 10px 24px",
+                    minHeight: "88vh",
                 }}
             >
                 {this.getPageLink()}

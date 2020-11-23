@@ -27,7 +27,7 @@ const NavItem = [
         text: "Resources",
         items: [
             { text: "Employees", link: "/Employees" },
-            { text: "res-2", link: "/res-2" },
+            { text: "Contractors", link: "/Contractors" },
             { text: "res-3", link: "/res-3" },
             { text: "res-4", link: "/res-4" },
         ],

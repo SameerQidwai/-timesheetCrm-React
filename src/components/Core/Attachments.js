@@ -1,13 +1,15 @@
-import React, { Component } from "react";
+import React, { Component, createRef } from "react";
 import { Upload, message, Button, Row, Col } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import moment from "moment";
 
-const { Dragger } = Upload;
+import "../Styles/attachments.css"
+// const { Dragger } = Upload;
 
 class Attachments extends Component {
     constructor() {
         super();
+        this.UploadRef = createRef();
         this.state = {
             fileList: [],
             defaultFiles: [
@@ -87,9 +89,22 @@ class Attachments extends Component {
         };
         return (
             <Row>
+                {/* <Col span="24" style={{ textAlign: "right" }}>
+                    <UploadOutlined
+                        style={{ fontSize: 24 }}
+                        onClick={() => {
+                            this.UploadRef.current.click();
+                        }}
+                    />
+                </Col> */}
                 <Col span="24">
                     <Upload {...props}>
-                        {/* <Button icon={<UploadOutlined />}>Upload</Button> */}
+                        <Button
+                            type="ghost"
+                            // ref={this.UploadRef}
+                        >
+                            <UploadOutlined /> Upload new File
+                        </Button>
                     </Upload>
                 </Col>
             </Row>

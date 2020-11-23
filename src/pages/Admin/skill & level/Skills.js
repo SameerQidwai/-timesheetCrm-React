@@ -349,6 +349,7 @@ class Skills extends Component {
     };
 
     getRecord = (data) => {
+        console.log(data);
         let result = data.levels ? Object.keys(data.levels).length / 2 : 0; // field to inserted
 
         for (let i = 1; i < result; i++) {

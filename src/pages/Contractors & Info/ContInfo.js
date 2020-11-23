@@ -24,29 +24,29 @@ import InfoModal from "./InfoModal";
 const { Item } = Descriptions;
 const { TabPane } = Tabs;
 
-class OrgInfo extends Component {
+class ContInfo extends Component {
     constructor() {
         super();
         this.state = {
             infoModal: false,
-            editEmp: false,
+            editOrg: false,
             data: {
                 key: 2,
+                EBA: "89898987",
+                address: "New York",
                 contact: "+923316785557",
+                contactName: "Farukh",
                 email: "son's@g.com",
                 name: "Musab",
                 phone: "+921218967889",
-                dob: "12/9/1997",
-                address: "15 yemen road, Yemen",
-                gender: "Male",
-                s_date: "12/9/2020",
+                website: "M&S.com.us",
             },
         };
     }
     closeModal = () => {
         this.setState({
             infoModal: false,
-            editEmp: false,
+            editOrg: false,
         });
     };
 
@@ -58,10 +58,10 @@ class OrgInfo extends Component {
     };
 
     render() {
-        const { data, infoModal, editEmp } = this.state;
+        const { data, infoModal, editOrg } = this.state;
         const DescTitle = (
             <Row justify="space-between">
-                <Col>Basic Info</Col>
+                <Col>{data.name}</Col>
                 <Col>
                     {" "}
                     <Dropdown
@@ -82,7 +82,7 @@ class OrgInfo extends Component {
                                     onClick={() => {
                                         this.setState({
                                             infoModal: true,
-                                            editEmp: data.key,
+                                            editOrg: data.key,
                                         });
                                     }}
                                 >
@@ -107,13 +107,11 @@ class OrgInfo extends Component {
                     layout="horizontal"
                     // extra={<Button type="primary">Edit</Button>}
                 >
-                    <Item label="Name">{data.name}</Item>
-                    <Item label="Phone">{data.contact} </Item>
+                    <Item label="Contact">{data.contact}</Item>
                     <Item label="Email">{data.email}</Item>
                     <Item label="Address">{data.address}</Item>
-                    <Item label="Date Of Birth">{data.dob}</Item>
-                    <Item label="Gender">{data.gender}</Item>
-                    <Item label="Start Date">{data.s_date}</Item>
+                    <Item label="Website">{data.website}</Item>
+                    <Item label="EBA">{data.EBA}</Item>
                 </Descriptions>
                 <Tabs
                     type="card"
@@ -136,7 +134,7 @@ class OrgInfo extends Component {
                 {infoModal && (
                     <InfoModal
                         visible={infoModal}
-                        editEmp={editEmp}
+                        editOrg={editOrg}
                         close={this.closeModal}
                         callBack={this.callBack}
                     />
@@ -146,4 +144,4 @@ class OrgInfo extends Component {
     }
 }
 
-export default OrgInfo;
+export default ContInfo;

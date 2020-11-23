@@ -23,7 +23,6 @@ const { Dragger } = Upload;
 const { RangePicker } = DatePicker;
 const TimeRange = TimePicker.RangePicker;
 const { Title, Text } = Typography;
-
 const validateMessages = {
     required: "${label} is required!",
     types: {
@@ -46,6 +45,8 @@ const normFile = (e) => {
 class Forms extends Component {
     constructor(props) {
         super(props);
+        // [this.form] = Form.useForm();
+        // this.formRef = React.createRef();
     }
 
     multipleUpload = (file, filelist, key, multiple) => {
@@ -79,6 +80,7 @@ class Forms extends Component {
             <Col span={FormFields.FormCol}>
                 <Form
                     id={FormFields.formId}
+                    // ref={this.formRef}
                     ref={FormFields.formId}
                     style={FormFields.Formstyle}
                     name="nest-messages"
@@ -131,7 +133,8 @@ class Forms extends Component {
                                             item.size,
                                             item.func,
                                             item.fieldStyle,
-                                            item.key
+                                            item.key,
+                                            item.disabled
                                         )}
                                     </Item>
                                 </Col>
@@ -184,7 +187,8 @@ class Forms extends Component {
         size,
         func,
         style,
-        key
+        key,
+        disabled
     ) => {
         let item = null;
         switch (type) {
@@ -244,10 +248,21 @@ class Forms extends Component {
                         options={data}
                         mode={mode}
                         showArrow
+                        showSearch
                         size={size}
                         allowClear
                         onChange={func}
                         style={style}
+                        optionFilterProp="label"
+                        filterOption={
+                            (input, option) =>
+                                option.label
+                                    .toLowerCase()
+                                    .indexOf(input.toLowerCase()) >= 0
+                            // console.log(option.label)
+                            // console.log(input.toLowerCase())
+                        }
+                        disabled={disabled}
                     />
                 );
                 break;
@@ -266,11 +281,23 @@ class Forms extends Component {
                 );
                 break;
             case "Checkbox":
-                item = <Checkbox options={data} size={size} style={style} />;
+                item = (
+                    <Checkbox
+                        options={data}
+                        size={size}
+                        style={style}
+                        onChange={func}
+                    />
+                );
                 break;
             case "CheckboxGroup":
                 item = (
-                    <Checkbox.Group options={data} size={size} style={style} />
+                    <Checkbox.Group
+                        options={data}
+                        size={size}
+                        style={style}
+                        onChange={func}
+                    />
                 );
                 break;
             case "DatePicker":
@@ -363,6 +390,7 @@ class Forms extends Component {
                         placeholder={placeholder}
                         style={style}
                         size={size}
+                        disabled={disabled}
                     />
                 );
         }
