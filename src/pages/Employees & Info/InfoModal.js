@@ -17,6 +17,7 @@ class InfoModal extends Component {
         this.basicRef = React.createRef();
         this.billingRef = React.createRef();
         this.detailRef = React.createRef();
+        this.kinRef = React.createRef();
         this.skillRef = React.createRef();
         this.exitRef = React.createRef();
 
@@ -47,34 +48,35 @@ class InfoModal extends Component {
             },
         ];
 
-        this.level_data = [
+        this.skill_data = [
             {
-                key: 1,
-                value: "Superstar",
+                value: 1,
+                label: "Superstar",
             },
             {
-                key: 2,
-                value: "Senior",
+                value: 2,
+                label: "Senior",
             },
             {
-                key: 3,
-                value: "Middle",
+                value: 3,
+                label: "Middle",
             },
             {
-                key: 4,
-                value: "Junior",
+                value: 4,
+                label: "Junior",
             },
             {
-                key: 5,
-                value: "Trainee",
+                value: 5,
+                label: "Trainee",
             },
         ];
 
         this.state = {
-            editOrg: false,
+            editEmp: false,
             basicSubmitted: false,
             billingSubmitted: false,
             detailSubmitted: false,
+            kinSubmitted: false,
             skillSubmitted: false,
             exitSubmitted: false,
             data: {
@@ -83,12 +85,9 @@ class InfoModal extends Component {
                 email: "Trigger@oneLm.com",
                 fname: "Charles",
                 lname: "Michel",
-                role: "011-Gamer",
+                role: "006",
                 disabled: false,
                 phone: "0098287381",
-                nok: "Jeanne Michel",
-                nok_phone: "0098287382",
-                nok_relation: "Daughter",
                 dob: moment("12 19 1997"),
                 s_date: moment("12 19 2020"),
                 address: "15 yemen Road, Yemen",
@@ -99,16 +98,24 @@ class InfoModal extends Component {
                 b_ac: "CPAL98304829101",
                 pay_f: "Weekly",
                 s_date: moment("12 26 2020"),
-                skill: [
-                    { level0: 1, pirority0: 2 },
-                    { level0: 2, pirority0: 4 },
-                    { level0: 3, pirority0: 6 },
-                ],
+                skill: {
+                    skill0: 1,
+                    pirority0: 2,
+                    skill1: 2,
+                    pirority1: 4,
+                    skill2: 3,
+                    pirority2: 6,
+                },
                 fc_email: "Trigger@gmail.com",
                 fc_contact: "0098287381",
                 e_date: moment("12 19 2120"),
                 lw_date: moment("12 18 2120"),
                 er_code: "Retired",
+                nok_name: "Jeanne Michel",
+                nok_phone: "0098287382",
+                nok_relation: "Daughter",
+                nok_sex: "Female",
+                nok_dob: moment("12 19 2022"),
             },
             BasicFields: {
                 //creating Component
@@ -162,7 +169,7 @@ class InfoModal extends Component {
                             { value: "006", label: "006- Birshul Farha" },
                         ],
                         labelAlign: "left",
-                        itemStyle: { marginBottom: 1 },
+                        itemStyle: { marginBottom: 10 },
                     },
                     {
                         fieldCol: 12, // this is only label 4
@@ -199,7 +206,7 @@ class InfoModal extends Component {
                                 message: "Please input your E-mail!",
                             },
                         ],
-                        itemStyle: { marginBottom: 1 },
+                        itemStyle: { marginBottom: 10 },
                     },
                     {
                         object: "basic", //this is field 7
@@ -216,7 +223,7 @@ class InfoModal extends Component {
                                 message: "First Name is required",
                             },
                         ],
-                        itemStyle: { marginBottom: 1 },
+                        itemStyle: { marginBottom: 10 },
                     },
 
                     {
@@ -243,7 +250,7 @@ class InfoModal extends Component {
                                 message: "Last Name is required",
                             },
                         ],
-                        itemStyle: { marginBottom: 1 },
+                        itemStyle: { marginBottom: 5 },
                     },
                     {
                         object: "basic", //this is field 10
@@ -301,6 +308,7 @@ class InfoModal extends Component {
                                 },
                             });
                         }.bind(this),
+                        itemStyle: { marginBottom: 5 },
                     },
                     {
                         fieldCol: 24, // this is only label
@@ -313,19 +321,19 @@ class InfoModal extends Component {
                     {
                         object: "basic", //this is field
                         fieldCol: 12,
-                        key: "Role",
+                        key: "role",
                         size: "small",
                         // rules:[{ required: true }],
                         type: "Select",
                         labelAlign: "left",
                         data: [
                             { value: "001", label: "001-Developer" },
-                            { value: "010", label: "010-Designer" },
-                            { value: "100", label: "100-Manger" },
-                            { value: "110", label: "110-Carpenter" },
-                            { value: "101", label: "101-Assistant" },
-                            { value: "011", label: "011-Gamer" },
-                            { value: "111", label: "111-Gambler" },
+                            { value: "002", label: "010-Designer" },
+                            { value: "003", label: "100-Manger" },
+                            { value: "004", label: "110-Carpenter" },
+                            { value: "005", label: "101-Assistant" },
+                            { value: "006", label: "011-Gamer" },
+                            { value: "007", label: "111-Gambler" },
                         ],
                         wrapperCol: { span: 24 },
                         rules: [
@@ -365,13 +373,15 @@ class InfoModal extends Component {
                         // itemStyle:{marginBottom:'10px'},
                     },
                     {
-                        Placeholder: "Next Of Kin",
+                        Placeholder: "Date Of Birth",
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
                         labelAlign: "right",
                         // itemStyle:{marginBottom:'10px'},
+                        itemStyle: { marginBottom: 1 },
                     },
+
                     {
                         object: "detail",
                         fieldCol: 12,
@@ -392,77 +402,6 @@ class InfoModal extends Component {
                     {
                         object: "detail",
                         fieldCol: 12,
-                        key: "nok",
-                        size: "small",
-                        // rules:[{ required: true }],
-                        type: "input",
-                        rules: [
-                            {
-                                required: true,
-                                message: "First Name is required",
-                            },
-                        ],
-                        itemStyle: { marginBottom: 1 },
-                    },
-                    {
-                        Placeholder: "Next Of Kin Number",
-                        fieldCol: 12,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
-                    },
-                    {
-                        Placeholder: "Next Of Kin Relation",
-                        fieldCol: 12,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
-                    },
-                    {
-                        object: "detail",
-                        fieldCol: 12,
-                        key: "nok_phone",
-                        size: "small",
-                        // rules:[{ required: true }],
-                        type: "input",
-                        rules: [
-                            {
-                                required: true,
-                                message: "First Name is required",
-                            },
-                        ],
-                        itemStyle: { marginBottom: 1 },
-                    },
-                    {
-                        object: "detail",
-                        fieldCol: 12,
-                        key: "nok_relation",
-                        size: "small",
-                        // rules:[{ required: true }],
-                        type: "input",
-                    },
-                    {
-                        Placeholder: "Date Of Birth",
-                        fieldCol: 12,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
-                        itemStyle: { marginBottom: 1 },
-                    },
-                    {
-                        Placeholder: "Start Date",
-                        fieldCol: 12,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
-                    },
-                    {
-                        object: "detail",
-                        fieldCol: 12,
                         key: "dob",
                         size: "small",
                         // rules:[{ required: true }],
@@ -475,6 +414,14 @@ class InfoModal extends Component {
                             },
                         ],
                         itemStyle: { marginBottom: 1 },
+                    },
+                    {
+                        Placeholder: "Start Date",
+                        fieldCol: 24,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
                     },
                     {
                         object: "detail",
@@ -512,6 +459,127 @@ class InfoModal extends Component {
                         object: "detail",
                         fieldCol: 24,
                         key: "sex",
+                        label: "Gender",
+                        size: "small",
+                        data: [
+                            { label: "Male", value: "Male" },
+                            { label: "Female", value: "Female" },
+                        ],
+                        rules: [
+                            {
+                                required: true,
+                                message: "Gender is Obviously required",
+                            },
+                        ],
+                        itemStyle: { marginBottom: 1 },
+                        // rules:[{ required: true }],
+                        type: "Radio",
+                        mode: "button",
+                        shape: "solid",
+                    },
+                ],
+            },
+            KinFields: {
+                formId: "kin_form",
+                FormCol: 24,
+                FieldSpace: 24,
+                justifyField: "center",
+                FormLayout: "inline",
+                size: "middle",
+                fields: [
+                    {
+                        Placeholder: "Name",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                    {
+                        Placeholder: "Number",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                    {
+                        object: "kin",
+                        fieldCol: 12,
+                        key: "nok_name",
+                        size: "small",
+                        // rules:[{ required: true }],
+                        type: "input",
+                        rules: [
+                            {
+                                // required: true,
+                                type: "string",
+                                message: "Enter minimum 8 Numbers",
+                                min: 6,
+                            },
+                        ],
+                        itemStyle: { marginBottom: 1 },
+                    },
+                    {
+                        object: "kin",
+                        fieldCol: 12,
+                        key: "nok_phone",
+                        size: "small",
+                        // rules:[{ required: true }],
+                        type: "input",
+                        rules: [
+                            {
+                                required: true,
+                                message: "First Name is required",
+                            },
+                        ],
+                        itemStyle: { marginBottom: 1 },
+                    },
+                    {
+                        Placeholder: "Relation",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                    {
+                        Placeholder: "Date Of Birth",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                        itemStyle: { marginBottom: 1 },
+                    },
+                    {
+                        object: "kin",
+                        fieldCol: 12,
+                        key: "nok_relation",
+                        size: "small",
+                        // rules:[{ required: true }],
+                        type: "input",
+                    },
+                    {
+                        object: "kin",
+                        fieldCol: 12,
+                        key: "nok_dob",
+                        size: "small",
+                        // rules:[{ required: true }],
+                        type: "DatePicker",
+                        fieldStyle: { width: "-webkit-fill-available" },
+                        rules: [
+                            {
+                                required: true,
+                                message: "Date of Birth is required",
+                            },
+                        ],
+                        itemStyle: { marginBottom: 20 },
+                    },
+                    {
+                        object: "kin",
+                        fieldCol: 24,
+                        key: "nok_sex",
                         label: "Gender",
                         size: "small",
                         data: [
@@ -832,16 +900,18 @@ class InfoModal extends Component {
     componentDidMount = () => {
         console.log(this.props);
         if (this.props.editEmp) {
-            console.log(this.state.data);
             this.getRecord(this.state.data);
         }
     };
 
     submit = () => {
         //submit button click
+        // console.log(this.detailRef.current);
+        // console.log(this.kinRef.current);
         this.basicRef.current && this.basicRef.current.refs.basic_form.submit();
         this.detailRef.current &&
             this.detailRef.current.refs.detail_form.submit();
+        this.kinRef.current && this.kinRef.current.refs.kin_form.submit();
         this.billingRef.current &&
             this.billingRef.current.refs.billing_form.submit();
         this.skillRef.current && this.skillRef.current.refs.skill_form.submit();
@@ -863,12 +933,13 @@ class InfoModal extends Component {
                 if (
                     this.state.basicSubmitted &&
                     this.state.detailSubmitted &&
+                    this.state.kinSubmitted &&
                     this.state.billingSubmitted &&
                     this.state.skillSubmitted &&
                     this.state.exitSubmitted
                 ) {
                     //check if both form is submittef
-                    if (!this.props.editOrg) {
+                    if (!this.props.editEmp) {
                         console.log("emes");
                         this.addEmployee(this.state.mergeObj); //add skill
                     } else {
@@ -895,12 +966,13 @@ class InfoModal extends Component {
                 if (
                     this.state.basicSubmitted &&
                     this.state.detailSubmitted &&
+                    this.state.kinSubmitted &&
                     this.state.billingSubmitted &&
                     this.state.skillSubmitted &&
                     this.state.exitSubmitted
                 ) {
                     //check if both form is submittef
-                    if (!this.props.editOrg) {
+                    if (!this.props.editEmp) {
                         console.log("emes");
                         this.addEmployee(this.state.mergeObj); //add skill
                     } else {
@@ -927,12 +999,46 @@ class InfoModal extends Component {
                 if (
                     this.state.basicSubmitted &&
                     this.state.detailSubmitted &&
+                    this.state.kinSubmitted &&
                     this.state.billingSubmitted &&
                     this.state.skillSubmitted &&
                     this.state.exitSubmitted
                 ) {
                     //check if both form is submittef
-                    if (!this.props.editOrg) {
+                    if (!this.props.editEmp) {
+                        console.log("emes");
+                        this.addEmployee(this.state.mergeObj); //add skill
+                    } else {
+                        console.log("edit");
+                        this.editRecord(this.state.mergeObj); //edit skill
+                    }
+                }
+            }
+        );
+    };
+
+    KinCall = (vake) => {
+        // this will work after I get the Object from the form
+        console.log(vake);
+        this.setState(
+            {
+                mergeObj: {
+                    ...this.state.mergeObj,
+                    ...vake.kin,
+                },
+                kinSubmitted: true, // level form submitted
+            },
+            () => {
+                if (
+                    this.state.basicSubmitted &&
+                    this.state.kinSubmitted &&
+                    this.state.detailSubmitted &&
+                    this.state.billingSubmitted &&
+                    this.state.skillSubmitted &&
+                    this.state.exitSubmitted
+                ) {
+                    //check if both form is submittef
+                    if (!this.props.editEmp) {
                         console.log("emes");
                         this.addEmployee(this.state.mergeObj); //add skill
                     } else {
@@ -951,7 +1057,7 @@ class InfoModal extends Component {
             {
                 mergeObj: {
                     ...this.state.mergeObj,
-                    ...vake.skill,
+                    skill: { ...vake.skill },
                 },
                 skillSubmitted: true, // level form submitted
             },
@@ -959,12 +1065,13 @@ class InfoModal extends Component {
                 if (
                     this.state.basicSubmitted &&
                     this.state.detailSubmitted &&
+                    this.state.kinSubmitted &&
                     this.state.billingSubmitted &&
                     this.state.skillSubmitted &&
                     this.state.exitSubmitted
                 ) {
                     //check if both form is submittef
-                    if (!this.props.editOrg) {
+                    if (!this.props.editEmp) {
                         console.log("emes");
                         this.addEmployee(this.state.mergeObj); //add skill
                     } else {
@@ -999,13 +1106,13 @@ class InfoModal extends Component {
                 key: `skill${item_no}`,
                 size: "small",
                 // rules:[{ required: true }],
-                data: this.level_data,
+                data: this.skill_data,
                 type: "Select",
                 labelAlign: "left",
                 rules: [
                     {
                         required: true,
-                        message: "First Name is required",
+                        message: "skill is required",
                     },
                 ],
             },
@@ -1020,6 +1127,12 @@ class InfoModal extends Component {
                 type: "Select",
                 labelAlign: "left",
                 itemStyle: { marginBottom: "5px" },
+                rules: [
+                    {
+                        required: true,
+                        message: "skill is required",
+                    },
+                ],
             },
             {
                 fieldCol: 2,
@@ -1067,12 +1180,13 @@ class InfoModal extends Component {
                 if (
                     this.state.basicSubmitted &&
                     this.state.detailSubmitted &&
+                    this.state.kinSubmitted &&
                     this.state.billingSubmitted &&
                     this.state.skillSubmitted &&
                     this.state.exitSubmitted
                 ) {
                     //check if both form is submittef
-                    if (!this.props.editOrg) {
+                    if (!this.props.editEmp) {
                         console.log("emes");
                         this.addEmployee(this.state.mergeObj); //add skill
                     } else {
@@ -1093,18 +1207,22 @@ class InfoModal extends Component {
     };
 
     getRecord = (data) => {
-        console.log(data);
-        let result = data.skill ? data.skill.length : 0; // field to inserted
+        // console.log(data);
+        const { SkillFields } = this.state;
+
+        let result = data.skill ? Object.keys(data.skill).length / 2 : 0; // field to inserted
 
         for (let i = 1; i < result; i++) {
             //field insert array
-            this.state.SkillFields.fields = this.state.SkillFields.fields.concat(
+            SkillFields.fields = SkillFields.fields.concat(
                 this.newSkillField(i)
             );
         }
+
         let basic = {
+            // exist: true,
             code: data.code,
-            cpCode: data.cpCpde,
+            cpCode: data.cpCode,
             email: data.email,
             fname: data.fname,
             lname: data.lname,
@@ -1114,12 +1232,17 @@ class InfoModal extends Component {
 
         let detail = {
             phone: data.phone,
-            nok: data.nok,
-            nok_phone: data.nok_phone,
             dob: data.dob,
             s_date: data.s_date,
             address: data.address,
             sex: data.sex,
+        };
+        let kin = {
+            nok_phone: data.nok_phone,
+            nok_name: data.nok_name,
+            nok_relation: data.nok_relation,
+            nok_dob: data.nok_dob,
+            nok_sex: data.nok_sex,
         };
 
         let billing = {
@@ -1131,7 +1254,7 @@ class InfoModal extends Component {
             s_date: data.s_date,
         };
 
-        let skill = [...data.skill];
+        let skill = { ...data.skill };
 
         let exit = {
             fc_email: data.fc_email,
@@ -1147,31 +1270,35 @@ class InfoModal extends Component {
             basic: basic,
         });
 
+        this.detailRef.current.refs.detail_form.setFieldsValue({
+            detail: detail,
+        });
+
+        this.kinRef.current.refs.kin_form.setFieldsValue({
+            kin: kin,
+        });
+
+        this.billingRef.current.refs.billing_form.setFieldsValue({
+            billing: billing,
+        });
+
+        this.skillRef.current.refs.skill_form.setFieldsValue({
+            skill: skill,
+        });
+
+        this.exitRef.current.refs.exit_form.setFieldsValue({
+            exit: exit,
+        });
+
         this.setState({
-            // editOrg: data.key,
-            BillingFields: {
-                ...this.state.BillingFields,
-                initialValues: { billing: billing },
-            },
-            DetailFields: {
-                ...this.state.DetailFields,
-                initialValues: { detail: detail },
-            },
-            SkillFields: {
-                ...this.state.SkillFields,
-                initialValues: { skill: skill },
-            },
-            ExitFields: {
-                ...this.state.ExitFields,
-                initialValues: { exit: exit },
-            },
+            SkillFields,
         });
     };
 
     editRecord = (value) => {
-        const { editOrg, callBack } = this.props;
-        value.key = editOrg;
-        callBack(value, editOrg);
+        const { editEmp, callBack } = this.props;
+        value.key = editEmp;
+        callBack(value, editEmp);
         this.onCancel();
     };
 
@@ -1180,12 +1307,14 @@ class InfoModal extends Component {
             BasicFields,
             BillingFields,
             DetailFields,
+            KinFields,
             SkillFields,
             ExitFields,
         } = this.state;
 
         delete BasicFields.initialValues; // delete initialValues of fields on close
         delete DetailFields.initialValues;
+        delete KinFields.initialValues;
         delete BillingFields.initialValues;
         delete SkillFields.initialValues;
         delete ExitFields.initialValues;
@@ -1221,10 +1350,11 @@ class InfoModal extends Component {
     };
 
     render() {
-        const { editOrg, visible } = this.props;
+        const { editEmp, visible } = this.props;
         const {
             BasicFields,
             DetailFields,
+            KinFields,
             BillingFields,
             SkillFields,
             ExitFields,
@@ -1232,39 +1362,46 @@ class InfoModal extends Component {
 
         return (
             <Modal
-                title={editOrg ? "Edit Empolyee" : "Add Empolyee"}
+                title={editEmp ? "Edit Employee" : "Add Employee"}
                 centered
                 visible={visible}
                 onOk={() => {
                     this.submit();
                 }}
-                okText={editOrg ? "Edit" : "Save"}
+                okText={editEmp ? "Edit" : "Save"}
                 onCancel={this.onCancel}
                 width={700}
             >
                 <Tabs type="card">
-                    <TabPane tab="Basic" key="1">
+                    <TabPane tab="Basic" key="1" forceRender>
                         <Form
                             ref={this.basicRef}
                             Callback={this.BasicCall}
                             FormFields={BasicFields}
                         />
                     </TabPane>
-                    <TabPane tab="Detail" key="2">
+                    <TabPane tab="Detail" key="2" forceRender>
                         <Form
                             ref={this.detailRef}
                             Callback={this.DetailCall}
                             FormFields={DetailFields}
                         />
                     </TabPane>
-                    <TabPane tab="Billing" key="3">
+                    <TabPane tab="Next Of Kin" key="3" forceRender>
+                        <Form
+                            ref={this.kinRef}
+                            Callback={this.KinCall}
+                            FormFields={KinFields}
+                        />
+                    </TabPane>
+                    <TabPane tab="Billing" key="4" forceRender>
                         <Form
                             ref={this.billingRef}
                             Callback={this.BillingCall}
                             FormFields={BillingFields}
                         />
                     </TabPane>
-                    <TabPane tab="Skill" key="4">
+                    <TabPane tab="Skill" key="5" forceRender>
                         <Row justify="end">
                             <Col>
                                 <Button
@@ -1290,7 +1427,7 @@ class InfoModal extends Component {
                             />
                         </Row>
                     </TabPane>
-                    <TabPane tab="Exit" key="5">
+                    <TabPane tab="Exit" key="6" forceRender>
                         <Form
                             ref={this.exitRef}
                             Callback={this.ExitCall}

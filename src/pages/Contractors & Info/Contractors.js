@@ -66,7 +66,7 @@ class Contractors extends Component {
                                     onClick={() => {
                                         this.setState({
                                             infoModal: true,
-                                            editEmp: record.key,
+                                            editCont: record.key,
                                         });
                                     }}
                                 >
@@ -75,7 +75,7 @@ class Contractors extends Component {
                                 <Menu.Item>
                                     <Link
                                         to={{
-                                            pathname: `/Employees/info/${record.key}`,
+                                            pathname: `/Contactors/info/${record.key}`,
                                         }}
                                         className="nav-link"
                                     >
@@ -95,22 +95,22 @@ class Contractors extends Component {
 
         this.state = {
             infoModal: false,
-            editEmp: false,
+            editCont: false,
             data: [
                 {
                     key: 1,
-                    name: "Nair",
-                    email: "N@olm.com",
+                    name: "Daiman Dark",
+                    email: "DD@olm.com",
                 },
                 {
                     key: 2,
-                    name: "Hallen",
-                    email: "H@olm.com",
+                    name: "Neil Armstrong",
+                    email: "HA@olm.com",
                 },
                 {
                     key: 3,
-                    name: "Gorge",
-                    email: "G@olm.com",
+                    name: "Gorge paloni",
+                    email: "GP@olm.com",
                 },
             ],
         };
@@ -126,7 +126,7 @@ class Contractors extends Component {
     closeModal = () => {
         this.setState({
             infoModal: false,
-            editEmp: false,
+            editCont: false,
         });
     };
     callBack = (value, key) => {
@@ -144,7 +144,7 @@ class Contractors extends Component {
     };
 
     render() {
-        const { data, infoModal, editEmp } = this.state;
+        const { data, infoModal, editCont } = this.state;
         const columns = this.columns;
         return (
             <>
@@ -171,7 +171,7 @@ class Contractors extends Component {
                                 >
                                     {" "}
                                     <PlusSquareOutlined />
-                                    Employees
+                                    Contactors
                                 </Button>
                             </Col>
                         </Row>
@@ -187,7 +187,7 @@ class Contractors extends Component {
                 {infoModal && (
                     <InfoModal
                         visible={infoModal}
-                        editEmp={editEmp}
+                        editCont={editCont}
                         close={this.closeModal}
                         callBack={this.callBack}
                         rows={data.length + 1} //Just for time Being till we call the Api's to rernder data while add and edit

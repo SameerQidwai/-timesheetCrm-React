@@ -450,6 +450,7 @@ class InfoModal extends Component {
 
     BasicCall = (vake) => {
         // this will work after  got  Object from the skill from
+        console.log(vake);
         this.setState(
             {
                 mergeObj: {
@@ -479,6 +480,7 @@ class InfoModal extends Component {
 
     BillingCall = (vake) => {
         // this will work after  getting the Object from level form
+        console.log(vake);
         this.setState(
             {
                 mergeObj: {
@@ -508,6 +510,7 @@ class InfoModal extends Component {
 
     InsuredCall = (vake) => {
         // this will work after I get the Object from the form
+        console.log(vake);
         this.setState(
             {
                 mergeObj: {
@@ -546,21 +549,34 @@ class InfoModal extends Component {
         let basic = {};
         let billing = {};
         let insured = {};
-        this.setState({
-            // editOrg: data.key,
-            BasicFields: {
-                ...this.state.BasicFields,
-                initialValues: { obj: basic },
-            },
-            BillingFields: {
-                ...this.state.BillingFields,
-                initialValues: { obj: billing },
-            },
-            InsuredFields: {
-                ...this.state.InsuredFields,
-                initialValues: { obj: insured },
-            },
+
+        this.basicRef.current.refs.basic_form.setFieldsValue({
+            obj: basic,
         });
+
+        this.billingRef.current.refs.billing_form.setFieldsValue({
+            obj: billing,
+        });
+
+        this.insuredRef.current.refs.insured_form.setFieldsValue({
+            obj: insured,
+        });
+
+        // this.setState({
+        //     // editOrg: data.key,
+        //     BasicFields: {
+        //         ...this.state.BasicFields,
+        //         initialValues: { obj: basic },
+        //     },
+        //     BillingFields: {
+        //         ...this.state.BillingFields,
+        //         initialValues: { obj: billing },
+        //     },
+        //     InsuredFields: {
+        //         ...this.state.InsuredFields,
+        //         initialValues: { obj: insured },
+        //     },
+        // });
     };
 
     editRecord = (value) => {
@@ -606,21 +622,21 @@ class InfoModal extends Component {
                 width={700}
             >
                 <Tabs type="card">
-                    <TabPane tab="Basic Informantion" key="1">
+                    <TabPane tab="Basic Informantion" key="1" forceRender>
                         <Form
                             ref={this.basicRef}
                             Callback={this.BasicCall}
                             FormFields={this.state.BasicFields}
                         />
                     </TabPane>
-                    <TabPane tab="Billing Information" key="2">
+                    <TabPane tab="Billing Information" key="2" forceRender>
                         <Form
                             ref={this.billingRef}
                             Callback={this.BillingCall}
                             FormFields={this.state.BillingFields}
                         />
                     </TabPane>
-                    <TabPane tab="Insured Information" key="3">
+                    <TabPane tab="Insured Information" key="3" forceRender>
                         <Form
                             ref={this.insuredRef}
                             Callback={this.InsuredCall}

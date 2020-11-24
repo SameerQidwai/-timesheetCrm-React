@@ -17,7 +17,7 @@ import {
     DownOutlined,
 } from "@ant-design/icons"; //Icons
 
-import { Link } from "react-router-dom";
+import { Link } from "react-router-dom"; 
 
 import InfoModal from "./InfoModal";
 import "../styles/table.css";

@@ -235,8 +235,12 @@ class Forms extends Component {
                         min={min}
                         max={max}
                         size={size}
-                        formatter={(value) => `${value}${shape}`}
-                        parser={(value) => value.replace(shape, "")}
+                        formatter={(value) =>
+                            shape ? `${value}${shape}` : `${value}`
+                        }
+                        parser={(value) =>
+                            shape ? value.replace(shape, "") : value
+                        }
                         style={style}
                     />
                 );

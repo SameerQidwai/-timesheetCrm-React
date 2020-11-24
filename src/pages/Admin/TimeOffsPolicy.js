@@ -76,8 +76,12 @@ class TimeOffsPolicy extends Component {
                     offs: {
                         hours0: 1,
                         timeoff0: "Vacations",
+                        incAt0: "M",
+                        threshold0: "900",
                         hours1: 11,
                         timeoff1: "Sick Leave",
+                        incAt1: "M",
+                        threshold1: "16",
                     },
                 },
                 {
@@ -86,8 +90,12 @@ class TimeOffsPolicy extends Component {
                     offs: {
                         hours0: 2,
                         timeoff0: "Vacations",
+                        incAt0: "M",
+                        threshold0: "901",
                         hours1: 22,
                         timeoff1: "Sick Leave",
+                        incAt1: "Y",
+                        threshold1: "26",
                     },
                 },
             ],
@@ -392,6 +400,7 @@ class TimeOffsPolicy extends Component {
         }
 
         var obj = { key: data.key, title: data.title };
+        console.log(data);
         this.setState(
             {
                 FormFields: {
