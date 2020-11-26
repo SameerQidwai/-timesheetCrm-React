@@ -97,6 +97,7 @@ class Comments extends Component {
             return { isHovered: { ...prevState.isHovered, [index]: filled } };
         });
     };
+    
     handleDelete = (key) => {
         console.log(key);
         this.setState({

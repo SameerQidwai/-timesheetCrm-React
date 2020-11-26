@@ -6,6 +6,7 @@ import {
     Table,
     Modal,
     Button,
+    Space,
     Dropdown,
     Popconfirm,
     Typography,
@@ -330,8 +331,8 @@ class Contact extends Component {
                     <Col>
                         <Title level={4}>Contact Persons</Title>
                     </Col>
-                    <Col style={{ textAlign: "end" }} span={4}>
-                        <Row justify="space-between">
+                    <Col style={{ textAlign: "end" }} span={12}>
+                        <Row justify="end">
                             <Col>
                                 <Button type="default" size="small">
                                     {" "}
@@ -339,7 +340,7 @@ class Contact extends Component {
                                     Filter
                                 </Button>
                             </Col>
-                            <Col>
+                            <Col offset={1}>
                                 <Button
                                     type="primary"
                                     size="small"

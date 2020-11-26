@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import { Route } from "react-router-dom"; // Route Library
+import { Route, Link } from "react-router-dom"; // Route Library
 
 import { Breadcrumb, Col } from "antd";
 
@@ -34,7 +34,7 @@ const pageLinks = [
     },
     {
         component: CalenderHoldays,
-        link: "/admin/calender/holidays/:id",
+        link: "/admin/calenders/holidays/:id",
     },
     {
         component: TimeOffs,
@@ -84,7 +84,11 @@ class AdminContent extends Component {
         path = path.split("/");
         return path.map((item, i) =>
             item !== "" ? (
-                <Breadcrumb.Item key={i}>{item}</Breadcrumb.Item>
+                <Breadcrumb.Item key={i}>
+                    {/* <Link to={item} className="nav-link"> */}
+                    {item}
+                    {/* </Link> */}
+                </Breadcrumb.Item>
             ) : null
         );
     };

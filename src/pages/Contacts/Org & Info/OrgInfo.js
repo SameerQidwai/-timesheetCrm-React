@@ -56,6 +56,10 @@ class OrgInfo extends Component {
             data: value,
         });
     };
+    componentDidMount = () => {
+        console.log(this.props.match.params);
+        //call function here to render data from node
+    };
 
     render() {
         const { data, infoModal, editOrg } = this.state;
@@ -119,16 +123,16 @@ class OrgInfo extends Component {
                     // defaultActiveKey="3"
                 >
                     <TabPane tab="Project" key="1">
-                        <Projects id={this.props.match.params} />
+                        <Projects {...this.props.match.params} />
                     </TabPane>
                     <TabPane tab="Opportunity" key="2">
-                        <Opportunity id={this.props.match.params} />
+                        <Opportunity {...this.props.match.params} />
                     </TabPane>
                     <TabPane tab="Comments" key="3">
-                        <Comments id={this.props.match.params} />
+                        <Comments {...this.props.match.params} />
                     </TabPane>
                     <TabPane tab="Sub-organization" key="4">
-                        <ChildOrg id={this.props.match.params} />
+                        <ChildOrg {...this.props.match.params} />
                     </TabPane>
                 </Tabs>
                 {infoModal && (

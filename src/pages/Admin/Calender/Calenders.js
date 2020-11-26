@@ -71,7 +71,7 @@ class Calenders extends Component {
                                 <Menu.Item>
                                     <Link
                                         to={{
-                                            pathname: `/admin/calender/holidays/${record.key}`,
+                                            pathname: `/admin/calenders/holidays/${record.key}`,
                                         }}
                                         className="nav-link"
                                     >

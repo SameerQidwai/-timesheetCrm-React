@@ -42,7 +42,7 @@ const pageLinks = [
     },
     {
         component: Admin,
-        link: "/admin/calender/holidays/:id",
+        link: "/admin/calenders/holidays/:id",
     },
     {
         component: Admin,

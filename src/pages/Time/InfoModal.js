@@ -3,13 +3,21 @@ import { Modal } from "antd";
 import { UploadOutlined } from "@ant-design/icons"; //Icons
 
 import Form from "../../components/Core/Form";
+import moment from "moment";
 
 class InfoModal extends Component {
     constructor() {
         super();
         this.timeRef = React.createRef();
         this.state = {
-            data: {},
+            data: {
+                type: "Sick Leave",
+                b_date: moment("Nov 25 2020"),
+                e_date: moment("Nov 25 2020"),
+                h_off: 8,
+                d_off: 1,
+                desc: "I was sick",
+            },
             timeFields: {
                 //creating Component
                 formId: "off_form",
@@ -31,7 +39,7 @@ class InfoModal extends Component {
                     {
                         object: "obj",
                         fieldCol: 24,
-                        key: "name",
+                        key: "type",
                         size: "small",
                         // rules:[{ required: true }],
                         type: "Select",

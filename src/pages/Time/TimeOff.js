@@ -91,11 +91,6 @@ class TimeOff extends Component {
                                 >
                                     Edit
                                 </Menu.Item>
-                                <Menu.Item>
-                                    {/* <Link to={{ pathname: '/admin/calender/holidays' ,query: record.key}} className="nav-link"> */}
-                                    View
-                                    {/* </Link> */}
-                                </Menu.Item>
                             </Menu>
                         }
                     >

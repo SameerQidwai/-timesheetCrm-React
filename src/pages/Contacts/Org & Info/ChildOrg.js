@@ -45,8 +45,14 @@ class ChildOrg extends Component {
         };
     }
     componentDidMount = () => {
-        console.log(this.props.id);
+        console.log(this.props);
     };
+
+    componentWillReceiveProps(nextProps) {
+        console.log(nextProps);
+        window.location.reload(false);
+        //call function to call data here
+    }
     render() {
         const { data } = this.state;
         return <Table columns={this.columns} dataSource={data} size="small" />;

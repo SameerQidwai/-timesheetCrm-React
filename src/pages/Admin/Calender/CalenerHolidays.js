@@ -1,14 +1,15 @@
 import React, { Component } from "react";
 import {
-    Table,
-    Menu,
-    Dropdown,
-    Button,
-    Popconfirm,
     Row,
     Col,
-    Typography,
+    Menu,
+    Table,
     Modal,
+    Button,
+    Dropdown,
+    Popconfirm,
+    Typography,
+    DatePicker,
 } from "antd";
 import {
     DownOutlined,
@@ -241,6 +242,15 @@ class CalenerHolidays extends Component {
                 <Row justify="space-between">
                     <Col>
                         <Title level={4}>Holidays</Title>
+                    </Col>
+                    <Col span="2">
+                        <DatePicker
+                            size="small"
+                            mode="year"
+                            picker="year"
+                            format="YYYY"
+                            defaultValue={moment(new Date())}
+                        />
                     </Col>
                     <Col style={{ textAlign: "end" }}>
                         <Button
