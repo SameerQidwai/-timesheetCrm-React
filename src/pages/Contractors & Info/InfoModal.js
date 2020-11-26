@@ -645,7 +645,7 @@ class InfoModal extends Component {
                 FieldSpace: 24,
                 justifyField: "center",
                 FormLayout: "inline",
-                size: "middle",
+                size: "small",
                 fields: [
                     {
                         Placeholder: "Future Contact Email",

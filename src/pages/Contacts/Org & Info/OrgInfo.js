@@ -17,6 +17,7 @@ import { SettingOutlined, DownOutlined } from "@ant-design/icons"; //Icons
 import Comments from "../../../components/Core/Comments";
 import Projects from "../../../components/Core/Projects";
 import Opportunity from "../../../components/Core/Opportunities";
+import ChildOrg from "./ChildOrg";
 
 import InfoModal from "./InfoModal";
 
@@ -115,7 +116,7 @@ class OrgInfo extends Component {
                 <Tabs
                     type="card"
                     style={{ marginTop: "50px" }}
-                    defaultActiveKey="3"
+                    // defaultActiveKey="3"
                 >
                     <TabPane tab="Project" key="1">
                         <Projects id={this.props.match.params} />
@@ -127,9 +128,7 @@ class OrgInfo extends Component {
                         <Comments id={this.props.match.params} />
                     </TabPane>
                     <TabPane tab="Sub-organization" key="4">
-                        <span>
-                            <a>Musab & sons -onelm</a>
-                        </span>
+                        <ChildOrg id={this.props.match.params} />
                     </TabPane>
                 </Tabs>
                 {infoModal && (

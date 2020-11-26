@@ -14,6 +14,7 @@ import Contractors from "../../pages/Contractors & Info/Contractors";
 import ContInfo from "../../pages/Contractors & Info/ContInfo";
 import Contact from "../../pages/Contacts/Contact";
 import TimeSheet from "../../pages/TimeSheet";
+import TimeOff from "../../pages/Time/TimeOff";
 
 import Admin from "../../pages/Admin/admin-drawer/admin-sidebar";
 import Leads from "../../pages/Contacts/Leads";
@@ -45,7 +46,11 @@ const pageLinks = [
     },
     {
         component: Admin,
-        link: "/admin/calender",
+        link: "/admin/calenders",
+    },
+    {
+        component: Admin,
+        link: "/admin/holiday-types",
     },
     {
         component: Admin,
@@ -114,6 +119,10 @@ const pageLinks = [
     {
         component: TimeSheet,
         link: "/time-sheet",
+    },
+    {
+        component: TimeOff,
+        link: "/time-off",
     },
 ];
 

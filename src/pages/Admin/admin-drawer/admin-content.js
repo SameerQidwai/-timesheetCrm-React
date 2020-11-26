@@ -6,7 +6,8 @@ import { Breadcrumb, Col } from "antd";
 
 import Global from "../Global";
 import CalenderHoldays from "../Calender/CalenerHolidays";
-import CalenderList from "../Calender/CalenderList";
+import Calenders from "../Calender/Calenders";
+import HolidayTypes from "../Calender/HolidayTypes";
 import TimeOffs from "../TimeOffs";
 import TimeOffsPolicy from "../TimeOffsPolicy";
 import Roles from "../../Role & Permission/Roles";
@@ -24,8 +25,12 @@ const pageLinks = [
         link: "/admin/global-settings",
     },
     {
-        component: CalenderList,
-        link: "/admin/calender",
+        component: HolidayTypes,
+        link: "/admin/holiday-types",
+    },
+    {
+        component: Calenders,
+        link: "/admin/calenders",
     },
     {
         component: CalenderHoldays,

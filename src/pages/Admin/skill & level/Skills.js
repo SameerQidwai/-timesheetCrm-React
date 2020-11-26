@@ -88,24 +88,29 @@ class Skills extends Component {
 
         this.level_data = [
             {
-                key: 1,
+                val: 1,
                 value: "Superstar",
+                label: "Superstar",
             },
             {
                 key: 2,
                 value: "Senior",
+                label: "Senior",
             },
             {
                 key: 3,
                 value: "Middle",
+                label: "Middle",
             },
             {
                 key: 4,
                 value: "Junior",
+                label: "Junior",
             },
             {
                 key: 5,
                 value: "Trainee",
+                label: "Trainee",
             },
         ];
 

@@ -28,10 +28,10 @@ const listData = [
         key: "/login",
     },
     {
-        text: "TimeOffs",
+        text: "Time Offs",
         icon: <FieldTimeOutlined />,
-        link: "/admin/global-settings",
-        key: "/admin/global-settings",
+        link: "/time-off",
+        key: "/time-off",
     },
     {
         text: "Reporting",

@@ -40,6 +40,11 @@ class Organizations extends Component {
                 key: "name",
             },
             {
+                title: "Parent Organization",
+                dataIndex: "parent",
+                key: "parent",
+            },
+            {
                 title: "Action",
                 key: "action",
                 align: "right",
@@ -121,10 +126,12 @@ class Organizations extends Component {
                 {
                     key: 2,
                     name: "Org A",
+                    parent: "One_LM",
                 },
                 {
                     key: 3,
                     name: "Org B",
+                    parent: "Org A",
                 },
             ],
         };
