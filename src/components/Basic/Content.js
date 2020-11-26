@@ -6,6 +6,7 @@ import { Layout } from "antd";
 
 import Login from "../../pages/Login/Login";
 
+import Admin from "../../pages/Admin/admin-drawer/admin-sidebar";
 import Organizations from "../../pages/Contacts/Org & Info/Organizations";
 import OrgInfo from "../../pages/Contacts/Org & Info/OrgInfo";
 import Employees from "../../pages/Employees & Info/Employees";
@@ -15,8 +16,8 @@ import ContInfo from "../../pages/Contractors & Info/ContInfo";
 import Contact from "../../pages/Contacts/Contact";
 import TimeSheet from "../../pages/TimeSheet";
 import TimeOff from "../../pages/Time/TimeOff";
+import Travels from "../../pages/Travel/Travels";
 
-import Admin from "../../pages/Admin/admin-drawer/admin-sidebar";
 import Leads from "../../pages/Contacts/Leads";
 import Calender from "../Calender/Calender";
 
@@ -123,6 +124,10 @@ const pageLinks = [
     {
         component: TimeOff,
         link: "/time-off",
+    },
+    {
+        component: Travels,
+        link: "/travles",
     },
 ];
 

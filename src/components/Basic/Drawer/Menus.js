@@ -8,6 +8,7 @@ import {
     DingdingOutlined,
     HomeOutlined,
     FileOutlined,
+    FileTextOutlined,
 } from "@ant-design/icons"; //Icons
 
 import "../../Styles/Menus.css";
@@ -34,8 +35,14 @@ const listData = [
         key: "/time-off",
     },
     {
-        text: "Reporting",
+        text: "Travels",
         icon: <DingdingOutlined />,
+        link: "/travles",
+        key: "/travles",
+    },
+    {
+        text: "Reporting",
+        icon: <FileTextOutlined />,
         key: "Reporting",
         subMenu: [
             {
