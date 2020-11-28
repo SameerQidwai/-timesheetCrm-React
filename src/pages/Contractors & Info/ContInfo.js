@@ -18,6 +18,7 @@ import Comments from "../../components/Core/Comments";
 import Projects from "../../components/Core/Projects";
 import Travels from "../../components/Core/Travels";
 import Attachments from "../../components/Core/Attachments";
+import Bank from "../../components/Core/Bank";
 
 import InfoModal from "./InfoModal";
 
@@ -43,6 +44,9 @@ class ContInfo extends Component {
             },
         };
     }
+    componentDidMount = () => {
+        console.log("ContINFO", this.props);
+    };
     closeModal = () => {
         this.setState({
             infoModal: false,
@@ -59,6 +63,7 @@ class ContInfo extends Component {
 
     render() {
         const { data, infoModal, editOrg } = this.state;
+        const { id } = this.props.match.params;
         const DescTitle = (
             <Row justify="space-between">
                 <Col>{data.name}</Col>
@@ -119,16 +124,19 @@ class ContInfo extends Component {
                     defaultActiveKey="5"
                 >
                     <TabPane tab="Project" key="1">
-                        <Projects id={this.props.match.params} />
+                        <Projects id={id} />
                     </TabPane>
                     <TabPane tab="Travels" key="2">
-                        <Travels id={this.props.match.params} />
+                        <Travels id={id} />
                     </TabPane>
                     <TabPane tab="Comments" key="4">
-                        <Comments id={this.props.match.params} />
+                        <Comments id={id} />
                     </TabPane>
                     <TabPane tab="Attachments" key="5">
                         <Attachments />
+                    </TabPane>
+                    <TabPane tab="Account" key="6   ">
+                        <Bank id={id} title={data.name} />
                     </TabPane>
                 </Tabs>
                 {infoModal && (

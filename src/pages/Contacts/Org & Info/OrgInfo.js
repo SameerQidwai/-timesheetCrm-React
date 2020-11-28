@@ -17,6 +17,7 @@ import { SettingOutlined, DownOutlined } from "@ant-design/icons"; //Icons
 import Comments from "../../../components/Core/Comments";
 import Projects from "../../../components/Core/Projects";
 import Opportunity from "../../../components/Core/Opportunities";
+import Bank from "../../../components/Core/Bank";
 import ChildOrg from "./ChildOrg";
 
 import InfoModal from "./InfoModal";
@@ -133,6 +134,9 @@ class OrgInfo extends Component {
                     </TabPane>
                     <TabPane tab="Sub-organization" key="4">
                         <ChildOrg {...this.props.match.params} />
+                    </TabPane>
+                    <TabPane tab="Account" key="5">
+                        <Bank {...this.props.match.params} title={data.name} />
                     </TabPane>
                 </Tabs>
                 {infoModal && (

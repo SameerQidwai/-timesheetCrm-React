@@ -111,7 +111,7 @@ const pageLinks = [
     },
     {
         component: ContInfo,
-        link: "/Contractors/info/:id",
+        link: "/contractors/info/:id",
     },
     {
         component: Leads,

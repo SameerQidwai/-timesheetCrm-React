@@ -75,7 +75,7 @@ class Contractors extends Component {
                                 <Menu.Item>
                                     <Link
                                         to={{
-                                            pathname: `/Contactors/info/${record.key}`,
+                                            pathname: `/contractors/info/${record.key}`,
                                         }}
                                         className="nav-link"
                                     >
