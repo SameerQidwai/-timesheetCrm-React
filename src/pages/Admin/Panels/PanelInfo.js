@@ -373,7 +373,7 @@ class PanelInfo extends Component {
                         style: { textAlign: "right" },
                         size: "small",
                         itemStyle: { marginBottom: "10px" },
-                        func: function func(value, e) {
+                        onClick: function func(value, e) {
                             let obj = this.state.FormFields_1.fields[
                                 this.state.FormFields_1.fields.length - 1
                             ]; // get the inster number for keys
@@ -522,7 +522,7 @@ class PanelInfo extends Component {
                 fieldStyle: {
                     cursor: "pointer",
                 },
-                func: function func(value, e) {
+                onClick: function func(value, e) {
                     this.state.FormFields_1.fields = this.state.FormFields_1.fields.filter(
                         (obj) => {
                             return (

@@ -77,7 +77,7 @@ class Global extends Component {
                         { value: "C", label: "Canada" },
                     ],
                     labelAlign: "right",
-                    func: function func(value, e) {
+                    onChange: function func(value, e) {
                         switch (value) {
                             case "P":
                                 this.dynamoForm_1.current.props.FormFields.fields[3].data = this.FormFields_1[

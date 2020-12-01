@@ -131,10 +131,12 @@ class Forms extends Component {
                                             item.showTime,
                                             item.shape,
                                             item.size,
-                                            item.func,
                                             item.fieldStyle,
                                             item.key,
-                                            item.disabled
+                                            item.disabled,
+                                            item.onChange,
+                                            item.onClick,
+                                            item.onBlur
                                         )}
                                     </Item>
                                 </Col>
@@ -185,10 +187,12 @@ class Forms extends Component {
         showTime,
         shape,
         size,
-        func,
         style,
         key,
-        disabled
+        disabled,
+        onChange,
+        onClick,
+        onBlur
     ) => {
         let item = null;
         switch (type) {
@@ -201,7 +205,7 @@ class Forms extends Component {
                 break;
             case "Text":
                 item = (
-                    <Text strong={mode} onClick={func} style={style}>
+                    <Text strong={mode} onClick={onClick} style={style}>
                         {placeholder}
                     </Text>
                 );
@@ -242,6 +246,8 @@ class Forms extends Component {
                             shape ? value.replace(shape, "") : value
                         }
                         style={style}
+                        onBlur={onBlur}
+                        onChange={onChange}
                     />
                 );
                 break;
@@ -255,7 +261,7 @@ class Forms extends Component {
                         showSearch
                         size={size}
                         allowClear
-                        onChange={func}
+                        onChange={onChange}
                         style={style}
                         optionFilterProp="label"
                         filterOption={
@@ -290,7 +296,7 @@ class Forms extends Component {
                         options={data}
                         size={size}
                         style={style}
-                        onChange={func}
+                        onChange={onChange}
                     />
                 );
                 break;
@@ -300,7 +306,7 @@ class Forms extends Component {
                         options={data}
                         size={size}
                         style={style}
-                        onChange={func}
+                        onChange={onChange}
                     />
                 );
                 break;
@@ -311,6 +317,8 @@ class Forms extends Component {
                         showTime={showTime}
                         size={size}
                         style={style}
+                        onBlur={onBlur}
+                        onChange={onChange}
                     />
                 );
                 break;
@@ -354,7 +362,7 @@ class Forms extends Component {
                         shape={shape}
                         block={max}
                         style={style}
-                        onClick={func}
+                        onClick={onChange}
                         size={size}
                     >
                         {placeholder}
@@ -395,6 +403,8 @@ class Forms extends Component {
                         style={style}
                         size={size}
                         disabled={disabled}
+                        onBlur={onBlur}
+                        onChange={onChange}
                     />
                 );
         }

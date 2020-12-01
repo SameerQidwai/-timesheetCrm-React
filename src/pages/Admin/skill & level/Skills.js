@@ -171,7 +171,7 @@ class Skills extends Component {
                         style: { textAlign: "right" },
                         size: "small",
                         itemStyle: { marginBottom: "10px" },
-                        func: function func(value, e) {
+                        onClick: function func(value, e) {
                             let obj = this.state.LevelFields.fields[
                                 this.state.LevelFields.fields.length - 1
                             ]; // get the inster number for keys
@@ -255,7 +255,7 @@ class Skills extends Component {
                 fieldStyle: {
                     cursor: "pointer",
                 },
-                func: function func(value, e) {
+                onClick: function func(value, e) {
                     this.state.LevelFields.fields = this.state.LevelFields.fields.filter(
                         (obj) => {
                             return (

@@ -255,7 +255,7 @@ class InfoModal extends Component {
                         valuePropName: "checked",
                         type: "Checkbox",
                         labelAlign: "left",
-                        func: function func(e) {
+                        onChange: function func(e) {
                             const { fields } = this.state.BasicFields;
 
                             fields[3].disabled = !e.target.checked; // person's code Field
@@ -980,7 +980,7 @@ class InfoModal extends Component {
                 fieldStyle: {
                     cursor: "pointer",
                 },
-                func: function func(value, e) {
+                onClick: function func(value, e) {
                     const { SkillFields } = this.state;
                     SkillFields.fields = SkillFields.fields.filter((obj) => {
                         return (

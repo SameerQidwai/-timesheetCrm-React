@@ -44,9 +44,11 @@ class ContInfo extends Component {
             },
         };
     }
+
     componentDidMount = () => {
         console.log("ContINFO", this.props);
     };
+    
     closeModal = () => {
         this.setState({
             infoModal: false,
@@ -65,8 +67,8 @@ class ContInfo extends Component {
         const { data, infoModal, editOrg } = this.state;
         const { id } = this.props.match.params;
         const DescTitle = (
-            <Row justify="space-between">
-                <Col>{data.name}</Col>
+            <Row justify="space-between"> 
+                <Col>{data.name}</Col> 
                 <Col>
                     {" "}
                     <Dropdown

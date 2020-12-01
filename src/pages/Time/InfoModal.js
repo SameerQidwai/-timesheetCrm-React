@@ -18,6 +18,8 @@ class InfoModal extends Component {
                 d_off: 1,
                 desc: "I was sick",
             },
+            default_hour: 8, // change this acording to the employeee to get days
+            hasChanged: false,
             timeFields: {
                 //creating Component
                 formId: "off_form",
@@ -73,6 +75,26 @@ class InfoModal extends Component {
                         // rules:[{ required: true }],
                         type: "DatePicker",
                         fieldStyle: { width: "100%" },
+                        onBlur: function func(e) {
+                            const { default_hour, hasChanged } = this.state;
+                            if (hasChanged) {
+                                const {
+                                    obj,
+                                } = this.timeRef.current.refs.off_form.getFieldsValue(); // get the values from from data
+                                
+                                const start = obj.b_date.format("YYYY MMM D");
+                                obj.d_off = obj.e_date.diff(start, "days") + 1;
+                                console.log(obj.d_off);
+                                obj.h_off = obj.d_off * default_hour;
+                                this.timeRef.current.refs.off_form.setFieldsValue(
+                                    { obj: obj }
+                                );
+                                this.setState({ hasChanged: false });
+                            }
+                        }.bind(this),
+                        onChange: function func(e) {
+                            this.setState({ hasChanged: true });
+                        }.bind(this),
                     },
                     {
                         object: "obj",
@@ -82,6 +104,29 @@ class InfoModal extends Component {
                         // rules:[{ required: true }],
                         type: "DatePicker",
                         fieldStyle: { width: "100%" },
+                        onBlur: function func(e) {
+                            const { default_hour, hasChanged } = this.state;
+                            if (hasChanged) {
+                                const {
+                                    obj,
+                                } = this.timeRef.current.refs.off_form.getFieldsValue(); // get the values from from data
+
+                                obj.b_date = !obj.b_date
+                                    ? moment()
+                                    : obj.b_date;
+                                const start = obj.b_date.format("YYYY MMM D");
+                                obj.d_off = obj.e_date.diff(start, "days") + 1;
+                                console.log(obj.d_off);
+                                obj.h_off = obj.d_off * default_hour;
+                                this.timeRef.current.refs.off_form.setFieldsValue(
+                                    { obj: obj }
+                                );
+                                this.setState({ hasChanged: false });
+                            }
+                        }.bind(this),
+                        onChange: function func(e) {
+                            this.setState({ hasChanged: true });
+                        }.bind(this),
                     },
                     {
                         Placeholder: "Hours",
@@ -107,6 +152,37 @@ class InfoModal extends Component {
                         // rules:[{ required: true }],
                         type: "InputNumber",
                         fieldStyle: { width: "100%" },
+                        onBlur: function func(e) {
+                            const { default_hour, hasChanged } = this.state;
+                            if (hasChanged) {
+                                const {
+                                    obj,
+                                } = this.timeRef.current.refs.off_form.getFieldsValue(); // get the values from from data
+
+                                obj.d_off = obj.h_off / default_hour;
+                                obj.b_date = !obj.b_date
+                                    ? moment()
+                                    : obj.b_date;
+                                const addDay =
+                                    obj.d_off <= 1
+                                        ? 0
+                                        : Math.ceil(obj.d_off) - 1;
+
+                                obj.e_date = moment(obj.b_date).add(
+                                    addDay,
+                                    "d"
+                                );
+
+                                this.timeRef.current.refs.off_form.setFieldsValue(
+                                    { obj: obj }
+                                );
+                                this.setState({ hasChanged: false });
+                            }
+                        }.bind(this),
+
+                        onChange: function func(e) {
+                            this.setState({ hasChanged: true });
+                        }.bind(this),
                     },
                     {
                         object: "obj",
@@ -116,6 +192,38 @@ class InfoModal extends Component {
                         // rules:[{ required: true }],
                         type: "InputNumber",
                         fieldStyle: { width: "100%" },
+                        onBlur: function func(e) {
+                            const { default_hour, hasChanged } = this.state;
+                            if (hasChanged) {
+                                const {
+                                    obj,
+                                } = this.timeRef.current.refs.off_form.getFieldsValue(); // get the values from from data
+
+                                obj.h_off = obj.d_off * default_hour;
+                                obj.b_date = !obj.b_date
+                                    ? moment()
+                                    : obj.b_date;
+                                const addDay =
+                                    obj.d_off <= 1
+                                        ? 0
+                                        : Math.ceil(obj.d_off) - 1;
+
+                                obj.e_date = moment(obj.b_date).add(
+                                    addDay,
+                                    "d"
+                                );
+
+                                this.timeRef.current.refs.off_form.setFieldsValue(
+                                    {
+                                        obj: obj,
+                                    }
+                                );
+                            }
+                        }.bind(this),
+
+                        onChange: function func(e) {
+                            this.setState({ hasChanged: true });
+                        }.bind(this),
                     },
                     {
                         Placeholder: "Descriptions",
@@ -167,6 +275,7 @@ class InfoModal extends Component {
         console.log(this.props);
         if (this.props.editOff) {
             this.getRecord(this.state.data);
+            const { default_hour } = this.state; // change this acording to the employeee to get days}
         }
     };
 

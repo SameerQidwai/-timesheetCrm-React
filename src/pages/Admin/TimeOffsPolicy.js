@@ -140,7 +140,7 @@ class TimeOffsPolicy extends Component {
                         mode: "primary",
                         style: { textAlign: "right" },
                         size: "small",
-                        func: function func(value, e) {
+                        onClick: function func(value, e) {
                             let obj = this.state.FormFields_1.fields[
                                 this.state.FormFields_1.fields.length - 1
                             ]; // get the inster number for keys
@@ -288,7 +288,7 @@ class TimeOffsPolicy extends Component {
                 fieldStyle: {
                     cursor: "pointer",
                 },
-                func: function func(value, e) {
+                onClick: function func(value, e) {
                     this.state.FormFields_1.fields = this.state.FormFields_1.fields.filter(
                         (obj) => {
                             return (
