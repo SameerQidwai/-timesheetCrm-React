@@ -5,6 +5,7 @@ import moment from "moment";
 import Form from "../../../components/Core/Form";
 
 import { addList, getOrgs, getOrgRecord, editList } from "../../../service/Organizations";
+import { getContactPersons } from "../../../service/constant-Apis";
 
 const { TabPane } = Tabs;
 
@@ -27,6 +28,7 @@ class InfoModal extends Component {
                 // FieldSpace:24,
                 justifyField: "center",
                 FormLayout: "inline",
+                contactPerson: [],
                 layout: { labelCol: { span: 10 }, wrapperCol: { span: 0 } },
                 size: "middle",
                 fields: [
@@ -126,6 +128,7 @@ class InfoModal extends Component {
                         key: "delegate_cp",
                         size: "small",
                         // rules:[{ required: true }],
+                        data: this.state? this.state.contactPerson : [],
                         type: "Select",
                         itemStyle: { marginBottom: "10px" },
                     },
@@ -420,30 +423,37 @@ class InfoModal extends Component {
     }
     componentDidMount = () =>{
         const { editOrg } = this.props
-        if(editOrg){
+        if (!editOrg){
+            this.getOrgs(editOrg)
             this.callAdd_Edit()
-            this.getRecord(editOrg)
+        }else{
+            this.fetchAll()
         }
-        this.getOrgs(editOrg)
+    }
+
+    fetchAll = () =>{
+        const {editOrg}= this.props;
+        Promise.all([ getOrgs(editOrg), getContactPersons() ])
+        .then(res => {
+            const { BasicFields } = this.state;
+            BasicFields.fields[3].data = res[0].data;
+            BasicFields.fields[11].data = res[1].data;
+            this.setState({ BasicFields, })
+            this.getRecord(editOrg)
+        })
+        .catch(e => {
+            console.log(e);
+        })
     }
 
     getOrgs = (id) => {
         getOrgs(id).then((res) => {
             if (res.success) {
                 const { BasicFields } = this.state;
-                BasicFields.fields[10].data = res.data;
+                BasicFields.fields[3].data = res.data;
                 this.setState({ BasicFields });
             }
         });
-    };
-
-    submit = () => {
-        //submit button click
-        this.basicRef.current.refs.basic_form.submit();
-        this.billingRef.current &&
-            this.billingRef.current.refs.billing_form.submit();
-        this.insuredRef.current &&
-            this.insuredRef.current.refs.insured_form.submit();
     };
 
     callAdd_Edit = ()=>{
@@ -462,6 +472,15 @@ class InfoModal extends Component {
             }
         })
     }
+
+    submit = () => {
+        //submit button click
+        this.basicRef.current.refs.basic_form.submit();
+        this.billingRef.current &&
+            this.billingRef.current.refs.billing_form.submit();
+        this.insuredRef.current &&
+            this.insuredRef.current.refs.insured_form.submit();
+    };
 
     BasicCall = (vake) => {
         // this will work after  got  Object from the skill from

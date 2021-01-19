@@ -126,10 +126,10 @@ class OrgInfo extends Component {
                     // defaultActiveKey="3"
                 >
                     <TabPane tab="Project" key="1">
-                        {/* <Projects {...this.props.match.params} /> */}
+                        <Projects {...this.props.match.params} />
                     </TabPane>
                     <TabPane tab="Opportunity" key="2">
-                        {/* <Opportunity {...this.props.match.params} /> */}
+                        <Opportunity {...this.props.match.params} />
                     </TabPane>
                     <TabPane tab="Comments" key="3">
                         <Comments {...this.props.match.params} />
@@ -138,7 +138,7 @@ class OrgInfo extends Component {
                         <ChildOrg {...this.props.match.params} />
                     </TabPane>
                     <TabPane tab="Account" key="5">
-                        {/* <Bank {...this.props.match.params} title={data.name} /> */}
+                        <Bank {...this.props.match.params} title={data.name} />
                     </TabPane>
                 </Tabs>
                 {infoModal && (

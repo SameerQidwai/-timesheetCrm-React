@@ -60,33 +60,33 @@ class Skills extends Component {
             formSubmitted: false, //check if got data from skill submit
             levelSubmitted: false, //check if got data from level submit
             data_skill:[
-                {
-                    key:1,
-                    name: 'Website Maintainance',
-                    eValue: 50000,
-                    eDate: moment().format('ddd MMM DD YYYY'),
-                    sDate: moment('12-9-2020').format('ddd MMM DD YYYY'),
-                    fDate: moment('11-1-2021').format('ddd MMM DD YYYY'),
-                    pMan: 'Munashir'
-                },
-                {
-                    key:2,
-                    name: 'HR for Accountant Position',
-                    eValue: 50000,
-                    eDate: moment('11-11-2020').format('ddd MMM DD YYYY'),
-                    sDate: moment('11-14-2020').format('ddd MMM DD YYYY'),
-                    fDate: moment('12-1-2020').format('ddd MMM DD YYYY'),
-                    pMan: 'Mustaqeem'
-                },
-                {
-                    key:3,
-                    name: 'Carpenter',
-                    eValue: 50000,
-                    eDate: moment('10-9-2020').format('ddd MMM DD YYYY'),
-                    sDate: moment('12-9-2020').format('ddd MMM DD YYYY'),
-                    fDate: moment('11-1-2021').format('ddd MMM DD YYYY'),
-                    pMan: 'Noor'
-                },
+                // {
+                //     key:1,
+                //     name: 'Website Maintainance',
+                //     eValue: 50000,
+                //     eDate: moment().format('ddd MMM DD YYYY'),
+                //     sDate: moment('12-9-2020').format('ddd MMM DD YYYY'),
+                //     fDate: moment('11-1-2021').format('ddd MMM DD YYYY'),
+                //     pMan: 'Munashir'
+                // },
+                // {
+                //     key:2,
+                //     name: 'HR for Accountant Position',
+                //     eValue: 50000,
+                //     eDate: moment('11-11-2020').format('ddd MMM DD YYYY'),
+                //     sDate: moment('11-14-2020').format('ddd MMM DD YYYY'),
+                //     fDate: moment('12-1-2020').format('ddd MMM DD YYYY'),
+                //     pMan: 'Mustaqeem'
+                // },
+                // {
+                //     key:3,
+                //     name: 'Carpenter',
+                //     eValue: 50000,
+                //     eDate: moment('10-9-2020').format('ddd MMM DD YYYY'),
+                //     sDate: moment('12-9-2020').format('ddd MMM DD YYYY'),
+                //     fDate: moment('11-1-2021').format('ddd MMM DD YYYY'),
+                //     pMan: 'Noor'
+                // },
             ]
         }
     }

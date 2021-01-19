@@ -39,8 +39,8 @@ class ChildOrg extends Component {
         ];
         this.state = {
             data: [
-                { key: 2, name: "Org-A", pKey: 1, parent: "One_LM" },
-                { key: 3, name: "Org-B", pKey: 2, parent: "Org-A" },
+                // { key: 2, name: "Org-A", pKey: 1, parent: "One_LM" },
+                // { key: 3, name: "Org-B", pKey: 2, parent: "Org-A" },
             ],
         };
     }

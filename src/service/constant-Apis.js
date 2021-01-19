@@ -41,3 +41,24 @@ export const getStandardLevels = () => {
             };
         });
 };
+
+export const getContactPersons = () =>{
+    return axios
+    .get(`${Api}/contactpersons`)
+    .then((res) => {
+        const { success, data } = res.data;
+        var cps = []
+        data.map((el) => {
+            cps.push({value: el.id, label: el.firstName +' ' +el.lastName})
+        });
+        console.log(cps);
+        if (success) return { success: success, data: cps };
+    })
+    .catch((err) => {
+        return {
+            error: "Please login again!",
+            success: "failed",
+            message: err.message,
+        };
+    });
+}

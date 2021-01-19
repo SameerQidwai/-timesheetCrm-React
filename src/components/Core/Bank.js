@@ -6,10 +6,10 @@ class Bank extends Component {
         super(props);
         this.state = {
             data: {
-                title: "Musab",
-                bank: "Bank of United",
-                acc_no: "BOU7XXXXXXXXX",
-                bsb: "",
+                // title: "Musab",
+                // bank: "Bank of United",
+                // acc_no: "BOU7XXXXXXXXX",
+                // bsb: "",
             },
         };
     }
@@ -18,7 +18,7 @@ class Bank extends Component {
     };
     render() {
         const { data } = this.state;
-        data.title = this.props.title;
+        // data.title = this.props.title;
         return (
             <Descriptions
                 title="Bank Account Detail"
