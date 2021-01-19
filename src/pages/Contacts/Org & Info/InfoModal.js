@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import { Modal, Tabs } from "antd";
 import { UploadOutlined } from "@ant-design/icons"; //Icons
-
+import moment from "moment";
 import Form from "../../../components/Core/Form";
+
+import { addList, getOrgs, getOrgRecord, editList } from "../../../service/Organizations";
 
 const { TabPane } = Tabs;
 
@@ -17,32 +19,7 @@ class InfoModal extends Component {
             basicSubmitted: false,
             billingSubmitted: false,
             insuredSubmitted: false,
-            data: {
-                key: 1,
-                name: "One_LM",
-                ABN: "098908",
-                CTI: "09809",
-                EBA: "098098",
-                SumIns_PI: 98098,
-                SumIns_PL: 90809809,
-                SumIns_Wc: "10 30 2020",
-                Tax_Code: "09809809",
-                address: "098098098",
-                contact: "9809809",
-                contactName: "90809809",
-                email: "098908",
-                expiry_PI: "10 06 2020",
-                expiry_PL: "10 30 2020",
-                insurer_PI: "908908",
-                insurer_PL: "980980",
-                insurer_WC: "98098",
-                invoice_email: "9098",
-                phone: "908098",
-                policy_PI: "098098",
-                policy_PL: "098098",
-                policy_WC: "9809809",
-                website: "098098098",
-            },
+            check: false,
             BasicFields: {
                 //creating Component
                 formId: "basic_form",
@@ -54,7 +31,7 @@ class InfoModal extends Component {
                 size: "middle",
                 fields: [
                     {
-                        Placeholder: "Name",
+                        Placeholder: "Name *",
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -74,16 +51,18 @@ class InfoModal extends Component {
                         fieldCol: 12,
                         key: "name",
                         size: "small",
-                        // rules:[{ required: true }],
-                        type: "input",
+                        rules:[{ required: true, message: 'Name is mandatory' }],
+                        type: "Input",
+                        itemStyle:{marginBottom: 1},
                     },
                     {
                         object: "obj",
                         fieldCol: 12,
-                        key: "nok",
+                        key: "parent",
                         size: "small",
                         // rules:[{ required: true }],
-                        type: "input",
+                        data: [],
+                        type: "Select",
                     },
                     {
                         Placeholder: "Phone",
@@ -107,7 +86,7 @@ class InfoModal extends Component {
                         key: "phone",
                         size: "small",
                         // rules:[{ required: true }],
-                        type: "input",
+                        type: "Input",
                     },
                     {
                         object: "obj",
@@ -115,11 +94,19 @@ class InfoModal extends Component {
                         key: "email",
                         size: "small",
                         // rules:[{ required: true }],
-                        type: "input",
+                        type: "Input",
                     },
                     {
                         Placeholder: "Expected Business Amount",
-                        fieldCol: 24,
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                    {
+                        Placeholder: "Delegate Contact person",
+                        fieldCol: 12,
                         size: "small",
                         type: "Text",
                         labelAlign: "right",
@@ -131,7 +118,16 @@ class InfoModal extends Component {
                         key: "EBA",
                         size: "small",
                         // rules:[{ required: true }],
-                        type: "input",
+                        type: "Input",
+                    },
+                    {
+                        object: "obj",
+                        fieldCol: 12,
+                        key: "delegate_cp",
+                        size: "small",
+                        // rules:[{ required: true }],
+                        type: "Select",
+                        itemStyle: { marginBottom: "10px" },
                     },
                     {
                         Placeholder: "Address",
@@ -147,7 +143,7 @@ class InfoModal extends Component {
                         key: "address",
                         size: "small",
                         // rules:[{ required: true }],
-                        type: "input",
+                        type: "Input",
                     },
                     {
                         Placeholder: "Website",
@@ -163,26 +159,26 @@ class InfoModal extends Component {
                         key: "website",
                         size: "small",
                         // rules:[{ required: true }],
-                        type: "input",
+                        type: "Input",
                         itemStyle: { marginBottom: "20px" },
                     },
-                    {
-                        object: "obj",
-                        fieldCol: 24,
-                        key: "attach",
-                        size: "small",
-                        mode: "",
-                        Placeholder: (
-                            <>
-                                Click or drag Other Doc <UploadOutlined />
-                            </>
-                        ),
+                    // {
+                    //     object: "obj",
+                    //     fieldCol: 24,
+                    //     key: "attach",
+                    //     size: "small",
+                    //     mode: "",
+                    //     Placeholder: (
+                    //         <>
+                    //             Click or drag Other Doc <UploadOutlined />
+                    //         </>
+                    //     ),
 
-                        type: "Dragger",
-                        labelAlign: "right",
-                        valuePropName: "fileList",
-                        getValue: true,
-                    },
+                    //     type: "Dragger",
+                    //     labelAlign: "right",
+                    //     valuePropName: "fileList",
+                    //     getValue: true,
+                    // },
                 ],
             },
             BillingFields: {
@@ -216,27 +212,19 @@ class InfoModal extends Component {
                         key: "ABN",
                         size: "small",
                         // rules:[{ required: true }],
-                        type: "input",
+                        type: "Input",
                     },
                     {
                         object: "obj",
                         fieldCol: 12,
-                        key: "Tax_Code",
+                        key: "tax_Code",
                         size: "small",
                         // rules:[{ required: true }],
-                        type: "input",
+                        type: "Input",
                     },
                     {
                         Placeholder: "Invoice Email",
-                        fieldCol: 12,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
-                    },
-                    {
-                        Placeholder: "Client Terms Info",
-                        fieldCol: 12,
+                        fieldCol: 24,
                         size: "small",
                         type: "Text",
                         labelAlign: "right",
@@ -248,15 +236,7 @@ class InfoModal extends Component {
                         key: "invoice_email",
                         size: "small",
                         // rules:[{ required: true }],
-                        type: "input",
-                    },
-                    {
-                        object: "obj",
-                        fieldCol: 12,
-                        key: "CTI",
-                        size: "small",
-                        // rules:[{ required: true }],
-                        type: "input",
+                        type: "Input",
                     },
                 ],
             },
@@ -284,7 +264,7 @@ class InfoModal extends Component {
                         label: "PI",
                         size: "small",
                         // rules:[{ required: true }],
-                        type: "input",
+                        type: "Input",
                         labelAlign: "left",
                         itemStyle: { marginBottom: "10px" },
                     },
@@ -295,7 +275,7 @@ class InfoModal extends Component {
                         label: "PL",
                         size: "small",
                         // rules:[{ required: true }],
-                        type: "input",
+                        type: "Input",
                         labelAlign: "left",
                         itemStyle: { marginBottom: "10px" },
                     },
@@ -306,7 +286,7 @@ class InfoModal extends Component {
                         label: "WC",
                         size: "small",
                         // rules:[{ required: true }],
-                        type: "input",
+                        type: "Input",
                         labelAlign: "left",
                         itemStyle: { marginBottom: "10px" },
                     },
@@ -325,7 +305,7 @@ class InfoModal extends Component {
                         key: "policy_PI",
                         label: "PI",
                         size: "small",
-                        type: "input",
+                        type: "Input",
                         labelAlign: "left",
                         itemStyle: { marginBottom: "10px" },
                     },
@@ -336,7 +316,7 @@ class InfoModal extends Component {
                         label: "PL",
                         size: "small",
                         // rules:[{ required: true }],
-                        type: "input",
+                        type: "Input",
                         labelAlign: "left",
                         itemStyle: { marginBottom: "10px" },
                     },
@@ -347,7 +327,7 @@ class InfoModal extends Component {
                         label: "WC",
                         size: "small",
                         // rules:[{ required: true }],
-                        type: "input",
+                        type: "Input",
                         labelAlign: "left",
                         itemStyle: { marginBottom: "10px" },
                     },
@@ -385,7 +365,7 @@ class InfoModal extends Component {
                     {
                         object: "obj",
                         fieldCol: 8,
-                        key: "Covrg_WC",
+                        key: "SumIns_WC",
                         label: "WC",
                         size: "small",
                         // rules:[{ required: true }],
@@ -426,7 +406,7 @@ class InfoModal extends Component {
                     {
                         object: "obj",
                         fieldCol: 8,
-                        key: "SumIns_Wc",
+                        key: "expiry_WC",
                         label: "WC",
                         size: "small",
                         // rules:[{ required: true }],
@@ -438,6 +418,24 @@ class InfoModal extends Component {
             },
         };
     }
+    componentDidMount = () =>{
+        const { editOrg } = this.props
+        if(editOrg){
+            this.callAdd_Edit()
+            this.getRecord(editOrg)
+        }
+        this.getOrgs(editOrg)
+    }
+
+    getOrgs = (id) => {
+        getOrgs(id).then((res) => {
+            if (res.success) {
+                const { BasicFields } = this.state;
+                BasicFields.fields[10].data = res.data;
+                this.setState({ BasicFields });
+            }
+        });
+    };
 
     submit = () => {
         //submit button click
@@ -448,14 +446,41 @@ class InfoModal extends Component {
             this.insuredRef.current.refs.insured_form.submit();
     };
 
+    callAdd_Edit = ()=>{
+        const { BasicFields } = this.state
+        this.setState({
+            BasicFields: {
+                ...BasicFields,
+                fields: BasicFields.fields.filter(el =>{
+                    if (el.Placeholder === 'Expected Business Amount'){
+                        el.fieldCol = 24
+                        return el
+                    }else if (el.Placeholder !=='Delegate Contact person' && el.key !== "delegate_cp"){
+                        return el
+                    }
+                })
+            }
+        })
+    }
+
     BasicCall = (vake) => {
         // this will work after  got  Object from the skill from
-        console.log(vake);
+        ;
+        vake = vake.obj
         this.setState(
             {
                 mergeObj: {
                     ...this.state.mergeObj,
-                    ...vake.obj,
+                    ...{
+                        name: vake.name? vake.name : '',
+                        parentOrganizationId: vake.parent? vake.parent : null,
+                        phoneNumber: vake.phone? vake.phone : '',
+                        delegateContactPersonOrganizationId: vake.delegate_cp? vake.delegate_cp: null,
+                        email: vake.email? vake.email : '',
+                        expectedBusinessAmount: vake.EBA? vake.EBA : 0,
+                        address: vake.address? vake.address : '',
+                        website: vake.website? vake.website: '',
+                    },
                 },
                 basicSubmitted: true, // skill form submitted
             },
@@ -467,10 +492,10 @@ class InfoModal extends Component {
                 ) {
                     //check if both form is submittef
                     if (!this.props.editOrg) {
-                        console.log("emes");
+                        
                         this.addOrganization(this.state.mergeObj); //add skill
                     } else {
-                        console.log("edit");
+                        
                         this.editRecord(this.state.mergeObj); //edit skill
                     }
                 }
@@ -480,12 +505,18 @@ class InfoModal extends Component {
 
     BillingCall = (vake) => {
         // this will work after  getting the Object from level form
-        console.log(vake);
+        ;
+        vake = vake.obj
         this.setState(
             {
                 mergeObj: {
                     ...this.state.mergeObj,
-                    ...vake.obj,
+                    ...{
+                        abn: vake.ABN? vake.ABN : '',
+                        taxCode: vake.tax_Code? vake.tax_Code : '',
+                        invoiceEmail: vake.invoice_email? vake.invoice_email: '',
+                        cti: vake.CTI? vake.CTI : '',
+                    },
                 },
                 billingSubmitted: true, // level form submitted
             },
@@ -497,10 +528,10 @@ class InfoModal extends Component {
                 ) {
                     //check if both form is submittef
                     if (!this.props.editOrg) {
-                        console.log("emes");
+                        
                         this.addOrganization(this.state.mergeObj); //add skill
                     } else {
-                        console.log("edit");
+                        
                         this.editRecord(this.state.mergeObj); //edit skill
                     }
                 }
@@ -510,12 +541,26 @@ class InfoModal extends Component {
 
     InsuredCall = (vake) => {
         // this will work after I get the Object from the form
-        console.log(vake);
+        ;
+        vake = vake.obj
         this.setState(
             {
                 mergeObj: {
                     ...this.state.mergeObj,
-                    ...vake.obj,
+                    ...{
+                        piInsurer: vake.insurer_PI? vake.insurer_PI : '',
+                        plInsurer: vake.insurer_PL? vake.insurer_PL : '',
+                        wcInsurer: vake.insurer_WC? vake.insurer_WC : '',
+                        piPolicyNumber: vake.policy_PI? vake.policy_PI : '',
+                        plPolicyNumber: vake.policy_PL? vake.policy_PL : '',
+                        wcPolicyNumber: vake.policy_WC? vake.policy_WC : '',
+                        piSumInsured: vake.SumIns_PI? vake.SumIns_PI : 0,
+                        plSumInsured: vake.SumIns_PL? vake.SumIns_PL : 0,
+                        wcSumInsured: vake.SumIns_WC? vake.SumIns_WC : 0,
+                        piInsuranceExpiry: vake.expiry_PI? vake.expiry_PI : null,
+                        plInsuranceExpiry: vake.expiry_PL? vake.expiry_PL : null,
+                        wcInsuranceExpiry: vake.expiry_WC? vake.expiry_WC : null,
+                    },
                 },
                 insuredSubmitted: true, // level form submitted
             },
@@ -527,10 +572,10 @@ class InfoModal extends Component {
                 ) {
                     //check if both form is submittef
                     if (!this.props.editOrg) {
-                        console.log("emes");
+                        
                         this.addOrganization(this.state.mergeObj); //add skill
                     } else {
-                        console.log("edit");
+                        
                         this.editRecord(this.state.mergeObj); //edit skill
                     }
                 }
@@ -539,86 +584,84 @@ class InfoModal extends Component {
     };
 
     addOrganization = (value) => {
-        const { rows, callBack } = this.props;
-        value.key = rows; // get new key
-        callBack(value, false);
-        this.onCancel();
+        const { callBack } = this.props;
+        addList(value).then((res) => {
+            if(res.sucess){
+                callBack()
+            }
+        });
     };
 
-    getRecord = (data) => {
-        let basic = {};
-        let billing = {};
-        let insured = {};
+    getRecord = (id) => {
+        // const { editOrg } = this.props;
+        getOrgRecord(id).then((res) => {
+            if (res.success){
+                const vake = res.data
+                ;
+                let basic = {
+                    name: vake.name,
+                    parent: vake.parentOrganization && vake.parentOrganization.id,
+                    phone: vake.phoneNumber,
+                    delegate_cp: vake.delegateContactPersonOrganization && vake.delegateContactPersonOrganization.id,
+                    email: vake.email,
+                    EBA: vake.expectedBusinessAmount,
+                    address: vake.address,
+                    website: vake.website,
+                }
+                let billing = {
+                    ABN: vake.abn,
+                    tax_Code: vake.taxCode,
+                    invoice_email: vake.invoiceEmail,
+                    CTI: vake.cti,
+                }
+                let insured = {
+                    insurer_PI: vake.piInsurer,
+                    insurer_PL: vake.plInsurer,
+                    insurer_WC: vake.wcInsurer,
+                    policy_PI: vake.piPolicyNumber,
+                    policy_PL: vake.plPolicyNumber,
+                    policy_WC: vake.wcPolicyNumber,
+                    SumIns_PI: vake.piSumInsured,
+                    SumIns_PL: vake.plSumInsured,
+                    SumIns_WC: vake.wcSumInsured,
+                    expiry_PI: moment(vake.piInsuranceExpiry),
+                    expiry_PL: moment(vake.plInsuranceExpiry),
+                    expiry_WC: moment(vake.wcInsuranceExpiry),
+                }
+                this.basicRef.current.refs.basic_form.setFieldsValue({ obj: basic, });
+        
+                this.billingRef.current.refs.billing_form.setFieldsValue({ obj: billing, });
+        
+                this.insuredRef.current.refs.insured_form.setFieldsValue({ obj: insured, });
+            }
+        })
 
-        this.basicRef.current.refs.basic_form.setFieldsValue({
-            obj: basic,
-        });
-
-        this.billingRef.current.refs.billing_form.setFieldsValue({
-            obj: billing,
-        });
-
-        this.insuredRef.current.refs.insured_form.setFieldsValue({
-            obj: insured,
-        });
-
-        // this.setState({
-        //     // editOrg: data.key,
-        //     BasicFields: {
-        //         ...this.state.BasicFields,
-        //         initialValues: { obj: basic },
-        //     },
-        //     BillingFields: {
-        //         ...this.state.BillingFields,
-        //         initialValues: { obj: billing },
-        //     },
-        //     InsuredFields: {
-        //         ...this.state.InsuredFields,
-        //         initialValues: { obj: insured },
-        //     },
-        // });
     };
 
     editRecord = (value) => {
         const { editOrg, callBack } = this.props;
-        value.key = editOrg;
-        callBack(value, editOrg);
-        this.onCancel();
-    };
-
-    onCancel = () => {
-        const { BasicFields, BillingFields, InsuredFields } = this.state;
-        delete BasicFields.initialValues; // delete initialValues of fields on close
-        delete BillingFields.initialValues;
-        delete InsuredFields.initialValues;
-        this.setState(
-            {
-                basicSubmitted: false,
-                billingSubmitted: false,
-                insuredSubmitted: false,
-                BasicFields: { ...BasicFields }, //delete Formfields on Close
-                BillingFields: { ...BillingFields },
-                InsuredFields: { ...InsuredFields },
-                mergeObj: {},
-            },
-            () => {
-                this.props.close();
+        value.id = editOrg
+        editList(value).then((res) => {
+            console.log(res);
+            if(res.success){
+                console.log('hereh');
+                callBack()
             }
-        );
+        });
     };
 
     render() {
         const { editOrg, visible } = this.props;
         return (
             <Modal
-                title={editOrg ? "Edit Organization" : "Add New Organization"}
+                title={editOrg? "Edit Organization" : "Add New Organization"}
                 centered
                 visible={visible}
                 onOk={() => {
                     this.submit();
                 }}
-                okText={editOrg ? "Edit" : "Save"}
-                onCancel={this.onCancel}
+                okText={"Save"}
+                onCancel={this.props.close}
                 width={700}
             >
                 <Tabs type="card">

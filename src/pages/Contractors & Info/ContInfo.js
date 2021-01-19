@@ -1,16 +1,6 @@
 import React, { Component } from "react";
-// import { ContactsOutlined, MailOutlined, TranslationOutlined, AliwangwangOutlined, DollarOutlined } from '@ant-design/icons';
 
-import {
-    Row,
-    Col,
-    Menu,
-    Tabs,
-    Button,
-    Dropdown,
-    Popconfirm,
-    Descriptions,
-} from "antd";
+import { Row, Col, Menu, Tabs, Button, Dropdown, Popconfirm, Descriptions, } from "antd";
 
 import { SettingOutlined, DownOutlined } from "@ant-design/icons"; //Icons
 

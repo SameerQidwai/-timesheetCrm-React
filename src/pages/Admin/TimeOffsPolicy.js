@@ -20,6 +20,14 @@ import {
 import Form from "../../components/Core/Form";
 import "../styles/table.css";
 
+import {
+    timeOff,
+    addList,
+    getList,
+    editLabel,
+    delLabel,
+} from "../../service/time-off-policy";
+
 const { Title } = Typography;
 
 class TimeOffsPolicy extends Component {
@@ -31,8 +39,8 @@ class TimeOffsPolicy extends Component {
         this.columns = [
             {
                 title: "Title",
-                dataIndex: "title",
-                key: "title",
+                dataIndex: "label",
+                key: "label",
             },
             {
                 title: "Action",
@@ -46,7 +54,7 @@ class TimeOffsPolicy extends Component {
                                     <Popconfirm
                                         title="Sure to delete?"
                                         onConfirm={() =>
-                                            this.handleDelete(record.key)
+                                            this.handleDelete(record.id)
                                         }
                                     >
                                         Delete
@@ -69,36 +77,8 @@ class TimeOffsPolicy extends Component {
         ];
 
         this.state = {
-            data: [
-                {
-                    key: 1,
-                    title: "Standards",
-                    offs: {
-                        hours0: 1,
-                        timeoff0: "Vacations",
-                        incAt0: "M",
-                        threshold0: "900",
-                        hours1: 11,
-                        timeoff1: "Sick Leave",
-                        incAt1: "M",
-                        threshold1: "16",
-                    },
-                },
-                {
-                    key: 2,
-                    title: "Executives",
-                    offs: {
-                        hours0: 2,
-                        timeoff0: "Vacations",
-                        incAt0: "M",
-                        threshold0: "901",
-                        hours1: 22,
-                        timeoff1: "Sick Leave",
-                        incAt1: "Y",
-                        threshold1: "26",
-                    },
-                },
-            ],
+            timeoff: [],
+            data: [],
             openModal: false,
             mergeObj: {},
             form1Submitted: false,
@@ -119,7 +99,7 @@ class TimeOffsPolicy extends Component {
                         object: "obj",
                         fieldCol: 24,
                         layout: { wrapperCol: { span: 22 } },
-                        key: "title",
+                        key: "label",
                         label: "Title",
                         size: "small",
                         rules: [
@@ -144,7 +124,6 @@ class TimeOffsPolicy extends Component {
                             let obj = this.state.FormFields_1.fields[
                                 this.state.FormFields_1.fields.length - 1
                             ]; // get the inster number for keys
-                            console.log(obj);
                             const item_no = obj ? parseInt(obj.key) + 1 : 0;
                             this.state.FormFields_1.fields = this.state.FormFields_1.fields.concat(
                                 ...this.newField(item_no)
@@ -199,15 +178,52 @@ class TimeOffsPolicy extends Component {
                 FormLayout: "inline",
                 size: "small",
                 // backstyle: {maxHeight:'115px',overflowY: 'auto'},
-                fields: this.newField(0),
+                fields: [],
             },
 
             editTimeoff: false,
         };
     }
 
+    componentDidMount = () => {
+        this.timeOff();
+        this.getData();
+    };
+
+    timeOff = () => {
+        timeOff().then((res) => {
+            if (res.success) {
+                this.setState({
+                    timeoff: res.data,
+                });
+            }
+        });
+    };
+    getData = () => {
+        getList().then((res) => {
+            if (res.success) {
+                this.setState({
+                    data: res.data,
+                    openModal: false,
+                    editTimeoff: false,
+                    FormFields: {
+                        ...this.state.FormFields,
+                        initialValues: {},
+                    },
+                    FormFields_1: {
+                        ...this.state.FormFields_1,
+                        initialValues: {},
+                        fields: [],
+                    },
+                    mergeObj: {},
+                });
+            }
+        });
+    };
+
     newField = (item_no) => {
         //inserting new fields in modals
+        const { timeoff } = this.state;
         const splice_key = [
             `timeoff${item_no}`,
             `hours${item_no}`,
@@ -227,11 +243,7 @@ class TimeOffsPolicy extends Component {
                 type: "Select",
                 labelAlign: "left",
                 itemStyle: { marginBottom: "5px" },
-                data: [
-                    { value: "Sick Leave", label: "Sick Leave" },
-                    { value: "Vacations", label: "Vacations" },
-                    { value: "Traning", label: "Traning" },
-                ],
+                data: timeoff,
             },
             {
                 object: "obj",
@@ -269,11 +281,7 @@ class TimeOffsPolicy extends Component {
                 type: "InputNumber",
                 labelAlign: "left",
                 itemStyle: { marginBottom: "5px" },
-                data: [
-                    { value: "Sick Leave", label: "Sick Leave" },
-                    { value: "Vacations", label: "Vacations" },
-                    { value: "Traning", label: "Traning" },
-                ],
+                data: [],
             },
             {
                 fieldCol: 1,
@@ -309,30 +317,37 @@ class TimeOffsPolicy extends Component {
         ];
     };
 
-    handleDelete = (key) => {
-        const dataSource = [...this.state.data];
-        this.setState({ data: dataSource.filter((item) => item.key !== key) });
+    handleDelete = (id) => {
+        delLabel(id).then((res) => {
+            if (res) {
+                this.getData();
+            }
+        });
     };
 
     toggelModal = (status) => {
-        this.setState({
-            openModal: status,
-        });
-
-        if (this.state.openModal) {
-            this.dynamoForm_1.current.refs.title_form.resetFields();
-            this.dynamoForm_2.current.refs.hours_form.resetFields();
-
+        const { FormFields_1 } = this.state;
+        if (!status) {
             delete this.state.FormFields.initialValues;
             delete this.state.FormFields_1.initialValues;
-            this.state.FormFields_1.fields = this.newField(0);
 
             this.setState({
                 FormFields: this.state.FormFields,
-                FormFields_1: this.state.FormFields_1,
+                FormFields_1: { ...this.state.FormFields_1, fields: [] },
+                openModal: false,
                 editTimeoff: false,
             });
+        } else {
+            this.setState({
+                openModal: status,
+                FormFields_1: { ...FormFields_1, fields: this.newField(0) },
+            });
         }
+    };
+
+    submit = () => {
+        this.dynamoForm_1.current.refs.title_form.submit();
+        this.dynamoForm_2.current.refs.hours_form.submit();
     };
 
     Callback = (vake) => {
@@ -341,10 +356,7 @@ class TimeOffsPolicy extends Component {
             {
                 mergeObj: {
                     ...this.state.mergeObj,
-                    title: vake.obj.title,
-                    key: vake.obj.key
-                        ? vake.obj.key
-                        : this.state.data.length + 1,
+                    label: vake.obj.label,
                 },
                 form1Submitted: true,
             },
@@ -364,11 +376,23 @@ class TimeOffsPolicy extends Component {
 
     Callback2 = (vake) => {
         // this will work after I get the Object from the form
+        console.log(vake.obj);
+        const { obj } = vake;
+        const vars = [];
+        let result = Object.keys(obj).length / 4;
+        for (let i = 0; i < result; i++) {
+            vars.push({
+                timeOffTypeId: obj[`timeoff${i}`],
+                hours: obj[`hours${i}`],
+                increaseEvery: obj[`incAt${i}`],
+                threshold: obj[`threshold${i}`],
+            });
+        }
         this.setState(
             {
                 mergeObj: {
                     ...this.state.mergeObj,
-                    offs: vake.obj,
+                    timeOffPolicyTimeOffTypes: vars,
                 },
                 form2Submitted: true,
             },
@@ -386,67 +410,53 @@ class TimeOffsPolicy extends Component {
         );
     };
 
-    submit = () => {
-        this.dynamoForm_1.current.refs.title_form.submit();
-        this.dynamoForm_2.current.refs.hours_form.submit();
-    };
-
     getRecord = (data, text) => {
-        let result = data.offs ? Object.keys(data.offs).length / 4 : 0;
-        for (let i = 1; i < result; i++) {
+        const vars = {};
+        const array = data.timeOffPolicyTimeOffTypes;
+        let result = array.length;
+        for (let i = 0; i < result; i++) {
             this.state.FormFields_1.fields = this.state.FormFields_1.fields.concat(
                 this.newField(i)
             );
+            let el = array[i];
+            vars[`timeoff${i}`] = el.timeOffType.id;
+            vars[`hours${i}`] = el.hours;
+            vars[`incAt${i}`] = el.increaseEvery;
+            vars[`threshold${i}`] = el.threshold;
         }
 
-        var obj = { key: data.key, title: data.title };
-        console.log(data);
-        this.setState(
-            {
-                FormFields: {
-                    ...this.state.FormFields,
-                    initialValues: { obj: obj },
-                },
-                FormFields_1: {
-                    ...this.state.FormFields_1,
-                    initialValues: { obj: data.offs },
-                },
-                editTimeoff: data.key,
+        var obj = { label: data.label };
+        this.setState({
+            FormFields: {
+                ...this.state.FormFields,
+                initialValues: { obj: obj },
             },
-            () => {
-                this.toggelModal(true);
-            }
-        );
+            FormFields_1: {
+                ...this.state.FormFields_1,
+                initialValues: { obj: vars },
+            },
+            editTimeoff: data.id,
+            openModal: true,
+        });
     };
 
     editRecord = () => {
-        this.state.mergeObj.key = this.state.editTimeoff;
-        this.state.data[this.state.editTimeoff - 1] = this.state.mergeObj;
-
-        this.setState(
-            {
-                data: [...this.state.data],
-                mergeObj: {},
-            },
-            () => {
+        const { mergeObj } = this.state;
+        mergeObj.id = this.state.editTimeoff;
+        editLabel(mergeObj).then((res) => {
+            if (res) {
+                this.getData();
                 this.toggelModal(false);
-                console.log(this.state.data);
             }
-        );
+        });
     };
 
     renderTable = () => {
-        const { data, mergeObj } = this.state;
-        this.setState(
-            {
-                data: [...data, mergeObj],
-                mergeObj: {},
-            },
-            () => {
-                this.toggelModal(false);
-                console.log("Data Rendered");
-            }
-        );
+        const { mergeObj } = this.state;
+        console.log({ mergeObj });
+        addList(mergeObj).then((res) => {
+            this.getData();
+        });
     };
 
     render() {
@@ -466,13 +476,13 @@ class TimeOffsPolicy extends Component {
                             }}
                             size="small"
                         >
-                            {" "}
                             <PlusSquareOutlined />
                             Add Time Off Policy
                         </Button>
                     </Col>
                     <Col span={24}>
                         <Table
+                            rowKey={(data) => data.id}
                             columns={columns}
                             dataSource={data}
                             size="small"
@@ -491,7 +501,7 @@ class TimeOffsPolicy extends Component {
                         onOk={() => {
                             this.submit();
                         }}
-                        okText={this.state.editTimeoff ? "Edit" : "Save"}
+                        okText={"Save"}
                         onCancel={() => {
                             this.toggelModal(false);
                         }}

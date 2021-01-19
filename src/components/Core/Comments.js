@@ -36,48 +36,48 @@ class Comments extends Component {
             fileList: [],
             data: [
                 // coments
-                {
-                    key: 0,
-                    author: "Han Solo",
-                    content: `I am Han Solo`,
-                    date: "2020-1-1",
-                },
-                {
-                    key: 1,
-                    author: "Musab tarq",
-                    content: `I am Musab Tariq`,
-                    date: "2020-2-10",
-                },
-                {
-                    key: 2,
-                    author: "Ovais raza",
-                    content: `I am Ovais Raza`,
-                    date: "2020-3-19",
-                },
-                {
-                    key: 3,
-                    author: "Shabaz ",
-                    content: `Shahbz here`,
-                    date: "2020-4-25",
-                },
-                {
-                    key: 4,
-                    author: "Rabi cube",
-                    content: `I am Rabi`,
-                    date: "2020-5-5",
-                },
-                {
-                    key: 5,
-                    author: "Me Me",
-                    content: `Project Looks Good so far`,
-                    date: "2020-9-20",
-                },
-                {
-                    key: 5,
-                    author: "You",
-                    content: `Prevented`,
-                    date: "2020-9-20",
-                },
+                // {
+                //     key: 0,
+                //     author: "Han Solo",
+                //     content: `I am Han Solo`,
+                //     date: "2020-1-1",
+                // },
+                // {
+                //     key: 1,
+                //     author: "Musab tarq",
+                //     content: `I am Musab Tariq`,
+                //     date: "2020-2-10",
+                // },
+                // {
+                //     key: 2,
+                //     author: "Ovais raza",
+                //     content: `I am Ovais Raza`,
+                //     date: "2020-3-19",
+                // },
+                // {
+                //     key: 3,
+                //     author: "Shabaz ",
+                //     content: `Shahbz here`,
+                //     date: "2020-4-25",
+                // },
+                // {
+                //     key: 4,
+                //     author: "Rabi cube",
+                //     content: `I am Rabi`,
+                //     date: "2020-5-5",
+                // },
+                // {
+                //     key: 5,
+                //     author: "Me Me",
+                //     content: `Project Looks Good so far`,
+                //     date: "2020-9-20",
+                // },
+                // {
+                //     key: 5,
+                //     author: "You",
+                //     content: `Prevented`,
+                //     date: "2020-9-20",
+                // },
             ],
             value: null,
         };
@@ -440,6 +440,7 @@ const styles = {
     cSec: {
         maxHeight: 500,
         overflowY: "auto",
+        minHeight: 500
     },
     delCol: {
         paddingLeft: "10px",

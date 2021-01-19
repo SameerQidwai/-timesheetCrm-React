@@ -1,51 +1,37 @@
 import React, { Component } from "react";
-import {
-    Row,
-    Col,
-    Menu,
-    Table,
-    Modal,
-    Button,
-    Dropdown,
-    Popconfirm,
-    Typography,
-    DatePicker,
-} from "antd";
-import {
-    DownOutlined,
-    SettingOutlined,
-    PlusSquareOutlined,
-} from "@ant-design/icons"; //Icons
+import { Row, Col, Menu, Table, Modal, Button, Dropdown, Popconfirm, Typography, DatePicker, } from "antd";
+import { DownOutlined, SettingOutlined, PlusSquareOutlined, } from "@ant-design/icons"; //Icons
 
 import Form from "../../../components/Core/Form";
 import moment from "moment";
 import "../../styles/table.css";
 
+import {
+    holidayType,
+    addList,
+    getList,
+    editLabel,
+    delLabel,
+} from "../../../service/calendar-holidays";
+
 const { Title } = Typography;
 
 class CalenerHolidays extends Component {
-    componentDidMount() {
-        var { id } = this.props.match.params;
-        if (id === "1") {
-            this.setState({ data: this.state.data1 });
-        } else {
-            this.setState({ data: this.state.data2 });
-        }
-    }
     constructor(props) {
         super(props);
         this.holidayForm = React.createRef();
         this.columns = [
             {
                 title: "Title",
-                dataIndex: "title",
-                key: "title",
+                dataIndex: "label",
+                key: "label",
             },
             {
                 title: "Date",
                 dataIndex: "date",
                 key: "date",
                 align: "right",
+                render: (text, record) => moment(text).format("DD-MMM-YYYY"),
             },
             {
                 title: "Action",
@@ -59,7 +45,7 @@ class CalenerHolidays extends Component {
                                     <Popconfirm
                                         title="Sure to delete?"
                                         onConfirm={() =>
-                                            this.handleDelete(record.key)
+                                            this.handleDelete(record.id)
                                         }
                                     >
                                         Delete
@@ -82,36 +68,8 @@ class CalenerHolidays extends Component {
         ];
 
         this.state = {
-            data1: [
-                {
-                    key: 1,
-                    title: "Easter",
-                    date: "12-Apr-2020",
-                },
-                {
-                    key: 2,
-                    title: "Labour Day",
-                    date: "01-May-2020",
-                },
-                {
-                    key: 3,
-                    title: "Chirstmas",
-                    date: "25-Dec-2020",
-                },
-            ],
-            data2: [
-                {
-                    key: 1,
-                    title: "Eid-ul-fiter",
-                    date: "13-May-2020",
-                },
-                {
-                    key: 2,
-                    title: "Eid-ul-azha",
-                    date: "12-jul-2020",
-                },
-            ],
-            data: null,
+            calendarId: false,
+            data: [],
             openModal: false,
             editTimeoff: false,
             FormFields: {
@@ -125,16 +83,12 @@ class CalenerHolidays extends Component {
                     {
                         object: "obj",
                         fieldCol: 24,
-                        key: "title",
+                        key: "label",
                         label: "Title",
                         size: "small",
                         // rules:[{ required: true }],
                         type: "Select",
-                        data: [
-                            { value: "Easter", label: "Easter" },
-                            { value: "Christmas", label: "Christmas" },
-                            { value: "Eid-ul-fiter", label: "Eid-ul-fiter" },
-                        ],
+                        data: [],
                         labelAlign: "right",
                     },
                     {
@@ -155,57 +109,93 @@ class CalenerHolidays extends Component {
         };
     }
 
-    handleDelete = (key) => {
-        const dataSource = [...this.state.data];
-        this.setState({ data: dataSource.filter((item) => item.key !== key) });
+    componentDidMount() {
+        this.setState(
+            {
+            },
+            () => {
+                this.getData();
+            }
+        );
+    }
+
+    getData = () => {
+        const { calendarId } = this.state;
+        getList(calendarId).then((res) => {
+            if (res.success) {
+                this.setState({
+                    data: res.data,
+                    openModal: false,
+                    editTimeoff: false,
+                });
+            }
+        });
+    };
+
+    handleDelete = (id) => {
+        delLabel(id).then((res) => {
+            if (res) {
+                this.getData();
+            }
+        });
     };
 
     toggelModal = (status) => {
-        this.setState({ openModal: status });
-
-        if (this.state.openModal) {
-            this.holidayForm.current.refs.form.resetFields(); // to reset file
-            delete this.state.FormFields.initialValues; // to delete intilize if not written
-            this.setState({
-                // set state
-                FormFields: this.state.FormFields,
-                editTimeoff: false,
+        if (status) {
+            const { FormFields } = this.state;
+            holidayType().then((res) => {
+                if (res.success) {
+                    FormFields.fields[0].data = res.data;
+                    this.setState({
+                        FormFields,
+                        openModal: status,
+                    });
+                }
             });
+        } else {
+            this.setState({ openModal: status, editTimeoff: false });
         }
+
+        // this.holidayForm.current.refs.form.resetFields(); // to reset file
     };
 
     Callback = (vake) => {
+        const { calendarId } = this.state;
         // this will work after I get the Object
+        vake.obj.date = moment(vake.obj.date).format("DD-MMM-YYYY");
+        const obj = {
+            calendarId: calendarId,
+            holidayTypeId: vake.obj.label,
+            date: new Date(vake.obj.date).getTime(),
+        };
         if (!this.state.editTimeoff) {
             // to add new datas
-            vake.obj.date = moment(vake.obj.date).format("DD-MMM-YYYY");
-            vake.obj.key = this.state.data.length + 1;
-            this.setState(
-                {
-                    data: [...this.state.data, vake.obj],
-                },
-                () => {
-                    this.toggelModal(false);
-                    // this.holidayForm.current.refs.form.resetFields();
-                    console.log("Data Rendered");
-                }
-            );
+            this.addType(obj);
         } else {
-            this.editRecord(vake.obj);
+            this.editRecord(obj);
         }
+    };
+    addType = (value) => {
+        addList(value).then((res) => {
+            if (res) {
+                this.getData();
+            }
+        });
     };
 
     getRecord = (data) => {
-        const obj = Object.assign({}, data);
-        obj.date = moment(obj.date);
-
+        const vars = {
+            id: data.id,
+            label: data.label,
+            date: moment(data.date),
+        };
         this.setState(
             {
                 FormFields: {
                     ...this.state.FormFields,
-                    initialValues: { obj: obj },
+                    initialValues: { obj: vars },
                 },
-                editTimeoff: obj.key,
+                editTimeoff: vars.id,
             },
             () => {
                 this.toggelModal(true);
@@ -214,20 +204,13 @@ class CalenerHolidays extends Component {
     };
 
     editRecord = (obj) => {
-        obj.key = this.state.editTimeoff;
-        obj.date = moment(obj.date).format("DD-MMM-YYYY");
-
-        this.state.data[obj.key - 1] = obj;
-
-        this.setState(
-            {
-                data: [...this.state.data],
-                mergeObj: {},
-            },
-            () => {
-                this.toggelModal(false);
+        const { editTimeoff } = this.state;
+        obj.id = editTimeoff;
+        editLabel(obj).then((res) => {
+            if (res) {
+                this.getData();
             }
-        );
+        });
     };
 
     submit = () => {
@@ -269,6 +252,7 @@ class CalenerHolidays extends Component {
                             columns={columns}
                             dataSource={data}
                             size="small"
+                            rowKey={(data) => data.id}
                         />
                     </Col>
                 </Row>
@@ -287,7 +271,7 @@ class CalenerHolidays extends Component {
                         onCancel={() => {
                             this.toggelModal(false);
                         }}
-                        okText={this.state.editTimeoff ? "Edit" : "Save"}
+                        okText={"Save"}
                         width={500}
                         bodyStyle={{ padding: "10px 0px 0px 0px" }}
                     >

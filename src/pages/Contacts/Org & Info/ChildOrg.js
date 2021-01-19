@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Table } from "antd";
 import { Link, withRouter } from "react-router-dom";
-
+import { getOrgRecord } from "../../../service/Organizations";
 class ChildOrg extends Component {
     constructor(props) {
         super(props);
@@ -45,7 +45,7 @@ class ChildOrg extends Component {
         };
     }
     componentDidMount = () => {
-        console.log(this.props);
+        console.log(this.props.id);
     };
 
     componentWillReceiveProps(nextProps) {

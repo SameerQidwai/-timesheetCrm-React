@@ -1185,7 +1185,7 @@ class InfoModal extends Component {
                 onOk={() => {
                     this.submit();
                 }}
-                okText={editCont ? "Edit" : "Save"}
+                okText={"Save"}
                 onCancel={this.onCancel}
                 width={700}
             >

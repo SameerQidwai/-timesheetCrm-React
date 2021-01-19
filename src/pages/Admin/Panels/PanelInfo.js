@@ -19,6 +19,15 @@ import {
 
 import Form from "../../../components/Core/Form";
 
+import {
+    getlevels,
+    getSkills,
+    getList,
+    editLabel,
+    addList,
+    delLabel,
+} from "../../../service/panelSkill";
+
 const { Title } = Typography;
 
 class PanelInfo extends Component {
@@ -30,8 +39,8 @@ class PanelInfo extends Component {
         this.columns = [
             {
                 title: "Skill",
-                dataIndex: "skill",
-                key: "skill",
+                dataIndex: "label",
+                key: "label",
             },
             {
                 title: "Action",
@@ -45,7 +54,7 @@ class PanelInfo extends Component {
                                     <Popconfirm
                                         title="Sure to delete?"
                                         onConfirm={() =>
-                                            this.handleDelete(record.key)
+                                            this.handleDelete(record.id)
                                         }
                                     >
                                         Delete
@@ -67,257 +76,15 @@ class PanelInfo extends Component {
             },
         ];
 
-        this.skill_select = [
-            { value: "Ux Developer", label: "Ux Developer" },
-            { value: "UI developer", label: "UI developer" },
-            { value: "Front developer", label: "Front developer" },
-            { value: "Back developer", label: "Back developer" },
-            { value: "Producer", label: "Producer" },
-            { value: "Director", label: "Director" },
-            { value: "Actors", label: "Actors" },
-            { value: "Camera Man", label: "Camera Man" },
-            { value: "civil Engineer", label: "civil Engineer" },
-            { value: "Labour", label: "Labour" },
-            { value: "Stuff", label: "Stuff" },
-        ];
-
-        this.skill_pirority = [
-            {
-                value: 1,
-                label: "Superstar",
-            },
-            {
-                value: 2,
-                label: "Senior",
-            },
-            {
-                value: 3,
-                label: "Middle",
-            },
-            {
-                value: 4,
-                label: "Junior",
-            },
-            {
-                value: 5,
-                label: "Trainee",
-            },
-        ];
         this.state = {
             openModal: false,
             mergeObj: {},
             form1Submitted: false,
             form2Submitted: false,
-            editTimeoff: false,
-
-            data1: [
-                {
-                    key: 1,
-                    skill: "Ux Developer",
-                    standard: "Front developer",
-                    levels: {
-                        level0: "Beginner",
-                        pirority0: 1,
-                        stceil0: 11,
-                        ltceil0: 12,
-                        level1: "Intermediate Class 1",
-                        pirority1: 2,
-                        stceil1: 11,
-                        ltceil1: 12,
-                        level2: "Intermediate Class 2",
-                        pirority2: 1,
-                        stceil2: 11,
-                        ltceil2: 12,
-                        level3: "Intermediate Class 3",
-                        pirority3: 3,
-                        stceil3: 11,
-                        ltceil3: 12,
-                        level4: "Expert",
-                        pirority4: 3,
-                        stceil4: 11,
-                        ltceil4: 12,
-                    },
-                },
-                {
-                    key: 2,
-                    skill: "UI developer",
-                    standard: "Actors",
-                    levels: {
-                        level0: "Beginner",
-                        pirority0: 1,
-                        stceil0: 11,
-                        ltceil0: 12,
-                        level1: "Intermediate Class 1",
-                        pirority1: 2,
-                        stceil1: 11,
-                        ltceil1: 12,
-                        level2: "Expert",
-                        pirority2: 3,
-                        stceil2: 11,
-                        ltceil2: 12,
-                    },
-                },
-                {
-                    key: 3,
-                    skill: "Front developer",
-                    levels: {
-                        level0: "Beginner",
-                        pirority0: 1,
-                        stceil0: 11,
-                        ltceil0: 12,
-                    },
-                },
-                {
-                    key: 4,
-                    skill: "back developer",
-                    levels: {
-                        level0: "Expert",
-                        pirority0: 3,
-                        stceil0: 11,
-                        ltceil0: 12,
-                    },
-                },
-            ],
-            data2: [
-                {
-                    key: 1,
-                    skill: "Producer",
-                    standard: "Producer",
-                    levels: {
-                        level0: "Beginner",
-                        pirority0: 1,
-                        stceil0: 11,
-                        ltceil0: 12,
-                        level1: "Intermediate Class 1",
-                        pirority1: 2,
-                        stceil1: 11,
-                        ltceil1: 12,
-                        level2: "Intermediate Class 2",
-                        pirority2: 1,
-                        stceil2: 11,
-                        ltceil2: 12,
-                        level3: "Intermediate Class 3",
-                        pirority3: 3,
-                        stceil3: 11,
-                        ltceil3: 12,
-                        level4: "Expert",
-                        pirority4: 3,
-                        stceil4: 11,
-                        ltceil4: 12,
-                    },
-                },
-                {
-                    key: 2,
-                    skill: "Director",
-                    standard: "Director",
-                    levels: {
-                        level0: "Beginner",
-                        pirority0: 1,
-                        stceil0: 11,
-                        ltceil0: 12,
-                        level1: "Intermediate Class 1",
-                        pirority1: 2,
-                        stceil1: 11,
-                        ltceil1: 12,
-                        level2: "Intermediate Class 2",
-                        pirority2: 1,
-                        stceil2: 11,
-                        ltceil2: 12,
-                        level3: "Expert",
-                        pirority3: 3,
-                        stceil3: 11,
-                        ltceil3: 12,
-                    },
-                },
-                {
-                    key: 3,
-                    skill: "Actors",
-                    standard: "Actors",
-                    levels: {
-                        level0: "Beginner",
-                        pirority0: 1,
-                        stceil0: 11,
-                        ltceil0: 12,
-                        level1: "Intermediate ",
-                        pirority1: 2,
-                        stceil1: 11,
-                        ltceil1: 12,
-                        level2: "Expert",
-                        pirority2: 3,
-                        stceil2: 11,
-                        ltceil2: 12,
-                    },
-                },
-                {
-                    key: 4,
-                    skill: "Camera Man",
-                    standard: "Camera Man",
-                    levels: {
-                        level0: "Intermediate Class 2",
-                        pirority0: 1,
-                        stceil0: 11,
-                        ltceil0: 12,
-                    },
-                },
-            ],
-            data3: [
-                {
-                    key: 1,
-                    skill: "civil Engineer",
-                    standard: "civil Engineer",
-                    levels: {
-                        level0: "Beginner",
-                        pirority0: 1,
-                        stceil0: 11,
-                        ltceil0: 12,
-                        level1: "Expert",
-                        pirority1: 3,
-                        stceil1: 11,
-                        ltceil1: 12,
-                    },
-                },
-                {
-                    key: 2,
-                    skill: "Technician",
-                    standard: "Camera Man",
-                    levels: {
-                        level0: "Beginner",
-                        pirority0: 1,
-                        stceil0: 11,
-                        ltceil0: 12,
-                        level1: "Intermediate Class 1",
-                        pirority1: 2,
-                        stceil1: 11,
-                        ltceil1: 12,
-                        level2: "Intermediate Class 2",
-                        pirority2: 1,
-                        stceil2: 11,
-                        ltceil2: 12,
-                    },
-                },
-                {
-                    key: 3,
-                    skill: "Labour",
-                    standard: "Actors",
-                    levels: {
-                        level0: "Beginner",
-                        pirority0: 1,
-                        stceil0: 11,
-                        ltceil0: 12,
-                    },
-                },
-                {
-                    key: 4,
-                    skill: "Stuff",
-                    standard: "Stuff",
-                    levels: {
-                        level0: "Expert",
-                        pirority0: 3,
-                        stceil0: 11,
-                        ltceil0: 12,
-                    },
-                },
-            ],
+            editPS: false,
+            panelId: false,
+            skill_select: false,
+            skill_pirority: false,
             data: [],
 
             FormFields: {
@@ -334,7 +101,7 @@ class PanelInfo extends Component {
                         object: "obj",
                         fieldCol: 12,
                         wrapperCol: { span: 20 },
-                        key: "skill",
+                        key: "label",
                         label: "Skill",
                         size: "small",
                         rules: [
@@ -361,7 +128,7 @@ class PanelInfo extends Component {
                             },
                         ],
                         type: "Select",
-                        data: this.skill_select,
+                        data: [],
                         labelAlign: "left",
                         itemStyle: { marginBottom: "5px" },
                     },
@@ -433,28 +200,61 @@ class PanelInfo extends Component {
                 FormLayout: "inline",
                 size: "small",
                 // backstyle: {maxHeight:'145px',overflowY: 'auto'},
-                fields: this.newField(0),
+                fields: [],
             },
         };
     }
 
     componentDidMount() {
-        var { id } = this.props.match.params;
-        console.log(typeof id);
-        switch (id) {
-            case "1":
-                this.setState({ data: this.state.data1 });
-                break;
-            case "2":
-                this.setState({ data: this.state.data2 });
-                break;
-            default:
-                this.setState({ data: this.state.data3 });
-                break;
-        }
+        this.setState(
+            {
+                panelId: this.props.match.params.id,
+            },
+            () => {
+                this.getData();
+                this.getSkilllevels();
+            }
+        );
     }
+    getSkilllevels = () => {
+        getlevels().then((level_res) => {
+            getSkills().then((skill_res) => {
+                if (level_res.success && skill_res.success) {
+                    const { FormFields } = this.state;
+                    FormFields.fields[1].data = skill_res.data;
+                    this.setState({
+                        FormFields,
+                        skill_pirority: level_res.data,
+                    });
+                }
+            });
+        });
+    };
+
+    getData = () => {
+        const { panelId, FormFields, FormFields_1 } = this.state;
+        getList(panelId).then((res) => {
+            if (res.success) {
+                this.setState({
+                    data: res.data,
+                    FormFields: { ...FormFields, initialValues: {} },
+                    FormFields_1: {
+                        ...FormFields_1,
+                        fields: [],
+                        initialValues: {},
+                    },
+                    mergeObj: {},
+                    openModal: false,
+                    editPS: false,
+                    form1Submitted: false,
+                    form2Submitted: false,
+                });
+            }
+        });
+    };
 
     newField = (item_no) => {
+        const { skill_pirority } = this.state;
         //inserting new fields in modals
         const splice_key = [
             `level${item_no}`,
@@ -482,7 +282,7 @@ class PanelInfo extends Component {
                 key: `pirority${item_no}`,
                 size: "small",
                 // rules:[{ required: true }],
-                data: this.skill_pirority,
+                data: skill_pirority,
                 type: "Select",
                 labelAlign: "left",
                 itemStyle: { marginBottom: "5px" },
@@ -543,87 +343,59 @@ class PanelInfo extends Component {
         ];
     };
 
-    handleDelete = (key) => {
-        const dataSource = [...this.state.data];
-        this.setState({ data: dataSource.filter((item) => item.key !== key) });
+    handleDelete = (id) => {
+        delLabel(id).then((res) => {
+            if (res) {
+                this.getData();
+            }
+        });
     };
 
     toggelModal = (status) => {
-        this.setState({
-            openModal: status,
-        });
-
-        if (this.state.openModal) {
-            this.dynamoForm_1.current.refs.title_form.resetFields();
-            this.dynamoForm_2.current.refs.hours_form.resetFields();
-
-            delete this.state.FormFields.initialValues;
-            delete this.state.FormFields_1.initialValues;
-            this.state.FormFields_1.fields = this.newField(0);
-
+        const { FormFields_1, FormFields } = this.state;
+        if (!status) {
             this.setState({
-                FormFields: this.state.FormFields,
-                FormFields_1: this.state.FormFields_1,
-                editTimeoff: false,
+                FormFields: { ...FormFields, initialValues: {} },
+                FormFields_1: {
+                    ...FormFields_1,
+                    fields: [],
+                    initialValues: {},
+                },
+                openModal: false,
+                editPS: false,
+                form1Submitted: false,
+                form2Submitted: false,
+            });
+        } else {
+            this.setState({
+                openModal: status,
+                FormFields_1: { ...FormFields_1, fields: this.newField(0) },
+                editPS: false,
             });
         }
     };
 
-    getRecord = (data, text) => {
-        let result = data.levels ? Object.keys(data.levels).length / 4 : 0;
-        for (let i = 1; i < result; i++) {
-            this.state.FormFields_1.fields = this.state.FormFields_1.fields.concat(
-                this.newField(i)
-            );
-        }
-
-        var obj = { key: data.key, skill: data.skill, standard: data.standard };
-        this.setState(
-            {
-                FormFields: {
-                    ...this.state.FormFields,
-                    initialValues: { obj: obj },
-                },
-                FormFields_1: {
-                    ...this.state.FormFields_1,
-                    initialValues: { obj: data.levels },
-                },
-                editTimeoff: data.key,
-            },
-            () => {
-                this.toggelModal(true);
-            }
-        );
-    };
-
-    editRecord = () => {
-        this.state.mergeObj.key = this.state.editTimeoff;
-        this.state.data[this.state.editTimeoff - 1] = this.state.mergeObj;
-        this.setState(
-            {
-                data: [...this.state.data],
-                mergeObj: {},
-            },
-            () => {
-                this.toggelModal(false);
-            }
-        );
+    submit = () => {
+        this.dynamoForm_1.current.refs.title_form.submit();
+        this.dynamoForm_2.current.refs.hours_form.submit();
     };
 
     Callback = (vake) => {
         // this will work after I get the Object from the form
+        const { panelId } = this.state;
         this.setState(
             {
                 mergeObj: {
                     ...this.state.mergeObj,
-                    skill: vake.obj.skill,
-                    // key: vake.obj.key? vake.obj.key:this.state.data.length + 1
+                    label: vake.obj.label,
+                    standardSkillId: vake.obj.standard,
+                    panelId: panelId,
                 },
                 form1Submitted: true,
             },
             () => {
                 if (this.state.form1Submitted && this.state.form2Submitted) {
-                    if (!this.state.editTimeoff) {
+                    if (!this.state.editPS) {
                         console.log("emes");
                         this.renderTable();
                     } else {
@@ -637,17 +409,28 @@ class PanelInfo extends Component {
 
     Callback2 = (vake) => {
         // this will work after I get the Object from the form
+        const { obj } = vake;
+        const vars = [];
+        let result = Object.keys(obj).length / 4;
+        for (let i = 0; i < result; i++) {
+            vars.push({
+                levelLabel: obj[`level${i}`],
+                standardLevelId: obj[`pirority${i}`],
+                shortTermCeil: obj[`stceil${i}`],
+                longTermCeil: obj[`ltceil${i}`],
+            });
+        }
         this.setState(
             {
                 mergeObj: {
                     ...this.state.mergeObj,
-                    levels: vake.obj,
+                    panelSkillStandardLevels: vars,
                 },
                 form2Submitted: true,
             },
             () => {
                 if (this.state.form1Submitted && this.state.form2Submitted) {
-                    if (!this.state.editTimeoff) {
+                    if (!this.state.editPS) {
                         console.log("emes");
                         this.renderTable();
                     } else {
@@ -660,26 +443,56 @@ class PanelInfo extends Component {
     };
 
     renderTable = () => {
-        this.state.mergeObj.key =
-            this.state.data[this.state.data.length - 1].key + 1;
-        this.state.data.push(this.state.mergeObj);
-        console.log(this.state.data);
-        this.setState(
-            {
-                data: [...this.state.data],
-                mergeObj: {},
-            },
-            () => {
-                this.toggelModal(false);
-                console.log(this.state.data);
-                console.log("Data Rendered");
-            }
-        );
+        const { mergeObj } = this.state;
+        addList(mergeObj).then((res) => {
+            this.getData();
+        });
     };
 
-    submit = () => {
-        this.dynamoForm_1.current.refs.title_form.submit();
-        this.dynamoForm_2.current.refs.hours_form.submit();
+    getRecord = (data, text) => {
+        const vars = {};
+        const array = data.panelSkillStandardLevels;
+        console.log(array);
+        let result = array.length;
+        for (let i = 0; i < result; i++) {
+            this.state.FormFields_1.fields = this.state.FormFields_1.fields.concat(
+                this.newField(i)
+            );
+            let el = array[i];
+            vars[`level${i}`] = el.levelLabel;
+            vars[`pirority${i}`] = el.standardLevel.id;
+            vars[`stceil${i}`] = el.shortTermCeil;
+            vars[`ltceil${i}`] = el.longTermCeil;
+        }
+
+        var obj = {
+            key: data.id,
+            label: data.label,
+            standard: data.standardSkill.id,
+        };
+        this.setState({
+            FormFields: {
+                ...this.state.FormFields,
+                initialValues: { obj: obj },
+            },
+            FormFields_1: {
+                ...this.state.FormFields_1,
+                initialValues: { obj: vars },
+            },
+            editPS: data.id,
+            openModal: true,
+        });
+    };
+
+    editRecord = () => {
+        const { mergeObj, editPS } = this.state;
+        mergeObj.id = editPS;
+        console.log(mergeObj);
+        editLabel(mergeObj).then((res) => {
+            if (res) {
+                this.getData();
+            }
+        });
     };
 
     render() {
@@ -705,21 +518,20 @@ class PanelInfo extends Component {
                     </Col>
                 </Row>
                 <Table
+                    rowKey={(data) => data.id}
                     columns={this.columns}
                     dataSource={skills}
                     size="small"
                 />
                 {this.state.openModal ? (
                     <Modal
-                        title={
-                            this.state.editTimeoff ? "Edit Skill" : "Add Skill"
-                        }
+                        title={this.state.editPS ? "Edit Skill" : "Add Skill"}
                         centered
                         visible={this.state.openModal}
                         onOk={() => {
                             this.submit();
                         }}
-                        okText={this.state.editTimeoff ? "Edit" : "Save"}
+                        okText={"Save"}
                         onCancel={() => {
                             this.toggelModal(false);
                         }}

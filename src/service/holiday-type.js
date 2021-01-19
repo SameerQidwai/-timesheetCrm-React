@@ -2,7 +2,7 @@ import axios from "axios";
 
 import { Api } from "./constant";
 
-const url = `${Api}/calendars`;
+const url = `${Api}/holiday-types`;
 
 export const getList = () => {
     return axios
@@ -23,6 +23,22 @@ export const getList = () => {
 export const addList = (data) => {
     return axios
         .post(url, data)
+        .then((res) => {
+            const { success } = res.data;
+            if (success) return success;
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                status: "failed",
+                message: err.message,
+            };
+        });
+};
+
+export const delLabel = (id) => {
+    return axios
+        .delete(url + `/${id}`)
         .then((res) => {
             const { success } = res.data;
             if (success) return success;

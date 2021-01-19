@@ -1,21 +1,10 @@
 import React, { Component } from "react";
-import {
-    Typography,
-    Row,
-    Col,
-    Popconfirm,
-    Modal,
-    Button,
-    Table,
-    Dropdown,
-    Menu,
-} from "antd";
-import {
-    SettingOutlined,
-    DownOutlined,
-    CloseOutlined,
-} from "@ant-design/icons"; //Icons
+import { Typography, Row, Col, Popconfirm, Modal, Button, Table, Dropdown, Menu, } from "antd";
+import { SettingOutlined, DownOutlined, CloseOutlined, PlusSquareOutlined, } from "@ant-design/icons"; //Icons
 import Forms from "../../../components/Core/Form";
+
+import { levels, addList, getList, editLabel, delLabel, } from "../../../service/skills";
+
 const { Title } = Typography;
 
 class Skills extends Component {
@@ -26,8 +15,8 @@ class Skills extends Component {
         this.columns = [
             {
                 title: "Skill Name",
-                dataIndex: "skill",
-                key: "skill",
+                dataIndex: "label",
+                key: "label",
             },
             {
                 title: "Action",
@@ -37,11 +26,11 @@ class Skills extends Component {
                     <Dropdown
                         overlay={
                             <Menu>
-                                <Menu.Item>
+                                <Menu.Item danger>
                                     <Popconfirm
                                         title="Sure to delete?"
                                         onConfirm={() =>
-                                            this.handleDelete(record.key)
+                                            this.handleDelete(record.id)
                                         }
                                     >
                                         Delete
@@ -120,28 +109,8 @@ class Skills extends Component {
             mergeObj: {}, // merge submit results into object
             formSubmitted: false, //check if got data from skill submit
             levelSubmitted: false, //check if got data from level submit
-            data_skill: [
-                {
-                    key: 1,
-                    skill: "Developer",
-                },
-                {
-                    key: 2,
-                    skill: "Accountant",
-                },
-                {
-                    key: 3,
-                    skill: "Carpenter",
-                },
-                {
-                    key: 4,
-                    skill: "Software Quality Assurance",
-                },
-                {
-                    key: 5,
-                    skill: "Office Boy",
-                },
-            ],
+            level_data: false,
+            data_skill: [],
             skillFields: {
                 formId: "skill_form",
                 FormCol: 24,
@@ -155,7 +124,7 @@ class Skills extends Component {
                         object: "obj",
                         fieldCol: 24,
                         layout: { wrapperCol: { span: 20 } },
-                        key: "skill",
+                        key: "label",
                         label: "Name",
                         size: "small",
                         // rules:[{ required: true, message:'You are not good to go' }],
@@ -165,7 +134,7 @@ class Skills extends Component {
                     },
                     {
                         fieldCol: 24,
-                        Placeholder: "Add Level",
+                        Placeholder: "Add Skill",
                         type: "Button",
                         mode: "primary",
                         style: { textAlign: "right" },
@@ -195,7 +164,7 @@ class Skills extends Component {
                         layout: {
                             wrapperCol: { offset: 1 },
                         },
-                        Placeholder: "Pirority",
+                        Placeholder: "priority",
                         type: "Text",
                         size: "small",
                     },
@@ -209,14 +178,52 @@ class Skills extends Component {
                 justifyField: "center",
                 FormLayout: "inline",
                 size: "small",
-                fields: this.newField(0),
+                fields: [],
             },
         };
     }
 
+    componentDidMount = () => {
+        this.getLevel();
+        this.getData();
+    };
+
+    getLevel = () => {
+        levels().then((res) => {
+            if (res.success) {
+                this.setState({
+                    level_data: res.data,
+                });
+            }
+        });
+    };
+
+    getData = () => {
+        getList().then((res) => {
+            if (res.success) {
+                this.setState({
+                    data_skill: res.data,
+                    isVisible: false,
+                    editSkill: false,
+                    skillFields: {
+                        ...this.state.skillFields,
+                        initialValues: {},
+                    },
+                    LevelFields: {
+                        ...this.state.LevelFields,
+                        initialValues: {},
+                        fields: [],
+                    },
+                    mergeObj: {},
+                });
+            }
+        });
+    };
+
     newField = (item_no) => {
         //inserting new fields in modals
-        const splice_key = [`level${item_no}`, `pirority${item_no}`, item_no];
+        const { level_data } = this.state;
+        const splice_key = [`level${item_no}`, `priority${item_no}`, item_no];
         return [
             {
                 object: "obj",
@@ -225,7 +232,7 @@ class Skills extends Component {
                 key: `level${item_no}`,
                 size: "small",
                 // rules:[{ required: true }],
-                data: this.level_data,
+                data: level_data,
                 type: "Select",
                 labelAlign: "left",
                 itemStyle: { marginBottom: "5px" },
@@ -234,7 +241,7 @@ class Skills extends Component {
                 object: "obj",
                 fieldCol: 7,
                 layout: { wrapperCol: { span: 20 } },
-                key: `pirority${item_no}`,
+                key: `priority${item_no}`,
                 size: "small",
                 // rules:[{ required: true }],
                 data: this.priority_data,
@@ -276,10 +283,37 @@ class Skills extends Component {
         ];
     };
 
-    handleDelete = (key) => {
-        //delete Object
-        this.setState({
-            data: this.state.data_skill.filter((item) => item.key !== key),
+    toggelModal = (status) => {
+        const { FormFields_1 } = this.state;
+        if (!status) {
+            this.setState({
+                skillFields: { ...this.state.skillFields, initialValues: {} },
+                LevelFields: {
+                    ...this.state.LevelFields,
+                    fields: [],
+                    initialValues: {},
+                },
+                isVisible: false,
+                editSkill: false,
+                formSubmitted: false,
+                levelSubmitted: false,
+            });
+        } else {
+            this.setState({
+                isVisible: status,
+                LevelFields: {
+                    ...this.state.LevelFields,
+                    fields: this.newField(0),
+                },
+            });
+        }
+    };
+
+    handleDelete = (id) => {
+        delLabel(id).then((res) => {
+            if (res) {
+                this.getData();
+            }
         });
     };
 
@@ -295,7 +329,7 @@ class Skills extends Component {
             {
                 mergeObj: {
                     ...this.state.mergeObj,
-                    skill: vake.obj.skill,
+                    label: vake.obj.label,
                 },
                 formSubmitted: true, // skill form submitted
             },
@@ -316,11 +350,20 @@ class Skills extends Component {
 
     levelCall = (vake) => {
         // this will work after  getting the Object from level form
+        const { obj } = vake;
+        const vars = [];
+        let result = Object.keys(obj).length / 2;
+        for (let i = 0; i < result; i++) {
+            vars.push({
+                standardLevelId: obj[`level${i}`],
+                priority: obj[`priority${i}`],
+            });
+        }
         this.setState(
             {
                 mergeObj: {
                     ...this.state.mergeObj,
-                    levels: vake.obj,
+                    standardSkillStandardLevels: vars,
                 },
                 levelSubmitted: true, // level form submitted
             },
@@ -340,32 +383,27 @@ class Skills extends Component {
     };
 
     addSkill = (value) => {
-        value.key =
-            this.state.data_skill[this.state.data_skill.length - 1].key + 1; // get new key
-        this.setState(
-            {
-                data_skill: [...this.state.data_skill, value],
-                isVisible: false,
-            },
-            () => {
-                this.onCancel();
-            }
-        );
+        const { mergeObj } = this.state;
+        console.log({ mergeObj });
+        addList(mergeObj).then((res) => {
+            this.getData();
+        });
     };
 
     getRecord = (data) => {
-        console.log(data);
-        let result = data.levels ? Object.keys(data.levels).length / 2 : 0; // field to inserted
-
-        for (let i = 1; i < result; i++) {
-            //field insert array
+        const vars = {};
+        const array = data.standardSkillStandardLevels;
+        let result = array.length;
+        for (let i = 0; i < result; i++) {
             this.state.LevelFields.fields = this.state.LevelFields.fields.concat(
                 this.newField(i)
             );
+            let el = array[i];
+            vars[`level${i}`] = el.standardLevel.id;
+            vars[`priority${i}`] = el.priority;
         }
 
-        var obj = { key: data.key, skill: data.skill }; //skill field initial values
-
+        var obj = { label: data.label };
         this.setState({
             skillFields: {
                 ...this.state.skillFields,
@@ -373,41 +411,22 @@ class Skills extends Component {
             },
             LevelFields: {
                 ...this.state.LevelFields,
-                initialValues: { obj: data.levels },
+                initialValues: { obj: vars },
             },
-            editSkill: data.key, //save edit field
+            editSkill: data.id, //save edit field
             isVisible: true, //open modal
         });
     };
 
-    editRecord = (value) => {
-        value.key = this.state.editSkill; //get saved edit record key
-        this.state.data_skill[value.key - 1] = value; // value to push on index
-
-        this.setState(
-            {
-                data_skill: [...this.state.data_skill],
-            },
-            () => {
-                this.onCancel(); // set all the state to initial
+    editRecord = () => {
+        const { mergeObj, editSkill } = this.state;
+        mergeObj.id = editSkill;
+        console.log(mergeObj);
+        editLabel(mergeObj).then((res) => {
+            if (res) {
+                this.getData();
+                this.toggelModal(false);
             }
-        );
-    };
-
-    onCancel = () => {
-        delete this.state.skillFields.initialValues; // delete initialValues of fields on close
-        delete this.state.LevelFields.initialValues;
-        this.setState({
-            isVisible: false, //close
-            skillFields: { ...this.state.skillFields }, //delete Formfields on Close
-            LevelFields: {
-                ...this.state.LevelFields,
-                fields: this.newField(0),
-            },
-            editSkill: false,
-            isVisible: false,
-            formSubmitted: false,
-            levelSubmitted: false,
         });
     };
 
@@ -423,13 +442,9 @@ class Skills extends Component {
                         <Button
                             type="primary"
                             size="small"
-                            onClick={() => {
-                                this.setState({
-                                    isVisible: true, //Open Modal
-                                });
-                            }}
+                            onClick={() => { this.toggelModal(true); }}
                         >
-                            Add Level
+                            <PlusSquareOutlined /> Add Skill
                         </Button>
                     </Col>
                 </Row>
@@ -440,19 +455,13 @@ class Skills extends Component {
                 />
                 {this.state.isVisible && (
                     <Modal
-                        title={
-                            this.state.editSkill ? "Edit Skill" : "Add Skill"
-                        }
+                        title={ this.state.editSkill ? "Edit Skill" : "Add Skill" }
                         centered
                         visible={this.state.isVisible}
-                        okText={this.state.editSkill ? "Edit" : "Save"}
+                        okText={"Save"}
                         width={400}
-                        onCancel={() => {
-                            this.onCancel();
-                        }}
-                        onOk={() => {
-                            this.submit();
-                        }}
+                        onCancel={() => { this.toggelModal(false); }}
+                        onOk={() => { this.submit(); }}
                     >
                         <Row justify="center">
                             <Forms

@@ -1,18 +1,20 @@
 import React, { Component } from "react";
-import { Popconfirm, Typography, Dropdown, Button, Table, Menu, Row, Col, } from "antd";
-import { PlusSquareOutlined, SettingOutlined, FilterOutlined, DownOutlined, } from "@ant-design/icons"; //Icons
-import { Link } from "react-router-dom";
+import { Row, Col, Menu, Table, Modal, Button, Dropdown, Popconfirm, Typography, } from "antd";
+import { DownOutlined, SettingOutlined, PlusSquareOutlined, FilterOutlined, UploadOutlined, } from "@ant-design/icons"; //Icons
+// import { Link } from 'react-router-dom'
 
 import InfoModal from "./InfoModal";
-import { getList, delOrg } from "../../../service/Organizations";
+import { getList, delList } from "../../../service/conatct-person";
 
 import "../../styles/table.css";
 
 const { Title } = Typography;
 
-class Organizations extends Component {
+class Contact extends Component {
     constructor(props) {
         super(props);
+        this.contactForm = React.createRef();
+        
         this.columns = [
             {
                 title: "Code",
@@ -21,16 +23,32 @@ class Organizations extends Component {
                 render: (record) => `00${record}`,
             },
             {
-                title: "Name",
-                dataIndex: "name",
-                key: "name",
+                title: "First Name",
+                dataIndex: "firstName",
+                key: "firstName",
             },
             {
-                title: "Parent Organization",
-                dataIndex: "parentOrganization",
-                key: "parentOrganization",
-                render: (record) => { if (record) {return record.name} }
+                title: "Last Name",
+                dataIndex: "lastName",
+                key: "lastName",
             },
+            {
+                title: "Email",
+                dataIndex: "email",
+                key: "email",
+            },
+            {
+                title: "Contact",
+                dataIndex: "phoneNumber",
+                key: "phoneNumber",
+            },
+            // {
+            //     title: "Organization",
+            //     render: (record) => {
+            //         const value = record.contactPersonOrganizations
+            //         console.log(value[value.length-1])
+            //     },
+            // },
             {
                 title: "Action",
                 key: "action",
@@ -42,18 +60,21 @@ class Organizations extends Component {
                                 <Menu.Item danger>
                                     <Popconfirm
                                         title="Sure to delete?"
-                                        onConfirm={() => this.handleDelete(record.id) }
-                                    >Delete</Popconfirm>
+                                        onConfirm={() =>
+                                            this.handleDelete(record.id)
+                                        }
+                                    >
+                                        Delete
+                                    </Popconfirm>
                                 </Menu.Item>
                                 <Menu.Item
-                                    onClick={() => { this.setState({ infoModal: true, editOrg: record.id }); }}
-                                >Edit </Menu.Item>
-                                <Menu.Item>
-                                    <Link
-                                        to={{ pathname: `/organizations/info/${record.id}`, }}
-                                        className="nav-link"
-                                    >View </Link>
-                                </Menu.Item>
+                                    onClick={() => { this.setState({ openModal: true, editCP: record.id }); }}
+                                >Edit</Menu.Item>
+                                {/* <Menu.Item> */}
+                                    {/* <Link to={{ pathname: '/admin/calender/holidays' ,query: record.key}} className="nav-link"> */}
+                                    {/* View */}
+                                    {/* </Link> */}
+                                {/* </Menu.Item> */}
                             </Menu>
                         }
                     >
@@ -66,12 +87,12 @@ class Organizations extends Component {
         ];
 
         this.state = {
-            infoModal: false,
-            editOrg: false, //creating Component
             data: [],
+            openModal: false,
+            editCP: false,
         };
     }
-    
+
     componentDidMount = () =>{
         this.getData()
     }
@@ -81,56 +102,58 @@ class Organizations extends Component {
             if (res.success) {
                 this.setState({
                     data: res.data,
-                    infoModal: false,
-                    editOrg: false,
+                    openModal: false,
+                    editCP: false,
                 });
             }
         });
     };
 
     handleDelete = (id) => {
-        delOrg(id).then((res) => {
+        delList(id).then((res) => {
             if (res.success) {
                 this.getData();
             }
         });
     };
 
-    closeModal = () => {
-        this.setState({
-            infoModal: false,
-            editOrg: false,
-        });
+    toggelModal = (status) => {
+        this.setState({ openModal: status });
     };
-    callBack = () => {
+
+    Callback = () => {
         this.getData()
     };
 
+    submit = () => {
+        this.contactForm.current.refs.contact_form.submit();
+    };
+
     render() {
-        const { data, infoModal, editOrg } = this.state;
+        const {data, openModal, editCP} = this.state;
         const columns = this.columns;
         return (
             <>
                 <Row justify="space-between">
                     <Col>
-                        <Title level={4}>Organizations</Title>
+                        <Title level={4}>Contact Persons</Title>
                     </Col>
-                    <Col style={{ textAlign: "end" }} span={4}>
-                        <Row justify="space-between">
+                    <Col style={{ textAlign: "end" }} span={12}>
+                        <Row justify="end">
                             <Col>
                                 <Button type="default" size="small">
                                     <FilterOutlined />
                                     Filter
                                 </Button>
                             </Col>
-                            <Col>
+                            <Col offset={1}>
                                 <Button
                                     type="primary"
-                                    onClick={() => { this.setState({ infoModal: true }); }}
                                     size="small"
+                                    onClick={() => { this.setState({ openModal: true, }); }}
                                 >
                                     <PlusSquareOutlined />
-                                    Organizations
+                                    Contact Person
                                 </Button>
                             </Col>
                         </Row>
@@ -144,17 +167,18 @@ class Organizations extends Component {
                         />
                     </Col>
                 </Row>
-                {infoModal && (
+                {openModal && (
                     <InfoModal
-                        visible={infoModal}
-                        editOrg={editOrg}
-                        close={this.closeModal}
-                        callBack={this.callBack}
+                        visible={openModal}
+                        editCP={editCP}
+                        close={this.toggelModal}
+                        callBack={this.Callback}
                     />
                 )}
+
             </>
         );
     }
 }
 
-export default Organizations;
+export default Contact;

@@ -1,12 +1,28 @@
-import React, {Component} from 'react'
-import { Table, Menu, Dropdown, Button, Popconfirm, Row, Col,Typography, Modal } from 'antd'
-import { DownOutlined, SettingOutlined, PlusSquareOutlined} from '@ant-design/icons'; //Icons
-import { Link } from 'react-router-dom'
+import React, { Component } from "react";
+import {
+    Table,
+    Menu,
+    Dropdown,
+    Button,
+    Popconfirm,
+    Row,
+    Col,
+    Typography,
+    Modal,
+} from "antd";
+import {
+    DownOutlined,
+    SettingOutlined,
+    PlusSquareOutlined,
+} from "@ant-design/icons"; //Icons
+import { Link } from "react-router-dom";
 
-import Form from '../../../components/Core/Form';
-import '../../styles/table.css'
+import Form from "../../../components/Core/Form";
+import { getList, addList, delLabel, editLabel } from "../../../service/panel";
 
-const { Title } = Typography
+import "../../styles/table.css";
+
+const { Title } = Typography;
 
 class Panels extends Component {
     constructor(props) {
@@ -15,190 +31,241 @@ class Panels extends Component {
 
         this.columns = [
             {
-                title: 'Name',
-                dataIndex: 'name',
-                key: 'name',
+                title: "Name",
+                dataIndex: "label",
+                key: "label",
             },
+            // {
+            //     title: "Contact",
+            //     dataIndex: "contact",
+            //     key: "contact",
+            // },
             {
-                title: 'Contact',
-                dataIndex: 'contact',
-                key: 'contact',
-            },
-            {
-                title: 'Action',
-                key: 'action',
-                align: 'right',
+                title: "Action",
+                key: "action",
+                align: "right",
                 render: (text, record) => (
-                    <Dropdown overlay={
-                        <Menu>
-                            <Menu.Item danger>
-                                <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete(record.key)}>
-                                    Delete
-                                </Popconfirm>
-                            </Menu.Item >
-                            <Menu.Item onClick={()=>this.getRecord(record)}>Edit</Menu.Item>
-                            <Menu.Item >
-                                <Link to={{ pathname: `/admin/panels/info/${record.key}` }}>
-                                    Skills
-                                </Link>
-                            </Menu.Item>
-                        </Menu>
-                    }>
-                        <Button  size="small">
-                            <SettingOutlined/> Option <DownOutlined/>
+                    <Dropdown
+                        overlay={
+                            <Menu>
+                                <Menu.Item danger>
+                                    <Popconfirm
+                                        title="Sure to delete?"
+                                        onConfirm={() =>
+                                            this.handleDelete(record.id)
+                                        }
+                                    >
+                                        Delete
+                                    </Popconfirm>
+                                </Menu.Item>
+                                <Menu.Item
+                                    onClick={() => this.getRecord(record)}
+                                >
+                                    Edit
+                                </Menu.Item>
+                                <Menu.Item>
+                                    <Link
+                                        to={{
+                                            pathname: `/admin/panels/info/${record.id}`,
+                                        }}
+                                    >
+                                        Skills
+                                    </Link>
+                                </Menu.Item>
+                            </Menu>
+                        }
+                    >
+                        <Button size="small">
+                            <SettingOutlined /> Option <DownOutlined />
                         </Button>
-                    </Dropdown>  
+                    </Dropdown>
                 ),
             },
         ];
 
-        this.state={
-            data : [
-                {
-                    key: 1,
-                    name: 'Panel 1',
-                    contact: '000-00001',
-                },
-                {
-                    key: 2,
-                    name: 'Panel 2',
-                    contact: 'xxx-xxxx',
-                },
-                {
-                    key: 3,
-                    name: 'Panel 3',
-                    contact: '9999999',
-                },
-            ],
+        this.state = {
+            data: [],
             openModal: false,
-            editTimeoff: false,
+            editPanel: false,
             FormFields: {
-                formId: 'time_off',
-                justify : 'center',
+                formId: "time_off",
+                justify: "center",
                 FormCol: 20,
                 // FieldSpace: { xs: 12, sm: 16, md: 122},
-                layout: {labelCol: { span: 6 }},
-                justifyField:'center',
-                // FormLayout:'inline', 
-                size: 'middle',
-                fields:[
+                layout: { labelCol: { span: 6 } },
+                justifyField: "center",
+                // FormLayout:'inline',
+                size: "middle",
+                fields: [
                     {
-                        object:'obj',
-                        fieldCol:24,
-                        key: 'name',
-                        label:'Name',
-                        size:'small',
+                        object: "obj",
+                        fieldCol: 24,
+                        key: "label",
+                        label: "Name",
+                        size: "small",
                         // rules:[{ required: true }],
-                        type: 'input',
-                        labelAlign: 'right',
+                        type: "input",
+                        labelAlign: "right",
                     },
-                    {
-                        object:'obj',
-                        fieldCol:24,
-                        key: 'contact',
-                        label:'Contact',
-                        size:'small',
-                        // rules:[{ required: true }],
-                        type: 'input',
-                        labelAlign: 'right',
-                    },
+                    // {
+                    //     object: "obj",
+                    //     fieldCol: 24,
+                    //     key: "contact",
+                    //     label: "Contact",
+                    //     size: "small",
+                    //     // rules:[{ required: true }],
+                    //     type: "input",
+                    //     labelAlign: "right",
+                    // },
                 ],
+            },
+        };
+    }
+
+    componentDidMount = () => {
+        this.getData();
+    };
+
+    getData = () => {
+        getList().then((res) => {
+            if (res.success) {
+                this.setState({
+                    data: res.data,
+                    FormFields: { ...this.state.FormFields, initialValues: {} },
+                    openModal: false,
+                    editPanel: false,
+                });
             }
-        } 
-    }
+        });
+    };
 
-    handleDelete =  (key)=>{
-        const dataSource = [...this.state.data];
-        this.setState({ data: dataSource.filter(item => item.key !== key) });
-    }
+    handleDelete = (id) => {
+        delLabel(id).then((res) => {
+            if (res) {
+                this.getData();
+            }
+        });
+    };
 
-    toggelModal =(status)=>{
-        this.setState({openModal:status})
-
-        if (this.state.openModal){
-            this.dynamoForm.current.refs.time_off.resetFields(); // to reset file
-            delete this.state.FormFields.initialValues // to delete intilize if not written    
-            this.setState({  // set state
-                FormFields: this.state.FormFields,
-                editTimeoff:false 
-            })
-        }
-    }
-
-    Callback =(vake)=>{ // this will work after I get the Object from the form
-        if (!this.state.editTimeoff){ // to add new datas
-            vake.obj.key = this.state.data.length + 1
+    toggelModal = (status) => {
+        if (status) {
+            this.setState({ openModal: status });
+        } else {
             this.setState({
-                data: [...this.state.data, vake.obj],
-            }, () => {
-                this.toggelModal(false)
-                console.log("Data Rendered");
+                // set state
+                FormFields: { ...this.state.FormFields, initialValues: {} },
+                openModal: status,
+                editPanel: false,
             });
-        }else{ // to edit pervoius data
-            this.editRecord(vake.obj)
         }
-    }
+    };
 
-    submit = () =>{
+    submit = () => {
         this.dynamoForm.current.refs.time_off.submit();
-    }
+    };
+
+    Callback = (vake) => {
+        // this will work after I get the Object from the form
+        if (!this.state.editPanel) {
+            // to add new datas
+            this.addType(vake.obj);
+        } else {
+            // to edit pervoius data
+            this.editRecord(vake.obj);
+        }
+    };
+
+    addType = (value) => {
+        addList(value).then((res) => {
+            if (res) {
+                this.getData();
+            }
+        });
+    };
 
     getRecord = (data) => {
-
+        console.log(data);
+        const obj = {
+            id: data.id,
+            label: data.label,
+        };
         this.setState({
-            FormFields: {...this.state.FormFields, initialValues: {obj:data}},
-            editTimeoff: data.key
-        }, ()=>{
-            this.toggelModal(true)
+            FormFields: {
+                ...this.state.FormFields,
+                initialValues: { obj: obj },
+            },
+            editPanel: obj.id,
+            openModal: true,
+        });
+    };
 
-        })   
-    }
+    editRecord = (obj) => {
+        const { editPanel } = this.state;
+        obj.id = editPanel;
+        editLabel(obj).then((res) => {
+            if (res) {
+                this.getData();
+            }
+        });
+    };
 
-    editRecord = (obj) =>{
-        obj.key =  this.state.editTimeoff
-        this.state.data[obj.key - 1] = obj
-
-        this.setState({
-            data: [...this.state.data],
-            mergeObj:{},
-        },()=>{
-            this.toggelModal(false)
-        })
-    }
-
-    
-    render(){
-        const data = this.state.data
-        const columns = this.columns
-        return(
+    render() {
+        const data = this.state.data;
+        const columns = this.columns;
+        return (
             <>
                 <Row justify="space-between">
                     <Col>
                         <Title level={4}>Panels</Title>
                     </Col>
-                    <Col style={{textAlign:'end'}}>
-                        <Button type="primary" onClick={()=>{this.toggelModal(true)}} size="small"> <PlusSquareOutlined />Add Panels</Button>
+                    <Col style={{ textAlign: "end" }}>
+                        <Button
+                            type="primary"
+                            onClick={() => {
+                                this.toggelModal(true);
+                            }}
+                            size="small"
+                        >
+                            <PlusSquareOutlined />
+                            Add Panels
+                        </Button>
                     </Col>
                     <Col span={24}>
-                        <Table columns={columns} dataSource={data} size="small"/>
+                        <Table
+                            columns={columns}
+                            dataSource={data}
+                            size="small"
+                        />
                     </Col>
                 </Row>
-                {this.state.openModal?
+                {this.state.openModal ? (
                     <Modal
-                        title={this.state.editTimeoff? 'Edit Panel' : 'Add New Panel'}
+                        title={
+                            this.state.editPanel
+                                ? "Edit Panel"
+                                : "Add New Panel"
+                        }
                         centered
                         visible={this.state.openModal}
-                        onOk={()=>{this.submit()}}
-                        okText={this.state.editTimeoff? 'Edit' : 'Save'}
-                        onCancel={()=>{this.toggelModal(false)}}
+                        onOk={() => {
+                            this.submit();
+                        }}
+                        okText={"Save"}
+                        onCancel={() => {
+                            this.toggelModal(false);
+                        }}
                         width={400}
                     >
-                        <Form ref={this.dynamoForm} Callback={this.Callback} FormFields = {this.state.FormFields} />   
-                    </Modal>:null
-                }
+                        <Form
+                            ref={this.dynamoForm}
+                            Callback={this.Callback}
+                            FormFields={this.state.FormFields}
+                        />
+                    </Modal>
+                ) : null}
             </>
-        )
+        );
     }
 }
 
-export default Panels
+export default Panels;

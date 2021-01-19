@@ -10,8 +10,20 @@ import {
     Dropdown,
     Menu,
 } from "antd";
-import { SettingOutlined, DownOutlined } from "@ant-design/icons"; //Icons
+import {
+    SettingOutlined,
+    DownOutlined,
+    PlusSquareOutlined,
+} from "@ant-design/icons"; //Icons
 import Forms from "../../../components/Core/Form";
+
+import {
+    getList,
+    addList,
+    delLabel,
+    editLabel,
+} from "../../../service/holiday-type";
+
 const { Title } = Typography;
 
 class HolidayTypes extends Component {
@@ -21,8 +33,8 @@ class HolidayTypes extends Component {
         this.columns = [
             {
                 title: "Types",
-                dataIndex: "type",
-                key: "type",
+                dataIndex: "label",
+                key: "label",
             },
             {
                 title: "Action",
@@ -37,11 +49,11 @@ class HolidayTypes extends Component {
                                 >
                                     Edit
                                 </Menu.Item>
-                                <Menu.Item>
+                                <Menu.Item danger>
                                     <Popconfirm
                                         title="Sure to delete?"
                                         onConfirm={() =>
-                                            this.handleDelete(record.key)
+                                            this.handleDelete(record.id)
                                         }
                                     >
                                         Delete
@@ -60,22 +72,8 @@ class HolidayTypes extends Component {
         this.state = {
             isVisible: false,
             newType: "",
-            data: [
-                {
-                    key: 1,
-                    type: "Easter",
-                },
-                {
-                    key: 2,
-                    type: "Christmas",
-                },
-                {
-                    key: 3,
-                    type: "Eid-ul-fiter",
-                },
-            ],
+            data: [],
             editType: false,
-
             FormFields: {
                 formId: "type_form",
                 FormCol: 20,
@@ -87,7 +85,7 @@ class HolidayTypes extends Component {
                     {
                         object: "obj",
                         fieldCol: 24,
-                        key: "type",
+                        key: "label",
                         label: "Name",
                         labelAlign: "right",
                         type: "Input",
@@ -98,9 +96,27 @@ class HolidayTypes extends Component {
         };
     }
 
-    handleDelete = (key) => {
-        this.setState({
-            data: this.state.data.filter((item) => item.key !== key),
+    componentDidMount = () => {
+        this.getData();
+    };
+
+    getData = () => {
+        getList().then((res) => {
+            if (res.success) {
+                this.setState({
+                    data: res.data,
+                    isVisible: false,
+                    editType: false,
+                });
+            }
+        });
+    };
+
+    handleDelete = (id) => {
+        delLabel(id).then((res) => {
+            if (res) {
+                this.getData();
+            }
         });
     };
 
@@ -117,14 +133,11 @@ class HolidayTypes extends Component {
     };
 
     addType = (value) => {
-        let obj = {
-            type: value.type,
-            key: this.state.data[this.state.data.length - 1].key + 1,
-        };
-
-        this.setState({
-            data: [...this.state.data, obj],
-            isVisible: false,
+        addList(value).then((res) => {
+            if (res) {
+                this.HalForm.current.refs.type_form.resetFields();
+                this.getData();
+            }
         });
     };
 
@@ -136,21 +149,19 @@ class HolidayTypes extends Component {
                 ...this.state.FormFields,
                 initialValues: { obj: obj },
             },
-            editType: obj.key,
+            editType: obj.id,
             isVisible: true,
         });
     };
 
     editRecord = (obj) => {
-        const { data, FormFields } = this.state;
-        obj.key = this.state.editType;
-        data[obj.key - 1] = obj;
-        delete FormFields.initialValues;
-        this.setState({
-            data,
-            FormFields,
-            editType: false,
-            isVisible: false,
+        const { editType } = this.state;
+        obj.id = editType;
+        editLabel(obj).then((res) => {
+            if (res) {
+                this.HalForm.current.refs.type_form.resetFields();
+                this.getData();
+            }
         });
     };
 
@@ -172,17 +183,22 @@ class HolidayTypes extends Component {
                                 });
                             }}
                         >
-                            Add Type
+                            <PlusSquareOutlined /> Holiday Type
                         </Button>
                     </Col>
                 </Row>
-                <Table columns={this.columns} dataSource={data} size="small" />
+                <Table
+                    columns={this.columns}
+                    dataSource={data}
+                    size="small"
+                    rowKey={(data) => data.id}
+                />
                 {this.state.isVisible && (
                     <Modal
                         title={this.state.editType ? "Edit Type" : "Add Type"}
                         centered
                         visible={this.state.isVisible}
-                        okText={this.state.editType ? "Edit" : "Save"}
+                        okText={"Save"}
                         width={400}
                         onCancel={() => {
                             delete this.state.FormFields.initialValues; // delete initialValues of fields on close

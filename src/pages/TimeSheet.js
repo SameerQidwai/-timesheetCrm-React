@@ -854,7 +854,6 @@ class TimeSheet extends Component {
                         <Row justify="space-around" style={{ padding: 20 }}>
                             <Col>
                                 <Button type="primary" onClick={this.saveTime}>
-                                    {" "}
                                     <SaveOutlined /> Save
                                 </Button>
                             </Col>

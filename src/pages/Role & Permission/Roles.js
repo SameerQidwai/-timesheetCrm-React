@@ -1,243 +1,309 @@
-import React, {Component} from 'react'
-import { Table, Menu, Dropdown, Button, Popconfirm, Row, Col,Typography, Modal } from 'antd'
-import { DownOutlined, SettingOutlined, PlusSquareOutlined} from '@ant-design/icons'; //Icons
+import React, { Component } from "react";
+import {
+    Table,
+    Menu,
+    Dropdown,
+    Button,
+    Popconfirm,
+    Row,
+    Col,
+    Typography,
+    Modal,
+} from "antd";
+import {
+    DownOutlined,
+    SettingOutlined,
+    PlusSquareOutlined,
+} from "@ant-design/icons"; //Icons
 
+import Form from "../../components/Core/Form";
+import "../styles/table.css";
+import Permission from "./Permission";
 
-import Form from '../../components/Core/Form';
-import '../styles/table.css'
-import Permission from './Permission';
-
-const { Title } = Typography
-
-
+const { Title } = Typography;
 
 class Roles extends Component {
     constructor(props) {
-    super(props);
+        super(props);
         this.roleForm = React.createRef();
         this.columns = [
             {
-                title: 'Title',
-                dataIndex: 'title',
-                key: 'title',
+                title: "Title",
+                dataIndex: "title",
+                key: "title",
             },
             {
-                title: 'Action',
-                key: 'action',
-                align: 'right',
-            render: (record) => (
-                    <Dropdown overlay={
-                        <Menu>
-                            <Menu.Item danger>
-                                <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete(record.key)} >
-                                    Delete
-                                </Popconfirm>
-                            </Menu.Item >
-                            <Menu.Item onClick={()=>{this.getRecord(record)}}>Edit</Menu.Item>
-                            <Menu.Item onClick={this.callPermission}>
-                                {/* <Link to={{ pathname: '/admin/calender/holidays' ,query: record.key}} className="nav-link"> */}
+                title: "Action",
+                key: "action",
+                align: "right",
+                render: (record) => (
+                    <Dropdown
+                        overlay={
+                            <Menu>
+                                <Menu.Item danger>
+                                    <Popconfirm
+                                        title="Sure to delete?"
+                                        onConfirm={() =>
+                                            this.handleDelete(record.key)
+                                        }
+                                    >
+                                        Delete
+                                    </Popconfirm>
+                                </Menu.Item>
+                                <Menu.Item
+                                    onClick={() => {
+                                        this.getRecord(record);
+                                    }}
+                                >
+                                    Edit
+                                </Menu.Item>
+                                <Menu.Item onClick={this.callPermission}>
+                                    {/* <Link to={{ pathname: '/admin/calender/holidays' ,query: record.key}} className="nav-link"> */}
                                     Permissions
-                                {/* </Link> */}
-                            </Menu.Item >
-                        </Menu>
-                    }>
-                        <Button size='small'>
-                            <SettingOutlined/> Option <DownOutlined/>
+                                    {/* </Link> */}
+                                </Menu.Item>
+                            </Menu>
+                        }
+                    >
+                        <Button size="small">
+                            <SettingOutlined /> Option <DownOutlined />
                         </Button>
-                    </Dropdown>  
+                    </Dropdown>
                 ),
             },
         ];
 
-        this.state={
-            data : [
+        this.state = {
+            data: [
                 {
                     key: 1,
-                    title: 'Admin',
+                    title: "Admin",
                 },
                 {
                     key: 2,
-                    title: 'Team Lead',
+                    title: "Team Lead",
                 },
                 {
                     key: 3,
-                    title: 'Project Manager',
+                    title: "Project Manager",
                 },
             ],
-            perData : [
+            perData: [
                 {
                     key: 1,
-                    category: 'Skills',
+                    category: "Skills",
                     create: true,
                     update: false,
                     read: true,
-                    delete: false
+                    delete: false,
                 },
                 {
                     key: 2,
-                    category: 'Employees',
+                    category: "Employees",
                     create: true,
                     update: true,
                     read: true,
-                    delete: true
+                    delete: true,
                 },
                 {
                     key: 3,
-                    category: 'Projects',
+                    category: "Projects",
                     create: true,
                     update: false,
                     read: true,
-                    delete: false
+                    delete: false,
                 },
                 {
                     key: 4,
-                    category: 'Time Off',
+                    category: "Time Off",
                     create: true,
                     update: false,
                     read: false,
-                    delete: false
+                    delete: false,
                 },
                 {
                     key: 5,
-                    category: 'Travler',
+                    category: "Travler",
                     create: false,
                     update: true,
                     read: true,
-                    delete: false
+                    delete: false,
                 },
                 {
                     key: 6,
-                    category: 'opportunity',
+                    category: "opportunity",
                     create: false,
                     update: true,
                     read: false,
-                    delete: true
+                    delete: true,
                 },
             ],
 
             openModal: false,
-            editTimeoff:false,
-            perModal:false,
+            editTimeoff: false,
+            perModal: false,
             FormFields: {
-                formId: 'role_form',
-                justify : 'center',
+                formId: "role_form",
+                justify: "center",
                 FormCol: 20,
-                FieldSpace: { xs: 12, sm: 16, md: 122},
-                layout: {labelCol: { span: 12 }},
-                justifyField:'center',
-                // FormLayout:'inline', 
-                size: 'middle',
-                fields:[
+                FieldSpace: { xs: 12, sm: 16, md: 122 },
+                layout: { labelCol: { span: 12 } },
+                justifyField: "center",
+                // FormLayout:'inline',
+                size: "middle",
+                fields: [
                     {
-                        object:'obj', 
-                        fieldCol:20,
-                        layout:  {labelCol: { span: 4 },
-                        wrapperCol: { span: 0 }},
-                        key: 'title',
-                        label:'Title',
-                        size: 'small',            
+                        object: "obj",
+                        fieldCol: 20,
+                        layout: {
+                            labelCol: { span: 4 },
+                            wrapperCol: { span: 0 },
+                        },
+                        key: "title",
+                        label: "Title",
+                        size: "small",
                         // rules:[{ required: true }],
-                        type: 'input',
-                        labelAlign: 'left',
+                        type: "input",
+                        labelAlign: "left",
                     },
                 ],
-            }
-        }
-    }    
+            },
+        };
+    }
 
+    toggelModal = (status) => {
+        this.setState({ openModal: status });
 
-    toggelModal =(status)=>{
-        this.setState({openModal:status})
-
-        if (this.state.openModal){
+        if (this.state.openModal) {
             this.roleForm.current.refs.role_form.resetFields(); // to reset file
-            delete this.state.FormFields.initialValues // to delete intilize if not written    
-            this.setState({  // set state
-                FormFields: this.state.FormFields,
-                editTimeoff:false 
-            })
-
-        }
-    }
-
-    Callback =(vake)=>{ // this will work after I get the Object from the form
-        if(!this.state.editTimeoff){
-            vake.obj.key = this.state.data.length + 1
+            delete this.state.FormFields.initialValues; // to delete intilize if not written
             this.setState({
-                data: [...this.state.data, vake.obj],
-            }, () => {
-                this.toggelModal(false)
-                this.roleForm.current.refs.role_form.resetFields();
-                console.log("Data Rendered");
+                // set state
+                FormFields: this.state.FormFields,
+                editTimeoff: false,
             });
-        }else{
-            this.editRecord(vake.obj)
         }
-    }
+    };
+
+    Callback = (vake) => {
+        // this will work after I get the Object from the form
+        if (!this.state.editTimeoff) {
+            vake.obj.key = this.state.data.length + 1;
+            this.setState(
+                {
+                    data: [...this.state.data, vake.obj],
+                },
+                () => {
+                    this.toggelModal(false);
+                    this.roleForm.current.refs.role_form.resetFields();
+                    console.log("Data Rendered");
+                }
+            );
+        } else {
+            this.editRecord(vake.obj);
+        }
+    };
 
     getRecord = (data) => {
-
         this.setState({
-            FormFields: {...this.state.FormFields, initialValues: {obj:data}},
-            editTimeoff:data.key
-        })
-        
-        this.toggelModal(true)
-    }
+            FormFields: {
+                ...this.state.FormFields,
+                initialValues: { obj: data },
+            },
+            editTimeoff: data.key,
+        });
+
+        this.toggelModal(true);
+    };
 
     editRecord = (obj) => {
-        obj.key =  this.state.editTimeoff
-        this.state.data[obj.key - 1] = obj
+        obj.key = this.state.editTimeoff;
+        this.state.data[obj.key - 1] = obj;
 
-        this.setState({
-            data: [...this.state.data],
-            mergeObj:{},
-        },()=>{
-            this.toggelModal(false)
-        })
-    }
+        this.setState(
+            {
+                data: [...this.state.data],
+                mergeObj: {},
+            },
+            () => {
+                this.toggelModal(false);
+            }
+        );
+    };
 
-    callPermission = () =>{
-        this.setState({perModal:true})
-    }
+    callPermission = () => {
+        this.setState({ perModal: true });
+    };
 
-    submit = () =>{
+    submit = () => {
         this.roleForm.current.refs.role_form.submit();
-    }
+    };
 
-    render(){
-        const data = this.state.data
-        const columns = this.columns
-        return(
+    render() {
+        const data = this.state.data;
+        const columns = this.columns;
+        return (
             <>
                 <Row justify="space-between">
                     <Col>
                         <Title level={4}>Roles</Title>
                     </Col>
-                    <Col style={{textAlign:'end'}}>
-                        <Button type="primary" onClick={()=>{this.toggelModal(true)}} size='small'> <PlusSquareOutlined />Add Roles</Button>
+                    <Col style={{ textAlign: "end" }}>
+                        <Button
+                            type="primary"
+                            onClick={() => {
+                                this.toggelModal(true);
+                            }}
+                            size="small"
+                        >
+                            {" "}
+                            <PlusSquareOutlined />
+                            Add Roles
+                        </Button>
                     </Col>
                     <Col span={24}>
-                        <Table columns={columns} dataSource={data} size='small'/>
+                        <Table
+                            columns={columns}
+                            dataSource={data}
+                            size="small"
+                        />
                     </Col>
                 </Row>
-                {this.state.openModal ? 
+                {this.state.openModal ? (
                     <Modal
-                        title= {this.state.editTimeoff? "Edit Role" : "Add New Role"}
+                        title={
+                            this.state.editTimeoff
+                                ? "Edit Role"
+                                : "Add New Role"
+                        }
                         centered
                         visible={this.state.openModal}
-                        onOk={()=>{this.submit()}}
-                        okText={this.state.editTimeoff? 'Edit' : 'Save'}
-                        onCancel={()=>{this.toggelModal(false)}}
+                        onOk={() => {
+                            this.submit();
+                        }}
+                        okText={"Save"}
+                        onCancel={() => {
+                            this.toggelModal(false);
+                        }}
                         width={600}
                     >
-                        <Form ref={this.roleForm} Callback={() => this.Callback()} FormFields= {this.state.FormFields} />   
-                    </Modal> : null
-                }
-                <Permission isVisible={this.state.perModal} Callback={()=>{this.setState({perModal:false})}} data={this.state.perData}/>
+                        <Form
+                            ref={this.roleForm}
+                            Callback={() => this.Callback()}
+                            FormFields={this.state.FormFields}
+                        />
+                    </Modal>
+                ) : null}
+                <Permission
+                    isVisible={this.state.perModal}
+                    Callback={() => {
+                        this.setState({ perModal: false });
+                    }}
+                    data={this.state.perData}
+                />
             </>
-        )
+        );
     }
 }
 
-export default Roles
+export default Roles;

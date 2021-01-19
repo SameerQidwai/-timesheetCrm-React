@@ -24,7 +24,7 @@ const listData = [
         key: "/admin/global-settings",
     },
     {
-        text: "Holidays",
+        text: "Holidays Types",
         icon: <CalendarOutlined />,
         link: "/admin/holiday-types",
         key: "/admin/holiday-types",
@@ -54,13 +54,13 @@ const listData = [
         key: "/admin/roles",
     },
     {
-        text: "Levels",
+        text: "Standard Levels",
         icon: <ApartmentOutlined />,
         link: "/admin/standard-levels",
         key: "/admin/standard-levels",
     },
     {
-        text: "Skills",
+        text: "Standard Skills",
         icon: <GoldOutlined />,
         link: "/admin/skills",
         key: "/admin/skills",

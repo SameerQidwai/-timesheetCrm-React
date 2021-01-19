@@ -81,7 +81,7 @@ class InfoModal extends Component {
                                 const {
                                     obj,
                                 } = this.timeRef.current.refs.off_form.getFieldsValue(); // get the values from from data
-                                
+
                                 const start = obj.b_date.format("YYYY MMM D");
                                 obj.d_off = obj.e_date.diff(start, "days") + 1;
                                 console.log(obj.d_off);
@@ -343,7 +343,7 @@ class InfoModal extends Component {
                 onOk={() => {
                     this.submit();
                 }}
-                okText={editOff ? "Edit" : "Save"}
+                okText={"Save"}
                 onCancel={this.onCancel}
                 width={700}
             >

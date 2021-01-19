@@ -1,15 +1,5 @@
 import React, { Component } from "react";
-import {
-    Table,
-    Menu,
-    Dropdown,
-    Button,
-    Tag,
-    Row,
-    Col,
-    Typography,
-    Modal,
-} from "antd";
+import { Table, Menu, Dropdown, Button, Tag, Row, Col, Typography, Modal, } from "antd";
 import {
     DownOutlined,
     SettingOutlined,
@@ -20,7 +10,7 @@ import { Link } from "react-router-dom";
 import Form from "../../../components/Core/Form";
 import "../../styles/table.css";
 
-// import { getList, addToList } from '../../../service/calender'
+import { getList, addList, editLabel } from "../../../service/calender";
 
 const { Title } = Typography;
 
@@ -33,23 +23,22 @@ class Calenders extends Component {
         this.columns = [
             {
                 title: "Title",
-                dataIndex: "title",
-                key: "title",
+                dataIndex: "label",
+                key: "label",
             },
             {
                 title: "Status",
-                dataIndex: "status",
-                key: "status",
+                dataIndex: "isActive",
+                key: "isActive",
                 align: "right",
-                render: (status) => (
+                render: (isActive) => (
                     <>
-                        {" "}
                         {
                             <Tag
-                                color={!status ? "#7d7b7b" : "green"}
-                                key={status}
+                                color={!isActive ? "#7d7b7b" : "green"}
+                                key={isActive}
                             >
-                                {status ? "Enabled" : "Disabled"}
+                                {isActive ? "Enabled" : "Disabled"}
                             </Tag>
                         }
                     </>
@@ -71,7 +60,7 @@ class Calenders extends Component {
                                 <Menu.Item>
                                     <Link
                                         to={{
-                                            pathname: `/admin/calenders/holidays/${record.key}`,
+                                            pathname: `/admin/calenders/holidays/${record.id}`,
                                         }}
                                         className="nav-link"
                                     >
@@ -90,18 +79,7 @@ class Calenders extends Component {
         ];
 
         this.state = {
-            data: [
-                {
-                    key: 1,
-                    title: "Standard",
-                    status: true,
-                },
-                {
-                    key: 2,
-                    title: "Muslims",
-                    status: false,
-                },
-            ],
+            data: [],
             calenderForm: React.createRef(),
             openModal: false,
 
@@ -113,6 +91,7 @@ class Calenders extends Component {
                 layout: { labelCol: { span: 12 } },
                 justifyField: "center",
                 size: "middle",
+                initialValues: { obj: { isActive: true } },
                 fields: [
                     {
                         object: "obj",
@@ -121,7 +100,7 @@ class Calenders extends Component {
                             labelCol: { span: 4 },
                             wrapperCol: { span: 0 },
                         },
-                        key: "title",
+                        key: "label",
                         label: "Title",
                         size: "small",
                         // rules:[{ required: true }],
@@ -131,7 +110,7 @@ class Calenders extends Component {
                     {
                         object: "obj",
                         fieldCol: 20,
-                        key: "status",
+                        key: "isActive",
                         label: "Status",
                         size: "small",
                         // rules:[{ required: true, message: 'Insert your Password Please' }],
@@ -146,99 +125,78 @@ class Calenders extends Component {
         };
     }
 
-    // componentDidMount=()=>{
-    //     this.getAll()
-    // }
+    componentDidMount = () => {
+        this.getData();
+    };
 
-    // getAll = () => { //creating API's
-    //     getList().then(data => {
-    //         console.log('calender')
-    //         if(data.status !== 'success'){
-    //             // localStorage.removeItem('usertoken')
-    //             // this.props.history.push(`/login`)
-    //         }else{
-    //             this.setState(
-    //                 {
-    //                     data: [...data]
-    //                 },() => {
-    //                     console.log(this.state.items)
-    //                 }
-    //             )
-    //         }
-    //     })
-    // }
-
-    handleDelete = (key) => {
-        const dataSource = [...this.state.data];
-        this.setState({ data: dataSource.filter((item) => item.key !== key) });
+    getData = () => {
+        //creating API's
+        getList().then((res) => {
+            if (res.success) {
+                this.setState({
+                    data: res.data,
+                    FormFields: {
+                        ...this.state.FormFields,
+                        initialValues: {},
+                    },
+                    openModal: false,
+                    editTimeoff: false,
+                });
+            }
+        });
     };
 
     toggelModal = (status) => {
-        this.setState({ openModal: status });
-
-        if (this.state.openModal) {
-            this.state.calenderForm.current.refs.calenderId.resetFields(); // to reset file
-            delete this.state.FormFields.initialValues; // to delete intilize if not written
+        if (status) {
+            this.setState({ openModal: status });
+        } else {
             this.setState({
-                // set state
-                FormFields: this.state.FormFields,
+                FormFields: {
+                    ...this.state.FormFields,
+                    initialValues: {},
+                },
+                openModal: false,
                 editTimeoff: false,
             });
         }
     };
 
-    getRecord = (data, text) => {
-        this.setState(
-            {
-                FormFields: {
-                    ...this.state.FormFields,
-                    initialValues: { obj: data },
-                },
-                editTimeoff: data.key,
-            },
-            () => {
-                this.toggelModal(true);
-            }
-        );
-    };
-
-    editRecord = (obj) => {
-        console.log(this.state.editTimeoff);
-        obj.key = this.state.editTimeoff;
-        this.state.data[obj.key - 1] = obj;
-
-        this.setState(
-            {
-                data: [...this.state.data],
-                mergeObj: {},
-            },
-            () => {
-                this.toggelModal(false);
-            }
-        );
-    };
-
     Callback = (vake) => {
         // this will work after I get the Object from the form
         if (!this.state.editTimeoff) {
-            vake.obj.key = this.state.data.length + 1; //frontEnd changes
-            this.setState(
-                {
-                    data: [...this.state.data, vake.obj],
-                },
-                () => {
-                    this.toggelModal(false);
-                    this.state.calenderForm.current.refs.calenderId.resetFields();
-                    console.log("Data Rendered");
-                }
-            );
-            // console.log(vake.obj)
-            // addToList(vake.obj).then(() => {
-            //     this.getAll() // refresh list
-            // })
+            this.addCal(vake.obj);
         } else {
             this.editRecord(vake.obj);
         }
+    };
+
+    addCal = (value) => {
+        addList(value).then((res) => {
+            if (res) {
+                this.getData();
+            }
+        });
+    };
+
+    getRecord = (data, text) => {
+        this.setState({
+            FormFields: {
+                ...this.state.FormFields,
+                initialValues: { obj: data },
+            },
+            editTimeoff: data.id,
+            openModal: true,
+        });
+    };
+
+    editRecord = (obj) => {
+        const { editTimeoff } = this.state;
+        obj.id = editTimeoff;
+        editLabel(obj).then((res) => {
+            if (res) {
+                this.getData();
+            }
+        });
     };
 
     submit = () => {
@@ -246,7 +204,7 @@ class Calenders extends Component {
     };
 
     render() {
-        const data = this.state.data;
+        const { data, openModal, editTimeoff } = this.state;
         const columns = this.columns;
         return (
             <>
@@ -262,7 +220,6 @@ class Calenders extends Component {
                             }}
                             size="small"
                         >
-                            {" "}
                             <PlusSquareOutlined />
                             Add Calender
                         </Button>
@@ -272,23 +229,24 @@ class Calenders extends Component {
                             columns={columns}
                             dataSource={data}
                             size="small"
+                            rowKey={(data) => data.id}
                         />
                     </Col>
                 </Row>
                 {
-                    this.state.openModal ? (
+                    openModal ? (
                         <Modal
                             title={
-                                this.state.editTimeoff
+                                editTimeoff
                                     ? "Edit Calender"
                                     : "Add New Calender"
                             }
                             centered
-                            visible={this.state.openModal}
+                            visible={openModal}
                             onOk={() => {
                                 this.submit();
                             }}
-                            okText={this.state.editTimeoff ? "Edit" : "Save"}
+                            okText={"Save"}
                             onCancel={() => {
                                 this.toggelModal(false);
                             }}

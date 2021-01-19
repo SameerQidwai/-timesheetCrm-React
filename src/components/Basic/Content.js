@@ -13,7 +13,9 @@ import Employees from "../../pages/Employees & Info/Employees";
 import EmpInfo from "../../pages/Employees & Info/EmpInfo";
 import Contractors from "../../pages/Contractors & Info/Contractors";
 import ContInfo from "../../pages/Contractors & Info/ContInfo";
-import Contact from "../../pages/Contacts/Contact";
+// import Clients from "../../pages/Clients & info/Clients";
+// import ClientsInfo from "../../pages/Clients & info/ClientInfo";
+import Contact from "../../pages/Contacts/Contact Person/Contact";
 import TimeSheet from "../../pages/TimeSheet";
 import TimeOff from "../../pages/Time/TimeOff";
 import Travels from "../../pages/Travel/Travels";
@@ -113,6 +115,14 @@ const pageLinks = [
         component: ContInfo,
         link: "/contractors/info/:id",
     },
+    // {
+    //     component: Clients,
+    //     link: "/clients",
+    // },
+    // {
+    //     component: ClientsInfo,
+    //     link: "/clients/info/:id",
+    // },
     {
         component: Leads,
         link: "/leads",

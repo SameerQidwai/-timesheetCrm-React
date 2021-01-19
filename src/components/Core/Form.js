@@ -1,22 +1,5 @@
 import React, { Component } from "react";
-import {
-    InputNumber,
-    Typography,
-    DatePicker,
-    TimePicker,
-    Checkbox,
-    Divider,
-    Upload,
-    Button,
-    Select,
-    Switch,
-    Radio,
-    Input,
-    Space,
-    Form,
-    Row,
-    Col,
-} from "antd";
+import { InputNumber, Typography, DatePicker, TimePicker, Checkbox, Divider, Upload, Button, Select, Switch, Radio, Input, Space, Form, Row, Col, } from "antd";
 
 const { Item } = Form;
 const { Dragger } = Upload;
@@ -120,24 +103,7 @@ class Forms extends Component {
                                         style={item.itemStyle}
                                         noStyle={item.noStyle}
                                     >
-                                        {this.filedformat(
-                                            item.type,
-                                            item.Placeholder,
-                                            item.data,
-                                            item.mode,
-                                            item.rangMin,
-                                            item.rangMax,
-                                            item.default,
-                                            item.showTime,
-                                            item.shape,
-                                            item.size,
-                                            item.fieldStyle,
-                                            item.key,
-                                            item.disabled,
-                                            item.onChange,
-                                            item.onClick,
-                                            item.onBlur
-                                        )}
+                                        {this.filedformat( item.type, item.Placeholder, item.data, item.mode, item.rangMin, item.rangMax, item.default, item.showTime, item.shape, item.size, item.fieldStyle, item.key, item.disabled, item.onChange, item.onClick, item.onBlur )}
                                     </Item>
                                 </Col>
                             ))}
@@ -176,24 +142,7 @@ class Forms extends Component {
         );
     };
 
-    filedformat = (
-        type,
-        placeholder,
-        data,
-        mode,
-        min,
-        max,
-        defaultValue,
-        showTime,
-        shape,
-        size,
-        style,
-        key,
-        disabled,
-        onChange,
-        onClick,
-        onBlur
-    ) => {
+    filedformat = ( type, placeholder, data, mode, min, max, defaultValue, showTime, shape, size, style, key, disabled, onChange, onClick, onBlur ) => {
         let item = null;
         switch (type) {
             case "Title":
@@ -362,7 +311,7 @@ class Forms extends Component {
                         shape={shape}
                         block={max}
                         style={style}
-                        onClick={onChange}
+                        onClick={onClick}
                         size={size}
                     >
                         {placeholder}
