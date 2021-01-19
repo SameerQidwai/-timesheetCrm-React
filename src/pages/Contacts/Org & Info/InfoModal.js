@@ -280,7 +280,7 @@ class InfoModal extends Component {
                         // rules:[{ required: true }],
                         type: "Input",
                         labelAlign: "left",
-                        itemStyle: { marginBottom: "10px" },
+                        itemStyle: { marginBottom: 10 },
                     },
                     {
                         object: "obj",
@@ -291,7 +291,7 @@ class InfoModal extends Component {
                         // rules:[{ required: true }],
                         type: "Input",
                         labelAlign: "left",
-                        itemStyle: { marginBottom: "10px" },
+                        itemStyle: { marginBottom: 10 },
                     },
                     {
                         Placeholder: "Policy Number",
@@ -300,7 +300,7 @@ class InfoModal extends Component {
                         type: "Title",
                         mode: 5,
                         labelAlign: "right",
-                        itemStyle: { marginTop: "20px" },
+                        itemStyle: { marginTop: 20 },
                     },
                     {
                         object: "obj",
@@ -310,7 +310,7 @@ class InfoModal extends Component {
                         size: "small",
                         type: "Input",
                         labelAlign: "left",
-                        itemStyle: { marginBottom: "10px" },
+                        itemStyle: { marginBottom: 10 },
                     },
                     {
                         object: "obj",
@@ -321,7 +321,7 @@ class InfoModal extends Component {
                         // rules:[{ required: true }],
                         type: "Input",
                         labelAlign: "left",
-                        itemStyle: { marginBottom: "10px" },
+                        itemStyle: { marginBottom: 10 },
                     },
                     {
                         object: "obj",
@@ -342,7 +342,7 @@ class InfoModal extends Component {
                         type: "Title",
                         mode: 5,
                         labelAlign: "right",
-                        itemStyle: { marginTop: "20px" },
+                        itemStyle: { marginTop: 20 },
                     },
                     {
                         object: "obj",
@@ -352,7 +352,7 @@ class InfoModal extends Component {
                         size: "small",
                         type: "InputNumber",
                         labelAlign: "left",
-                        itemStyle: { marginBottom: "10px" },
+                        itemStyle: { marginBottom: 10 },
                     },
                     {
                         object: "obj",
@@ -363,7 +363,7 @@ class InfoModal extends Component {
                         // rules:[{ required: true }],
                         type: "InputNumber",
                         labelAlign: "left",
-                        itemStyle: { marginBottom: "10px" },
+                        itemStyle: { marginBottom: 10 },
                     },
                     {
                         object: "obj",
@@ -372,9 +372,9 @@ class InfoModal extends Component {
                         label: "WC",
                         size: "small",
                         // rules:[{ required: true }],
-                        type: "Select",
+                        type: "InputNumber",
                         labelAlign: "left",
-                        itemStyle: { marginBottom: "10px" },
+                        itemStyle: { marginBottom: 10 },
                     },
                     {
                         Placeholder: "Insurance Expiry",
@@ -604,8 +604,9 @@ class InfoModal extends Component {
 
     addOrganization = (value) => {
         const { callBack } = this.props;
+        console.log(value);
         addList(value).then((res) => {
-            if(res.sucess){
+            if(res.success){
                 callBack()
             }
         });

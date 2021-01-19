@@ -9,7 +9,7 @@ export const getStates = () => {
             const { success, data } = res.data;
             var states = []
             data.map((el) => {
-                states.push({value: el.id, label: el.name})
+                states.push({value: el.id, label: el.label})
             });
             if (success) return { success: success, data: states };
         })

@@ -654,6 +654,7 @@ class InfoModal extends Component {
                 let asso = {};
                 const skillArray = data.standardSkillStandardLevels;
                 const assoArray = data.contactPersonOrganizations
+                console.log(assoArray);
                 let result = skillArray.length < assoArray.length? assoArray.length :skillArray.length;
                 for (let i = 0; i < result; i++) {
                     let skillEl = skillArray[i];
