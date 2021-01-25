@@ -1,21 +1,7 @@
 import React, { Component } from "react";
-import {
-    Popconfirm,
-    Typography,
-    Dropdown,
-    Button,
-    Table,
-    Menu,
-    Row,
-    Col,
-} from "antd";
+import { Popconfirm, Typography, Dropdown, Button, Table, Menu, Row, Col, } from "antd";
 
-import {
-    PlusSquareOutlined,
-    SettingOutlined,
-    FilterOutlined,
-    DownOutlined,
-} from "@ant-design/icons"; //Icons
+import { PlusSquareOutlined, SettingOutlined, FilterOutlined, DownOutlined, } from "@ant-design/icons"; //Icons
 
 import { Link } from "react-router-dom"; 
 
@@ -55,19 +41,14 @@ class Employees extends Component {
                                 <Menu.Item danger>
                                     <Popconfirm
                                         title="Sure to delete?"
-                                        onConfirm={() =>
-                                            this.handleDelete(record.key)
-                                        }
+                                        onConfirm={() => this.handleDelete(record.key) }
                                     >
                                         Delete
                                     </Popconfirm>
                                 </Menu.Item>
                                 <Menu.Item
                                     onClick={() => {
-                                        this.setState({
-                                            infoModal: true,
-                                            editEmp: record.key,
-                                        });
+                                        this.setState({ infoModal: true, editEmp: record.key, });
                                     }}
                                 >
                                     Edit
@@ -80,6 +61,16 @@ class Employees extends Component {
                                         className="nav-link"
                                     >
                                         View
+                                    </Link>
+                                </Menu.Item>
+                                <Menu.Item>
+                                    <Link
+                                        to={{
+                                            pathname: `/Employee/contracts/${record.key}`,
+                                        }}
+                                        className="nav-link"
+                                    >
+                                        Contracts
                                     </Link>
                                 </Menu.Item>
                             </Menu>
@@ -97,21 +88,9 @@ class Employees extends Component {
             infoModal: false,
             editEmp: false,
             data: [
-                {
-                    key: 1,
-                    name: "Nair",
-                    email: "N@olm.com",
-                },
-                {
-                    key: 2,
-                    name: "Hallen",
-                    email: "H@olm.com",
-                },
-                {
-                    key: 3,
-                    name: "Gorge",
-                    email: "G@olm.com",
-                },
+                { key: 1, name: "Nair", email: "N@olm.com", },
+                { key: 2, name: "Hallen", email: "H@olm.com", },
+                { key: 3, name: "Gorge", email: "G@olm.com", },
             ],
         };
     }
@@ -155,11 +134,7 @@ class Employees extends Component {
                     <Col style={{ textAlign: "end" }} span={4}>
                         <Row justify="space-between">
                             <Col>
-                                <Button type="default" size="small">
-                                    {" "}
-                                    <FilterOutlined />
-                                    Filter
-                                </Button>
+                                <Button type="default" size="small"> <FilterOutlined /> Filter </Button>
                             </Col>
                             <Col>
                                 <Button
@@ -169,7 +144,6 @@ class Employees extends Component {
                                     }}
                                     size="small"
                                 >
-                                    {" "}
                                     <PlusSquareOutlined />
                                     Employees
                                 </Button>

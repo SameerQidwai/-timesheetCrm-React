@@ -62,3 +62,23 @@ export const getContactPersons = () =>{
         };
     });
 }
+
+export const getOrganizations = (id) => {
+    return axios
+        .get(`${Api}/organizations`)
+        .then((res) => {
+            const { success, data } = res.data;
+            var orgs = []
+            data.map((el) => {
+                orgs.push({value: el.id, label: el.name, disabled: el.id === id && true})
+            });
+            if (success) return { success: success, data: orgs };
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                success: "failed",
+                message: err.message,
+            };
+        });
+};

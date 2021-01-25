@@ -3,8 +3,8 @@ import { Modal, Tabs, Row, Col, Button, Input } from "antd";
 import { UploadOutlined, PlusSquareFilled, CloseOutlined, } from "@ant-design/icons"; //Icons
 
 import Form from "../../../components/Core/Form";
-import { addList, getOrgs, getOrgRecord, editList } from "../../../service/conatct-person";
-import { getStates, getStandardLevels } from "../../../service/constant-Apis";
+import { addList, getOrgRecord, editList } from "../../../service/conatct-person";
+import { getStates, getStandardLevels, getOrganizations } from "../../../service/constant-Apis";
 
 import moment from "moment";
 
@@ -302,7 +302,7 @@ class InfoModal extends Component {
     };
     fetchAll = () =>{
         const {editCP}= this.props;
-        Promise.all([ getStates(), getStandardLevels(), getOrgs() ])
+        Promise.all([ getStates(), getStandardLevels(), getOrganizations() ])
         .then(res => {
                 const { BasicFields } = this.state;
                 BasicFields.fields[10].data = res[0].data;

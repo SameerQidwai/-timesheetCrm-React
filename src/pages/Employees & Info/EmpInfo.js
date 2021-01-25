@@ -4,6 +4,8 @@ import { Row, Col, Menu, Tabs, Button, Dropdown, Popconfirm, Descriptions, } fro
 
 import { SettingOutlined, DownOutlined } from "@ant-design/icons"; //Icons
 
+import { Link } from "react-router-dom"; 
+
 import Comments from "../../components/Core/Comments";
 import Projects from "../../components/Core/Projects";
 import Travels from "../../components/Core/Travels";
@@ -53,9 +55,8 @@ class OrgInfo extends Component {
         const { id } = this.props.match.params;
         const DescTitle = (
             <Row justify="space-between">
-                <Col>Basic Info</Col>
+                <Col>Basic Information</Col>
                 <Col>
-                    {" "}
                     <Dropdown
                         overlay={
                             <Menu>
@@ -79,6 +80,16 @@ class OrgInfo extends Component {
                                     }}
                                 >
                                     Edit
+                                </Menu.Item>
+                                <Menu.Item>
+                                    <Link
+                                        to={{
+                                            pathname: `/Employee/contracts/${data.key}`,
+                                        }}
+                                        className="nav-link"
+                                    >
+                                        Contracts
+                                    </Link>
                                 </Menu.Item>
                             </Menu>
                         }

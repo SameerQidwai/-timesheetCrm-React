@@ -11,6 +11,7 @@ import Organizations from "../../pages/Contacts/Org & Info/Organizations";
 import OrgInfo from "../../pages/Contacts/Org & Info/OrgInfo";
 import Employees from "../../pages/Employees & Info/Employees";
 import EmpInfo from "../../pages/Employees & Info/EmpInfo";
+import EmpBilling from "../../pages/Employees & Info/EmpBilling"
 import Contractors from "../../pages/Contractors & Info/Contractors";
 import ContInfo from "../../pages/Contractors & Info/ContInfo";
 // import Clients from "../../pages/Clients & info/Clients";
@@ -106,6 +107,10 @@ const pageLinks = [
     {
         component: EmpInfo,
         link: "/Employees/info/:id",
+    },
+    {
+        component: EmpBilling,
+        link: "/Employee/contracts/:id",
     },
     {
         component: Contractors,

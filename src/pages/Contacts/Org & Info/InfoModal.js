@@ -4,8 +4,8 @@ import { UploadOutlined } from "@ant-design/icons"; //Icons
 import moment from "moment";
 import Form from "../../../components/Core/Form";
 
-import { addList, getOrgs, getOrgRecord, editList } from "../../../service/Organizations";
-import { getContactPersons } from "../../../service/constant-Apis";
+import { addList, getOrgRecord, editList } from "../../../service/Organizations";
+import { getContactPersons, getOrganizations } from "../../../service/constant-Apis";
 
 const { TabPane } = Tabs;
 
@@ -433,7 +433,7 @@ class InfoModal extends Component {
 
     fetchAll = () =>{
         const {editOrg}= this.props;
-        Promise.all([ getOrgs(editOrg), getContactPersons() ])
+        Promise.all([ getOrganizations(editOrg), getContactPersons() ])
         .then(res => {
             const { BasicFields } = this.state;
             BasicFields.fields[3].data = res[0].data;
@@ -447,7 +447,7 @@ class InfoModal extends Component {
     }
 
     getOrgs = (id) => {
-        getOrgs(id).then((res) => {
+        getOrganizations(id).then((res) => {
             if (res.success) {
                 const { BasicFields } = this.state;
                 BasicFields.fields[3].data = res.data;

@@ -19,7 +19,6 @@ class InfoModal extends Component {
         this.detailRef = React.createRef();
         this.kinRef = React.createRef();
         this.skillRef = React.createRef();
-        this.exitRef = React.createRef();
 
         this.priority_data = [
             {
@@ -78,7 +77,6 @@ class InfoModal extends Component {
             detailSubmitted: false,
             kinSubmitted: false,
             skillSubmitted: false,
-            exitSubmitted: false,
             data: {
                 code: 1,
                 cpCode: "004",
@@ -128,48 +126,12 @@ class InfoModal extends Component {
                 size: "small",
                 fields: [
                     {
-                        fieldCol: 12, // this is only label 0
-                        size: "small",
-                        Placeholder: "Code",
-                        type: "Text",
-                        labelAlign: "left",
-                    },
-                    {
                         fieldCol: 12, // this is only label 1
                         size: "small",
                         Placeholder: "Contact person Code",
                         type: "Text",
                         labelAlign: "left",
                         disabled: true,
-                    },
-
-                    {
-                        object: "basic", //this is field 2
-                        fieldCol: 12,
-                        key: "code",
-                        size: "small",
-                        // rules:[{ required: true }],
-                        type: "Input",
-                        labelAlign: "left",
-                    },
-                    {
-                        object: "basic", //this is field 3
-                        fieldCol: 12,
-                        key: "cpCode",
-                        size: "small",
-                        disabled: true,
-                        // rules:[{ required: true }],
-                        type: "Select",
-                        data: [
-                            { value: "001", label: "001- Dayne Haskins" },
-                            { value: "002", label: "002- Charlie Wilson" },
-                            { value: "003", label: "003- Owen Wilson" },
-                            { value: "004", label: "004- Charles Michel" },
-                            { value: "005", label: "005- Frank Mcgrath" },
-                            { value: "006", label: "006- Birshul Farha" },
-                        ],
-                        labelAlign: "left",
-                        itemStyle: { marginBottom: 10 },
                     },
                     {
                         fieldCol: 12, // this is only label 4
@@ -180,13 +142,15 @@ class InfoModal extends Component {
                         labelAlign: "left",
                     },
                     {
-                        fieldCol: 12, // this is only label 5
+                        object: "basic", //this is field 3
+                        fieldCol: 12,
+                        key: "cpCode",
                         size: "small",
-                        Placeholder: "First Name",
-                        disabled: false,
+                        disabled: true,
                         // rules:[{ required: true }],
-                        type: "Text",
+                        type: "Input",
                         labelAlign: "left",
+                        itemStyle: { marginBottom: 10 },
                     },
                     {
                         object: "basic", //this is field 6
@@ -209,6 +173,24 @@ class InfoModal extends Component {
                         itemStyle: { marginBottom: 10 },
                     },
                     {
+                        fieldCol: 12, // this is only label 5
+                        size: "small",
+                        Placeholder: "First Name",
+                        disabled: false,
+                        // rules:[{ required: true }],
+                        type: "Text",
+                        labelAlign: "left",
+                    },
+                    {
+                        fieldCol: 12, // this is only label 8
+                        size: "small",
+                        Placeholder: "Last Name",
+                        disabled: false,
+                        // rules:[{ required: true }],
+                        type: "Text",
+                        labelAlign: "left",
+                    },
+                    {
                         object: "basic", //this is field 7
                         fieldCol: 12,
                         key: "fname",
@@ -224,16 +206,6 @@ class InfoModal extends Component {
                             },
                         ],
                         itemStyle: { marginBottom: 10 },
-                    },
-
-                    {
-                        fieldCol: 24, // this is only label 8
-                        size: "small",
-                        Placeholder: "Last Name",
-                        disabled: false,
-                        // rules:[{ required: true }],
-                        type: "Text",
-                        labelAlign: "left",
                     },
                     {
                         object: "basic", //this is field 9
@@ -252,98 +224,98 @@ class InfoModal extends Component {
                         ],
                         itemStyle: { marginBottom: 5 },
                     },
-                    {
-                        object: "basic", //this is field 10
-                        fieldCol: 24,
-                        key: "exist",
-                        size: "small",
-                        label: "Enter Contact Person Code",
-                        // rules:[{ required: true }],
-                        valuePropName: "checked",
-                        type: "Checkbox",
-                        labelAlign: "left",
-                        onChange: function func(e) {
-                            const { fields } = this.state.BasicFields;
+                    // {
+                    //     object: "basic", //this is field 10
+                    //     fieldCol: 24,
+                    //     key: "exist",
+                    //     size: "small",
+                    //     label: "Enter Contact Person Code",
+                    //     // rules:[{ required: true }],
+                    //     valuePropName: "checked",
+                    //     type: "Checkbox",
+                    //     labelAlign: "left",
+                    //     onChange: function func(e) {
+                    //         const { fields } = this.state.BasicFields;
 
-                            fields[3].disabled = !e.target.checked; // person's code Field
-                            fields[6].disabled = e.target.checked; //Email Field
-                            fields[7].disabled = e.target.checked; // First Name Field
-                            fields[9].disabled = e.target.checked; // Last Name Field
+                    //         fields[3].disabled = !e.target.checked; // person's code Field
+                    //         fields[6].disabled = e.target.checked; //Email Field
+                    //         fields[7].disabled = e.target.checked; // First Name Field
+                    //         fields[9].disabled = e.target.checked; // Last Name Field
 
-                            if (e.target.checked) {
-                                this.basicRef.current.refs.basic_form.setFieldsValue(
-                                    {
-                                        basic: {
-                                            ..."basic",
-                                            email: "mailme@g.com",
-                                            fname: "Sameer",
-                                            lname: "Qidwai",
-                                        },
-                                    }
-                                );
-                                fields[3].rules = [
-                                    {
-                                        required: true,
-                                        message:
-                                            "Insert code OR add new Employee",
-                                    },
-                                ];
-                            } else {
-                                this.basicRef.current.refs.basic_form.setFieldsValue(
-                                    {
-                                        basic: {
-                                            ..."basic",
-                                            email: undefined,
-                                            fname: undefined,
-                                            lname: undefined,
-                                            cpCode: false,
-                                        },
-                                    }
-                                );
-                            }
-                            this.setState({
-                                BasicFields: {
-                                    ...this.state.BasicFields,
-                                    fields: fields,
-                                },
-                            });
-                        }.bind(this),
-                        itemStyle: { marginBottom: 5 },
-                    },
-                    {
-                        fieldCol: 24, // this is only label
-                        size: "small",
-                        Placeholder: "Role",
-                        // rules:[{ required: true }],
-                        type: "Text",
-                        labelAlign: "left",
-                    },
-                    {
-                        object: "basic", //this is field
-                        fieldCol: 12,
-                        key: "role",
-                        size: "small",
-                        // rules:[{ required: true }],
-                        type: "Select",
-                        labelAlign: "left",
-                        data: [
-                            { value: "001", label: "001-Developer" },
-                            { value: "002", label: "010-Designer" },
-                            { value: "003", label: "100-Manger" },
-                            { value: "004", label: "110-Carpenter" },
-                            { value: "005", label: "101-Assistant" },
-                            { value: "006", label: "011-Gamer" },
-                            { value: "007", label: "111-Gambler" },
-                        ],
-                        wrapperCol: { span: 24 },
-                        rules: [
-                            {
-                                required: true,
-                                message: "Select the role of employee",
-                            },
-                        ],
-                        itemStyle: { marginBottom: 1 },
-                    },
+                    //         if (e.target.checked) {
+                    //             this.basicRef.current.refs.basic_form.setFieldsValue(
+                    //                 {
+                    //                     basic: {
+                    //                         ..."basic",
+                    //                         email: "mailme@g.com",
+                    //                         fname: "Sameer",
+                    //                         lname: "Qidwai",
+                    //                     },
+                    //                 }
+                    //             );
+                    //             fields[3].rules = [
+                    //                 {
+                    //                     required: true,
+                    //                     message:
+                    //                         "Insert code OR add new Employee",
+                    //                 },
+                    //             ];
+                    //         } else {
+                    //             this.basicRef.current.refs.basic_form.setFieldsValue(
+                    //                 {
+                    //                     basic: {
+                    //                         ..."basic",
+                    //                         email: undefined,
+                    //                         fname: undefined,
+                    //                         lname: undefined,
+                    //                         cpCode: false,
+                    //                     },
+                    //                 }
+                    //             );
+                    //         }
+                    //         this.setState({
+                    //             BasicFields: {
+                    //                 ...this.state.BasicFields,
+                    //                 fields: fields,
+                    //             },
+                    //         });
+                    //     }.bind(this),
+                    //     itemStyle: { marginBottom: 5 },
+                    // },
+                    // {
+                    //     fieldCol: 24, // this is only label
+                    //     size: "small",
+                    //     Placeholder: "Role",
+                    //     // rules:[{ required: true }],
+                    //     type: "Text",
+                    //     labelAlign: "left",
+                    // },
+                    // {
+                    //     object: "basic", //this is field
+                    //     fieldCol: 12,
+                    //     key: "role",
+                    //     size: "small",
+                    //     // rules:[{ required: true }],
+                    //     type: "Select",
+                    //     labelAlign: "left",
+                    //     data: [
+                    //         { value: "001", label: "001-Developer" },
+                    //         { value: "002", label: "010-Designer" },
+                    //         { value: "003", label: "100-Manger" },
+                    //         { value: "004", label: "110-Carpenter" },
+                    //         { value: "005", label: "101-Assistant" },
+                    //         { value: "006", label: "011-Gamer" },
+                    //         { value: "007", label: "111-Gambler" },
+                    //     ],
+                    //     wrapperCol: { span: 24 },
+                    //     rules: [
+                    //         {
+                    //             required: true,
+                    //             message: "Select the role of employee",
+                    //         },
+                    //     ],
+                    //     itemStyle: { marginBottom: 1 },
+                    // },
                     {
                         object: "basic", //this is field
                         fieldCol: 12,
@@ -416,8 +388,16 @@ class InfoModal extends Component {
                         itemStyle: { marginBottom: 1 },
                     },
                     {
-                        Placeholder: "Start Date",
-                        fieldCol: 24,
+                        Placeholder: "Gender",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                    {
+                        Placeholder: "State",
+                        fieldCol: 12,
                         size: "small",
                         type: "Text",
                         labelAlign: "right",
@@ -426,18 +406,27 @@ class InfoModal extends Component {
                     {
                         object: "detail",
                         fieldCol: 12,
-                        key: "s_date",
+                        key: "sex",
+                        size: "small",
+                        data: [
+                            { label: "Male", value: "M" },
+                            { label: "Female", value: "F" },
+                        ],
+                        itemStyle: { marginBottom: 10 },
+                        // rules:[{ required: true }],
+                        type: "Radio",
+                        mode: "button",
+                        shape: "solid",
+                    },
+                    {
+                        object: "basic",
+                        fieldCol: 12,
+                        key: "stateId",
                         size: "small",
                         // rules:[{ required: true }],
-                        type: "DatePicker",
-                        fieldStyle: { width: "-webkit-fill-available" },
-                        rules: [
-                            {
-                                required: true,
-                                message: "Start Date is required",
-                            },
-                        ],
-                        itemStyle: { marginBottom: 1 },
+                        type: "Select",
+                        data: [],
+                        itemStyle: { marginBottom: 10 },
                     },
                     {
                         Placeholder: "Address",
@@ -454,28 +443,6 @@ class InfoModal extends Component {
                         // rules:[{ required: true }],
                         type: "Input",
                         itemStyle: { marginBottom: "10px" },
-                    },
-                    {
-                        object: "detail",
-                        fieldCol: 24,
-                        key: "sex",
-                        label: "Gender",
-                        size: "small",
-                        data: [
-                            { label: "Male", value: "Male" },
-                            { label: "Female", value: "Female" },
-                        ],
-                        rules: [
-                            {
-                                required: true,
-                                message: "Gender is Obviously required",
-                            },
-                        ],
-                        itemStyle: { marginBottom: 1 },
-                        // rules:[{ required: true }],
-                        type: "Radio",
-                        mode: "button",
-                        shape: "solid",
                     },
                 ],
             },
@@ -767,133 +734,6 @@ class InfoModal extends Component {
                 size: "middle",
                 fields: this.newSkillField(0),
             },
-            ExitFields: {
-                formId: "exit_form",
-                FormCol: 24,
-                FieldSpace: 24,
-                justifyField: "center",
-                FormLayout: "inline",
-                size: "middle",
-                fields: [
-                    {
-                        Placeholder: "Future Contact Email",
-                        fieldCol: 12,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
-                    },
-                    {
-                        Placeholder: "Future Contact Mobile",
-                        fieldCol: 12,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
-                    },
-                    {
-                        object: "exit",
-                        fieldCol: 12,
-                        key: "fc_email",
-                        size: "small",
-                        // rules:[{ required: true }],
-                        type: "Input",
-                        rules: [
-                            {
-                                required: true,
-                                message: "Email is required",
-                            },
-                        ],
-                        itemStyle: { marginBottom: 1 },
-                    },
-                    {
-                        object: "exit",
-                        fieldCol: 12,
-                        key: "fc_contact",
-                        size: "small",
-                        // rules:[{ required: true }],
-                        type: "Input",
-                        rules: [
-                            {
-                                required: true,
-                                message: "First Name is required",
-                            },
-                        ],
-                        itemStyle: { marginBottom: 1 },
-                    },
-                    {
-                        Placeholder: "Exit Date",
-                        fieldCol: 12,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
-                    },
-                    {
-                        Placeholder: "Last Working Date",
-                        fieldCol: 12,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
-                    },
-                    {
-                        object: "exit",
-                        fieldCol: 12,
-                        key: "e_date",
-                        size: "small",
-                        // rules:[{ required: true }],
-                        type: "DatePicker",
-                        fieldStyle: { width: "-webkit-fill-available" },
-                        rules: [
-                            {
-                                required: true,
-                                message: "Exit Date is required",
-                            },
-                        ],
-                        itemStyle: { marginBottom: 1 },
-                    },
-                    {
-                        object: "exit",
-                        fieldCol: 12,
-                        key: "lw_date",
-                        size: "small",
-                        // rules:[{ required: true }],
-                        type: "lw_date",
-                        fieldStyle: { width: "-webkit-fill-available" },
-                        rules: [
-                            {
-                                required: true,
-                                message: "Last Date is required",
-                            },
-                        ],
-                        itemStyle: { marginBottom: 1 },
-                    },
-                    {
-                        Placeholder: "Exit Reason Code",
-                        fieldCol: 24,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
-                    },
-                    {
-                        object: "exit",
-                        fieldCol: 12,
-                        key: "er_code",
-                        size: "small",
-                        // rules:[{ required: true }],
-                        type: "Input",
-                        rules: [
-                            {
-                                required: true,
-                                message: "Reason is required",
-                            },
-                        ],
-                        itemStyle: { marginBottom: 1 },
-                    },
-                ],
-            },
         };
     }
 
@@ -915,7 +755,6 @@ class InfoModal extends Component {
         this.billingRef.current &&
             this.billingRef.current.refs.billing_form.submit();
         this.skillRef.current && this.skillRef.current.refs.skill_form.submit();
-        this.exitRef.current && this.exitRef.current.refs.exit_form.submit();
     };
 
     BasicCall = (vake) => {
@@ -935,8 +774,7 @@ class InfoModal extends Component {
                     this.state.detailSubmitted &&
                     this.state.kinSubmitted &&
                     this.state.billingSubmitted &&
-                    this.state.skillSubmitted &&
-                    this.state.exitSubmitted
+                    this.state.skillSubmitted 
                 ) {
                     //check if both form is submittef
                     if (!this.props.editEmp) {
@@ -968,8 +806,7 @@ class InfoModal extends Component {
                     this.state.detailSubmitted &&
                     this.state.kinSubmitted &&
                     this.state.billingSubmitted &&
-                    this.state.skillSubmitted &&
-                    this.state.exitSubmitted
+                    this.state.skillSubmitted 
                 ) {
                     //check if both form is submittef
                     if (!this.props.editEmp) {
@@ -1001,8 +838,7 @@ class InfoModal extends Component {
                     this.state.detailSubmitted &&
                     this.state.kinSubmitted &&
                     this.state.billingSubmitted &&
-                    this.state.skillSubmitted &&
-                    this.state.exitSubmitted
+                    this.state.skillSubmitted 
                 ) {
                     //check if both form is submittef
                     if (!this.props.editEmp) {
@@ -1034,8 +870,7 @@ class InfoModal extends Component {
                     this.state.kinSubmitted &&
                     this.state.detailSubmitted &&
                     this.state.billingSubmitted &&
-                    this.state.skillSubmitted &&
-                    this.state.exitSubmitted
+                    this.state.skillSubmitted 
                 ) {
                     //check if both form is submittef
                     if (!this.props.editEmp) {
@@ -1067,8 +902,7 @@ class InfoModal extends Component {
                     this.state.detailSubmitted &&
                     this.state.kinSubmitted &&
                     this.state.billingSubmitted &&
-                    this.state.skillSubmitted &&
-                    this.state.exitSubmitted
+                    this.state.skillSubmitted
                 ) {
                     //check if both form is submittef
                     if (!this.props.editEmp) {
@@ -1165,39 +999,6 @@ class InfoModal extends Component {
         ];
     };
 
-    ExitCall = (vake) => {
-        // this will work after I get the Object from the form
-        console.log(vake);
-        this.setState(
-            {
-                mergeObj: {
-                    ...this.state.mergeObj,
-                    ...vake.exit,
-                },
-                exitSubmitted: true, // level form submitted
-            },
-            () => {
-                if (
-                    this.state.basicSubmitted &&
-                    this.state.detailSubmitted &&
-                    this.state.kinSubmitted &&
-                    this.state.billingSubmitted &&
-                    this.state.skillSubmitted &&
-                    this.state.exitSubmitted
-                ) {
-                    //check if both form is submittef
-                    if (!this.props.editEmp) {
-                        console.log("emes");
-                        this.addEmployee(this.state.mergeObj); //add skill
-                    } else {
-                        console.log("edit");
-                        this.editRecord(this.state.mergeObj); //edit skill
-                    }
-                }
-            }
-        );
-    };
-
     addEmployee = (value) => {
         console.log("addEmployee", value);
         const { rows, callBack } = this.props;
@@ -1256,13 +1057,6 @@ class InfoModal extends Component {
 
         let skill = { ...data.skill };
 
-        let exit = {
-            fc_email: data.fc_email,
-            fc_contact: data.fc_contact,
-            e_date: data.e_date,
-            lw_date: data.lw_date,
-            er_code: data.er_code,
-        };
 
         // console.log(basic, billing, detail, skill, exit);
 
@@ -1275,8 +1069,6 @@ class InfoModal extends Component {
         this.billingRef.current.refs.billing_form.setFieldsValue({ billing: billing, });
 
         this.skillRef.current.refs.skill_form.setFieldsValue({ skill: skill, });
-
-        this.exitRef.current.refs.exit_form.setFieldsValue({ exit: exit, });
 
         this.setState({ SkillFields, });
     };
@@ -1295,7 +1087,6 @@ class InfoModal extends Component {
             DetailFields,
             KinFields,
             SkillFields,
-            ExitFields,
         } = this.state;
 
         delete BasicFields.initialValues; // delete initialValues of fields on close
@@ -1303,19 +1094,16 @@ class InfoModal extends Component {
         delete KinFields.initialValues;
         delete BillingFields.initialValues;
         delete SkillFields.initialValues;
-        delete ExitFields.initialValues;
         this.setState(
             {
                 basicSubmitted: false,
                 detailSubmitted: false,
                 billingSubmitted: false,
                 skillSubmitted: false,
-                exitSubmitted: false,
                 BasicFields: { ...BasicFields }, //delete Formfields on Close
                 BillingFields: { ...BillingFields },
                 DetailFields: { ...DetailFields },
                 SkillFields: { ...SkillFields },
-                ExitFields: { ...ExitFields },
                 mergeObj: {},
             },
             () => {
@@ -1337,7 +1125,7 @@ class InfoModal extends Component {
 
     render() {
         const { editEmp, visible } = this.props;
-        const { BasicFields, DetailFields, KinFields, BillingFields, SkillFields, ExitFields, } = this.state;
+        const { BasicFields, DetailFields, KinFields, BillingFields, SkillFields, } = this.state;
 
         return (
             <Modal
@@ -1405,13 +1193,6 @@ class InfoModal extends Component {
                                 FormFields={SkillFields}
                             />
                         </Row>
-                    </TabPane>
-                    <TabPane tab="Exit" key="6" forceRender>
-                        <Form
-                            ref={this.exitRef}
-                            Callback={this.ExitCall}
-                            FormFields={ExitFields}
-                        />
                     </TabPane>
                 </Tabs>
             </Modal>
