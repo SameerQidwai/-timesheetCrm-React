@@ -21,7 +21,7 @@ const url = `${Api}/panels`;
 //         .catch((err) => {
 //             return {
 //                 error: "Please login again!",
-//                 success: "failed",
+//                 success: false,
 //                 message: err.message,
 //             };
 //         });
@@ -37,7 +37,7 @@ export const getList = () => {
         .catch((err) => {
             return {
                 error: "Please login again!",
-                success: "failed",
+                success: false,
                 message: err.message,
             };
         });
@@ -53,7 +53,7 @@ export const addList = (data) => {
         .catch((err) => {
             return {
                 error: "Please login again!",
-                status: "failed",
+                status: false,
                 message: err.message,
             };
         });
@@ -69,7 +69,7 @@ export const delLabel = (id) => {
         .catch((err) => {
             return {
                 error: "Please login again!",
-                status: "failed",
+                status: false,
                 message: err.message,
             };
         });
@@ -85,7 +85,7 @@ export const editLabel = (data) => {
         .catch((err) => {
             return {
                 error: "Please login again!",
-                status: "failed",
+                status: false,
                 message: err.message,
             };
         });

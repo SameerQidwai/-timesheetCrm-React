@@ -1169,13 +1169,7 @@ class InfoModal extends Component {
 
     render() {
         const { editCont, visible } = this.props;
-        const {
-            BasicFields,
-            DetailFields,
-            BillingFields,
-            SkillFields,
-            ExitFields,
-        } = this.state;
+        const { BasicFields, DetailFields, BillingFields, SkillFields, ExitFields, } = this.state;
 
         return (
             <Modal

@@ -16,7 +16,7 @@ export const getStates = () => {
         .catch((err) => {
             return {
                 error: "Please login again!",
-                success: "failed",
+                success: false,
                 message: err.message,
             };
         });
@@ -36,7 +36,7 @@ export const getStandardLevels = () => {
         .catch((err) => {
             return {
                 error: "Please login again!",
-                success: "failed",
+                success: false,
                 message: err.message,
             };
         });
@@ -51,13 +51,31 @@ export const getContactPersons = () =>{
         data.map((el) => {
             cps.push({value: el.id, label: el.firstName +' ' +el.lastName})
         });
-        console.log(cps);
         if (success) return { success: success, data: cps };
     })
     .catch((err) => {
         return {
             error: "Please login again!",
-            success: "failed",
+            success: false,
+            message: err.message,
+        };
+    });
+}
+export const getOneLmPersons = () =>{
+    return axios
+    .get(`${Api}/employees/get/contact-persons`)
+    .then((res) => {
+        const { success, data } = res.data;
+        var cps = []
+        data.map((el) => {
+            cps.push({value: el.id, label: el.firstName +' ' +el.lastName})
+        });
+        if (success) return { success: success, data: cps };
+    })
+    .catch((err) => {
+        return {
+            error: "Please login again!",
+            success: false,
             message: err.message,
         };
     });
@@ -77,7 +95,7 @@ export const getOrganizations = (id) => {
         .catch((err) => {
             return {
                 error: "Please login again!",
-                success: "failed",
+                success: false,
                 message: err.message,
             };
         });

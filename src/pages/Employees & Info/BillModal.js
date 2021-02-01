@@ -3,7 +3,9 @@ import { Modal, Tabs, Row, Col, Button, Input } from "antd";
 import { UploadOutlined, PlusSquareFilled, CloseOutlined, } from "@ant-design/icons"; //Icons
 
 import Form from "../../components/Core/Form";
+
 import moment from "moment";
+import { addList, editList, getRecord } from "../../service/employee-contracts";
 
 class BillModal extends Component {
     constructor() {
@@ -11,7 +13,7 @@ class BillModal extends Component {
         this.billingRef = React.createRef();
 
         this.state = {
-            editEmp: false,
+            editCntrct: false,
             basicSubmitted: false,
             billingSubmitted: false,
             detailSubmitted: false,
@@ -23,7 +25,7 @@ class BillModal extends Component {
                 mem_ac: "98098",
                 b_ac: "CPAL98304829101",
                 pay_f: "Weekly",
-                s_date: moment("12 26 2020"),
+                startDate: moment("12 26 2020"),
             },
             BillingFields: {
                 formId: "billing_form",
@@ -43,7 +45,7 @@ class BillModal extends Component {
                         // itemStyle:{marginBottom:'10px'},
                     },
                     {
-                        Placeholder: "Membership A/c no",
+                        Placeholder: "Work Hours In a Day",
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -53,7 +55,7 @@ class BillModal extends Component {
                     {
                         object: "billing",
                         fieldCol: 12,
-                        key: "pay_email",
+                        key: "payslipEmail",
                         size: "small",
                         type: "input",
                         // rules: [
@@ -67,9 +69,40 @@ class BillModal extends Component {
                     {
                         object: "billing",
                         fieldCol: 12,
-                        key: "mem_ac",
+                        key: "noOfHours",
                         size: "small",
-                        // rules:[{ required: true }],
+                        type: "InputNumber",
+                        // shape: " Hours",
+                        fieldStyle: { width: "-webkit-fill-available" },
+                        // rules: [
+                        //     {
+                        //         required: true,
+                        //         message: "How much he Cost",
+                        //     },
+                        // ],
+                        itemStyle: { marginBottom: 1 },
+                    },
+                    {
+                        Placeholder: "Membership A/c no",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                    {
+                        Placeholder: "Type",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                    {
+                        object: "billing",
+                        fieldCol: 12,
+                        key: "membershipAccountNo",
+                        size: "small",
                         type: "input",
                         // rules: [
                         //     {
@@ -79,29 +112,17 @@ class BillModal extends Component {
                         // ],
                         itemStyle: { marginBottom: 1 },
                     },
-                    
-                    {
-                        Placeholder: "Bank Account No",
-                        fieldCol: 12,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
-                    },
-                    {
-                        Placeholder: "Bank Account Title",
-                        fieldCol: 12,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
-                    },
                     {
                         object: "billing",
                         fieldCol: 12,
-                        key: "b_ac_No",
+                        key: "type",
                         size: "small",
-                        type: "input",
+                        data: [
+                            { label: "Casual", value: 1 },
+                            { label: "Part Time", value: 2 },
+                            { label: "Full Time", value: 3 },
+                        ],
+                        type: "Select",
                         // rules: [
                         //     {
                         //         required: true,
@@ -111,18 +132,71 @@ class BillModal extends Component {
                         itemStyle: { marginBottom: 1 },
                     },
                     {
+                        Placeholder: "Pay Frequence",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                    {
+                        Placeholder: "Remuneration Frequancy",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                    {
                         object: "billing",
                         fieldCol: 12,
-                        key: "b_ac_Title",
+                        key: "payFrequency",
                         size: "small",
-                        type: "input",
+                        data: [
+                            { label: "Hourly", value: 1 },
+                            { label: "Daily", value: 2 },
+                            { label: "Weekly", value: 3 },
+                            { label: "Fortnightly", value: 4 },
+                            { label: "Monthly", value: 5 },
+                        ],
+                        type: "Select",
                         // rules: [
                         //     {
                         //         required: true,
-                        //         message: "Account Number",
+                        //         message: "Payment Frequncy is required",
                         //     },
                         // ],
                         itemStyle: { marginBottom: 1 },
+                    },
+                    {
+                        object: "billing",
+                        fieldCol: 12,
+                        key: "remunerationAmountPer",
+                        size: "small",
+                        data: [
+                            { label: "Hourly", value: 1 },
+                            { label: "Daily", value: 2 },
+                            { label: "Weekly", value: 3 },
+                            { label: "Fortnightly", value: 4 },
+                            { label: "Monthly", value: 5 },
+                            { label: "Yearly", value: 6 },
+                        ],
+                        type: "Select",
+                        // rules: [
+                        //     {
+                        //         required: true,
+                        //         message: "Payment Frequncy is required",
+                        //     },
+                        // ],
+                        itemStyle: { marginBottom: 1 },
+                    },
+                    {
+                        Placeholder: "Remuneration Amount",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
                     },
                     {
                         Placeholder: "Start Date",
@@ -133,166 +207,70 @@ class BillModal extends Component {
                         // itemStyle:{marginBottom:'10px'},
                     },
                     {
-                        Placeholder: "End Date",
-                        fieldCol: 12,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
-                    },
-                    {
                         object: "billing",
                         fieldCol: 12,
-                        key: "s_date",
-                        size: "small",
-                        type: "DatePicker",
-                        fieldStyle: { width: "-webkit-fill-available" },
-                        // rules: [
-                        //     {
-                        //         required: true,
-                        //         message: "Start Date is required",
-                        //     },
-                        // ],
-                        itemStyle: { marginBottom: 1 },
-                    },
-                    {
-                        object: "billing",
-                        fieldCol: 12,
-                        key: "e_date",
-                        size: "small",
-                        type: "DatePicker",
-                        fieldStyle: { width: "-webkit-fill-available" },
-                        // rules: [
-                        //     {
-                        //         required: true,
-                        //         message: "Start Date is required",
-                        //     },
-                        // ],
-                        itemStyle: { marginBottom: 1 },
-                    },
-                    {
-                        Placeholder: "Job Type",
-                        fieldCol: 12,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
-                    },
-                    {
-                        Placeholder: "Work In A Day",
-                        fieldCol: 12,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
-                    },
-                    {
-                        object: "billing",
-                        fieldCol: 12,
-                        key: "job_type",
-                        size: "small",
-                        data: [
-                            { label: "Casual", value: "casual" },
-                            { label: "Part Time", value: "parttime" },
-                            { label: "Full Time", value: "fulltime" },
-                        ],
-                        type: "Select",
-                        itemStyle: { marginBottom: 1 },
-                    },
-                    {
-                        object: "billing",
-                        fieldCol: 12,
-                        key: "h_day",
+                        key: "remunerationAmount",
                         size: "small",
                         type: "InputNumber",
+                        shape: "$",
                         fieldStyle: { width: "-webkit-fill-available" },
+                        // rules: [
+                        //     {
+                        //         required: true,
+                        //         message: "How much he Cost",
+                        //     },
+                        // ],
                         itemStyle: { marginBottom: 1 },
-                    },
-                    {
-                        Placeholder: "Rate",
-                        fieldCol: 12,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
-                    },
-                    {
-                        Placeholder: "Rate Duration",
-                        fieldCol: 12,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
                     },
                     
                     {
                         object: "billing",
                         fieldCol: 12,
-                        key: "rate",
+                        key: "startDate",
                         size: "small",
-                        type: "InputNumber",
-                        shape: "$",
+                        type: "DatePicker",
                         fieldStyle: { width: "-webkit-fill-available" },
-                        itemStyle: { marginBottom: 1 },
-                    },
-                    {
-                        object: "billing",
-                        fieldCol: 12,
-                        key: "rate_duration",
-                        size: "small",
-                        data: [
-                            { label: "Hourly", value: "hourly" },
-                            { label: "Weekly", value: "weekly" },
-                            { label: "Monthly", value: "monthly" },
-                            { label: "Yearly", value: "yearly" },
-                        ],
-                        type: "Select",
                         // rules: [
                         //     {
                         //         required: true,
-                        //         message: "Payment Frequncy is required",
+                        //         message: "Start Date is required",
                         //     },
                         // ],
                         itemStyle: { marginBottom: 1 },
                     },
                     {
-                        Placeholder: "Pay Frequence",
+                        Placeholder: "End Date",
                         fieldCol: 24,
                         size: "small",
                         type: "Text",
                         labelAlign: "right",
                         // itemStyle:{marginBottom:'10px'},
                     },
+                   
                     {
                         object: "billing",
                         fieldCol: 12,
-                        key: "pay_f",
+                        key: "endDate",
                         size: "small",
-                        data: [
-                            { label: "Daily", value: "daily" },
-                            { label: "Weekly", value: "weekly" },
-                            { label: "Fortnightly", value: "fortnightly" },
-                            { label: "Monthly", value: "monthly" },
-                        ],
-                        type: "Select",
+                        type: "DatePicker",
+                        fieldStyle: { width: "-webkit-fill-available" },
                         // rules: [
                         //     {
                         //         required: true,
-                        //         message: "Payment Frequncy is required",
+                        //         message: "Start Date is required",
                         //     },
                         // ],
                         itemStyle: { marginBottom: 1 },
                     },
-                    
                 ],
             },
         };
     }
 
     componentDidMount = () => {
-        const { editEmp } = this.props
-        if (editEmp) {
-            this.getRecord(editEmp);
+        const { editCntrct } = this.props
+        if (editCntrct) {
+            this.getRecord(editCntrct);
         }
     };
 
@@ -302,50 +280,54 @@ class BillModal extends Component {
 
     BillingCall = (vake) => {
         // this will work after  getting the Object from level form
-        const {editEmp} = this.props
+        const {editCntrct} = this.props
         const { billing } = vake
-        if (!editEmp) {
+        if (!editCntrct) {
             console.log("emes");
-            this.addEmployee(billing); //add skill
+            this.addContract(billing); //add skill
         } else {
             console.log("edit");
             this.editRecord(billing); //edit skill
         }
     };
 
-    addEmployee = (value) => {
-        console.log("addEmployee", value);
-        const { rows, callBack } = this.props;
-        value.key = rows; // get new key
-        value.s_date = value.s_date && moment(value.s_date).format( "ddd MMM DD YYYY" )
-        value.e_date = value.e_date && moment(value.e_date).format( "ddd MMM DD YYYY" )
-        callBack(value,false);
+    addContract = (data) => {
+        const {  callBack, editEmp } = this.props;
+        addList(editEmp, data).then(res=>{
+            console.log(res);
+            if(res.success){
+                callBack();
+            }
+        });
     };
 
     getRecord = (data) => {
-        // console.log(data);
-        console.log(data);
-        data.s_date = data.s_date && moment(data.s_date)
-        data.e_date = data.e_date && moment(data.e_date)
-        this.billingRef.current.refs.billing_form.setFieldsValue({ billing: data, });
+        getRecord(data).then(res=>{
+            const {success, data} = res
+            if (success){
+                data.startDate = data.startDate && moment(data.startDate)
+                data.endDate = data.endDate && moment(data.endDate)
+                this.billingRef.current.refs.billing_form.setFieldsValue({ billing: data, });
+            }
+        })        
     };
 
-    editRecord = (value) => {
-        const { editEmp, callBack } = this.props;
-        value.key = editEmp.key;
-        console.log(value);
-        value.s_date = value.s_date && moment(value.s_date).format( "ddd MMM DD YYYY" )
-        value.e_date = value.e_date && moment(value.e_date).format( "ddd MMM DD YYYY" )
-        callBack(value, editEmp.key);
+    editRecord = (data) => {
+        const { editCntrct, callBack } = this.props;
+        editList(editCntrct, data).then((res) => {
+            if(res.success){
+                callBack()
+            }
+        });
     };
 
     render() {
-        const { editEmp, visible, close } = this.props;
+        const { editCntrct, visible, close } = this.props;
         const { BillingFields } = this.state;
 
         return (
             <Modal
-                title={editEmp ? "Edit Billing" : "Add Billing"}
+                title={editCntrct ? "Edit Billing" : "Add Billing"}
                 centered
                 visible={visible}
                 onOk={() => { this.submit(); }}

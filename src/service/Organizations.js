@@ -14,7 +14,7 @@ export const getList = () => {
         .catch((err) => {
             return {
                 error: "Please login again!",
-                success: "failed",
+                success: false,
                 message: err.message,
             };
         });
@@ -30,7 +30,7 @@ export const getOrgRecord = (id) => {
         .catch((err) => {
             return {
                 error: "Please login again!",
-                status: "failed",
+                status: false,
                 message: err.message,
             };
         });
@@ -46,7 +46,7 @@ export const addList = (data) => {
         .catch((err) => {
             return {
                 error: "Please login again!",
-                status: "failed",
+                status: false,
                 message: err.message,
             };
         });
@@ -62,7 +62,7 @@ export const delOrg = (id) => {
         .catch((err) => {
             return {
                 error: "Please login again!",
-                status: "failed",
+                status: false,
                 message: err.message,
             };
         });
@@ -78,7 +78,7 @@ export const editList = (data) => {
         .catch((err) => {
             return {
                 error: "Please login again!",
-                status: "failed",
+                status: false,
                 message: err.message,
             };
         });

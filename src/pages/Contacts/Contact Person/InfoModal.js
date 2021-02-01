@@ -3,7 +3,7 @@ import { Modal, Tabs, Row, Col, Button, Input } from "antd";
 import { UploadOutlined, PlusSquareFilled, CloseOutlined, } from "@ant-design/icons"; //Icons
 
 import Form from "../../../components/Core/Form";
-import { addList, getOrgRecord, editList } from "../../../service/conatct-person";
+import { addList, getContactRecord, editList } from "../../../service/conatct-person";
 import { getStates, getStandardLevels, getOrganizations } from "../../../service/constant-Apis";
 
 import moment from "moment";
@@ -361,7 +361,6 @@ class InfoModal extends Component {
     newSkillField = (item_no, level_data) => {
         //inserting new fields in modals
         const {skill_data} = this.state
-        console.log(level_data);
         const splice_key = [`skill${item_no}`, `level${item_no}`, item_no];
         return [
             {
@@ -539,7 +538,7 @@ class InfoModal extends Component {
 
     BasicCall = (vake) => {
         // this will work after  got  Object from the skill from
-        vake.basic.stateId = null
+        // vake.basic.stateId = null
         this.setState(
             {
                 mergeObj: {
@@ -571,13 +570,15 @@ class InfoModal extends Component {
         const { asso } = vake;
         const vars = [];
         let result = Object.keys(asso).length / 5;
-        for (let i = 0; i < result; i++) {
-            vars.push({
-                designation: asso[`designation${i}`],
-                organizationId: asso[`organizationId${i}`],
-                startDate: asso[`startDate${i}`],
-                endDate: asso[`endDate${i}`],
-            });
+        if(Object.keys(asso).length > 0){
+            for (let i = 0; i < result; i++) {
+                vars.push({
+                    designation: asso[`designation${i}`],
+                    organizationId: asso[`organizationId${i}`],
+                    startDate: asso[`startDate${i}`],
+                    endDate: asso[`endDate${i}`],
+                });
+            }
         }
         this.setState(
             {
@@ -606,9 +607,11 @@ class InfoModal extends Component {
         // this will work after I get the Object from the form
         const { skill } = vake;
         const vars = [];
-        let result = Object.keys(skill).length / 2;
-        for (let i = 0; i < result; i++) {
-            vars.push(skill[`level${i}`]);
+        let result = skill ? Object.keys(skill).length / 2 : 0;
+        if (Object.keys(skill).length > 0){
+            for (let i = 0; i < result; i++) {
+                vars.push(skill[`level${i}`]);
+            }
         }
         this.setState(
             {
@@ -646,7 +649,8 @@ class InfoModal extends Component {
     };
 
     getRecord = (id) => {
-        getOrgRecord(id).then((res) => {
+        getContactRecord(id).then((res) => {
+            console.log(res.data);
             if (res.success){
                 const {data} = res
                 const { SkillFields, associateFields, skill_data } = this.state
@@ -654,13 +658,11 @@ class InfoModal extends Component {
                 let asso = {};
                 const skillArray = data.standardSkillStandardLevels;
                 const assoArray = data.contactPersonOrganizations
-                console.log(assoArray);
                 let result = skillArray.length < assoArray.length? assoArray.length :skillArray.length;
                 for (let i = 0; i < result; i++) {
                     let skillEl = skillArray[i];
                     let assoEl = assoArray[i]
                     if(skillEl){
-                        console.log(skillEl);
                         skill_data.map(El=>{
                             El.levels.map(lEl=>{
                                 if (lEl.value === skillEl.id){
@@ -674,6 +676,7 @@ class InfoModal extends Component {
                     if(assoEl){
                         associateFields.fields = associateFields.fields.concat( this.newAssociateField(i) );
                         asso[`designation${i}`] = assoEl.designation
+                        asso[`organizationId${i}`] = assoEl.organizationId
                         asso[`startDate${i}`] = assoEl.startDate && moment(assoEl.startDate)
                         asso[`endDate${i}`] = assoEl.endDate && moment (assoEl.endDate)
                     }
@@ -686,6 +689,7 @@ class InfoModal extends Component {
                     gender: data.gender,
                     phoneNumber: data.phoneNumber,
                     address: data.address,
+                    stateId: data.stateId
                 };
                 this.basicRef.current.refs.basic_form.setFieldsValue({ basic: basic, });
                 this.associateRef.current.refs.associate_form.setFieldsValue({ asso: asso, });
@@ -699,7 +703,6 @@ class InfoModal extends Component {
         const { editCP, callBack } = this.props;
         value.id = editCP
         editList(value).then((res) => {
-            console.log(res);
             if(res.success){
                 console.log('hereh');
                 callBack()

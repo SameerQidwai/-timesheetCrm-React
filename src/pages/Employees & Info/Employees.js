@@ -6,6 +6,9 @@ import { PlusSquareOutlined, SettingOutlined, FilterOutlined, DownOutlined, } fr
 import { Link } from "react-router-dom"; 
 
 import InfoModal from "./InfoModal";
+
+import { getList, delList } from "../../service/Employees";
+
 import "../styles/table.css";
 
 const { Title } = Typography;
@@ -16,19 +19,47 @@ class Employees extends Component {
         this.columns = [
             {
                 title: "Code",
-                dataIndex: "key",
-                key: "key",
-                render: (record) => `00${record}`,
+                dataIndex: "contactPersonOrganization",
+                key: "contactPersonOrganization",
+                render: (record) => {
+                    return `Emp-00${record.contactPerson.id}`
+                },
             },
             {
-                title: "Name",
-                dataIndex: "name",
-                key: "name",
+                title: "First Name",
+                dataIndex: "contactPersonOrganization",
+                key: "contactPersonOrganization",
+                render: (record) =>{
+                    console.log(record.contactPerson.firstName)
+                    return record.contactPerson.firstName
+                }
+            },
+            {
+                title: "Last Name",
+                dataIndex: "contactPersonOrganization",
+                key: "contactPersonOrganization",
+                render: (record) =>{
+                    console.log(record.contactPerson.lastName)
+                    return record.contactPerson.lastName
+                }
+            },
+            {
+                title: "Phone",
+                dataIndex: "contactPersonOrganization",
+                key: "contactPersonOrganization",
+                render: (record) =>{
+                    console.log(record.contactPerson.phoneNumber)
+                    return record.contactPerson.phoneNumber
+                }
             },
             {
                 title: "Email",
-                dataIndex: "email",
-                key: "email",
+                dataIndex: "contactPersonOrganization",
+                key: "contactPersonOrganization",
+                render: (record) =>{
+                    console.log(record.contactPerson.email)
+                    return record.contactPerson.email
+                }
             },
             {
                 title: "Action",
@@ -38,17 +69,18 @@ class Employees extends Component {
                     <Dropdown
                         overlay={
                             <Menu>
-                                <Menu.Item danger>
+                                {/* <Menu.Item danger>
                                     <Popconfirm
                                         title="Sure to delete?"
-                                        onConfirm={() => this.handleDelete(record.key) }
+                                        onConfirm={() => this.handleDelete(record.id) }
                                     >
                                         Delete
                                     </Popconfirm>
-                                </Menu.Item>
+                                </Menu.Item> */}
                                 <Menu.Item
                                     onClick={() => {
-                                        this.setState({ infoModal: true, editEmp: record.key, });
+                                        console.log(record.id);
+                                        this.setState({ infoModal: true, editEmp: record.id, });
                                     }}
                                 >
                                     Edit
@@ -56,7 +88,7 @@ class Employees extends Component {
                                 <Menu.Item>
                                     <Link
                                         to={{
-                                            pathname: `/Employees/info/${record.key}`,
+                                            pathname: `/Employees/info/${record.id}`,
                                         }}
                                         className="nav-link"
                                     >
@@ -66,7 +98,7 @@ class Employees extends Component {
                                 <Menu.Item>
                                     <Link
                                         to={{
-                                            pathname: `/Employee/contracts/${record.key}`,
+                                            pathname: `/Employee/contracts/${record.id}`,
                                         }}
                                         className="nav-link"
                                     >
@@ -87,39 +119,40 @@ class Employees extends Component {
         this.state = {
             infoModal: false,
             editEmp: false,
-            data: [
-                { key: 1, name: "Nair", email: "N@olm.com", },
-                { key: 2, name: "Hallen", email: "H@olm.com", },
-                { key: 3, name: "Gorge", email: "G@olm.com", },
-            ],
+            data: [],
         };
     }
 
-    handleDelete = (code) => {
-        const dataSource = [...this.state.data];
-        this.setState({
-            data: dataSource.filter((item) => item.code !== code),
+    componentDidMount = () =>{
+        this.getList()
+    }
+
+    getList = () =>{
+        getList().then(res=>{
+            if (res.success){
+                this.setState({
+                    data: res.data,
+                    infoModal: false,
+                    editEmp: false,
+                })
+            }
+        })
+    }
+
+    handleDelete = (id) => {
+        delList(id).then((res) => {
+            if (res.success) {
+                this.getList();
+            }
         });
     };
 
     closeModal = () => {
-        this.setState({
-            infoModal: false,
-            editEmp: false,
-        });
+        this.setState({ infoModal: false, editEmp: false, });
     };
-    callBack = (value, key) => {
-        const { data } = this.state;
-        if (key === false) {
-            this.setState({
-                data: [...data, value],
-            });
-        } else {
-            data[key] = value;
-            this.setState({
-                data,
-            });
-        }
+    callBack = (value) => {
+        // const { data, editEmp } = this.state;
+        this.getList()
     };
 
     render() {
@@ -152,6 +185,7 @@ class Employees extends Component {
                     </Col>
                     <Col span={24}>
                         <Table
+                            rowKey={(data) => data.id}
                             columns={columns}
                             dataSource={data}
                             size="small"
@@ -164,7 +198,6 @@ class Employees extends Component {
                         editEmp={editEmp}
                         close={this.closeModal}
                         callBack={this.callBack}
-                        rows={data.length + 1} //Just for time Being till we call the Api's to rernder data while add and edit
                     />
                 )}
             </>

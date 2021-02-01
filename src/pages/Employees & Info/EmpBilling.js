@@ -4,10 +4,17 @@ import { Popconfirm, Typography, Dropdown, Button, Table, Menu, Row, Col, Descri
 import { PlusSquareOutlined, SettingOutlined, FilterOutlined, DownOutlined, } from "@ant-design/icons"; //Icons
 
 import BillModal from "./BillModal";
+import { getRecord as empRecord } from "../../service/Employees"
+import { getList, delList } from "../../service/employee-contracts";
+
+import moment from "moment"
 import "../styles/table.css";
+
 
 const { Title } = Typography;
 const { Item } = Descriptions;
+const JOB_TYPE = { 1:"Casual", 2:"Part Time" , 3: "Full Time" }
+const DURATION = {1: "Hourly" , 2: "Daily" , 3: "Weekly" , 4: "Fortnightly" , 5: "Monthly" }
 
 class EmpBilling extends Component {
     constructor () {
@@ -15,34 +22,38 @@ class EmpBilling extends Component {
         this.columns = [
             {
                 title: "Code",
-                dataIndex: "key",
-                key: "key",
+                dataIndex: "id",
+                key: "id",
                 render: (record) => `00${record}`,
             },
             {
                 title: "Start Date",
-                dataIndex: "s_date",
-                key: "s_date",
+                dataIndex: "startDate",
+                key: "startDate",
+                render:(record)=> record && moment(record).format(`ddd MMM DD YYYY`)
             },
             {
                 title: "End Date",
-                dataIndex: "e_date",
-                key: "e_date",
+                dataIndex: "endDate",
+                key: "endDate",
+                render:(record)=> record && moment(record).format(`ddd MMM DD YYYY`)
             },
             {
                 title: "Job Type",
-                dataIndex: "job_type",
-                key: "job_type",
+                dataIndex: "type",
+                key: "type",
+                render: (record) => JOB_TYPE[record]
             },
             {
                 title: "Rate",
-                dataIndex: "rate",
-                key: "rate",
+                dataIndex: "remunerationAmount",
+                key: "remunerationAmount",
             },
             {
                 title: "Rate Duration",
-                dataIndex: "rate_duration",
-                key: "rate_duration",
+                dataIndex: "remunerationAmountPer",
+                key: "remunerationAmountPer",
+                render: (record)=> DURATION[record]
             },
             {
                 title: "Action",
@@ -55,14 +66,14 @@ class EmpBilling extends Component {
                                 <Menu.Item danger>
                                     <Popconfirm
                                         title="Sure to delete?"
-                                        onConfirm={() => this.handleDelete(record.key) }
+                                        onConfirm={() => this.handleDelete(record.id) }
                                     >
                                         Delete
                                     </Popconfirm>
                                 </Menu.Item>
                                 <Menu.Item
                                     onClick={() => {
-                                        this.setState({ billModal: true, editEmp: record, });
+                                        this.setState({ billModal: true, editCntrct: record.id, });
                                     }}
                                 >
                                     Edit
@@ -79,54 +90,58 @@ class EmpBilling extends Component {
         ];
 
         this.state = {
-            data: [
-                {
-                    b_ac_No: "wew",
-                    b_ac_Title: "wew",
-                    e_date: "Tue Jan 26 2021",
-                    h_day: 231,
-                    job_type: "fulltime",
-                    key: 1,
-                    mem_ac: "asdsad",
-                    pay_email: "asdsad",
-                    pay_f: "fortnightly",
-                    rate: 222,
-                    rate_duration: "yearly",
-                    s_date: "Mon Jan 25 2021",
-                }
-            ],
+            intro: {},
+            data: [],
             billModal: false,
-            editEmp: false,
+            editCntrct: false,
         }
     }
-    callBack = (value, key) => {
-        const { data } = this.state;
-        if (key === false) {
+    componentDidMount = ()=>{
+        const { id } = this.props.match.params
+        this.fetchAll(id)
+    }
+
+    fetchAll = (id) =>{
+        Promise.all([ getList(id), empRecord(id) ])
+        .then(res => {
             this.setState({
-                data: [...data, value],
+                data: res[0].data,
+                intro: res[1].basic,
                 billModal: false,
-                editEmp: false,
-            });
-        } else {
-            data[key-1] = value;
-            this.setState({
-                data: [...data],
-                billModal: false,
-                editEmp: false,
-            });
-        }
+                editCntrct: false,
+            })
+        })
+        .catch(e => {
+            console.log(e);
+        })
+    }
+    getList = (id) =>{
+        getList(id).then(res=>{
+            if(res.success){
+                this.setState({
+                    data: res.data,
+                    billModal: false,
+                    editCntrct: false,
+                })
+            }
+        })
+    }
+    
+    callBack = () => {
+        const { id } = this.props.match.params
+        this.getList(id)
     };
 
-    handleDelete = (code) => {
-        const {data} = this.state;
-        console.log(code);
-        this.setState({
-            data: data.filter((item) => item.key !== code),
+    handleDelete = (id) => {
+        delList(id).then((res) => {
+            const { id } = this.props.match.params
+            this.getList(id)
         });
     };
 
     render () {
-        const { billModal, editEmp, data  } = this.state
+        const { billModal, editCntrct, data, intro  } = this.state
+        const Emp = this.props.match.params.id
         return (
             <>
                 <Descriptions
@@ -136,8 +151,9 @@ class EmpBilling extends Component {
                     layout="horizontal"
                     // extra={<Button type="primary">Edit</Button>}
                 >
-                    <Item>Code: <b>001</b></Item>
-                    <Item>Name: <b>Sameer</b></Item>
+                    <Item>Code: <b>{intro.cpCode}</b></Item>
+                    <Item>First Name: <b>{intro.firstName}</b></Item>
+                    <Item>Last Name: <b>{intro.lastName}</b></Item>
                     <Item style={{textAlign:"right"}}>
                         <Button
                             size="small"
@@ -147,6 +163,7 @@ class EmpBilling extends Component {
                     </Item>
                 </Descriptions>
                 <Table
+                    rowKey={(data) => data.id}
                     columns={this.columns}
                     dataSource={data}
                     size="small"
@@ -155,10 +172,10 @@ class EmpBilling extends Component {
                  {billModal && (
                     <BillModal
                         visible={billModal}
-                        editEmp={editEmp}
-                        close={()=>this.setState({billModal:false})}
+                        editCntrct={editCntrct}
+                        close={()=>this.setState({billModal:false, editCntrct:false})}
                         callBack={this.callBack}
-                        rows={data.length+1} //Just for time Being till we call the Api's to rernder data while add and edit
+                        editEmp={Emp} //Just for time Being till we call the Api's to rernder data while add and edit
                     />
                 )}
             </>

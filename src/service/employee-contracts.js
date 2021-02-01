@@ -2,59 +2,11 @@ import axios from "axios";
 
 import { Api } from "./constant";
 
-const url = `${Api}/panel-skills`;
-
-export const getSkills = () => {
-    return axios
-        .get(`${Api}/standard-skills`)
-        .then((res) => {
-            const { success, data } = res.data;
-            data.map((el) => {
-                el.value = el.id;
-                delete el.id;
-                delete el.createdAt;
-                delete el.deletedAt;
-                delete el.updatedAt;
-                delete el.standardSkillStandardLevels;
-            });
-            if (success) return { success: success, data: data };
-        })
-        .catch((err) => {
-            return {
-                error: "Please login again!",
-                success: false,
-                message: err.message,
-            };
-        });
-};
-
-export const getlevels = () => {
-    return axios
-        .get(`${Api}/standard-levels`)
-        .then((res) => {
-            const { success, data } = res.data;
-            data.map((el) => {
-                el.value = el.id;
-                delete el.id;
-                delete el.createdAt;
-                delete el.deletedAt;
-                delete el.updatedAt;
-            });
-            if (success) return { success: success, data: data };
-        })
-        .catch((err) => {
-            return {
-                error: "Please login again!",
-                success: false,
-                message: err.message,
-            };
-        });
-};
+const url = `${Api}/employment-contracts`;
 
 export const getList = (id) => {
-    console.log(id);
     return axios
-        .get(url + `?panelId=${id}`)
+        .get(url+ `?employeeId=${id}`)
         .then((res) => {
             const { success, data } = res.data;
             if (success) return { success: success, data: data };
@@ -68,12 +20,12 @@ export const getList = (id) => {
         });
 };
 
-export const addList = (data) => {
+export const getRecord = (id) => {
     return axios
-        .post(url, data)
+        .get(url + `/${id}`)
         .then((res) => {
-            const { success } = res.data;
-            if (success) return success;
+            const { success, data } = res.data;
+            if (success) return {success, data};
         })
         .catch((err) => {
             return {
@@ -84,12 +36,29 @@ export const addList = (data) => {
         });
 };
 
-export const delLabel = (id) => {
+export const addList = (id, data) => {
+    return axios
+        .post(url+`?employeeId=${id}`, data)
+        .then((res) => {
+            console.log(res);
+            const { success } = res.data;
+            if (success) return {success};
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                status: false,
+                message: err.message,
+            };
+        });
+};
+
+export const delList = (id) => {
     return axios
         .delete(url + `/${id}`)
         .then((res) => {
             const { success } = res.data;
-            if (success) return success;
+            if (success) return {success};
         })
         .catch((err) => {
             return {
@@ -100,12 +69,12 @@ export const delLabel = (id) => {
         });
 };
 
-export const editLabel = (data) => {
+export const editList = (id, data) => {
     return axios
-        .put(url + `/${data.id}`, data)
+        .put(url + `/${id}`, data)
         .then((res) => {
             const { success } = res.data;
-            if (success) return success;
+            if (success) return {success};
         })
         .catch((err) => {
             return {

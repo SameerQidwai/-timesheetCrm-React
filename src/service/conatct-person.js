@@ -14,13 +14,13 @@ export const getList = () => {
         .catch((err) => {
             return {
                 error: "Please login again!",
-                success: "failed",
+                success: false,
                 message: err.message,
             };
         });
 };
 
-export const getOrgRecord = (id) => {
+export const getContactRecord = (id) => {
     return axios
         .get(url + `/${id}`)
         .then((res) => {
@@ -30,7 +30,7 @@ export const getOrgRecord = (id) => {
         .catch((err) => {
             return {
                 error: "Please login again!",
-                status: "failed",
+                status: false,
                 message: err.message,
             };
         });
@@ -40,13 +40,14 @@ export const addList = (data) => {
     return axios
         .post(url, data)
         .then((res) => {
+            console.log(res);
             const { success } = res.data;
             if (success) return {success};
         })
         .catch((err) => {
             return {
                 error: "Please login again!",
-                status: "failed",
+                status: false,
                 message: err.message,
             };
         });
@@ -62,7 +63,7 @@ export const delList = (id) => {
         .catch((err) => {
             return {
                 error: "Please login again!",
-                status: "failed",
+                status: false,
                 message: err.message,
             };
         });
@@ -78,7 +79,7 @@ export const editList = (data) => {
         .catch((err) => {
             return {
                 error: "Please login again!",
-                status: "failed",
+                status: false,
                 message: err.message,
             };
         });

@@ -1,14 +1,13 @@
 import React, { Component } from "react";
-import { Modal, Tabs, Row, Col, Button, Input } from "antd";
-import {
-    UploadOutlined,
-    PlusSquareFilled,
-    CloseOutlined,
-} from "@ant-design/icons"; //Icons
+import { Modal, Tabs, Row, Col, Button, Input, Select } from "antd";
+import { UploadOutlined, PlusSquareFilled, CloseOutlined, } from "@ant-design/icons"; //Icons
 
 import Form from "../../components/Core/Form";
 import moment from "moment";
 
+import { getOneLmPersons, getStates } from "../../service/constant-Apis";
+import { getContactRecord } from "../../service/conatct-person";
+import { addList, getRecord, editList } from "../../service/Employees";
 const { TabPane } = Tabs;
 
 class InfoModal extends Component {
@@ -18,92 +17,38 @@ class InfoModal extends Component {
         this.billingRef = React.createRef();
         this.detailRef = React.createRef();
         this.kinRef = React.createRef();
-        this.skillRef = React.createRef();
-
-        this.priority_data = [
-            {
-                value: 1,
-                label: "Superstar",
-            },
-            {
-                value: 2,
-                label: "Senior",
-            },
-            {
-                value: 3,
-                label: "Middle",
-            },
-            {
-                value: 4,
-                label: "Junior",
-            },
-            {
-                value: 5,
-                label: "Trainee",
-            },
-            {
-                value: 6,
-                label: "Internee",
-            },
-        ];
-
-        this.skill_data = [
-            {
-                value: 1,
-                label: "Superstar",
-            },
-            {
-                value: 2,
-                label: "Senior",
-            },
-            {
-                value: 3,
-                label: "Middle",
-            },
-            {
-                value: 4,
-                label: "Junior",
-            },
-            {
-                value: 5,
-                label: "Trainee",
-            },
-        ];
-
+        this.detailRef = React.createRef();
+        this.bankRef = React.createRef();
+        
         this.state = {
             editEmp: false,
             basicSubmitted: false,
             billingSubmitted: false,
             detailSubmitted: false,
             kinSubmitted: false,
-            skillSubmitted: false,
+            bankSubmitted: false,
+
+            CONTACT:[],
+            sContact: null,
             data: {
                 code: 1,
                 cpCode: "004",
                 email: "Trigger@oneLm.com",
-                fname: "Charles",
-                lname: "Michel",
+                firstName: "Charles",
+                lastName: "Michel",
                 role: "006",
                 disabled: false,
-                phone: "0098287381",
-                dob: moment("12 19 1997"),
+                phoneNumber: "0098287381",
+                dateOfBirth: moment("12 19 1997"),
                 s_date: moment("12 19 2020"),
                 address: "15 yemen Road, Yemen",
-                sex: "Male",
+                gender: "Male",
                 pay_email: "Trigger.payme@oneLm.com",
                 h_rate: "90",
                 mem_ac: "98098",
                 b_ac: "CPAL98304829101",
                 pay_f: "Weekly",
                 s_date: moment("12 26 2020"),
-                skill: {
-                    skill0: 1,
-                    pirority0: 2,
-                    skill1: 2,
-                    pirority1: 4,
-                    skill2: 3,
-                    pirority2: 6,
-                },
                 fc_email: "Trigger@gmail.com",
                 fc_contact: "0098287381",
                 e_date: moment("12 19 2120"),
@@ -112,9 +57,10 @@ class InfoModal extends Component {
                 nok_name: "Jeanne Michel",
                 nok_phone: "0098287382",
                 nok_relation: "Daughter",
-                nok_sex: "Female",
+                nok_gender: "Female",
                 nok_dob: moment("12 19 2022"),
             },
+
             BasicFields: {
                 //creating Component
                 formId: "basic_form",
@@ -160,16 +106,16 @@ class InfoModal extends Component {
                         // rules:[{ required: true }],
                         type: "Input",
                         disabled: false,
-                        rules: [
-                            {
-                                type: "email",
-                                message: "The input is not valid E-mail!",
-                            },
-                            {
-                                required: true,
-                                message: "Please input your E-mail!",
-                            },
-                        ],
+                        // rules: [
+                        //     {
+                        //         type: "email",
+                        //         message: "The input is not valid E-mail!",
+                        //     },
+                        //     {
+                        //         required: true,
+                        //         message: "Please input your E-mail!",
+                        //     },
+                        // ],
                         itemStyle: { marginBottom: 10 },
                     },
                     {
@@ -193,7 +139,7 @@ class InfoModal extends Component {
                     {
                         object: "basic", //this is field 7
                         fieldCol: 12,
-                        key: "fname",
+                        key: "firstName",
                         size: "small",
                         // rules:[{ required: true }],
                         type: "Input",
@@ -210,132 +156,20 @@ class InfoModal extends Component {
                     {
                         object: "basic", //this is field 9
                         fieldCol: 12,
-                        key: "lname",
+                        key: "lastName",
                         size: "small",
                         // rules:[{ required: true }],
                         type: "Input",
                         labelAlign: "left",
                         disabled: false,
-                        rules: [
-                            {
-                                required: true,
-                                message: "Last Name is required",
-                            },
-                        ],
+                        // rules: [
+                        //     {
+                        //         required: true,
+                        //         message: "Last Name is required",
+                        //     },
+                        // ],
                         itemStyle: { marginBottom: 5 },
                     },
-                    // {
-                    //     object: "basic", //this is field 10
-                    //     fieldCol: 24,
-                    //     key: "exist",
-                    //     size: "small",
-                    //     label: "Enter Contact Person Code",
-                    //     // rules:[{ required: true }],
-                    //     valuePropName: "checked",
-                    //     type: "Checkbox",
-                    //     labelAlign: "left",
-                    //     onChange: function func(e) {
-                    //         const { fields } = this.state.BasicFields;
-
-                    //         fields[3].disabled = !e.target.checked; // person's code Field
-                    //         fields[6].disabled = e.target.checked; //Email Field
-                    //         fields[7].disabled = e.target.checked; // First Name Field
-                    //         fields[9].disabled = e.target.checked; // Last Name Field
-
-                    //         if (e.target.checked) {
-                    //             this.basicRef.current.refs.basic_form.setFieldsValue(
-                    //                 {
-                    //                     basic: {
-                    //                         ..."basic",
-                    //                         email: "mailme@g.com",
-                    //                         fname: "Sameer",
-                    //                         lname: "Qidwai",
-                    //                     },
-                    //                 }
-                    //             );
-                    //             fields[3].rules = [
-                    //                 {
-                    //                     required: true,
-                    //                     message:
-                    //                         "Insert code OR add new Employee",
-                    //                 },
-                    //             ];
-                    //         } else {
-                    //             this.basicRef.current.refs.basic_form.setFieldsValue(
-                    //                 {
-                    //                     basic: {
-                    //                         ..."basic",
-                    //                         email: undefined,
-                    //                         fname: undefined,
-                    //                         lname: undefined,
-                    //                         cpCode: false,
-                    //                     },
-                    //                 }
-                    //             );
-                    //         }
-                    //         this.setState({
-                    //             BasicFields: {
-                    //                 ...this.state.BasicFields,
-                    //                 fields: fields,
-                    //             },
-                    //         });
-                    //     }.bind(this),
-                    //     itemStyle: { marginBottom: 5 },
-                    // },
-                    // {
-                    //     fieldCol: 24, // this is only label
-                    //     size: "small",
-                    //     Placeholder: "Role",
-                    //     // rules:[{ required: true }],
-                    //     type: "Text",
-                    //     labelAlign: "left",
-                    // },
-                    // {
-                    //     object: "basic", //this is field
-                    //     fieldCol: 12,
-                    //     key: "role",
-                    //     size: "small",
-                    //     // rules:[{ required: true }],
-                    //     type: "Select",
-                    //     labelAlign: "left",
-                    //     data: [
-                    //         { value: "001", label: "001-Developer" },
-                    //         { value: "002", label: "010-Designer" },
-                    //         { value: "003", label: "100-Manger" },
-                    //         { value: "004", label: "110-Carpenter" },
-                    //         { value: "005", label: "101-Assistant" },
-                    //         { value: "006", label: "011-Gamer" },
-                    //         { value: "007", label: "111-Gambler" },
-                    //     ],
-                    //     wrapperCol: { span: 24 },
-                    //     rules: [
-                    //         {
-                    //             required: true,
-                    //             message: "Select the role of employee",
-                    //         },
-                    //     ],
-                    //     itemStyle: { marginBottom: 1 },
-                    // },
-                    {
-                        object: "basic", //this is field
-                        fieldCol: 12,
-                        key: "disabled",
-                        size: "small",
-                        label: "Is Disabled",
-                        // rules:[{ required: true }],
-                        valuePropName: "checked",
-                        type: "Switch",
-                    },
-                ],
-            },
-            DetailFields: {
-                formId: "detail_form",
-                FormCol: 24,
-                FieldSpace: 24,
-                justifyField: "center",
-                FormLayout: "inline",
-                size: "middle",
-                fields: [
                     {
                         Placeholder: "Phone",
                         fieldCol: 12,
@@ -355,37 +189,37 @@ class InfoModal extends Component {
                     },
 
                     {
-                        object: "detail",
+                        object: "basic",
                         fieldCol: 12,
-                        key: "phone",
+                        key: "phoneNumber",
                         size: "small",
                         // rules:[{ required: true }],
                         type: "input",
-                        rules: [
-                            {
-                                // required: true,
-                                type: "string",
-                                message: "Enter minimum 8 Numbers",
-                                min: 6,
-                            },
-                        ],
-                        itemStyle: { marginBottom: 1 },
+                        // rules: [
+                        //     {
+                        //         // required: true,
+                        //         type: "string",
+                        //         message: "Enter minimum 8 Numbers",
+                        //         min: 6,
+                        //     },
+                        // ],
+                        itemStyle: { marginBottom: 10 },
                     },
                     {
-                        object: "detail",
+                        object: "basic",
                         fieldCol: 12,
-                        key: "dob",
+                        key: "dateOfBirth",
                         size: "small",
                         // rules:[{ required: true }],
                         type: "DatePicker",
                         fieldStyle: { width: "-webkit-fill-available" },
-                        rules: [
-                            {
-                                required: true,
-                                message: "Date of Birth is required",
-                            },
-                        ],
-                        itemStyle: { marginBottom: 1 },
+                        // rules: [
+                        //     {
+                        //         required: true,
+                        //         message: "Date of Birth is required",
+                        //     },
+                        // ],
+                        itemStyle: { marginBottom: 10 },
                     },
                     {
                         Placeholder: "Gender",
@@ -404,9 +238,9 @@ class InfoModal extends Component {
                         // itemStyle:{marginBottom:'10px'},
                     },
                     {
-                        object: "detail",
+                        object: "basic",
                         fieldCol: 12,
-                        key: "sex",
+                        key: "gender",
                         size: "small",
                         data: [
                             { label: "Male", value: "M" },
@@ -436,7 +270,7 @@ class InfoModal extends Component {
                         labelAlign: "right",
                     },
                     {
-                        object: "detail",
+                        object: "basic",
                         fieldCol: 24,
                         key: "address",
                         size: "small",
@@ -446,6 +280,113 @@ class InfoModal extends Component {
                     },
                 ],
             },
+
+            DetailFields:{
+                formId: "detail_form",
+                FormCol: 24,
+                FieldSpace: 24,
+                justifyField: "center",
+                FormLayout: "inline",
+                size: "middle",
+                fields: [
+                    {
+                        Placeholder: "TFN",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                    },
+                    {
+                        Placeholder: "Annuation Id",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                    },
+                    {
+                        object: "detail",
+                        fieldCol: 12,
+                        key: "tfn",
+                        size: "small",
+                        // rules:[{ required: true }],
+                        type: "Input",
+                        itemStyle: { marginBottom: "10px" },
+                    },
+                    {
+                        object: "detail",
+                        fieldCol: 12,
+                        key: "superAnnuationId",
+                        size: "small",
+                        // rules:[{ required: true }],
+                        type: "Input",
+                        itemStyle: { marginBottom: "10px" },
+                    },
+                    {
+                        Placeholder: "Annuation Name",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                    },
+                    {
+                        Placeholder: "Member Number",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                    },
+                    {
+                        object: "detail",
+                        fieldCol: 12,
+                        key: "superAnnuationName",
+                        size: "small",
+                        // rules:[{ required: true }],
+                        type: "Input",
+                        itemStyle: { marginBottom: "10px" },
+                    },
+                    {
+                        object: "detail",
+                        fieldCol: 12,
+                        key: "memberNumber",
+                        size: "small",
+                        // rules:[{ required: true }],
+                        type: "Input",
+                        itemStyle: { marginBottom: "10px" },
+                    },
+                    {
+                        Placeholder: "SMSF Bank Account Id",
+                        fieldCol: 24,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                    },
+                    {
+                        object: "detail",
+                        fieldCol: 12,
+                        key: "smsfBankAccountId",
+                        size: "small",
+                        // rules:[{ required: true }],
+                        type: "Input",
+                        itemStyle: { marginBottom: "10px" },
+                    },
+                    {
+                        Placeholder: "Training",
+                        fieldCol: 24,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                    },
+                    {
+                        object: "detail",
+                        fieldCol: 24,
+                        key: "training",
+                        size: "small",
+                        // rules:[{ required: true }],
+                        type: "Textarea",
+                    },
+                ]
+            },
+
             KinFields: {
                 formId: "kin_form",
                 FormCol: 24,
@@ -473,34 +414,42 @@ class InfoModal extends Component {
                     {
                         object: "kin",
                         fieldCol: 12,
-                        key: "nok_name",
+                        key: "nextOfKinName",
                         size: "small",
                         // rules:[{ required: true }],
                         type: "input",
-                        rules: [
-                            {
-                                // required: true,
-                                type: "string",
-                                message: "Enter minimum 8 Numbers",
-                                min: 6,
-                            },
-                        ],
+                        // rules: [
+                        //     {
+                        //         // required: true,
+                        //         type: "string",
+                        //         message: "Enter minimum 8 Numbers",
+                        //         min: 6,
+                        //     },
+                        // ],
                         itemStyle: { marginBottom: 1 },
                     },
                     {
                         object: "kin",
                         fieldCol: 12,
-                        key: "nok_phone",
+                        key: "nextOfKinPhoneNumber",
                         size: "small",
                         // rules:[{ required: true }],
                         type: "input",
-                        rules: [
-                            {
-                                required: true,
-                                message: "First Name is required",
-                            },
-                        ],
+                        // rules: [
+                        //     {
+                        //         required: true,
+                        //         message: "First Name is required",
+                        //     },
+                        // ],
                         itemStyle: { marginBottom: 1 },
+                    },
+                    {
+                        Placeholder: "Email",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
                     },
                     {
                         Placeholder: "Relation",
@@ -511,18 +460,9 @@ class InfoModal extends Component {
                         // itemStyle:{marginBottom:'10px'},
                     },
                     {
-                        Placeholder: "Date Of Birth",
-                        fieldCol: 12,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
-                        itemStyle: { marginBottom: 1 },
-                    },
-                    {
                         object: "kin",
                         fieldCol: 12,
-                        key: "nok_relation",
+                        key: "nextOfKinRelation",
                         size: "small",
                         // rules:[{ required: true }],
                         type: "input",
@@ -530,43 +470,119 @@ class InfoModal extends Component {
                     {
                         object: "kin",
                         fieldCol: 12,
-                        key: "nok_dob",
+                        key: "nextOfKinEmail",
                         size: "small",
                         // rules:[{ required: true }],
-                        type: "DatePicker",
-                        fieldStyle: { width: "-webkit-fill-available" },
-                        rules: [
-                            {
-                                required: true,
-                                message: "Date of Birth is required",
-                            },
-                        ],
-                        itemStyle: { marginBottom: 20 },
+                        type: "input",
+                        itemStyle:{marginBottom:10},
+                    },
+                    {
+                        Placeholder: "Date Of Birth",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:10},
+                        // itemStyle: { marginBottom: 1 },
                     },
                     {
                         object: "kin",
-                        fieldCol: 24,
-                        key: "nok_sex",
+                        fieldCol: 12,
+                        key: "nextOfKinGender",
                         label: "Gender",
                         size: "small",
                         data: [
-                            { label: "Male", value: "Male" },
-                            { label: "Female", value: "Female" },
+                            { label: "Male", value: "M" },
+                            { label: "Female", value: "F" },
                         ],
-                        rules: [
-                            {
-                                required: true,
-                                message: "Gender is Obviously required",
-                            },
-                        ],
+                        // rules: [
+                        //     {
+                        //         required: true,
+                        //         message: "Gender is Obviously required",
+                        //     },
+                        // ],
                         itemStyle: { marginBottom: 1 },
                         // rules:[{ required: true }],
                         type: "Radio",
                         mode: "button",
                         shape: "solid",
                     },
+                    {
+                        object: "kin",
+                        fieldCol: 12,
+                        key: "nextOfKinDateOfBirth",
+                        size: "small",
+                        // rules:[{ required: true }],
+                        type: "DatePicker",
+                        fieldStyle: { width: "-webkit-fill-available" },
+                        // rules: [
+                        //     {
+                        //         required: true,
+                        //         message: "Date of Birth is required",
+                        //     },
+                        // ],
+                        itemStyle: { marginBottom: 20 },
+                    },
+                    
                 ],
             },
+
+            BankFields: {
+                formId: "bank_form",
+                FormCol: 24,
+                FieldSpace: 24,
+                justifyField: "center",
+                FormLayout: "inline",
+                size: "middle",
+                fields:[
+                    {
+                        Placeholder: "Bank Name",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                    },
+                    {
+                        Placeholder: "Bank Account No",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                    },
+                    {
+                        object: "bank",
+                        fieldCol: 12,
+                        key: "bankName",
+                        size: "small",
+                        type: "Input",
+                        itemStyle: { marginBottom: "10px" },
+                    },
+                    {
+                        object: "bank",
+                        fieldCol: 12,
+                        key: "bankAccountNo",
+                        size: "small",
+                        type: "Input",
+                        itemStyle: { marginBottom: "10px" },
+                    },
+                    {
+                        Placeholder: "Bank BSB",
+                        fieldCol: 24,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                    },
+                    {
+                        object: "bank",
+                        fieldCol: 12,
+                        key: "bankBsb",
+                        size: "small",
+                        type: "Input",
+                        itemStyle: { marginBottom: "10px" },
+                    },
+                ]
+            },
+
             BillingFields: {
                 formId: "billing_form",
                 FormCol: 24,
@@ -585,7 +601,7 @@ class InfoModal extends Component {
                         // itemStyle:{marginBottom:'10px'},
                     },
                     {
-                        Placeholder: "Hourly Rate",
+                        Placeholder: "Work Hours In a Day",
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -595,33 +611,31 @@ class InfoModal extends Component {
                     {
                         object: "billing",
                         fieldCol: 12,
-                        key: "pay_email",
+                        key: "payslipEmail",
                         size: "small",
-                        // rules:[{ required: true }],
                         type: "input",
-                        rules: [
-                            {
-                                required: true,
-                                message: "Payment Email is required",
-                            },
-                        ],
+                        // rules: [
+                        //     {
+                        //         required: true,
+                        //         message: "Payment Email is required",
+                        //     },
+                        // ],
                         itemStyle: { marginBottom: 1 },
                     },
                     {
                         object: "billing",
                         fieldCol: 12,
-                        key: "h_rate",
+                        key: "noOfHours",
                         size: "small",
-                        // rules:[{ required: true }],
                         type: "InputNumber",
-                        shape: "$",
+                        // shape: " Hours",
                         fieldStyle: { width: "-webkit-fill-available" },
-                        rules: [
-                            {
-                                required: true,
-                                message: "How much he Cost",
-                            },
-                        ],
+                        // rules: [
+                        //     {
+                        //         required: true,
+                        //         message: "How much he Cost",
+                        //     },
+                        // ],
                         itemStyle: { marginBottom: 1 },
                     },
                     {
@@ -633,7 +647,7 @@ class InfoModal extends Component {
                         // itemStyle:{marginBottom:'10px'},
                     },
                     {
-                        Placeholder: "Bank Account",
+                        Placeholder: "Type",
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -643,35 +657,97 @@ class InfoModal extends Component {
                     {
                         object: "billing",
                         fieldCol: 12,
-                        key: "mem_ac",
+                        key: "membershipAccountNo",
                         size: "small",
-                        // rules:[{ required: true }],
                         type: "input",
-                        rules: [
-                            {
-                                required: true,
-                                message: "Member Ship is required",
-                            },
-                        ],
+                        // rules: [
+                        //     {
+                        //         required: true,
+                        //         message: "Member Ship is required",
+                        //     },
+                        // ],
                         itemStyle: { marginBottom: 1 },
                     },
                     {
                         object: "billing",
                         fieldCol: 12,
-                        key: "b_ac",
+                        key: "type",
                         size: "small",
-                        // rules:[{ required: true }],
-                        type: "input",
-                        rules: [
-                            {
-                                required: true,
-                                message: "Account Number",
-                            },
+                        data: [
+                            { label: "Casual", value: 1 },
+                            { label: "Part Time", value: 2 },
+                            { label: "Full Time", value: 3 },
                         ],
+                        type: "Select",
+                        // rules: [
+                        //     {
+                        //         required: true,
+                        //         message: "Account Number",
+                        //     },
+                        // ],
                         itemStyle: { marginBottom: 1 },
                     },
                     {
                         Placeholder: "Pay Frequence",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                    {
+                        Placeholder: "Remuneration Frequancy",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                    {
+                        object: "billing",
+                        fieldCol: 12,
+                        key: "payFrequency",
+                        size: "small",
+                        data: [
+                            { label: "Hourly", value: 1 },
+                            { label: "Daily", value: 2 },
+                            { label: "Weekly", value: 3 },
+                            { label: "Fortnightly", value: 4 },
+                            { label: "Monthly", value: 5 },
+                        ],
+                        type: "Select",
+                        // rules: [
+                        //     {
+                        //         required: true,
+                        //         message: "Payment Frequncy is required",
+                        //     },
+                        // ],
+                        itemStyle: { marginBottom: 1 },
+                    },
+                    {
+                        object: "billing",
+                        fieldCol: 12,
+                        key: "remunerationAmountPer",
+                        size: "small",
+                        data: [
+                            { label: "Hourly", value: 1 },
+                            { label: "Daily", value: 2 },
+                            { label: "Weekly", value: 3 },
+                            { label: "Fortnightly", value: 4 },
+                            { label: "Monthly", value: 5 },
+                            { label: "Yearly", value: 6 },
+                        ],
+                        type: "Select",
+                        // rules: [
+                        //     {
+                        //         required: true,
+                        //         message: "Payment Frequncy is required",
+                        //     },
+                        // ],
+                        itemStyle: { marginBottom: 1 },
+                    },
+                    {
+                        Placeholder: "Remuneration Amount",
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -689,76 +765,96 @@ class InfoModal extends Component {
                     {
                         object: "billing",
                         fieldCol: 12,
-                        key: "pay_f",
+                        key: "remunerationAmount",
                         size: "small",
-                        // rules:[{ required: true }],
-                        data: [
-                            { label: "Daily", value: "daily" },
-                            { label: "Weekly", value: "weekly" },
-                            { label: "Monthly", value: "monthly" },
-                        ],
-                        type: "Select",
-                        rules: [
-                            {
-                                required: true,
-                                message: "Payment Frequncy is required",
-                            },
-                        ],
+                        type: "InputNumber",
+                        shape: "$",
+                        fieldStyle: { width: "-webkit-fill-available" },
+                        // rules: [
+                        //     {
+                        //         required: true,
+                        //         message: "How much he Cost",
+                        //     },
+                        // ],
                         itemStyle: { marginBottom: 1 },
                     },
+                    
                     {
                         object: "billing",
                         fieldCol: 12,
-                        key: "s_date",
+                        key: "startDate",
                         size: "small",
-                        // rules:[{ required: true }],
                         type: "DatePicker",
                         fieldStyle: { width: "-webkit-fill-available" },
-                        rules: [
-                            {
-                                required: true,
-                                message: "Start Date is required",
-                            },
-                        ],
+                        // rules: [
+                        //     {
+                        //         required: true,
+                        //         message: "Start Date is required",
+                        //     },
+                        // ],
+                        itemStyle: { marginBottom: 1 },
+                    },
+                    {
+                        Placeholder: "End Date",
+                        fieldCol: 24,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                   
+                    {
+                        object: "billing",
+                        fieldCol: 12,
+                        key: "endDate",
+                        size: "small",
+                        type: "DatePicker",
+                        fieldStyle: { width: "-webkit-fill-available" },
+                        // rules: [
+                        //     {
+                        //         required: true,
+                        //         message: "Start Date is required",
+                        //     },
+                        // ],
                         itemStyle: { marginBottom: 1 },
                     },
                 ],
-            },
-            SkillFields: {
-                formId: "skill_form",
-                FormCol: 24,
-                FieldSpace: 24,
-                justifyField: "center",
-                FormLayout: "inline",
-                layout: { labelCol: { span: 9 }, wrapperCol: { span: 0 } },
-                size: "middle",
-                fields: this.newSkillField(0),
             },
         };
     }
 
     componentDidMount = () => {
-        console.log(this.props);
-        if (this.props.editEmp) {
-            this.getRecord(this.state.data);
-        }
+        // console.log(this.props);
+        const { editEmp } = this.props
+        this.fetchAll(editEmp)
     };
 
+    fetchAll = (edit) =>{
+        console.log(edit);
+        const { editEmp } = this.props
+        Promise.all([ getStates(), edit ? this.getRecord(editEmp) : getOneLmPersons() ])
+        .then(res => {
+            const { BasicFields } = this.state
+            BasicFields.fields[15].data = res[0].data;
+                this.setState({
+                    BasicFields,
+                    CONTACT: !edit ? res[1].data: [],
+                })
+        })
+        .catch(e => {
+            console.log(e);
+        })
+    }
+
     submit = () => {
-        //submit button click
-        // console.log(this.detailRef.current);
-        // console.log(this.kinRef.current);
         this.basicRef.current && this.basicRef.current.refs.basic_form.submit();
-        this.detailRef.current &&
-            this.detailRef.current.refs.detail_form.submit();
+        this.detailRef.current && this.detailRef.current.refs.detail_form.submit();
         this.kinRef.current && this.kinRef.current.refs.kin_form.submit();
-        this.billingRef.current &&
-            this.billingRef.current.refs.billing_form.submit();
-        this.skillRef.current && this.skillRef.current.refs.skill_form.submit();
+        this.bankRef.current && this.bankRef.current.refs.bank_form.submit();
+        this.billingRef.current && this.billingRef.current.refs.billing_form.submit();
     };
 
     BasicCall = (vake) => {
-        // this will work after  got  Object from the skill from
         console.log(vake);
         this.setState(
             {
@@ -773,8 +869,8 @@ class InfoModal extends Component {
                     this.state.basicSubmitted &&
                     this.state.detailSubmitted &&
                     this.state.kinSubmitted &&
-                    this.state.billingSubmitted &&
-                    this.state.skillSubmitted 
+                    this.state.bankSubmitted &&
+                    this.state.billingSubmitted 
                 ) {
                     //check if both form is submittef
                     if (!this.props.editEmp) {
@@ -792,11 +888,12 @@ class InfoModal extends Component {
     BillingCall = (vake) => {
         // this will work after  getting the Object from level form
         console.log(vake);
+        vake.billing.noOfHoursPer =1
         this.setState(
             {
                 mergeObj: {
                     ...this.state.mergeObj,
-                    ...vake.billing,
+                    latestEmploymentContract: vake.billing,
                 },
                 billingSubmitted: true, // level form submitted
             },
@@ -805,8 +902,8 @@ class InfoModal extends Component {
                     this.state.basicSubmitted &&
                     this.state.detailSubmitted &&
                     this.state.kinSubmitted &&
-                    this.state.billingSubmitted &&
-                    this.state.skillSubmitted 
+                    this.state.bankSubmitted &&
+                    this.state.billingSubmitted 
                 ) {
                     //check if both form is submittef
                     if (!this.props.editEmp) {
@@ -837,8 +934,8 @@ class InfoModal extends Component {
                     this.state.basicSubmitted &&
                     this.state.detailSubmitted &&
                     this.state.kinSubmitted &&
-                    this.state.billingSubmitted &&
-                    this.state.skillSubmitted 
+                    this.state.bankSubmitted &&
+                    this.state.billingSubmitted  
                 ) {
                     //check if both form is submittef
                     if (!this.props.editEmp) {
@@ -868,9 +965,9 @@ class InfoModal extends Component {
                 if (
                     this.state.basicSubmitted &&
                     this.state.kinSubmitted &&
+                    this.state.bankSubmitted &&
                     this.state.detailSubmitted &&
-                    this.state.billingSubmitted &&
-                    this.state.skillSubmitted 
+                    this.state.billingSubmitted 
                 ) {
                     //check if both form is submittef
                     if (!this.props.editEmp) {
@@ -885,24 +982,24 @@ class InfoModal extends Component {
         );
     };
 
-    SkillCall = (vake) => {
+    BankCall = (vake) => {
         // this will work after I get the Object from the form
         console.log(vake);
         this.setState(
             {
                 mergeObj: {
                     ...this.state.mergeObj,
-                    skill: { ...vake.skill },
+                    ...vake.bank,
                 },
-                skillSubmitted: true, // level form submitted
+                bankSubmitted: true, // level form submitted
             },
             () => {
                 if (
                     this.state.basicSubmitted &&
-                    this.state.detailSubmitted &&
                     this.state.kinSubmitted &&
-                    this.state.billingSubmitted &&
-                    this.state.skillSubmitted
+                    this.state.bankSubmitted &&
+                    this.state.detailSubmitted &&
+                    this.state.billingSubmitted 
                 ) {
                     //check if both form is submittef
                     if (!this.props.editEmp) {
@@ -917,193 +1014,64 @@ class InfoModal extends Component {
         );
     };
 
-    insertSkill = () => {
-        const { SkillFields } = this.state;
-        let obj = SkillFields.fields[SkillFields.fields.length - 1]; // get the inster number for keys
-        const item_no = obj ? parseInt(obj.key) + 1 : 0;
-        SkillFields.fields = SkillFields.fields.concat(
-            ...this.newSkillField(item_no)
-        );
-        this.setState({
-            SkillFields,
-        });
+    addEmployee = (data) => {
+        console.log("addEmployee", data);
+        const { callBack } = this.props;
+        const { sContact } = this.state
+        data.contactPersonId = sContact
+        // value.key = rows; // get new key
+        console.log(data);
+        addList(data).then(res=>{
+            console.log(res);
+            if(res.success){
+                console.log(res.data, false);
+                callBack(res.data, false);
+            }
+        })
     };
 
-    newSkillField = (item_no) => {
-        //inserting new fields in modals
-        const splice_key = [`skill${item_no}`, `pirority${item_no}`, item_no];
-        return [
-            {
-                object: "skill",
-                fieldCol: 11,
-                layout: { wrapperCol: { span: 23 } },
-                key: `skill${item_no}`,
-                size: "small",
-                // rules:[{ required: true }],
-                data: this.skill_data,
-                type: "Select",
-                labelAlign: "left",
-                rules: [
-                    {
-                        required: true,
-                        message: "skill is required",
-                    },
-                ],
-            },
-            {
-                object: "skill",
-                fieldCol: 11,
-                layout: { wrapperCol: { span: 20 } },
-                key: `pirority${item_no}`,
-                size: "small",
-                // rules:[{ required: true }],
-                data: this.priority_data,
-                type: "Select",
-                labelAlign: "left",
-                itemStyle: { marginBottom: "5px" },
-                rules: [
-                    {
-                        required: true,
-                        message: "skill is required",
-                    },
-                ],
-            },
-            {
-                fieldCol: 2,
-                size: "small",
-                Placeholder: <CloseOutlined />,
-                key: item_no,
-                // rules:[{ required: true }],
-                type: "Text",
-                style: {
-                    textAlign: "right",
-                },
-                fieldStyle: {
-                    cursor: "pointer",
-                },
-                onClick: function func(value, e) {
-                    const { SkillFields } = this.state;
-                    SkillFields.fields = SkillFields.fields.filter((obj) => {
-                        return (
-                            obj.key !== splice_key[0] &&
-                            obj.key !== splice_key[1] &&
-                            obj.key !== splice_key[2]
-                        );
-                    });
+    getRecord = (id) => {
+        console.log('getRecord');
+        getRecord(id).then(res=>{
+            if (res.success){
+                this.basicRef.current.refs.basic_form.setFieldsValue({ basic: res.basic, });
 
-                    this.setState({
-                        SkillFields,
-                    });
-                }.bind(this),
-            },
-        ];
-    };
+                this.detailRef.current.refs.detail_form.setFieldsValue({ detail: res.detail, });
 
-    addEmployee = (value) => {
-        console.log("addEmployee", value);
-        const { rows, callBack } = this.props;
-        value.key = rows; // get new key
-        callBack(value, false);
-        this.onCancel();
-    };
+                this.kinRef.current.refs.kin_form.setFieldsValue({ kin: res.kin, });
 
-    getRecord = (data) => {
-        // console.log(data);
-        const { SkillFields } = this.state;
+                this.bankRef.current.refs.bank_form.setFieldsValue({ bank: res.bank, });
 
-        let result = data.skill ? Object.keys(data.skill).length / 2 : 0; // field to inserted
-
-        for (let i = 1; i < result; i++) {
-            //field insert array
-            SkillFields.fields = SkillFields.fields.concat(
-                this.newSkillField(i)
-            );
-        }
-
-        let basic = {
-            // exist: true,
-            code: data.code,
-            cpCode: data.cpCode,
-            email: data.email,
-            fname: data.fname,
-            lname: data.lname,
-            role: data.role,
-            disabled: data.disabled,
-        };
-
-        let detail = {
-            phone: data.phone,
-            dob: data.dob,
-            s_date: data.s_date,
-            address: data.address,
-            sex: data.sex,
-        };
-        let kin = {
-            nok_phone: data.nok_phone,
-            nok_name: data.nok_name,
-            nok_relation: data.nok_relation,
-            nok_dob: data.nok_dob,
-            nok_sex: data.nok_sex,
-        };
-
-        let billing = {
-            pay_email: data.pay_email,
-            h_rate: data.h_rate,
-            mem_ac: data.mem_ac,
-            b_ac: data.b_ac,
-            pay_f: data.pay_f,
-            s_date: data.s_date,
-        };
-
-        let skill = { ...data.skill };
-
-
-        // console.log(basic, billing, detail, skill, exit);
-
-        this.basicRef.current.refs.basic_form.setFieldsValue({ basic: basic, });
-
-        this.detailRef.current.refs.detail_form.setFieldsValue({ detail: detail, });
-
-        this.kinRef.current.refs.kin_form.setFieldsValue({ kin: kin, });
-
-        this.billingRef.current.refs.billing_form.setFieldsValue({ billing: billing, });
-
-        this.skillRef.current.refs.skill_form.setFieldsValue({ skill: skill, });
-
-        this.setState({ SkillFields, });
+                this.billingRef.current.refs.billing_form.setFieldsValue({ billing: res.billing, })
+            }
+        })
     };
 
     editRecord = (value) => {
         const { editEmp, callBack } = this.props;
-        value.key = editEmp;
-        callBack(value, editEmp);
-        this.onCancel();
+        editList(editEmp, value).then((res) => {
+            if(res.success){
+                console.log('hereh');
+                callBack()
+            }
+        });
     };
 
     onCancel = () => {
-        const {
-            BasicFields,
-            BillingFields,
-            DetailFields,
-            KinFields,
-            SkillFields,
-        } = this.state;
+        const { BasicFields, BillingFields, DetailFields, KinFields, BankFields} = this.state;
 
         delete BasicFields.initialValues; // delete initialValues of fields on close
         delete DetailFields.initialValues;
         delete KinFields.initialValues;
         delete BillingFields.initialValues;
-        delete SkillFields.initialValues;
         this.setState(
             {
                 basicSubmitted: false,
                 detailSubmitted: false,
                 billingSubmitted: false,
-                skillSubmitted: false,
                 BasicFields: { ...BasicFields }, //delete Formfields on Close
                 BillingFields: { ...BillingFields },
                 DetailFields: { ...DetailFields },
-                SkillFields: { ...SkillFields },
                 mergeObj: {},
             },
             () => {
@@ -1112,20 +1080,22 @@ class InfoModal extends Component {
         );
     };
 
-    onchecked = (e) => {
-        const { name, checked } = e.target;
-        console.log(name, checked);
-        this.basicRef.current.setFieldsValue({
-            email: "mailme.g.com",
-        });
-        // this.props.form.setFieldsValue({
-        //     [fname]: fvalue,
-        // });
+    onContact = (value) => {
+        console.log(value);
+        getContactRecord(value).then(res=>{
+            if(res.success){
+                console.log(res.data);
+                res.data.cpCode = `Emp-00${res.data.id}`
+                res.data.dateOfBirth = res.data.dateOfBirth && moment(res.data.dateOfBirth) 
+                this.basicRef.current.refs.basic_form.setFieldsValue({ basic: res.data, });
+                this.setState({sContact: value})
+            }
+        })
     };
 
     render() {
         const { editEmp, visible } = this.props;
-        const { BasicFields, DetailFields, KinFields, BillingFields, SkillFields, } = this.state;
+        const { BasicFields, DetailFields, KinFields, BankFields, BillingFields, CONTACT, sContact } = this.state;
 
         return (
             <Modal
@@ -1139,6 +1109,28 @@ class InfoModal extends Component {
                 onCancel={this.onCancel}
                 width={700}
             >
+                {!editEmp &&<Row style={{marginBottom:"1em"}}>
+                    <Select
+                        value={sContact}
+                        placeholder="Contact Person"
+                        options={CONTACT}
+                        showArrow
+                        showSearch
+                        size="small"
+                        allowClear
+                        onChange={this.onContact}
+                        optionFilterProp="label"
+                        filterOption={
+                            (input, option) =>
+                                option.label
+                                    .toLowerCase()
+                                    .indexOf(input.toLowerCase()) >= 0
+                            // console.log(option.label)
+                            // console.log(input.toLowerCase())
+                        }
+                        style={{width:"20em"}}
+                    />
+                    </Row>}
                 <Tabs type="card">
                     <TabPane tab="Basic" key="1" forceRender>
                         <Form
@@ -1161,38 +1153,19 @@ class InfoModal extends Component {
                             FormFields={KinFields}
                         />
                     </TabPane>
-                    <TabPane tab="Billing" key="4" forceRender>
+                    <TabPane tab="Bank" key="4" forceRender>
+                        <Form
+                            ref={this.bankRef}
+                            Callback={this.BankCall}
+                            FormFields={BankFields}
+                        />
+                    </TabPane>
+                    <TabPane tab="Contarct" key="5" forceRender>
                         <Form
                             ref={this.billingRef}
                             Callback={this.BillingCall}
                             FormFields={BillingFields}
                         />
-                    </TabPane>
-                    <TabPane tab="Skill" key="5" forceRender>
-                        <Row justify="end">
-                            <Col>
-                                <Button
-                                    type="primary"
-                                    size="small"
-                                    onClick={this.insertSkill}
-                                >
-                                    <PlusSquareFilled /> Insert Skill
-                                </Button>
-                            </Col>
-                            <Col span="24">
-                                <Row>
-                                    <Col span="11">Skill</Col>
-                                    <Col span="11">Level</Col>
-                                </Row>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Form
-                                ref={this.skillRef}
-                                Callback={this.SkillCall}
-                                FormFields={SkillFields}
-                            />
-                        </Row>
                     </TabPane>
                 </Tabs>
             </Modal>
