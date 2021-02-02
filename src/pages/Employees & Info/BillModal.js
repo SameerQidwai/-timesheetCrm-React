@@ -280,8 +280,12 @@ class BillModal extends Component {
 
     BillingCall = (vake) => {
         // this will work after  getting the Object from level form
-        const {editCntrct} = this.props
-        const { billing } = vake
+        const {editCntrct, editEmp} = this.props
+        const { billing } = vake;
+        billing.noOfHoursPer = 1; 
+        billing.startDate = billing.startDate ? new Date (moment(billing.startDate).format("DD-MMM-YYYY")).getTime(): null
+        billing.endDate = billing.endDate ? new Date (moment(billing.endDate).format("DD-MMM-YYYY")).getTime(): null
+        billing.employeeId = editEmp;
         if (!editCntrct) {
             console.log("emes");
             this.addContract(billing); //add skill
@@ -292,8 +296,8 @@ class BillModal extends Component {
     };
 
     addContract = (data) => {
-        const {  callBack, editEmp } = this.props;
-        addList(editEmp, data).then(res=>{
+        const { callBack } = this.props;
+        addList(data).then(res=>{
             console.log(res);
             if(res.success){
                 callBack();

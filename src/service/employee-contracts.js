@@ -36,9 +36,9 @@ export const getRecord = (id) => {
         });
 };
 
-export const addList = (id, data) => {
+export const addList = (data) => {
     return axios
-        .post(url+`?employeeId=${id}`, data)
+        .post(url, data)
         .then((res) => {
             console.log(res);
             const { success } = res.data;

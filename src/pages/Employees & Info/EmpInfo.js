@@ -14,6 +14,10 @@ import Bank from "../../components/Core/Bank";
 
 import InfoModal from "./InfoModal";
 
+import { getRecord, delList } from "../../service/Employees";
+
+import moment from "moment"
+
 const { Item } = Descriptions;
 const { TabPane } = Tabs;
 
@@ -22,37 +26,55 @@ class OrgInfo extends Component {
         super();
         this.state = {
             infoModal: false,
-            editEmp: false,
+            emp: false,
             data: {
-                key: 2,
-                contact: "+923316785557",
-                email: "son's@g.com",
-                name: "Musab",
-                phone: "+921218967889",
-                dob: "12/9/1997",
-                address: "15 yemen road, Yemen",
-                gender: "Male",
-                s_date: "12/9/2020",
+                cpCode: '',
+                firstName: '',
+                lastName: '',
+                gender: '',
+                dateOfBirth:  '',
+                phoneNumber: '',
+                email: '',
+                address: '',
+                stateId: '',
             },
         };
     }
+    componentDidMount = ()=>{
+        const { id } = this.props.match.params
+        this.getRecord(id)
+    }
+
+    getRecord = (id) =>{
+        getRecord(id).then(res=>{
+            if(res.success){
+                this.setState({
+                    data: res.basic,
+                    emp: id
+                })
+            }
+        })
+    }
+
     closeModal = () => {
-        this.setState({
-            infoModal: false,
-            editEmp: false,
+        this.setState({ infoModal: false, });
+    };
+
+    handleDelete = (id) => {
+        delList(id).then((res) => {
+            if (res.success) {
+                this.props.history.push('/Employees')
+            }
         });
     };
 
-    callBack = (value, key) => {
-        console.log(value);
-        this.setState({
-            data: value,
-        });
+    callBack = () => {
+        const { emp } = this.state
+        this.getRecord(emp)
     };
 
     render() {
-        const { data, infoModal, editEmp } = this.state;
-        const { id } = this.props.match.params;
+        const { data, infoModal, emp } = this.state;
         const DescTitle = (
             <Row justify="space-between">
                 <Col>Basic Information</Col>
@@ -60,31 +82,21 @@ class OrgInfo extends Component {
                     <Dropdown
                         overlay={
                             <Menu>
-                                <Menu.Item danger>
+                                {/* <Menu.Item danger>
                                     <Popconfirm
                                         title="Sure to delete?"
-                                        // onConfirm={() =>
-                                        //     this.handleDelete(
-                                        //     )
-                                        // }
+                                        onConfirm={() => this.handleDelete(emp) }
                                     >
                                         Delete
                                     </Popconfirm>
-                                </Menu.Item>
-                                <Menu.Item
-                                    onClick={() => {
-                                        this.setState({
-                                            infoModal: true,
-                                            editEmp: data.key,
-                                        });
-                                    }}
-                                >
+                                </Menu.Item> */}
+                                <Menu.Item onClick={() => { this.setState({ infoModal: true, }); }} >
                                     Edit
                                 </Menu.Item>
                                 <Menu.Item>
                                     <Link
                                         to={{
-                                            pathname: `/Employee/contracts/${data.key}`,
+                                            pathname: `/Employee/contracts/${emp}`,
                                         }}
                                         className="nav-link"
                                     >
@@ -110,13 +122,13 @@ class OrgInfo extends Component {
                     layout="horizontal"
                     // extra={<Button type="primary">Edit</Button>}
                 >
-                    <Item label="Name">{data.name}</Item>
-                    <Item label="Phone">{data.contact} </Item>
+                    <Item label="First Name">{data.firstName}</Item>
+                    <Item label="Last Name">{data.lastName}</Item>
+                    <Item label="Phone">{data.phoneNumber} </Item>
                     <Item label="Email">{data.email}</Item>
                     <Item label="Address">{data.address}</Item>
-                    <Item label="Date Of Birth">{data.dob}</Item>
+                    <Item label="Date Of Birth">{data.dateOfBirth ? moment(data.dateOfBirth).format('DD MM YYYY'): null}</Item>
                     <Item label="Gender">{data.gender}</Item>
-                    <Item label="Start Date">{data.s_date}</Item>
                 </Descriptions>
                 <Tabs
                     type="card"
@@ -124,25 +136,25 @@ class OrgInfo extends Component {
                     defaultActiveKey="5"
                 >
                     <TabPane tab="Project" key="1">
-                        <Projects id={id} />
+                        <Projects id={emp} />
                     </TabPane>
                     <TabPane tab="Travels" key="2">
-                        <Travels id={id} />
+                        <Travels id={emp} />
                     </TabPane>
                     <TabPane tab="Comments" key="4">
-                        <Comments id={id} />
+                        <Comments id={emp} />
                     </TabPane>
                     <TabPane tab="Attachments" key="5">
                         <Attachments />
                     </TabPane>
                     <TabPane tab="Account" key="6">
-                        <Bank id={id} title={data.name} />
+                        <Bank id={emp} title={data.name} />
                     </TabPane>
                 </Tabs>
                 {infoModal && (
                     <InfoModal
                         visible={infoModal}
-                        editEmp={editEmp}
+                        editEmp={emp}
                         close={this.closeModal}
                         callBack={this.callBack}
                     />
