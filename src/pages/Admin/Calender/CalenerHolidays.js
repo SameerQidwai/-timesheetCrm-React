@@ -110,16 +110,12 @@ class CalenerHolidays extends Component {
     }
 
     componentDidMount() {
-        this.setState(
-            {
-            },
-            () => {
-                this.getData();
-            }
-        );
+        const { id } = this.props.match.params
+        this.setState({calendarId: id},()=>this.getData(id))
+        
     }
 
-    getData = () => {
+    getData = (id) => {
         const { calendarId } = this.state;
         getList(calendarId).then((res) => {
             if (res.success) {
