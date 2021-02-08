@@ -61,9 +61,9 @@ export const getContactPersons = () =>{
         };
     });
 }
-export const getOneLmPersons = () =>{
+export const getOrgPersons = (id) =>{
     return axios
-    .get(`${Api}/employees/get/contact-persons`)
+    .get(`${Api}/sub-contractors/get/contact-persons?organizationId=${id}`)
     .then((res) => {
         const { success, data } = res.data;
         var cps = []
@@ -80,6 +80,7 @@ export const getOneLmPersons = () =>{
         };
     });
 }
+
 
 export const getOrganizations = (id) => {
     return axios

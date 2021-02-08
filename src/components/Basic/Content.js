@@ -14,6 +14,7 @@ import EmpInfo from "../../pages/Employees & Info/EmpInfo";
 import EmpBilling from "../../pages/Employees & Info/EmpBilling"
 import Contractors from "../../pages/Contractors & Info/Contractors";
 import ContInfo from "../../pages/Contractors & Info/ContInfo";
+import ContBilling from "../../pages/Contractors & Info/ContBilling";
 // import Clients from "../../pages/Clients & info/Clients";
 // import ClientsInfo from "../../pages/Clients & info/ClientInfo";
 import Contact from "../../pages/Contacts/Contact Person/Contact";
@@ -114,11 +115,15 @@ const pageLinks = [
     },
     {
         component: Contractors,
-        link: "/Contractors",
+        link: "/sub-contractors",
     },
     {
         component: ContInfo,
-        link: "/contractors/info/:id",
+        link: "/sub-contractors/info/:id",
+    },
+    {
+        component: ContBilling,
+        link: "/sub-contractors/contracts/:id",
     },
     // {
     //     component: Clients,

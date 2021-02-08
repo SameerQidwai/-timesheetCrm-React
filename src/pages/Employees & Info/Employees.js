@@ -150,6 +150,7 @@ class Employees extends Component {
     closeModal = () => {
         this.setState({ infoModal: false, editEmp: false, });
     };
+    
     callBack = (value) => {
         // const { data, editEmp } = this.state;
         this.getList()

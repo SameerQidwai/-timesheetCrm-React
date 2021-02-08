@@ -1,9 +1,6 @@
 import React, { Component } from "react";
-
 import { Row, Col, Menu, Tabs, Button, Dropdown, Popconfirm, Descriptions, } from "antd";
-
 import { SettingOutlined, DownOutlined } from "@ant-design/icons"; //Icons
-    
 import { Link } from "react-router-dom"; 
 
 import Comments from "../../components/Core/Comments";
@@ -128,6 +125,7 @@ class OrgInfo extends Component {
                     <Item label="Email">{data.email}</Item>
                     <Item label="Address">{data.address}</Item>
                     <Item label="Date Of Birth">{data.dateOfBirth ? moment(data.dateOfBirth).format('DD MM YYYY'): null}</Item>
+                    <Item label="Date Of Birth">{JSON.stringify(data.dateOfBirth)}</Item>
                     <Item label="Gender">{data.gender}</Item>
                 </Descriptions>
                 <Tabs

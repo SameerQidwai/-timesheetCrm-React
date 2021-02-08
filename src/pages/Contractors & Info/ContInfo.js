@@ -1,8 +1,7 @@
 import React, { Component } from "react";
-
-import { Row, Col, Menu, Tabs, Button, Dropdown, Popconfirm, Descriptions, } from "antd";
-
+import { Row, Col, Menu, Tabs, Button, Dropdown, Descriptions, } from "antd";
 import { SettingOutlined, DownOutlined } from "@ant-design/icons"; //Icons
+import { Link } from "react-router-dom"; 
 
 import Comments from "../../components/Core/Comments";
 import Projects from "../../components/Core/Projects";
@@ -12,6 +11,9 @@ import Bank from "../../components/Core/Bank";
 
 import InfoModal from "./InfoModal";
 
+import { getRecord, delList } from "../../service/contractors";
+import  moment from "moment";
+
 const { Item } = Descriptions;
 const { TabPane } = Tabs;
 
@@ -20,70 +22,84 @@ class ContInfo extends Component {
         super();
         this.state = {
             infoModal: false,
-            editOrg: false,
+            editCont: false,
             data: {
-                key: 2,
-                EBA: "89898987",
-                address: "New York",
-                contact: "+923316785557",
-                contactName: "Farukh",
-                email: "son's@g.com",
-                name: "Musab",
-                phone: "+921218967889",
-                website: "M&S.com.us",
+                cpCode: '',
+                firstName: '',
+                lastName: '',
+                gender: '',
+                dateOfBirth:  '',
+                phoneNumber: '',
+                email: '',
+                address: '',
+                stateId: '',
             },
         };
     }
 
-    componentDidMount = () => {
-        console.log("ContINFO", this.props);
-    };
-    
+    componentDidMount = ()=>{
+        const { id } = this.props.match.params
+        this.getRecord(id)
+    }
+
+    getRecord = (id) =>{
+        getRecord(id).then(res=>{
+            if(res.success){
+                this.setState({
+                    data: res.basic,
+                    editCont: id
+                })
+            }
+        })
+    }
+
     closeModal = () => {
-        this.setState({
-            infoModal: false,
-            editOrg: false,
+        this.setState({ infoModal: false, });
+    };
+
+    handleDelete = (id) => {
+        delList(id).then((res) => {
+            if (res.success) {
+                this.props.history.push('/sub-contractors')
+            }
         });
     };
 
-    callBack = (value, key) => {
-        console.log(value);
-        this.setState({
-            data: value,
-        });
+    callBack = () => {
+        const { editCont } = this.state
+        this.getRecord(editCont)
     };
+
 
     render() {
-        const { data, infoModal, editOrg } = this.state;
-        const { id } = this.props.match.params;
+        const { data, infoModal, editCont } = this.state;
         const DescTitle = (
             <Row justify="space-between"> 
-                <Col>{data.name}</Col> 
+                 <Col>Basic Information</Col>
                 <Col>
-                    {" "}
                     <Dropdown
                         overlay={
                             <Menu>
-                                <Menu.Item danger>
+                                {/* <Menu.Item danger>
                                     <Popconfirm
                                         title="Sure to delete?"
-                                        // onConfirm={() =>
-                                        //     this.handleDelete(
-                                        //     )
-                                        // }
+                                        onConfirm={() => this.handleDelete(emp) }
                                     >
                                         Delete
                                     </Popconfirm>
-                                </Menu.Item>
-                                <Menu.Item
-                                    onClick={() => {
-                                        this.setState({
-                                            infoModal: true,
-                                            editOrg: data.key,
-                                        });
-                                    }}
-                                >
+                                </Menu.Item> */}
+                                <Menu.Item onClick={() => { this.setState({ infoModal: true }); }} >
                                     Edit
+                                </Menu.Item>
+                                <Menu.Item>
+                                    <Link
+                                        to={{
+                                            pathname: `/sub-contractors/contracts/${editCont}`,
+                                        }}
+                                        className="nav-link"
+                                    >
+                                        Contracts
+                                    </Link>
                                 </Menu.Item>
                             </Menu>
                         }
@@ -97,44 +113,46 @@ class ContInfo extends Component {
         );
         return (
             <>
-                <Descriptions
+                 <Descriptions
                     title={DescTitle}
                     size="small"
                     bordered
                     layout="horizontal"
                     // extra={<Button type="primary">Edit</Button>}
                 >
-                    <Item label="Contact">{data.contact}</Item>
+                    <Item label="First Name">{data.firstName}</Item>
+                    <Item label="Last Name">{data.lastName}</Item>
+                    <Item label="Phone">{data.phoneNumber} </Item>
                     <Item label="Email">{data.email}</Item>
                     <Item label="Address">{data.address}</Item>
-                    <Item label="Website">{data.website}</Item>
-                    <Item label="EBA">{data.EBA}</Item>
+                    <Item label="Date Of Birth">{data.dateOfBirth ? moment(data.dateOfBirth).format('DD MM YYYY'): null}</Item>
+                    <Item label="Gender">{data.gender}</Item>
                 </Descriptions>
                 <Tabs
                     type="card"
                     style={{ marginTop: "50px" }}
-                    defaultActiveKey="5"
+                    defaultActiveKey="1"
                 >
                     <TabPane tab="Project" key="1">
-                        <Projects id={id} />
+                        <Projects id={editCont} />
                     </TabPane>
                     <TabPane tab="Travels" key="2">
-                        <Travels id={id} />
+                        <Travels id={editCont} />
                     </TabPane>
                     <TabPane tab="Comments" key="4">
-                        <Comments id={id} />
+                        <Comments id={editCont} />
                     </TabPane>
                     <TabPane tab="Attachments" key="5">
                         <Attachments />
                     </TabPane>
                     <TabPane tab="Account" key="6   ">
-                        <Bank id={id} title={data.name} />
+                        <Bank id={editCont} title={data.name} />
                     </TabPane>
                 </Tabs>
                 {infoModal && (
                     <InfoModal
                         visible={infoModal}
-                        editOrg={editOrg}
+                        editCont={editCont}
                         close={this.closeModal}
                         callBack={this.callBack}
                     />

@@ -1,25 +1,12 @@
 import React, { Component } from "react";
-import {
-    Popconfirm,
-    Typography,
-    Dropdown,
-    Button,
-    Table,
-    Menu,
-    Row,
-    Col,
-} from "antd";
-
-import {
-    PlusSquareOutlined,
-    SettingOutlined,
-    FilterOutlined,
-    DownOutlined,
-} from "@ant-design/icons"; //Icons
+import { Typography, Dropdown, Button, Table, Menu, Row, Col, } from "antd";
+import { PlusSquareOutlined, SettingOutlined, FilterOutlined, DownOutlined, } from "@ant-design/icons"; //Icons
 
 import { Link } from "react-router-dom";
 
 import InfoModal from "./InfoModal";
+
+import { getList } from "../../service/contractors";
 import "../styles/table.css";
 
 const { Title } = Typography;
@@ -30,19 +17,43 @@ class Contractors extends Component {
         this.columns = [
             {
                 title: "Code",
-                dataIndex: "key",
-                key: "key",
-                render: (record) => `00${record}`,
+                dataIndex: "contactPersonOrganization",
+                key: "contactPersonOrganization",
+                render: (record) => {
+                    return `Emp-00${record.contactPerson.id}`
+                },
             },
             {
-                title: "Name",
-                dataIndex: "name",
-                key: "name",
+                title: "First Name",
+                dataIndex: "contactPersonOrganization",
+                key: "contactPersonOrganization",
+                render: (record) =>{
+                    return record.contactPerson.firstName
+                }
+            },
+            {
+                title: "Last Name",
+                dataIndex: "contactPersonOrganization",
+                key: "contactPersonOrganization",
+                render: (record) =>{
+                    return record.contactPerson.lastName
+                }
+            },
+            {
+                title: "Phone",
+                dataIndex: "contactPersonOrganization",
+                key: "contactPersonOrganization",
+                render: (record) =>{
+                    return record.contactPerson.phoneNumber
+                }
             },
             {
                 title: "Email",
-                dataIndex: "email",
-                key: "email",
+                dataIndex: "contactPersonOrganization",
+                key: "contactPersonOrganization",
+                render: (record) =>{
+                    return record.contactPerson.email
+                }
             },
             {
                 title: "Action",
@@ -52,22 +63,17 @@ class Contractors extends Component {
                     <Dropdown
                         overlay={
                             <Menu>
-                                <Menu.Item danger>
+                                {/* <Menu.Item danger>
                                     <Popconfirm
                                         title="Sure to delete?"
-                                        onConfirm={() =>
-                                            this.handleDelete(record.key)
-                                        }
+                                        onConfirm={() => this.handleDelete(record.id) }
                                     >
                                         Delete
                                     </Popconfirm>
-                                </Menu.Item>
+                                </Menu.Item> */}
                                 <Menu.Item
                                     onClick={() => {
-                                        this.setState({
-                                            infoModal: true,
-                                            editCont: record.key,
-                                        });
+                                        this.setState({ infoModal: true, editCont: record.id, });
                                     }}
                                 >
                                     Edit
@@ -75,11 +81,21 @@ class Contractors extends Component {
                                 <Menu.Item>
                                     <Link
                                         to={{
-                                            pathname: `/contractors/info/${record.key}`,
+                                            pathname: `/sub-contractors/info/${record.id}`,
                                         }}
                                         className="nav-link"
                                     >
                                         View
+                                    </Link>
+                                </Menu.Item>
+                                <Menu.Item>
+                                    <Link
+                                        to={{
+                                            pathname: `/sub-contractors/contracts/${record.id}`,
+                                        }}
+                                        className="nav-link"
+                                    >
+                                        Contracts
                                     </Link>
                                 </Menu.Item>
                             </Menu>
@@ -96,25 +112,31 @@ class Contractors extends Component {
         this.state = {
             infoModal: false,
             editCont: false,
-            data: [
-                {
-                    key: 1,
-                    name: "Daiman Dark",
-                    email: "DD@olm.com",
-                },
-                {
-                    key: 2,
-                    name: "Neil Armstrong",
-                    email: "HA@olm.com",
-                },
-                {
-                    key: 3,
-                    name: "Gorge paloni",
-                    email: "GP@olm.com",
-                },
-            ],
+            data: [],
         };
     }
+    componentDidMount = () =>{
+        this.getList()
+    }
+
+    getList = () =>{
+        console.log('getList');
+        getList().then(res=>{
+            if (res.success){
+                this.setState({
+                    data: res.data,
+                    infoModal: false,
+                    editCont: false,
+                })
+            }
+        })
+    }
+    
+    callBack = () => {
+        console.log('callBack');
+        this.getList()
+    };
+
 
     handleDelete = (code) => {
         const dataSource = [...this.state.data];
@@ -128,19 +150,6 @@ class Contractors extends Component {
             infoModal: false,
             editCont: false,
         });
-    };
-    callBack = (value, key) => {
-        const { data } = this.state;
-        if (key === false) {
-            this.setState({
-                data: [...data, value],
-            });
-        } else {
-            data[key] = value;
-            this.setState({
-                data,
-            });
-        }
     };
 
     render() {
@@ -178,6 +187,7 @@ class Contractors extends Component {
                     </Col>
                     <Col span={24}>
                         <Table
+                            rowKey={(data) => data.id}
                             columns={columns}
                             dataSource={data}
                             size="small"
@@ -190,7 +200,6 @@ class Contractors extends Component {
                         editCont={editCont}
                         close={this.closeModal}
                         callBack={this.callBack}
-                        rows={data.length + 1} //Just for time Being till we call the Api's to rernder data while add and edit
                     />
                 )}
             </>

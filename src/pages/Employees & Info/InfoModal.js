@@ -5,7 +5,7 @@ import { UploadOutlined, PlusSquareFilled, CloseOutlined, } from "@ant-design/ic
 import Form from "../../components/Core/Form";
 import moment from "moment";
 
-import { getOneLmPersons, getStates } from "../../service/constant-Apis";
+import { getOrgPersons, getStates } from "../../service/constant-Apis";
 import { getContactRecord } from "../../service/conatct-person";
 import { addList, getRecord, editList } from "../../service/Employees";
 const { TabPane } = Tabs;
@@ -832,7 +832,7 @@ class InfoModal extends Component {
     fetchAll = (edit) =>{
         console.log(edit);
         const { editEmp } = this.props
-        Promise.all([ getStates(), edit ? this.getRecord(editEmp) : getOneLmPersons() ])
+        Promise.all([ getStates(), edit ? this.getRecord(editEmp) : getOrgPersons(1) ])
         .then(res => {
             const { BasicFields } = this.state
             BasicFields.fields[15].data = res[0].data;
@@ -1026,6 +1026,14 @@ class InfoModal extends Component {
             if(res.success){
                 console.log(res.data, false);
                 callBack(res.data, false);
+            }else{
+                this.setState({
+                    basicSubmitted: false,
+                    kinSubmitted: false,
+                    bankSubmitted: false,
+                    detailSubmitted: false,
+                    billingSubmitted: false,
+                })
             }
         })
     };
@@ -1053,6 +1061,14 @@ class InfoModal extends Component {
             if(res.success){
                 console.log('hereh');
                 callBack()
+            }else{
+                this.setState({
+                    basicSubmitted: false,
+                    kinSubmitted: false,
+                    bankSubmitted: false,
+                    detailSubmitted: false,
+                    billingSubmitted: false,
+                })
             }
         });
     };
@@ -1092,6 +1108,15 @@ class InfoModal extends Component {
             }
         })
     };
+    
+    onContactClear = () =>{
+        this.setState({
+            sContact: null,
+        },()=>{
+            console.log('sameer');
+            this.basicRef.current.refs.basic_form.resetFields();
+        })
+    }
 
     render() {
         const { editEmp, visible } = this.props;
@@ -1118,6 +1143,7 @@ class InfoModal extends Component {
                         showSearch
                         size="small"
                         allowClear
+                        onClear={this.onContactClear}
                         onChange={this.onContact}
                         optionFilterProp="label"
                         filterOption={
