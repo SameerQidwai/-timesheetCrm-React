@@ -101,7 +101,7 @@ class CalenerHolidays extends Component {
                         mode: "date",
                         type: "DatePicker",
                         labelAlign: "right",
-                        fieldStyle: { width: "-webkit-fill-available" },
+                        fieldStyle: { width: "100%" },
                         // hidden: false
                     },
                 ],

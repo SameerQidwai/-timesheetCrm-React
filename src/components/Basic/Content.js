@@ -22,7 +22,8 @@ import TimeSheet from "../../pages/TimeSheet";
 import TimeOff from "../../pages/Time/TimeOff";
 import Travels from "../../pages/Travel/Travels";
 
-import Leads from "../../pages/Contacts/Leads";
+import Leads from "../../pages/opportunity/Leads";
+import Projects from "../../pages/Project/Projects";
 import Calender from "../Calender/Calender";
 
 const { Content } = Layout;
@@ -136,6 +137,18 @@ const pageLinks = [
     {
         component: Leads,
         link: "/leads",
+    },
+    {
+        component: Leads,
+        link: "/leads/info/:id",
+    },
+    {
+        component: Projects,
+        link: "/projects",
+    },
+    {
+        component: Projects,
+        link: "/projects/info:id",
     },
     {
         component: TimeSheet,

@@ -154,7 +154,7 @@ class Forms extends Component {
                 break;
             case "Text":
                 item = (
-                    <Text strong={mode} onClick={onClick} style={style}>
+                    <Text strong={mode} onClick={onClick} style={style} disabled={disabled}>
                         {placeholder}
                     </Text>
                 );

@@ -331,7 +331,7 @@ class InfoModal extends Component {
                         size: "small",
                         // rules:[{ required: true }],
                         type: "DatePicker",
-                        fieldStyle: { width: "-webkit-fill-available" },
+                        fieldStyle: { width: "100%" },
                         rules: [
                             {
                                 required: true,
@@ -355,7 +355,7 @@ class InfoModal extends Component {
                         size: "small",
                         // rules:[{ required: true }],
                         type: "DatePicker",
-                        fieldStyle: { width: "-webkit-fill-available" },
+                        fieldStyle: { width: "100%" },
                         rules: [
                             {
                                 required: true,
@@ -452,7 +452,7 @@ class InfoModal extends Component {
                         // rules:[{ required: true }],
                         type: "InputNumber",
                         shape: "$",
-                        fieldStyle: { width: "-webkit-fill-available" },
+                        fieldStyle: { width: "100%" },
                         rules: [
                             {
                                 required: true,
@@ -550,7 +550,7 @@ class InfoModal extends Component {
                         size: "small",
                         // rules:[{ required: true }],
                         type: "DatePicker",
-                        fieldStyle: { width: "-webkit-fill-available" },
+                        fieldStyle: { width: "100%" },
                         rules: [
                             {
                                 required: true,

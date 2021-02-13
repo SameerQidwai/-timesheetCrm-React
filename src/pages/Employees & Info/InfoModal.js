@@ -212,7 +212,7 @@ class InfoModal extends Component {
                         size: "small",
                         // rules:[{ required: true }],
                         type: "DatePicker",
-                        fieldStyle: { width: "-webkit-fill-available" },
+                        fieldStyle: { width: "100%" },
                         // rules: [
                         //     {
                         //         required: true,
@@ -477,15 +477,6 @@ class InfoModal extends Component {
                         itemStyle:{marginBottom:10},
                     },
                     {
-                        Placeholder: "Date Of Birth",
-                        fieldCol: 12,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:10},
-                        // itemStyle: { marginBottom: 1 },
-                    },
-                    {
                         object: "kin",
                         fieldCol: 12,
                         key: "nextOfKinGender",
@@ -506,24 +497,7 @@ class InfoModal extends Component {
                         type: "Radio",
                         mode: "button",
                         shape: "solid",
-                    },
-                    {
-                        object: "kin",
-                        fieldCol: 12,
-                        key: "nextOfKinDateOfBirth",
-                        size: "small",
-                        // rules:[{ required: true }],
-                        type: "DatePicker",
-                        fieldStyle: { width: "-webkit-fill-available" },
-                        // rules: [
-                        //     {
-                        //         required: true,
-                        //         message: "Date of Birth is required",
-                        //     },
-                        // ],
-                        itemStyle: { marginBottom: 20 },
-                    },
-                    
+                    },                    
                 ],
             },
 
@@ -629,7 +603,7 @@ class InfoModal extends Component {
                         size: "small",
                         type: "InputNumber",
                         // shape: " Hours",
-                        fieldStyle: { width: "-webkit-fill-available" },
+                        fieldStyle: { width: "100%" },
                         // rules: [
                         //     {
                         //         required: true,
@@ -769,7 +743,7 @@ class InfoModal extends Component {
                         size: "small",
                         type: "InputNumber",
                         shape: "$",
-                        fieldStyle: { width: "-webkit-fill-available" },
+                        fieldStyle: { width: "100%" },
                         // rules: [
                         //     {
                         //         required: true,
@@ -785,7 +759,7 @@ class InfoModal extends Component {
                         key: "startDate",
                         size: "small",
                         type: "DatePicker",
-                        fieldStyle: { width: "-webkit-fill-available" },
+                        fieldStyle: { width: "100%" },
                         // rules: [
                         //     {
                         //         required: true,
@@ -809,7 +783,7 @@ class InfoModal extends Component {
                         key: "endDate",
                         size: "small",
                         type: "DatePicker",
-                        fieldStyle: { width: "-webkit-fill-available" },
+                        fieldStyle: { width: "100%" },
                         // rules: [
                         //     {
                         //         required: true,

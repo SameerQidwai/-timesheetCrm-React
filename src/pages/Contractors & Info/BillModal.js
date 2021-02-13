@@ -72,7 +72,7 @@ class BillModal extends Component {
                     //     size: "small",
                     //     type: "InputNumber",
                     //     // shape: " Hours",
-                    //     fieldStyle: { width: "-webkit-fill-available" },
+                    //     fieldStyle: { width: "100%" },
                     //     // rules: [
                     //     //     {
                     //     //         required: true,
@@ -126,7 +126,7 @@ class BillModal extends Component {
                         size: "small",
                         type: "InputNumber",
                         shape: "$",
-                        fieldStyle: { width: "-webkit-fill-available" },
+                        fieldStyle: { width: "100%" },
                         // rules: [
                         //     {
                         //         required: true,
@@ -157,7 +157,7 @@ class BillModal extends Component {
                         key: "startDate",
                         size: "small",
                         type: "DatePicker",
-                        fieldStyle: { width: "-webkit-fill-available" },
+                        fieldStyle: { width: "100%" },
                         // rules: [
                         //     {
                         //         required: true,
@@ -172,7 +172,7 @@ class BillModal extends Component {
                         key: "endDate",
                         size: "small",
                         type: "DatePicker",
-                        fieldStyle: { width: "-webkit-fill-available" },
+                        fieldStyle: { width: "100%" },
                         // rules: [
                         //     {
                         //         required: true,

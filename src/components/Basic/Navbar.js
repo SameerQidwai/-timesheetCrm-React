@@ -15,8 +15,6 @@ const NavItem = [
         items: [
             { text: "Organizations", link: "/organizations" },
             { text: "Contact", link: "/contact" },
-            { text: "con-3", link: "/con-3" },
-            { text: "con-4", link: "/con-4" },
         ],
     },
     {
@@ -28,13 +26,11 @@ const NavItem = [
         items: [
             { text: "Employees", link: "/Employees" },
             { text: "Sub Contractors", link: "/sub-contractors" },
-            { text: "Clients", link: "/clients" },
-            { text: "res-4", link: "/res-4" },
         ],
     },
     {
         text: "Projects",
-        link: "link",
+        link: "/projects",
     },
     // {
     //     text:'Admin',

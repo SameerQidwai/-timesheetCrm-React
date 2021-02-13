@@ -125,7 +125,6 @@ class OrgInfo extends Component {
                     <Item label="Email">{data.email}</Item>
                     <Item label="Address">{data.address}</Item>
                     <Item label="Date Of Birth">{data.dateOfBirth ? moment(data.dateOfBirth).format('DD MM YYYY'): null}</Item>
-                    <Item label="Date Of Birth">{JSON.stringify(data.dateOfBirth)}</Item>
                     <Item label="Gender">{data.gender}</Item>
                 </Descriptions>
                 <Tabs
@@ -133,19 +132,19 @@ class OrgInfo extends Component {
                     style={{ marginTop: "50px" }}
                     defaultActiveKey="5"
                 >
-                    <TabPane tab="Project" key="1">
+                    <TabPane tab="Project" key="project">
                         <Projects id={emp} />
                     </TabPane>
-                    <TabPane tab="Travels" key="2">
+                    <TabPane tab="Travels" key="travels">
                         <Travels id={emp} />
                     </TabPane>
-                    <TabPane tab="Comments" key="4">
+                    <TabPane tab="Comments" key="comments">
                         <Comments id={emp} />
                     </TabPane>
-                    <TabPane tab="Attachments" key="5">
+                    <TabPane tab="Attachments" key="attachments">
                         <Attachments />
                     </TabPane>
-                    <TabPane tab="Account" key="6">
+                    <TabPane tab="Account" key="account">
                         <Bank id={emp} title={data.name} />
                     </TabPane>
                 </Tabs>
