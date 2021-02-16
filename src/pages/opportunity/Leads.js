@@ -58,6 +58,17 @@ class Leads extends Component {
                                     View
                                 {/* </Link> */}
                             </Menu.Item >
+                             <Menu.Item>
+                                <Link
+                                    to={{
+                                        pathname: `/leads/resources/${record.id}`,
+                                    }}
+                                    className="nav-link"
+                                >
+                                    Resources
+                                </Link>
+                            </Menu.Item>
+                            
                         </Menu>
                     }>
                         <Button size='small'>

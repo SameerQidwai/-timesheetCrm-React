@@ -1136,13 +1136,13 @@ class InfoModal extends Component {
                             FormFields={BillingFields}
                         />
                     </TabPane>
-                    <TabPane tab="Resource Info" key="resource" forceRender>
+                    {/* <TabPane tab="Resource Info" key="resource" forceRender>
                         <Form
                             ref={this.resourceRef}
                             Callback={this.ResourceCall}
                             FormFields={ResourceFields}
                         />
-                    </TabPane>
+                    </TabPane> */}
                     
                 </Tabs>
             </Modal>

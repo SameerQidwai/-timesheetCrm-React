@@ -5,7 +5,7 @@ import moment from "moment";
 import Form from "../../components/Core/Form";
 
 // import { addList, getOrgRecord, editList } from "../../../service/Organizations";
-import { getOrganizations, getStates, getStandardLevels, getOrgPersons } from "../../service/constant-Apis";
+import { getOrganizations, getStates, getStandardLevels, getOrgPersons, getPanels } from "../../service/constant-Apis";
 
 const { TabPane } = Tabs;
 
@@ -49,7 +49,7 @@ class InfoModal extends Component {
                         // itemStyle:{marginBottom:'10px'},
                     },
                     {
-                        Placeholder: "Organization",
+                        Placeholder: "Panel",
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -68,20 +68,19 @@ class InfoModal extends Component {
                     {
                         object: "obj",
                         fieldCol: 12,
-                        key: "OrganizationId",
+                        key: "panelId",
                         size: "small",
                         // rules:[{ required: true }],
                         data: [],
                         type: "Select",
-                        onChange: function func(value) {
-                            getOrgPersons(value).then(res=>{
-                                if(res.success){
-                                    const { BasicFields } = this.state
-                                    BasicFields.fields[6].data = res.data
-                                    this.setState({ BasicFields })
-                                }
-                            })
-                        }.bind(this)
+                    },
+                    {
+                        Placeholder: "Organization",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
                     },
                     {
                         Placeholder: "Delegate Contact Person",
@@ -92,12 +91,28 @@ class InfoModal extends Component {
                         // itemStyle:{marginBottom:'10px'},
                     },
                     {
-                        Placeholder: "Name",
+                        object: "obj",
                         fieldCol: 12,
+                        key: "OrganizationId",
                         size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
+                        // rules:[{ required: true }],
+                        data: [],
+                        type: "Select",
+                        onChange: function func(value) {
+                            if (value){
+                                getOrgPersons(value).then(res=>{
+                                    if(res.success){
+                                        const { BasicFields } = this.state
+                                        BasicFields.fields[7].data = res.data
+                                        this.setState({ BasicFields })
+                                    }
+                                })
+                            }else{
+                                const { BasicFields } = this.state
+                                BasicFields.fields[7].data = []
+                                this.setState({ BasicFields })
+                            }
+                        }.bind(this)
                     },
                     {
                         object: "obj",
@@ -109,12 +124,12 @@ class InfoModal extends Component {
                         type: "Select",
                     },
                     {
-                        object: "obj",
+                        Placeholder: "Name",
                         fieldCol: 12,
-                        key: "name",
                         size: "small",
-                        // rules:[{ required: true }],
-                        type: "Input",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
                     },
                     {
                         Placeholder: "Value",
@@ -125,12 +140,12 @@ class InfoModal extends Component {
                         // itemStyle:{marginBottom:'10px'},
                     },
                     {
-                        Placeholder: "Type",
+                        object: "obj",
                         fieldCol: 12,
+                        key: "name",
                         size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
+                        // rules:[{ required: true }],
+                        type: "Input",
                     },
                     {
                         object: "obj",
@@ -141,15 +156,13 @@ class InfoModal extends Component {
                         type: "Input",
                     },
                     {
-                        object: "obj",
+                        Placeholder: "Type",
                         fieldCol: 12,
-                        key: "type",
                         size: "small",
-                        // rules:[{ required: true }],
-                        data: [],
-                        type: "Select",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
                     },
-                    
                     {
                         Placeholder: "State",
                         fieldCol: 12,
@@ -159,12 +172,13 @@ class InfoModal extends Component {
                         // itemStyle:{marginBottom:'10px'},
                     },
                     {
-                        Placeholder: "Qualified Ops",
+                        object: "obj",
                         fieldCol: 12,
+                        key: "type",
                         size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
+                        // rules:[{ required: true }],
+                        data: [],
+                        type: "Select",
                     },
                     {
                         object: "obj",
@@ -180,6 +194,7 @@ class InfoModal extends Component {
                         object: "kin",
                         fieldCol: 12,
                         key: "qualifiedOps",
+                        label: "Qualified Ops",
                         size: "small",
                         data: [
                             { label: "True", value: true },
@@ -704,13 +719,14 @@ class InfoModal extends Component {
 
     fetchAll = () =>{
         const { editLead }= this.props;                                             // either call this or call that
-        Promise.all([ getOrganizations(), getStates(), getStandardLevels(), ])
+        Promise.all([ getPanels(), getOrganizations(), getStates(), getStandardLevels()])
         .then(res => {
             console.log(res);
             const { BasicFields, ResourceFields } = this.state;
                 BasicFields.fields[3].data = res[0].success? res[0].data : [];
-                BasicFields.fields[14].data = res[1].success? res[1].data : [];
-                ResourceFields.fields[5].data = res[2].success? res[2].data : [];
+                BasicFields.fields[6].data = res[1].success? res[1].data : [];
+                BasicFields.fields[15].data = res[2].success? res[2].data : [];
+                ResourceFields.fields[5].data = res[3].success? res[3].data : [];
             this.setState({
                 BasicFields,
                 ResourceFields,

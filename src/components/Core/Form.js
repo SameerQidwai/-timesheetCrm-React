@@ -103,7 +103,7 @@ class Forms extends Component {
                                         style={item.itemStyle}
                                         noStyle={item.noStyle}
                                     >
-                                        {this.filedformat( item.type, item.Placeholder, item.data, item.mode, item.rangMin, item.rangMax, item.default, item.showTime, item.shape, item.size, item.fieldStyle, item.key, item.disabled, item.onChange, item.onClick, item.onBlur )}
+                                        {this.filedformat( item.type, item.Placeholder, item.data, item.mode, item.rangMin, item.rangMax, item.default, item.showTime, item.shape, item.size, item.fieldStyle, item.key, item.disabled, item.onChange, item.onClick, item.onBlur, item.onClear )}
                                     </Item>
                                 </Col>
                             ))}
@@ -142,7 +142,7 @@ class Forms extends Component {
         );
     };
 
-    filedformat = ( type, placeholder, data, mode, min, max, defaultValue, showTime, shape, size, style, key, disabled, onChange, onClick, onBlur ) => {
+    filedformat = ( type, placeholder, data, mode, min, max, defaultValue, showTime, shape, size, style, key, disabled, onChange, onClick, onBlur, onClear ) => {
         let item = null;
         switch (type) {
             case "Title":
@@ -211,6 +211,7 @@ class Forms extends Component {
                         size={size}
                         allowClear
                         onChange={onChange}
+                        onClear={onClear}
                         style={style}
                         optionFilterProp="label"
                         filterOption={

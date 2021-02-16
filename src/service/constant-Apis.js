@@ -101,3 +101,24 @@ export const getOrganizations = (id) => {
             };
         });
 };
+
+export const getPanels = () => {
+    return axios
+        .get(`${Api}/panels`)
+        .then((res) => {
+            const { success, data } = res.data;
+            var panels = []
+            data.map((el) => {
+                console.log(el);
+                panels.push({ value: el.id, label: el.label })
+            });
+            if (success) return { success: success, data: panels };
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                success: false,
+                message: err.message,
+            };
+        });
+};
