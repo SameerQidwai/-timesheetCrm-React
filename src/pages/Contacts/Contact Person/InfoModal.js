@@ -156,8 +156,8 @@ class InfoModal extends Component {
                         key: "gender",
                         size: "small",
                         data: [
-                            { label: "Male", value: "M" },
-                            { label: "Female", value: "F" },
+                            { label: "Male", value: "Male" },
+                            { label: "Female", value: "Female" },
                         ],
                         // rules: [ { required: true, message: "Gender is Obviously required", }, ],
                         type: "Radio",

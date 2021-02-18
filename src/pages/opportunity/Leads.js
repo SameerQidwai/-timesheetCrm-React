@@ -4,8 +4,11 @@ import { DownOutlined, SettingOutlined, PlusSquareOutlined, FilterOutlined} from
 import { Link } from 'react-router-dom'
 
 import InfoModal from './infoModal'
-import '../styles/table.css'
 
+import { getList, delList } from "../../service/opportunities";
+
+import '../styles/table.css'
+import moment from "moment";
 const { Title } = Typography
 
 class Leads extends Component {
@@ -15,26 +18,45 @@ class Leads extends Component {
         this.columns = [
             {
                 title: 'Code',
-                dataIndex: 'key',
-                key: 'key',
+                dataIndex: 'id',
+                key: 'id',
                 render:(record) =>(
                     `00${record}`
                 ),
             },
             {
+                title: 'Title',
+                dataIndex: 'title',
+                key: 'title',
+            },
+            {
                 title: 'Organization Name',
-                dataIndex: 'org',
-                key: 'org',
+                dataIndex: 'organization',
+                key: 'organization',
+                render: (record) =>{return record && record.name}
             },
             {
                 title: 'Revenue',
-                dataIndex: 'revenue',
-                key: 'revenue',
+                dataIndex: 'value',
+                key: 'value',
             },
             {
-                title: 'Last Comment',
-                dataIndex: 'l_comment',
-                key: 'l_comment',
+                title: 'Start Date',
+                dataIndex: 'startDate',
+                key: 'startDate',
+                render: (record) =>(moment(record).format('ddd DD MM yyyy'))
+            },
+            {
+                title: 'End Date',
+                dataIndex: 'endDate',
+                key: 'endDtae',
+                render: (record) =>(moment(record).format('ddd DD MM yyyy'))
+            },
+            {
+                title: 'Bid Date',
+                dataIndex: 'bidDate',
+                key: 'bidDate',
+                render: (record) =>(moment(record).format('ddd DD MM yyyy'))
             },
             {
                 title: 'Action',
@@ -44,13 +66,14 @@ class Leads extends Component {
                     <Dropdown overlay={
                         <Menu>
                             <Menu.Item danger>
-                                <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete(record.code)} >
+                                <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete(record.id)} >
                                     Delete
                                 </Popconfirm>
                             </Menu.Item >
                             <Menu.Item 
                                 onClick={()=>this.setState({
-                                    openModal: true
+                                    openModal: true,
+                                    editLead: record.id
                                 })}
                             >Edit</Menu.Item>
                             <Menu.Item >
@@ -79,45 +102,40 @@ class Leads extends Component {
             },
         ];
 
-        this.state={
-
-            data : [
-                {
-                    key:1,
-                    org: 'One_LM',
-                    Revenue:'$3000',
-                    l_comment: 'they are evaluating'
-                },
-                {
-                    key:2,
-                    org: 'lead Carot',
-                    Revenue:'$4000',
-                    l_comment: 'they want demo'
-                },
-                {
-                    key:3,
-                    org: 'Jubliee',
-                    Revenue:'$1000',
-                    l_comment: 'Need to gether req'
-                },
-            ],
+        this.state = {
+            data : [],
             openModal: false,
             editLead:false,
         }
     }
 
-    handleDelete =  (code)=>{
-        const dataSource = [...this.state.data];
-        this.setState({ data: dataSource.filter(item => item.code !== code) });
+    componentDidMount = () =>{
+        this.getList()
     }
 
-    Callback =()=>{ // this will work after I get the Object from the form
-        console.log("callback called in lead");
-        this.setState({
-            openModal: false,
-            editLead: false
+    getList = () =>{
+        getList().then(res=>{
+            console.log(res.data);
+            this.setState({
+                data: res.success ? res.data : [],
+                openModal: false,
+                editLead: false
+            })
         })
     }
+
+    handleDelete = (id) => {
+        delList(id).then((res) => {
+            if (res.success) {
+                this.getList();
+            }
+        });
+    };
+
+    callBack =()=>{ // this will work after I get the Object from the form
+        this.getList()
+    }
+
     closeModal = () =>{
         console.log("Colse called in lead");
         this.setState({
@@ -154,7 +172,12 @@ class Leads extends Component {
                         </Row>
                     </Col>
                     <Col span={24}>
-                        <Table columns={this.columns} dataSource={data} size='small'/>
+                        <Table
+                            rowKey={(data) => data.id} 
+                            columns={this.columns}
+                            dataSource={data}
+                            size='small'
+                        />
                     </Col>
                 </Row>
                 {openModal && (

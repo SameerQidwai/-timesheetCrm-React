@@ -239,8 +239,8 @@ class InfoModal extends Component {
                         key: "gender",
                         size: "small",
                         data: [
-                            { label: "Male", value: "M" },
-                            { label: "Female", value: "F" },
+                            { label: "Male", value: "Male" },
+                            { label: "Female", value: "Female" },
                         ],
                         itemStyle: { marginBottom: 10 },
                         // rules:[{ required: true }],
@@ -655,7 +655,7 @@ class InfoModal extends Component {
                     <Col>
                         <Select
                             value={sOrg}
-                            placeholder="Organizaion"
+                            placeholder="Organization"
                             options={ORGS}
                             showArrow
                             showSearch

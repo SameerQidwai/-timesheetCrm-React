@@ -4,22 +4,30 @@ import { DownOutlined, SettingOutlined, PlusSquareOutlined, FilterOutlined} from
 import { Link } from 'react-router-dom'
 
 import InfoModal from './infoModal'
-import '../styles/table.css'
 
+import { getList, delList } from "../../service/opportunities";
+
+import '../styles/table.css'
+import moment from "moment";
 const { Title } = Typography
 
-class Projects extends Component {
+class Leads extends Component {
     constructor(props) {
     super(props);
         this.leadForm = React.createRef();
         this.columns = [
             {
                 title: 'Code',
-                dataIndex: 'key',
-                key: 'key',
+                dataIndex: 'id',
+                key: 'id',
                 render:(record) =>(
                     `00${record}`
                 ),
+            },
+            {
+                title: 'Title',
+                dataIndex: 'title',
+                key: 'title',
             },
             {
                 title: 'Organization Name',
@@ -28,13 +36,26 @@ class Projects extends Component {
             },
             {
                 title: 'Revenue',
-                dataIndex: 'revenue',
-                key: 'revenue',
+                dataIndex: 'value',
+                key: 'value',
             },
             {
-                title: 'Last Comment',
-                dataIndex: 'l_comment',
-                key: 'l_comment',
+                title: 'Start Date',
+                dataIndex: 'startDate',
+                key: 'startDate',
+                render: (record) =>(moment(record).format('ddd DD MM yyyy'))
+            },
+            {
+                title: 'End Date',
+                dataIndex: 'endDate',
+                key: 'endDtae',
+                render: (record) =>(moment(record).format('ddd DD MM yyyy'))
+            },
+            {
+                title: 'Bid Date',
+                dataIndex: 'bidDate',
+                key: 'bidDate',
+                render: (record) =>(moment(record).format('ddd DD MM yyyy'))
             },
             {
                 title: 'Action',
@@ -44,13 +65,14 @@ class Projects extends Component {
                     <Dropdown overlay={
                         <Menu>
                             <Menu.Item danger>
-                                <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete(record.code)} >
+                                <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete(record.id)} >
                                     Delete
                                 </Popconfirm>
                             </Menu.Item >
                             <Menu.Item 
                                 onClick={()=>this.setState({
-                                    openModal: true
+                                    openModal: true,
+                                    editLead: record.id
                                 })}
                             >Edit</Menu.Item>
                             <Menu.Item >
@@ -58,6 +80,17 @@ class Projects extends Component {
                                     View
                                 {/* </Link> */}
                             </Menu.Item >
+                             <Menu.Item>
+                                <Link
+                                    to={{
+                                        pathname: `/leads/resources/${record.id}`,
+                                    }}
+                                    className="nav-link"
+                                >
+                                    Resources
+                                </Link>
+                            </Menu.Item>
+                            
                         </Menu>
                     }>
                         <Button size='small'>
@@ -68,45 +101,40 @@ class Projects extends Component {
             },
         ];
 
-        this.state={
-
-            data : [
-                {
-                    key:1,
-                    org: 'One_LM',
-                    Revenue:'$3000',
-                    l_comment: 'they are evaluating'
-                },
-                {
-                    key:2,
-                    org: 'lead Carot',
-                    Revenue:'$4000',
-                    l_comment: 'they want demo'
-                },
-                {
-                    key:3,
-                    org: 'Jubliee',
-                    Revenue:'$1000',
-                    l_comment: 'Need to gether req'
-                },
-            ],
+        this.state = {
+            data : [],
             openModal: false,
             editLead:false,
         }
     }
 
-    handleDelete =  (code)=>{
-        const dataSource = [...this.state.data];
-        this.setState({ data: dataSource.filter(item => item.code !== code) });
+    componentDidMount = () =>{
+        this.getList()
     }
 
-    Callback =()=>{ // this will work after I get the Object from the form
-        console.log("callback called in lead");
+    getList = () =>{
+        getList().then(res=>{
+            this.setState({
+                data: res.success ? res.data : []
+            })
+        })
+    }
+
+    handleDelete = (id) => {
+        delList(id).then((res) => {
+            if (res.success) {
+                this.getData();
+            }
+        });
+    };
+
+    callBack =()=>{ // this will work after I get the Object from the form
         this.setState({
             openModal: false,
             editLead: false
         })
     }
+
     closeModal = () =>{
         console.log("Colse called in lead");
         this.setState({
@@ -121,14 +149,14 @@ class Projects extends Component {
             <>
                 <Row justify="space-between">
                     <Col>
-                        <Title level={4}>Projects</Title>
+                        <Title level={4}>Lead</Title>
                     </Col>
-                    <Col style={{textAlign:'end'}} span={2} >
-                        {/* <Row justify="space-between">
-                            <Col> */}
+                    <Col style={{textAlign:'end'}} span={4} >
+                        <Row justify="space-between">
+                            <Col>
                                 <Button type="default"size='small'> <FilterOutlined />Filter</Button>
-                            {/* </Col> */}
-                            {/* <Col>
+                            </Col>
+                            <Col>
                                 <Button 
                                     type="primary" 
                                     size='small'
@@ -138,12 +166,17 @@ class Projects extends Component {
                                             editLead:false
                                         })
                                     }} 
-                                    ><PlusSquareOutlined />Add Project</Button>
-                            </Col> */}
-                        {/* </Row> */}
+                                    ><PlusSquareOutlined />Add Lead</Button>
+                            </Col>
+                        </Row>
                     </Col>
                     <Col span={24}>
-                        <Table columns={this.columns} dataSource={data} size='small'/>
+                        <Table
+                            rowKey={(data) => data.id} 
+                            columns={this.columns}
+                            dataSource={data}
+                            size='small'
+                        />
                     </Col>
                 </Row>
                 {openModal && (
@@ -159,4 +192,4 @@ class Projects extends Component {
     }
 }
 
-export default Projects
+export default Leads

@@ -61,6 +61,29 @@ export const getContactPersons = () =>{
         };
     });
 }
+
+export const getEmployees = () => {
+    return axios
+        .get(`${Api}/employees`)
+        .then((res) => {
+            const { success, data } = res.data;
+            var cps = []
+            console.log(data);
+            data.map((el) => {
+                cps.push({value: el.id, label: el.contactPersonOrganization.contactPerson.firstName +' ' +el.contactPersonOrganization.contactPerson.lastName})
+            });
+            console.log(cps);
+            if (success) return { success: success, data: cps };
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                success: false,
+                message: err.message,
+            };
+        });
+};
+
 export const getOrgPersons = (id) =>{
     return axios
     .get(`${Api}/sub-contractors/get/contact-persons?organizationId=${id}`)
@@ -109,10 +132,29 @@ export const getPanels = () => {
             const { success, data } = res.data;
             var panels = []
             data.map((el) => {
-                console.log(el);
                 panels.push({ value: el.id, label: el.label })
             });
             if (success) return { success: success, data: panels };
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                success: false,
+                message: err.message,
+            };
+        });
+};
+
+export const getPanelSkills = (id) => {
+    return axios
+        .get(`${Api}/panel-skills?panelId=${id}`)
+        .then((res) => {
+            const { success, data } = res.data;
+            var panelskill = []
+            data.map((el) => {
+                panelskill.push({value: el.id, label: el.label,  levels: el.panelSkillStandardLevels.map(lvlEl=>{ return { value:lvlEl.id, label: lvlEl.levelLabel}})})
+            });
+            if (success) return { success: success, data: panelskill };
         })
         .catch((err) => {
             return {

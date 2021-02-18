@@ -4,8 +4,8 @@ import { CloseOutlined, PlusSquareOutlined } from "@ant-design/icons"; //Icons
 import moment from "moment";
 import Form from "../../components/Core/Form";
 
-// import { addList, getOrgRecord, editList } from "../../../service/Organizations";
-import { getOrganizations, getStates, getStandardLevels, getOrgPersons } from "../../service/constant-Apis";
+import { addList, getRecord, editList } from "../../service/opportunities";
+import { getOrganizations, getStates, getOrgPersons, getPanels } from "../../service/constant-Apis";
 
 const { TabPane } = Tabs;
 
@@ -16,14 +16,12 @@ class InfoModal extends Component {
         this.tenderRef = React.createRef();
         this.billingRef = React.createRef();
         this.datesRef = React.createRef();
-        this.resourceRef = React.createRef();
         this.state = {
             editLead: false,
             basicSubmitted: false,
             tenderSubmitted: false,
             datesSubmitted: false,
             billingSubmitted: false,
-            resourceSubmitted: false,
             check: false,
 
             SKILLS: [],
@@ -49,7 +47,7 @@ class InfoModal extends Component {
                         // itemStyle:{marginBottom:'10px'},
                     },
                     {
-                        Placeholder: "Organization",
+                        Placeholder: "Panel",
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -68,20 +66,19 @@ class InfoModal extends Component {
                     {
                         object: "obj",
                         fieldCol: 12,
-                        key: "OrganizationId",
+                        key: "panelId",
                         size: "small",
                         // rules:[{ required: true }],
                         data: [],
                         type: "Select",
-                        onChange: function func(value) {
-                            getOrgPersons(value).then(res=>{
-                                if(res.success){
-                                    const { BasicFields } = this.state
-                                    BasicFields.fields[6].data = res.data
-                                    this.setState({ BasicFields })
-                                }
-                            })
-                        }.bind(this)
+                    },
+                    {
+                        Placeholder: "Organization",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
                     },
                     {
                         Placeholder: "Delegate Contact Person",
@@ -92,12 +89,28 @@ class InfoModal extends Component {
                         // itemStyle:{marginBottom:'10px'},
                     },
                     {
-                        Placeholder: "Name",
+                        object: "obj",
                         fieldCol: 12,
+                        key: "organizationId",
                         size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
+                        // rules:[{ required: true }],
+                        data: [],
+                        type: "Select",
+                        onChange: function func(value) {
+                            if (value){
+                                getOrgPersons(value).then(res=>{
+                                    if(res.success){
+                                        const { BasicFields } = this.state
+                                        BasicFields.fields[7].data = res.data
+                                        this.setState({ BasicFields })
+                                    }
+                                })
+                            }else{
+                                const { BasicFields } = this.state
+                                BasicFields.fields[7].data = []
+                                this.setState({ BasicFields })
+                            }
+                        }.bind(this)
                     },
                     {
                         object: "obj",
@@ -109,12 +122,12 @@ class InfoModal extends Component {
                         type: "Select",
                     },
                     {
-                        object: "obj",
+                        Placeholder: "Name",
                         fieldCol: 12,
-                        key: "name",
                         size: "small",
-                        // rules:[{ required: true }],
-                        type: "Input",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
                     },
                     {
                         Placeholder: "Value",
@@ -125,12 +138,12 @@ class InfoModal extends Component {
                         // itemStyle:{marginBottom:'10px'},
                     },
                     {
-                        Placeholder: "Type",
+                        object: "obj",
                         fieldCol: 12,
+                        key: "title",
                         size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
+                        // rules:[{ required: true }],
+                        type: "Input",
                     },
                     {
                         object: "obj",
@@ -141,15 +154,13 @@ class InfoModal extends Component {
                         type: "Input",
                     },
                     {
-                        object: "obj",
+                        Placeholder: "Type",
                         fieldCol: 12,
-                        key: "type",
                         size: "small",
-                        // rules:[{ required: true }],
-                        data: [],
-                        type: "Select",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
                     },
-                    
                     {
                         Placeholder: "State",
                         fieldCol: 12,
@@ -159,12 +170,14 @@ class InfoModal extends Component {
                         // itemStyle:{marginBottom:'10px'},
                     },
                     {
-                        Placeholder: "Qualified Ops",
+                        object: "obj",
                         fieldCol: 12,
+                        key: "type",
                         size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
+                        // rules:[{ required: true }],
+                        data: [{label: 'MILESTONE BASE', value: 1},
+                            {label: 'TIME BASE', value: 2}],
+                        type: "Select",
                     },
                     {
                         object: "obj",
@@ -177,9 +190,10 @@ class InfoModal extends Component {
                         itemStyle: { marginBottom: "10px" },
                     },    
                     {
-                        object: "kin",
+                        object: "obj",
                         fieldCol: 12,
                         key: "qualifiedOps",
+                        label: "Qualified Ops",
                         size: "small",
                         data: [
                             { label: "True", value: true },
@@ -196,6 +210,9 @@ class InfoModal extends Component {
                         type: "Radio",
                         mode: "button",
                         shape: "solid",
+                        onChange: function name(params, options) {
+                            console.log({params}, {options});
+                        }
                     },       
                                    
                 ],
@@ -230,7 +247,7 @@ class InfoModal extends Component {
                     {
                         object: "obj",
                         fieldCol: 12,
-                        key: "tenderName",
+                        key: "tender",
                         size: "small",
                         // rules:[{ required: true }],
                         type: "Input",
@@ -238,7 +255,7 @@ class InfoModal extends Component {
                     {
                         object: "obj",
                         fieldCol: 12,
-                        key: "tenderContact",
+                        key: "tenderNumber",
                         size: "small",
                         // rules:[{ required: true }],
                         type: "Input",
@@ -291,7 +308,7 @@ class InfoModal extends Component {
                     {
                         object: "obj",
                         fieldCol: 12,
-                        key: "cm%",
+                        key: "cmPercentage",
                         size: "small",
                         shape: '%',
                         // rules:[{ required: true }],
@@ -327,7 +344,7 @@ class InfoModal extends Component {
                     {
                         object: "obj",
                         fieldCol: 12,
-                        key: "go%",
+                        key: "goPercentage",
                         size: "small",
                         shape: '%',
                         // rules:[{ required: true }],
@@ -337,7 +354,7 @@ class InfoModal extends Component {
                     {
                         object: "obj",
                         fieldCol: 12,
-                        key: "get%",
+                        key: "getPercentage",
                         size: "small",
                         shape: '%',
                         // rules:[{ required: true }],
@@ -532,234 +549,22 @@ class InfoModal extends Component {
                 ],
             },
 
-            ResourceFields: {
-                formId: "resource_form",
-                FormCol: 24,
-                FieldSpace: 24,
-                justifyField: "center",
-                FormLayout: "inline",
-                size: "middle",
-                fields: [
-                    
-                    {
-                        Placeholder: "Account Director",
-                        fieldCol: 10,
-                        size: "small",
-                        type: "Text",
-                        mode: 'strong',
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
-                    },
-                    {
-                        Placeholder: "Account Manager",
-                        fieldCol: 10,
-                        size: "small",
-                        type: "Text",
-                        mode: 'strong',
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
-                    },
-                    {
-                        Placeholder: `Add Employee`,
-                        fieldCol: 4,
-                        size: "small",
-                        type: "Button",
-                        mode: 'strong',
-                        labelAlign: "right",
-                        onClick: function func(value, e) {
-                            this.insertSkill()
-                        }.bind(this),
-                        // itemStyle:{marginBottom:'10px'},
-                    },
-                    {
-                        object: "p_obj",
-                        fieldCol: 10,
-                        layout: { wrapperCol: { span: 23 } },
-                        key: 'p_name',
-                        size: "small",
-                        // rules:[{ required: true }],
-                        data: [],
-                        type: "Select",
-                    },
-                    {
-                        object: "p_obj",
-                        fieldCol: 10,
-                        layout: { wrapperCol: { span: 23 } },
-                        key: 'p_name',
-                        size: "small",
-                        // rules:[{ required: true }],
-                        data: [],
-                        type: "Select",
-                    },
-                    {
-                        Placeholder: "Project Manager",
-                        fieldCol: 20,
-                        size: "small",
-                        type: "Text",
-                        mode: 'strong',
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
-                    },
-                    {
-                        Placeholder: "Skill",
-                        fieldCol: 7,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
-                    },
-                    {
-                        Placeholder: "Level",
-                        fieldCol: 7,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
-                    },
-                    {
-                        Placeholder: "Employee",
-                        fieldCol: 8,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
-                    },
-                    {
-                        object: "p_obj",
-                        fieldCol: 7,
-                        layout: { wrapperCol: { span: 23 } },
-                        key: 'pSkill',
-                        size: "small",
-                        // rules:[{ required: true }],
-                        data: this.state? this.state.SKILLS: [],
-                        type: "Select",
-                        onChange: function func(e, value) {
-                           const { ResourceFields } = this.state
-                            ResourceFields.fields.map(el=>{
-                                if (el.key === 'pLevel'){
-                                    el.data = value? value.levels: []
-                                    return el
-                               }else{
-                                   return el
-                               }
-                           })
-                            const {obj} = this.resourceRef.current.refs.resource_form.getFieldsValue() // const
-                            delete obj['pLevel'];
-                            this.resourceRef.current.refs.resource_form.setFieldsValue({ obj, })
-                           this.setState({ResourceFields})
-                        }.bind(this),
-                    },
-                    {
-                        object: "p_obj",
-                        fieldCol: 7,
-                        layout: { wrapperCol: { span: 23 } },
-                        key: 'pLevel',
-                        size: "small",
-                        // rules:[{ required: true }],
-                        data: [],
-                        type: "Select",
-                        // onChange: function func(e, value) {
-                        //    const { ResourceFields } = this.state
-                        //     ResourceFields.fields.map(el=>{
-                        //         if (el.key === 'p_name'){
-                        //             el.data = value? value.levels: []
-                        //             return el
-                        //        }else{
-                        //            return el
-                        //        }
-                        //    })
-                        //     const {obj} = this.resourceRef.current.refs.resource_form.getFieldsValue() // const
-                        //     delete obj['p_name'];
-                        //     this.resourceRef.current.refs.resource_form.setFieldsValue({ obj, })
-                        //    this.setState({ResourceFields})
-                        // }.bind(this),
-                    },
-                    {
-                        object: "p_obj",
-                        fieldCol: 8,
-                        layout: { wrapperCol: { span: 23 } },
-                        key: 'p_name',
-                        size: "small",
-                        // rules:[{ required: true }],
-                        data: [],
-                        type: "Select",
-                    },
-                    // {
-                    //     Placeholder: <CloseOutlined />,
-                    //     fieldCol: 2,
-                    //     size: "small",
-                    //     type: "Text",
-                    //     labelAlign: "right",
-                    //     style: { textAlign: "right", },
-                    //     fieldStyle: { cursor: "pointer", },
-                    //     onClick: function func(value, e) {
-                    //         const p_obj= {pSkill: "", pLevel: "", p_name:""}
-                    //         this.resourceRef.current.refs.resource_form.setFieldsValue({p_obj})
-                    //     }.bind(this),
-                        
-                    //     // itemStyle:{marginBottom:'10px'},
-                    // },
-                    {
-                        Placeholder: "Employee",
-                        fieldCol: 24,
-                        size: "small",
-                        type: "Text",
-                        mode: 'strong',
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
-                    },
-                    {
-                        Placeholder: "Skill",
-                        fieldCol: 7,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
-                    },
-                    {
-                        Placeholder: "Level",
-                        fieldCol: 7,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
-                    },
-                    {
-                        Placeholder: "Employee",
-                        fieldCol: 8,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
-                    },
-                ],
-            },
         };
     }
     componentDidMount = () =>{
-        const { editLead } = this.props
         this.fetchAll()
     }
 
     fetchAll = () =>{
         const { editLead }= this.props;                                             // either call this or call that
-        Promise.all([ getOrganizations(), getStates(), getStandardLevels(), ])
+        Promise.all([ getPanels(), getOrganizations(), getStates(), editLead && this.getRecord(editLead)])
         .then(res => {
-            console.log(res);
-            const { BasicFields, ResourceFields } = this.state;
+            const { BasicFields } = this.state;
                 BasicFields.fields[3].data = res[0].success? res[0].data : [];
-                BasicFields.fields[14].data = res[1].success? res[1].data : [];
-                ResourceFields.fields[5].data = res[2].success? res[2].data : [];
+                BasicFields.fields[6].data = res[1].success? res[1].data : [];
+                BasicFields.fields[15].data = res[2].success? res[2].data : [];
             this.setState({
                 BasicFields,
-                ResourceFields,
-                SKILLS: res[2].success? res[2].data : []
-            },()=>{
-                if (editLead){
-                    this.getRecord(editLead)
-                }else{
-                    this.insertSkill(0)
-                }
             })
         })
         .catch(e => {
@@ -767,122 +572,12 @@ class InfoModal extends Component {
         })
     }
 
-    insertSkill = () => {
-        const { ResourceFields } = this.state;
-        let obj = ResourceFields.fields[ResourceFields.fields.length - 1]; // get the inster number for keys
-        const item_no = (parseInt(obj.key) || obj.key===0 )? parseInt(obj.key) + 1 : 0;
-        ResourceFields.fields = ResourceFields.fields.concat( ...this.newResourceField(item_no) );
-        this.setState({ ResourceFields, });
-    };
-
-    newResourceField = (item_no, level_data) => {
-        //inserting new fields in modals
-        const {SKILLS} = this.state
-        const splice_key = [`skill${item_no}`, `level${item_no}`, `name${item_no}`, item_no];
-        return [
-            {
-                object: "obj",
-                fieldCol: 7,
-                layout: { wrapperCol: { span: 23 } },
-                key: splice_key[0],
-                size: "small",
-                // rules:[{ required: true }],
-                data: SKILLS? SKILLS:[],
-                type: "Select",
-                onChange: function func(e, value) {
-                   const { ResourceFields } = this.state
-                    ResourceFields.fields.map(el=>{
-                        if (el.key ===splice_key[1]){
-                            el.data = value? value.levels: []
-                            return el
-                       }else{
-                           return el
-                       }
-                   })
-                    const { obj } = this.resourceRef.current.refs.resource_form.getFieldsValue() // const
-                    delete obj[splice_key[1]];
-                    this.resourceRef.current.refs.resource_form.setFieldsValue({ obj, })
-                   this.setState({ResourceFields})
-                }.bind(this),
-            },
-            {
-                object: "obj",
-                fieldCol: 7,
-                layout: { wrapperCol: { span: 20 } },
-                key: splice_key[1],
-                size: "small",
-                // rules:[{ required: true }],
-                data: level_data? level_data: [],
-                type: "Select",
-                labelAlign: "left",
-                itemStyle: { marginBottom: "5px" },
-                // rules: [
-                //     {
-                //         required: true,
-                //         message: "obj is required",
-                //     },
-                // ],
-            },
-            {
-                object: "obj",
-                fieldCol: 8,
-                layout: { wrapperCol: { span: 20 } },
-                key: splice_key[2],
-                size: "small",
-                // rules:[{ required: true }],
-                data: [],
-                type: "Select",
-                labelAlign: "left",
-                itemStyle: { marginBottom: "5px" },
-                // rules: [
-                //     {
-                //         required: true,
-                //         message: "obj is required",
-                //     },
-                // ],
-            },
-            {
-                fieldCol: 2,
-                size: "small",
-                Placeholder: <CloseOutlined />,
-                key: item_no,
-                // rules:[{ required: true }],
-                type: "Text",
-                style: {
-                    textAlign: "right",
-                },
-                fieldStyle: {
-                    cursor: "pointer",
-                },
-                onClick: function func(value, e) {
-                    const { ResourceFields } = this.state;
-                    ResourceFields.fields = ResourceFields.fields.filter((obj) => {
-                        return (
-                            obj.key !== splice_key[0] &&
-                            obj.key !== splice_key[1] &&
-                            obj.key !== splice_key[2] &&
-                            obj.key !== splice_key[3]
-                        );
-                    });
-                    const {obj} = this.resourceRef.current.refs.resource_form.getFieldsValue() // const
-                    delete obj[splice_key[0]];
-                    delete obj[splice_key[1]];
-                    delete obj[splice_key[2]];
-                    delete obj[splice_key[3]];
-                    this.resourceRef.current.refs.resource_form.setFieldsValue({ obj, })
-                    this.setState({ ResourceFields, });
-                }.bind(this),
-            },
-        ];
-    };
-
     submit = () => {
         //submit button click
         this.basicRef.current.refs.basic_form.submit();
         this.tenderRef.current.refs.tender_form.submit();
         this.billingRef.current && this.billingRef.current.refs.billing_form.submit();
         this.datesRef.current && this.datesRef.current.refs.dates_form.submit();
-        this.resourceRef.current && this.resourceRef.current.refs.dates_form.submit();
     };
 
     BasicCall = (vake) => { 
@@ -902,13 +597,12 @@ class InfoModal extends Component {
                     this.state.basicSubmitted &&
                     this.state.tenderSubmitted &&
                     this.state.billingSubmitted &&
-                    this.state.resourceSubmitted &&
                     this.state.datesSubmitted
                 ) {
                     //check if both form is submittef
                     if (!this.props.editLead) {
                         
-                        this.addOrganization(this.state.mergeObj); //add skill
+                        this.addOpportunity(this.state.mergeObj); //add skill
                     } else {
                         
                         this.editRecord(this.state.mergeObj); //edit skill
@@ -935,13 +629,12 @@ class InfoModal extends Component {
                     this.state.basicSubmitted &&
                     this.state.tenderSubmitted &&
                     this.state.billingSubmitted &&
-                    this.state.resourceSubmitted &&
                     this.state.datesSubmitted
                 ) {
                     //check if both form is submittef
                     if (!this.props.editLead) {
                         
-                        this.addOrganization(this.state.mergeObj); //add skill
+                        this.addOpportunity(this.state.mergeObj); //add skill
                     } else {
                         
                         this.editRecord(this.state.mergeObj); //edit skill
@@ -968,13 +661,12 @@ class InfoModal extends Component {
                     this.state.basicSubmitted &&
                     this.state.tenderSubmitted &&
                     this.state.billingSubmitted &&
-                    this.state.resourceSubmitted &&
                     this.state.datesSubmitted
                 ) {
                     //check if both form is submittef
                     if (!this.props.editLead) {
                         
-                        this.addOrganization(this.state.mergeObj); //add skill
+                        this.addOpportunity(this.state.mergeObj); //add skill
                     } else {
                         
                         this.editRecord(this.state.mergeObj); //edit skill
@@ -997,107 +689,66 @@ class InfoModal extends Component {
                 datesSubmitted: true, // level form submitted
             },
             () => {
-                if (
-                    this.state.basicSubmitted &&
-                    this.state.tenderSubmitted &&
-                    this.state.billingSubmitted &&
-                    this.state.resourceSubmitted &&
-                    this.state.datesSubmitted
-                ) {
+                const { basicSubmitted, tenderSubmitted, billingSubmitted, datesSubmitted, mergeObj } = this.state
+                if ( basicSubmitted && tenderSubmitted && billingSubmitted && datesSubmitted ) {
                     //check if both form is submittef
                     if (!this.props.editLead) {
                         
-                        this.addOrganization(this.state.mergeObj); //add skill
+                        this.addOpportunity(mergeObj); //add skill
                     } else {
                         
-                        this.editRecord(this.state.mergeObj); //edit skill
+                        this.editRecord(mergeObj); //edit skill
                     }
                 }
             }
         );
     };
 
-    ResourceCall = (vake) => {
-        // this will work after I get the Object from the form
-        ;
-        vake = vake.obj
-        this.setState(
-            {
-                mergeObj: {
-                    ...this.state.mergeObj,
-                    ...vake,
-                },
-                resourceSubmitted: true, // level form submitted
-            },
-            () => {
-                if (
-                    this.state.basicSubmitted &&
-                    this.state.tenderSubmitted &&
-                    this.state.billingSubmitted &&
-                    this.state.resourceSubmitted &&
-                    this.state.datesSubmitted
-                ) {
-                    //check if both form is submittef
-                    if (!this.props.editLead) {
-                        
-                        this.addOrganization(this.state.mergeObj); //add skill
-                    } else {
-                        
-                        this.editRecord(this.state.mergeObj); //edit skill
-                    }
-                }
-            }
-        );
-    };
-
-    addOrganization = (value) => {
+    addOpportunity = (value) => {
         const { callBack } = this.props;
-        // addList(value).then((res) => {
-        //     if(res.success){
-        //         callBack()
-        //     }
-        // });
+        console.log(value);
+        addList(value).then((res) => {
+            if(res.success){
+                callBack()
+            }else{
+                 this.setState({basicSubmitted: false, tenderSubmitted: false, billingSubmitted: false, datesSubmitted: false})
+            }
+        });
     };
 
     getRecord = (id) => {
-        // const { editLead } = this.props;
-        // getOrgRecord(id).then((res) => {
-        //     if (res.success){
-                const vake = {}
-                ;
-                let basic = { }
-                let billing = { }
-                let dates = { }
-                let resource = { }
-
+        getRecord(id).then((res) => {
+            if (res.success){
+                const {basic, tender, billing, dates } = res
                 this.basicRef.current.refs.basic_form.setFieldsValue({ obj: basic, });
-                this.tenderRef.current.refs.tender_form.setFieldsValue({ obj: basic, });
+                this.tenderRef.current.refs.tender_form.setFieldsValue({ obj: tender, });
                 this.billingRef.current.refs.billing_form.setFieldsValue({ obj: billing, });
                 this.datesRef.current.refs.dates_form.setFieldsValue({ obj: dates, });
-                this.resourceRef.current.refs.resource_form.setFieldsValue({ obj: resource, });
-        //     }
-        // })
+            }
+        })
 
     };
 
-    editRecord = (value) => {
+    editRecord = (data) => {
         const { editLead, callBack } = this.props;
-        value.id = editLead
-        // editList(value).then((res) => {
-        //     console.log(res);
-        //     if(res.success){
-                console.log('hereh');
+        console.log(this.props);
+        data.id = editLead
+        editList(data).then((res) => {
+            console.log(res);
+            if(res.success){
                 callBack()
-        //     }
-        // });
+            }else{
+                this.setState({basicSubmitted: false, tenderSubmitted: false, billingSubmitted: false, datesSubmitted: false})
+            }
+        });
     };
 
     render() {
         const { editLead, visible, close } = this.props;
-        const { BasicFields, tenderFields, DatesFields, BillingFields, ResourceFields } = this.state
+        const { BasicFields, tenderFields, DatesFields, BillingFields } = this.state
         return (
             <Modal
-                title={editLead? "Edit Project" : "Add New opportunity"}
+                title={editLead? "Edit opportunity" : "Add New opportunity"}
                 centered
                 visible={visible}
                 onOk={() => {
@@ -1135,15 +786,7 @@ class InfoModal extends Component {
                             Callback={this.BillingCall}
                             FormFields={BillingFields}
                         />
-                    </TabPane>
-                    {/* <TabPane tab="Resource Info" key="resource" forceRender>
-                        <Form
-                            ref={this.resourceRef}
-                            Callback={this.ResourceCall}
-                            FormFields={ResourceFields}
-                        />
-                    </TabPane> */}
-                    
+                    </TabPane>                    
                 </Tabs>
             </Modal>
         );

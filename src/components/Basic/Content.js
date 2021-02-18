@@ -23,7 +23,7 @@ import TimeOff from "../../pages/Time/TimeOff";
 import Travels from "../../pages/Travel/Travels";
 
 import Leads from "../../pages/opportunity/Leads";
-import Resources from "../Core/Resources/Resources";
+import Resources from "../../pages/opportunity/Resources";
 import Projects from "../../pages/Project/Projects";
 import Calender from "../Calender/Calender";
 
