@@ -45,7 +45,7 @@ class Clients extends Component {
                 key: "email",
             },
             {
-                title: "Organization",
+                title: "Organisation",
                 dataIndex: "org",
                 key: "org",
             },

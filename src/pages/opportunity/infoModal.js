@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import { Modal, Tabs } from "antd";
+import { Button, Modal, Tabs } from "antd";
 import { CloseOutlined, PlusSquareOutlined } from "@ant-design/icons"; //Icons
 import moment from "moment";
 import Form from "../../components/Core/Form";
 
 import { addList, getRecord, editList } from "../../service/opportunities";
-import { getOrganizations, getStates, getOrgPersons, getPanels } from "../../service/constant-Apis";
+import { getOrganisations, getStates, getOrgPersons, getPanels } from "../../service/constant-Apis";
 
 const { TabPane } = Tabs;
 
@@ -73,7 +73,7 @@ class InfoModal extends Component {
                         type: "Select",
                     },
                     {
-                        Placeholder: "Organization",
+                        Placeholder: "Organisation",
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -91,7 +91,7 @@ class InfoModal extends Component {
                     {
                         object: "obj",
                         fieldCol: 12,
-                        key: "organizationId",
+                        key: "organisationId",
                         size: "small",
                         // rules:[{ required: true }],
                         data: [],
@@ -557,7 +557,7 @@ class InfoModal extends Component {
 
     fetchAll = () =>{
         const { editLead }= this.props;                                             // either call this or call that
-        Promise.all([ getPanels(), getOrganizations(), getStates(), editLead && this.getRecord(editLead)])
+        Promise.all([ getPanels(), getOrganisations(), getStates(), editLead && this.getRecord(editLead)])
         .then(res => {
             const { BasicFields } = this.state;
                 BasicFields.fields[3].data = res[0].success? res[0].data : [];
@@ -721,7 +721,7 @@ class InfoModal extends Component {
         return getRecord(id).then((res) => {
             if (res.success){
                 const {basic, tender, billing, dates } = res
-                const contactPersons = getOrgPersons(basic.organizationId)
+                const contactPersons = getOrgPersons(basic.organisationId)
                 this.basicRef.current.refs.basic_form.setFieldsValue({ obj: basic, });
                 this.tenderRef.current.refs.tender_form.setFieldsValue({ obj: tender, });
                 this.billingRef.current.refs.billing_form.setFieldsValue({ obj: billing, });
@@ -760,6 +760,11 @@ class InfoModal extends Component {
                 okText={"Save"}
                 onCancel={close}
                 width={750}
+                // footer={[
+                //         <Button key="1" style={{float:'left'}} type="primary"> Add To Project</Button>,
+                //         <Button key="2" onClick={close}>Cancel</Button>,
+                //         <Button key="3" type="primary" onClick={() => { this.submit(); }}> Save </Button>
+                //   ]}
             >
                 <Tabs type="card">
                     <TabPane tab="Project Info" key="basic" forceRender>

@@ -12,7 +12,7 @@ import TimeOffs from "../TimeOffs";
 import TimeOffsPolicy from "../TimeOffsPolicy";
 import Roles from "../../Role & Permission/Roles";
 import Panels from "../Panels/Panels";
-import PanelInfo from "../Panels/PanelInfo";
+import PanelSkills from "../Panels/PanelSkills";
 import Levels from "../skill & level/Levels.js";
 import Skills from "../skill & level/Skills.js";
 
@@ -53,8 +53,8 @@ const pageLinks = [
         link: "/admin/panels",
     },
     {
-        component: PanelInfo,
-        link: "/admin/panels/info/:id",
+        component: PanelSkills,
+        link: "/admin/panels/skills/:id",
     },
     {
         component: check,
@@ -81,13 +81,12 @@ class AdminContent extends Component {
     };
     getbreadcrums = () => {
         let path = this.props.location;
+        let location = ''
         path = path.split("/");
         return path.map((item, i) =>
-            item !== "" ? (
+            item !== ""  && isNaN(item) ? (
                 <Breadcrumb.Item key={i}>
-                    {/* <Link to={item} className="nav-link"> */}
-                    {item}
-                    {/* </Link> */}
+                    { item }
                 </Breadcrumb.Item>
             ) : null
         );

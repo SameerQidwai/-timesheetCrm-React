@@ -75,7 +75,7 @@ const listData = [
 
 class AdminMenus extends Component {
     componentDidMount = () => {
-        console.log(this.props.location.key);
+        // console.log(this.props.location.key);
     };
     MenuRender = () => {
         return listData.map((item, i) =>

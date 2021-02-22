@@ -3,7 +3,7 @@ import { Table, Menu, Dropdown, Button, Popconfirm, Row, Col,Typography, Modal }
 import { DownOutlined, SettingOutlined, PlusSquareOutlined, FilterOutlined} from '@ant-design/icons'; //Icons
 import { Link } from 'react-router-dom'
 
-import InfoModal from './infoModal'
+import InfoModal from './InfoModal'
 
 import { getList, delList } from "../../service/opportunities";
 
@@ -11,10 +11,10 @@ import '../styles/table.css'
 import moment from "moment";
 const { Title } = Typography
 
-class Leads extends Component {
+class Projects extends Component {
     constructor(props) {
     super(props);
-        this.leadForm = React.createRef();
+        this.proForm = React.createRef();
         this.columns = [
             {
                 title: 'Code',
@@ -30,9 +30,10 @@ class Leads extends Component {
                 key: 'title',
             },
             {
-                title: 'Organization Name',
-                dataIndex: 'org',
-                key: 'org',
+                title: 'Organisation Name',
+                dataIndex: 'organisation',
+                key: 'organisation',
+                render: (record) =>{return record && record.name}
             },
             {
                 title: 'Revenue',
@@ -52,12 +53,6 @@ class Leads extends Component {
                 render: (record) =>(moment(record).format('ddd DD MM yyyy'))
             },
             {
-                title: 'Bid Date',
-                dataIndex: 'bidDate',
-                key: 'bidDate',
-                render: (record) =>(moment(record).format('ddd DD MM yyyy'))
-            },
-            {
                 title: 'Action',
                 key: 'action',
                 align: 'right',
@@ -72,7 +67,7 @@ class Leads extends Component {
                             <Menu.Item 
                                 onClick={()=>this.setState({
                                     openModal: true,
-                                    editLead: record.id
+                                    editPro: record.id
                                 })}
                             >Edit</Menu.Item>
                             <Menu.Item >
@@ -83,7 +78,7 @@ class Leads extends Component {
                              <Menu.Item>
                                 <Link
                                     to={{
-                                        pathname: `/leads/resources/${record.id}`,
+                                        pathname: `/projects/resources/${record.id}`,
                                     }}
                                     className="nav-link"
                                 >
@@ -102,14 +97,17 @@ class Leads extends Component {
         ];
 
         this.state = {
-            data : [],
+            data : [
+                {title: 'Service', organisation: {name: 'PSO'}, value: '1000.00', startDate: '12 10 2020', endDate: '12 4 2021'},
+                {title: 'Web Application', organisation: {name: 'Technologics'}, value: '200000.00', startDate: '12 10 2020', endDate: '12 4 2021'},
+            ],
             openModal: false,
-            editLead:false,
+            editPro:false,
         }
     }
 
     componentDidMount = () =>{
-        this.getList()
+        // this.getList()
     }
 
     getList = () =>{
@@ -131,25 +129,24 @@ class Leads extends Component {
     callBack =()=>{ // this will work after I get the Object from the form
         this.setState({
             openModal: false,
-            editLead: false
+            editPro: false
         })
     }
 
     closeModal = () =>{
-        console.log("Colse called in lead");
         this.setState({
             openModal: false,
-            editLead: false
+            editPro: false
         })
     }
 
     render(){
-        const { data, openModal, editLead } = this.state
+        const { data, openModal, editPro } = this.state
         return(
             <>
                 <Row justify="space-between">
                     <Col>
-                        <Title level={4}>Lead</Title>
+                        <Title level={4}>Project</Title>
                     </Col>
                     <Col style={{textAlign:'end'}} span={4} >
                         <Row justify="space-between">
@@ -163,10 +160,10 @@ class Leads extends Component {
                                     onClick={()=>{
                                         this.setState({
                                             openModal: true,
-                                            editLead:false
+                                            editPro:false
                                         })
                                     }} 
-                                    ><PlusSquareOutlined />Add Lead</Button>
+                                    ><PlusSquareOutlined />Add Project</Button>
                             </Col>
                         </Row>
                     </Col>
@@ -182,7 +179,7 @@ class Leads extends Component {
                 {openModal && (
                     <InfoModal
                         visible={openModal}
-                        editLead={editLead}
+                        editPro={editPro}
                         close={this.closeModal}
                         callBack={this.callBack}
                     />
@@ -192,4 +189,4 @@ class Leads extends Component {
     }
 }
 
-export default Leads
+export default Projects

@@ -19,16 +19,16 @@ class Employees extends Component {
         this.columns = [
             {
                 title: "Code",
-                dataIndex: "contactPersonOrganization",
-                key: "contactPersonOrganization",
+                dataIndex: "contactPersonOrganisation",
+                key: "contactPersonOrganisation",
                 render: (record) => {
                     return `Emp-00${record.contactPerson.id}`
                 },
             },
             {
                 title: "First Name",
-                dataIndex: "contactPersonOrganization",
-                key: "contactPersonOrganization",
+                dataIndex: "contactPersonOrganisation",
+                key: "contactPersonOrganisation",
                 render: (record) =>{
                     console.log(record.contactPerson.firstName)
                     return record.contactPerson.firstName
@@ -36,8 +36,8 @@ class Employees extends Component {
             },
             {
                 title: "Last Name",
-                dataIndex: "contactPersonOrganization",
-                key: "contactPersonOrganization",
+                dataIndex: "contactPersonOrganisation",
+                key: "contactPersonOrganisation",
                 render: (record) =>{
                     console.log(record.contactPerson.lastName)
                     return record.contactPerson.lastName
@@ -45,8 +45,8 @@ class Employees extends Component {
             },
             {
                 title: "Phone",
-                dataIndex: "contactPersonOrganization",
-                key: "contactPersonOrganization",
+                dataIndex: "contactPersonOrganisation",
+                key: "contactPersonOrganisation",
                 render: (record) =>{
                     console.log(record.contactPerson.phoneNumber)
                     return record.contactPerson.phoneNumber
@@ -54,8 +54,8 @@ class Employees extends Component {
             },
             {
                 title: "Email",
-                dataIndex: "contactPersonOrganization",
-                key: "contactPersonOrganization",
+                dataIndex: "contactPersonOrganisation",
+                key: "contactPersonOrganisation",
                 render: (record) =>{
                     console.log(record.contactPerson.email)
                     return record.contactPerson.email

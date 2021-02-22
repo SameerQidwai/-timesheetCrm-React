@@ -43,9 +43,9 @@ class Contact extends Component {
                 key: "phoneNumber",
             },
             // {
-            //     title: "Organization",
+            //     title: "Organisation",
             //     render: (record) => {
-            //         const value = record.contactPersonOrganizations
+            //         const value = record.contactPersonOrganisations
             //         console.log(value[value.length-1])
             //     },
             // },

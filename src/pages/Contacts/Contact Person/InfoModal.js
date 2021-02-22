@@ -4,7 +4,7 @@ import { UploadOutlined, PlusSquareFilled, CloseOutlined, } from "@ant-design/ic
 
 import Form from "../../../components/Core/Form";
 import { addList, getContactRecord, editList } from "../../../service/conatct-person";
-import { getStates, getStandardLevels, getOrganizations } from "../../../service/constant-Apis";
+import { getStates, getStandardLevels, getOrganisations } from "../../../service/constant-Apis";
 
 import moment from "moment";
 
@@ -302,7 +302,7 @@ class InfoModal extends Component {
     };
     fetchAll = () =>{
         const {editCP}= this.props;
-        Promise.all([ getStates(), getStandardLevels(), getOrganizations() ])
+        Promise.all([ getStates(), getStandardLevels(), getOrganisations() ])
         .then(res => {
                 const { BasicFields } = this.state;
                 BasicFields.fields[10].data = res[0].data;
@@ -456,7 +456,7 @@ class InfoModal extends Component {
 
     newAssociateField = (item_no) =>{
         const { orgs_data } = this.state
-        const splice_key = [`designation${item_no}`, `organizationId${item_no}`,`startDate${item_no}`,`endDate${item_no}`, item_no];
+        const splice_key = [`designation${item_no}`, `organisationId${item_no}`,`startDate${item_no}`,`endDate${item_no}`, item_no];
         return [
             {
                 object: "asso",
@@ -574,7 +574,7 @@ class InfoModal extends Component {
             for (let i = 0; i < result; i++) {
                 vars.push({
                     designation: asso[`designation${i}`],
-                    organizationId: asso[`organizationId${i}`],
+                    organisationId: asso[`organisationId${i}`],
                     startDate: asso[`startDate${i}`],
                     endDate: asso[`endDate${i}`],
                 });
@@ -582,7 +582,7 @@ class InfoModal extends Component {
         }
         this.setState(
             {
-                mergeObj: { ...this.state.mergeObj, contactPersonOrganizations: vars, },
+                mergeObj: { ...this.state.mergeObj, contactPersonOrganisations: vars, },
                 associateSubmitted: true, // level form submitted
             },
             () => {
@@ -657,7 +657,7 @@ class InfoModal extends Component {
                 let skill = {};
                 let asso = {};
                 const skillArray = data.standardSkillStandardLevels;
-                const assoArray = data.contactPersonOrganizations
+                const assoArray = data.contactPersonOrganisations
                 let result = skillArray.length < assoArray.length? assoArray.length :skillArray.length;
                 for (let i = 0; i < result; i++) {
                     let skillEl = skillArray[i];
@@ -676,7 +676,7 @@ class InfoModal extends Component {
                     if(assoEl){
                         associateFields.fields = associateFields.fields.concat( this.newAssociateField(i) );
                         asso[`designation${i}`] = assoEl.designation
-                        asso[`organizationId${i}`] = assoEl.organizationId
+                        asso[`organisationId${i}`] = assoEl.organisationId
                         asso[`startDate${i}`] = assoEl.startDate && moment(assoEl.startDate)
                         asso[`endDate${i}`] = assoEl.endDate && moment (assoEl.endDate)
                     }
@@ -768,7 +768,7 @@ class InfoModal extends Component {
                             <Col span="24">
                                 <Row>
                                     <Col span="6">Designation</Col>
-                                    <Col span="6">Organization</Col>
+                                    <Col span="6">Organisation</Col>
                                     <Col span="5">Start Date</Col>
                                     <Col span="5">End Date</Col>
                                 </Row>

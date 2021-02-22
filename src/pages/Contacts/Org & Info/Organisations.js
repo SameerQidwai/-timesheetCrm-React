@@ -4,13 +4,13 @@ import { PlusSquareOutlined, SettingOutlined, FilterOutlined, DownOutlined, } fr
 import { Link } from "react-router-dom";
 
 import InfoModal from "./InfoModal";
-import { getList, delOrg } from "../../../service/Organizations";
+import { getList, delOrg } from "../../../service/Organisations";
 
 import "../../styles/table.css";
 
 const { Title } = Typography;
 
-class Organizations extends Component {
+class Organisations extends Component {
     constructor(props) {
         super(props);
         this.columns = [
@@ -26,16 +26,16 @@ class Organizations extends Component {
                 key: "name",
             },
             {
-                title: "Parent Organization",
-                dataIndex: "parentOrganization",
-                key: "parentOrganization",
+                title: "Parent Organisation",
+                dataIndex: "parentOrganisation",
+                key: "parentOrganisation",
                 render: (record) => { if (record) {return record.name} }
             },
             {
                 title: "Action",
                 key: "action",
                 align: "right",
-                render: (record) => (
+                render: (record) => ( 
                     <Dropdown
                         overlay={
                             <Menu>
@@ -50,7 +50,7 @@ class Organizations extends Component {
                                 >Edit </Menu.Item>
                                 <Menu.Item>
                                     <Link
-                                        to={{ pathname: `/organizations/info/${record.id}`, }}
+                                        to={{ pathname: `/organisations/info/${record.id}`, }}
                                         className="nav-link"
                                     >View </Link>
                                 </Menu.Item>
@@ -113,7 +113,7 @@ class Organizations extends Component {
             <>
                 <Row justify="space-between">
                     <Col>
-                        <Title level={4}>Organizations</Title>
+                        <Title level={4}>Organisations</Title>
                     </Col>
                     <Col style={{ textAlign: "end" }} span={4}>
                         <Row justify="space-between">
@@ -130,7 +130,7 @@ class Organizations extends Component {
                                     size="small"
                                 >
                                     <PlusSquareOutlined />
-                                    Organizations
+                                    Organisations
                                 </Button>
                             </Col>
                         </Row>
@@ -157,4 +157,4 @@ class Organizations extends Component {
     }
 }
 
-export default Organizations;
+export default Organisations;

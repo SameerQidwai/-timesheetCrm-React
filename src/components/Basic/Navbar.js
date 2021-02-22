@@ -13,7 +13,7 @@ const NavItem = [
     {
         text: "Contacts",
         items: [
-            { text: "Organizations", link: "/organizations" },
+            { text: "Organisations", link: "/organisations" },
             { text: "Contact", link: "/contact" },
         ],
     },

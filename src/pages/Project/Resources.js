@@ -3,7 +3,7 @@ import { Row, Col, Menu, Button, Dropdown, Descriptions, Table, Popconfirm } fro
 import { SettingOutlined, DownOutlined } from "@ant-design/icons"; //Icons
 import { Link } from "react-router-dom"; 
 
-import InfoModal from "./resModal";
+import InfoModal from "./ResModal";
 import { getRecord, getResources, delResource } from "../../service/opportunities";
 
 import moment from "moment"
@@ -11,8 +11,9 @@ import moment from "moment"
 const { Item } = Descriptions;
 
 class OrgInfo extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
+        const { id } = props.match.params
         this.columns = [
             {
                 title: "Skill",
@@ -79,7 +80,14 @@ class OrgInfo extends Component {
                                     Edit
                                 </Menu.Item>
                                 <Menu.Item >
+                                <Link
+                                    to={{
+                                        pathname: `/projects/${id}/resources/rates/${record.id}`,
+                                    }}
+                                    className="nav-link"
+                                >
                                     History
+                                </Link>
                                 </Menu.Item>
                             </Menu>
                         }
@@ -95,15 +103,19 @@ class OrgInfo extends Component {
         this.state = {
             infoModal: false,
             editRex: false,
-            leadId: false,
-            data: [],
-            desc: {},
+            ProId: false,
+            data: [
+                {panelSkillId: 'Developer', panelSkillStandardLevelId: 'Senior', userId: 'Faizan', billableHours: '8', buyingRate: '20', sellingRate: '23', startDate: '12 10 2020', endDate: '12 4 2021'},
+                {panelSkillId: 'Designer', panelSkillStandardLevelId: 'Senior', userId: 'Adam', billableHours: 8, buyingRate: 10, sellingRate: 15, startDate: '12 10 2020', endDate: '12 4 2021'},
+            ],
+            desc: {title: 'Service', organisation: {name: 'PSO'}, value: '1000.00', startDate: '12 10 2020', endDate: '12 4 2021'},
         };
     }
 
     componentDidMount = ()=>{
         const { id } = this.props.match.params
-        this.fetchAll(id)
+        // console.log(this.props.match.params);
+        // this.fetchAll(id)
     }
 
     fetchAll = (id) =>{
@@ -112,7 +124,7 @@ class OrgInfo extends Component {
             this.setState({
                 desc: res[0].success? res[0].data : {},
                 editRex: false,
-                leadId: id,
+                ProId: id,
                 data: res[1].success? res[1].data : [],
             })
         })
@@ -146,12 +158,12 @@ class OrgInfo extends Component {
     };
 
     callBack = () => {
-        const { lead } = this.state
-        this.getResources(lead)
+        const { ProId } = this.state
+        this.getResources(ProId)
     };
 
     render() {
-        const { desc, data, infoModal, editRex, leadId } = this.state;
+        const { desc, data, infoModal, editRex, ProId } = this.state;
         return (
             <>
                 <Descriptions
@@ -161,16 +173,16 @@ class OrgInfo extends Component {
                     layout="horizontal"
                     // extra={<Button type="primary">Edit</Button>}
                 >
-                    <Item label="First Name">{desc.title}</Item>
-                    <Item label="Last Name">{desc.value}</Item>
-                    <Item label="Phone">{desc.startDate ? moment(desc.startDate).format('ddd DD MM YYYY'): null} </Item>
-                    <Item label="Email">{desc.endDate ? moment(desc.endDate).format('ddd DD MM YYYY'): null}</Item>
-                    <Item label="Address">{desc.bidDate ? moment(desc.bidDate).format('ddd DD MM YYYY'): null}</Item>
+                    <Item label="Project Name">{desc.title}</Item>
+                    <Item label="Estimated Value">{desc.value}</Item>
+                    <Item label="Organisation">{desc.organisationName ? desc.organisation.name :' No Organizaition'}</Item>
+                    <Item label="Start date">{desc.startDate ? moment(desc.startDate).format('ddd DD MM YYYY'): null} </Item>
+                    <Item label="End Date">{desc.endDate ? moment(desc.endDate).format('ddd DD MM YYYY'): null}</Item>
                     {/* <Item label="Gender">{data.gender}</Item> */}
                 </Descriptions>
                 <Row justify="end">
                     <Col> <Button type="primary" size='small'  onClick={() => {  this.setState({ infoModal: true, editRex: false, }) }}>Add New</Button> </Col>
-                    <Col> <Button type="danger" size='small'>Delete Resource</Button></Col>
+                    {/* <Col> <Button type="danger" size='small'>Delete Resource</Button></Col> */}
                 </Row>
                 <Table
                     rowKey={(data) => data.id}
@@ -182,7 +194,7 @@ class OrgInfo extends Component {
                     <InfoModal
                         visible={infoModal}
                         editRex={editRex}
-                        leadId = {leadId}
+                        ProId = {ProId}
                         panelId = {desc.panelId}
                         close={this.closeModal}
                         callBack={this.callBack}

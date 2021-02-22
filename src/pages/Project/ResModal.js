@@ -201,9 +201,9 @@ class InfoModal extends Component {
     };
 
     addRecord = (data) =>{
-        const { leadId, callBack } = this.props
-        console.log(leadId);
-        addResource(leadId, data).then(res=>{
+        const { ProId, callBack } = this.props
+        console.log(ProId);
+        addResource(ProId, data).then(res=>{
             if(res.success){
                 callBack()
             }
@@ -212,9 +212,9 @@ class InfoModal extends Component {
     
     
     getRecord = (skills) => {
-        const { leadId, editRex } = this.props;
-        console.log(leadId, editRex);
-        getResource(leadId, editRex).then((resR) => {
+        const { ProId, editRex } = this.props;
+        console.log(ProId, editRex);
+        getResource(ProId, editRex).then((resR) => {
             console.log(resR.data);
             if (resR.success){
                 const skillIndex = skills.findIndex(skill =>skill.value === resR.data.panelSkillId)
@@ -231,9 +231,9 @@ class InfoModal extends Component {
     };
 
     editRecord = (data) => {
-        const { editRex, leadId, callBack } = this.props;
+        const { editRex, ProId, callBack } = this.props;
         data.id = editRex
-        editResource(editRex, leadId, data).then((res) => {
+        editResource(editRex, ProId, data).then((res) => {
             if(res.success){
                 callBack()
             }

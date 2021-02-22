@@ -128,7 +128,7 @@ class InfoModal extends Component {
                     {
                         fieldCol: 12, // this is only label 1
                         size: "small",
-                        Placeholder: "Organization",
+                        Placeholder: "Organisation",
                         type: "Text",
                         labelAlign: "left",
                     },

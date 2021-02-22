@@ -43,7 +43,10 @@ export const getRecord = (id) => {
             const basic = {
                 id: data.id,
                 panelId: data.panelId,
-                organizationId: data.organizationId,
+                organisationId: data.organisationId,
+                organisationName: data.organisation && data.organisation.name,
+                organisationId: data.organisationId,
+                ContactName: data.contactPerson && data.contactPerson.firstName + data.contactPerson.lastName ,
                 contactPersonId: data.contactPersonId,
                 qualifiedOps: data.qualifiedOps,
                 type: data.type,

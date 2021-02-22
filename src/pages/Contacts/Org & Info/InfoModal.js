@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import { Modal, Tabs } from "antd";
+import Draggable from 'react-draggable';
+
 import { UploadOutlined } from "@ant-design/icons"; //Icons
 import moment from "moment";
 import Form from "../../../components/Core/Form";
-
-import { addList, getOrgRecord, editList } from "../../../service/Organizations";
-import { getContactPersons, getOrganizations } from "../../../service/constant-Apis";
+import { addList, getOrgRecord, editList } from "../../../service/Organisations";
+import { getContactPersons, getOrganisations } from "../../../service/constant-Apis";
 
 const { TabPane } = Tabs;
 
@@ -15,12 +16,15 @@ class InfoModal extends Component {
         this.basicRef = React.createRef();
         this.billingRef = React.createRef();
         this.insuredRef = React.createRef();
+        this.draggleRef = React.createRef();
         this.state = {
             editOrg: false,
             basicSubmitted: false,
             billingSubmitted: false,
             insuredSubmitted: false,
             check: false,
+            bounds: { left: 0, top: 0, bottom: 0, right: 0 },
+            dragDisable: true,
             BasicFields: {
                 //creating Component
                 formId: "basic_form",
@@ -433,7 +437,7 @@ class InfoModal extends Component {
 
     fetchAll = () =>{
         const {editOrg}= this.props;
-        Promise.all([ getOrganizations(editOrg), getContactPersons() ])
+        Promise.all([ getOrganisations(editOrg), getContactPersons() ])
         .then(res => {
             const { BasicFields } = this.state;
             BasicFields.fields[3].data = res[0].data;
@@ -447,7 +451,7 @@ class InfoModal extends Component {
     }
 
     getOrgs = (id) => {
-        getOrganizations(id).then((res) => {
+        getOrganisations(id).then((res) => {
             if (res.success) {
                 const { BasicFields } = this.state;
                 BasicFields.fields[3].data = res.data;
@@ -492,9 +496,9 @@ class InfoModal extends Component {
                     ...this.state.mergeObj,
                     ...{
                         name: vake.name? vake.name : '',
-                        parentOrganizationId: vake.parent? vake.parent : null,
+                        parentOrganisationId: vake.parent? vake.parent : null,
                         phoneNumber: vake.phone? vake.phone : '',
-                        delegateContactPersonOrganizationId: vake.delegate_cp? vake.delegate_cp: null,
+                        delegateContactPersonOrganisationId: vake.delegate_cp? vake.delegate_cp: null,
                         email: vake.email? vake.email : '',
                         expectedBusinessAmount: vake.EBA? vake.EBA : 0,
                         address: vake.address? vake.address : '',
@@ -512,7 +516,7 @@ class InfoModal extends Component {
                     //check if both form is submittef
                     if (!this.props.editOrg) {
                         
-                        this.addOrganization(this.state.mergeObj); //add skill
+                        this.addOrganisation(this.state.mergeObj); //add skill
                     } else {
                         
                         this.editRecord(this.state.mergeObj); //edit skill
@@ -548,7 +552,7 @@ class InfoModal extends Component {
                     //check if both form is submittef
                     if (!this.props.editOrg) {
                         
-                        this.addOrganization(this.state.mergeObj); //add skill
+                        this.addOrganisation(this.state.mergeObj); //add skill
                     } else {
                         
                         this.editRecord(this.state.mergeObj); //edit skill
@@ -592,7 +596,7 @@ class InfoModal extends Component {
                     //check if both form is submittef
                     if (!this.props.editOrg) {
                         
-                        this.addOrganization(this.state.mergeObj); //add skill
+                        this.addOrganisation(this.state.mergeObj); //add skill
                     } else {
                         
                         this.editRecord(this.state.mergeObj); //edit skill
@@ -602,7 +606,7 @@ class InfoModal extends Component {
         );
     };
 
-    addOrganization = (value) => {
+    addOrganisation = (value) => {
         const { callBack } = this.props;
         console.log(value);
         addList(value).then((res) => {
@@ -620,9 +624,9 @@ class InfoModal extends Component {
                 ;
                 let basic = {
                     name: vake.name,
-                    parent: vake.parentOrganization && vake.parentOrganization.id,
+                    parent: vake.parentOrganisation && vake.parentOrganisation.id,
                     phone: vake.phoneNumber,
-                    delegate_cp: vake.delegateContactPersonOrganization && vake.delegateContactPersonOrganization.id,
+                    delegate_cp: vake.delegateContactPersonOrganisation && vake.delegateContactPersonOrganisation.id,
                     email: vake.email,
                     EBA: vake.expectedBusinessAmount,
                     address: vake.address,
@@ -670,11 +674,32 @@ class InfoModal extends Component {
         });
     };
 
+    onDrag = (event, uiData) => {
+        const { clientWidth, clientHeight } = window?.document?.documentElement;
+        const targetRect = this.draggleRef?.current?.getBoundingClientRect();
+        this.setState({
+          bounds: {
+            left: -targetRect?.left + uiData?.x,
+            right: clientWidth - (targetRect?.right - uiData?.x),
+            top: -targetRect?.top + uiData?.y,
+            bottom: clientHeight - (targetRect?.bottom - uiData?.y),
+          },
+        });
+    };
     render() {
         const { editOrg, visible } = this.props;
+        const { bounds, dragDisable, BasicFields, BillingFields, InsuredFields } = this.state
         return (
             <Modal
-                title={editOrg? "Edit Organization" : "Add New Organization"}
+                title={
+                    <div 
+                        style={{ width: '100%', cursor: 'move', }} 
+                        onMouseOver={() => { if (dragDisable) { this.setState({ dragDisable: false, }); } }}
+                        onMouseOut={() => { this.setState({ dragDisable: true, });}}
+                    >
+                            {editOrg? "Edit Organisation" : "Add New Organisation"}
+                    </div>
+                }
                 centered
                 visible={visible}
                 onOk={() => {
@@ -683,27 +708,38 @@ class InfoModal extends Component {
                 okText={"Save"}
                 onCancel={this.props.close}
                 width={700}
+                maskClosable={false}
+                destroyOnClose={true}
+                modalRender={modal => (
+                    <Draggable
+                      bounds={bounds}
+                      disabled={dragDisable}
+                      onStart={(event, uiData) => this.onDrag(event, uiData)}
+                    >
+                      <div ref={this.draggleRef}>{modal}</div>
+                    </Draggable>
+                  )}
             >
                 <Tabs type="card">
                     <TabPane tab="Basic Informantion" key="1" forceRender>
                         <Form
                             ref={this.basicRef}
                             Callback={this.BasicCall}
-                            FormFields={this.state.BasicFields}
+                            FormFields={BasicFields}
                         />
                     </TabPane>
                     <TabPane tab="Billing Information" key="2" forceRender>
                         <Form
                             ref={this.billingRef}
                             Callback={this.BillingCall}
-                            FormFields={this.state.BillingFields}
+                            FormFields={BillingFields}
                         />
                     </TabPane>
                     <TabPane tab="Insured Information" key="3" forceRender>
                         <Form
                             ref={this.insuredRef}
                             Callback={this.InsuredCall}
-                            FormFields={this.state.InsuredFields}
+                            FormFields={InsuredFields}
                         />
                     </TabPane>
                 </Tabs>

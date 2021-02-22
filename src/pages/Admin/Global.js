@@ -43,7 +43,7 @@ class Global extends Component {
                 {
                     object: "obj",
                     fieldCol: 20,
-                    Placeholder: "Organization Information",
+                    Placeholder: "Organisation Information",
                     type: "Title",
                     size: "small",
                     mode: 4,

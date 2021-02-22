@@ -7,7 +7,7 @@ import { Layout } from "antd";
 import Login from "../../pages/Login/Login";
 
 import Admin from "../../pages/Admin/admin-drawer/admin-sidebar";
-import Organizations from "../../pages/Contacts/Org & Info/Organizations";
+import Organisations from "../../pages/Contacts/Org & Info/Organisations";
 import OrgInfo from "../../pages/Contacts/Org & Info/OrgInfo";
 import Employees from "../../pages/Employees & Info/Employees";
 import EmpInfo from "../../pages/Employees & Info/EmpInfo";
@@ -23,8 +23,11 @@ import TimeOff from "../../pages/Time/TimeOff";
 import Travels from "../../pages/Travel/Travels";
 
 import Leads from "../../pages/opportunity/Leads";
-import Resources from "../../pages/opportunity/Resources";
+import LeadsInfo from "../../pages/opportunity/LeadInfo";
+import LeadResources from "../../pages/opportunity/Resources";
 import Projects from "../../pages/Project/Projects";
+import ProjectResources from "../../pages/Project/Resources";
+import ResourceHistory from "../../pages/Project/ResourceHistory";
 import Calender from "../Calender/Calender";
 
 const { Content } = Layout;
@@ -85,19 +88,19 @@ const pageLinks = [
     },
     {
         component: Admin,
-        link: "/admin/panels/info/:id",
+        link: "/admin/panels/skills/:id",
     },
     {
         component: Admin,
         link: "/check",
     },
     {
-        component: Organizations,
-        link: "/organizations",
+        component: Organisations,
+        link: "/organisations",
     },
     {
         component: OrgInfo,
-        link: "/organizations/info/:id",
+        link: "/organisations/info/:id",
     },
     {
         component: Contact,
@@ -140,11 +143,11 @@ const pageLinks = [
         link: "/leads",
     },
     {
-        component: Leads,
+        component: LeadsInfo,
         link: "/leads/info/:id",
     },
     {
-        component: Resources,
+        component: LeadResources,
         link: "/leads/resources/:id",
     },
     {
@@ -154,6 +157,15 @@ const pageLinks = [
     {
         component: Projects,
         link: "/projects/info:id",
+    },
+    {
+        component: ProjectResources,
+        link: "/projects/resources/:id",
+    },
+    {
+        component: ResourceHistory,
+        // link: "/project/:projectId/resources/:resourcesId/rate/:id",
+        link: "/projects/:proId/resources/rates/:id",
     },
     {
         component: TimeSheet,

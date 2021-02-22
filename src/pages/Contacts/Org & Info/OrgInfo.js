@@ -10,7 +10,7 @@ import ChildOrg from "./ChildOrg";
 
 import InfoModal from "./InfoModal";
 
-import { getOrgRecord, delOrg } from "../../../service/Organizations";
+import { getOrgRecord, delOrg } from "../../../service/Organisations";
 
 const { Item } = Descriptions;
 const { TabPane } = Tabs;
@@ -63,7 +63,7 @@ class OrgInfo extends Component {
     handleDelete = (id) => {
         delOrg(id).then((res) => {
             if (res.success) {
-                window.location.href = '/organizations'
+                window.location.href = '/organisations'
             }
         });
     };
@@ -134,7 +134,7 @@ class OrgInfo extends Component {
                     <TabPane tab="Comments" key="3">
                         <Comments {...this.props.match.params} />
                     </TabPane>
-                    <TabPane tab="Sub-organization" key="4">
+                    <TabPane tab="Sub-organisation" key="4">
                         <ChildOrg {...this.props.match.params} />
                     </TabPane>
                     <TabPane tab="Account" key="5">

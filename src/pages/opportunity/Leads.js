@@ -30,9 +30,9 @@ class Leads extends Component {
                 key: 'title',
             },
             {
-                title: 'Organization Name',
-                dataIndex: 'organization',
-                key: 'organization',
+                title: 'Organisation Name',
+                dataIndex: 'organisation',
+                key: 'organisation',
                 render: (record) =>{return record && record.name}
             },
             {
@@ -76,12 +76,7 @@ class Leads extends Component {
                                     editLead: record.id
                                 })}
                             >Edit</Menu.Item>
-                            <Menu.Item >
-                                {/* <Link to={{ pathname: '/admin/calender/holidays' ,query: record.key}} className="nav-link"> */}
-                                    View
-                                {/* </Link> */}
-                            </Menu.Item >
-                             <Menu.Item>
+                            <Menu.Item>
                                 <Link
                                     to={{
                                         pathname: `/leads/resources/${record.id}`,
@@ -91,7 +86,11 @@ class Leads extends Component {
                                     Resources
                                 </Link>
                             </Menu.Item>
-                            
+                            <Menu.Item >
+                                <Link to={{ pathname: `/leads/info/${record.id}`}} className="nav-link">
+                                    View
+                                </Link>
+                            </Menu.Item >
                         </Menu>
                     }>
                         <Button size='small'>

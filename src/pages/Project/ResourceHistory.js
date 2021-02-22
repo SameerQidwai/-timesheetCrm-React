@@ -3,7 +3,7 @@ import { Row, Col, Menu, Button, Dropdown, Descriptions, Table, Popconfirm } fro
 import { SettingOutlined, DownOutlined } from "@ant-design/icons"; //Icons
 import { Link } from "react-router-dom"; 
 
-import InfoModal from "./resModal";
+import HistModal from "./HistModal";
 import { getRecord, getResources, delResource } from "../../service/opportunities";
 
 import moment from "moment"
@@ -11,36 +11,10 @@ import moment from "moment"
 const { Item } = Descriptions;
 
 class OrgInfo extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
+        console.log(this.props);
         this.columns = [
-            {
-                title: "Skill",
-                dataIndex: "panelSkill",
-                key: "panelSkill",
-                render: (record)=> {return record  && record.label}
-            },
-            {
-                title: "Level",
-                dataIndex: "panelSkillStandardLevel",
-                key: "panelSkillStandardLevel",
-                render: (record)=> {return record && record.levelLabel}
-            },
-            {
-                title: "Employee Name",
-                dataIndex: "user",
-                key: "user",
-                render: (record)=> {return record &&
-                    <Link
-                                to={{
-                                    pathname: `/Employees/info/${record.id}`,
-                                }}
-                                className="nav-link"
-                            >
-                    {record.contactPersonOrganisation.contactPerson.firstName} {record.contactPersonOrganisation.contactPerson.lastName}
-                    </Link>
-                }
-            },
             {
                 title: "Billable Hours",
                 dataIndex: "billableHours",
@@ -55,6 +29,16 @@ class OrgInfo extends Component {
                 title: "Sale Cost",
                 dataIndex: "sellingRate",
                 key: "sellingRate",
+            },
+            {
+                title: "Start Date",
+                dataIndex: "startDate",
+                key: "startDate",
+            },
+            {
+                title: "End Date",
+                dataIndex: "endDate",
+                key: "endDate",
             },
             {
                 title: "Action",
@@ -94,26 +78,29 @@ class OrgInfo extends Component {
         this.state = {
             infoModal: false,
             editRex: false,
-            leadId: false,
-            data: [],
+            ProId: false,
+            data: [
+                {billableHours: 6, buyingRate: 20,sellingRate: 21, startDate: 'Mon Nov 20 2020', endDate: 'Fri Dec 20 2020'},
+                {billableHours: 6, buyingRate: 20,sellingRate: 22, startDate: 'Mon Dec 22 2020' , endDate: 'Mon Jan 20 2021'},
+                {billableHours: 6, buyingRate: 21,sellingRate: 25, startDate: 'Tue Jan 21 2021', endDate: 'Tue Fri 10 2021'}
+            ],
             desc: {},
         };
     }
 
     componentDidMount = ()=>{
-        const { id } = this.props.match.params
-        this.fetchAll(id)
+        const { proId, id } = this.props.match.params
+        this.fetchAll(proId, id)
     }
 
-    fetchAll = (id) =>{
+    fetchAll = (proId, id) =>{
         Promise.all([ getRecord(id), getResources(id)])
         .then(res => {
-            console.log(res[1].data);
             this.setState({
                 desc: res[0].success? res[0].data : {},
                 editRex: false,
-                infoModal: false,
-                leadId: id,
+                ProId: proId,
+                resId: id,
                 data: res[1].success? res[1].data : [],
             })
         })
@@ -126,9 +113,8 @@ class OrgInfo extends Component {
         getResources(id).then(res=>{
             if(res.success){
                 this.setState({
-                    data: res.data,
-                    editRex: false,
-                    infoModal: false,
+                    desc: res.data,
+                    editRex: false
                 })
             }
         })
@@ -140,22 +126,20 @@ class OrgInfo extends Component {
 
     handleDelete = (rId) => {
         const { id } = this.props.match.params //opputunityId
-        console.log(id);
-        delResource(id, rId).then((res) => {
+        delResource(id,rId).then((res) => {
             if (res.success) {
-                this.props.history.push('/Employees')
+                // this.props.history.push('/Employees')
             }
         });
     };
 
     callBack = () => {
-        const { leadId } = this.state
-        console.log(leadId);
-        this.getResources(leadId)
+        const { ProId } = this.state
+        this.getResources(ProId)
     };
 
     render() {
-        const { desc, data, infoModal, editRex, leadId } = this.state;
+        const { desc, data, infoModal, editRex, ProId } = this.state;
         return (
             <>
                 <Descriptions
@@ -165,16 +149,14 @@ class OrgInfo extends Component {
                     layout="horizontal"
                     // extra={<Button type="primary">Edit</Button>}
                 >
-                    <Item label="First Name">{desc.title}</Item>
-                    <Item label="Last Name">{desc.value}</Item>
-                    <Item label="Phone">{desc.startDate ? moment(desc.startDate).format('ddd DD MM YYYY'): null} </Item>
-                    <Item label="Email">{desc.endDate ? moment(desc.endDate).format('ddd DD MM YYYY'): null}</Item>
-                    <Item label="Address">{desc.bidDate ? moment(desc.bidDate).format('ddd DD MM YYYY'): null}</Item>
+                    <Item label="First Name">Talha</Item>
+                    <Item label="Last Name">Ahmed</Item>
+                    <Item label="Skill">Andriod Developer</Item>
+                    <Item label="Level">Senior</Item>
                     {/* <Item label="Gender">{data.gender}</Item> */}
                 </Descriptions>
                 <Row justify="end">
                     <Col> <Button type="primary" size='small'  onClick={() => {  this.setState({ infoModal: true, editRex: false, }) }}>Add New</Button> </Col>
-                    {/* <Col> <Button type="danger" size='small'>Delete Resource</Button></Col> */}
                 </Row>
                 <Table
                     rowKey={(data) => data.id}
@@ -183,10 +165,10 @@ class OrgInfo extends Component {
                     size="small"
                 />
                 {infoModal && (
-                    <InfoModal
+                    <HistModal
                         visible={infoModal}
                         editRex={editRex}
-                        leadId = {leadId}
+                        ProId = {ProId}
                         panelId = {desc.panelId}
                         close={this.closeModal}
                         callBack={this.callBack}

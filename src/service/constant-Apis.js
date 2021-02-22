@@ -86,7 +86,7 @@ export const getEmployees = () => {
 
 export const getOrgPersons = (id) =>{
     return axios
-    .get(`${Api}/sub-contractors/get/contact-persons?organizationId=${id}`)
+    .get(`${Api}/sub-contractors/get/contact-persons?OrganizationId=${id}`)
     .then((res) => {
         const { success, data } = res.data;
         var cps = []
@@ -105,9 +105,9 @@ export const getOrgPersons = (id) =>{
 }
 
 
-export const getOrganizations = (id) => {
+export const getOrganisations = (id) => {
     return axios
-        .get(`${Api}/organizations`)
+        .get(`${Api}/Organizations`)
         .then((res) => {
             const { success, data } = res.data;
             var orgs = []

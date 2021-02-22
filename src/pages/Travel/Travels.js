@@ -100,7 +100,7 @@ class Travels extends Component {
                                 <Menu.Item>
                                     {/* <Link
                                         to={{
-                                            pathname: `/organizations/info/${record.key}`,
+                                            pathname: `/organisations/info/${record.key}`,
                                         }}
                                         className="nav-link"
                                     > */}

@@ -66,7 +66,7 @@ class Panels extends Component {
                                 <Menu.Item>
                                     <Link
                                         to={{
-                                            pathname: `/admin/panels/info/${record.id}`,
+                                            pathname: `/admin/panels/skills/${record.id}`,
                                         }}
                                     >
                                         Skills

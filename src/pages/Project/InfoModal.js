@@ -5,7 +5,7 @@ import moment from "moment";
 import Form from "../../components/Core/Form";
 
 import { addList, getRecord, editList } from "../../service/opportunities";
-import { getOrganizations, getStates, getOrgPersons, getPanels } from "../../service/constant-Apis";
+import { getOrganisations, getStates, getOrgPersons, getPanels } from "../../service/constant-Apis";
 
 const { TabPane } = Tabs;
 
@@ -17,7 +17,7 @@ class InfoModal extends Component {
         this.billingRef = React.createRef();
         this.datesRef = React.createRef();
         this.state = {
-            editLead: false,
+            editPro: false,
             basicSubmitted: false,
             tenderSubmitted: false,
             datesSubmitted: false,
@@ -73,7 +73,7 @@ class InfoModal extends Component {
                         type: "Select",
                     },
                     {
-                        Placeholder: "Organization",
+                        Placeholder: "Organisation",
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -91,7 +91,7 @@ class InfoModal extends Component {
                     {
                         object: "obj",
                         fieldCol: 12,
-                        key: "organizationId",
+                        key: "organisationId",
                         size: "small",
                         // rules:[{ required: true }],
                         data: [],
@@ -556,8 +556,8 @@ class InfoModal extends Component {
     }
 
     fetchAll = () =>{
-        const { editLead }= this.props;                                             // either call this or call that
-        Promise.all([ getPanels(), getOrganizations(), getStates(), editLead && this.getRecord(editLead)])
+        const { editPro }= this.props;                                             // either call this or call that
+        Promise.all([ getPanels(), getOrganisations(), getStates(), editPro && this.getRecord(editPro)])
         .then(res => {
             const { BasicFields } = this.state;
                 BasicFields.fields[3].data = res[0].success? res[0].data : [];
@@ -600,7 +600,7 @@ class InfoModal extends Component {
                     this.state.datesSubmitted
                 ) {
                     //check if both form is submittef
-                    if (!this.props.editLead) {
+                    if (!this.props.editPro) {
                         
                         this.addOpportunity(this.state.mergeObj); //add skill
                     } else {
@@ -632,7 +632,7 @@ class InfoModal extends Component {
                     this.state.datesSubmitted
                 ) {
                     //check if both form is submittef
-                    if (!this.props.editLead) {
+                    if (!this.props.editPro) {
                         
                         this.addOpportunity(this.state.mergeObj); //add skill
                     } else {
@@ -664,7 +664,7 @@ class InfoModal extends Component {
                     this.state.datesSubmitted
                 ) {
                     //check if both form is submittef
-                    if (!this.props.editLead) {
+                    if (!this.props.editPro) {
                         
                         this.addOpportunity(this.state.mergeObj); //add skill
                     } else {
@@ -692,7 +692,7 @@ class InfoModal extends Component {
                 const { basicSubmitted, tenderSubmitted, billingSubmitted, datesSubmitted, mergeObj } = this.state
                 if ( basicSubmitted && tenderSubmitted && billingSubmitted && datesSubmitted ) {
                     //check if both form is submittef
-                    if (!this.props.editLead) {
+                    if (!this.props.editPro) {
                         
                         this.addOpportunity(mergeObj); //add skill
                     } else {
@@ -730,9 +730,9 @@ class InfoModal extends Component {
     };
 
     editRecord = (data) => {
-        const { editLead, callBack } = this.props;
+        const { editPro, callBack } = this.props;
         console.log(this.props);
-        data.id = editLead
+        data.id = editPro
         editList(data).then((res) => {
             console.log(res);
             if(res.success){
@@ -744,11 +744,11 @@ class InfoModal extends Component {
     };
 
     render() {
-        const { editLead, visible, close } = this.props;
+        const { editPro, visible, close } = this.props;
         const { BasicFields, tenderFields, DatesFields, BillingFields } = this.state
         return (
             <Modal
-                title={editLead? "Edit opportunity" : "Add New opportunity"}
+                title={editPro? "Edit opportunity" : "Add New opportunity"}
                 centered
                 visible={visible}
                 onOk={() => {

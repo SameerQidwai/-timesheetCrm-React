@@ -6,7 +6,7 @@ import moment from "moment";
 
 import { addList, getRecord, editList } from "../../service/contractors";
 import { getContactRecord } from "../../service/conatct-person";
-import { getOrganizations, getOrgPersons, getStates } from "../../service/constant-Apis";
+import { getOrganisations, getOrgPersons, getStates } from "../../service/constant-Apis";
 
 const { TabPane } = Tabs;
 
@@ -443,7 +443,7 @@ class InfoModal extends Component {
             this.getRecord(editCont);
         }
 
-        getOrganizations().then(res=>{
+        getOrganisations().then(res=>{
             if (res.success){
                 this.setState({
                     ORGS: res.data.filter((item) => item.value !== 1)
@@ -458,7 +458,7 @@ class InfoModal extends Component {
     };
 
     fetchAll = (edit) =>{
-        Promise.all([ getStates(), edit ? this.getRecord(edit) : getOrganizations()])
+        Promise.all([ getStates(), edit ? this.getRecord(edit) : getOrganisations()])
         .then(res => {
             const { BasicFields } = this.state
             BasicFields.fields[15].data = res[0].data;
@@ -535,7 +535,7 @@ class InfoModal extends Component {
         const { callBack } = this.props;
         const { sContact, sOrg } = this.state
         data.contactPersonId = sContact
-        data.organizationId = sOrg
+        data.organisationId = sOrg
         addList(data).then(res=>{
             if(res.success){
                 callBack();
@@ -617,7 +617,7 @@ class InfoModal extends Component {
     onClear = (org, person) =>{
         this.setState({
             sContact: person,
-            sOrg: org, // if onPerson is select Organization won't get null, but if organizaion get clear both values get null
+            sOrg: org, // if onPerson is select Organisation won't get null, but if organizaion get clear both values get null
         },()=>{
             this.basicRef.current.refs.basic_form.resetFields();
         })
@@ -655,7 +655,7 @@ class InfoModal extends Component {
                     <Col>
                         <Select
                             value={sOrg}
-                            placeholder="Organization"
+                            placeholder="Organisation"
                             options={ORGS}
                             showArrow
                             showSearch
