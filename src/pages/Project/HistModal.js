@@ -225,7 +225,7 @@ class InfoModal extends Component {
                 onOk={() => { this.submit(); }}
                 okText={"Save"}
                 onCancel={close}
-                width={700}
+                width={900}
             >
                 <Form
                     ref={this.resourceRef}

@@ -108,7 +108,7 @@ class OrgInfo extends Component {
                 {panelSkillId: 'Developer', panelSkillStandardLevelId: 'Senior', userId: 'Faizan', billableHours: '8', buyingRate: '20', sellingRate: '23', startDate: '12 10 2020', endDate: '12 4 2021'},
                 {panelSkillId: 'Designer', panelSkillStandardLevelId: 'Senior', userId: 'Adam', billableHours: 8, buyingRate: 10, sellingRate: 15, startDate: '12 10 2020', endDate: '12 4 2021'},
             ],
-            desc: {title: 'Service', organisation: {name: 'PSO'}, value: '1000.00', startDate: '12 10 2020', endDate: '12 4 2021'},
+            desc: {title: 'Service', organization: {name: 'PSO'}, value: '1000.00', startDate: '12 10 2020', endDate: '12 4 2021'},
         };
     }
 
@@ -175,7 +175,7 @@ class OrgInfo extends Component {
                 >
                     <Item label="Project Name">{desc.title}</Item>
                     <Item label="Estimated Value">{desc.value}</Item>
-                    <Item label="Organisation">{desc.organisationName ? desc.organisation.name :' No Organizaition'}</Item>
+                    <Item label="Organisation">{desc.organizationName ? desc.organization.name :' No Organisation'}</Item>
                     <Item label="Start date">{desc.startDate ? moment(desc.startDate).format('ddd DD MM YYYY'): null} </Item>
                     <Item label="End Date">{desc.endDate ? moment(desc.endDate).format('ddd DD MM YYYY'): null}</Item>
                     {/* <Item label="Gender">{data.gender}</Item> */}

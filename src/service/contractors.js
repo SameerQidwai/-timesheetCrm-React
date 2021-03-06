@@ -28,7 +28,7 @@ export const getRecord = (id) => {
             const { success, data } = res.data;
             if (success) {
                 console.log(data)
-                const contactPerson = data.contactPersonOrganisation ? data.contactPersonOrganisation.contactPerson : {}
+                const contactPerson = data.contactPersonOrganization ? data.contactPersonOrganization.contactPerson : {}
                 const basic = {
                     cpCode: `Emp-00${contactPerson.id}`,
                     firstName: contactPerson.firstName,

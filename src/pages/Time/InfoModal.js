@@ -345,7 +345,7 @@ class InfoModal extends Component {
                 }}
                 okText={"Save"}
                 onCancel={this.onCancel}
-                width={700}
+                width={900}
             >
                 <Form
                     ref={this.timeRef}

@@ -1,32 +1,12 @@
 import React, { Component } from "react";
-import {
-    Row,
-    Col,
-    Typography,
-    Button,
-    Table,
-    Menu,
-    Dropdown,
-    Popconfirm,
-    Modal,
-} from "antd";
-import {
-    DownOutlined,
-    SettingOutlined,
-    PlusSquareOutlined,
-    CloseOutlined,
-} from "@ant-design/icons"; //Icons
+import { Row, Col, Typography, Button, Table, Menu, Dropdown, Popconfirm, Modal, } from "antd";
+import { DownOutlined, SettingOutlined, PlusSquareOutlined, CloseOutlined, } from "@ant-design/icons"; //Icons
 
 import Form from "../../../components/Core/Form";
 
-import {
-    getlevels,
-    getSkills,
-    getList,
-    editLabel,
-    addList,
-    delLabel,
-} from "../../../service/panelSkill";
+import { getlevels, getSkills, getList, editLabel, addList, delLabel, } from "../../../service/panelSkill";
+import { getStandardLevels } from "../../../service/constant-Apis";
+import Operation from "antd/lib/transfer/operation";
 
 const { Title } = Typography;
 
@@ -98,11 +78,23 @@ class PanelInfo extends Component {
                 size: "small",
                 fields: [
                     {
+                        fieldCol: 12,
+                        Placeholder: "Panel Skill",
+                        type: "Text",
+                        size: "small",
+                    },
+                    {
+                        fieldCol: 12,
+                        Placeholder: "Generic Skill",
+                        type: "Text",
+                        size: "small",
+                    },
+                    {
                         object: "obj",
                         fieldCol: 12,
-                        wrapperCol: { span: 20 },
+                        // wrapperCol: { span: 20 },
                         key: "label",
-                        label: "Skill",
+                        // label: "Panel Skill",
                         size: "small",
                         rules: [
                             {
@@ -117,9 +109,9 @@ class PanelInfo extends Component {
                     {
                         object: "obj",
                         fieldCol: 12,
-                        labelCol: { span: 7 },
+                        // labelCol: { span: 7 },
                         key: "standard",
-                        label: "Standard",
+                        // label: "Generic Skill",
                         size: "small",
                         rules: [
                             {
@@ -129,6 +121,13 @@ class PanelInfo extends Component {
                         ],
                         type: "Select",
                         data: [],
+                        // onChange: function name(value, option) {
+                        //     if (value){
+                        //         console.log(option);
+                        //         const { FormFields_1 } = this.state
+                        //         this.setState({skill_pirority: option.level, FormFields_1})
+                        //     }  
+                        // }.bind(this),
                         labelAlign: "left",
                         itemStyle: { marginBottom: "5px" },
                     },
@@ -156,7 +155,7 @@ class PanelInfo extends Component {
                     },
                     {
                         fieldCol: 8,
-                        Placeholder: "Level",
+                        Placeholder: "Panel Level",
                         type: "Text",
                         size: "small",
                     },
@@ -165,7 +164,7 @@ class PanelInfo extends Component {
                         layout: {
                             wrapperCol: { offset: 1 },
                         },
-                        Placeholder: "Pirority",
+                        Placeholder: "Generic Level",
                         type: "Text",
                         size: "small",
                     },
@@ -175,6 +174,9 @@ class PanelInfo extends Component {
                             wrapperCol: { offset: 1 },
                         },
                         Placeholder: "ST Ceil",
+                        tooltip: true,
+                        tooltipTitle: "Short Term Ceiling Rate (ex GST)",
+                        tooltipTrigger: "hover",
                         type: "Text",
                         size: "small",
                     },
@@ -221,7 +223,7 @@ class PanelInfo extends Component {
             getSkills().then((skill_res) => {
                 if (level_res.success && skill_res.success) {
                     const { FormFields } = this.state;
-                    FormFields.fields[1].data = skill_res.data;
+                    FormFields.fields[3].data = skill_res.data;
                     this.setState({
                         FormFields,
                         skill_pirority: level_res.data,
@@ -230,6 +232,17 @@ class PanelInfo extends Component {
             });
         });
     };
+    // getSkilllevels = () => {
+    //     getStandardLevels().then(res=>{
+    //         const { FormFields } = this.state;
+    //         console.log(res.data);
+    //         FormFields.fields[3].data = res.data;
+    //         this.setState({
+    //             FormFields,
+    //             // skill_pirority: level_res.data,
+    //         });
+    //     });
+    // };
 
     getData = () => {
         const { panelId, FormFields, FormFields_1 } = this.state;
@@ -294,7 +307,6 @@ class PanelInfo extends Component {
                 key: `stceil${item_no}`,
                 size: "small",
                 // rules:[{ required: true }],
-                type: "InputNumber",
                 labelAlign: "left",
                 itemStyle: { marginBottom: "5px" },
             },
@@ -304,6 +316,9 @@ class PanelInfo extends Component {
                 layout: { wrapperCol: { span: 20 } },
                 key: `ltceil${item_no}`,
                 size: "small",
+                tooltip: true,
+                tooltipTitle: "Long Term Ceiling Rate (ex GST)",
+                tooltipTrigger: "focus",
                 // rules:[{ required: true }],
                 type: "InputNumber",
                 labelAlign: "left",

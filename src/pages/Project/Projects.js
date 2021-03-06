@@ -31,8 +31,8 @@ class Projects extends Component {
             },
             {
                 title: 'Organisation Name',
-                dataIndex: 'organisation',
-                key: 'organisation',
+                dataIndex: 'organization',
+                key: 'organization',
                 render: (record) =>{return record && record.name}
             },
             {
@@ -98,8 +98,8 @@ class Projects extends Component {
 
         this.state = {
             data : [
-                {title: 'Service', organisation: {name: 'PSO'}, value: '1000.00', startDate: '12 10 2020', endDate: '12 4 2021'},
-                {title: 'Web Application', organisation: {name: 'Technologics'}, value: '200000.00', startDate: '12 10 2020', endDate: '12 4 2021'},
+                {title: 'Service', organization: {name: 'PSO'}, value: '1000.00', startDate: '12 10 2020', endDate: '12 4 2021'},
+                {title: 'Web Application', organization: {name: 'Technologics'}, value: '200000.00', startDate: '12 10 2020', endDate: '12 4 2021'},
             ],
             openModal: false,
             editPro:false,

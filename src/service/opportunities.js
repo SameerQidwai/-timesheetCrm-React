@@ -40,12 +40,13 @@ export const getRecord = (id) => {
         .get(url + `/${id}`)
         .then((res) => {
             const { success, data } = res.data;
+            // console.log(data);
             const basic = {
                 id: data.id,
                 panelId: data.panelId,
-                organisationId: data.organisationId,
-                organisationName: data.organisation && data.organisation.name,
-                organisationId: data.organisationId,
+                organizationId: data.organizationId,
+                organizationName: data.organization && data.organization.name,
+                // organizationId: data.organizationId,
                 ContactName: data.contactPerson && data.contactPerson.firstName + data.contactPerson.lastName ,
                 contactPersonId: data.contactPersonId,
                 qualifiedOps: data.qualifiedOps,

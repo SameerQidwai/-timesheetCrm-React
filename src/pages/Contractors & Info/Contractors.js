@@ -17,40 +17,40 @@ class Contractors extends Component {
         this.columns = [
             {
                 title: "Code",
-                dataIndex: "contactPersonOrganisation",
-                key: "contactPersonOrganisation",
+                dataIndex: "contactPersonOrganization",
+                key: "contactPersonOrganization",
                 render: (record) => {
                     return `Emp-00${record.contactPerson.id}`
                 },
             },
             {
                 title: "First Name",
-                dataIndex: "contactPersonOrganisation",
-                key: "contactPersonOrganisation",
+                dataIndex: "contactPersonOrganization",
+                key: "contactPersonOrganization",
                 render: (record) =>{
                     return record.contactPerson.firstName
                 }
             },
             {
                 title: "Last Name",
-                dataIndex: "contactPersonOrganisation",
-                key: "contactPersonOrganisation",
+                dataIndex: "contactPersonOrganization",
+                key: "contactPersonOrganization",
                 render: (record) =>{
                     return record.contactPerson.lastName
                 }
             },
             {
                 title: "Phone",
-                dataIndex: "contactPersonOrganisation",
-                key: "contactPersonOrganisation",
+                dataIndex: "contactPersonOrganization",
+                key: "contactPersonOrganization",
                 render: (record) =>{
                     return record.contactPerson.phoneNumber
                 }
             },
             {
                 title: "Email",
-                dataIndex: "contactPersonOrganisation",
-                key: "contactPersonOrganisation",
+                dataIndex: "contactPersonOrganization",
+                key: "contactPersonOrganization",
                 render: (record) =>{
                     return record.contactPerson.email
                 }

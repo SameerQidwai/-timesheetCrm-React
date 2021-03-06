@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Table } from "antd";
 import { Link, withRouter } from "react-router-dom";
-import { getOrgRecord } from "../../../service/Organisations";
+import { getOrgRecord } from "../../../service/Organizations";
 class ChildOrg extends Component {
     constructor(props) {
         super(props);
@@ -13,7 +13,7 @@ class ChildOrg extends Component {
                 render: (text, record) => (
                     <Link
                         to={{
-                            pathname: `/organisations/info/${record.key}`,
+                            pathname: `/organizations/info/${record.key}`,
                         }}
                         className="nav-link"
                     >
@@ -28,7 +28,7 @@ class ChildOrg extends Component {
                 render: (text, record) => (
                     <Link
                         to={{
-                            pathname: `/organisations/info/${record.key}`,
+                            pathname: `/organizations/info/${record.key}`,
                         }}
                         className="nav-link"
                     >

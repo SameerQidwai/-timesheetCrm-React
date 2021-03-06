@@ -1,26 +1,10 @@
 import React, { Component } from "react";
 
-import {
-    Row,
-    Col,
-    Comment,
-    Tooltip,
-    Avatar,
-    Popconfirm,
-    Form,
-    Input,
-    List,
-    Upload,
-} from "antd";
+import { Row, Col, Comment, Tooltip, Avatar, Popconfirm, Form, Input, List, Upload, } from "antd";
 
 import moment from "moment";
 
-import {
-    DeleteOutlined,
-    DeleteFilled,
-    SendOutlined,
-    PaperClipOutlined,
-} from "@ant-design/icons";
+import { DeleteOutlined, DeleteFilled, SendOutlined, PaperClipOutlined, } from "@ant-design/icons";
 
 import "../Styles/comment.css";
 

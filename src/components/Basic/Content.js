@@ -7,7 +7,7 @@ import { Layout } from "antd";
 import Login from "../../pages/Login/Login";
 
 import Admin from "../../pages/Admin/admin-drawer/admin-sidebar";
-import Organisations from "../../pages/Contacts/Org & Info/Organisations";
+import Organizations from "../../pages/Contacts/Org & Info/Organizations";
 import OrgInfo from "../../pages/Contacts/Org & Info/OrgInfo";
 import Employees from "../../pages/Employees & Info/Employees";
 import EmpInfo from "../../pages/Employees & Info/EmpInfo";
@@ -22,9 +22,9 @@ import TimeSheet from "../../pages/TimeSheet";
 import TimeOff from "../../pages/Time/TimeOff";
 import Travels from "../../pages/Travel/Travels";
 
-import Leads from "../../pages/opportunity/Leads";
-import LeadsInfo from "../../pages/opportunity/LeadInfo";
-import LeadResources from "../../pages/opportunity/Resources";
+import Opportunities from "../../pages/Leads/Opportunities";
+import OpportunityInfo from "../../pages/Leads/OpportunityInfo";
+import OpportunityResources from "../../pages/Leads/Resources";
 import Projects from "../../pages/Project/Projects";
 import ProjectResources from "../../pages/Project/Resources";
 import ResourceHistory from "../../pages/Project/ResourceHistory";
@@ -64,11 +64,11 @@ const pageLinks = [
     },
     {
         component: Admin,
-        link: "/admin/time-offs",
+        link: "/admin/leave-categories",
     },
     {
         component: Admin,
-        link: "/admin/time-off-policies",
+        link: "/admin/leave-policies",
     },
     {
         component: Admin,
@@ -95,7 +95,7 @@ const pageLinks = [
         link: "/check",
     },
     {
-        component: Organisations,
+        component: Organizations,
         link: "/organisations",
     },
     {
@@ -139,16 +139,16 @@ const pageLinks = [
     //     link: "/clients/info/:id",
     // },
     {
-        component: Leads,
-        link: "/leads",
+        component: Opportunities,
+        link: "/opportunities",
     },
     {
-        component: LeadsInfo,
-        link: "/leads/info/:id",
+        component: OpportunityInfo,
+        link: "/opportunity/info/:id",
     },
     {
-        component: LeadResources,
-        link: "/leads/resources/:id",
+        component: OpportunityResources,
+        link: "/opportunity/resources/:id",
     },
     {
         component: Projects,

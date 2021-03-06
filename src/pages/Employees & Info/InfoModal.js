@@ -80,12 +80,13 @@ class InfoModal extends Component {
                         disabled: true,
                     },
                     {
-                        fieldCol: 12, // this is only label 4
+                        Placeholder: "Date Of Birth",
+                        fieldCol: 12,
                         size: "small",
-                        Placeholder: "Email",
-                        disabled: false,
                         type: "Text",
-                        labelAlign: "left",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                        itemStyle: { marginBottom: 1 },
                     },
                     {
                         object: "basic", //this is field 3
@@ -99,21 +100,17 @@ class InfoModal extends Component {
                         itemStyle: { marginBottom: 10 },
                     },
                     {
-                        object: "basic", //this is field 6
+                        object: "basic",
                         fieldCol: 12,
-                        key: "email",
+                        key: "dateOfBirth",
                         size: "small",
                         // rules:[{ required: true }],
-                        type: "Input",
-                        disabled: false,
+                        type: "DatePicker",
+                        fieldStyle: { width: "100%" },
                         // rules: [
                         //     {
-                        //         type: "email",
-                        //         message: "The input is not valid E-mail!",
-                        //     },
-                        //     {
                         //         required: true,
-                        //         message: "Please input your E-mail!",
+                        //         message: "Date of Birth is required",
                         //     },
                         // ],
                         itemStyle: { marginBottom: 10 },
@@ -179,15 +176,13 @@ class InfoModal extends Component {
                         // itemStyle:{marginBottom:'10px'},
                     },
                     {
-                        Placeholder: "Date Of Birth",
-                        fieldCol: 12,
+                        fieldCol: 12, // this is only label 4
                         size: "small",
+                        Placeholder: "Email",
+                        disabled: false,
                         type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
-                        itemStyle: { marginBottom: 1 },
+                        labelAlign: "left",
                     },
-
                     {
                         object: "basic",
                         fieldCol: 12,
@@ -206,17 +201,21 @@ class InfoModal extends Component {
                         itemStyle: { marginBottom: 10 },
                     },
                     {
-                        object: "basic",
+                        object: "basic", //this is field 6
                         fieldCol: 12,
-                        key: "dateOfBirth",
+                        key: "email",
                         size: "small",
                         // rules:[{ required: true }],
-                        type: "DatePicker",
-                        fieldStyle: { width: "100%" },
+                        type: "Input",
+                        disabled: false,
                         // rules: [
                         //     {
+                        //         type: "email",
+                        //         message: "The input is not valid E-mail!",
+                        //     },
+                        //     {
                         //         required: true,
-                        //         message: "Date of Birth is required",
+                        //         message: "Please input your E-mail!",
                         //     },
                         // ],
                         itemStyle: { marginBottom: 10 },
@@ -248,9 +247,9 @@ class InfoModal extends Component {
                         ],
                         itemStyle: { marginBottom: 10 },
                         // rules:[{ required: true }],
-                        type: "Radio",
-                        mode: "button",
-                        shape: "solid",
+                        type: "Select",
+                        // mode: "button",
+                        // shape: "solid",
                     },
                     {
                         object: "basic",
@@ -290,14 +289,14 @@ class InfoModal extends Component {
                 size: "middle",
                 fields: [
                     {
-                        Placeholder: "TFN",
+                        Placeholder: "Tax File Number",
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
                         labelAlign: "right",
                     },
                     {
-                        Placeholder: "Annuation Id",
+                        Placeholder: "Tax-free Threshold",
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -315,25 +314,46 @@ class InfoModal extends Component {
                     {
                         object: "detail",
                         fieldCol: 12,
-                        key: "superAnnuationId",
+                        key: "tax_threshold",
                         size: "small",
-                        // rules:[{ required: true }],
-                        type: "Input",
-                        itemStyle: { marginBottom: "10px" },
+                        data: [
+                            { label: "Yes", value: true },
+                            { label: "No", value: false },
+                        ],
+                        // rules: [ { required: true, message: "Gender is Obviously required", }, ],
+                        type: "Select",
+                        // mode: "button",
+                        // shape: "solid",
+                        itemStyle: { marginBottom: 10 },
                     },
                     {
-                        Placeholder: "Annuation Name",
+                        Placeholder: "HELP (HECS)",
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
                         labelAlign: "right",
                     },
                     {
-                        Placeholder: "Member Number",
+                        Placeholder: "Superannuation Fund Name",
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
                         labelAlign: "right",
+                    },
+                    {
+                        object: "detail",
+                        fieldCol: 12,
+                        key: "help",
+                        size: "small",
+                        data: [
+                            { label: "Yes", value: true },
+                            { label: "No", value: false },
+                        ],
+                        // rules: [ { required: true, message: "Gender is Obviously required", }, ],
+                        type: "Select",
+                        // mode: "button",
+                        // shape: "solid",
+                        itemStyle: { marginBottom: 10 },
                     },
                     {
                         object: "detail",
@@ -345,6 +365,20 @@ class InfoModal extends Component {
                         itemStyle: { marginBottom: "10px" },
                     },
                     {
+                        Placeholder: "Membership/Account Number",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                    },
+                    {
+                        Placeholder: "SMSF Details",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                    },
+                    {
                         object: "detail",
                         fieldCol: 12,
                         key: "memberNumber",
@@ -353,21 +387,21 @@ class InfoModal extends Component {
                         type: "Input",
                         itemStyle: { marginBottom: "10px" },
                     },
-                    {
-                        Placeholder: "SMSF Bank Account Id",
-                        fieldCol: 24,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                    },
+                    
                     {
                         object: "detail",
                         fieldCol: 12,
-                        key: "smsfBankAccountId",
+                        key: "smsf",
                         size: "small",
-                        // rules:[{ required: true }],
-                        type: "Input",
-                        itemStyle: { marginBottom: "10px" },
+                        data: [
+                            { label: "Yes", value: true },
+                            { label: "No", value: false },
+                        ],
+                        // rules: [ { required: true, message: "Gender is Obviously required", }, ],
+                        type: "Select",
+                        // mode: "button",
+                        // shape: "solid",
+                        itemStyle: { marginBottom: 10 },
                     },
                     {
                         Placeholder: "Training",
@@ -404,7 +438,7 @@ class InfoModal extends Component {
                         // itemStyle:{marginBottom:'10px'},
                     },
                     {
-                        Placeholder: "Number",
+                        Placeholder: "Phone",
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -452,7 +486,7 @@ class InfoModal extends Component {
                         // itemStyle:{marginBottom:'10px'},
                     },
                     {
-                        Placeholder: "Relation",
+                        Placeholder: "Relationship to Employee",
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -465,7 +499,15 @@ class InfoModal extends Component {
                         key: "nextOfKinRelation",
                         size: "small",
                         // rules:[{ required: true }],
-                        type: "input",
+                        data:[
+                            {label: 'Spouse',value:'Spouse' },
+                            {label: 'Partner',value:'Partner' },
+                            {label: 'Sibling',value:'Sibling' },
+                            {label: 'Parent',value:'Parent' },
+                            {label: 'Child',value:'Child' },
+                            {label: 'Friend',value:'Friend' },
+                        ],
+                        type: "select",
                     },
                     {
                         object: "kin",
@@ -476,28 +518,6 @@ class InfoModal extends Component {
                         type: "input",
                         itemStyle:{marginBottom:10},
                     },
-                    {
-                        object: "kin",
-                        fieldCol: 12,
-                        key: "nextOfKinGender",
-                        label: "Gender",
-                        size: "small",
-                        data: [
-                            { label: "Male", value: "Male" },
-                            { label: "Female", value: "Female" },
-                        ],
-                        // rules: [
-                        //     {
-                        //         required: true,
-                        //         message: "Gender is Obviously required",
-                        //     },
-                        // ],
-                        itemStyle: { marginBottom: 1 },
-                        // rules:[{ required: true }],
-                        type: "Radio",
-                        mode: "button",
-                        shape: "solid",
-                    },                    
                 ],
             },
 
@@ -510,14 +530,14 @@ class InfoModal extends Component {
                 size: "middle",
                 fields:[
                     {
-                        Placeholder: "Bank Name",
+                        Placeholder: "Bank Account Name",
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
                         labelAlign: "right",
                     },
                     {
-                        Placeholder: "Bank Account No",
+                        Placeholder: "Bank Account Number",
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -540,7 +560,7 @@ class InfoModal extends Component {
                         itemStyle: { marginBottom: "10px" },
                     },
                     {
-                        Placeholder: "Bank BSB",
+                        Placeholder: "BSB Number",
                         fieldCol: 24,
                         size: "small",
                         type: "Text",
@@ -567,80 +587,20 @@ class InfoModal extends Component {
                 size: "middle",
                 fields: [
                     {
+                        Placeholder: "Employment Status",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                    {
                         Placeholder: "Payslip Email",
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
                         labelAlign: "right",
                         // itemStyle:{marginBottom:'10px'},
-                    },
-                    {
-                        Placeholder: "Work Hours In a Day",
-                        fieldCol: 12,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
-                    },
-                    {
-                        object: "billing",
-                        fieldCol: 12,
-                        key: "payslipEmail",
-                        size: "small",
-                        type: "input",
-                        // rules: [
-                        //     {
-                        //         required: true,
-                        //         message: "Payment Email is required",
-                        //     },
-                        // ],
-                        itemStyle: { marginBottom: 1 },
-                    },
-                    {
-                        object: "billing",
-                        fieldCol: 12,
-                        key: "noOfHours",
-                        size: "small",
-                        type: "InputNumber",
-                        // shape: " Hours",
-                        fieldStyle: { width: "100%" },
-                        // rules: [
-                        //     {
-                        //         required: true,
-                        //         message: "How much he Cost",
-                        //     },
-                        // ],
-                        itemStyle: { marginBottom: 1 },
-                    },
-                    {
-                        Placeholder: "Membership A/c no",
-                        fieldCol: 12,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
-                    },
-                    {
-                        Placeholder: "Type",
-                        fieldCol: 12,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
-                    },
-                    {
-                        object: "billing",
-                        fieldCol: 12,
-                        key: "membershipAccountNo",
-                        size: "small",
-                        type: "input",
-                        // rules: [
-                        //     {
-                        //         required: true,
-                        //         message: "Member Ship is required",
-                        //     },
-                        // ],
-                        itemStyle: { marginBottom: 1 },
                     },
                     {
                         object: "billing",
@@ -662,6 +622,123 @@ class InfoModal extends Component {
                         itemStyle: { marginBottom: 1 },
                     },
                     {
+                        object: "billing",
+                        fieldCol: 12,
+                        key: "payslipEmail",
+                        size: "small",
+                        type: "input",
+                        // rules: [
+                        //     {
+                        //         required: true,
+                        //         message: "Payment Email is required",
+                        //     },
+                        // ],
+                        itemStyle: { marginBottom: 1 },
+                    },
+                    {
+                        Placeholder: "Full Work Week Hours",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                    {
+                        Placeholder: "Contract Start Date",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                    
+                    {
+                        object: "billing",
+                        fieldCol: 12,
+                        key: "noOfHours",
+                        size: "small",
+                        type: "InputNumber",
+                        // shape: " Hours",
+                        fieldStyle: { width: "100%" },
+                        // rules: [
+                        //     {
+                        //         required: true,
+                        //         message: "How much he Cost",
+                        //     },
+                        // ],
+                        itemStyle: { marginBottom: 1 },
+                    },
+                    {
+                        object: "billing",
+                        fieldCol: 12,
+                        key: "startDate",
+                        size: "small",
+                        type: "DatePicker",
+                        fieldStyle: { width: "100%" },
+                        // rules: [
+                        //     {
+                        //         required: true,
+                        //         message: "Start Date is required",
+                        //     },
+                        // ],
+                        itemStyle: { marginBottom: 1 },
+                    },
+                    {
+                        Placeholder: "Contract End Date",
+                        fieldCol: 24,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                    {
+                        Placeholder: "Annual Base Salary",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                    {
+                        object: "billing",
+                        fieldCol: 12,
+                        key: "endDate",
+                        size: "small",
+                        type: "DatePicker",
+                        fieldStyle: { width: "100%" },
+                        // rules: [
+                        //     {
+                        //         required: true,
+                        //         message: "Start Date is required",
+                        //     },
+                        // ],
+                        itemStyle: { marginBottom: 1 },
+                    },
+                    {
+                        object: "billing",
+                        fieldCol: 12,
+                        key: "remunerationAmount",
+                        size: "small",
+                        type: "InputNumber",
+                        shape: "$",
+                        fieldStyle: { width: "100%" },
+                        // rules: [
+                        //     {
+                        //         required: true,
+                        //         message: "How much he Cost",
+                        //     },
+                        // ],
+                        itemStyle: { marginBottom: 1 },
+                    },  
+                    {
+                        Placeholder: "Hourly Rate",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                    {
                         Placeholder: "Pay Frequence",
                         fieldCol: 12,
                         size: "small",
@@ -670,13 +747,21 @@ class InfoModal extends Component {
                         // itemStyle:{marginBottom:'10px'},
                     },
                     {
-                        Placeholder: "Remuneration Frequancy",
+                        object: "billing",
                         fieldCol: 12,
+                        key: "hourlyrate",
                         size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
-                    },
+                        type: "InputNumber",
+                        shape: "$",
+                        fieldStyle: { width: "100%" },
+                        // rules: [
+                        //     {
+                        //         required: true,
+                        //         message: "How much he Cost",
+                        //     },
+                        // ],
+                        itemStyle: { marginBottom: 1 },
+                    }, 
                     {
                         object: "billing",
                         fieldCol: 12,
@@ -699,97 +784,19 @@ class InfoModal extends Component {
                         itemStyle: { marginBottom: 1 },
                     },
                     {
-                        object: "billing",
-                        fieldCol: 12,
-                        key: "remunerationAmountPer",
-                        size: "small",
-                        data: [
-                            { label: "Hourly", value: 1 },
-                            { label: "Daily", value: 2 },
-                            { label: "Weekly", value: 3 },
-                            { label: "Fortnightly", value: 4 },
-                            { label: "Monthly", value: 5 },
-                            { label: "Yearly", value: 6 },
-                        ],
-                        type: "Select",
-                        // rules: [
-                        //     {
-                        //         required: true,
-                        //         message: "Payment Frequncy is required",
-                        //     },
-                        // ],
-                        itemStyle: { marginBottom: 1 },
-                    },
-                    {
-                        Placeholder: "Remuneration Amount",
-                        fieldCol: 12,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
-                    },
-                    {
-                        Placeholder: "Start Date",
-                        fieldCol: 12,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
-                    },
-                    {
-                        object: "billing",
-                        fieldCol: 12,
-                        key: "remunerationAmount",
-                        size: "small",
-                        type: "InputNumber",
-                        shape: "$",
-                        fieldStyle: { width: "100%" },
-                        // rules: [
-                        //     {
-                        //         required: true,
-                        //         message: "How much he Cost",
-                        //     },
-                        // ],
-                        itemStyle: { marginBottom: 1 },
-                    },
-                    
-                    {
-                        object: "billing",
-                        fieldCol: 12,
-                        key: "startDate",
-                        size: "small",
-                        type: "DatePicker",
-                        fieldStyle: { width: "100%" },
-                        // rules: [
-                        //     {
-                        //         required: true,
-                        //         message: "Start Date is required",
-                        //     },
-                        // ],
-                        itemStyle: { marginBottom: 1 },
-                    },
-                    {
-                        Placeholder: "End Date",
+                        Placeholder: "Comments",
                         fieldCol: 24,
                         size: "small",
                         type: "Text",
                         labelAlign: "right",
                         // itemStyle:{marginBottom:'10px'},
                     },
-                   
                     {
                         object: "billing",
-                        fieldCol: 12,
-                        key: "endDate",
+                        fieldCol: 24,
+                        key: "payslipEmail",
                         size: "small",
-                        type: "DatePicker",
-                        fieldStyle: { width: "100%" },
-                        // rules: [
-                        //     {
-                        //         required: true,
-                        //         message: "Start Date is required",
-                        //     },
-                        // ],
+                        type: "Textarea",
                         itemStyle: { marginBottom: 1 },
                     },
                 ],
@@ -1106,7 +1113,7 @@ class InfoModal extends Component {
                 }}
                 okText={"Save"}
                 onCancel={this.onCancel}
-                width={700}
+                width={900}
             >
                 {!editEmp &&<Row style={{marginBottom:"1em"}}>
                     <Select
@@ -1132,35 +1139,35 @@ class InfoModal extends Component {
                     />
                     </Row>}
                 <Tabs type="card">
-                    <TabPane tab="Basic" key="1" forceRender>
+                    <TabPane tab="Personal Details" key="details" forceRender>
                         <Form
                             ref={this.basicRef}
                             Callback={this.BasicCall}
                             FormFields={BasicFields}
                         />
                     </TabPane>
-                    <TabPane tab="Detail" key="2" forceRender>
+                    <TabPane tab="Superannuation" key="superannuation" forceRender>
                         <Form
                             ref={this.detailRef}
                             Callback={this.DetailCall}
                             FormFields={DetailFields}
                         />
                     </TabPane>
-                    <TabPane tab="Next Of Kin" key="3" forceRender>
+                    <TabPane tab="Next of Kin" key="kin" forceRender>
                         <Form
                             ref={this.kinRef}
                             Callback={this.KinCall}
                             FormFields={KinFields}
                         />
                     </TabPane>
-                    <TabPane tab="Bank" key="4" forceRender>
+                    <TabPane tab="Banking Details" key="bank" forceRender>
                         <Form
                             ref={this.bankRef}
                             Callback={this.BankCall}
                             FormFields={BankFields}
                         />
                     </TabPane>
-                    <TabPane tab="Contarct" key="5" forceRender>
+                    <TabPane tab=" Employment Contracts" key="contract" forceRender>
                         <Form
                             ref={this.billingRef}
                             Callback={this.BillingCall}

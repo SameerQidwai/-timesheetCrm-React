@@ -8,8 +8,8 @@ import Global from "../Global";
 import CalenderHoldays from "../Calender/CalenerHolidays";
 import Calenders from "../Calender/Calenders";
 import HolidayTypes from "../Calender/HolidayTypes";
-import TimeOffs from "../TimeOffs";
-import TimeOffsPolicy from "../TimeOffsPolicy";
+import LeaveCategories from "../LeaveCategories";
+import LeavePolicies from "../LeavePolicies";
 import Roles from "../../Role & Permission/Roles";
 import Panels from "../Panels/Panels";
 import PanelSkills from "../Panels/PanelSkills";
@@ -37,12 +37,12 @@ const pageLinks = [
         link: "/admin/calenders/holidays/:id",
     },
     {
-        component: TimeOffs,
-        link: "/admin/time-offs",
+        component: LeaveCategories,
+        link: "/admin/leave-categories",
     },
     {
-        component: TimeOffsPolicy,
-        link: "/admin/time-off-policies",
+        component: LeavePolicies,
+        link: "/admin/leave-policies",
     },
     {
         component: Roles,

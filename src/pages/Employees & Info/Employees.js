@@ -19,46 +19,42 @@ class Employees extends Component {
         this.columns = [
             {
                 title: "Code",
-                dataIndex: "contactPersonOrganisation",
-                key: "contactPersonOrganisation",
+                dataIndex: "contactPersonOrganization",
+                key: "contactPersonOrganization",
                 render: (record) => {
-                    return `Emp-00${record.contactPerson.id}`
+                    return `Emp-00${ record && record.contactPersonId}`
                 },
             },
             {
                 title: "First Name",
-                dataIndex: "contactPersonOrganisation",
-                key: "contactPersonOrganisation",
+                dataIndex: "contactPersonOrganization",
+                key: "contactPersonOrganization",
                 render: (record) =>{
-                    console.log(record.contactPerson.firstName)
-                    return record.contactPerson.firstName
+                    return record && record.contactPerson.firstName
                 }
             },
             {
                 title: "Last Name",
-                dataIndex: "contactPersonOrganisation",
-                key: "contactPersonOrganisation",
+                dataIndex: "contactPersonOrganization",
+                key: "contactPersonOrganization",
                 render: (record) =>{
-                    console.log(record.contactPerson.lastName)
-                    return record.contactPerson.lastName
+                    return record && record.contactPerson.lastName
                 }
             },
             {
                 title: "Phone",
-                dataIndex: "contactPersonOrganisation",
-                key: "contactPersonOrganisation",
+                dataIndex: "contactPersonOrganization",
+                key: "contactPersonOrganization",
                 render: (record) =>{
-                    console.log(record.contactPerson.phoneNumber)
-                    return record.contactPerson.phoneNumber
+                    return record && record.contactPerson.phoneNumber
                 }
             },
             {
                 title: "Email",
-                dataIndex: "contactPersonOrganisation",
-                key: "contactPersonOrganisation",
+                dataIndex: "contactPersonOrganization",
+                key: "contactPersonOrganization",
                 render: (record) =>{
-                    console.log(record.contactPerson.email)
-                    return record.contactPerson.email
+                    return record && record.contactPerson.email
                 }
             },
             {
@@ -130,6 +126,7 @@ class Employees extends Component {
     getList = () =>{
         getList().then(res=>{
             if (res.success){
+                console.log(res.data);
                 this.setState({
                     data: res.data,
                     infoModal: false,

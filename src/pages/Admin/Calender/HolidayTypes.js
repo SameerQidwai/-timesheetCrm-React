@@ -101,7 +101,7 @@ class HolidayTypes extends Component {
     };
 
     getData = () => {
-        getList().then((res) => {
+        getList().then((res) => {   
             if (res.success) {
                 this.setState({
                     data: res.data,
@@ -166,7 +166,7 @@ class HolidayTypes extends Component {
     };
 
     render() {
-        const { data } = this.state;
+        const { data, isVisible } = this.state;
         return (
             <>
                 <Row justify="space-between">
@@ -193,11 +193,11 @@ class HolidayTypes extends Component {
                     size="small"
                     rowKey={(data) => data.id}
                 />
-                {this.state.isVisible && (
+                {isVisible && (
                     <Modal
                         title={this.state.editType ? "Edit Type" : "Add Type"}
                         centered
-                        visible={this.state.isVisible}
+                        visible={isVisible}
                         okText={"Save"}
                         width={400}
                         onCancel={() => {

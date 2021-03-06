@@ -85,9 +85,11 @@ export const getEmployees = () => {
 };
 
 export const getOrgPersons = (id) =>{
+    console.log(id);
     return axios
-    .get(`${Api}/sub-contractors/get/contact-persons?OrganizationId=${id}`)
+    .get(`${Api}/sub-contractors/get/contact-persons?organizationId=${id}`)
     .then((res) => {
+        console.log(res);
         const { success, data } = res.data;
         var cps = []
         data.map((el) => {
@@ -105,12 +107,13 @@ export const getOrgPersons = (id) =>{
 }
 
 
-export const getOrganisations = (id) => {
+export const getOrganizations = (id) => {
     return axios
         .get(`${Api}/Organizations`)
         .then((res) => {
             const { success, data } = res.data;
             var orgs = []
+            // console.log(data);
             data.map((el) => {
                 orgs.push({value: el.id, label: el.name, disabled: el.id === id && true})
             });

@@ -5,8 +5,8 @@ import Draggable from 'react-draggable';
 import { UploadOutlined } from "@ant-design/icons"; //Icons
 import moment from "moment";
 import Form from "../../../components/Core/Form";
-import { addList, getOrgRecord, editList } from "../../../service/Organisations";
-import { getContactPersons, getOrganisations } from "../../../service/constant-Apis";
+import { addList, getOrgRecord, editList } from "../../../service/Organizations";
+import { getContactPersons, getOrganizations } from "../../../service/constant-Apis";
 
 const { TabPane } = Tabs;
 
@@ -15,12 +15,14 @@ class InfoModal extends Component {
         super();
         this.basicRef = React.createRef();
         this.billingRef = React.createRef();
+        this.bankRef = React.createRef();
         this.insuredRef = React.createRef();
         this.draggleRef = React.createRef();
         this.state = {
             editOrg: false,
             basicSubmitted: false,
             billingSubmitted: false,
+            bankSubmitted: false,
             insuredSubmitted: false,
             check: false,
             bounds: { left: 0, top: 0, bottom: 0, right: 0 },
@@ -217,9 +219,11 @@ class InfoModal extends Component {
                         object: "obj",
                         fieldCol: 12,
                         key: "ABN",
+                        shape: "ABN",
                         size: "small",
                         // rules:[{ required: true }],
-                        type: "Input",
+                        type: "InputNumber",
+                        fieldStyle: {width: '100%'}
                     },
                     {
                         object: "obj",
@@ -227,11 +231,25 @@ class InfoModal extends Component {
                         key: "tax_Code",
                         size: "small",
                         // rules:[{ required: true }],
-                        type: "Input",
+                        type: "Select",
+                        data: [
+                            {value:'GST', label: 'GST - Goods & Services Tax Registered'},
+                            {value: 'EXP', label: 'EXP - GST Free Exports/Overseas Org'},
+                            {value: 'GNR', label: 'GNR - GST Non-Registered'},
+                            {value: 'UNG', label: 'UNG - No ABN'}
+                        ]
                     },
                     {
-                        Placeholder: "Invoice Email",
-                        fieldCol: 24,
+                        Placeholder: "Email for Invoices",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                    {
+                        Placeholder: "Contact Number for Invoices",
+                        fieldCol: 12,
                         size: "small",
                         type: "Text",
                         labelAlign: "right",
@@ -241,6 +259,15 @@ class InfoModal extends Component {
                         object: "obj",
                         fieldCol: 12,
                         key: "invoice_email",
+                        size: "small",
+                        // rules:[{ required: true }],
+                        type: "Input",
+                    },
+                    
+                    {
+                        object: "obj",
+                        fieldCol: 12,
+                        key: "invoice_number",
                         size: "small",
                         // rules:[{ required: true }],
                         type: "Input",
@@ -256,7 +283,7 @@ class InfoModal extends Component {
                 size: "middle",
                 fields: [
                     {
-                        Placeholder: "Insurer",
+                        Placeholder: " Professional Indemnity",
                         fieldCol: 24,
                         size: "small",
                         type: "Title",
@@ -265,145 +292,167 @@ class InfoModal extends Component {
                         // itemStyle:{marginBottom:'10px'},
                     },
                     {
-                        object: "obj",
-                        fieldCol: 8,
-                        key: "insurer_PI",
-                        label: "PI",
+                        Placeholder: "Insurer",
+                        fieldCol: 6,
                         size: "small",
-                        // rules:[{ required: true }],
-                        type: "Input",
-                        labelAlign: "left",
-                        itemStyle: { marginBottom: "10px" },
-                    },
-                    {
-                        object: "obj",
-                        fieldCol: 8,
-                        key: "insurer_PL",
-                        label: "PL",
-                        size: "small",
-                        // rules:[{ required: true }],
-                        type: "Input",
-                        labelAlign: "left",
-                        itemStyle: { marginBottom: 10 },
-                    },
-                    {
-                        object: "obj",
-                        fieldCol: 8,
-                        key: "insurer_WC",
-                        label: "WC",
-                        size: "small",
-                        // rules:[{ required: true }],
-                        type: "Input",
-                        labelAlign: "left",
-                        itemStyle: { marginBottom: 10 },
+                        type: "Text",
+                        // mode: 5,
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
                     },
                     {
                         Placeholder: "Policy Number",
-                        fieldCol: 24,
+                        fieldCol: 6,
                         size: "small",
-                        type: "Title",
-                        mode: 5,
+                        type: "Text",
+                        // mode: 5,
                         labelAlign: "right",
-                        itemStyle: { marginTop: 20 },
+                        // itemStyle:{marginBottom:'10px'},
                     },
                     {
-                        object: "obj",
-                        fieldCol: 8,
-                        key: "policy_PI",
-                        label: "PI",
+                        Placeholder: "Sum Insured",
+                        fieldCol: 6,
                         size: "small",
-                        type: "Input",
-                        labelAlign: "left",
-                        itemStyle: { marginBottom: 10 },
+                        type: "Text",
+                        // mode: 5,
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
                     },
                     {
-                        object: "obj",
-                        fieldCol: 8,
-                        key: "policy_PL",
-                        label: "PL",
+                        Placeholder: "Expiry",
+                        fieldCol: 6,
                         size: "small",
-                        // rules:[{ required: true }],
-                        type: "Input",
-                        labelAlign: "left",
-                        itemStyle: { marginBottom: 10 },
+                        type: "Text",
+                        // mode: 5,
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
                     },
                     {
                         object: "obj",
-                        fieldCol: 8,
-                        key: "policy_WC",
-                        label: "WC",
+                        fieldCol: 6,
+                        key: "insurer_PI",
+                        // label: "Insurer",
                         size: "small",
                         // rules:[{ required: true }],
                         type: "Input",
                         labelAlign: "left",
                         itemStyle: { marginBottom: "10px" },
                     },
-
                     {
-                        Placeholder: "Sum Insured ",
-                        fieldCol: 24,
+                        object: "obj",
+                        fieldCol: 6,
+                        key: "policy_PI",
+                        // label: "Policy Number",
                         size: "small",
-                        type: "Title",
-                        mode: 5,
-                        labelAlign: "right",
-                        itemStyle: { marginTop: 20 },
+                        type: "Input",
+                        labelAlign: "left",
+                        itemStyle: { marginBottom: 10 },
                     },
                     {
                         object: "obj",
                         key: "SumIns_PI",
-                        fieldCol: 8,
-                        label: "PI",
+                        fieldCol: 6,
+                        // label: "Sum Insured",
                         size: "small",
                         type: "InputNumber",
+                        fieldStyle: {width: '100%'},
                         labelAlign: "left",
                         itemStyle: { marginBottom: 10 },
                     },
                     {
                         object: "obj",
-                        fieldCol: 8,
-                        key: "SumIns_PL",
-                        label: "PL",
+                        fieldCol: 6,
+                        key: "expiry_PI",
+                        // label: "Expiry",
                         size: "small",
-                        // rules:[{ required: true }],
-                        type: "InputNumber",
+                        type: "DatePicker",
                         labelAlign: "left",
-                        itemStyle: { marginBottom: 10 },
+                        itemStyle: { marginBottom: "10px" },
                     },
                     {
-                        object: "obj",
-                        fieldCol: 8,
-                        key: "SumIns_WC",
-                        label: "WC",
-                        size: "small",
-                        // rules:[{ required: true }],
-                        type: "InputNumber",
-                        labelAlign: "left",
-                        itemStyle: { marginBottom: 10 },
-                    },
-                    {
-                        Placeholder: "Insurance Expiry",
+                        Placeholder: "Public Liability",
                         fieldCol: 24,
                         size: "small",
                         type: "Title",
                         mode: 5,
                         labelAlign: "right",
-                        itemStyle: { marginTop: "20px" },
+                        itemStyle: { marginTop: 20 },
                     },
                     {
-                        object: "obj",
-                        fieldCol: 8,
-                        key: "expiry_PI",
-                        label: "PI",
+                        Placeholder: "Insurer",
+                        fieldCol: 6,
                         size: "small",
-                        type: "DatePicker",
-                        labelAlign: "left",
-                        itemStyle: { marginBottom: "10px" },
+                        type: "Text",
+                        // mode: 5,
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                    {
+                        Placeholder: "Policy Number",
+                        fieldCol: 6,
+                        size: "small",
+                        type: "Text",
+                        // mode: 5,
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                    {
+                        Placeholder: "Sum Insured",
+                        fieldCol: 6,
+                        size: "small",
+                        type: "Text",
+                        // mode: 5,
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                    {
+                        Placeholder: "Expiry",
+                        fieldCol: 6,
+                        size: "small",
+                        type: "Text",
+                        // mode: 5,
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
                     },
                     {
                         object: "obj",
-                        fieldCol: 8,
+                        fieldCol: 6,
+                        key: "insurer_PL",
+                        // label: "Insurer",
+                        size: "small",
+                        // rules:[{ required: true }],
+                        type: "Input",
+                        labelAlign: "left",
+                        itemStyle: { marginBottom: 10 },
+                    },
+                    {
+                        object: "obj",
+                        fieldCol: 6,
+                        key: "policy_PL",
+                        // label: "Policy Number",
+                        size: "small",
+                        // rules:[{ required: true }],
+                        type: "Input",
+                        labelAlign: "left",
+                        itemStyle: { marginBottom: 10 },
+                    },
+                    {
+                        object: "obj",
+                        fieldCol: 6,
+                        key: "SumIns_PL",
+                        // label: "Sum Insured",
+                        size: "small",
+                        // rules:[{ required: true }],
+                        type: "InputNumber",
+                        fieldStyle: {width: '100%'},
+                        labelAlign: "left",
+                        itemStyle: { marginBottom: 10 },
+                    },
+                    {
+                        object: "obj",
+                        fieldCol: 6,
                         key: "expiry_PL",
-                        label: "PL",
+                        // label: "Expiry",
                         size: "small",
                         // rules:[{ required: true }],
                         type: "DatePicker",
@@ -411,15 +460,153 @@ class InfoModal extends Component {
                         itemStyle: { marginBottom: "10px" },
                     },
                     {
+                        Placeholder: "Worker’s Compensation",
+                        fieldCol: 24,
+                        size: "small",
+                        type: "Title",
+                        mode: 5,
+                        labelAlign: "right",
+                        itemStyle: { marginTop: 20 },
+                    },
+                    {
+                        Placeholder: "Insurer",
+                        fieldCol: 6,
+                        size: "small",
+                        type: "Text",
+                        // mode: 5,
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                    {
+                        Placeholder: "Policy Number",
+                        fieldCol: 6,
+                        size: "small",
+                        type: "Text",
+                        // mode: 5,
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                    {
+                        Placeholder: "Sum Insured",
+                        fieldCol: 6,
+                        size: "small",
+                        type: "Text",
+                        // mode: 5,
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                    {
+                        Placeholder: "Expiry",
+                        fieldCol: 6,
+                        size: "small",
+                        type: "Text",
+                        // mode: 5,
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                    {
                         object: "obj",
-                        fieldCol: 8,
+                        fieldCol: 6,
+                        key: "insurer_WC",
+                        // label: "Insurer",
+                        size: "small",
+                        // rules:[{ required: true }],
+                        type: "Input",
+                        labelAlign: "left",
+                        itemStyle: { marginBottom: 10 },
+                    },
+                    {
+                        object: "obj",
+                        fieldCol: 6,
+                        key: "policy_WC",
+                        // label: "Policy Number",
+                        size: "small",
+                        // rules:[{ required: true }],
+                        type: "Input",
+                        labelAlign: "left",
+                        itemStyle: { marginBottom: "10px" },
+                    },
+                    {
+                        object: "obj",
+                        fieldCol: 6,
+                        key: "SumIns_WC",
+                        // label: "Sum Insured",
+                        size: "small",
+                        // rules:[{ required: true }],
+                        type: "InputNumber",
+                        fieldStyle: {width: '100%'},
+                        labelAlign: "left",
+                        itemStyle: { marginBottom: 10 },
+                    },
+                    {
+                        object: "obj",
+                        fieldCol: 6,
                         key: "expiry_WC",
-                        label: "WC",
+                        // label: "Expiry",
                         size: "small",
                         // rules:[{ required: true }],
                         type: "DatePicker",
                         labelAlign: "left",
                         itemStyle: { marginBottom: "10px" },
+                    },
+                ],
+            },
+            BankFields: {
+                formId: "bank_form",
+                FormCol: 24,
+                FieldSpace: 24,
+                justifyField: "center",
+                FormLayout: "inline",
+                layout: { labelCol: { span: 9 }, wrapperCol: { span: 0 } },
+                size: "middle",
+                fields: [
+                    {
+                        Placeholder: "Bank Account Name",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                    {
+                        Placeholder: "BSB Number",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                    {
+                        object: "obj",
+                        fieldCol: 12,
+                        key: "bank_name",
+                        size: "small",
+                        // rules:[{ required: true }],
+                        type: "Input",
+                    },
+                    {
+                        object: "obj",
+                        fieldCol: 12,
+                        key: "bsb_number",
+                        size: "small",
+                        // rules:[{ required: true }],
+                        type: "Input",
+                    },
+                    {
+                        Placeholder: "Bank Account Number",
+                        fieldCol: 24,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                    {
+                        object: "obj",
+                        fieldCol: 12,
+                        key: "bank_number",
+                        size: "small",
+                        // rules:[{ required: true }],
+                        type: "Input",
                     },
                 ],
             },
@@ -437,7 +624,7 @@ class InfoModal extends Component {
 
     fetchAll = () =>{
         const {editOrg}= this.props;
-        Promise.all([ getOrganisations(editOrg), getContactPersons() ])
+        Promise.all([ getOrganizations(editOrg), getContactPersons() ])
         .then(res => {
             const { BasicFields } = this.state;
             BasicFields.fields[3].data = res[0].data;
@@ -451,7 +638,7 @@ class InfoModal extends Component {
     }
 
     getOrgs = (id) => {
-        getOrganisations(id).then((res) => {
+        getOrganizations(id).then((res) => {
             if (res.success) {
                 const { BasicFields } = this.state;
                 BasicFields.fields[3].data = res.data;
@@ -496,9 +683,9 @@ class InfoModal extends Component {
                     ...this.state.mergeObj,
                     ...{
                         name: vake.name? vake.name : '',
-                        parentOrganisationId: vake.parent? vake.parent : null,
+                        parentOrganizationId: vake.parent? vake.parent : null,
                         phoneNumber: vake.phone? vake.phone : '',
-                        delegateContactPersonOrganisationId: vake.delegate_cp? vake.delegate_cp: null,
+                        delegatecontactPersonOrganizationId: vake.delegate_cp? vake.delegate_cp: null,
                         email: vake.email? vake.email : '',
                         expectedBusinessAmount: vake.EBA? vake.EBA : 0,
                         address: vake.address? vake.address : '',
@@ -511,12 +698,13 @@ class InfoModal extends Component {
                 if (
                     this.state.basicSubmitted &&
                     this.state.billingSubmitted &&
-                    this.state.insuredSubmitted
+                    this.state.insuredSubmitted &&
+                    this.state.bankSubmitted 
                 ) {
                     //check if both form is submittef
                     if (!this.props.editOrg) {
                         
-                        this.addOrganisation(this.state.mergeObj); //add skill
+                        this.addOrganization(this.state.mergeObj); //add skill
                     } else {
                         
                         this.editRecord(this.state.mergeObj); //edit skill
@@ -538,6 +726,7 @@ class InfoModal extends Component {
                         abn: vake.ABN? vake.ABN : '',
                         taxCode: vake.tax_Code? vake.tax_Code : '',
                         invoiceEmail: vake.invoice_email? vake.invoice_email: '',
+                        invoiceNumber: vake.invoice_number? vake.invoice_number: '',
                         cti: vake.CTI? vake.CTI : '',
                     },
                 },
@@ -547,12 +736,13 @@ class InfoModal extends Component {
                 if (
                     this.state.basicSubmitted &&
                     this.state.billingSubmitted &&
-                    this.state.insuredSubmitted
+                    this.state.insuredSubmitted &&
+                    this.state.bankSubmitted 
                 ) {
                     //check if both form is submittef
                     if (!this.props.editOrg) {
                         
-                        this.addOrganisation(this.state.mergeObj); //add skill
+                        this.addOrganization(this.state.mergeObj); //add skill
                     } else {
                         
                         this.editRecord(this.state.mergeObj); //edit skill
@@ -591,12 +781,13 @@ class InfoModal extends Component {
                 if (
                     this.state.basicSubmitted &&
                     this.state.billingSubmitted &&
-                    this.state.insuredSubmitted
+                    this.state.insuredSubmitted &&
+                    this.state.bankSubmitted 
                 ) {
                     //check if both form is submittef
                     if (!this.props.editOrg) {
                         
-                        this.addOrganisation(this.state.mergeObj); //add skill
+                        this.addOrganization(this.state.mergeObj); //add skill
                     } else {
                         
                         this.editRecord(this.state.mergeObj); //edit skill
@@ -606,7 +797,39 @@ class InfoModal extends Component {
         );
     };
 
-    addOrganisation = (value) => {
+    BankCall = (vake) => {
+        // this will work after I get the Object from the form
+        ;
+        vake = vake.obj
+        this.setState(
+            {
+                mergeObj: {
+                    ...this.state.mergeObj,
+                    ...vake,
+                },
+                bankSubmitted: true, // level form submitted
+            },
+            () => {
+                if (
+                    this.state.basicSubmitted &&
+                    this.state.billingSubmitted &&
+                    this.state.insuredSubmitted &&
+                    this.state.bankSubmitted 
+                ) {
+                    //check if both form is submittef
+                    if (!this.props.editOrg) {
+                        
+                        this.addOrganization(this.state.mergeObj); //add skill
+                    } else {
+                        
+                        this.editRecord(this.state.mergeObj); //edit skill
+                    }
+                }
+            }
+        );
+    };
+
+    addOrganization = (value) => {
         const { callBack } = this.props;
         console.log(value);
         addList(value).then((res) => {
@@ -624,9 +847,9 @@ class InfoModal extends Component {
                 ;
                 let basic = {
                     name: vake.name,
-                    parent: vake.parentOrganisation && vake.parentOrganisation.id,
+                    parent: vake.parentOrganization && vake.parentOrganization.id,
                     phone: vake.phoneNumber,
-                    delegate_cp: vake.delegateContactPersonOrganisation && vake.delegateContactPersonOrganisation.id,
+                    delegate_cp: vake.delegatecontactPersonOrganization && vake.delegatecontactPersonOrganization.id,
                     email: vake.email,
                     EBA: vake.expectedBusinessAmount,
                     address: vake.address,
@@ -688,7 +911,7 @@ class InfoModal extends Component {
     };
     render() {
         const { editOrg, visible } = this.props;
-        const { bounds, dragDisable, BasicFields, BillingFields, InsuredFields } = this.state
+        const { bounds, dragDisable, BasicFields, BillingFields, InsuredFields, BankFields } = this.state
         return (
             <Modal
                 title={
@@ -697,7 +920,7 @@ class InfoModal extends Component {
                         onMouseOver={() => { if (dragDisable) { this.setState({ dragDisable: false, }); } }}
                         onMouseOut={() => { this.setState({ dragDisable: true, });}}
                     >
-                            {editOrg? "Edit Organisation" : "Add New Organisation"}
+                            {editOrg? "Edit Organisation" : "Add Organisation"}
                     </div>
                 }
                 centered
@@ -707,7 +930,7 @@ class InfoModal extends Component {
                 }}
                 okText={"Save"}
                 onCancel={this.props.close}
-                width={700}
+                width={900}
                 maskClosable={false}
                 destroyOnClose={true}
                 modalRender={modal => (
@@ -721,25 +944,32 @@ class InfoModal extends Component {
                   )}
             >
                 <Tabs type="card">
-                    <TabPane tab="Basic Informantion" key="1" forceRender>
+                    <TabPane tab="General Details" key="general_details" forceRender>
                         <Form
                             ref={this.basicRef}
                             Callback={this.BasicCall}
                             FormFields={BasicFields}
                         />
                     </TabPane>
-                    <TabPane tab="Billing Information" key="2" forceRender>
+                    <TabPane tab="Billing Details" key="billing_details" forceRender>
                         <Form
                             ref={this.billingRef}
                             Callback={this.BillingCall}
                             FormFields={BillingFields}
                         />
                     </TabPane>
-                    <TabPane tab="Insured Information" key="3" forceRender>
+                    <TabPane tab="Insurance Details" key="insurance_detail" forceRender>
                         <Form
                             ref={this.insuredRef}
                             Callback={this.InsuredCall}
                             FormFields={InsuredFields}
+                        />
+                    </TabPane>
+                    <TabPane tab="Bank Details" key="bank_detail" forceRender>
+                        <Form
+                            ref={this.bankRef}
+                            Callback={this.bankCall}
+                            FormFields={BankFields}
                         />
                     </TabPane>
                 </Tabs>

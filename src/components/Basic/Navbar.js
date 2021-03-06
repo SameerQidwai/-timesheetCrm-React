@@ -18,8 +18,8 @@ const NavItem = [
         ],
     },
     {
-        text: "Lead",
-        link: "/leads",
+        text: "Opportunities",
+        link: "/opportunities",
     },
     {
         text: "Resources",

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { InputNumber, Typography, DatePicker, TimePicker, Checkbox, Divider, Upload, Button, Select, Switch, Radio, Input, Space, Form, Row, Col, } from "antd";
+import { InputNumber, Typography, DatePicker, TimePicker, Checkbox, Divider, Upload, Button, Select, Switch, Radio, Input, Space, Form, Row, Col, Tooltip} from "antd";
 
 const { Item } = Form;
 const { Dragger } = Upload;
@@ -52,6 +52,26 @@ class Forms extends Component {
         this.props.Callback(value);
     };
 
+    formatter = (value, shape)=>{
+        if (shape === "$"){
+            return `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+        }else if(shape === 'ABN'){
+            return `${value}`.replace(/^(.{2})(.{3})(.*)$/, "$1 $2 $3")
+        }else{
+            return shape ? `${value}${shape}` : `${value}`
+        }
+    }
+
+    parser = (value, shape) =>{
+        if(shape === "$"){
+            return value.replace(/\$\s?|(,*)/g, '')
+        }else if(shape === 'ABN'){
+            return value.replace(/\s?|(,*)/g, '')
+        }else{
+            return shape ? value.replace(shape, "") : value
+        }
+    }
+
     content = () => {
         const { FormFields } = this.props;
         const fields = FormFields.fields;
@@ -102,8 +122,13 @@ class Forms extends Component {
                                         hidden={item.hidden === true}
                                         style={item.itemStyle}
                                         noStyle={item.noStyle}
-                                    >
-                                        {this.filedformat( item.type, item.Placeholder, item.data, item.mode, item.rangMin, item.rangMax, item.default, item.showTime, item.shape, item.size, item.fieldStyle, item.key, item.disabled, item.onChange, item.onClick, item.onBlur, item.onClear )}
+                                    > { item.tooltip ? 
+                                            (<Tooltip title={item.tooltipTitle} trigger={item.tooltipTrigger}>
+                                                {this.filedformat( item.type, item.Placeholder, item.data, item.mode, item.rangMin, item.rangMax, item.showTime, item.shape, item.size, item.fieldStyle, item.disabled, item.onChange, item.onClick, item.onBlur, item.onClear )}
+                                            </Tooltip>) 
+                                            :
+                                            this.filedformat( item.type, item.Placeholder, item.data, item.mode, item.rangMin, item.rangMax, item.showTime, item.shape, item.size, item.fieldStyle, item.disabled, item.onChange, item.onClick, item.onBlur, item.onClear )
+                                        }
                                     </Item>
                                 </Col>
                             ))}
@@ -142,7 +167,7 @@ class Forms extends Component {
         );
     };
 
-    filedformat = ( type, placeholder, data, mode, min, max, defaultValue, showTime, shape, size, style, key, disabled, onChange, onClick, onBlur, onClear ) => {
+    filedformat = ( type, placeholder, data, mode, min, max, showTime, shape, size, style, disabled, onChange, onClick, onBlur, onClear ) => {
         let item = null;
         switch (type) {
             case "Title":
@@ -188,12 +213,8 @@ class Forms extends Component {
                         min={min}
                         max={max}
                         size={size}
-                        formatter={(value) =>
-                            shape ? `${value}${shape}` : `${value}`
-                        }
-                        parser={(value) =>
-                            shape ? value.replace(shape, "") : value
-                        }
+                        formatter={(value) => this.formatter(value, shape) }
+                        parser={(value) => this.parser(value, shape) }
                         style={style}
                         onBlur={onBlur}
                         onChange={onChange}
@@ -269,6 +290,7 @@ class Forms extends Component {
                         style={style}
                         onBlur={onBlur}
                         onChange={onChange}
+                        format={'DD/MM/YYYY'}
                     />
                 );
                 break;
@@ -299,6 +321,7 @@ class Forms extends Component {
                         showTime={showTime}
                         size={size}
                         style={style}
+                        format={'DD/MM/YYYY'}
                     />
                 );
                 break;

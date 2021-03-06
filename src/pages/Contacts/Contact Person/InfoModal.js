@@ -4,7 +4,7 @@ import { UploadOutlined, PlusSquareFilled, CloseOutlined, } from "@ant-design/ic
 
 import Form from "../../../components/Core/Form";
 import { addList, getContactRecord, editList } from "../../../service/conatct-person";
-import { getStates, getStandardLevels, getOrganisations } from "../../../service/constant-Apis";
+import { getStates, getStandardLevels, getOrganizations } from "../../../service/constant-Apis";
 
 import moment from "moment";
 
@@ -16,6 +16,7 @@ class InfoModal extends Component {
         this.basicRef = React.createRef();
         this.associateRef = React.createRef();
         this.skillRef = React.createRef();
+        this.securityRef = React.createRef();
 
         this.priority_data = [
             {
@@ -75,6 +76,7 @@ class InfoModal extends Component {
             kinSubmitted: false,
             skillSubmitted: false,
             exitSubmitted: false,
+            securitySubmitted: false,
             skill_data: [],
             orgs_data: [],
             BasicFields: {
@@ -133,7 +135,7 @@ class InfoModal extends Component {
                         // itemStyle:{marginBottom:'10px'},
                     },
                     {
-                        Placeholder: "Gender",
+                        Placeholder: "Email",
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -153,17 +155,19 @@ class InfoModal extends Component {
                     {
                         object: "basic",
                         fieldCol: 12,
-                        key: "gender",
+                        key: "email",
                         size: "small",
-                        data: [
-                            { label: "Male", value: "Male" },
-                            { label: "Female", value: "Female" },
-                        ],
-                        // rules: [ { required: true, message: "Gender is Obviously required", }, ],
-                        type: "Radio",
-                        mode: "button",
-                        shape: "solid",
+                        type: "input",
+                        labelAlign: "right",
                         itemStyle: { marginBottom: 10 },
+                    },
+                    {
+                        Placeholder: "Gender",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
                     },
                     {
                         Placeholder: "State",
@@ -174,12 +178,18 @@ class InfoModal extends Component {
                         // itemStyle:{marginBottom:'10px'},
                     },
                     {
-                        Placeholder: "Email",
+                        object: "basic",
                         fieldCol: 12,
+                        key: "gender",
                         size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
+                        data: [
+                            { label: "Male", value: "Male" },
+                            { label: "Female", value: "Female" },
+                            { label: "Other", value: "Other" },
+                        ],
+                        // rules: [ { required: true, message: "Gender is Obviously required", }, ],
+                        type: "Select",
+                        itemStyle: { marginBottom: 10 },
                     },
                     {
                         object: "basic",
@@ -189,15 +199,6 @@ class InfoModal extends Component {
                         // rules:[{ required: true }],
                         type: "Select",
                         data: [],
-                        itemStyle: { marginBottom: 10 },
-                    },
-                    {
-                        object: "basic",
-                        fieldCol: 12,
-                        key: "email",
-                        size: "small",
-                        type: "input",
-                        labelAlign: "right",
                         itemStyle: { marginBottom: 10 },
                     },
                     {
@@ -292,6 +293,106 @@ class InfoModal extends Component {
                 // fields: this.newSkillField(0),
                 fields: [],
             },
+            SecurityFields: {
+                //creating Component
+                formId: "security_form",
+                FormCol: 24,
+                // FieldSpace:24,
+                justifyField: "center",
+                FormLayout: "inline",
+                layout: { labelCol: { span: 10 }, wrapperCol: { span: 0 } },
+                size: "small",
+                fields: [
+                    {
+                        Placeholder: "Clearance Level",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                    {
+                        Placeholder: "Date Granted",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                    {
+                        object: "sec",
+                        fieldCol: 12,
+                        key: "clearancelevel",
+                        size: "small",
+                        data: [
+                            { label: "BV - Baseline Vetting", value: "BV" },
+                            { label: "NV1 - Negative Vetting 1", value: "NV1" },
+                            { label: "NV2 - Negative Vetting 2", value: "NV2" },
+                            { label: "PV - Positive Vetting", value: "PV" },
+                        ],
+                        // rules: [ { required: true, message: "Gender is Obviously required", }, ],
+                        type: "Select",
+                        itemStyle: { marginBottom: 10 },
+                    },
+                    {
+                        object: "sec",
+                        fieldCol: 12,
+                        key: "granted",
+                        size: "small",
+                        // rules:[{ required: true }],
+                        type: "DatePicker",
+                        fieldStyle: { width: "100%" },
+                        // rules: [
+                        //     {
+                        //         required: true,
+                        //         message: "Date of Birth is required",
+                        //     },
+                        // ],
+                        itemStyle: { marginBottom: 10 },
+                    },
+                    {
+                        Placeholder: "Expiry Date",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                    {
+                        Placeholder: "Current Sponsor",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                    {
+                        object: "sec",
+                        fieldCol: 12,
+                        key: "expiry",
+                        size: "small",
+                        // rules:[{ required: true }],
+                        type: "DatePicker",
+                        fieldStyle: { width: "100%" },
+                        // rules: [
+                        //     {
+                        //         required: true,
+                        //         message: "Date of Birth is required",
+                        //     },
+                        // ],
+                        itemStyle: { marginBottom: 10 },
+                    },
+                    {
+                        object: "basic",
+                        fieldCol: 12,
+                        key: "sponsor",
+                        size: "small",
+                        type: "Select",
+                        labelAlign: "right",
+                        itemStyle: { marginBottom: 10 },
+                    },
+                ],
+            },
         };
     }
 
@@ -302,12 +403,14 @@ class InfoModal extends Component {
     };
     fetchAll = () =>{
         const {editCP}= this.props;
-        Promise.all([ getStates(), getStandardLevels(), getOrganisations() ])
+        Promise.all([ getStates(), getStandardLevels(), getOrganizations() ])
         .then(res => {
-                const { BasicFields } = this.state;
-                BasicFields.fields[10].data = res[0].data;
+                const { BasicFields, SecurityFields } = this.state;
+                BasicFields.fields[11].data = res[0].data;
+                SecurityFields.fields[7].data = res[2].data
                 this.setState({
                     BasicFields,
+                    SecurityFields,
                     skill_data: res[1].data,
                     orgs_data: res[2].data
                 },()=>{
@@ -331,24 +434,6 @@ class InfoModal extends Component {
             console.log(e);
         })
     }
-   
-    // getStates = () => {
-    //     getStates().then((res) => {
-    //         if (res.success) {
-    //             const { BasicFields } = this.state;
-    //             BasicFields.fields[10].data = res.data;
-    //             this.setState({ BasicFields });
-    //         }
-    //     });
-    // };
-
-    // getStandardLevels = () =>{
-    //     getStandardLevels().then(res =>{
-    //         if (res.success) {
-    //             this.setState({ skill_data: res.data });
-    //         }
-    //     })
-    // }
 
     insertSkill = () => {
         const { SkillFields } = this.state;
@@ -389,7 +474,7 @@ class InfoModal extends Component {
                            return el
                        }
                    })
-                    const {skill} = this.skillRef.current.refs.skill_form.getFieldValue() // const
+                    const { skill } = this.skillRef.current.refs.skill_form.getFieldsValue() // const
                     delete skill[splice_key[1]];
                     this.skillRef.current.refs.skill_form.setFieldsValue({ skill, })
                    this.setState({SkillFields})
@@ -456,16 +541,18 @@ class InfoModal extends Component {
 
     newAssociateField = (item_no) =>{
         const { orgs_data } = this.state
-        const splice_key = [`designation${item_no}`, `organisationId${item_no}`,`startDate${item_no}`,`endDate${item_no}`, item_no];
+        const splice_key = [`organizationId${item_no}`, `designation${item_no}`, `startDate${item_no}`,`endDate${item_no}`, item_no];
         return [
+           
             {
                 object: "asso",
                 fieldCol: 6,
                 layout: { wrapperCol: { span: 23 } },
                 key: splice_key[0],
                 size: "small",
+                data: orgs_data,
                 // rules:[{ required: true }],
-                type: "Input",
+                type: "Select",
             },
             {
                 object: "asso",
@@ -473,9 +560,8 @@ class InfoModal extends Component {
                 layout: { wrapperCol: { span: 23 } },
                 key: splice_key[1],
                 size: "small",
-                data: orgs_data,
                 // rules:[{ required: true }],
-                type: "Select",
+                type: "Input",
             },
             {
                 object: "asso",
@@ -531,9 +617,9 @@ class InfoModal extends Component {
     submit = () => {
         //submit button click
         this.basicRef.current && this.basicRef.current.refs.basic_form.submit();
-        this.associateRef.current &&
-            this.associateRef.current.refs.associate_form.submit();
+        this.associateRef.current && this.associateRef.current.refs.associate_form.submit();
         this.skillRef.current && this.skillRef.current.refs.skill_form.submit();
+        this.securityRef.current && this.securityRef.current.refs.security_form.submit();
     };
 
     BasicCall = (vake) => {
@@ -548,17 +634,14 @@ class InfoModal extends Component {
                 basicSubmitted: true, // skill form submitted
             },
             () => {
-                if (
-                    this.state.basicSubmitted &&
-                    this.state.associateSubmitted &&
-                    this.state.skillSubmitted
-                ) {
+                const { basicSubmitted, associateSubmitted, skillSubmitted, securitySubmitted, mergeObj } = this.state
+                if ( basicSubmitted && associateSubmitted && skillSubmitted && securitySubmitted ) {
                     //check if both form is submittef
                     if (!this.props.editCP) {
-                        this.addPerson(this.state.mergeObj); //add skill
+                        this.addPerson(mergeObj); //add skill
                     } else {
                         console.log("edit");
-                        this.editRecord(this.state.mergeObj); //edit skill
+                        this.editRecord(mergeObj); //edit skill
                     }
                 }
             }
@@ -574,7 +657,7 @@ class InfoModal extends Component {
             for (let i = 0; i < result; i++) {
                 vars.push({
                     designation: asso[`designation${i}`],
-                    organisationId: asso[`organisationId${i}`],
+                    organizationId: asso[`organizationId${i}`],
                     startDate: asso[`startDate${i}`],
                     endDate: asso[`endDate${i}`],
                 });
@@ -582,21 +665,18 @@ class InfoModal extends Component {
         }
         this.setState(
             {
-                mergeObj: { ...this.state.mergeObj, contactPersonOrganisations: vars, },
+                mergeObj: { ...this.state.mergeObj, contactPersonOrganizations: vars, },
                 associateSubmitted: true, // level form submitted
             },
             () => {
-                if (
-                    this.state.basicSubmitted &&
-                    this.state.associateSubmitted &&
-                    this.state.skillSubmitted 
-                ) {
+                const { basicSubmitted, associateSubmitted, skillSubmitted, securitySubmitted, mergeObj } = this.state
+                if ( basicSubmitted && associateSubmitted && skillSubmitted && securitySubmitted ) {
                     //check if both form is submittef
                     if (!this.props.editCP) {
-                        this.addPerson(this.state.mergeObj); //add skill
+                        this.addPerson(mergeObj); //add skill
                     } else {
                         console.log("edit");
-                        this.editRecord(this.state.mergeObj); //edit skill
+                        this.editRecord(mergeObj); //edit skill
                     }
                 }
             }
@@ -622,17 +702,40 @@ class InfoModal extends Component {
                 skillSubmitted: true, // level form submitted
             },
             () => {
-                if (
-                    this.state.basicSubmitted &&
-                    this.state.associateSubmitted &&
-                    this.state.skillSubmitted 
-                ) {
+                const { basicSubmitted, associateSubmitted, skillSubmitted, securitySubmitted, mergeObj } = this.state
+                if ( basicSubmitted && associateSubmitted && skillSubmitted && securitySubmitted ) {
                     //check if both form is submittef
                     if (!this.props.editCP) {
-                        this.addPerson(this.state.mergeObj); //add skill
+                        this.addPerson(mergeObj); //add skill
                     } else {
                         console.log("edit");
-                        this.editRecord(this.state.mergeObj); //edit skill
+                        this.editRecord(mergeObj); //edit skill
+                    }
+                }
+            }
+        );
+    };
+
+    SecurityCall = (vake) => {
+        // this will work after  got  Object from the skill from
+        // vake.basic.stateId = null
+        this.setState(
+            {
+                mergeObj: {
+                    ...this.state.mergeObj,
+                    ...vake.sec,
+                },
+                securitySubmitted: true, // skill form submitted
+            },
+            () => {
+                const { basicSubmitted, associateSubmitted, skillSubmitted, securitySubmitted, mergeObj } = this.state
+                if ( basicSubmitted && associateSubmitted && skillSubmitted && securitySubmitted ) {
+                    //check if both form is submittef
+                    if (!this.props.editCP) {
+                        this.addPerson(mergeObj); //add skill
+                    } else {
+                        console.log("edit");
+                        this.editRecord(mergeObj); //edit skill
                     }
                 }
             }
@@ -657,7 +760,7 @@ class InfoModal extends Component {
                 let skill = {};
                 let asso = {};
                 const skillArray = data.standardSkillStandardLevels;
-                const assoArray = data.contactPersonOrganisations
+                const assoArray = data.contactPersonOrganizations
                 let result = skillArray.length < assoArray.length? assoArray.length :skillArray.length;
                 for (let i = 0; i < result; i++) {
                     let skillEl = skillArray[i];
@@ -676,7 +779,7 @@ class InfoModal extends Component {
                     if(assoEl){
                         associateFields.fields = associateFields.fields.concat( this.newAssociateField(i) );
                         asso[`designation${i}`] = assoEl.designation
-                        asso[`organisationId${i}`] = assoEl.organisationId
+                        asso[`organizationId${i}`] = assoEl.organizationId
                         asso[`startDate${i}`] = assoEl.startDate && moment(assoEl.startDate)
                         asso[`endDate${i}`] = assoEl.endDate && moment (assoEl.endDate)
                     }
@@ -734,7 +837,7 @@ class InfoModal extends Component {
 
     render() {
         const { editCP, visible } = this.props;
-        const { BasicFields, associateFields, SkillFields } = this.state;
+        const { BasicFields, associateFields, SkillFields, SecurityFields } = this.state;
 
         return (
             <Modal
@@ -744,17 +847,17 @@ class InfoModal extends Component {
                 onOk={() => { this.submit(); }}
                 okText={"Save"}
                 onCancel={this.onCancel}
-                width={700}
+                width={900}
             >
                 <Tabs type="card">
-                    <TabPane tab="Basic" key="1" forceRender>
+                    <TabPane tab="Basic" key="basic" forceRender>
                         <Form
                             ref={this.basicRef}
                             Callback={this.BasicCall}
                             FormFields={BasicFields}
                         />
                     </TabPane>
-                    <TabPane tab="Association" key="2" forceRender>
+                    <TabPane tab="Association" key="association" forceRender>
                     <Row justify="end">
                             <Col>
                                 <Button
@@ -767,8 +870,8 @@ class InfoModal extends Component {
                             </Col>
                             <Col span="24">
                                 <Row>
-                                    <Col span="6">Designation</Col>
                                     <Col span="6">Organisation</Col>
+                                    <Col span="6">Designation</Col>
                                     <Col span="5">Start Date</Col>
                                     <Col span="5">End Date</Col>
                                 </Row>
@@ -782,7 +885,7 @@ class InfoModal extends Component {
                             />
                         </Row>
                     </TabPane>
-                    <TabPane tab="Skill" key="3" forceRender>
+                    <TabPane tab="Skill" key="skill" forceRender>
                         <Row justify="end">
                             <Col>
                                 <Button
@@ -807,6 +910,13 @@ class InfoModal extends Component {
                                 FormFields={SkillFields}
                             />
                         </Row>
+                    </TabPane>
+                    <TabPane tab="Security Clearance" key="security" forceRender>
+                        <Form
+                            ref={this.securityRef}
+                            Callback={this.SecurityCall}
+                            FormFields={SecurityFields}
+                        />
                     </TabPane>
                 </Tabs>
             </Modal>

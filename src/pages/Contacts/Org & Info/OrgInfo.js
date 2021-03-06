@@ -6,11 +6,11 @@ import Comments from "../../../components/Core/Comments";
 import Projects from "../../../components/Core/Projects";
 import Opportunity from "../../../components/Core/Opportunities";
 import Bank from "../../../components/Core/Bank";
-import ChildOrg from "./ChildOrg";
+import ChildOrg from "./ChildOrg"; 
 
 import InfoModal from "./InfoModal";
 
-import { getOrgRecord, delOrg } from "../../../service/Organisations";
+import { getOrgRecord, delOrg } from "../../../service/Organizations";
 
 const { Item } = Descriptions;
 const { TabPane } = Tabs;
@@ -63,7 +63,7 @@ class OrgInfo extends Component {
     handleDelete = (id) => {
         delOrg(id).then((res) => {
             if (res.success) {
-                window.location.href = '/organisations'
+                window.location.href = '/organizations'
             }
         });
     };
@@ -134,7 +134,7 @@ class OrgInfo extends Component {
                     <TabPane tab="Comments" key="3">
                         <Comments {...this.props.match.params} />
                     </TabPane>
-                    <TabPane tab="Sub-organisation" key="4">
+                    <TabPane tab="Sub-organization" key="4">
                         <ChildOrg {...this.props.match.params} />
                     </TabPane>
                     <TabPane tab="Account" key="5">

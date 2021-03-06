@@ -398,9 +398,9 @@ class InfoModal extends Component {
                         ],
                         itemStyle: { marginBottom: 1 },
                         // rules:[{ required: true }],
-                        type: "Radio",
-                        mode: "button",
-                        shape: "solid",
+                        type: "Select",
+                        // mode: "button",
+                        // shape: "solid",
                     },
                 ],
             },
@@ -938,7 +938,7 @@ class InfoModal extends Component {
                 }}
                 okText={"Save"}
                 onCancel={this.onCancel}
-                width={700}
+                width={}
             >
                 <Tabs type="card">
                     <TabPane tab="Basic" key="1" forceRender>

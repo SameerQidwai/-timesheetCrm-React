@@ -81,7 +81,7 @@ class Roles extends Component {
                 },
                 {
                     key: 2,
-                    title: "Team Lead",
+                    title: "Team Opportunity",
                 },
                 {
                     key: 3,

@@ -5,7 +5,7 @@ import moment from "moment";
 import Form from "../../components/Core/Form";
 
 import { addList, getRecord, editList } from "../../service/opportunities";
-import { getOrganisations, getStates, getOrgPersons, getPanels } from "../../service/constant-Apis";
+import { getOrganizations, getStates, getOrgPersons, getPanels } from "../../service/constant-Apis";
 
 const { TabPane } = Tabs;
 
@@ -39,7 +39,7 @@ class InfoModal extends Component {
                 size: "middle",
                 fields: [
                     {
-                        Placeholder: "Lead ID",
+                        Placeholder: "Opportunity ID",
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -91,7 +91,7 @@ class InfoModal extends Component {
                     {
                         object: "obj",
                         fieldCol: 12,
-                        key: "organisationId",
+                        key: "organizationId",
                         size: "small",
                         // rules:[{ required: true }],
                         data: [],
@@ -207,9 +207,9 @@ class InfoModal extends Component {
                         // ],
                         itemStyle: { marginBottom: 1 },
                         // rules:[{ required: true }],
-                        type: "Radio",
-                        mode: "button",
-                        shape: "solid",
+                        type: "Select",
+                        // mode: "button",
+                        // shape: "solid",
                         onChange: function name(params, options) {
                             console.log({params}, {options});
                         }
@@ -557,7 +557,7 @@ class InfoModal extends Component {
 
     fetchAll = () =>{
         const { editPro }= this.props;                                             // either call this or call that
-        Promise.all([ getPanels(), getOrganisations(), getStates(), editPro && this.getRecord(editPro)])
+        Promise.all([ getPanels(), getOrganizations(), getStates(), editPro && this.getRecord(editPro)])
         .then(res => {
             const { BasicFields } = this.state;
                 BasicFields.fields[3].data = res[0].success? res[0].data : [];
