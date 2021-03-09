@@ -149,7 +149,7 @@ class Opportunities extends Component {
             <>
                 <Row justify="space-between">
                     <Col>
-                        <Title level={4}>Lead</Title>
+                        <Title level={4}>Opportunities</Title>
                     </Col>
                     <Col style={{textAlign:'end'}} span={4} >
                         <Row justify="space-between">
@@ -166,7 +166,7 @@ class Opportunities extends Component {
                                             editLead:false
                                         })
                                     }} 
-                                    ><PlusSquareOutlined />Add Lead</Button>
+                                    ><PlusSquareOutlined />Add Opportunity</Button>
                             </Col>
                         </Row>
                     </Col>
