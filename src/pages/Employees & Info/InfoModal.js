@@ -395,6 +395,7 @@ class InfoModal extends Component {
                         fieldCol: 24,
                         key: "training",
                         size: "small",
+                        mode:{ minRows: 6, maxRows:12},
                         // rules:[{ required: true }],
                         type: "Textarea",
                     },

@@ -203,6 +203,7 @@ class Forms extends Component {
                     <Input.TextArea
                         placeholder={placeholder}
                         allowClear
+                        // autoSize={mode}
                         autoSize={mode}
                         asize={size}
                         style={style}
