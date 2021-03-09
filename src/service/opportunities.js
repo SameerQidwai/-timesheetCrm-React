@@ -41,37 +41,49 @@ export const getRecord = (id) => {
         .then((res) => {
             const { success, data } = res.data;
             // console.log(data);
-            const basic = {
-                id: data.id,
-                panelId: data.panelId,
-                organizationId: data.organizationId,
-                organizationName: data.organization && data.organization.name,
-                // organizationId: data.organizationId,
-                ContactName: data.contactPerson && data.contactPerson.firstName + data.contactPerson.lastName ,
-                contactPersonId: data.contactPersonId,
-                qualifiedOps: data.qualifiedOps,
-                type: data.type,
-                value: data.value,
-                title: data.title,
-                stateId: data.stateId
+            if (success) {
+                const basic = {
+                    id: data.id,
+                    panelId: data.panelId,
+                    organizationId: data.organizationId,
+                    organizationName: data.organization && data.organization.name,
+                    // organizationId: data.organizationId,
+                    ContactName: data.contactPerson && data.contactPerson.firstName +' '+ data.contactPerson.lastName ,
+                    contactPersonId: data.contactPersonId,
+                    qualifiedOps: data.qualifiedOps,
+                    type: data.type,
+                    value: data.value? data.value: 0,
+                    title: data.title,
+                    stateId: data.stateId
+                }
+                const tender = {
+                    tender: data.tender,
+                    tenderNumber: data.tenderNumber,
+                }
+                const billing = {
+                    cmPercentage: data.cmPercentage? data.cmPercentage: 0,
+                    cm$: data.value * data.cmPercentage /100,
+                    getPercentage: data.getPercentage ? data.getPercentage: 0,
+                    goPercentage: data.goPercentage? data.goPercentage: 0,
+                    // these Four keys are for Profit and lost
+                    totalMonths: (data.startDate && data.endDate) ? Math.round(moment(data.endDate).diff(moment(data.startDate), 'months', true)) : 0, 
+                    endDate: data.endDate ? moment(data.endDate): null,
+                    startDate: data.startDate ? moment(data.startDate): null,
+                    value: data.value
+                }
+                billing.goget = (billing.getPercentage* billing.goPercentage)/100
+                billing.discount = (data.value * billing.goget) /100
+                billing.upside = (data.value - billing.discount)
+                
+                const dates = {
+                    entryDate: moment(data.entryDate),
+                    startDate: moment(data.startDate),
+                    endDate: moment(data.endDate),
+                    bidDate: moment(data.bidDate)
+                }
+                data.ContactName= data.contactPerson && data.contactPerson.firstName + ' ' + data.contactPerson.lastName
+                return {success, data, basic, tender, billing, dates};
             }
-            const tender = {
-                tender: data.tender,
-                tenderNumber: data.tenderNumber,
-                tenderValue: data.tenderValue
-            }
-            const billing = {
-                cmPercentage: data.cmPercentage,
-                getPercentage: data.getPercentage,
-                goPercentage: data.goPercentage
-            }
-            const dates = {
-                entryDate: moment(data.entryDate),
-                startDate: moment(data.startDate),
-                endDate: moment(data.endDate),
-                bidDate: moment(data.bidDate)
-            }
-            if (success) return {success, data, basic, tender, billing, dates};
         })
         .catch((err) => {
             return {

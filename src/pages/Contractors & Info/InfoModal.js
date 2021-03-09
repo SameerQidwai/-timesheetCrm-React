@@ -342,7 +342,7 @@ class InfoModal extends Component {
                         // itemStyle:{marginBottom:'10px'},
                     },
                     {
-                        Placeholder: "Relationship to Employee",
+                        Placeholder: "Relationship to Contractor",
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -352,27 +352,27 @@ class InfoModal extends Component {
                     {
                         object: "kin",
                         fieldCol: 12,
-                        key: "nextOfKinRelation",
-                        size: "small",
-                        // rules:[{ required: true }],
-                        data:[
-                            {label: 'Spouse',value:'Spouse' },
-                            {label: 'Partner',value:'Partner' },
-                            {label: 'Sibling',value:'Sibling' },
-                            {label: 'Parent',value:'Parent' },
-                            {label: 'Child',value:'Child' },
-                            {label: 'Friend',value:'Friend' },
-                        ],
-                        type: "select",
-                    },
-                    {
-                        object: "kin",
-                        fieldCol: 12,
                         key: "nextOfKinEmail",
                         size: "small",
                         // rules:[{ required: true }],
                         type: "input",
                         itemStyle:{marginBottom:10},
+                    },
+                    {
+                        object: "kin",
+                        fieldCol: 12,
+                        key: "nextOfKinRelation",
+                        size: "small",
+                        // rules:[{ required: true }],
+                        data:[
+                            {label: 'Spouse', value: 'Spouse' },
+                            {label: 'Partner', value: 'Partner' },
+                            {label: 'Sibling', value: 'Sibling' },
+                            {label: 'Parent', value: 'Parent' },
+                            {label: 'Child', value: 'Child' },
+                            {label: 'Friend', value: 'Friend' },
+                        ],
+                        type: "Select",
                     },
                 ],
             },
@@ -439,8 +439,16 @@ class InfoModal extends Component {
                         labelAlign: "right",
                         // itemStyle:{marginBottom:'10px'},
                     },
+                    // {
+                    //     Placeholder: `Total Contract ${'here'}`,
+                    //     fieldCol: 12,
+                    //     size: "small",
+                    //     type: "Text",
+                    //     labelAlign: "right",
+                    //     // itemStyle:{marginBottom:'10px'},
+                    // },
                     {
-                        Placeholder: `Total Contract ${'here'}`,
+                        Placeholder: `Total Fee`,
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -466,38 +474,17 @@ class InfoModal extends Component {
                         //         message: "Payment Frequncy is required",
                         //     },
                         // ],
+                        onChange: function onChange(value, option) {
+                            const { BillingFields } = this.state
+                            BillingFields.fields[5].Placeholder = `Total Fee ${value ?option.label: ''}`
+                            this.setState({BillingFields})
+                        }.bind(this),
                         itemStyle: { marginBottom: 1 },
                     },
                     {
                         object: "billing",
                         fieldCol: 12,
-                        key: "noOfHours",
-                        size: "small",
-                        type: "InputNumber",
-                        // shape: " Hours",
-                        fieldStyle: { width: "100%" },
-                        // rules: [
-                        //     {
-                        //         required: true,
-                        //         message: "How much he Cost",
-                        //     },
-                        // ],
-                        itemStyle: { marginBottom: 1 },
-                    },
-                    
-                    {
-                        Placeholder: `Total Fee`,
-                        fieldCol: 24,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
-                    },
-                    
-                    {
-                        object: "billing",
-                        fieldCol: 12,
-                        key: "GST",
+                        key: "remunerationAmount",
                         size: "small",
                         type: "InputNumber",
                         shape: "$",
@@ -510,6 +497,22 @@ class InfoModal extends Component {
                         // ],
                         itemStyle: { marginBottom: 1 },
                     },
+                    // {
+                    //     object: "billing",
+                    //     fieldCol: 12,
+                    //     key: "GST",
+                    //     size: "small",
+                    //     type: "InputNumber",
+                    //     shape: "$",
+                    //     fieldStyle: { width: "100%" },
+                    //     // rules: [
+                    //     //     {
+                    //     //         required: true,
+                    //     //         message: "How much he Cost",
+                    //     //     },
+                    //     // ],
+                    //     itemStyle: { marginBottom: 1 },
+                    // },
                     {
                         Placeholder: "Comments",
                         fieldCol: 24,
@@ -521,7 +524,7 @@ class InfoModal extends Component {
                     {
                         object: "billing",
                         fieldCol: 24,
-                        key: "payslipEmail",
+                        key: "comments",
                         size: "small",
                         type: "Textarea",
                         itemStyle: { marginBottom: 1 },
@@ -642,6 +645,7 @@ class InfoModal extends Component {
         //submit button click
         this.basicRef.current && this.basicRef.current.refs.basic_form.submit();
         this.billingRef.current && this.billingRef.current.refs.billing_form.submit();
+        this.kinRef.current && this.kinRef.current.refs.kin_form.submit();
     };
 
     BasicCall = (vake) => {
@@ -745,6 +749,7 @@ class InfoModal extends Component {
         getRecord(id).then(res=>{
             if (res.success){
                 this.basicRef.current.refs.basic_form.setFieldsValue({ basic: res.basic, });
+                this.kinRef.current.refs.kin_form.setFieldsValue({ kin: res.kin, });
                 this.billingRef.current.refs.billing_form.setFieldsValue({ billing: res.billing, })
             }
         })
@@ -799,7 +804,7 @@ class InfoModal extends Component {
     onPerson = (value) => {
         getContactRecord(value).then(res=>{
             if(res.success){
-                res.data.cpCode = `Emp-00${res.data.id}`
+                res.data.cpCode = `Con-00${res.data.id}`
                 res.data.dateOfBirth = res.data.dateOfBirth && moment(res.data.dateOfBirth) 
                 this.basicRef.current.refs.basic_form.setFieldsValue({ basic: res.data, });
                 this.setState({sContact: value})

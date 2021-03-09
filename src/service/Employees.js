@@ -48,6 +48,8 @@ export const getRecord = (id) => {
                     tfn: data.tfn,
                     memberNumber: data.memberNumber,
                     training: data.training,
+                    taxFreeThreshold: data.taxFreeThreshold,
+                    helpHECS: data.helpHECS
                 }
                 const kin = {
                     nextOfKinDateOfBirth: data.nextOfKinDateOfBirth? moment(data.nextOfKinDateOfBirth) : null,
@@ -77,8 +79,18 @@ export const getRecord = (id) => {
                     noOfHoursPer: employmentContracts.noOfHoursPer, 
                     remunerationAmount:employmentContracts.remunerationAmount,
                     remunerationAmountPer: employmentContracts.remunerationAmountPer,  
+                    comments: employmentContracts.comments
                 }
-                return {success, data, basic, detail, kin, bank, billing}
+                const smsf = {
+                    smsfName: data.smsfName,
+                    smsfABN: data.smsfABN,
+                    smsfAddress: data.smsfAddress,
+                    smsfBankName: data.smsfBankName,
+                    smsfBankBsb: data.smsfBankBsb,
+                    smsfBankAccountNo: data.smsfBankAccountNo,
+                }
+                console.log(smsf);
+                return {success, data, basic, detail, kin, bank, billing, smsf}
             };
         })
         .catch((err) => {

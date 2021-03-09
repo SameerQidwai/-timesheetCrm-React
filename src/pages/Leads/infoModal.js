@@ -23,7 +23,7 @@ class InfoModal extends Component {
             datesSubmitted: false,
             billingSubmitted: false,
             check: false,
-
+            leadValue: 0,
             SKILLS: [],
             STATES: [],
             ORGS: [],
@@ -39,7 +39,7 @@ class InfoModal extends Component {
                 size: "middle",
                 fields: [
                     {
-                        Placeholder: "Lead ID",
+                        Placeholder: "Opportunity ID",
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -110,6 +110,9 @@ class InfoModal extends Component {
                             }else{
                                 const { BasicFields } = this.state
                                 BasicFields.fields[7].data = []
+                                const { obj } = this.basicRef.current.refs.basic_form.getFieldsValue();
+                                obj.contactPersonId = undefined
+                                this.basicRef.current.refs.basic_form.setFieldsValue({ obj: obj, });
                                 this.setState({ BasicFields })
                             }
                         }.bind(this)
@@ -152,8 +155,18 @@ class InfoModal extends Component {
                         fieldCol: 12,
                         key: "value",
                         size: "small",
+                        shape: "$",
                         // rules:[{ required: true }],
-                        type: "Input",
+                        type: "InputNumber",
+                        onChange: function setValue(value) {
+                            const {obj} = this.billingRef.current.refs.billing_form.getFieldsValue();
+                            obj.cm$ =  obj.cmPercentage? (value * obj.cmPercentage) /100 : 0
+                            obj.discount =  obj.goget? (value * obj.goget) /100 : 0
+                            obj.upside =  obj.discount? (value - obj.discount) : 0
+                            this.billingRef.current.refs.billing_form.setFieldsValue({ obj: obj, });
+
+                        }.bind(this),
+                        fieldStyle: { width: "100%" },
                     },
                     {
                         Placeholder: "Type",
@@ -190,12 +203,20 @@ class InfoModal extends Component {
                         data: [],
                         type: "Select",
                         itemStyle: { marginBottom: "10px" },
-                    },    
+                    },
+                    {
+                        Placeholder: "Qualified Ops",
+                        fieldCol: 24,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
                     {
                         object: "obj",
                         fieldCol: 12,
                         key: "qualifiedOps",
-                        label: "Qualified Ops",
+                        // label: "Qualified Ops",
                         size: "small",
                         data: [
                             { label: "True", value: true },
@@ -209,12 +230,7 @@ class InfoModal extends Component {
                         // ],
                         itemStyle: { marginBottom: 1 },
                         // rules:[{ required: true }],
-                        type: "Radio",
-                        mode: "button",
-                        shape: "solid",
-                        onChange: function name(params, options) {
-                            console.log({params}, {options});
-                        }
+                        type: "Select",
                     },       
                                    
                 ],
@@ -262,23 +278,23 @@ class InfoModal extends Component {
                         // rules:[{ required: true }],
                         type: "Input",
                     },
-                    {
-                        Placeholder: "Tender Value",
-                        size: "small",
-                        fieldCol: 24,
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
-                    },
-                    {
-                        object: "obj",
-                        fieldCol: 12,
-                        layout:  { wrapperCol: 12 },
-                        key: "tenderValue",
-                        size: "small",
-                        // rules:[{ required: true }],
-                        type: "Input",
-                    },
+                    // {
+                    //     Placeholder: "Tender Value",
+                    //     size: "small",
+                    //     fieldCol: 24,
+                    //     type: "Text",
+                    //     labelAlign: "right",
+                    //     // itemStyle:{marginBottom:'10px'},
+                    // },
+                    // {
+                    //     object: "obj",
+                    //     fieldCol: 12,
+                    //     layout:  { wrapperCol: 12 },
+                    //     key: "tenderValue",
+                    //     size: "small",
+                    //     // rules:[{ required: true }],
+                    //     type: "Input",
+                    // },
                     
                 ],
             },
@@ -315,7 +331,15 @@ class InfoModal extends Component {
                         shape: '%',
                         // rules:[{ required: true }],
                         type: "InputNumber",
+                        rangeMin: 0,
+                        rangeMax: 100,
                         fieldStyle: { width: "100%" },
+                        onChange: function name(value) {
+                            const basic = this.basicRef.current.refs.basic_form.getFieldsValue().obj;
+                            const billing = this.basicRef.current.refs.basic_form.getFieldsValue().obj;
+                            billing.cm$ =  basic.value? (basic.value * value) /100 : 0
+                            this.billingRef.current.refs.billing_form.setFieldsValue({ obj: billing, });
+                        }.bind(this)
                     },
                     {
                         object: "obj",
@@ -323,6 +347,7 @@ class InfoModal extends Component {
                         key: "cm$",
                         size: "small",
                         shape: '$',
+                        disabled: true,
                         // rules:[{ required: true }],
                         type: "InputNumber",
                         fieldStyle: { width: "100%" },
@@ -352,6 +377,16 @@ class InfoModal extends Component {
                         // rules:[{ required: true }],
                         type: "InputNumber",
                         fieldStyle: { width: "100%" },
+                        rangeMin: 0,
+                        rangeMax: 100,
+                        onChange: function name(value) {
+                            const basic = this.basicRef.current.refs.basic_form.getFieldsValue().obj;
+                            const billing = this.billingRef.current.refs.billing_form.getFieldsValue().obj;
+                            billing.goget =  billing.getPercentage? (billing.getPercentage * value) /100 : 0
+                            billing.discount =  (billing.goget && basic.value)? (basic.value * billing.goget) /100 : 0
+                            billing.upside =  billing.discount? (basic.value - billing.discount) : 0
+                            this.billingRef.current.refs.billing_form.setFieldsValue({ obj: billing, });
+                        }.bind(this)
                     },
                     {
                         object: "obj",
@@ -361,7 +396,17 @@ class InfoModal extends Component {
                         shape: '%',
                         // rules:[{ required: true }],
                         type: "InputNumber",
+                        rangeMin: 0,
+                        rangeMax: 100,
                         fieldStyle: { width: "100%" },
+                        onChange: function name(value) {
+                            const basic = this.basicRef.current.refs.basic_form.getFieldsValue().obj;
+                            const billing = this.billingRef.current.refs.billing_form.getFieldsValue().obj;
+                            billing.goget =  billing.goPercentage? (billing.goPercentage * value) /100 : 0
+                            billing.discount =  (billing.goget && basic.value)? (basic.value * billing.goget) /100 : 0
+                            billing.upside =  billing.discount? (basic.value - billing.discount) : 0
+                            this.billingRef.current.refs.billing_form.setFieldsValue({ obj: billing, });
+                        }.bind(this)
                     },
                     {
                         Placeholder: "GO/Get",
@@ -382,9 +427,10 @@ class InfoModal extends Component {
                     {
                         object: "obj",
                         fieldCol: 12,
-                        key: "goget%",
+                        key: "goget",
                         size: "small",
                         shape: '%',
+                        disabled: true,
                         // rules:[{ required: true }],
                         type: "InputNumber",
                         fieldStyle: { width: "100%" },
@@ -394,6 +440,8 @@ class InfoModal extends Component {
                         fieldCol: 12,
                         key: "discount",
                         size: "small",
+                        disabled: true,
+                        shape: '$',
                         // rules:[{ required: true }],
                         type: "InputNumber",
                         fieldStyle: { width: "100%" },
@@ -411,6 +459,8 @@ class InfoModal extends Component {
                         fieldCol: 12,
                         key: "upside",
                         size: "small",
+                        disabled: true,
+                        shape: '$',
                         // rules:[{ required: true }],
                         type: "InputNumber",
                         fieldStyle: { width: "100%" },
@@ -425,6 +475,7 @@ class InfoModal extends Component {
                 justifyField: "center",
                 FormLayout: "inline",
                 size: "middle",
+                initialValues: {entryDate: moment(new Date())},
                 fields: [
                     {
                         Placeholder: "Start Date",
@@ -470,14 +521,7 @@ class InfoModal extends Component {
                         //     },
                         // ],
                     },
-                    {
-                        Placeholder: "Total Months",
-                        fieldCol: 12,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
-                    },
+ 
                     {
                         Placeholder: "Daily Hours",
                         fieldCol: 12,
@@ -487,14 +531,14 @@ class InfoModal extends Component {
                         // itemStyle:{marginBottom:'10px'},
                     },
                     {
-                        object: "obj",
+                        Placeholder: "Bid Date",
                         fieldCol: 12,
-                        key: "months",
                         size: "small",
-                        // rules:[{ required: true }],
-                        type: "InputNumber",
-                        fieldStyle: { width: "100%" },
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
                     },
+                  
                     {
                         object: "obj",
                         fieldCol: 12,
@@ -503,22 +547,6 @@ class InfoModal extends Component {
                         // rules:[{ required: true }],
                         type: "InputNumber",
                         fieldStyle: { width: "100%" },
-                    },
-                    {
-                        Placeholder: "Bid Date",
-                        fieldCol: 12,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
-                    },
-                    {
-                        Placeholder: "Entry Date",
-                        fieldCol: 12,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
                     },
                     {
                         object: "obj",
@@ -534,6 +562,16 @@ class InfoModal extends Component {
                         //     },
                         // ],
                     },
+                    
+                    {
+                        Placeholder: "Entry Date",
+                        fieldCol: 24,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                    
                     {
                         object: "obj",
                         fieldCol: 12,
@@ -559,7 +597,12 @@ class InfoModal extends Component {
 
     fetchAll = () =>{
         console.log('fetchAll');
-        const { editLead }= this.props;                                             // either call this or call that
+        const { editLead }= this.props;  
+        //
+        const dates = {entryDate: moment(new Date())}
+        this.datesRef.current.refs.dates_form.setFieldsValue({ obj: dates, }); 
+        // to set the Default entryDate for new Oppurtunity                              
+                                                                     // either call this or call that
         Promise.all([ getPanels(), getOrganizations(), getStates(), editLead && this.getRecord(editLead)])
         .then(res => {
             console.log(res[1].data);
@@ -712,11 +755,11 @@ class InfoModal extends Component {
     addOpportunity = (value) => {
         const { callBack } = this.props;
         console.log(value);
+        this.setState({basicSubmitted: false, tenderSubmitted: false, billingSubmitted: false, datesSubmitted: false})
+
         addList(value).then((res) => {
             if(res.success){
                 callBack()
-            }else{
-                 this.setState({basicSubmitted: false, tenderSubmitted: false, billingSubmitted: false, datesSubmitted: false})
             }
         });
     };
@@ -740,12 +783,12 @@ class InfoModal extends Component {
         const { editLead, callBack } = this.props;
         console.log(this.props);
         data.id = editLead
+        this.setState({basicSubmitted: false, tenderSubmitted: false, billingSubmitted: false, datesSubmitted: false})
+
         editList(data).then((res) => {
             console.log(res);
             if(res.success){
                 callBack()
-            }else{
-                this.setState({basicSubmitted: false, tenderSubmitted: false, billingSubmitted: false, datesSubmitted: false})
             }
         });
     };

@@ -1,17 +1,6 @@
 import React, { Component } from "react";
 
-import {
-    Row,
-    Col,
-    Table,
-    Modal,
-    Input,
-    Button,
-    Select,
-    Typography,
-    Popconfirm,
-    DatePicker,
-} from "antd";
+import { Row, Col, Table, Modal, Input, Button, Select, Typography, Popconfirm, DatePicker, } from "antd";
 import {
     CloseCircleOutlined,
     CheckOutlined,

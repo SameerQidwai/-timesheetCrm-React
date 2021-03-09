@@ -40,8 +40,14 @@ export const getRecord = (id) => {
                     address: contactPerson.address,
                     stateId:contactPerson.stateId,
                 }
-                console.log(basic);
-               
+                const kin = {
+                    nextOfKinDateOfBirth: data.nextOfKinDateOfBirth? moment(data.nextOfKinDateOfBirth) : null,
+                    nextOfKinEmail: data.nextOfKinEmail,
+                    nextOfKinGender: data.nextOfKinGender,
+                    nextOfKinName:  data.nextOfKinName,
+                    nextOfKinPhoneNumber: data.nextOfKinPhoneNumber,
+                    nextOfKinRelation: data.nextOfKinRelation
+                }
                 const employmentContracts = data.employmentContracts.length >0 ? data.employmentContracts[0] : {}
                 const billing ={
                     employeeId: employmentContracts.employeeId,
@@ -52,8 +58,9 @@ export const getRecord = (id) => {
                     noOfHoursPer: employmentContracts.noOfHoursPer, 
                     remunerationAmount:employmentContracts.remunerationAmount,
                     remunerationAmountPer: employmentContracts.remunerationAmountPer,  
+                    comments: employmentContracts.comments
                 }
-                return {success, data, basic, billing}
+                return {success, data, basic, billing, kin}
             };
         })
         .catch((err) => {

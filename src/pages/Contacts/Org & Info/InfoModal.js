@@ -17,6 +17,7 @@ class InfoModal extends Component {
         this.billingRef = React.createRef();
         this.bankRef = React.createRef();
         this.insuredRef = React.createRef();
+        this.futureRef = React.createRef();
         this.draggleRef = React.createRef();
         this.state = {
             editOrg: false,
@@ -24,6 +25,7 @@ class InfoModal extends Component {
             billingSubmitted: false,
             bankSubmitted: false,
             insuredSubmitted: false,
+            futureSubmitted: false,
             check: false,
             bounds: { left: 0, top: 0, bottom: 0, right: 0 },
             dragDisable: true,
@@ -105,7 +107,7 @@ class InfoModal extends Component {
                         type: "Input",
                     },
                     {
-                        Placeholder: "Expected Business Amount",
+                        Placeholder: "Business Type",
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -123,10 +125,16 @@ class InfoModal extends Component {
                     {
                         object: "obj",
                         fieldCol: 12,
-                        key: "EBA",
+                        key: "businessType",
                         size: "small",
                         // rules:[{ required: true }],
-                        type: "Input",
+                        type: "Select",
+                        data: [
+                            {label: 'Sole Trader', value: 1 },
+                            {label: 'Partnership', value: 2 },
+                            {label: 'Company', value: 3 },
+                            {label: 'Trust', value: 4 },
+                        ]
                     },
                     {
                         object: "obj",
@@ -579,7 +587,7 @@ class InfoModal extends Component {
                     {
                         object: "obj",
                         fieldCol: 12,
-                        key: "bank_name",
+                        key: "bankName",
                         size: "small",
                         // rules:[{ required: true }],
                         type: "Input",
@@ -587,7 +595,7 @@ class InfoModal extends Component {
                     {
                         object: "obj",
                         fieldCol: 12,
-                        key: "bsb_number",
+                        key: "bankBsb",
                         size: "small",
                         // rules:[{ required: true }],
                         type: "Input",
@@ -603,10 +611,61 @@ class InfoModal extends Component {
                     {
                         object: "obj",
                         fieldCol: 12,
-                        key: "bank_number",
+                        key: "bankAccountNo",
                         size: "small",
                         // rules:[{ required: true }],
                         type: "Input",
+                    },
+                ],
+            },
+
+            FutureFields: {
+                //creating Component
+                formId: "future_form",
+                FormCol: 24,
+                // FieldSpace:24,
+                justifyField: "center",
+                FormLayout: "inline",
+                contactPerson: [],
+                size: "middle",
+                fields: [
+                    {
+                        Placeholder: "Current Financial Year Total Forecast",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                    {
+                        Placeholder: "Next Financial Year Total Forecast",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                    {
+                        object: "obj",
+                        fieldCol: 12,
+                        key: "currentForecast",
+                        size: "small",
+                        type: "Input",
+                        shape: '$',
+                        // rules:[{ required: true }],
+                        type: "InputNumber",
+                        fieldStyle: { width: "100%" },
+                    },
+                    {
+                        object: "obj",
+                        fieldCol: 12,
+                        key: "nextForecast",
+                        size: "small",
+                        type: "Input",
+                        shape: '$',
+                        // rules:[{ required: true }],
+                        type: "InputNumber",
+                        fieldStyle: { width: "100%" },
                     },
                 ],
             },
@@ -653,7 +712,7 @@ class InfoModal extends Component {
             BasicFields: {
                 ...BasicFields,
                 fields: BasicFields.fields.filter(el =>{
-                    if (el.Placeholder === 'Expected Business Amount'){
+                    if (el.Placeholder === 'Business Type'){
                         el.fieldCol = 24
                         return el
                     }else if (el.Placeholder !=='Delegate Contact person' && el.key !== "delegate_cp"){
@@ -667,10 +726,10 @@ class InfoModal extends Component {
     submit = () => {
         //submit button click
         this.basicRef.current.refs.basic_form.submit();
-        this.billingRef.current &&
-            this.billingRef.current.refs.billing_form.submit();
-        this.insuredRef.current &&
-            this.insuredRef.current.refs.insured_form.submit();
+        this.billingRef.current && this.billingRef.current.refs.billing_form.submit();
+        this.insuredRef.current && this.insuredRef.current.refs.insured_form.submit();
+        this.bankRef.current && this.bankRef.current.refs.bank_form.submit()
+        this.futureRef.current && this.futureRef.current.refs.future_form.submit()
     };
 
     BasicCall = (vake) => {
@@ -695,12 +754,7 @@ class InfoModal extends Component {
                 basicSubmitted: true, // skill form submitted
             },
             () => {
-                if (
-                    this.state.basicSubmitted &&
-                    this.state.billingSubmitted &&
-                    this.state.insuredSubmitted &&
-                    this.state.bankSubmitted 
-                ) {
+                if ( this.state.basicSubmitted && this.state.billingSubmitted && this.state.insuredSubmitted && this.state.bankSubmitted && this.state.futureSubmitted ) {
                     //check if both form is submittef
                     if (!this.props.editOrg) {
                         
@@ -727,18 +781,14 @@ class InfoModal extends Component {
                         taxCode: vake.tax_Code? vake.tax_Code : '',
                         invoiceEmail: vake.invoice_email? vake.invoice_email: '',
                         invoiceNumber: vake.invoice_number? vake.invoice_number: '',
+                        businessType: vake.businessType? vake.businessType: undefined,
                         cti: vake.CTI? vake.CTI : '',
                     },
                 },
                 billingSubmitted: true, // level form submitted
             },
             () => {
-                if (
-                    this.state.basicSubmitted &&
-                    this.state.billingSubmitted &&
-                    this.state.insuredSubmitted &&
-                    this.state.bankSubmitted 
-                ) {
+                if ( this.state.basicSubmitted && this.state.billingSubmitted && this.state.insuredSubmitted && this.state.bankSubmitted && this.state.futureSubmitted ) {
                     //check if both form is submittef
                     if (!this.props.editOrg) {
                         
@@ -778,12 +828,7 @@ class InfoModal extends Component {
                 insuredSubmitted: true, // level form submitted
             },
             () => {
-                if (
-                    this.state.basicSubmitted &&
-                    this.state.billingSubmitted &&
-                    this.state.insuredSubmitted &&
-                    this.state.bankSubmitted 
-                ) {
+                if ( this.state.basicSubmitted && this.state.billingSubmitted && this.state.insuredSubmitted && this.state.bankSubmitted && this.state.futureSubmitted ) {
                     //check if both form is submittef
                     if (!this.props.editOrg) {
                         
@@ -799,23 +844,52 @@ class InfoModal extends Component {
 
     BankCall = (vake) => {
         // this will work after I get the Object from the form
+        vake = vake.obj
+        console.log(vake);
+        this.setState(
+            {
+                mergeObj: {
+                    ...this.state.mergeObj,
+                    ...{
+                        bankName: vake.bankName? vake.bankName : '',
+                        bankAccountNo: vake.bankAccountNo? vake.bankAccountNo : '',
+                        bankBsb: vake.bankBsb? vake.bankBsb: '',
+                    },
+                },
+                bankSubmitted: true, // level form submitted
+            },
+            () => {
+                if ( this.state.basicSubmitted && this.state.billingSubmitted && this.state.insuredSubmitted && this.state.bankSubmitted && this.state.futureSubmitted ) {
+                    //check if both form is submittef
+                    if (!this.props.editOrg) {
+                        
+                        this.addOrganization(this.state.mergeObj); //add skill
+                    } else {
+                        
+                        this.editRecord(this.state.mergeObj); //edit skill
+                    }
+                }
+            }
+        );
+    };
+
+    FutureCall = (vake) => {
+        // this will work after I get the Object from the form
         ;
         vake = vake.obj
         this.setState(
             {
                 mergeObj: {
                     ...this.state.mergeObj,
-                    ...vake,
+                    ...{
+                        currentFinancialYearTotalForecast: vake.currentForecast ? vake.currentForecast : 0,
+                        nextFinancialYearTotalForecast: vake.nextForecast ? vake.nextForecast: 0,
+                    },
                 },
-                bankSubmitted: true, // level form submitted
+                futureSubmitted: true, // level form submitted
             },
             () => {
-                if (
-                    this.state.basicSubmitted &&
-                    this.state.billingSubmitted &&
-                    this.state.insuredSubmitted &&
-                    this.state.bankSubmitted 
-                ) {
+                if ( this.state.basicSubmitted && this.state.billingSubmitted && this.state.insuredSubmitted && this.state.bankSubmitted && this.state.futureSubmitted ) {
                     //check if both form is submittef
                     if (!this.props.editOrg) {
                         
@@ -832,6 +906,13 @@ class InfoModal extends Component {
     addOrganization = (value) => {
         const { callBack } = this.props;
         console.log(value);
+        this.setState({ 
+            basicSubmitted: false, 
+            billingSubmitted:false, 
+            insuredSubmitted:false, 
+            bankSubmitted:false, 
+            futureSubmitted:false 
+        })
         addList(value).then((res) => {
             if(res.success){
                 callBack()
@@ -843,43 +924,16 @@ class InfoModal extends Component {
         // const { editOrg } = this.props;
         getOrgRecord(id).then((res) => {
             if (res.success){
-                const vake = res.data
-                ;
-                let basic = {
-                    name: vake.name,
-                    parent: vake.parentOrganization && vake.parentOrganization.id,
-                    phone: vake.phoneNumber,
-                    delegate_cp: vake.delegatecontactPersonOrganization && vake.delegatecontactPersonOrganization.id,
-                    email: vake.email,
-                    EBA: vake.expectedBusinessAmount,
-                    address: vake.address,
-                    website: vake.website,
-                }
-                let billing = {
-                    ABN: vake.abn,
-                    tax_Code: vake.taxCode,
-                    invoice_email: vake.invoiceEmail,
-                    CTI: vake.cti,
-                }
-                let insured = {
-                    insurer_PI: vake.piInsurer,
-                    insurer_PL: vake.plInsurer,
-                    insurer_WC: vake.wcInsurer,
-                    policy_PI: vake.piPolicyNumber,
-                    policy_PL: vake.plPolicyNumber,
-                    policy_WC: vake.wcPolicyNumber,
-                    SumIns_PI: vake.piSumInsured,
-                    SumIns_PL: vake.plSumInsured,
-                    SumIns_WC: vake.wcSumInsured,
-                    expiry_PI: moment(vake.piInsuranceExpiry),
-                    expiry_PL: moment(vake.plInsuranceExpiry),
-                    expiry_WC: moment(vake.wcInsuranceExpiry),
-                }
+               const  { basic, billing, insured, bank, future, data} = res
                 this.basicRef.current.refs.basic_form.setFieldsValue({ obj: basic, });
         
                 this.billingRef.current.refs.billing_form.setFieldsValue({ obj: billing, });
         
                 this.insuredRef.current.refs.insured_form.setFieldsValue({ obj: insured, });
+
+                this.bankRef.current.refs.bank_form.setFieldsValue({ obj: bank, });
+                
+                this.futureRef.current.refs.future_form.setFieldsValue({ obj: future, });
             }
         })
 
@@ -888,6 +942,13 @@ class InfoModal extends Component {
     editRecord = (value) => {
         const { editOrg, callBack } = this.props;
         value.id = editOrg
+        this.setState({ 
+            basicSubmitted: false, 
+            billingSubmitted:false, 
+            insuredSubmitted:false, 
+            bankSubmitted:false, 
+            futureSubmitted:false 
+        })
         editList(value).then((res) => {
             console.log(res);
             if(res.success){
@@ -911,7 +972,7 @@ class InfoModal extends Component {
     };
     render() {
         const { editOrg, visible } = this.props;
-        const { bounds, dragDisable, BasicFields, BillingFields, InsuredFields, BankFields } = this.state
+        const { bounds, dragDisable, BasicFields, BillingFields, InsuredFields, BankFields, FutureFields } = this.state
         return (
             <Modal
                 title={
@@ -968,8 +1029,16 @@ class InfoModal extends Component {
                     <TabPane tab="Bank Details" key="bank_detail" forceRender>
                         <Form
                             ref={this.bankRef}
-                            Callback={this.bankCall}
+                            Callback={this.BankCall}
                             FormFields={BankFields}
+                        />
+                    </TabPane>
+
+                    <TabPane tab="Work In Future" key="future" forceRender>
+                        <Form
+                            ref={this.futureRef}
+                            Callback={this.FutureCall}
+                            FormFields={FutureFields}
                         />
                     </TabPane>
                 </Tabs>

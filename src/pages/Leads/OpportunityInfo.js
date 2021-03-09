@@ -7,6 +7,7 @@ import Comments from "../../components/Core/Comments";
 import Travels from "../../components/Core/Travels";
 import Attachments from "../../components/Core/Attachments";
 import Bank from "../../components/Core/Bank";
+import ProfitLoss from "../../components/Core/ProfitLoss";
 
 import InfoModal from "./infoModal";
 
@@ -24,6 +25,7 @@ class OpportunityInfo extends Component {
             infoModal: false,
             leadId: false,
             data: { },
+            billing: {}
         };
     }
     componentDidMount = ()=>{
@@ -33,10 +35,10 @@ class OpportunityInfo extends Component {
 
     getRecord = (id) =>{
         getRecord(id).then(res=>{
-            console.log(res);
             if(res.success){
                 this.setState({
-                    data: res.basic,
+                    data: res.data,
+                    billing: res.billing,
                     leadId: id,
                     infoModal: false
                 })
@@ -62,16 +64,16 @@ class OpportunityInfo extends Component {
     };
 
     render() {
-        const { data, infoModal, leadId } = this.state;
+        const { data, infoModal, leadId, billing } = this.state;
         const DescTitle = (
             <Row justify="space-between">
-                <Col>Lead Basic Information</Col>
+                <Col>Opportunity Basic Information</Col>
                 <Col>
                     <Dropdown
                         overlay={
                             <Menu>
                                 <Menu.Item>
-                                    <Popconfirm title="Lead is Done!?" >
+                                    <Popconfirm title="Opportunity is Done!?" >
                                         Add To Project
                                     </Popconfirm>
                                 </Menu.Item>
@@ -111,7 +113,7 @@ class OpportunityInfo extends Component {
                         data.organizationName ? 
                             <Link
                                 to={{
-                                    pathname: `/organiations/info/${data.organizationId}`,
+                                    pathname: `/organizations/info/${data.organizationId}`,
                                 }}
                                 className="nav-link"
                             >
@@ -130,7 +132,7 @@ class OpportunityInfo extends Component {
                 <Tabs
                     type="card"
                     style={{ marginTop: "50px" }}
-                    defaultActiveKey="5"
+                    defaultActiveKey="profitloss"
                 >
                     <TabPane tab="Comments" key="comments">
                         <Comments id={leadId} />
@@ -143,6 +145,9 @@ class OpportunityInfo extends Component {
                     </TabPane>
                     <TabPane tab="Account" key="account">
                         <Bank id={leadId} title={data.name} />
+                    </TabPane>
+                    <TabPane tab="Profit & Loss" key="profitloss">
+                        <ProfitLoss id={leadId} billing={billing} />
                     </TabPane>
                 </Tabs>
                 {infoModal && (

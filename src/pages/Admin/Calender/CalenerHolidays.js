@@ -6,13 +6,7 @@ import Form from "../../../components/Core/Form";
 import moment from "moment";
 import "../../styles/table.css";
 
-import {
-    holidayType,
-    addList,
-    getList,
-    editLabel,
-    delLabel,
-} from "../../../service/calendar-holidays";
+import { holidayType, addList, getList, editLabel, delLabel, } from "../../../service/calendar-holidays";
 
 const { Title } = Typography;
 

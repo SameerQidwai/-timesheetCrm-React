@@ -1,28 +1,9 @@
 import React, { Component } from "react";
-import {
-    Typography,
-    Row,
-    Col,
-    Popconfirm,
-    Modal,
-    Button,
-    Table,
-    Dropdown,
-    Menu,
-} from "antd";
-import {
-    SettingOutlined,
-    DownOutlined,
-    PlusSquareOutlined,
-} from "@ant-design/icons"; //Icons
+import { Typography, Row, Col, Popconfirm, Modal, Button, Table, Dropdown, Menu, } from "antd";
+import { SettingOutlined, DownOutlined, PlusSquareOutlined, } from "@ant-design/icons"; //Icons
 import Forms from "../../../components/Core/Form";
 
-import {
-    getList,
-    addList,
-    delLabel,
-    editLabel,
-} from "../../../service/holiday-type";
+import { getList, addList, delLabel, editLabel, } from "../../../service/holiday-type";
 
 const { Title } = Typography;
 

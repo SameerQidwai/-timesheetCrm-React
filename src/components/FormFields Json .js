@@ -30,17 +30,23 @@ fields={
             itemStyle: 'put style on from item for the field',
             fieldStyle = 'put style directly to the field ',
             valuePropName:'"checked" for the field name as checkbox and switch and fileList for Dragger',
-            onChange : ' (value, e) function on the field onChange or click',
-            rangMin: 'To set min number to a input field',
-            rangMax: 'To set max number to a input field and if multiple allowed',
+            rangeMin: 'To set min number to a input field',
+            rangeMax: 'To set max number to a input field and if multiple allowed',
             // default: 'might work n something... form initial value is working at the time',
             showTime: 'boolean for datePicker to show Time as well and string for TimePicker for format...',
             shape: 'to set shape for Button and buttonStle for Radio prop and suffix in input fields',
             size: 'set Size of any element',
-            onChange: 'onChange function on anyFiled',
             fieldStyle: 'style on the field',
             getValue: 'If field is not getting getValueFromEvent',
-            noStyle: "If don't want form style"
+            noStyle: "If don't want form style",
+            onChange: 'onChange function on anyFiled',
+            onClick: 'onClick function on anyField', 
+            onBlur: 'onBlur function on anyField', 
+            onClear: 'onBlur function on anyField', 
+            tooltip: 'ToolTip on Text or Title types', 
+            tooltipTitle: 'Title of the Tool tip', 
+            tooltipTrigger: 'Hover click or focus tool tip trigger'
+
         } 
     ]
 }
@@ -52,11 +58,27 @@ const Example = {
     FieldSpace: { xs: 12, sm: 16, md: 122},
     layout: {labelCol: { span: 12 }},
     justifyField:'center',
-    FormLayout:'vertical', 
+    FormLayout:'inline', 
     size: 'middle',
     Formstyle:{backgroundColor:'white'},
     backstyle:{backgroundColor:'green'},
     fields:[
+        {
+            Placeholder: "CM",
+            size: "small",
+            fieldCol: 12,
+            type: "Text",
+            labelAlign: "right",
+            // itemStyle:{marginBottom:'10px'},
+        },
+        {
+            Placeholder: "CM",
+            size: "small",
+            fieldCol: 12,
+            type: "Title",
+            labelAlign: "right",
+            // itemStyle:{marginBottom:'10px'},
+        },
         {
             object:'obj',
             fieldCol:13,
@@ -88,8 +110,8 @@ const Example = {
             variable: 'age',
             label:'Age',
             // rules:[{ type: 'number', min: 0, max: 99 }],
-            rangMin: 1,
-            rangMax:2,
+            rangeMin: 1,
+            rangeMax:2,
             type: 'inputNumber',
             layout: {labelCol: { span: 8 }},
             labelAlign: 'right',

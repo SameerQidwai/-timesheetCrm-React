@@ -48,10 +48,6 @@ class Forms extends Component {
         return false;
     };
 
-    onFinishs = (value) => {
-        this.props.Callback(value);
-    };
-
     formatter = (value, shape)=>{
         if (shape === "$"){
             return `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
@@ -71,6 +67,11 @@ class Forms extends Component {
             return shape ? value.replace(shape, "") : value
         }
     }
+
+
+    onFinishs = (value) => {
+        this.props.Callback(value);
+    };
 
     content = () => {
         const { FormFields } = this.props;
@@ -122,12 +123,14 @@ class Forms extends Component {
                                         hidden={item.hidden === true}
                                         style={item.itemStyle}
                                         noStyle={item.noStyle}
-                                    > { item.tooltip ? 
-                                            (<Tooltip title={item.tooltipTitle} trigger={item.tooltipTrigger}>
-                                                {this.filedformat( item.type, item.Placeholder, item.data, item.mode, item.rangMin, item.rangMax, item.showTime, item.shape, item.size, item.fieldStyle, item.disabled, item.onChange, item.onClick, item.onBlur, item.onClear )}
-                                            </Tooltip>) 
-                                            :
-                                            this.filedformat( item.type, item.Placeholder, item.data, item.mode, item.rangMin, item.rangMax, item.showTime, item.shape, item.size, item.fieldStyle, item.disabled, item.onChange, item.onClick, item.onBlur, item.onClear )
+                                    >
+                                         { 
+                                        //  item.tooltip ? 
+                                        //     (<Tooltip title={item.tooltipTitle} trigger={item.tooltipTrigger}>
+                                        //         {this.filedformat( item.type, item.Placeholder, item.data, item.mode, item.rangeMin, item.rangeMax, item.showTime, item.shape, item.size, item.fieldStyle, item.disabled, item.onChange, item.onClick, item.onBlur, item.onClear )}
+                                        //     </Tooltip>) 
+                                        //     :
+                                            this.filedformat( item.type, item.Placeholder, item.data, item.mode, item.rangeMin, item.rangeMax, item.showTime, item.shape, item.size, item.fieldStyle, item.disabled, item.onChange, item.onClick, item.onBlur, item.onClear, item.tooltip, item.tooltipTitle, item.tooltipTrigger )
                                         }
                                     </Item>
                                 </Col>
@@ -167,20 +170,21 @@ class Forms extends Component {
         );
     };
 
-    filedformat = ( type, placeholder, data, mode, min, max, showTime, shape, size, style, disabled, onChange, onClick, onBlur, onClear ) => {
+    filedformat = ( type, placeholder, data, mode, min, max, showTime, shape, size, style, disabled, onChange, onClick, onBlur, onClear, tooltip, tTitle, tTrigger ) => {
         let item = null;
         switch (type) {
             case "Title":
                 item = (
                     <Title level={mode} size={size} style={style}>
-                        {placeholder}
+                        {console.log({tooltip}, {tTitle}, { tTrigger})}
+                        { tooltip? <Tooltip title={tTitle} trigger={tTrigger}> {placeholder}</Tooltip> :   placeholder }
                     </Title>
                 );
                 break;
             case "Text":
                 item = (
                     <Text strong={mode} onClick={onClick} style={style} disabled={disabled}>
-                        {placeholder}
+                        { tooltip? <Tooltip title={tTitle} trigger={tTrigger}> {placeholder}</Tooltip> :   placeholder }
                     </Text>
                 );
                 break;
@@ -218,6 +222,7 @@ class Forms extends Component {
                         style={style}
                         onBlur={onBlur}
                         onChange={onChange}
+                        disabled={disabled}
                     />
                 );
                 break;

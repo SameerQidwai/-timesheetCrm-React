@@ -78,9 +78,7 @@ class InfoModal extends Component {
                         onBlur: function func(e) {
                             const { default_hour, hasChanged } = this.state;
                             if (hasChanged) {
-                                const {
-                                    obj,
-                                } = this.timeRef.current.refs.off_form.getFieldsValue(); // get the values from from data
+                                const { obj, } = this.timeRef.current.refs.off_form.getFieldsValue(); // get the values from from data
 
                                 const start = obj.b_date.format("YYYY MMM D");
                                 obj.d_off = obj.e_date.diff(start, "days") + 1;

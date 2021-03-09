@@ -19,6 +19,7 @@ class InfoModal extends Component {
         this.kinRef = React.createRef();
         this.detailRef = React.createRef();
         this.bankRef = React.createRef();
+        this.smsfRef = React.createRef();
         
         this.state = {
             editEmp: false,
@@ -27,6 +28,7 @@ class InfoModal extends Component {
             detailSubmitted: false,
             kinSubmitted: false,
             bankSubmitted: false,
+            smsfSubmitted: false,
 
             CONTACT:[],
             sContact: null,
@@ -242,8 +244,9 @@ class InfoModal extends Component {
                         key: "gender",
                         size: "small",
                         data: [
-                            { label: "Male", value: "Male" },
-                            { label: "Female", value: "Female" },
+                            { label: "Male", value: "M" },
+                            { label: "Female", value: "F" },
+                            { label: "Other", value: "O" },
                         ],
                         itemStyle: { marginBottom: 10 },
                         // rules:[{ required: true }],
@@ -314,7 +317,7 @@ class InfoModal extends Component {
                     {
                         object: "detail",
                         fieldCol: 12,
-                        key: "tax_threshold",
+                        key: "taxFreeThreshold",
                         size: "small",
                         data: [
                             { label: "Yes", value: true },
@@ -343,7 +346,7 @@ class InfoModal extends Component {
                     {
                         object: "detail",
                         fieldCol: 12,
-                        key: "help",
+                        key: "helpHECS",
                         size: "small",
                         data: [
                             { label: "Yes", value: true },
@@ -366,14 +369,7 @@ class InfoModal extends Component {
                     },
                     {
                         Placeholder: "Membership/Account Number",
-                        fieldCol: 12,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                    },
-                    {
-                        Placeholder: "SMSF Details",
-                        fieldCol: 12,
+                        fieldCol: 24,
                         size: "small",
                         type: "Text",
                         labelAlign: "right",
@@ -386,22 +382,6 @@ class InfoModal extends Component {
                         // rules:[{ required: true }],
                         type: "Input",
                         itemStyle: { marginBottom: "10px" },
-                    },
-                    
-                    {
-                        object: "detail",
-                        fieldCol: 12,
-                        key: "smsf",
-                        size: "small",
-                        data: [
-                            { label: "Yes", value: true },
-                            { label: "No", value: false },
-                        ],
-                        // rules: [ { required: true, message: "Gender is Obviously required", }, ],
-                        type: "Select",
-                        // mode: "button",
-                        // shape: "solid",
-                        itemStyle: { marginBottom: 10 },
                     },
                     {
                         Placeholder: "Training",
@@ -496,6 +476,15 @@ class InfoModal extends Component {
                     {
                         object: "kin",
                         fieldCol: 12,
+                        key: "nextOfKinEmail",
+                        size: "small",
+                        // rules:[{ required: true }],
+                        type: "input",
+                        itemStyle:{marginBottom:10},
+                    },
+                    {
+                        object: "kin",
+                        fieldCol: 12,
                         key: "nextOfKinRelation",
                         size: "small",
                         // rules:[{ required: true }],
@@ -507,16 +496,7 @@ class InfoModal extends Component {
                             {label: 'Child',value:'Child' },
                             {label: 'Friend',value:'Friend' },
                         ],
-                        type: "select",
-                    },
-                    {
-                        object: "kin",
-                        fieldCol: 12,
-                        key: "nextOfKinEmail",
-                        size: "small",
-                        // rules:[{ required: true }],
-                        type: "input",
-                        itemStyle:{marginBottom:10},
+                        type: "Select",
                     },
                 ],
             },
@@ -636,7 +616,7 @@ class InfoModal extends Component {
                         itemStyle: { marginBottom: 1 },
                     },
                     {
-                        Placeholder: "Full Work Week Hours",
+                        Placeholder: "Full Work Hours",
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -654,11 +634,34 @@ class InfoModal extends Component {
                     
                     {
                         object: "billing",
-                        fieldCol: 12,
+                        fieldCol: 6,
                         key: "noOfHours",
                         size: "small",
                         type: "InputNumber",
                         // shape: " Hours",
+                        fieldStyle: { width: "100%" },
+                        // rules: [
+                        //     {
+                        //         required: true,
+                        //         message: "How much he Cost",
+                        //     },
+                        // ],
+                        itemStyle: { marginBottom: 1 },
+                    },
+                    {
+                        object: "billing",
+                        fieldCol: 6,
+                        key: "noOfHoursPer",
+                        size: "small",
+                        type: "Select",
+                        // shape: " Hours",
+                        data: [
+                            { label: "Hourly", value: 1 },
+                            { label: "Daily", value: 2 },
+                            { label: "Weekly", value: 3 },
+                            { label: "Fortnightly", value: 4 },
+                            { label: "Monthly", value: 5 },
+                        ],
                         fieldStyle: { width: "100%" },
                         // rules: [
                         //     {
@@ -685,7 +688,7 @@ class InfoModal extends Component {
                     },
                     {
                         Placeholder: "Contract End Date",
-                        fieldCol: 24,
+                        fieldCol: 12,
                         size: "small",
                         type: "Text",
                         labelAlign: "right",
@@ -730,38 +733,38 @@ class InfoModal extends Component {
                         // ],
                         itemStyle: { marginBottom: 1 },
                     },  
-                    {
-                        Placeholder: "Hourly Rate",
-                        fieldCol: 12,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
-                    },
+                    // {
+                    //     Placeholder: "Hourly Rate",
+                    //     fieldCol: 12,
+                    //     size: "small",
+                    //     type: "Text",
+                    //     labelAlign: "right",
+                    //     // itemStyle:{marginBottom:'10px'},
+                    // },
                     {
                         Placeholder: "Pay Frequence",
-                        fieldCol: 12,
+                        fieldCol: 24,
                         size: "small",
                         type: "Text",
                         labelAlign: "right",
                         // itemStyle:{marginBottom:'10px'},
                     },
-                    {
-                        object: "billing",
-                        fieldCol: 12,
-                        key: "hourlyrate",
-                        size: "small",
-                        type: "InputNumber",
-                        shape: "$",
-                        fieldStyle: { width: "100%" },
-                        // rules: [
-                        //     {
-                        //         required: true,
-                        //         message: "How much he Cost",
-                        //     },
-                        // ],
-                        itemStyle: { marginBottom: 1 },
-                    }, 
+                    // {
+                    //     object: "billing",
+                    //     fieldCol: 12,
+                    //     key: "hourlyrate",
+                    //     size: "small",
+                    //     type: "InputNumber",
+                    //     shape: "$",
+                    //     fieldStyle: { width: "100%" },
+                    //     // rules: [
+                    //     //     {
+                    //     //         required: true,
+                    //     //         message: "How much he Cost",
+                    //     //     },
+                    //     // ],
+                    //     itemStyle: { marginBottom: 1 },
+                    // }, 
                     {
                         object: "billing",
                         fieldCol: 12,
@@ -794,12 +797,113 @@ class InfoModal extends Component {
                     {
                         object: "billing",
                         fieldCol: 24,
-                        key: "payslipEmail",
+                        key: "comments",
                         size: "small",
                         type: "Textarea",
                         itemStyle: { marginBottom: 1 },
                     },
                 ],
+            },
+
+            SmsfFields: {
+                formId: "smsf_form",
+                FormCol: 24,
+                FieldSpace: 24,
+                justifyField: "center",
+                FormLayout: "inline",
+                size: "middle",
+                fields:[
+                    {
+                        Placeholder: "SMSF Name",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                    },
+                    {
+                        Placeholder: "SMSF ABN",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                    },
+                    {
+                        object: "smsf",
+                        fieldCol: 12,
+                        key: "smsfName",
+                        size: "small",
+                        type: "Input",
+                        itemStyle: { marginBottom: "10px" },
+                    },
+                    {
+                        object: "smsf",
+                        fieldCol: 12,
+                        key: "smsfABN",
+                        size: "small",
+                        type: "Input",
+                        itemStyle: { marginBottom: "10px" },
+                    },
+                    {
+                        Placeholder: "ESA Address",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                    },
+                    {
+                        Placeholder: "Bank Account Name",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                    },
+                    {
+                        object: "smsf",
+                        fieldCol: 12,
+                        key: "smsfAddress",
+                        size: "small",
+                        type: "Input",
+                        itemStyle: { marginBottom: "10px" },
+                    },
+                    {
+                        object: "smsf",
+                        fieldCol: 12,
+                        key: "smsfBankName",
+                        size: "small",
+                        type: "Input",
+                        itemStyle: { marginBottom: "10px" },
+                    },
+                    {
+                        Placeholder: "BSB Number",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                    },
+                    {
+                        Placeholder: "Bank Account Number",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                    },
+                    {
+                        object: "smsf",
+                        fieldCol: 12,
+                        key: "smsfBankBsb",
+                        size: "small",
+                        type: "Input",
+                        itemStyle: { marginBottom: "10px" },
+                    },
+                    {
+                        object: "smsf",
+                        fieldCol: 12,
+                        key: "smsfBankAccountNo",
+                        size: "small",
+                        type: "Input",
+                        itemStyle: { marginBottom: "10px" },
+                    },
+                ]
             },
         };
     }
@@ -833,6 +937,7 @@ class InfoModal extends Component {
         this.kinRef.current && this.kinRef.current.refs.kin_form.submit();
         this.bankRef.current && this.bankRef.current.refs.bank_form.submit();
         this.billingRef.current && this.billingRef.current.refs.billing_form.submit();
+        this.smsfRef.current && this.smsfRef.current.refs.smsf_form.submit();
     };
 
     BasicCall = (vake) => {
@@ -851,7 +956,8 @@ class InfoModal extends Component {
                     this.state.detailSubmitted &&
                     this.state.kinSubmitted &&
                     this.state.bankSubmitted &&
-                    this.state.billingSubmitted 
+                    this.state.billingSubmitted &&
+                    this.state.smsfSubmitted 
                 ) {
                     //check if both form is submittef
                     if (!this.props.editEmp) {
@@ -869,7 +975,11 @@ class InfoModal extends Component {
     BillingCall = (vake) => {
         // this will work after  getting the Object from level form
         console.log(vake);
-        vake.billing.noOfHoursPer =1
+        // cnecking if type is selected
+        if (vake.billing.type ){
+            vake.billing.type === 1 ? vake.billing.remunerationAmountPer = 1 : vake.billing.remunerationAmountPer = 7
+            //check what type is selected
+        }
         this.setState(
             {
                 mergeObj: {
@@ -884,7 +994,8 @@ class InfoModal extends Component {
                     this.state.detailSubmitted &&
                     this.state.kinSubmitted &&
                     this.state.bankSubmitted &&
-                    this.state.billingSubmitted 
+                    this.state.billingSubmitted &&
+                    this.state.smsfSubmitted 
                 ) {
                     //check if both form is submittef
                     if (!this.props.editEmp) {
@@ -916,7 +1027,8 @@ class InfoModal extends Component {
                     this.state.detailSubmitted &&
                     this.state.kinSubmitted &&
                     this.state.bankSubmitted &&
-                    this.state.billingSubmitted  
+                    this.state.billingSubmitted  &&
+                    this.state.smsfSubmitted 
                 ) {
                     //check if both form is submittef
                     if (!this.props.editEmp) {
@@ -948,7 +1060,8 @@ class InfoModal extends Component {
                     this.state.kinSubmitted &&
                     this.state.bankSubmitted &&
                     this.state.detailSubmitted &&
-                    this.state.billingSubmitted 
+                    this.state.billingSubmitted &&
+                    this.state.smsfSubmitted 
                 ) {
                     //check if both form is submittef
                     if (!this.props.editEmp) {
@@ -980,7 +1093,49 @@ class InfoModal extends Component {
                     this.state.kinSubmitted &&
                     this.state.bankSubmitted &&
                     this.state.detailSubmitted &&
-                    this.state.billingSubmitted 
+                    this.state.billingSubmitted &&
+                    this.state.smsfSubmitted 
+                ) {
+                    //check if both form is submittef
+                    if (!this.props.editEmp) {
+                        console.log("emes");
+                        this.addEmployee(this.state.mergeObj); //add skill
+                    } else {
+                        console.log("edit");
+                        this.editRecord(this.state.mergeObj); //edit skill
+                    }
+                }
+            }
+        );
+    };
+
+    SmsfCall = (vake) => {
+        // this will work after I get the Object from the form
+        console.log(vake);
+        const { smsf } = vake
+        this.setState(
+            {
+                mergeObj: {
+                    ...this.state.mergeObj,
+                    ...{ // to send the defaut value
+                        smsfName: smsf.smsfName? smsf.smsfName: '', 
+                        smsfABN: smsf.smsfABN? smsf.smsfABN: '',
+                        smsfAddress: smsf.smsfAddress? smsf.smsfAddress: '',
+                        smsfBankName: smsf.smsfBankName? smsf.smsfBankName: '',
+                        smsfBankBsb: smsf.smsfBankBsb? smsf.smsfBankBsb: '',
+                        smsfBankAccountNo: smsf.smsfBankAccountNo? smsf.smsfBankAccountNo: '',
+                    },
+                },
+                smsfSubmitted: true, // level form submitted
+            },
+            () => {
+                if (
+                    this.state.basicSubmitted &&
+                    this.state.kinSubmitted &&
+                    this.state.bankSubmitted &&
+                    this.state.detailSubmitted &&
+                    this.state.billingSubmitted &&
+                    this.state.smsfSubmitted 
                 ) {
                     //check if both form is submittef
                     if (!this.props.editEmp) {
@@ -1014,6 +1169,7 @@ class InfoModal extends Component {
                     bankSubmitted: false,
                     detailSubmitted: false,
                     billingSubmitted: false,
+                    smsfSubmitted: false,
                 })
             }
         })
@@ -1023,6 +1179,7 @@ class InfoModal extends Component {
         console.log('getRecord');
         getRecord(id).then(res=>{
             if (res.success){
+                console.log(res.smsf);
                 this.basicRef.current.refs.basic_form.setFieldsValue({ basic: res.basic, });
 
                 this.detailRef.current.refs.detail_form.setFieldsValue({ detail: res.detail, });
@@ -1032,6 +1189,8 @@ class InfoModal extends Component {
                 this.bankRef.current.refs.bank_form.setFieldsValue({ bank: res.bank, });
 
                 this.billingRef.current.refs.billing_form.setFieldsValue({ billing: res.billing, })
+
+                this.smsfRef.current.refs.smsf_form.setFieldsValue({ smsf: res.smsf, })
             }
         })
     };
@@ -1049,6 +1208,7 @@ class InfoModal extends Component {
                     bankSubmitted: false,
                     detailSubmitted: false,
                     billingSubmitted: false,
+                    smsfSubmitted: false,
                 })
             }
         });
@@ -1101,7 +1261,7 @@ class InfoModal extends Component {
 
     render() {
         const { editEmp, visible } = this.props;
-        const { BasicFields, DetailFields, KinFields, BankFields, BillingFields, CONTACT, sContact } = this.state;
+        const { BasicFields, DetailFields, KinFields, BankFields, BillingFields, SmsfFields,  CONTACT, sContact } = this.state;
 
         return (
             <Modal
@@ -1172,6 +1332,13 @@ class InfoModal extends Component {
                             ref={this.billingRef}
                             Callback={this.BillingCall}
                             FormFields={BillingFields}
+                        />
+                    </TabPane>
+                    <TabPane tab=" SMSF Details" key="SMSF" forceRender>
+                        <Form
+                            ref={this.smsfRef}
+                            Callback={this.SmsfCall}
+                            FormFields={SmsfFields}
                         />
                     </TabPane>
                 </Tabs>

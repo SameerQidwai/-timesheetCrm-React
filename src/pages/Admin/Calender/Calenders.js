@@ -1,10 +1,6 @@
 import React, { Component } from "react";
 import { Table, Menu, Dropdown, Button, Tag, Row, Col, Typography, Modal, } from "antd";
-import {
-    DownOutlined,
-    SettingOutlined,
-    PlusSquareOutlined,
-} from "@ant-design/icons"; //Icons
+import { DownOutlined, SettingOutlined, PlusSquareOutlined, } from "@ant-design/icons"; //Icons
 import { Link } from "react-router-dom";
 
 import Form from "../../../components/Core/Form";

@@ -2,15 +2,7 @@ import React, { Component } from "react";
 import { Menu } from "antd";
 import { Link, withRouter } from "react-router-dom";
 
-import {
-    FieldTimeOutlined,
-    UserOutlined,
-    CalendarOutlined,
-    GlobalOutlined,
-    AppstoreOutlined,
-    ApartmentOutlined,
-    GoldOutlined,
-} from "@ant-design/icons"; //Icons
+import { FieldTimeOutlined, UserOutlined, CalendarOutlined, GlobalOutlined, AppstoreOutlined, ApartmentOutlined, GoldOutlined, } from "@ant-design/icons"; //Icons
 
 // import './Menus.css'
 

@@ -73,9 +73,7 @@ class InfoModal extends Component {
             basicSubmitted: false,
             associateSubmitted: false,
             detailSubmitted: false,
-            kinSubmitted: false,
             skillSubmitted: false,
-            exitSubmitted: false,
             securitySubmitted: false,
             skill_data: [],
             orgs_data: [],
@@ -183,9 +181,9 @@ class InfoModal extends Component {
                         key: "gender",
                         size: "small",
                         data: [
-                            { label: "Male", value: "Male" },
-                            { label: "Female", value: "Female" },
-                            { label: "Other", value: "Other" },
+                            { label: "Male", value: "M" },
+                            { label: "Female", value: "F" },
+                            { label: "Other", value: "O" },
                         ],
                         // rules: [ { required: true, message: "Gender is Obviously required", }, ],
                         type: "Select",
@@ -232,7 +230,7 @@ class InfoModal extends Component {
                     //     type: "Dragger",
                     //     labelAlign: "right",
                     //     itemStyle: { marginBottom: "10px" },
-                    //     rangMax: false,
+                    //     rangeMax: false,
                     //     mode: "",
                     // },
                     // {
@@ -241,7 +239,7 @@ class InfoModal extends Component {
                     //     key: "resume",
                     //     size: "small",
                     //     labelCol: { span: 12 },
-                    //     rangMax: true,
+                    //     rangeMax: true,
                     //     Placeholder: (
                     //         <>
                     //             Click or drag Cover Letter <UploadOutlined />
@@ -383,7 +381,7 @@ class InfoModal extends Component {
                         itemStyle: { marginBottom: 10 },
                     },
                     {
-                        object: "basic",
+                        object: "sec",
                         fieldCol: 12,
                         key: "sponsor",
                         size: "small",
@@ -625,6 +623,7 @@ class InfoModal extends Component {
     BasicCall = (vake) => {
         // this will work after  got  Object from the skill from
         // vake.basic.stateId = null
+        console.log(vake);
         this.setState(
             {
                 mergeObj: {
@@ -650,17 +649,20 @@ class InfoModal extends Component {
 
     AssociateCall = (vake) => {
         // this will work after  getting the Object from level form
+        console.log(vake);
         const { asso } = vake;
         const vars = [];
         let result = Object.keys(asso).length / 5;
         if(Object.keys(asso).length > 0){
             for (let i = 0; i < result; i++) {
-                vars.push({
-                    designation: asso[`designation${i}`],
-                    organizationId: asso[`organizationId${i}`],
-                    startDate: asso[`startDate${i}`],
-                    endDate: asso[`endDate${i}`],
-                });
+                if(asso[`organizationId${i}`]){
+                    vars.push({
+                        designation: asso[`designation${i}`],
+                        organizationId: asso[`organizationId${i}`],
+                        startDate: asso[`startDate${i}`],
+                        endDate: asso[`endDate${i}`],
+                    });
+                }
             }
         }
         this.setState(
@@ -685,6 +687,8 @@ class InfoModal extends Component {
 
     SkillCall = (vake) => {
         // this will work after I get the Object from the form
+        console.log(vake);
+
         const { skill } = vake;
         const vars = [];
         let result = skill ? Object.keys(skill).length / 2 : 0;
@@ -719,6 +723,8 @@ class InfoModal extends Component {
     SecurityCall = (vake) => {
         // this will work after  got  Object from the skill from
         // vake.basic.stateId = null
+        console.log(vake);
+
         this.setState(
             {
                 mergeObj: {
@@ -744,6 +750,14 @@ class InfoModal extends Component {
 
     addPerson = (value) => {
         const { callBack } = this.props;
+        console.log(value);
+        this.setState({
+            basicSubmitted: false,
+            associateSubmitted: false,
+            detailSubmitted: false,
+            skillSubmitted: false,
+            securitySubmitted: false,
+        })
         addList(value).then((res) => {
             if(res.success){
                 callBack()
@@ -805,6 +819,13 @@ class InfoModal extends Component {
     editRecord = (value) => {
         const { editCP, callBack } = this.props;
         value.id = editCP
+        this.setState({
+            basicSubmitted: false,
+            associateSubmitted: false,
+            detailSubmitted: false,
+            skillSubmitted: false,
+            securitySubmitted: false,
+        })
         editList(value).then((res) => {
             if(res.success){
                 console.log('hereh');
