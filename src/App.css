@@ -31,7 +31,12 @@
 .App-link {
   color: #61dafb;
 }
-
+input[disabled] {
+  color: #372f2f;
+}
+input[type="text"][disabled] {
+  color: #372f2f;
+}
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

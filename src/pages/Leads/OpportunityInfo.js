@@ -146,7 +146,7 @@ class OpportunityInfo extends Component {
                     <TabPane tab="Account" key="account">
                         <Bank id={leadId} title={data.name} />
                     </TabPane>
-                    <TabPane tab="Profit & Loss" key="profitloss">
+                    <TabPane tab="Projected Profit & Loss" key="profitloss">
                         <ProfitLoss id={leadId} billing={billing} />
                     </TabPane>
                 </Tabs>

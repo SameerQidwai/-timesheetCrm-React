@@ -74,7 +74,6 @@ class InfoModal extends Component {
                         Placeholder: "Contact person Code",
                         type: "Text",
                         labelAlign: "left",
-                        disabled: true,
                     },
                     {
                         Placeholder: "Date Of Birth",
@@ -90,7 +89,6 @@ class InfoModal extends Component {
                         fieldCol: 12,
                         key: "cpCode",
                         size: "small",
-                        disabled: true,
                         // rules:[{ required: true }],
                         type: "Input",
                         labelAlign: "left",
@@ -431,6 +429,7 @@ class InfoModal extends Component {
                         // ],
                         itemStyle: { marginBottom: 1 },
                     },
+
                     {
                         Placeholder: "Contract Payment Basis",
                         fieldCol: 12,
@@ -497,22 +496,52 @@ class InfoModal extends Component {
                         // ],
                         itemStyle: { marginBottom: 1 },
                     },
-                    // {
-                    //     object: "billing",
-                    //     fieldCol: 12,
-                    //     key: "GST",
-                    //     size: "small",
-                    //     type: "InputNumber",
-                    //     shape: "$",
-                    //     fieldStyle: { width: "100%" },
-                    //     // rules: [
-                    //     //     {
-                    //     //         required: true,
-                    //     //         message: "How much he Cost",
-                    //     //     },
-                    //     // ],
-                    //     itemStyle: { marginBottom: 1 },
-                    // },
+                    {
+                        Placeholder: "Full Work Hours",
+                        fieldCol: 24,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                    {
+                        object: "billing",
+                        fieldCol: 6,
+                        key: "noOfHours",
+                        size: "small",
+                        type: "InputNumber",
+                        // shape: " Hours",
+                        fieldStyle: { width: "100%" },
+                        // rules: [
+                        //     {
+                        //         required: true,
+                        //         message: "How much he Cost",
+                        //     },
+                        // ],
+                        itemStyle: { marginBottom: 1 },
+                    },
+                    {
+                        object: "billing",
+                        fieldCol: 6,
+                        key: "noOfHoursPer",
+                        size: "small",
+                        type: "Select",
+                        // shape: " Hours",
+                        data: [
+                            { label: "Daily", value: 2 },
+                            { label: "Weekly", value: 3 },
+                            { label: "Fortnightly", value: 4 },
+                            { label: "Monthly", value: 5 },
+                        ],
+                        fieldStyle: { width: "100%" },
+                        // rules: [
+                        //     {
+                        //         required: true,
+                        //         message: "How much he Cost",
+                        //     },
+                        // ],
+                        itemStyle: { marginBottom: 1 },
+                    },
                     {
                         Placeholder: "Comments",
                         fieldCol: 24,
@@ -902,18 +931,18 @@ class InfoModal extends Component {
                             FormFields={BasicFields}
                         />
                     </TabPane>
-                    <TabPane tab="Next of Kin" key="kin" forceRender>
-                        <Form
-                            ref={this.kinRef}
-                            Callback={this.KinCall}
-                            FormFields={KinFields}
-                        />
-                    </TabPane>
                     <TabPane tab=" Subcontractor Contracts" key="contracts" forceRender>
                         <Form
                             ref={this.billingRef}
                             Callback={this.BillingCall}
                             FormFields={BillingFields}
+                        />
+                    </TabPane>
+                    <TabPane tab="Next of Kin" key="kin" forceRender>
+                        <Form
+                            ref={this.kinRef}
+                            Callback={this.KinCall}
+                            FormFields={KinFields}
                         />
                     </TabPane>
                 </Tabs>

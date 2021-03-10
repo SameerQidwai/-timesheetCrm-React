@@ -52,7 +52,7 @@ export const getRecord = (id) => {
                     contactPersonId: data.contactPersonId,
                     qualifiedOps: data.qualifiedOps,
                     type: data.type,
-                    value: data.value? data.value: 0,
+                    // value: data.value? data.value: 0,
                     title: data.title,
                     stateId: data.stateId
                 }
@@ -69,7 +69,7 @@ export const getRecord = (id) => {
                     totalMonths: (data.startDate && data.endDate) ? Math.round(moment(data.endDate).diff(moment(data.startDate), 'months', true)) : 0, 
                     endDate: data.endDate ? moment(data.endDate): null,
                     startDate: data.startDate ? moment(data.startDate): null,
-                    value: data.value
+                    value: data.value? data.value: 0,
                 }
                 billing.goget = (billing.getPercentage* billing.goPercentage)/100
                 billing.discount = (data.value * billing.goget) /100

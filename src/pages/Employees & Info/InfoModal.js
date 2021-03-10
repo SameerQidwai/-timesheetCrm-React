@@ -79,7 +79,6 @@ class InfoModal extends Component {
                         Placeholder: "Contact person Code",
                         type: "Text",
                         labelAlign: "left",
-                        disabled: true,
                     },
                     {
                         Placeholder: "Date Of Birth",
@@ -594,6 +593,16 @@ class InfoModal extends Component {
                             { label: "Full Time", value: 3 },
                         ],
                         type: "Select",
+                        onChange: function name(value) {
+                            const { BillingFields } = this.state
+                            if (value === 1){
+                                BillingFields.fields[10].Placeholder = "Hourly Base Salary"
+                                this.setState({BillingFields})
+                            }else{
+                                BillingFields.fields[10].Placeholder = "Annual Base Salary"
+                                this.setState({BillingFields})
+                            }
+                        }.bind(this),
                         // rules: [
                         //     {
                         //         required: true,
@@ -657,7 +666,6 @@ class InfoModal extends Component {
                         type: "Select",
                         // shape: " Hours",
                         data: [
-                            { label: "Hourly", value: 1 },
                             { label: "Daily", value: 2 },
                             { label: "Weekly", value: 3 },
                             { label: "Fortnightly", value: 4 },
@@ -1307,6 +1315,13 @@ class InfoModal extends Component {
                             FormFields={BasicFields}
                         />
                     </TabPane>
+                    <TabPane tab=" Employment Contracts" key="contract" forceRender>
+                        <Form
+                            ref={this.billingRef}
+                            Callback={this.BillingCall}
+                            FormFields={BillingFields}
+                        />
+                    </TabPane>
                     <TabPane tab="Superannuation" key="superannuation" forceRender>
                         <Form
                             ref={this.detailRef}
@@ -1326,13 +1341,6 @@ class InfoModal extends Component {
                             ref={this.bankRef}
                             Callback={this.BankCall}
                             FormFields={BankFields}
-                        />
-                    </TabPane>
-                    <TabPane tab=" Employment Contracts" key="contract" forceRender>
-                        <Form
-                            ref={this.billingRef}
-                            Callback={this.BillingCall}
-                            FormFields={BillingFields}
                         />
                     </TabPane>
                     <TabPane tab=" SMSF Details" key="SMSF" forceRender>

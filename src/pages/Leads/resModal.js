@@ -5,7 +5,7 @@ import moment from "moment";
 import Form from "../../components/Core/Form";
 
 import { addResource, getResource, editResource } from "../../service/opportunities";
-import { getPanelSkills, getStandardLevels, getEmployees  } from "../../service/constant-Apis";
+import { getPanelSkills, getStandardLevels, getEmployees, getSubContractors  } from "../../service/constant-Apis";
 
 
 const { TabPane } = Tabs;
@@ -74,22 +74,14 @@ class InfoModal extends Component {
                         data: [],
                         type: "Select",
                         onChange: function func(e, value) {
-                            const { ResourceFields } = this.state
-                            getEmployees().then(res=>{
-                                ResourceFields.fields[6].data = res.success? res.data: []
-                                const { obj } = this.resourceRef.current.refs.resource_form.getFieldsValue() // const
-                                console.log(obj);
-                                obj['userId'] = undefined;
-                                this.resourceRef.current.refs.resource_form.setFieldsValue({ obj, })
-                                this.setState({ResourceFields})
-                            })
+                            this.fetchRes()
                             
                         }.bind(this),
                     },
 
 
                     {
-                        Placeholder: "Employee",
+                        Placeholder: "Resource",
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -163,8 +155,23 @@ class InfoModal extends Component {
     }
     componentDidMount = () =>{
         const { editRex, panelId } = this.props
-        console.log({editRex}, {panelId});
         this.openModal()
+    }
+
+    fetchRes = () =>{
+        Promise.all([ getEmployees(),  getSubContractors()])
+        .then(res => {
+            const data = res[0].success ? res[0].data.concat(res[1].success ? res[1].data: []): res[1].success ? res[1].data: []
+            const { ResourceFields } = this.state
+            ResourceFields.fields[6].data = data
+            const { obj } = this.resourceRef.current.refs.resource_form.getFieldsValue() // const
+            obj['userId'] = undefined;
+            this.resourceRef.current.refs.resource_form.setFieldsValue({ obj, })
+            this.setState({ResourceFields})
+        })
+        .catch(e => {
+            console.log(e);
+        })
     }
 
     openModal = () =>{

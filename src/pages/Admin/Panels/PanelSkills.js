@@ -43,7 +43,7 @@ class PanelInfo extends Component {
                                 <Menu.Item
                                     onClick={() => this.getRecord(record)}
                                 >
-                                    View
+                                    Edit
                                 </Menu.Item>
                             </Menu>
                         }

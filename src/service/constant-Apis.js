@@ -67,13 +67,35 @@ export const getEmployees = () => {
         .get(`${Api}/employees`)
         .then((res) => {
             const { success, data } = res.data;
-            var cps = []
-            console.log(data);
-            data.map((el) => {
-                cps.push({value: el.id, label: el.contactPersonOrganization.contactPerson.firstName +' ' +el.contactPersonOrganization.contactPerson.lastName})
-            });
-            console.log(cps);
-            if (success) return { success: success, data: cps };
+            var cps = []          
+            if (success) {
+                data.map((el) => {
+                    cps.push({value: el.contactPersonOrganization.contactPerson.id, label: el.contactPersonOrganization.contactPerson.firstName +' ' +el.contactPersonOrganization.contactPerson.lastName + '   '+'(Employee)', status: '(Employee)'})
+                });
+                return { success: success, data: cps }
+            }
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                success: false,
+                message: err.message,
+            };
+        });
+};
+
+export const getSubContractors = () => {
+    return axios
+        .get(`${Api}/sub-contractors`)
+        .then((res) => {
+            const { success, data } = res.data;
+            var cps = []    
+            if (success) {
+                data.map((el) => {
+                    cps.push({value: el.contactPersonOrganization.contactPerson.id, label: el.contactPersonOrganization.contactPerson.firstName +' ' +el.contactPersonOrganization.contactPerson.lastName + '   '+ '(Sub-Contractor)', status: '(Sub-Contractor)'})
+                });
+                return { success: success, data: cps };
+            }
         })
         .catch((err) => {
             return {

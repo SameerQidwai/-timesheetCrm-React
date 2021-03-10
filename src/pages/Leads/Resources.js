@@ -27,7 +27,7 @@ class OrgInfo extends Component {
                 render: (record)=> {return record && record.levelLabel}
             },
             {
-                title: "Employee Name",
+                title: "Resource Name",
                 dataIndex: "user",
                 key: "user",
                 render: (record)=> {return record &&
@@ -108,7 +108,6 @@ class OrgInfo extends Component {
     fetchAll = (id) =>{
         Promise.all([ getRecord(id), getResources(id)])
         .then(res => {
-            console.log(res[1].data);
             this.setState({
                 desc: res[0].success? res[0].data : {},
                 editRex: false,
