@@ -44,19 +44,19 @@ class Opportunities extends Component {
                 title: 'Start Date',
                 dataIndex: 'startDate',
                 key: 'startDate',
-                render: (record) =>(moment(record).format('ddd DD MM yyyy'))
+                render: (record) =>(record && moment(record).format('ddd DD MM yyyy'))
             },
             {
                 title: 'End Date',
                 dataIndex: 'endDate',
                 key: 'endDtae',
-                render: (record) =>(moment(record).format('ddd DD MM yyyy'))
+                render: (record) =>(record && moment(record).format('ddd DD MM yyyy'))
             },
             {
                 title: 'Bid Date',
                 dataIndex: 'bidDate',
                 key: 'bidDate',
-                render: (record) =>(moment(record).format('ddd DD MM yyyy'))
+                render: (record) =>(record && moment(record).format('ddd DD MM yyyy'))
             },
             {
                 title: 'Action',
@@ -166,7 +166,7 @@ class Opportunities extends Component {
                                             editLead:false
                                         })
                                     }} 
-                                    ><PlusSquareOutlined />Add Opportunity</Button>
+                                    ><PlusSquareOutlined /> Opportunity</Button>
                             </Col>
                         </Row>
                     </Col>

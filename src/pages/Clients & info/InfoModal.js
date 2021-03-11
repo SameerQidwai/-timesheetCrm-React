@@ -1,10 +1,6 @@
 import React, { Component } from "react";
 import { Modal, Tabs, Row, Col, Button, Input } from "antd";
-import {
-    UploadOutlined,
-    PlusSquareFilled,
-    CloseOutlined,
-} from "@ant-design/icons"; //Icons
+import { UploadOutlined, PlusSquareFilled, CloseOutlined, } from "@ant-design/icons"; //Icons
 
 import Form from "../../components/Core/Form";
 import moment from "moment";

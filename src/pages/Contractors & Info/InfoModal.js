@@ -238,9 +238,9 @@ class InfoModal extends Component {
                         key: "gender",
                         size: "small",
                         data: [
-                            { label: "Male", value: "Male" },
-                            { label: "Female", value: "Female" },
-                            { label: "Others", value: "Others" },
+                            { label: "Male", value: "M" },
+                            { label: "Female", value: "F" },
+                            { label: "Others", value: "O" },
                         ],
                         itemStyle: { marginBottom: 10 },
                         // rules:[{ required: true }],

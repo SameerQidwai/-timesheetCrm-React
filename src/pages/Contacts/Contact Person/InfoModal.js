@@ -833,7 +833,7 @@ class InfoModal extends Component {
         editList(value).then((res) => {
             if(res.success){
                 console.log('hereh');
-                // callBack()
+                callBack()
             }
         });
     };

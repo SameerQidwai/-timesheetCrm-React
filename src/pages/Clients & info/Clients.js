@@ -1,21 +1,7 @@
 import React, { Component } from "react";
-import {
-    Popconfirm,
-    Typography,
-    Dropdown,
-    Button,
-    Table,
-    Menu,
-    Row,
-    Col,
-} from "antd";
+import { Popconfirm, Typography, Dropdown, Button, Table, Menu, Row, Col, } from "antd";
 
-import {
-    PlusSquareOutlined,
-    SettingOutlined,
-    FilterOutlined,
-    DownOutlined,
-} from "@ant-design/icons"; //Icons
+import { PlusSquareOutlined, SettingOutlined, FilterOutlined, DownOutlined, } from "@ant-design/icons"; //Icons
 
 import { Link } from "react-router-dom";
 

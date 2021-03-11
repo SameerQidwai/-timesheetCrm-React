@@ -44,13 +44,13 @@ class Projects extends Component {
                 title: 'Start Date',
                 dataIndex: 'startDate',
                 key: 'startDate',
-                render: (record) =>(moment(record).format('ddd DD MM yyyy'))
+                render: (record) =>(record && moment(record).format('ddd DD MM yyyy'))
             },
             {
                 title: 'End Date',
                 dataIndex: 'endDate',
                 key: 'endDtae',
-                render: (record) =>(moment(record).format('ddd DD MM yyyy'))
+                render: (record) =>(record &&  moment(record).format('ddd DD MM yyyy'))
             },
             {
                 title: 'Action',

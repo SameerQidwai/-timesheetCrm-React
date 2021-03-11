@@ -30,7 +30,7 @@ class Employees extends Component {
                 dataIndex: "contactPersonOrganization",
                 key: "contactPersonOrganization",
                 render: (record) =>{
-                    return record && record.contactPerson && record.contactPerson && record.contactPerson.firstName
+                    return record && record.contactPerson && record.contactPerson.firstName
                 }
             },
             {

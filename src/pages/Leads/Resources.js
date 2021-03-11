@@ -37,7 +37,7 @@ class OrgInfo extends Component {
                                 }}
                                 className="nav-link"
                             >
-                    {record.contactPersonOrganization.contactPerson.firstName} {record.contactPersonOrganization.contactPerson.lastName}
+                    {record.contactPersonOrganization && record.contactPersonOrganization.contactPerson && `${record.contactPersonOrganization.contactPerson.firstName} ${record.contactPersonOrganization.contactPerson.lastName}`}
                     </Link>
                 }
             },

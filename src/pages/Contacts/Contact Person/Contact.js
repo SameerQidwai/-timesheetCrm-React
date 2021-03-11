@@ -57,7 +57,7 @@ class Contact extends Component {
                     <Dropdown
                         overlay={
                             <Menu>
-                                <Menu.Item danger>
+                                {/* <Menu.Item danger>
                                     <Popconfirm
                                         title="Sure to delete?"
                                         onConfirm={() =>
@@ -66,7 +66,7 @@ class Contact extends Component {
                                     >
                                         Delete
                                     </Popconfirm>
-                                </Menu.Item>
+                                </Menu.Item> */}
                                 <Menu.Item
                                     onClick={() => { this.setState({ openModal: true, editCP: record.id }); }}
                                 >Edit</Menu.Item>

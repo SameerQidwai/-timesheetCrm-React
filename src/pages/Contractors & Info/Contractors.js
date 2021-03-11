@@ -20,7 +20,7 @@ class Contractors extends Component {
                 dataIndex: "contactPersonOrganization",
                 key: "contactPersonOrganization",
                 render: (record) => {
-                    return `Sub-00${record.contactPerson.id}`
+                    return record && record.contactPerson && `Sub-00${ record.contactPerson.id}`
                 },
             },
             {
@@ -28,7 +28,7 @@ class Contractors extends Component {
                 dataIndex: "contactPersonOrganization",
                 key: "contactPersonOrganization",
                 render: (record) =>{
-                    return record.contactPerson.firstName
+                    return record && record.contactPerson && record.contactPerson.firstName
                 }
             },
             {
@@ -36,7 +36,7 @@ class Contractors extends Component {
                 dataIndex: "contactPersonOrganization",
                 key: "contactPersonOrganization",
                 render: (record) =>{
-                    return record.contactPerson.lastName
+                    return record && record.contactPerson && record.contactPerson.lastName
                 }
             },
             {
@@ -44,7 +44,7 @@ class Contractors extends Component {
                 dataIndex: "contactPersonOrganization",
                 key: "contactPersonOrganization",
                 render: (record) =>{
-                    return record.contactPerson.phoneNumber
+                    return record && record.contactPerson && record.contactPerson.phoneNumber
                 }
             },
             {
@@ -52,7 +52,7 @@ class Contractors extends Component {
                 dataIndex: "contactPersonOrganization",
                 key: "contactPersonOrganization",
                 render: (record) =>{
-                    return record.contactPerson.email
+                    return record && record.contactPerson && record.contactPerson.email
                 }
             },
             {

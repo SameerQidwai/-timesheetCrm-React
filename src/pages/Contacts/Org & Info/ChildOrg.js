@@ -13,7 +13,7 @@ class ChildOrg extends Component {
                 render: (text, record) => (
                     <Link
                         to={{
-                            pathname: `/organizations/info/${record.key}`,
+                            pathname: `/organizations/info/${record && record.key}`,
                         }}
                         className="nav-link"
                     >
@@ -28,7 +28,7 @@ class ChildOrg extends Component {
                 render: (text, record) => (
                     <Link
                         to={{
-                            pathname: `/organizations/info/${record.key}`,
+                            pathname: `/organizations/info/${record &&  record.key}`,
                         }}
                         className="nav-link"
                     >
