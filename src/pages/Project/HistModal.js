@@ -219,6 +219,7 @@ class InfoModal extends Component {
         const { ResourceFields } = this.state
         return (
             <Modal
+                maskClosable={false}
                 title={editRex? "Edit opportunity" : "Add Resource"}
                 centered
                 visible={visible}

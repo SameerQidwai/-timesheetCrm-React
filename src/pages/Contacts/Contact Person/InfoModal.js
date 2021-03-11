@@ -320,7 +320,7 @@ class InfoModal extends Component {
                     {
                         object: "sec",
                         fieldCol: 12,
-                        key: "clearancelevel",
+                        key: "clearanceLevel",
                         size: "small",
                         data: [
                             { label: "BV - Baseline Vetting", value: "BV" },
@@ -335,7 +335,7 @@ class InfoModal extends Component {
                     {
                         object: "sec",
                         fieldCol: 12,
-                        key: "granted",
+                        key: "clearanceGrantedDate",
                         size: "small",
                         // rules:[{ required: true }],
                         type: "DatePicker",
@@ -367,7 +367,7 @@ class InfoModal extends Component {
                     {
                         object: "sec",
                         fieldCol: 12,
-                        key: "expiry",
+                        key: "clearanceExpiryDate",
                         size: "small",
                         // rules:[{ required: true }],
                         type: "DatePicker",
@@ -383,7 +383,7 @@ class InfoModal extends Component {
                     {
                         object: "sec",
                         fieldCol: 12,
-                        key: "sponsor",
+                        key: "clearanceSponsorId",
                         size: "small",
                         type: "Select",
                         labelAlign: "right",
@@ -623,7 +623,6 @@ class InfoModal extends Component {
     BasicCall = (vake) => {
         // this will work after  got  Object from the skill from
         // vake.basic.stateId = null
-        console.log(vake);
         this.setState(
             {
                 mergeObj: {
@@ -649,7 +648,6 @@ class InfoModal extends Component {
 
     AssociateCall = (vake) => {
         // this will work after  getting the Object from level form
-        console.log(vake);
         const { asso } = vake;
         const vars = [];
         let result = Object.keys(asso).length / 5;
@@ -687,7 +685,6 @@ class InfoModal extends Component {
 
     SkillCall = (vake) => {
         // this will work after I get the Object from the form
-        console.log(vake);
 
         const { skill } = vake;
         const vars = [];
@@ -723,7 +720,6 @@ class InfoModal extends Component {
     SecurityCall = (vake) => {
         // this will work after  got  Object from the skill from
         // vake.basic.stateId = null
-        console.log(vake);
 
         this.setState(
             {
@@ -808,15 +804,23 @@ class InfoModal extends Component {
                     address: data.address,
                     stateId: data.stateId
                 };
+                let sec = {
+                    clearanceLevel: data.clearanceLevel,
+                    clearanceGrantedDate: data.clearanceGrantedDate && moment(data.clearanceGrantedDate),
+                    clearanceExpiryDate: data.clearanceExpiryDate && moment(data.clearanceExpiryDate),
+                    clearanceSponsorId: data.clearanceSponsorId,
+                }
                 this.basicRef.current.refs.basic_form.setFieldsValue({ basic: basic, });
                 this.associateRef.current.refs.associate_form.setFieldsValue({ asso: asso, });
                 this.skillRef.current.refs.skill_form.setFieldsValue({ skill: skill, });
+                this.securityRef.current.refs.security_form.setFieldsValue({ sec: sec, });
                 this.setState({ associateFields, SkillFields })
             }
         })
     };
 
     editRecord = (value) => {
+        console.log(value);
         const { editCP, callBack } = this.props;
         value.id = editCP
         this.setState({
@@ -829,7 +833,7 @@ class InfoModal extends Component {
         editList(value).then((res) => {
             if(res.success){
                 console.log('hereh');
-                callBack()
+                // callBack()
             }
         });
     };
@@ -862,6 +866,7 @@ class InfoModal extends Component {
 
         return (
             <Modal
+                maskClosable={false}
                 title={editCP ? "Edit Contact Person" : "Add Contact Person"}
                 centered
                 visible={visible}

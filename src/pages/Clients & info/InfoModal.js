@@ -930,6 +930,7 @@ class InfoModal extends Component {
 
         return (
             <Modal
+                maskClosable={false}
                 title={editClient ? "Edit Client" : "Add Client"}
                 centered
                 visible={visible}

@@ -275,6 +275,7 @@ class InfoModal extends Component {
         const { edit, visible } = this.props;
         return (
             <Modal
+                maskClosable={false}
                 title={edit ? "Edit Travel" : "Add Travel"}
                 centered
                 visible={visible}

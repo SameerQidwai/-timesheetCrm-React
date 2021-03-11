@@ -248,6 +248,7 @@ class CalenerHolidays extends Component {
                 </Row>
                 {this.state.openModal ? (
                     <Modal
+                maskClosable={false}
                         title={
                             this.state.editTimeoff
                                 ? "Edit Holiday"

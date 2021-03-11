@@ -6,7 +6,7 @@ import { UploadOutlined } from "@ant-design/icons"; //Icons
 import moment from "moment";
 import Form from "../../../components/Core/Form";
 import { addList, getOrgRecord, editList } from "../../../service/Organizations";
-import { getContactPersons, getOrganizations } from "../../../service/constant-Apis";
+import { getContactPersons, getOrganizations, getOrgPersons } from "../../../service/constant-Apis";
 
 const { TabPane } = Tabs;
 
@@ -683,7 +683,7 @@ class InfoModal extends Component {
 
     fetchAll = () =>{
         const {editOrg}= this.props;
-        Promise.all([ getOrganizations(editOrg), getContactPersons() ])
+        Promise.all([ getOrganizations(editOrg), getOrgPersons(editOrg), getContactPersons() ])
         .then(res => {
             const { BasicFields } = this.state;
             BasicFields.fields[3].data = res[0].data;
@@ -749,6 +749,7 @@ class InfoModal extends Component {
                         expectedBusinessAmount: vake.EBA? vake.EBA : 0,
                         address: vake.address? vake.address : '',
                         website: vake.website? vake.website: '',
+                        businessType: vake.businessType? vake.businessType: undefined,
                     },
                 },
                 basicSubmitted: true, // skill form submitted
@@ -780,8 +781,8 @@ class InfoModal extends Component {
                         abn: vake.ABN? vake.ABN : '',
                         taxCode: vake.tax_Code? vake.tax_Code : '',
                         invoiceEmail: vake.invoice_email? vake.invoice_email: '',
-                        invoiceNumber: vake.invoice_number? vake.invoice_number: '',
-                        businessType: vake.businessType? vake.businessType: undefined,
+                        invoiceContactNumber: vake.invoice_number? vake.invoice_number: '',
+                        // businessType: vake.businessType? vake.businessType: undefined,
                         cti: vake.CTI? vake.CTI : '',
                     },
                 },
@@ -845,8 +846,7 @@ class InfoModal extends Component {
     BankCall = (vake) => {
         // this will work after I get the Object from the form
         vake = vake.obj
-        console.log(vake);
-        this.setState(
+                this.setState(
             {
                 mergeObj: {
                     ...this.state.mergeObj,
@@ -875,7 +875,6 @@ class InfoModal extends Component {
 
     FutureCall = (vake) => {
         // this will work after I get the Object from the form
-        ;
         vake = vake.obj
         this.setState(
             {
@@ -942,6 +941,7 @@ class InfoModal extends Component {
     editRecord = (value) => {
         const { editOrg, callBack } = this.props;
         value.id = editOrg
+        console.log(value);
         this.setState({ 
             basicSubmitted: false, 
             billingSubmitted:false, 
@@ -975,6 +975,7 @@ class InfoModal extends Component {
         const { bounds, dragDisable, BasicFields, BillingFields, InsuredFields, BankFields, FutureFields } = this.state
         return (
             <Modal
+                maskClosable={false}
                 title={
                     <div 
                         style={{ width: '100%', cursor: 'move', }} 
@@ -992,7 +993,6 @@ class InfoModal extends Component {
                 okText={"Save"}
                 onCancel={this.props.close}
                 width={900}
-                maskClosable={false}
                 destroyOnClose={true}
                 modalRender={modal => (
                     <Draggable

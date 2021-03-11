@@ -748,6 +748,7 @@ class InfoModal extends Component {
         const { BasicFields, tenderFields, DatesFields, BillingFields } = this.state
         return (
             <Modal
+                maskClosable={false}
                 title={editPro? "Edit opportunity" : "Add New opportunity"}
                 centered
                 visible={visible}

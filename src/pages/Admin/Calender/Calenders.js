@@ -232,6 +232,7 @@ class Calenders extends Component {
                 {
                     openModal ? (
                         <Modal
+                maskClosable={false}
                             title={
                                 editTimeoff
                                     ? "Edit Calender"

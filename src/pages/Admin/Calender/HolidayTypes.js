@@ -176,6 +176,7 @@ class HolidayTypes extends Component {
                 />
                 {isVisible && (
                     <Modal
+                maskClosable={false}
                         title={this.state.editType ? "Edit Type" : "Add Type"}
                         centered
                         visible={isVisible}

@@ -78,6 +78,7 @@ class Permission extends Component {
     render (){
         return (
                 <Modal
+                maskClosable={false}
                     title="Edit Permission"
                     centered
                     visible={this.props.isVisible}

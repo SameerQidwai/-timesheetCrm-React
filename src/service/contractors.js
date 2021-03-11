@@ -30,7 +30,7 @@ export const getRecord = (id) => {
                 console.log(data)
                 const contactPerson = data.contactPersonOrganization ? data.contactPersonOrganization.contactPerson : {}
                 const basic = {
-                    cpCode: `Emp-00${contactPerson.id}`,
+                    cpCode: `Sub-00${contactPerson.id}`,
                     firstName: contactPerson.firstName,
                     lastName: contactPerson.lastName,
                     gender: contactPerson.gender,

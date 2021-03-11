@@ -20,7 +20,7 @@ class Contractors extends Component {
                 dataIndex: "contactPersonOrganization",
                 key: "contactPersonOrganization",
                 render: (record) => {
-                    return `Emp-00${record.contactPerson.id}`
+                    return `Sub-00${record.contactPerson.id}`
                 },
             },
             {

@@ -76,10 +76,10 @@ export const getRecord = (id) => {
                 billing.upside = (data.value - billing.discount)
                 
                 const dates = {
-                    entryDate: moment(data.entryDate),
-                    startDate: moment(data.startDate),
-                    endDate: moment(data.endDate),
-                    bidDate: moment(data.bidDate)
+                    entryDate: data.entryDate && moment(data.entryDate),
+                    startDate: data.startDate && moment(data.startDate),
+                    endDate: data.endDate && moment(data.endDate),
+                    bidDate: data.bidDate && moment(data.bidDate)
                 }
                 data.ContactName= data.contactPerson && data.contactPerson.firstName + ' ' + data.contactPerson.lastName
                 return {success, data, basic, tender, billing, dates};

@@ -341,6 +341,7 @@ class BillModal extends Component {
 
         return (
             <Modal
+                maskClosable={false}
                 title={editCntrct ? "Edit Billing" : "Add Billing"}
                 centered
                 visible={visible}

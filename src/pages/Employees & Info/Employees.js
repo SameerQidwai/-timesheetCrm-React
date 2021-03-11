@@ -30,7 +30,7 @@ class Employees extends Component {
                 dataIndex: "contactPersonOrganization",
                 key: "contactPersonOrganization",
                 render: (record) =>{
-                    return record && record.contactPerson.firstName
+                    return record && record.contactPerson && record.contactPerson && record.contactPerson.firstName
                 }
             },
             {
@@ -38,7 +38,7 @@ class Employees extends Component {
                 dataIndex: "contactPersonOrganization",
                 key: "contactPersonOrganization",
                 render: (record) =>{
-                    return record && record.contactPerson.lastName
+                    return record && record.contactPerson && record.contactPerson.lastName
                 }
             },
             {
@@ -46,7 +46,7 @@ class Employees extends Component {
                 dataIndex: "contactPersonOrganization",
                 key: "contactPersonOrganization",
                 render: (record) =>{
-                    return record && record.contactPerson.phoneNumber
+                    return record && record.contactPerson && record.contactPerson.phoneNumber
                 }
             },
             {
@@ -54,7 +54,7 @@ class Employees extends Component {
                 dataIndex: "contactPersonOrganization",
                 key: "contactPersonOrganization",
                 render: (record) =>{
-                    return record && record.contactPerson.email
+                    return record && record.contactPerson && record.contactPerson.email
                 }
             },
             {

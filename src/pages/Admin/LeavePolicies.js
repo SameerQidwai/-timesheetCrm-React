@@ -470,6 +470,7 @@ class LeavePolicies extends Component {
                 </Row>
                 {this.state.openModal ? (
                     <Modal
+                maskClosable={false}
                         title={
                             this.state.editTimeoff
                                 ? "Edit Leave Policy"

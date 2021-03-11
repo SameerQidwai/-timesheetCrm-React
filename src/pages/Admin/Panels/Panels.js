@@ -226,6 +226,7 @@ class Panels extends Component {
                 </Row>
                 {this.state.openModal ? (
                     <Modal
+                maskClosable={false}
                         title={
                             this.state.editPanel
                                 ? "Edit Panel"

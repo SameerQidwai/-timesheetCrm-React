@@ -6,8 +6,8 @@ import { getRecord } from "../../service/opportunities";
 const { Title, Text } = Typography
 
 class ProfitLoss extends Component {
-    constructor(){
-        super()
+    constructor(props){
+        super(props)
         this.state={
             billing: {},
             columns: [
@@ -225,19 +225,14 @@ class ProfitLoss extends Component {
                 },
             ],
             data:[
-                {key: 'R', label: 'Revenue', 1: 800, 2: 800, 3: 800, 4: 800, 5: 800, 6: 800, 7: 800, 8: 800, 9: 800, 10: 800},
-                {key: 'C', label: '(-) Cos', 1: 640, 2: 640, 3: 640, 4: 640, 5: 640, 6: 640, 7: 640, 8: 640, 9: 640, 10: 640},
-                {key: '$', label: 'CM $', 1: 160, 2: 160, 3: 160, 4: 160, 5: 160, 6: 160, 7: 160, 8: 160, 9: 160, 10: 160},
-                {key: '%', label: 'CM %', 1: 20, 2: 20, 3: 20, 4: 20, 5: 20, 6: 20, 7: 20, 8: 20, 9: 20, 10: 20},
+                {key: 'R', label: 'Revenue', 1: 800, 2: 100, 3: 200, 4: 300, 5: 800, 6: 800, 7: 800, 8: 800, 9: 800, 10: 800},
+                {key: 'C', label: '(-) Cos', 1: 200, 2: 240, 3: 440, 4: 640, 5: 640, 6: 640, 7: 640, 8: 640, 9: 640, 10: 640},
+                {key: '$', label: 'CM $', 1: 160, 2: 170, 3: 160, 4: 160, 5: 160, 6: 160, 7: 160, 8: 160, 9: 160, 10: 160},
+                {key: '%', label: 'CM %', 1: 20, 2: 20, 3: 10, 4: 20, 5: 20, 6: 20, 7: 20, 8: 20, 9: 20, 10: 20},
             ]
         }
     }
     componentDidMount = () =>{
-        // console.log(this.props);
-        // this.getRecord(this.props.id)
-        // setTimeout(() => {
-        //     this.Columns()
-        // }, 3000);
     }
 
     // getRecord = (id) =>{
@@ -259,22 +254,28 @@ class ProfitLoss extends Component {
         console.log(billing.totalMonths);
         const len = billing.totalMonths>0 ? billing.totalMonths : 0
         let month = billing.startDate
-        for (var i = 1; i <= len; i++){
-            columns.push(
+        let array = []
+        for (var i = 1; i <=len; i++){
+            array.push(
                 {
                     title: moment(month).format('MMM YY'),
+                    width:500,
                     children: [
                       {
                         title: '22',
-                        render: (record) =>{
-                            if (record.key === 'R') {
-                                return `$ ${record[i]}`
-                            }else if (record.key === 'C'){
-                                return `$ ${record[i]}`
-                            }else if (record.key === '$'){
-                                return <b>{`$ ${record[i]}`}</b>
-                            }else if (record.key === '%'){
-                                return <b>{` ${record[i]} %`}</b>
+                        dataIndex: i,
+                        key: i,
+                        render: (record, records) =>{
+                            console.log(record, records, 'recordss');
+                            // console.log(record,record[i], 'render record');
+                            if (records.key === 'R') {
+                                return `$ ${record}`
+                            }else if (records.key === 'C'){
+                                return `$ ${record}`
+                            }else if (records.key === '$'){
+                                return <b>{`$ ${record}`}</b>
+                            }else if (records.key === '%'){
+                                return <b>{` ${record} %`}</b>
                             }
                         }
                       },
@@ -284,10 +285,8 @@ class ProfitLoss extends Component {
             month = moment(month).add(1, 'months')
         }
         this.setState({
-            columns,
-            billing,
-        },()=>{
-            console.log(this.state.columns);
+            columns: [...columns, ...array],
+            // billing,
         })
     }
 
@@ -323,6 +322,7 @@ class ProfitLoss extends Component {
                 <Col span={24}>
                     <Title level={3} underline>Exp Vitcom - Opportunity</Title>
                 </Col>
+                {console.log(columns)}
                 <Table
                     rowKey= {(data =>data.label)}
                     columns={columns}

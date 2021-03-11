@@ -176,7 +176,6 @@ class Forms extends Component {
             case "Title":
                 item = (
                     <Title level={mode} size={size} style={style}>
-                        {console.log({tooltip}, {tTitle}, { tTrigger})}
                         { tooltip? <Tooltip title={tTitle} trigger={tTrigger}> {placeholder}</Tooltip> :   placeholder }
                     </Title>
                 );

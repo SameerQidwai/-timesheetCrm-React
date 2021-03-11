@@ -91,6 +91,7 @@ class InfoModal extends Component {
                         size: "small",
                         // rules:[{ required: true }],
                         type: "Input",
+                        disabled: true,
                         labelAlign: "left",
                         itemStyle: { marginBottom: 10 },
                     },
@@ -868,6 +869,7 @@ class InfoModal extends Component {
 
         return (
             <Modal
+                maskClosable={false}
                 title={editCont ? "Edit Contractor" : "Add Contractor"}
                 centered
                 visible={visible}
