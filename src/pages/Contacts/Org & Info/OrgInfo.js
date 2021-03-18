@@ -137,7 +137,7 @@ class OrgInfo extends Component {
                     <TabPane tab="Sub-organization" key="4">
                         <ChildOrg {...this.props.match.params} />
                     </TabPane>
-                    <TabPane tab="Account" key="5">
+                    <TabPane tab="Bank Account" key="5">
                         <Bank {...this.props.match.params} title={data.name} />
                     </TabPane>
                 </Tabs>

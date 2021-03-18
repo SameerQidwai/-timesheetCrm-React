@@ -144,7 +144,7 @@ class OrgInfo extends Component {
                     <TabPane tab="Attachments" key="attachments">
                         <Attachments />
                     </TabPane>
-                    <TabPane tab="Account" key="account">
+                    <TabPane tab="Bank Account" key="account">
                         <Bank id={emp} title={data.name} />
                     </TabPane>
                 </Tabs>

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Modal, Tabs, Row, Col, Button, Input } from "antd";
-import { UploadOutlined, PlusSquareFilled, CloseOutlined, } from "@ant-design/icons"; //Icons
+import { UploadOutlined, PlusSquareFilled, CloseOutlined, LoadingOutlined } from "@ant-design/icons"; //Icons
 
 import Form from "../../../components/Core/Form";
 import { addList, getContactRecord, editList } from "../../../service/conatct-person";
@@ -77,6 +77,7 @@ class InfoModal extends Component {
             securitySubmitted: false,
             skill_data: [],
             orgs_data: [],
+            loading: false,
             BasicFields: {
                 //creating Component
                 formId: "basic_form",
@@ -614,6 +615,7 @@ class InfoModal extends Component {
 
     submit = () => {
         //submit button click
+        this.setState({ loading: true })
         this.basicRef.current && this.basicRef.current.refs.basic_form.submit();
         this.associateRef.current && this.associateRef.current.refs.associate_form.submit();
         this.skillRef.current && this.skillRef.current.refs.skill_form.submit();
@@ -756,6 +758,7 @@ class InfoModal extends Component {
         })
         addList(value).then((res) => {
             if(res.success){
+                this.setState({ loading: false })
                 callBack()
             }
         });
@@ -833,6 +836,7 @@ class InfoModal extends Component {
         editList(value).then((res) => {
             if(res.success){
                 console.log('hereh');
+                this.setState({ loading: false })
                 callBack()
             }
         });
@@ -862,8 +866,7 @@ class InfoModal extends Component {
 
     render() {
         const { editCP, visible } = this.props;
-        const { BasicFields, associateFields, SkillFields, SecurityFields } = this.state;
-
+        const { BasicFields, associateFields, SkillFields, SecurityFields, loading } = this.state;
         return (
             <Modal
                 maskClosable={false}
@@ -871,7 +874,8 @@ class InfoModal extends Component {
                 centered
                 visible={visible}
                 onOk={() => { this.submit(); }}
-                okText={"Save"}
+                okButtonProps={{ disabled: loading }}
+                okText={loading ?<LoadingOutlined /> :"Save"}
                 onCancel={this.onCancel}
                 width={900}
             >

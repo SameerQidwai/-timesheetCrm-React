@@ -222,7 +222,7 @@ class InfoModal extends Component {
                 size: "middle",
                 fields: [
                     {
-                        Placeholder: "Tender",
+                        Placeholder: "Tender/RFQTS Title",
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -230,7 +230,7 @@ class InfoModal extends Component {
                         // itemStyle:{marginBottom:'10px'},
                     },
                     {
-                        Placeholder: "Tender Number",
+                        Placeholder: "Tender/RFQTS Number",
                         size: "small",
                         fieldCol: 12,
                         type: "Text",
@@ -756,7 +756,6 @@ class InfoModal extends Component {
         const { callBack } = this.props;
         console.log(value);
         this.setState({basicSubmitted: false, tenderSubmitted: false, billingSubmitted: false, datesSubmitted: false})
-
         addList(value).then((res) => {
             if(res.success){
                 callBack()
@@ -784,7 +783,6 @@ class InfoModal extends Component {
         console.log(this.props);
         data.id = editLead
         this.setState({basicSubmitted: false, tenderSubmitted: false, billingSubmitted: false, datesSubmitted: false})
-
         editList(data).then((res) => {
             console.log(res);
             if(res.success){
@@ -822,7 +820,7 @@ class InfoModal extends Component {
                             FormFields={BasicFields}
                         />
                     </TabPane>
-                    <TabPane tab="Tender Info" key="tender" forceRender>
+                    <TabPane tab="Tender/RFQTS Info" key="tender" forceRender>
                         <Form
                             ref={this.tenderRef}
                             Callback={this.tenderCall}

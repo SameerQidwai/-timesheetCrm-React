@@ -145,7 +145,7 @@ class ContInfo extends Component {
                     <TabPane tab="Attachments" key="5">
                         <Attachments />
                     </TabPane>
-                    <TabPane tab="Account" key="6   ">
+                    <TabPane tab="Bank Account" key="6   ">
                         <Bank id={editCont} title={data.name} />
                     </TabPane>
                 </Tabs>

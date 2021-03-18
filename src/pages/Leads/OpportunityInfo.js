@@ -77,7 +77,9 @@ class OpportunityInfo extends Component {
                                         Add To Project
                                     </Popconfirm>
                                 </Menu.Item>
-                                <Menu.Item onClick={() => { this.setState({ infoModal: true, }); }} > Edit </Menu.Item>
+                                <Menu.Item onClick={() => { 
+                                    // this.setState({ infoModal: true, });
+                                     }} > Edit </Menu.Item>
                                 <Menu.Item>
                                     <Link
                                         to={{
@@ -91,7 +93,7 @@ class OpportunityInfo extends Component {
                             </Menu>
                         }
                     >
-                        <Button size="small">
+                        <Button size="small" >
                             <SettingOutlined /> Option <DownOutlined />
                         </Button>
                     </Dropdown>
@@ -132,7 +134,7 @@ class OpportunityInfo extends Component {
                 <Tabs
                     type="card"
                     style={{ marginTop: "50px" }}
-                    defaultActiveKey="profitloss"
+                    defaultActiveKey="profitloss"   
                 >
                     <TabPane tab="Comments" key="comments">
                         <Comments id={leadId} />
@@ -143,7 +145,7 @@ class OpportunityInfo extends Component {
                     <TabPane tab="Attachments" key="attachments">
                         <Attachments />
                     </TabPane>
-                    <TabPane tab="Account" key="account">
+                    <TabPane tab="Bank Account" key="account">
                         <Bank id={leadId} title={data.name} />
                     </TabPane>
                     <TabPane tab="Projected Profit & Loss" key="profitloss">

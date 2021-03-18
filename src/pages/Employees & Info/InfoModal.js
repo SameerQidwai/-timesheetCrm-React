@@ -1088,11 +1088,17 @@ class InfoModal extends Component {
     BankCall = (vake) => {
         // this will work after I get the Object from the form
         console.log(vake);
+        const { bank } = vake
         this.setState(
             {
                 mergeObj: {
                     ...this.state.mergeObj,
-                    ...vake.bank,
+                    ...{
+                        smsfBankAccountId: bank.smsfBankAccountId? bank.smsfBankAccountId: '',
+                        bankName: bank.name? bank.name: '',
+                        bankAccountNo: bank.accountNo? bank.accountNo: '',
+                        bankBsb: bank.bsb? bank.bsb: '',
+                    },
                 },
                 bankSubmitted: true, // level form submitted
             },
@@ -1165,21 +1171,19 @@ class InfoModal extends Component {
         const { sContact } = this.state
         data.contactPersonId = sContact
         // value.key = rows; // get new key
-        console.log(data);
+        this.setState({
+            basicSubmitted: false,
+            kinSubmitted: false,
+            bankSubmitted: false,
+            detailSubmitted: false,
+            billingSubmitted: false,
+            smsfSubmitted: false,
+        })
         addList(data).then(res=>{
             console.log(res);
             if(res.success){
                 console.log(res.data, false);
                 callBack(res.data, false);
-            }else{
-                this.setState({
-                    basicSubmitted: false,
-                    kinSubmitted: false,
-                    bankSubmitted: false,
-                    detailSubmitted: false,
-                    billingSubmitted: false,
-                    smsfSubmitted: false,
-                })
             }
         })
     };
@@ -1206,19 +1210,18 @@ class InfoModal extends Component {
 
     editRecord = (value) => {
         const { editEmp, callBack } = this.props;
+        this.setState({
+            basicSubmitted: false,
+            kinSubmitted: false,
+            bankSubmitted: false,
+            detailSubmitted: false,
+            billingSubmitted: false,
+            smsfSubmitted: false,
+        })
         editList(editEmp, value).then((res) => {
             if(res.success){
                 console.log('hereh');
                 callBack()
-            }else{
-                this.setState({
-                    basicSubmitted: false,
-                    kinSubmitted: false,
-                    bankSubmitted: false,
-                    detailSubmitted: false,
-                    billingSubmitted: false,
-                    smsfSubmitted: false,
-                })
             }
         });
     };

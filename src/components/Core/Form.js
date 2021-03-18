@@ -53,6 +53,8 @@ class Forms extends Component {
             return `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
         }else if(shape === 'ABN'){
             return `${value}`.replace(/^(.{2})(.{3})(.*)$/, "$1 $2 $3")
+            // return `${value}`.replace(/^(.{2})(.{3})(.{3})(.*)$/, "$1 $2 $3")
+            // return `${value}`.substr(0, 2) + " " + `${value}`.substr(2, 5) + " " + `${value}`.substr(7, 10);
         }else{
             return shape ? `${value}${shape}` : `${value}`
         }

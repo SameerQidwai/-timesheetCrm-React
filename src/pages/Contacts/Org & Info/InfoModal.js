@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Modal, Tabs } from "antd";
 import Draggable from 'react-draggable';
 
-import { UploadOutlined } from "@ant-design/icons"; //Icons
+import { UploadOutlined, LoadingOutlined } from "@ant-design/icons"; //Icons
 import moment from "moment";
 import Form from "../../../components/Core/Form";
 import { addList, getOrgRecord, editList } from "../../../service/Organizations";
@@ -363,6 +363,7 @@ class InfoModal extends Component {
                         // label: "Sum Insured",
                         size: "small",
                         type: "InputNumber",
+                        shape: '$',
                         fieldStyle: {width: '100%'},
                         labelAlign: "left",
                         itemStyle: { marginBottom: 10 },
@@ -450,6 +451,7 @@ class InfoModal extends Component {
                         key: "SumIns_PL",
                         // label: "Sum Insured",
                         size: "small",
+                        shape: '$',
                         // rules:[{ required: true }],
                         type: "InputNumber",
                         fieldStyle: {width: '100%'},
@@ -540,6 +542,7 @@ class InfoModal extends Component {
                         key: "SumIns_WC",
                         // label: "Sum Insured",
                         size: "small",
+                        shape: '$',
                         // rules:[{ required: true }],
                         type: "InputNumber",
                         fieldStyle: {width: '100%'},
@@ -725,6 +728,7 @@ class InfoModal extends Component {
 
     submit = () => {
         //submit button click
+        this.setState({loading: true})
         this.basicRef.current.refs.basic_form.submit();
         this.billingRef.current && this.billingRef.current.refs.billing_form.submit();
         this.insuredRef.current && this.insuredRef.current.refs.insured_form.submit();
@@ -915,6 +919,8 @@ class InfoModal extends Component {
         addList(value).then((res) => {
             if(res.success){
                 callBack()
+            }else{
+                this.setState({loading:false})
             }
         });
     };
@@ -954,6 +960,8 @@ class InfoModal extends Component {
             if(res.success){
                 console.log('hereh');
                 callBack()
+            }else{
+                this.setState({loading:false})
             }
         });
     };
@@ -972,7 +980,7 @@ class InfoModal extends Component {
     };
     render() {
         const { editOrg, visible } = this.props;
-        const { bounds, dragDisable, BasicFields, BillingFields, InsuredFields, BankFields, FutureFields } = this.state
+        const { bounds, dragDisable, BasicFields, BillingFields, InsuredFields, BankFields, FutureFields, loading } = this.state
         return (
             <Modal
                 maskClosable={false}
@@ -990,7 +998,8 @@ class InfoModal extends Component {
                 onOk={() => {
                     this.submit();
                 }}
-                okText={"Save"}
+                okButtonProps={{ disabled: loading }}
+                okText={loading ?<LoadingOutlined /> :"Save"}
                 onCancel={this.props.close}
                 width={900}
                 destroyOnClose={true}

@@ -57,9 +57,9 @@ export const getOrgRecord = (id) => {
                     SumIns_PI: vake.piSumInsured,
                     SumIns_PL: vake.plSumInsured,
                     SumIns_WC: vake.wcSumInsured,
-                    expiry_PI: moment(vake.piInsuranceExpiry),
-                    expiry_PL: moment(vake.plInsuranceExpiry),
-                    expiry_WC: moment(vake.wcInsuranceExpiry),
+                    expiry_PI: vake.piInsuranceExpiry ? moment(vake.piInsuranceExpiry): null,
+                    expiry_PL: vake.piInsuranceExpiry ? moment(vake.plInsuranceExpiry) : null,
+                    expiry_WC: vake.piInsuranceExpiry ? moment(vake.wcInsuranceExpiry) : null,
                 }
                 const bank = {
                     bankName: vake.bankAccounts[0] && vake.bankAccounts[0].name,

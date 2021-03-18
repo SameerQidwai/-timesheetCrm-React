@@ -763,14 +763,14 @@ class InfoModal extends Component {
         const { sContact, sOrg } = this.state
         data.contactPersonId = sContact
         data.organizationId = sOrg
+        this.setState({
+            basicSubmitted: false,
+            kinSubmitted: false,
+            billingSubmitted: false
+        })
         addList(data).then(res=>{
             if(res.success){
                 callBack();
-            }else{
-                this.setState({
-                    basicSubmitted: false,
-                    billingSubmitted: false
-                })
             }
         })
     };
@@ -787,15 +787,15 @@ class InfoModal extends Component {
 
     editRecord = (value) => {
         const { editCont, callBack } = this.props;
+        this.setState({
+            basicSubmitted: false,
+            kinSubmitted: false,
+            billingSubmitted: false
+        })
         editList(editCont, value).then((res) => {
             if(res.success){
                 console.log('editRecord');
                 callBack()
-            }else{
-                this.setState({
-                    basicSubmitted: false,
-                    billingSubmitted: false
-                })
             }
         });
     };
