@@ -1,16 +1,16 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import { Row, Col, Menu, Button, Dropdown, Descriptions, Table, Popconfirm } from "antd";
 import { SettingOutlined, DownOutlined } from "@ant-design/icons"; //Icons
 import { Link } from "react-router-dom"; 
 
-import InfoModal from "./resModal";
+import ResModal from "./Modals/ResModal";
 import { getRecord, getResources, delResource } from "../../service/opportunities";
 
 import moment from "moment"
 
 const { Item } = Descriptions;
 
-class OrgInfo extends Component {
+class Resource extends Component {
     constructor() {
         super();
         this.columns = [
@@ -26,36 +26,36 @@ class OrgInfo extends Component {
                 key: "panelSkillStandardLevel",
                 render: (record)=> {return record && record.levelLabel}
             },
+            // {
+            //     title: "Resource Name",
+            //     dataIndex: "user",
+            //     key: "user",
+            //     render: (record)=> {return record &&
+            //         <Link
+            //                     to={{
+            //                         pathname: `/Employees/info/${record.id}`,
+            //                     }}
+            //                     className="nav-link"
+            //                 >
+            //         {record.contactPersonOrganization && record.contactPersonOrganization.contactPerson && `${record.contactPersonOrganization.contactPerson.firstName} ${record.contactPersonOrganization.contactPerson.lastName}`}
+            //         </Link>
+            //     }
+            // },
             {
-                title: "Resource Name",
-                dataIndex: "user",
-                key: "user",
-                render: (record)=> {return record &&
-                    <Link
-                                to={{
-                                    pathname: `/Employees/info/${record.id}`,
-                                }}
-                                className="nav-link"
-                            >
-                    {record.contactPersonOrganization && record.contactPersonOrganization.contactPerson && `${record.contactPersonOrganization.contactPerson.firstName} ${record.contactPersonOrganization.contactPerson.lastName}`}
-                    </Link>
-                }
-            },
-            {
-                title: "Billable Hours",
+                title: "Total Hours",
                 dataIndex: "billableHours",
                 key: "billableHours",
             },
-            {
-                title: "Buy Cost",
-                dataIndex: "buyingRate",
-                key: "buyingRate",
-            },
-            {
-                title: "Sale Cost",
-                dataIndex: "sellingRate",
-                key: "sellingRate",
-            },
+            // {
+            //     title: "Buy Cost",
+            //     dataIndex: "buyingRate",
+            //     key: "buyingRate",
+            // },
+            // {
+            //     title: "Sale Cost",
+            //     dataIndex: "sellingRate",
+            //     key: "sellingRate",
+            // },
             {
                 title: "Action",
                 key: "action",
@@ -75,10 +75,18 @@ class OrgInfo extends Component {
                                 <Menu.Item
                                     onClick={() => {
                                         console.log(record.id);
-                                        this.setState({ infoModal: true, editRex: record.id, });
+                                        this.setState({ infoModal: true, editRex: record.id, resource: false });
                                     }}
                                 >
                                     Edit
+                                </Menu.Item>
+                                <Menu.Item 
+                                    onClick={() => {
+                                        console.log(record.id);
+                                        this.setState({ infoModal: true, editRex: false, resource: true });
+                                    }}
+                                >
+                                        Add
                                 </Menu.Item>
                             </Menu>
                         }
@@ -97,6 +105,7 @@ class OrgInfo extends Component {
             leadId: false,
             data: [],
             desc: {},
+            resource: false
         };
     }
 
@@ -154,7 +163,7 @@ class OrgInfo extends Component {
     };
 
     render() {
-        const { desc, data, infoModal, editRex, leadId } = this.state;
+        const { desc, data, infoModal, editRex, leadId, resource } = this.state;
         return (
             <>
                 <Descriptions
@@ -172,23 +181,35 @@ class OrgInfo extends Component {
                     {/* <Item label="Gender">{data.gender}</Item> */}
                 </Descriptions>
                 <Row justify="end">
-                    <Col> <Button type="primary" size='small'  onClick={() => {  this.setState({ infoModal: true, editRex: false, }) }}>Add New</Button> </Col>
+                    <Col> 
+                        <Button 
+                            type="primary" 
+                            size='small'  
+                            onClick={() => { this.setState({ infoModal: true, editRex: false, resource: false }) }}>
+                                Add New
+                        </Button>
+                    </Col>
                     {/* <Col> <Button type="danger" size='small'>Delete Resource</Button></Col> */}
                 </Row>
                 <Table
-                    rowKey={(data) => data.id}
+                    rowKey={(record) => record.id}
                     columns={this.columns}
                     dataSource={data}
+                    expandable={{
+                        expandedRowRender: record => <NestedTable/>,
+                        rowExpandable: record => record.user.length > 0,
+                      }}
                     size="small"
                 />
                 {infoModal && (
-                    <InfoModal
+                    <ResModal
                         visible={infoModal}
                         editRex={editRex}
                         leadId = {leadId}
                         panelId = {desc.panelId}
                         close={this.closeModal}
                         callBack={this.callBack}
+                        resource={resource}
                     />
                 )}
             </>
@@ -196,4 +217,117 @@ class OrgInfo extends Component {
     }
 }
 
-export default OrgInfo;
+
+function NestedTable(key) {
+    // const [data, setData] = useState(
+    //     [
+    //     {
+    //         id: 0,
+    //         code: '001',
+    //         name: 'Ovias Ford',
+    //         sale: 100,
+    //         cost: 50,
+    //         hours: 80,
+    //         selected: true,
+    //     },
+    //     {
+    //         id: 1,
+    //         code: '002',
+    //         name: 'Musab Cavil',
+    //         sale: 200,
+    //         cost: 50,
+    //         hours: 100,
+    //         selected: false,
+    //     },
+    //     {
+    //         id: 2,
+    //         code: '003',
+    //         name: 'Noor Uddin',
+    //         sale: 150,
+    //         cost: 30,
+    //         hours: 150,
+    //         selected: false,
+    //     },
+    // ]
+    // );
+    const data = []
+    for (let i = 0; i < 19; ++i) {
+        data.push({
+            id: i,
+            code: '2014-12-24 23:12:00',
+            name: 'Sameer Ahmed Qidwai',
+            sale: 150,
+            cost: 30,
+            hours: 150,
+        });
+      }
+    const [ visible, setVisible ] = useState(false)
+    const [selectedRowKeys, setSelectedRowKeys] = useState([0])
+    const columns = [
+        { title: 'Code', dataIndex: 'code', key: 'code' },
+        { title: 'Name', dataIndex: 'name', key: 'name' },
+        { title: 'Buy Cost', dataIndex: 'cost', key: 'cost' },
+        { title: 'Billable Hours', dataIndex: 'hours', key: 'hours' },
+        {
+            title: "Action",
+            key: "action",
+            align: "right",
+            render: (record) => (
+                <Dropdown
+                    overlay={
+                        <Menu>
+                            <Menu.Item danger>
+                                <Popconfirm
+                                    title="Sure to delete?"
+                                    // onConfirm={() => this.handleDelete(record.id) }
+                                >
+                                    Delete
+                                </Popconfirm>
+                            </Menu.Item>
+                            <Menu.Item
+                                onClick={()=>{setVisible(true)}}
+                            >
+                                Edit
+                            </Menu.Item>
+                        </Menu>
+                    }
+                >
+                    <Button size="small">
+                        <SettingOutlined /> Option <DownOutlined />
+                    </Button>
+                </Dropdown>
+            ),
+        },
+    ];
+
+    const onSelectChange = (selected, Rows) =>  {
+        console.log(selected, Rows)
+        setSelectedRowKeys(selected)
+    }
+
+    return <div style={{padding: 10, paddingLeft: 20}}> 
+        <Table
+            key={key}
+            rowKey={(record) => record.id} 
+            columns={columns} 
+            dataSource={data} 
+            pagination={false}
+            rowSelection={{
+                type: 'radio',
+                selectedRowKeys: selectedRowKeys,
+                onChange: onSelectChange
+            }}
+        />
+        <ResModal
+            visible={visible}
+            resource
+            // editRex={editRex}
+            // leadId = {leadId}
+            // panelId = {desc.panelId}
+            close={()=>{setVisible(false)}}
+            // callBack={this.callBack}
+        />
+    </div>
+};
+
+export default Resource;

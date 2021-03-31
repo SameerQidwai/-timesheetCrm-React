@@ -983,16 +983,16 @@ class InfoModal extends Component {
         const { bounds, dragDisable, BasicFields, BillingFields, InsuredFields, BankFields, FutureFields, loading } = this.state
         return (
             <Modal
-                maskClosable={false}
                 title={
                     <div 
                         style={{ width: '100%', cursor: 'move', }} 
                         onMouseOver={() => { if (dragDisable) { this.setState({ dragDisable: false, }); } }}
                         onMouseOut={() => { this.setState({ dragDisable: true, });}}
                     >
-                            {editOrg? "Edit Organisation" : "Add Organisation"}
+                        {editOrg? "Edit Organisation" : "Add Organisation"}
                     </div>
-                }
+                    }
+                maskClosable={false}
                 centered
                 visible={visible}
                 onOk={() => {

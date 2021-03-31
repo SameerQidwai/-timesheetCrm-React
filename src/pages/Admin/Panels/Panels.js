@@ -226,12 +226,12 @@ class Panels extends Component {
                 </Row>
                 {this.state.openModal ? (
                     <Modal
-                maskClosable={false}
                         title={
                             this.state.editPanel
-                                ? "Edit Panel"
-                                : "Add New Panel"
+                            ? "Edit Panel"
+                            : "Add New Panel"
                         }
+                        maskClosable={false}
                         centered
                         visible={this.state.openModal}
                         onOk={() => {

@@ -25,6 +25,7 @@ import Travels from "../../pages/Travel/Travels";
 import Opportunities from "../../pages/Leads/Opportunities";
 import OpportunityInfo from "../../pages/Leads/OpportunityInfo";
 import OpportunityResources from "../../pages/Leads/Resources";
+
 import Projects from "../../pages/Project/Projects";
 import ProjectResources from "../../pages/Project/Resources";
 import ResourceHistory from "../../pages/Project/ResourceHistory";

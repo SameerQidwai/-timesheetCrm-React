@@ -861,6 +861,7 @@ class TimeSheet extends Component {
                 {this.state.isVisible && (
                     <Modal
                         title="Edit TimeSheet"
+                        maskClosable={false}
                         centered
                         visible={this.state.isVisible}
                         okText="Save"
@@ -876,7 +877,6 @@ class TimeSheet extends Component {
                         onOk={() => {
                             this.submit();
                         }}
-                        maskClosable={false}
                     >
                         <Row>
                             <Form
@@ -890,8 +890,8 @@ class TimeSheet extends Component {
 
                 {this.state.proVisible && (
                     <Modal
-                        maskClosable={false}
                         title="Add Project"
+                        maskClosable={false}
                         centered
                         visible={this.state.proVisible}
                         okText="Add"

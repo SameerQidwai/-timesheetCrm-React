@@ -335,8 +335,8 @@ class InfoModal extends Component {
         const { editOff, visible } = this.props;
         return (
             <Modal
-                maskClosable={false}
                 title={editOff ? "Edit Time Off" : "Add New Time Off"}
+                maskClosable={false}
                 centered
                 visible={visible}
                 onOk={() => {

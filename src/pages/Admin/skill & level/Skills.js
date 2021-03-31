@@ -455,8 +455,8 @@ class Skills extends Component {
                 />
                 {this.state.isVisible && (
                     <Modal
-                maskClosable={false}
                         title={ this.state.editSkill ? "Edit Skill" : "Add Skill" }
+                        maskClosable={false}
                         centered
                         visible={this.state.isVisible}
                         okText={"Save"}

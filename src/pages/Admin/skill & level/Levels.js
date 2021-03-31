@@ -177,10 +177,10 @@ class Levels extends Component {
                 />
                 {this.state.isVisible && (
                     <Modal
-                maskClosable={false}
                         title={
                             this.state.editLevel ? "Edit Level" : "Add Level"
                         }
+                        maskClosable={false}
                         centered
                         visible={this.state.isVisible}
                         okText={"Save"}

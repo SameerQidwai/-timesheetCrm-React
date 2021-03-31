@@ -869,8 +869,8 @@ class InfoModal extends Component {
         const { BasicFields, associateFields, SkillFields, SecurityFields, loading } = this.state;
         return (
             <Modal
-                maskClosable={false}
                 title={editCP ? "Edit Contact Person" : "Add Contact Person"}
+                maskClosable={false}
                 centered
                 visible={visible}
                 onOk={() => { this.submit(); }}

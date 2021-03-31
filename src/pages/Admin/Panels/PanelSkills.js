@@ -541,8 +541,8 @@ class PanelInfo extends Component {
                 />
                 {this.state.openModal ? (
                     <Modal
-                maskClosable={false}
                         title={this.state.editPS ? "Edit Skill" : "Add Skill"}
+                        maskClosable={false}
                         centered
                         visible={this.state.openModal}
                         onOk={() => {

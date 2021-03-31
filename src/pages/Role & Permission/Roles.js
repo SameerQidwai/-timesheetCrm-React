@@ -271,12 +271,12 @@ class Roles extends Component {
                 </Row>
                 {this.state.openModal ? (
                     <Modal
-                maskClosable={false}
                         title={
                             this.state.editTimeoff
-                                ? "Edit Role"
-                                : "Add New Role"
+                            ? "Edit Role"
+                            : "Add New Role"
                         }
+                        maskClosable={false}
                         centered
                         visible={this.state.openModal}
                         onOk={() => {

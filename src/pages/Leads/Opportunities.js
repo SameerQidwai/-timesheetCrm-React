@@ -3,7 +3,7 @@ import { Table, Menu, Dropdown, Button, Popconfirm, Row, Col,Typography, Modal }
 import { DownOutlined, SettingOutlined, PlusSquareOutlined, FilterOutlined} from '@ant-design/icons'; //Icons
 import { Link } from 'react-router-dom'
 
-import InfoModal from './infoModal'
+import InfoModal from './Modals/InfoModal'
 
 import { getList, delList } from "../../service/opportunities";
 

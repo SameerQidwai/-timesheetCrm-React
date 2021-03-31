@@ -111,19 +111,11 @@ class LeavePolicies extends Component {
                                 FormFields_1: this.state.FormFields_1,
                             });
                         }.bind(this),
+                        itemStyle: { marginBottom: 5 },
                     },
                     {
-                        fieldCol: 10,
-                        Placeholder: "Time Off",
-                        type: "Text",
-                        size: "small",
-                    },
-                    {
-                        fieldCol: 5,
-                        layout: {
-                            wrapperCol: { offset: 1 },
-                        },
-                        Placeholder: "Hours",
+                        fieldCol: 6,
+                        Placeholder: "Categories",
                         type: "Text",
                         size: "small",
                     },
@@ -132,12 +124,39 @@ class LeavePolicies extends Component {
                         layout: {
                             wrapperCol: { offset: 1 },
                         },
-                        Placeholder: "Increase",
+                        Placeholder: "Earn Hours",
                         type: "Text",
                         size: "small",
                     },
                     {
-                        fieldCol: 5,
+                        fieldCol: 4,
+                        layout: {
+                            wrapperCol: { offset: 1 },
+                        },
+                        Placeholder: "Earn Every",
+                        type: "Text",
+                        size: "small",
+                    },
+                    {
+                        fieldCol: 4,
+                        layout: {
+                            wrapperCol: { offset: 1 },
+                        },
+                        Placeholder: "Reset Every",
+                        type: "Text",
+                        size: "small",
+                    },
+                    {
+                        fieldCol: 3,
+                        layout: {
+                            wrapperCol: { offset: 1 },
+                        },
+                        Placeholder: "Rest Hours",
+                        type: "Text",
+                        size: "small",
+                    },
+                    {
+                        fieldCol: 3,
                         layout: {
                             wrapperCol: { offset: 1 },
                         },
@@ -203,20 +222,14 @@ class LeavePolicies extends Component {
     newField = (item_no) => {
         //inserting new fields in modals
         const { timeoff } = this.state;
-        const splice_key = [
-            `timeoff${item_no}`,
-            `hours${item_no}`,
-            `incAt${item_no}`,
-            `threshold${item_no}`,
-            item_no,
-        ];
+        const splice_key = [ `category${item_no}`, `earnHours${item_no}`, `earnEvery${item_no}`, `resetEvery${item_no}`, `resetHours${item_no}`, `threshold${item_no}`, item_no, ];
         // console.log(splice_key)
         return [
             {
                 object: "obj",
-                fieldCol: 10,
+                fieldCol: 6,
                 layout: { wrapperCol: { span: 23 } },
-                key: `timeoff${item_no}`,
+                key: splice_key[0],
                 size: "small",
                 // rules:[{ required: true }],
                 type: "Select",
@@ -226,9 +239,9 @@ class LeavePolicies extends Component {
             },
             {
                 object: "obj",
-                fieldCol: 5,
+                fieldCol: 3,
                 layout: { wrapperCol: { span: 20, offset: 2 } },
-                key: `hours${item_no}`,
+                key: splice_key[1],
                 size: "small",
                 // rules:[{ required: true }],
                 type: "InputNumber",
@@ -237,24 +250,51 @@ class LeavePolicies extends Component {
             },
             {
                 object: "obj",
-                fieldCol: 3,
+                fieldCol: 4,
                 layout: { wrapperCol: { span: 23 } },
-                key: `incAt${item_no}`,
+                key: splice_key[3],
                 size: "small",
                 // rules:[{ required: true }],
                 type: "Select",
                 labelAlign: "left",
                 itemStyle: { marginBottom: "5px" },
                 data: [
-                    { value: "M", label: "M" },
-                    { value: "Y", label: "Y" },
+                    { value: "M", label: "Monthly" },
+                    { value: "Y", label: "Yearly" },
                 ],
             },
             {
                 object: "obj",
-                fieldCol: 5,
+                fieldCol: 4,
                 layout: { wrapperCol: { span: 23 } },
-                key: `threshold${item_no}`,
+                key: splice_key[4],
+                size: "small",
+                // rules:[{ required: true }],
+                type: "Select",
+                labelAlign: "left",
+                itemStyle: { marginBottom: "5px" },
+                data: [
+                    { value: "M", label: "Monthly" },
+                    { value: "Y", label: "Yearly" },
+                ],
+            },
+            {
+                object: "obj",
+                fieldCol: 3,
+                layout: { wrapperCol: { span: 23 } },
+                key: splice_key[5],
+                size: "small",
+                // rules:[{ required: true }],
+                type: "InputNumber",
+                labelAlign: "left",
+                itemStyle: { marginBottom: "5px" },
+                data: [],
+            },
+            {
+                object: "obj",
+                fieldCol: 3,
+                layout: { wrapperCol: { span: 23 } },
+                key: splice_key[6],
                 size: "small",
                 // rules:[{ required: true }],
                 type: "InputNumber",
@@ -266,7 +306,7 @@ class LeavePolicies extends Component {
                 fieldCol: 1,
                 size: "small",
                 Placeholder: <CloseOutlined />,
-                key: item_no,
+                key: splice_key[7],
                 // rules:[{ required: true }],
                 type: "Text",
                 style: {
@@ -470,12 +510,12 @@ class LeavePolicies extends Component {
                 </Row>
                 {this.state.openModal ? (
                     <Modal
-                maskClosable={false}
                         title={
                             this.state.editTimeoff
-                                ? "Edit Leave Policy"
-                                : "Add Leave Policy"
+                            ? "Edit Leave Policy"
+                            : "Add Leave Policy"
                         }
+                        maskClosable={false}
                         centered
                         visible={this.state.openModal}
                         onOk={() => {
@@ -485,7 +525,7 @@ class LeavePolicies extends Component {
                         onCancel={() => {
                             this.toggelModal(false);
                         }}
-                        width={640}
+                        width={900}
                     >
                         <Row>
                             <Form

@@ -275,13 +275,11 @@ class InfoModal extends Component {
         const { edit, visible } = this.props;
         return (
             <Modal
-                maskClosable={false}
                 title={edit ? "Edit Travel" : "Add Travel"}
+                maskClosable={false}
                 centered
                 visible={visible}
-                onOk={() => {
-                    this.submit();
-                }}
+                onOk={() => { this.submit(); }}
                 okText={"Save"}
                 onCancel={this.onCancel}
                 width={900}

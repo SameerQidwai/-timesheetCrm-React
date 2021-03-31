@@ -148,7 +148,11 @@ export const getResources = (id)=>{
         .get(url + `/${id}/resources`)
         .then((res) => {
             const { success, data } = res.data;
-            if (success) return { success: success, data: data };
+            if (success) {
+                // console.log(data);
+                data.map(el => el.user = [{...el.user, chosen: true}] )
+                return { success: success, data: data }
+            };
         })
         .catch((err) => {
             return {

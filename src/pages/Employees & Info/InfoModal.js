@@ -1277,8 +1277,8 @@ class InfoModal extends Component {
 
         return (
             <Modal
-                maskClosable={false}
                 title={editEmp ? "Edit Employee" : "Add Employee"}
+                maskClosable={false}
                 centered
                 visible={visible}
                 onOk={() => {

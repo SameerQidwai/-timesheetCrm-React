@@ -10,7 +10,7 @@ import moment from "moment"
 
 const { Item } = Descriptions;
 
-class OrgInfo extends Component {
+class ResourceHistory extends Component {
     constructor(props) {
         super(props);
         console.log(this.props);
@@ -179,4 +179,4 @@ class OrgInfo extends Component {
     }
 }
 
-export default OrgInfo;
+export default ResourceHistory;

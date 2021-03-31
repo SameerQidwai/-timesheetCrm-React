@@ -9,7 +9,7 @@ import Attachments from "../../components/Core/Attachments";
 import Bank from "../../components/Core/Bank";
 import ProfitLoss from "../../components/Core/ProfitLoss";
 
-import InfoModal from "./infoModal";
+import InfoModal from "./Modals/InfoModal";
 
 import { getRecord, delList } from "../../service/opportunities";
 

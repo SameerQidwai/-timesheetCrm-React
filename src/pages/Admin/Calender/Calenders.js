@@ -232,12 +232,12 @@ class Calenders extends Component {
                 {
                     openModal ? (
                         <Modal
-                maskClosable={false}
                             title={
                                 editTimeoff
-                                    ? "Edit Calender"
-                                    : "Add New Calender"
+                                ? "Edit Calender"
+                                : "Add New Calender"
                             }
+                            maskClosable={false}
                             centered
                             visible={openModal}
                             onOk={() => {
