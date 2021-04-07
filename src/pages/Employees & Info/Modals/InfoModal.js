@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import { Modal, Tabs, Row, Col, Button, Input, Select } from "antd";
-import { UploadOutlined, PlusSquareFilled, CloseOutlined, } from "@ant-design/icons"; //Icons
+import { UploadOutlined, PlusSquareFilled, CloseOutlined, UserOutlined } from "@ant-design/icons"; //Icons
 
-import Form from "../../components/Core/Form";
+import Form from "../../../components/Core/Form";
 import moment from "moment";
 
-import { getOrgPersons, getStates } from "../../service/constant-Apis";
-import { getContactRecord } from "../../service/conatct-person";
-import { addList, getRecord, editList } from "../../service/Employees";
+import { getOrgPersons, getStates } from "../../../service/constant-Apis";
+import { getContactRecord } from "../../../service/conatct-person";
+import { addList, getRecord, editList } from "../../../service/Employees";
 const { TabPane } = Tabs;
 
 class InfoModal extends Component {
@@ -17,7 +17,7 @@ class InfoModal extends Component {
         this.billingRef = React.createRef();
         this.detailRef = React.createRef();
         this.kinRef = React.createRef();
-        this.detailRef = React.createRef();
+        // this.detailRef = React.createRef();
         this.bankRef = React.createRef();
         this.smsfRef = React.createRef();
         
@@ -291,71 +291,18 @@ class InfoModal extends Component {
                 size: "middle",
                 fields: [
                     {
-                        Placeholder: "Tax File Number",
+                        Placeholder: "Superannuation Fund/ SMSF Name",
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
                         labelAlign: "right",
                     },
                     {
-                        Placeholder: "Tax-free Threshold",
+                        Placeholder: "Account type",
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
                         labelAlign: "right",
-                    },
-                    {
-                        object: "detail",
-                        fieldCol: 12,
-                        key: "tfn",
-                        size: "small",
-                        // rules:[{ required: true }],
-                        type: "Input",
-                        itemStyle: { marginBottom: "10px" },
-                    },
-                    {
-                        object: "detail",
-                        fieldCol: 12,
-                        key: "taxFreeThreshold",
-                        size: "small",
-                        data: [
-                            { label: "Yes", value: true },
-                            { label: "No", value: false },
-                        ],
-                        // rules: [ { required: true, message: "Gender is Obviously required", }, ],
-                        type: "Select",
-                        // mode: "button",
-                        // shape: "solid",
-                        itemStyle: { marginBottom: 10 },
-                    },
-                    {
-                        Placeholder: "HELP (HECS)",
-                        fieldCol: 12,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                    },
-                    {
-                        Placeholder: "Superannuation Fund Name",
-                        fieldCol: 12,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                    },
-                    {
-                        object: "detail",
-                        fieldCol: 12,
-                        key: "helpHECS",
-                        size: "small",
-                        data: [
-                            { label: "Yes", value: true },
-                            { label: "No", value: false },
-                        ],
-                        // rules: [ { required: true, message: "Gender is Obviously required", }, ],
-                        type: "Select",
-                        // mode: "button",
-                        // shape: "solid",
-                        itemStyle: { marginBottom: 10 },
                     },
                     {
                         object: "detail",
@@ -367,37 +314,166 @@ class InfoModal extends Component {
                         itemStyle: { marginBottom: "10px" },
                     },
                     {
-                        Placeholder: "Membership/Account Number",
-                        fieldCol: 24,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                    },
-                    {
                         object: "detail",
                         fieldCol: 12,
-                        key: "memberNumber",
+                        key: "accountType",
                         size: "small",
-                        // rules:[{ required: true }],
-                        type: "Input",
-                        itemStyle: { marginBottom: "10px" },
+                        data: [
+                            { label: "Superannuation", value: true },
+                            { label: "SMSF", value: false },
+                        ],
+                        // rules: [ { required: true, message: "Gender is Obviously required", }, ],
+                        type: "Select",
+                        // mode: "button",
+                        // shape: "solid",
+                        itemStyle: { marginBottom: 10 },
+                        onChange: function FundTypeCond (value){
+                            const superannuation = [
+                                {
+                                    Placeholder: "Membership / Account",
+                                    fieldCol: 12,
+                                    size: "small",
+                                    type: "Text",
+                                    labelAlign: "right",
+                                },
+                                {
+                                    Placeholder: "USI Number",
+                                    fieldCol: 12,
+                                    size: "small",
+                                    type: "Text",
+                                    labelAlign: "right",
+                                },
+                                {
+                                    object: "detail",
+                                    fieldCol: 12,
+                                    key: "memberNumber",
+                                    size: "small",
+                                    type: "Input",
+                                    itemStyle: { marginBottom: "10px" },
+                                },
+                                {
+                                    object: "detail",
+                                    fieldCol: 12,
+                                    key: "usiNumber",
+                                    size: "small",
+                                    type: "Input",
+                                    itemStyle: { marginBottom: "10px" },
+                                },
+                            ]
+                            const smsf = [
+                                {
+                                    Placeholder: "SMSF ABN",
+                                    fieldCol: 12,
+                                    size: "small",
+                                    type: "Text",
+                                    labelAlign: "right",
+                                },
+                                {
+                                    Placeholder: "ESA Address",
+                                    fieldCol: 12,
+                                    size: "small",
+                                    type: "Text",
+                                    labelAlign: "right",
+                                },
+                                {
+                                    object: "detail",
+                                    fieldCol: 12,
+                                    key: "smsfABN",
+                                    size: "small",
+                                    type: "Input",
+                                    itemStyle: { marginBottom: "10px" },
+                                },
+                                {
+                                    object: "detail",
+                                    fieldCol: 12,
+                                    key: "smsfAddress",
+                                    size: "small",
+                                    type: "Input",
+                                    itemStyle: { marginBottom: "10px" },
+                                },
+                                {
+                                    Placeholder: "Bank Account Name",
+                                    fieldCol: 12,
+                                    size: "small",
+                                    type: "Text",
+                                    labelAlign: "right",
+                                },
+                                {
+                                    Placeholder: "BSB Number",
+                                    fieldCol: 12,
+                                    size: "small",
+                                    type: "Text",
+                                    labelAlign: "right",
+                                },
+                                {
+                                    object: "detail",
+                                    fieldCol: 12,
+                                    key: "smsfBankName",
+                                    size: "small",
+                                    type: "Input",
+                                    itemStyle: { marginBottom: "10px" },
+                                },
+                                {
+                                    object: "detail",
+                                    fieldCol: 12,
+                                    key: "smsfBankBsb",
+                                    size: "small",
+                                    type: "Input",
+                                    itemStyle: { marginBottom: "10px" },
+                                },
+                                {
+                                    Placeholder: "Bank Account Number",
+                                    fieldCol: 24,
+                                    size: "small",
+                                    type: "Text",
+                                    labelAlign: "right",
+                                },
+                                {
+                                    object: "detail",
+                                    fieldCol: 12,
+                                    key: "smsfBankAccountNo",
+                                    size: "small",
+                                    type: "Input",
+                                    itemStyle: { marginBottom: "10px" },
+                                },
+                            ]
+                            let { fields } = this.state.DetailFields
+                            const { detail } = this.detailRef.current.refs.detail_form.getFieldsValue(); // get the values from from data
+                            const { superAnnuationName, accountType } = detail
+                            
+                            if (value){
+                                fields.splice(4, fields.length)
+                                fields = fields.concat(superannuation)
+                            }else if (value === false){
+                                fields.splice(4, fields.length)
+                                fields = fields.concat(smsf)
+                            }else{
+                                fields.splice(4, fields.length)
+                            }
+                            const details = { superAnnuationName: superAnnuationName, accountType: accountType }
+                            this.detailRef.current.refs.detail_form.setFieldsValue({ detail: details })
+                            this.setState({
+                                DetailFields: {...this.state.DetailFields, fields,}
+                            })
+                        }.bind(this)
                     },
-                    {
-                        Placeholder: "Training",
-                        fieldCol: 24,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                    },
-                    {
-                        object: "detail",
-                        fieldCol: 24,
-                        key: "training",
-                        size: "small",
-                        mode:{ minRows: 6, maxRows:12},
-                        // rules:[{ required: true }],
-                        type: "Textarea",
-                    },
+
+                    // {
+                    //     Placeholder: "Training",
+                    //     fieldCol: 24,
+                    //     size: "small",
+                    //     type: "Text",
+                    //     labelAlign: "right",
+                    // },
+                    // {
+                    //     object: "detail",
+                    //     fieldCol: 24,
+                    //     key: "training",
+                    //     size: "small",
+                    //     mode:{ minRows: 6, maxRows:12},
+                    //     // rules:[{ required: true }],
+                    //     type: "Textarea",
+                    // },
                 ]
             },
 
@@ -541,7 +617,14 @@ class InfoModal extends Component {
                     },
                     {
                         Placeholder: "BSB Number",
-                        fieldCol: 24,
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                    },
+                    {
+                        Placeholder: "Tax File Number",
+                        fieldCol: 12,
                         size: "small",
                         type: "Text",
                         labelAlign: "right",
@@ -553,6 +636,59 @@ class InfoModal extends Component {
                         size: "small",
                         type: "Input",
                         itemStyle: { marginBottom: "10px" },
+                    },
+                    {
+                        object: "bank",
+                        fieldCol: 12,
+                        key: "tfn",
+                        size: "small",
+                        // rules:[{ required: true }],
+                        type: "Input",
+                        itemStyle: { marginBottom: "10px" },
+                    },
+                    {
+                        Placeholder: "Tax-free Threshold",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                    },
+                    {
+                        Placeholder: "HELP (HECS)",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                    },
+                    {
+                        object: "bank",
+                        fieldCol: 12,
+                        key: "taxFreeThreshold",
+                        size: "small",
+                        data: [
+                            { label: "Yes", value: true },
+                            { label: "No", value: false },
+                        ],
+                        // rules: [ { required: true, message: "Gender is Obviously required", }, ],
+                        type: "Select",
+                        // mode: "button",
+                        // shape: "solid",
+                        itemStyle: { marginBottom: 10 },
+                    },
+                    {
+                        object: "bank",
+                        fieldCol: 12,
+                        key: "helpHECS",
+                        size: "small",
+                        data: [
+                            { label: "Yes", value: true },
+                            { label: "No", value: false },
+                        ],
+                        // rules: [ { required: true, message: "Gender is Obviously required", }, ],
+                        type: "Select",
+                        // mode: "button",
+                        // shape: "solid",
+                        itemStyle: { marginBottom: 10 },
                     },
                 ]
             },
@@ -823,13 +959,6 @@ class InfoModal extends Component {
                 size: "middle",
                 fields:[
                     {
-                        Placeholder: "SMSF Name",
-                        fieldCol: 12,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                    },
-                    {
                         Placeholder: "SMSF ABN",
                         fieldCol: 12,
                         size: "small",
@@ -837,12 +966,11 @@ class InfoModal extends Component {
                         labelAlign: "right",
                     },
                     {
-                        object: "smsf",
+                        Placeholder: "ESA Address",
                         fieldCol: 12,
-                        key: "smsfName",
                         size: "small",
-                        type: "Input",
-                        itemStyle: { marginBottom: "10px" },
+                        type: "Text",
+                        labelAlign: "right",
                     },
                     {
                         object: "smsf",
@@ -853,11 +981,12 @@ class InfoModal extends Component {
                         itemStyle: { marginBottom: "10px" },
                     },
                     {
-                        Placeholder: "ESA Address",
+                        object: "smsf",
                         fieldCol: 12,
+                        key: "smsfAddress",
                         size: "small",
-                        type: "Text",
-                        labelAlign: "right",
+                        type: "Input",
+                        itemStyle: { marginBottom: "10px" },
                     },
                     {
                         Placeholder: "Bank Account Name",
@@ -867,12 +996,11 @@ class InfoModal extends Component {
                         labelAlign: "right",
                     },
                     {
-                        object: "smsf",
+                        Placeholder: "BSB Number",
                         fieldCol: 12,
-                        key: "smsfAddress",
                         size: "small",
-                        type: "Input",
-                        itemStyle: { marginBottom: "10px" },
+                        type: "Text",
+                        labelAlign: "right",
                     },
                     {
                         object: "smsf",
@@ -883,26 +1011,19 @@ class InfoModal extends Component {
                         itemStyle: { marginBottom: "10px" },
                     },
                     {
-                        Placeholder: "BSB Number",
-                        fieldCol: 12,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                    },
-                    {
-                        Placeholder: "Bank Account Number",
-                        fieldCol: 12,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                    },
-                    {
                         object: "smsf",
                         fieldCol: 12,
                         key: "smsfBankBsb",
                         size: "small",
                         type: "Input",
                         itemStyle: { marginBottom: "10px" },
+                    },
+                    {
+                        Placeholder: "Bank Account Number",
+                        fieldCol: 24,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
                     },
                     {
                         object: "smsf",
@@ -939,7 +1060,7 @@ class InfoModal extends Component {
             console.log(e);
         })
     }
-
+    
     submit = () => {
         this.basicRef.current && this.basicRef.current.refs.basic_form.submit();
         this.detailRef.current && this.detailRef.current.refs.detail_form.submit();
@@ -950,12 +1071,12 @@ class InfoModal extends Component {
     };
 
     BasicCall = (vake) => {
-        console.log(vake);
         this.setState(
             {
                 mergeObj: {
                     ...this.state.mergeObj,
                     ...vake.basic,
+                    username: this.state.sUsername
                 },
                 basicSubmitted: true, // skill form submitted
             },
@@ -1273,7 +1394,7 @@ class InfoModal extends Component {
 
     render() {
         const { editEmp, visible } = this.props;
-        const { BasicFields, DetailFields, KinFields, BankFields, BillingFields, SmsfFields,  CONTACT, sContact } = this.state;
+        const { BasicFields, DetailFields, KinFields, BankFields, BillingFields, SmsfFields,  CONTACT, sContact, sUsername } = this.state;
 
         return (
             <Modal
@@ -1288,29 +1409,46 @@ class InfoModal extends Component {
                 onCancel={this.onCancel}
                 width={900}
             >
-                {!editEmp &&<Row style={{marginBottom:"1em"}}>
-                    <Select
-                        value={sContact}
-                        placeholder="Contact Person"
-                        options={CONTACT}
-                        showArrow
-                        showSearch
-                        size="small"
-                        allowClear
-                        onClear={this.onContactClear}
-                        onChange={this.onContact}
-                        optionFilterProp="label"
-                        filterOption={
-                            (input, option) =>
-                                option.label
-                                    .toLowerCase()
-                                    .indexOf(input.toLowerCase()) >= 0
-                            // console.log(option.label)
-                            // console.log(input.toLowerCase())
-                        }
-                        style={{width:"20em"}}
-                    />
-                    </Row>}
+                <Row style={{marginBottom:"1em"}} justify="space-between">
+                    {!editEmp && <Col span={8} >
+                        <Select
+                            value={sContact}
+                            placeholder="Contact Person"
+                            options={CONTACT}
+                            showArrow
+                            showSearch
+                            size="small"
+                            allowClear
+                            onClear={this.onContactClear}
+                            onChange={this.onContact}
+                            optionFilterProp="label"
+                            filterOption={
+                                (input, option) =>
+                                    option.label
+                                        .toLowerCase()
+                                        .indexOf(input.toLowerCase()) >= 0
+                                // console.log(option.label)
+                                // console.log(input.toLowerCase())
+                            }
+                            style={{width:"100%"}}
+                        />
+                    </Col> }
+                    <Col span={8}>
+                        <Input
+                            value={sUsername}
+                            placeholder="Email"
+                            size="small"
+                            // prefix={<UserOutlined />} 
+                            onChange={(e, value)=>{
+                                console.log(e);
+                                this.setState({
+                                    sUsername: e.target.value
+                                })
+                            }}
+                            style={{width:"100%"}}
+                        /> 
+                    </Col>
+                </Row>
                 <Tabs type="card">
                     <TabPane tab="Personal Details" key="details" forceRender>
                         <Form

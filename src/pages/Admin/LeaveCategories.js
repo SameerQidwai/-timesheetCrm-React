@@ -204,14 +204,10 @@ class LeaveCategories extends Component {
                 </Row>
                 {this.state.openModal ? (
                     <Modal
-                        title={
-                            this.state.editTimeoff
-                            ? "Edit Leave Category"
-                            : "Add Leave Category"
-                        }
+                        title={ this.state.editTimeoff ? "Edit Leave Category" : "Add Leave Category" }
                         maskClosable={false}
                         centered
-                        visible={this.state.openModal}
+                        visible={ this.state.openModal }
                         onOk={() => {
                             this.submit();
                         }}

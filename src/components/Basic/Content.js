@@ -9,9 +9,11 @@ import Login from "../../pages/Login/Login";
 import Admin from "../../pages/Admin/admin-drawer/admin-sidebar";
 import Organizations from "../../pages/Contacts/Org & Info/Organizations";
 import OrgInfo from "../../pages/Contacts/Org & Info/OrgInfo";
+
 import Employees from "../../pages/Employees & Info/Employees";
 import EmpInfo from "../../pages/Employees & Info/EmpInfo";
 import EmpBilling from "../../pages/Employees & Info/EmpBilling"
+import NovatedLease from "../../pages/Employees & Info/NovatedLease";
 import Contractors from "../../pages/Contractors & Info/Contractors";
 import ContInfo from "../../pages/Contractors & Info/ContInfo";
 import ContBilling from "../../pages/Contractors & Info/ContBilling";
@@ -113,11 +115,15 @@ const pageLinks = [
     },
     {
         component: EmpInfo,
-        link: "/Employees/info/:id",
+        link: "/Employees/:id/info",
     },
     {
         component: EmpBilling,
-        link: "/Employee/contracts/:id",
+        link: "/Employee/:id/contracts",
+    },
+    {
+        component: NovatedLease,
+        link: "/Employee/:id/novated-lease",
     },
     {
         component: Contractors,

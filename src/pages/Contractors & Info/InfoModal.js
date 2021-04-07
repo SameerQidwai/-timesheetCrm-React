@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Modal, Tabs, Row, Col, Select } from "antd";
+import { Modal, Tabs, Row, Col, Select, Input } from "antd";
 
 import Form from "../../components/Core/Form";
 import moment from "moment";
@@ -25,6 +25,7 @@ class InfoModal extends Component {
             sContact: null,
             ORGS: [],
             sOrg: null,
+            sUsername: null,
             data: {
                 code: 1,
                 cpCode: "004",
@@ -686,6 +687,7 @@ class InfoModal extends Component {
                 mergeObj: {
                     ...this.state.mergeObj,
                     ...vake.basic,
+                    username: this.state.sUsername
                 },
                 basicSubmitted: true, // skill form submitted
             },
@@ -865,7 +867,7 @@ class InfoModal extends Component {
 
     render() {
         const { editCont, visible } = this.props;
-        const { BasicFields, BillingFields, KinFields, sContact, CONTACTS, ORGS, sOrg } = this.state;
+        const { BasicFields, BillingFields, KinFields, sContact, CONTACTS, ORGS, sOrg, sUsername } = this.state;
 
         return (
             <Modal
@@ -880,8 +882,8 @@ class InfoModal extends Component {
                 onCancel={this.onCancel}
                 width={900}
             >
-                {!editCont &&<Row style={{marginBottom:"1em"}} justify="space-between">
-                    <Col>
+                <Row style={{marginBottom:"1em"}} justify="space-between">
+                    {!editCont &&<Col span={7}>
                         <Select
                             value={sOrg}
                             placeholder="Organization"
@@ -899,10 +901,10 @@ class InfoModal extends Component {
                                         .toLowerCase()
                                         .indexOf(input.toLowerCase()) >= 0
                             }
-                            style={{width:"20em"}}
+                            style={{width:"100%"}}
                         />
-                    </Col>
-                    <Col>
+                    </Col>}
+                    {!editCont &&<Col span={7}> 
                         <Select
                             value={sContact}
                             placeholder="Contact Person"
@@ -921,26 +923,41 @@ class InfoModal extends Component {
                                         .toLowerCase()
                                         .indexOf(input.toLowerCase()) >= 0
                             }
-                            style={{width:"20em"}}
+                            style={{width:"100%"}}
                         />
+                    </Col> }
+                    <Col span={7}>
+                        <Input
+                            value={sUsername}
+                            placeholder="Email"
+                            size="small"
+                            // prefix={<UserOutlined />} 
+                            onChange={(e, value)=>{
+                                console.log(e);
+                                this.setState({
+                                    sUsername: e.target.value
+                                })
+                            }}
+                            style={{width:"100%"}}
+                        /> 
                     </Col>
-                </Row>}
+                </Row>
                 <Tabs type="card">
-                    <TabPane tab="Contractor Details" key="details" forceRender>
+                    <TabPane tab="Contractor Details" key="Contractor Details" forceRender>
                         <Form
                             ref={this.basicRef}
                             Callback={this.BasicCall}
                             FormFields={BasicFields}
                         />
                     </TabPane>
-                    <TabPane tab=" Subcontractor Contracts" key="contracts" forceRender>
+                    <TabPane tab="Subcontractor Contracts" key="Subcontractor Contracts" forceRender>
                         <Form
                             ref={this.billingRef}
                             Callback={this.BillingCall}
                             FormFields={BillingFields}
                         />
                     </TabPane>
-                    <TabPane tab="Next of Kin" key="kin" forceRender>
+                    <TabPane tab="Next of Kin" key="Next of Kin" forceRender>
                         <Form
                             ref={this.kinRef}
                             Callback={this.KinCall}

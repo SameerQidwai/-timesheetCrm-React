@@ -261,6 +261,9 @@ class LeavePolicies extends Component {
                 data: [
                     { value: "M", label: "Monthly" },
                     { value: "Y", label: "Yearly" },
+                    { value: "A", label: "Anniversary" },
+                    { value: "MA", label: "Monthly Anniversary" },
+                    { value: "N", label: "NEVER" },
                 ],
             },
             {
@@ -276,6 +279,9 @@ class LeavePolicies extends Component {
                 data: [
                     { value: "M", label: "Monthly" },
                     { value: "Y", label: "Yearly" },
+                    { value: "A", label: "Anniversary" },
+                    { value: "MA", label: "Monthly Anniversary" },
+                    { value: "N", label: "NEVER" },
                 ],
             },
             {

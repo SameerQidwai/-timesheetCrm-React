@@ -5,7 +5,7 @@ import { PlusSquareOutlined, SettingOutlined, FilterOutlined, DownOutlined, } fr
 
 import { Link } from "react-router-dom"; 
 
-import InfoModal from "./InfoModal";
+import InfoModal from "./Modals/InfoModal";
 
 import { getList, delList } from "../../service/Employees";
 
@@ -84,7 +84,7 @@ class Employees extends Component {
                                 <Menu.Item>
                                     <Link
                                         to={{
-                                            pathname: `/Employees/info/${record.id}`,
+                                            pathname: `/Employees/${record.id}/info`,
                                         }}
                                         className="nav-link"
                                     >
@@ -94,11 +94,21 @@ class Employees extends Component {
                                 <Menu.Item>
                                     <Link
                                         to={{
-                                            pathname: `/Employee/contracts/${record.id}`,
+                                            pathname: `/Employee/${record.id}/contracts`,
                                         }}
                                         className="nav-link"
                                     >
                                         Contracts
+                                    </Link>
+                                </Menu.Item>
+                                <Menu.Item>
+                                    <Link
+                                        to={{
+                                            pathname: `/Employee/${record.id}/novated-lease`,
+                                        }}
+                                        className="nav-link"
+                                    >
+                                        Novated Lease
                                     </Link>
                                 </Menu.Item>
                             </Menu>

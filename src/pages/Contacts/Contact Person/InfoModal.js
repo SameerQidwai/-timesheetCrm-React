@@ -519,7 +519,7 @@ class InfoModal extends Component {
                             obj.key !== splice_key[2]
                         );
                     });
-                    const {skill} = this.skillRef.current.refs.skill_form.getFieldValue() // const
+                    const {skill} = this.skillRef.current.refs.skill_form.getFieldsValue() // const
                     delete skill[splice_key[0]];
                     delete skill[splice_key[1]];
                     delete skill[splice_key[2]];
@@ -600,7 +600,7 @@ class InfoModal extends Component {
                             obj.key !== splice_key[4] 
                         );
                     });
-                    const {asso} = this.associateRef.current.refs.associate_form.getFieldValue() // const
+                    const {asso} = this.associateRef.current.refs.associate_form.getFieldsValue() // const
                     delete asso[splice_key[0]];
                     delete asso[splice_key[1]];
                     delete asso[splice_key[2]];

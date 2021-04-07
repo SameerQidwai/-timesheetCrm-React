@@ -27,7 +27,6 @@ export const getRecord = (id) => {
         .then((res) => {
             const { success, data } = res.data;
             if (success) {
-                console.log(data)
                 const contactPerson = data.contactPersonOrganization ? data.contactPersonOrganization.contactPerson : {}
                 const basic = {
                     cpCode: `Emp-00${contactPerson.id}`,
@@ -40,7 +39,6 @@ export const getRecord = (id) => {
                     address: contactPerson.address,
                     stateId:contactPerson.stateId,
                 }
-                console.log(basic);
                 const detail = {
                     smsfBankAccountId: data.smsfBankAccountId,
                     superAnnuationId: data.superAnnuationId,
@@ -89,7 +87,6 @@ export const getRecord = (id) => {
                     smsfBankBsb: data.smsfBankBsb,
                     smsfBankAccountNo: data.smsfBankAccountNo,
                 }
-                console.log(smsf);
                 return {success, data, basic, detail, kin, bank, billing, smsf}
             };
         })
