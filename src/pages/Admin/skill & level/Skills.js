@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Typography, Row, Col, Popconfirm, Modal, Button, Table, Dropdown, Menu, } from "antd";
-import { SettingOutlined, DownOutlined, CloseOutlined, PlusSquareOutlined, } from "@ant-design/icons"; //Icons
+import { SettingOutlined, DownOutlined, CloseOutlined, PlusSquareOutlined, LoadingOutlined} from "@ant-design/icons"; //Icons
 import Forms from "../../../components/Core/Form";
 
 import { levels, addList, getList, editLabel, delLabel, } from "../../../service/skills";
@@ -54,23 +54,23 @@ class Skills extends Component {
 
         this.priority_data = [
             {
-                key: 1,
+                label: '1',
                 value: 1,
             },
             {
-                key: 2,
+                label: '2',
                 value: 2,
             },
             {
-                key: 3,
+                label: '3',
                 value: 3,
             },
             {
-                key: 4,
+                label: '4',
                 value: 4,
             },
             {
-                key: 5,
+                label: '5',
                 value: 5,
             },
         ];
@@ -110,6 +110,7 @@ class Skills extends Component {
             formSubmitted: false, //check if got data from skill submit
             levelSubmitted: false, //check if got data from level submit
             level_data: false,
+            loading: false,
             data_skill: [],
             skillFields: {
                 formId: "skill_form",
@@ -297,10 +298,12 @@ class Skills extends Component {
                 editSkill: false,
                 formSubmitted: false,
                 levelSubmitted: false,
+                loading: false
             });
         } else {
             this.setState({
                 isVisible: status,
+                loading: false,
                 LevelFields: {
                     ...this.state.LevelFields,
                     fields: this.newField(0),
@@ -319,6 +322,7 @@ class Skills extends Component {
 
     submit = () => {
         //submit button click
+        this.setState({loading: true})
         this.skillForm.current.refs.skill_form.submit();
         this.levelForm.current.refs.level_form.submit();
     };
@@ -431,7 +435,7 @@ class Skills extends Component {
     };
 
     render() {
-        const { data_skill } = this.state;
+        const { data_skill, isVisible, editSkill, LevelFields, skillFields, loading } = this.state;
         return (
             <>
                 <Row justify="space-between">
@@ -453,13 +457,14 @@ class Skills extends Component {
                     dataSource={data_skill}
                     size="small"
                 />
-                {this.state.isVisible && (
+                {isVisible && (
                     <Modal
-                        title={ this.state.editSkill ? "Edit Skill" : "Add Skill" }
+                        title={ editSkill ? "Edit Skill" : "Add Skill" }
                         maskClosable={false}
                         centered
-                        visible={this.state.isVisible}
-                        okText={"Save"}
+                        visible={isVisible}
+                        okButtonProps={{ disabled: loading }}
+                        okText={loading ?<LoadingOutlined /> :"Save"}
                         width={400}
                         onCancel={() => { this.toggelModal(false); }}
                         onOk={() => { this.submit(); }}
@@ -468,14 +473,14 @@ class Skills extends Component {
                             <Forms
                                 ref={this.skillForm}
                                 Callback={this.skillCall}
-                                FormFields={this.state.skillFields}
+                                FormFields={skillFields}
                             />
                         </Row>
                         <Row style={{ maxHeight: "85px", overflowY: "auto" }}>
                             <Forms
                                 ref={this.levelForm}
                                 Callback={this.levelCall}
-                                FormFields={this.state.LevelFields}
+                                FormFields={LevelFields}
                             />
                         </Row>
                     </Modal>

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Modal, Tabs, Row, Col, Select, Input } from "antd";
-
+import { LoadingOutlined } from "@ant-design/icons"; //Icons
 import Form from "../../components/Core/Form";
 import moment from "moment";
 
@@ -26,6 +26,7 @@ class InfoModal extends Component {
             ORGS: [],
             sOrg: null,
             sUsername: null,
+            loading: false,
             data: {
                 code: 1,
                 cpCode: "004",
@@ -664,6 +665,7 @@ class InfoModal extends Component {
             BasicFields.fields[15].data = res[0].data;
                 this.setState({
                     BasicFields,
+                    sUsername: edit ? res[1].username: null,
                     ORGS: !edit ? res[1].data.filter((item) => item.value !== 1): [],
                 })
         })
@@ -674,6 +676,7 @@ class InfoModal extends Component {
 
     submit = () => {
         //submit button click
+        this.setState({loading: true})
         this.basicRef.current && this.basicRef.current.refs.basic_form.submit();
         this.billingRef.current && this.billingRef.current.refs.billing_form.submit();
         this.kinRef.current && this.kinRef.current.refs.kin_form.submit();
@@ -709,7 +712,7 @@ class InfoModal extends Component {
     BillingCall = (vake) => {
         // this will work after  getting the Object from level form
         const { editCont } = this.props
-        vake.billing.noOfHoursPer = 1; 
+        // vake.billing.noOfHoursPer = 1; 
         this.setState(
             {
                 mergeObj: {
@@ -778,11 +781,12 @@ class InfoModal extends Component {
     };
 
     getRecord = (id) => {
-        getRecord(id).then(res=>{
+        return getRecord(id).then(res=>{
             if (res.success){
                 this.basicRef.current.refs.basic_form.setFieldsValue({ basic: res.basic, });
                 this.kinRef.current.refs.kin_form.setFieldsValue({ kin: res.kin, });
                 this.billingRef.current.refs.billing_form.setFieldsValue({ billing: res.billing, })
+                return {username: res.basic.username}
             }
         })
     };
@@ -867,7 +871,7 @@ class InfoModal extends Component {
 
     render() {
         const { editCont, visible } = this.props;
-        const { BasicFields, BillingFields, KinFields, sContact, CONTACTS, ORGS, sOrg, sUsername } = this.state;
+        const { BasicFields, BillingFields, KinFields, sContact, CONTACTS, ORGS, sOrg, sUsername, loading } = this.state;
 
         return (
             <Modal
@@ -875,10 +879,9 @@ class InfoModal extends Component {
                 maskClosable={false}
                 centered
                 visible={visible}
-                onOk={() => {
-                    this.submit();
-                }}
-                okText={"Save"}
+                onOk={() => { this.submit(); }}
+                okButtonProps={{ disabled: loading }}
+                okText={loading ?<LoadingOutlined /> :"Save"}
                 onCancel={this.onCancel}
                 width={900}
             >
@@ -931,6 +934,7 @@ class InfoModal extends Component {
                             value={sUsername}
                             placeholder="Email"
                             size="small"
+                            type="email"
                             // prefix={<UserOutlined />} 
                             onChange={(e, value)=>{
                                 console.log(e);

@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
-
 import {Modal, Table, Checkbox } from 'antd'
+import { LoadingOutlined } from "@ant-design/icons"; //Icons
 
 class Permission extends Component {
     constructor(props) {
@@ -59,7 +59,8 @@ class Permission extends Component {
         ]
 
         this.state = {
-            perData: this.props.data
+            perData: this.props.data,
+            loading: false
         }
     }
 
@@ -71,11 +72,12 @@ class Permission extends Component {
     };
 
     submit = () =>{
-        console.log(this.state.perData)
+        this.setState({loading: true})
         this.props.Callback();
     }
 
     render (){
+        const { loading, perData } = this.state
         return (
                 <Modal
                     title="Edit Permission"
@@ -83,12 +85,13 @@ class Permission extends Component {
                     centered
                     visible={this.props.isVisible}
                     onOk={()=>{this.submit()}}
-                    okText= 'Save'
+                    okButtonProps={{ disabled: loading }}
+                    okText={loading ?<LoadingOutlined /> :"Save"}
                     onCancel={()=>{this.props.Callback()}}
                     width={640}
                     pagination={false}
                 >
-                    <Table columns={this.perColumns} dataSource={this.state.perData} size='small'/>
+                    <Table columns={this.perColumns} dataSource={perData} size='small'/>
                 </Modal>
             
         )

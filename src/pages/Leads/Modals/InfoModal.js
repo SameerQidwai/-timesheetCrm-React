@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { Button, Modal, Tabs } from "antd";
-import { CloseOutlined, PlusSquareOutlined } from "@ant-design/icons"; //Icons
+import { Modal, Tabs } from "antd";
+import { LoadingOutlined } from "@ant-design/icons"; //Icons
 import moment from "moment";
 import Form from "../../../components/Core/Form";
 
@@ -27,6 +27,7 @@ class InfoModal extends Component {
             SKILLS: [],
             STATES: [],
             ORGS: [],
+            loading: false,
 
             BasicFields: {
                 //creating Component
@@ -622,6 +623,7 @@ class InfoModal extends Component {
 
     submit = () => {
         //submit button click
+        this.setState({loading: true})
         this.basicRef.current.refs.basic_form.submit();
         this.tenderRef.current.refs.tender_form.submit();
         this.billingRef.current && this.billingRef.current.refs.billing_form.submit();
@@ -630,13 +632,19 @@ class InfoModal extends Component {
 
     BasicCall = (vake) => { 
         // this will work after  got  Object from the skill from
-        ;
         vake = vake.obj
         this.setState(
             {
                 mergeObj: {
                     ...this.state.mergeObj,
-                    ...vake,
+                    ...{panelId: vake.panelId ?vake.panelId : null,
+                        organizationId: vake.organizationId ?vake.organizationId : null,
+                        contactPersonId: vake.contactPersonId ?vake.contactPersonId : null,
+                        title: vake.title ?vake.title : '',
+                        type: vake.type ?vake.type : '',
+                        stateId: vake.stateId ?vake.stateId : null,
+                        qualifiedOps: vake.qualifiedOps ?vake.qualifiedOps : false,
+                    },
                 },
                 basicSubmitted: true, // skill form submitted
             },
@@ -662,13 +670,15 @@ class InfoModal extends Component {
 
     tenderCall = (vake) => {
         // this will work after  got  Object from the skill from
-        ;
         vake = vake.obj
         this.setState(
             {
                 mergeObj: {
                     ...this.state.mergeObj,
-                    ...vake,
+                    ...{
+                        tender: vake.tender ? vake.tender : '',
+                        tenderNumber: vake.tenderNumber ? vake.tenderNumber : '',
+                    },
                 },
                 tenderSubmitted: true, // skill form submitted
             },
@@ -694,13 +704,17 @@ class InfoModal extends Component {
 
     BillingCall = (vake) => {
         // this will work after  getting the Object from level form
-        ;
         vake = vake.obj
         this.setState(
             {
                 mergeObj: {
                     ...this.state.mergeObj,
-                    ...vake,
+                    ...{
+                        value: vake.value ? vake.value : 0,
+                        cmPercentage: vake.cmPercentage ? vake.cmPercentage : 0,
+                        goPercentage: vake.goPercentage ? vake.goPercentage : 0,
+                        getPercentage: vake.getPercentage ? vake.getPercentage : 0,
+                    },
                 },
                 billingSubmitted: true, // level form submitted
             },
@@ -726,7 +740,6 @@ class InfoModal extends Component {
 
     DatesCall = (vake) => {
         // this will work after I get the Object from the form
-        ;
         vake = vake.obj
         this.setState(
             {
@@ -793,17 +806,16 @@ class InfoModal extends Component {
 
     render() {
         const { editLead, visible, close } = this.props;
-        const { BasicFields, tenderFields, DatesFields, BillingFields } = this.state
+        const { BasicFields, tenderFields, DatesFields, BillingFields, loading } = this.state
         return (
             <Modal
                 title={editLead? "Edit opportunity" : "Add New opportunity"}
                 maskClosable={false}
                 centered
                 visible={visible}
-                onOk={() => {
-                    this.submit();
-                }}
-                okText={"Save"}
+                onOk={() => { this.submit(); }}
+                okButtonProps={{ disabled: loading }}
+                okText={loading ?<LoadingOutlined /> :"Save"}
                 onCancel={close}
                 width={750}
                 // footer={[

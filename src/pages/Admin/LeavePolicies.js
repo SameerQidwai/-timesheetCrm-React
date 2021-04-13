@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Table, Menu, Dropdown, Button, Popconfirm, Row, Col, Typography, Modal, } from "antd";
-import { DownOutlined, SettingOutlined, PlusSquareOutlined, CloseOutlined, } from "@ant-design/icons"; //Icons
+import { DownOutlined, SettingOutlined, PlusSquareOutlined, CloseOutlined, LoadingOutlined} from "@ant-design/icons"; //Icons
 
 import Form from "../../components/Core/Form";
 import "../styles/table.css";
@@ -62,6 +62,7 @@ class LeavePolicies extends Component {
             mergeObj: {},
             form1Submitted: false,
             form2Submitted: false,
+            loading: false,
 
             FormFields: {
                 //this is for insert new fields
@@ -371,6 +372,7 @@ class LeavePolicies extends Component {
     };
 
     submit = () => {
+        this.setState({loading: true})
         this.dynamoForm_1.current.refs.title_form.submit();
         this.dynamoForm_2.current.refs.hours_form.submit();
     };
@@ -485,7 +487,7 @@ class LeavePolicies extends Component {
     };
 
     render() {
-        const data = this.state.data;
+        const {data, openModal, editTimeoff, FormFields, FormFields_1, loading} = this.state;
         const columns = this.columns;
         return (
             <>
@@ -514,37 +516,30 @@ class LeavePolicies extends Component {
                         />
                     </Col>
                 </Row>
-                {this.state.openModal ? (
+                {openModal ? (
                     <Modal
-                        title={
-                            this.state.editTimeoff
-                            ? "Edit Leave Policy"
-                            : "Add Leave Policy"
-                        }
+                        title={ editTimeoff ? "Edit Leave Policy" : "Add Leave Policy" }
                         maskClosable={false}
                         centered
-                        visible={this.state.openModal}
-                        onOk={() => {
-                            this.submit();
-                        }}
-                        okText={"Save"}
-                        onCancel={() => {
-                            this.toggelModal(false);
-                        }}
+                        visible={openModal}
+                        onOk={() => { this.submit(); }}
+                        okButtonProps={{ disabled: loading }}
+                        okText={loading ?<LoadingOutlined /> :"Save"}
+                        onCancel={() => { this.toggelModal(false); }}
                         width={900}
                     >
                         <Row>
                             <Form
                                 ref={this.dynamoForm_1}
                                 Callback={this.Callback}
-                                FormFields={this.state.FormFields}
+                                FormFields={FormFields}
                             />
                         </Row>
                         <Row style={{ maxHeight: "115px", overflowY: "auto" }}>
                             <Form
                                 ref={this.dynamoForm_2}
                                 Callback={this.Callback2}
-                                FormFields={this.state.FormFields_1}
+                                FormFields={FormFields_1}
                             />
                         </Row>
                     </Modal>

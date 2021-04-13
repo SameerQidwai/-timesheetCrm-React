@@ -1,20 +1,7 @@
 import React, { Component } from "react";
+import { Table, Menu, Dropdown, Button, Popconfirm, Row, Col, Typography, Modal, } from "antd";
 import {
-    Table,
-    Menu,
-    Dropdown,
-    Button,
-    Popconfirm,
-    Row,
-    Col,
-    Typography,
-    Modal,
-} from "antd";
-import {
-    DownOutlined,
-    SettingOutlined,
-    PlusSquareOutlined,
-} from "@ant-design/icons"; //Icons
+    DownOutlined, SettingOutlined, PlusSquareOutlined, LoadingOutlined } from "@ant-design/icons"; //Icons
 
 import Form from "../../components/Core/Form";
 import "../styles/table.css";
@@ -142,6 +129,7 @@ class Roles extends Component {
             openModal: false,
             editTimeoff: false,
             perModal: false,
+            loading: false,
             FormFields: {
                 formId: "role_form",
                 justify: "center",
@@ -236,11 +224,12 @@ class Roles extends Component {
     };
 
     submit = () => {
+        this.setState({loading: true})
         this.roleForm.current.refs.role_form.submit();
     };
 
     render() {
-        const data = this.state.data;
+        const {data, openModal, editTimeoff, FormFields, perData, perModal, loading} = this.state;
         const columns = this.columns;
         return (
             <>
@@ -256,7 +245,6 @@ class Roles extends Component {
                             }}
                             size="small"
                         >
-                            {" "}
                             <PlusSquareOutlined />
                             Add Roles
                         </Button>
@@ -269,20 +257,17 @@ class Roles extends Component {
                         />
                     </Col>
                 </Row>
-                {this.state.openModal ? (
+                {openModal ? (
                     <Modal
-                        title={
-                            this.state.editTimeoff
-                            ? "Edit Role"
-                            : "Add New Role"
-                        }
+                        title={ editTimeoff ? "Edit Role" : "Add New Role" }
                         maskClosable={false}
                         centered
-                        visible={this.state.openModal}
+                        visible={openModal}
                         onOk={() => {
                             this.submit();
                         }}
-                        okText={"Save"}
+                        okButtonProps={{ disabled: loading }}
+                        okText={loading ?<LoadingOutlined /> :"Save"}
                         onCancel={() => {
                             this.toggelModal(false);
                         }}
@@ -291,16 +276,16 @@ class Roles extends Component {
                         <Form
                             ref={this.roleForm}
                             Callback={() => this.Callback()}
-                            FormFields={this.state.FormFields}
+                            FormFields={FormFields}
                         />
                     </Modal>
                 ) : null}
                 <Permission
-                    isVisible={this.state.perModal}
+                    isVisible={perModal}
                     Callback={() => {
                         this.setState({ perModal: false });
                     }}
-                    data={this.state.perData}
+                    data={perData}
                 />
             </>
         );

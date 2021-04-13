@@ -652,8 +652,8 @@ class InfoModal extends Component {
         // this will work after  getting the Object from level form
         const { asso } = vake;
         const vars = [];
-        let result = Object.keys(asso).length / 5;
-        if(Object.keys(asso).length > 0){
+        let result = asso ? Object.keys(asso).length / 5  : 0;
+        if(asso && Object.keys(asso).length > 0){
             for (let i = 0; i < result; i++) {
                 if(asso[`organizationId${i}`]){
                     vars.push({
@@ -691,7 +691,7 @@ class InfoModal extends Component {
         const { skill } = vake;
         const vars = [];
         let result = skill ? Object.keys(skill).length / 2 : 0;
-        if (Object.keys(skill).length > 0){
+        if (skill && Object.keys(skill).length > 0){
             for (let i = 0; i < result; i++) {
                 vars.push(skill[`level${i}`]);
             }
@@ -774,14 +774,16 @@ class InfoModal extends Component {
                 let asso = {};
                 const skillArray = data.standardSkillStandardLevels;
                 const assoArray = data.contactPersonOrganizations
-                let result = skillArray.length < assoArray.length? assoArray.length :skillArray.length;
+                let result = skillArray.length < assoArray.length? assoArray.length :skillArray.length; // check the largest length to run loop only once not twice for two array
+                console.log('sameer', result, assoArray.length, skillArray.length);
                 for (let i = 0; i < result; i++) {
+                    console.log('sameer', result, assoArray.length, skillArray.length);
                     let skillEl = skillArray[i];
                     let assoEl = assoArray[i]
-                    if(skillEl){
+                    if(skillEl){ // checking if the next skillEl have obj to insert value and fields into form 
                         skill_data.map(El=>{
                             El.levels.map(lEl=>{
-                                if (lEl.value === skillEl.id){
+                                if (lEl.value === skillEl.id){                                              // options for level select fields
                                     SkillFields.fields = SkillFields.fields.concat( this.newSkillField(i, El.levels) );
                                     skill[`level${i}`] = lEl.value;
                                     skill[`skill${i}`] = El.value;
@@ -789,13 +791,21 @@ class InfoModal extends Component {
                             })
                         })                        
                     }
-                    if(assoEl){
+                    if(assoEl){ // checking if the next assoEl have obj to insert value and fields into form 
                         associateFields.fields = associateFields.fields.concat( this.newAssociateField(i) );
                         asso[`designation${i}`] = assoEl.designation
                         asso[`organizationId${i}`] = assoEl.organizationId
                         asso[`startDate${i}`] = assoEl.startDate && moment(assoEl.startDate)
                         asso[`endDate${i}`] = assoEl.endDate && moment (assoEl.endDate)
                     }
+                }
+                if (skillArray.length === 0){ // checking if skill is not have any data when getting record to edited and insert an new Empty fields
+                    console.log(skillArray.length, 'skill length null');
+                    SkillFields.fields = SkillFields.fields.concat( this.newSkillField(0));
+                }
+                if (assoArray.length === 0){ // checking if assosiation is not have any data when getting record to edited and insert an new Empty fields
+                    console.log(assoArray.length, 'assosiation length null');
+                    associateFields.fields = associateFields.fields.concat( this.newAssociateField(0) );
                 }
                 let basic = {
                     // exist: true,
@@ -813,6 +823,7 @@ class InfoModal extends Component {
                     clearanceExpiryDate: data.clearanceExpiryDate && moment(data.clearanceExpiryDate),
                     clearanceSponsorId: data.clearanceSponsorId,
                 }
+
                 this.basicRef.current.refs.basic_form.setFieldsValue({ basic: basic, });
                 this.associateRef.current.refs.associate_form.setFieldsValue({ asso: asso, });
                 this.skillRef.current.refs.skill_form.setFieldsValue({ skill: skill, });
@@ -833,6 +844,7 @@ class InfoModal extends Component {
             skillSubmitted: false,
             securitySubmitted: false,
         })
+        console.log(value);
         editList(value).then((res) => {
             if(res.success){
                 console.log('hereh');

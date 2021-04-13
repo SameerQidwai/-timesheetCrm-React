@@ -1,11 +1,7 @@
 import React, { Component } from "react";
 
 import { Row, Col, Table, Modal, Input, Button, Select, Typography, Popconfirm, DatePicker, } from "antd";
-import {
-    CloseCircleOutlined,
-    CheckOutlined,
-    SaveOutlined,
-} from "@ant-design/icons"; //Icons
+import { CloseCircleOutlined, CheckOutlined, SaveOutlined, LoadingOutlined } from "@ant-design/icons"; //Icons
 import Form from "../components/Core/Form";
 import moment from "moment";
 
@@ -24,6 +20,7 @@ class TimeSheet extends Component {
             proVisible: false,
             dataIndex: {},
             columns: [],
+            loading: false,
             data: [
                 {
                     key: 1,
@@ -783,6 +780,7 @@ class TimeSheet extends Component {
     };
 
     render() {
+        const { loading, columns, data, comments, isVisible, FormFields, proVisible } = this.state
         return (
             <>
                 <Row justify="space-between">
@@ -812,7 +810,7 @@ class TimeSheet extends Component {
                     </Col>
                 </Row>
                 <Table
-                    columns={this.state.columns}
+                    columns={columns}
                     size="small"
                     scroll={{
                         // x: "calc(700px + 100%)",
@@ -822,7 +820,7 @@ class TimeSheet extends Component {
                     // footer={() => "Footer"}
                     bordered
                     pagination={false}
-                    dataSource={this.state.data}
+                    dataSource={data}
                     className="timeSheet-table"
                 />
                 <Row
@@ -835,7 +833,7 @@ class TimeSheet extends Component {
                             autoSize={{ minRows: 6, maxRows: 12 }}
                             showCount
                             onChange={this.commentSec}
-                            value={this.state.comments}
+                            value={comments}
                             placeholder="Add some commen"
                         />
                     </Col>
@@ -858,50 +856,50 @@ class TimeSheet extends Component {
                         </Row>
                     </Col>
                 </Row>
-                {this.state.isVisible && (
+                {isVisible && (
                     <Modal
                         title="Edit TimeSheet"
                         maskClosable={false}
                         centered
-                        visible={this.state.isVisible}
-                        okText="Save"
+                        visible={isVisible}
                         width={540}
                         // pagination={false}
                         onCancel={() => {
-                            delete this.state.FormFields.initialValues; // delete initialValues of fields on close
+                            delete FormFields.initialValues; // delete initialValues of fields on close
                             this.setState({
                                 isVisible: false, //close
-                                FormFields: this.state.FormFields, //delete Formfields on Close
+                                FormFields: FormFields, //delete Formfields on Close
                             });
                         }}
-                        onOk={() => {
-                            this.submit();
-                        }}
+                        onOk={() => { this.submit(); }}
+                        okButtonProps={{ disabled: loading }}
+                        okText={loading ?<LoadingOutlined /> :"Save"}
                     >
                         <Row>
                             <Form
                                 ref={this.dynamoForm}
                                 Callback={this.Callback}
-                                FormFields={this.state.FormFields}
+                                FormFields={FormFields}
                             />
                         </Row>
                     </Modal>
                 )}
 
-                {this.state.proVisible && (
+                {proVisible && (
                     <Modal
                         title="Add Project"
                         maskClosable={false}
                         centered
-                        visible={this.state.proVisible}
-                        okText="Add"
+                        visible={proVisible}
+                        okButtonProps={{ disabled: loading }}
+                        okText={loading ?<LoadingOutlined /> :"Add"}
                         width={500}
                         // pagination={false}
                         onCancel={() => {
                             this.setState({ proVisible: false });
                         }}
                         onOk={() => {
-                            this.setState({ proVisible: false });
+                            this.setState({ proVisible: false, loading: true });
                         }}
                     >
                         <Row justify="space-around">

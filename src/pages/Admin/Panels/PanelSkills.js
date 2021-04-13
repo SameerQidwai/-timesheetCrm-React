@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Row, Col, Typography, Button, Table, Menu, Dropdown, Popconfirm, Modal, } from "antd";
-import { DownOutlined, SettingOutlined, PlusSquareOutlined, CloseOutlined, } from "@ant-design/icons"; //Icons
+import { DownOutlined, SettingOutlined, PlusSquareOutlined, CloseOutlined, LoadingOutlined} from "@ant-design/icons"; //Icons
 
 import Form from "../../../components/Core/Form";
 
@@ -65,6 +65,7 @@ class PanelInfo extends Component {
             panelId: false,
             skill_select: false,
             skill_pirority: false,
+            loading: false,
             data: [],
 
             FormFields: {
@@ -264,6 +265,7 @@ class PanelInfo extends Component {
                     editPS: false,
                     form1Submitted: false,
                     form2Submitted: false,
+                    loading: false
                 });
             }
         });
@@ -381,17 +383,20 @@ class PanelInfo extends Component {
                 editPS: false,
                 form1Submitted: false,
                 form2Submitted: false,
+                loading: false
             });
         } else {
             this.setState({
                 openModal: status,
                 FormFields_1: { ...FormFields_1, fields: this.newField(0) },
                 editPS: false,
+                loading: false
             });
         }
     };
 
     submit = () => {
+        this.setState({ loading: true })
         this.dynamoForm_1.current.refs.title_form.submit();
         this.dynamoForm_2.current.refs.hours_form.submit();
     };
@@ -503,7 +508,6 @@ class PanelInfo extends Component {
     editRecord = () => {
         const { mergeObj, editPS } = this.state;
         mergeObj.id = editPS;
-        console.log(mergeObj);
         editLabel(mergeObj).then((res) => {
             if (res) {
                 this.getData();
@@ -512,7 +516,7 @@ class PanelInfo extends Component {
     };
 
     render() {
-        const skills = this.state.data;
+        const {data, openModal, editPS, FormFields, FormFields_1, loading} = this.state;
         return (
             <>
                 <Row justify="space-between">
@@ -527,7 +531,6 @@ class PanelInfo extends Component {
                             }}
                             size="small"
                         >
-                            {" "}
                             <PlusSquareOutlined />
                             Add Skill
                         </Button>
@@ -536,36 +539,35 @@ class PanelInfo extends Component {
                 <Table
                     rowKey={(data) => data.id}
                     columns={this.columns}
-                    dataSource={skills}
+                    dataSource={data}
                     size="small"
                 />
-                {this.state.openModal ? (
+                {openModal ? (
                     <Modal
-                        title={this.state.editPS ? "Edit Skill" : "Add Skill"}
+                        title={editPS ? "Edit Skill" : "Add Skill"}
                         maskClosable={false}
                         centered
-                        visible={this.state.openModal}
+                        visible={openModal}
                         onOk={() => {
                             this.submit();
                         }}
-                        okText={"Save"}
-                        onCancel={() => {
-                            this.toggelModal(false);
-                        }}
+                        okButtonProps={{ disabled: loading }}
+                        okText={loading ?<LoadingOutlined /> :"Save"}
+                        onCancel={() => { this.toggelModal(false); }}
                         width={700}
                     >
                         <Row>
                             <Form
                                 ref={this.dynamoForm_1}
                                 Callback={this.Callback}
-                                FormFields={this.state.FormFields}
+                                FormFields={FormFields}
                             />
                         </Row>
                         <Row style={{ maxHeight: "145px", overflowY: "auto" }}>
                             <Form
                                 ref={this.dynamoForm_2}
                                 Callback={this.Callback2}
-                                FormFields={this.state.FormFields_1}
+                                FormFields={FormFields_1}
                             />
                         </Row>
                     </Modal>

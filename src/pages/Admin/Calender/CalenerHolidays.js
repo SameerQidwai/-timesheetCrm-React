@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Row, Col, Menu, Table, Modal, Button, Dropdown, Popconfirm, Typography, DatePicker, } from "antd";
-import { DownOutlined, SettingOutlined, PlusSquareOutlined, } from "@ant-design/icons"; //Icons
+import { DownOutlined, SettingOutlined, PlusSquareOutlined, LoadingOutlined} from "@ant-design/icons"; //Icons
 
 import Form from "../../../components/Core/Form";
 import moment from "moment";
@@ -204,11 +204,12 @@ class CalenerHolidays extends Component {
     };
 
     submit = () => {
+        this.setState({loading: true})
         this.holidayForm.current.refs.form.submit();
     };
 
     render() {
-        const data = this.state.data;
+        const {data, openModal, editTimeoff, FormFields, loading} = this.state;
         const columns = this.columns;
         return (
             <>
@@ -233,7 +234,6 @@ class CalenerHolidays extends Component {
                                 this.toggelModal(true);
                             }}
                         >
-                            {" "}
                             <PlusSquareOutlined /> Add Holiday
                         </Button>
                     </Col>
@@ -246,23 +246,16 @@ class CalenerHolidays extends Component {
                         />
                     </Col>
                 </Row>
-                {this.state.openModal ? (
+                {openModal ? (
                     <Modal
-                        title={
-                            this.state.editTimeoff
-                            ? "Edit Holiday"
-                            : "Add New Holiday"
-                        }
+                        title={ editTimeoff ? "Edit Holiday" : "Add New Holiday" }
                         maskClosable={false}
                         centered
-                        visible={this.state.openModal}
-                        onOk={() => {
-                            this.submit();
-                        }}
-                        onCancel={() => {
-                            this.toggelModal(false);
-                        }}
-                        okText={"Save"}
+                        visible={openModal}
+                        onOk={() => { this.submit(); }}
+                        onCancel={() => { this.toggelModal(false); }}
+                        okButtonProps={{ disabled: loading }}
+                        okText={loading ?<LoadingOutlined /> :"Save"}
                         width={500}
                         bodyStyle={{ padding: "10px 0px 0px 0px" }}
                     >
@@ -270,7 +263,7 @@ class CalenerHolidays extends Component {
                             <Form
                                 ref={this.holidayForm}
                                 Callback={this.Callback}
-                                FormFields={this.state.FormFields}
+                                FormFields={FormFields}
                             />
                         </Row>
                     </Modal>

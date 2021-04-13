@@ -1,10 +1,9 @@
 import React, { Component } from "react";
 import { Modal, Tabs } from "antd";
-import { CloseOutlined, PlusSquareOutlined } from "@ant-design/icons"; //Icons
-import moment from "moment";
+import { LoadingOutlined } from "@ant-design/icons"; //Icons
 import Form from "../../components/Core/Form";
 
-import { addResource, getResource, editResource } from "../../service/opportunities";
+import { addLeadSkill, getLeadSkills, editLeadSkill } from "../../service/opportunities";
 import { getPanelSkills, getStandardLevels, getContactPersons  } from "../../service/constant-Apis";
 
 
@@ -18,7 +17,7 @@ class InfoModal extends Component {
             editRex: false,
             resourceSubmitted: false,
             check: false,
-
+            loading: false,
             SKILLS: [],
             STATES: [],
             ORGS: [],
@@ -184,6 +183,7 @@ class InfoModal extends Component {
     
     submit = () => {
         //submit button click
+        this.setState({loading: true})
         this.resourceRef.current && this.resourceRef.current.refs.resource_form.submit();
     };
 
@@ -203,7 +203,7 @@ class InfoModal extends Component {
     addRecord = (data) =>{
         const { ProId, callBack } = this.props
         console.log(ProId);
-        addResource(ProId, data).then(res=>{
+        addLeadSkill(ProId, data).then(res=>{
             if(res.success){
                 callBack()
             }
@@ -214,7 +214,7 @@ class InfoModal extends Component {
     getRecord = (skills) => {
         const { ProId, editRex } = this.props;
         console.log(ProId, editRex);
-        getResource(ProId, editRex).then((resR) => {
+        getLeadSkills(ProId, editRex).then((resR) => {
             console.log(resR.data);
             if (resR.success){
                 const skillIndex = skills.findIndex(skill =>skill.value === resR.data.panelSkillId)
@@ -233,7 +233,7 @@ class InfoModal extends Component {
     editRecord = (data) => {
         const { editRex, ProId, callBack } = this.props;
         data.id = editRex
-        editResource(editRex, ProId, data).then((res) => {
+        editLeadSkill(editRex, ProId, data).then((res) => {
             if(res.success){
                 callBack()
             }
@@ -242,7 +242,7 @@ class InfoModal extends Component {
     
     render() {
         const { editRex, visible, close } = this.props;
-        const { ResourceFields } = this.state
+        const { ResourceFields, loading } = this.state
         return (
             <Modal
                 title={editRex? "Edit opportunity" : "Add Resource"}
@@ -250,7 +250,8 @@ class InfoModal extends Component {
                 centered
                 visible={visible}
                 onOk={() => { this.submit(); }}
-                okText={"Save"}
+                okButtonProps={{ disabled: loading }}
+                okText={loading ?<LoadingOutlined /> :"Save"}
                 onCancel={close}
                 width={900}
             >

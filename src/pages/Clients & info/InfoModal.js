@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Modal, Tabs, Row, Col, Button, Input } from "antd";
-import { UploadOutlined, PlusSquareFilled, CloseOutlined, } from "@ant-design/icons"; //Icons
+import { UploadOutlined, PlusSquareFilled, CloseOutlined, LoadingOutlined} from "@ant-design/icons"; //Icons
 
 import Form from "../../components/Core/Form";
 import moment from "moment";
@@ -71,6 +71,7 @@ class InfoModal extends Component {
             billingSubmitted: false,
             detailSubmitted: false,
             skillSubmitted: false,
+            loading: false,
             data: {
                 code: 1,
                 cpCode: "004",
@@ -580,6 +581,7 @@ class InfoModal extends Component {
     submit = () => {
         //submit button click
         // console.log(this.detailRef.current);
+        this.setState({loading: true})
         this.basicRef.current && this.basicRef.current.refs.basic_form.submit();
         this.detailRef.current &&
             this.detailRef.current.refs.detail_form.submit();
@@ -922,6 +924,7 @@ class InfoModal extends Component {
             DetailFields,
             BillingFields,
             // SkillFields,
+            loading
         } = this.state;
 
         return (
@@ -930,10 +933,9 @@ class InfoModal extends Component {
                 maskClosable={false}
                 centered
                 visible={visible}
-                onOk={() => {
-                    this.submit();
-                }}
-                okText={"Save"}
+                onOk={() => { this.submit(); }}
+                okButtonProps={{ disabled: loading }}
+                okText={loading ?<LoadingOutlined /> :"Save"}
                 onCancel={this.onCancel}
                 width={}
             >

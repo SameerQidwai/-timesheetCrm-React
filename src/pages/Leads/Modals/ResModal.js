@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { Modal, Tabs } from "antd";
-import { CloseOutlined, PlusSquareOutlined } from "@ant-design/icons"; //Icons
+import { LoadingOutlined } from "@ant-design/icons"; //Icons
 import moment from "moment";
 import Form from "../../../components/Core/Form";
 
-import { addResource, getResource, editResource } from "../../../service/opportunities";
+import { addLeadSkill, getLeadSkill, editLeadSkill, addLeadSkillResource, editLeadSkillResource } from "../../../service/opportunities";
 import { getPanelSkills, getStandardLevels, getEmployees, getSubContractors  } from "../../../service/constant-Apis";
 
 
@@ -18,6 +18,7 @@ class InfoModal extends Component {
             editRex: false,
             resourceSubmitted: false,
             check: false,
+            loading: false,
 
             SKILLS: [],
             STATES: [],
@@ -40,32 +41,6 @@ class InfoModal extends Component {
                         // itemStyle:{marginBottom:'10px'},
                     },
                     {
-                        Placeholder: "Work Hours",
-                        fieldCol:12,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
-                    },
-                    {
-                        object: "obj",
-                        fieldCol: 12,
-                        key: 'userId',
-                        size: "small",
-                        // rules:[{ required: true }],
-                        data: [],
-                        type: "Select",
-                    },
-                    {
-                        object: "obj",
-                        fieldCol: 12,
-                        key: 'billableHours',
-                        size: "small",
-                        // rules:[{ required: true }],
-                        type: "InputNumber",
-                        fieldStyle: { width: "100%" },
-                    },
-                    {
                         Placeholder: "Buy Cost",
                         fieldCol: 12,
                         size: "small",
@@ -74,12 +49,13 @@ class InfoModal extends Component {
                         // itemStyle:{marginBottom:'10px'},
                     },
                     {
-                        Placeholder: "Sale Cost",
+                        object: "obj",
                         fieldCol: 12,
+                        key: 'contactPersonId',
                         size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
+                        // rules:[{ required: true }],
+                        data: [],
+                        type: "Select",
                     },
                     {
                         object: "obj",
@@ -89,6 +65,14 @@ class InfoModal extends Component {
                         // rules:[{ required: true }],
                         type: "InputNumber",
                         fieldStyle: { width: "100%" },
+                    },                   
+                    {
+                        Placeholder: "Sale Cost",
+                        fieldCol: 24,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
                     },
                     {
                         object: "obj",
@@ -101,6 +85,7 @@ class InfoModal extends Component {
                     },
                 ],
             },
+
             SkillFields: {
                 formId: "resource_form",
                 FormCol: 24,
@@ -134,13 +119,12 @@ class InfoModal extends Component {
                         data: [],
                         type: "Select",
                         onChange: function func(e, value) {
-                            const { ResourceFields } = this.state
-                            ResourceFields.fields[3].data = value? value.levels: []
+                            const { SkillFields } = this.state
+                            SkillFields.fields[3].data = value? value.levels: []
                             const  { obj } = this.resourceRef.current.refs.resource_form.getFieldsValue() // const
                             obj['panelSkillStandardLevelId'] = undefined
-                            obj['userId'] = undefined;
                             this.resourceRef.current.refs.resource_form.setFieldsValue({ obj, })
-                            this.setState({ResourceFields})
+                            this.setState({SkillFields})
                         }.bind(this),
                     },
                     {
@@ -179,102 +163,133 @@ class InfoModal extends Component {
         };
     }
     componentDidMount = () =>{
-        const { editRex, panelId } = this.props
-        this.openModal()
+        const { skillId } = this.props
+        if (skillId){
+            this.fetchRes()
+        }else{
+            this.skillModal()
+        }
     }
 
     fetchRes = () =>{
         Promise.all([ getEmployees(),  getSubContractors()])
         .then(res => {
+            console.log(res[0]);
             const data = res[0].success ? res[0].data.concat(res[1].success ? res[1].data: []): res[1].success ? res[1].data: []
             const { ResourceFields } = this.state
-            ResourceFields.fields[6].data = data
-            const { obj } = this.resourceRef.current.refs.resource_form.getFieldsValue() // const
-            obj['userId'] = undefined;
-            this.resourceRef.current.refs.resource_form.setFieldsValue({ obj, })
+            const { editRex } = this.props
+            if(editRex){
+                const obj = {
+                    contactPersonId: editRex.contactPersonId,
+                    billableHours: editRex.billableHours,
+                    buyingRate: editRex.buyingRate,
+                    sellingRate: editRex.sellingRate,
+                }
+                this.resourceRef.current.refs.resource_form.setFieldsValue({ obj, })
+            }
+            ResourceFields.fields[2].data = data
             this.setState({ResourceFields})
+
         })
         .catch(e => {
             console.log(e);
         })
     }
 
-    openModal = () =>{
-        const { editRex, panelId } = this.props
-        getPanelSkills(panelId).then(res=>{
-            const {  ResourceFields } = this.state;
-            ResourceFields.fields[2].data = res.success? res.data : [];
-            this.setState({
-                ResourceFields,
-            },()=>{
-                if (editRex){
-                    this.getRecord(res.data)
+    skillModal = () =>{
+        const { editRex, panelId, leadId } = this.props
+        getPanelSkills(panelId).then(res => {
+            const {  SkillFields } = this.state;
+            SkillFields.fields[2].data = res.success? res.data : [];
+            console.log(panelId, res.data);
+
+            if(editRex){ // repopulate the fields to edit them to resolve multiple api calling might be do this on every Modal Compenent
+                const skillIndex = SkillFields.fields[2].data.findIndex(skill =>skill.value === editRex.panelSkillId)
+                SkillFields.fields[3].data = SkillFields.fields[2].data ? SkillFields.fields[2].data[skillIndex].levels : []
+                const obj = {
+                    panelSkillId: editRex.panelSkillId,
+                    panelSkillStandardLevelId: editRex.panelSkillStandardLevelId,
+                    billableHours: editRex.billableHours
                 }
-            })
+                this.resourceRef.current.refs.resource_form.setFieldsValue({ obj, })
+            }
+
+            this.setState({SkillFields})
+        })
+        .catch(e => {
+            console.log(e);
         })
     }
     
     submit = () => {
         //submit button click
+        this.setState({loading: true})
         this.resourceRef.current && this.resourceRef.current.refs.resource_form.submit();
     };
 
     ResourceCall = (vake) => {
         // this will work after I get the Object from the form
-        const { editRex } = this.props
+        const { editRex,skillId } = this.props
         if (editRex){
             console.log('edit');
-            this.editRecord(vake.obj)
+            if(skillId){
+                this.editResource(vake.obj)
+            }else{
+                this.editSkill(vake.obj)
+            }
 
         }else{
-            console.log('add');
-            this.addRecord(vake.obj)
+            if (skillId){
+                this.addResourse(vake.obj)
+            }else{
+                this.addSkill(vake.obj)
+            }
         }
     };
 
-    addRecord = (data) =>{
+    addSkill = (data) =>{
         const { leadId, callBack } = this.props
         console.log(leadId);
-        addResource(leadId, data).then(res=>{
+        addLeadSkill(leadId, data).then(res=>{
             if(res.success){
-                callBack()
+                console.log(res.data);
+                callBack(res.data)
             }
         })
     }
-    
-    
-    getRecord = (skills) => {
-        const { leadId, editRex } = this.props;
-        console.log(leadId, editRex);
-        getResource(leadId, editRex).then((resR) => {
-            console.log(resR.data);
-            if (resR.success){
-                const skillIndex = skills.findIndex(skill =>skill.value === resR.data.panelSkillId)
-                getEmployees().then(resP=>{
-                    const { ResourceFields } = this.state
-                    ResourceFields.fields[3].data = skills[skillIndex] ? skills[skillIndex].levels : []
-                    ResourceFields.fields[6].data = resP.success? resP.data: []
-                    this.resourceRef.current.refs.resource_form.setFieldsValue({ obj: resR.data })
-                    this.setState({ResourceFields})
-                })
+
+    addResourse = ( data) =>{
+        const {callBack, leadId, skillId } = this.props
+        addLeadSkillResource(leadId, skillId, data).then(res=>{
+            if(res.success){
+                callBack(res.data)
             }
         })
+    }
 
-    };
-
-    editRecord = (data) => {
+    editSkill = (data) => {
         const { editRex, leadId, callBack } = this.props;
         data.id = editRex
-        editResource(leadId, editRex, data).then((res) => {
+        editLeadSkill(leadId, editRex, data).then((res) => {
             if(res.success){
-                callBack()
+                callBack(res.data)
+            }
+        });
+    };
+
+    editResource = (data) => {
+        const { editRex, leadId, skillId, callBack } = this.props;
+        data.id = editRex
+        editLeadSkillResource(leadId, skillId , editRex.id, data).then((res) => {
+            if(res.success){
+                callBack(res.data)
             }
         });
     };
     
     render() {
-        const { editRex, visible, close, resource } = this.props;
-        const { ResourceFields, SkillFields } = this.state
+        const { editRex, visible, close, resource, skillId } = this.props;
+        const { ResourceFields, SkillFields, loading } = this.state
         return (
             <Modal
                 title={editRex? "Edit opportunity" : "Add Resource"}
@@ -282,14 +297,15 @@ class InfoModal extends Component {
                 centered
                 visible={visible}
                 onOk={() => { this.submit(); }}
-                okText={"Save"}
+                okButtonProps={{ disabled: loading }}
+                okText={loading ?<LoadingOutlined /> :"Save"}
                 onCancel={close}
                 width={750}
             >
                 <Form
                     ref={this.resourceRef}
                     Callback={this.ResourceCall}
-                    FormFields={resource? ResourceFields : SkillFields}
+                    FormFields={skillId? ResourceFields : SkillFields}
                 />
             </Modal>
         );

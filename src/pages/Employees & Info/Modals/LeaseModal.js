@@ -1,19 +1,20 @@
 import React, { Component } from "react";
 import { Modal, Tabs, Row, Col, Button, Input } from "antd";
-import { UploadOutlined, PlusSquareFilled, CloseOutlined, } from "@ant-design/icons"; //Icons
+import { LoadingOutlined } from "@ant-design/icons"; //Icons
 
 import Form from "../../../components/Core/Form";
 
 import moment from "moment";
 import { addList, editList, getRecord } from "../../../service/employee-leases";
 
-class BillModal extends Component {
+class LeaseModal extends Component {
     constructor() {
         super();
         this.leaseRef = React.createRef();
 
         this.state = {
             leaseSubmitted: false,
+            loading: false,
             LeaseFields: {
                 formId: "lease_form",
                 FormCol: 24,
@@ -185,7 +186,7 @@ class BillModal extends Component {
                             { label: "Weekly", value: 3 },
                             { label: "Fortnightly", value: 4 },
                             { label: "Monthly", value: 5 },
-                            { label: "QUATERLY", value: 6 },
+                            { label: "Quarterly", value: 6 },
                         ],
                         type: "Select",
                         // rules: [
@@ -279,6 +280,7 @@ class BillModal extends Component {
     };
 
     submit = () => {
+        this.setState({loading: true})
         this.leaseRef.current && this.leaseRef.current.refs.lease_form.submit();
     }
 
@@ -329,7 +331,7 @@ class BillModal extends Component {
 
     render() {
         const { editLease, visible, close } = this.props;
-        const { LeaseFields } = this.state;
+        const { LeaseFields, loading } = this.state;
 
         return (
             <Modal
@@ -338,7 +340,8 @@ class BillModal extends Component {
                 centered
                 visible={visible}
                 onOk={() => { this.submit(); }}
-                okText={"Save"}
+                okButtonProps={{ disabled: loading }}
+                okText={loading ?<LoadingOutlined /> :"Save"}
                 onCancel={close}
                 width={900}
             >
@@ -352,4 +355,4 @@ class BillModal extends Component {
     }
 }
 
-export default BillModal;
+export default LeaseModal;

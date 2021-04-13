@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Modal } from "antd";
-import { UploadOutlined } from "@ant-design/icons"; //Icons
+import { UploadOutlined, LoadingOutlined } from "@ant-design/icons"; //Icons
 
 import Form from "../../components/Core/Form";
 import moment from "moment";
@@ -20,6 +20,7 @@ class InfoModal extends Component {
             },
             default_hour: 8, // change this acording to the employeee to get days
             hasChanged: false,
+            loading: false,
             timeFields: {
                 //creating Component
                 formId: "off_form",
@@ -279,6 +280,7 @@ class InfoModal extends Component {
 
     submit = () => {
         //submit button click
+        this.setState({loading: true})
         this.timeRef.current.refs.off_form.submit();
     };
 
@@ -333,23 +335,23 @@ class InfoModal extends Component {
 
     render() {
         const { editOff, visible } = this.props;
+        const { timeFields, loading } = this.setState
         return (
             <Modal
                 title={editOff ? "Edit Time Off" : "Add New Time Off"}
                 maskClosable={false}
                 centered
                 visible={visible}
-                onOk={() => {
-                    this.submit();
-                }}
-                okText={"Save"}
+                onOk={() => { this.submit(); }}
+                okButtonProps={{ disabled: loading }}
+                okText={loading ?<LoadingOutlined /> :"Save"}
                 onCancel={this.onCancel}
                 width={900}
             >
                 <Form
                     ref={this.timeRef}
                     Callback={this.BasicCall}
-                    FormFields={this.state.timeFields}
+                    FormFields={timeFields}
                 />
             </Modal>
         );

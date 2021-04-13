@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Table, Menu, Dropdown, Button, Tag, Row, Col, Typography, Modal, } from "antd";
-import { DownOutlined, SettingOutlined, PlusSquareOutlined, } from "@ant-design/icons"; //Icons
+import { DownOutlined, SettingOutlined, PlusSquareOutlined, LoadingOutlined} from "@ant-design/icons"; //Icons
 import { Link } from "react-router-dom";
 
 import Form from "../../../components/Core/Form";
@@ -196,11 +196,12 @@ class Calenders extends Component {
     };
 
     submit = () => {
+        this.setState({loading: true})
         this.state.calenderForm.current.refs.calenderId.submit();
     };
 
     render() {
-        const { data, openModal, editTimeoff } = this.state;
+        const { data, openModal, editTimeoff, loading, calenderForm, FormFields } = this.state;
         const columns = this.columns;
         return (
             <>
@@ -232,27 +233,22 @@ class Calenders extends Component {
                 {
                     openModal ? (
                         <Modal
-                            title={
-                                editTimeoff
-                                ? "Edit Calender"
-                                : "Add New Calender"
-                            }
+                            title={ editTimeoff ? "Edit Calender" : "Add New Calender" }
                             maskClosable={false}
                             centered
                             visible={openModal}
-                            onOk={() => {
-                                this.submit();
-                            }}
-                            okText={"Save"}
+                            onOk={() => { this.submit(); }}
+                            okButtonProps={{ disabled: loading }}
+                            okText={loading ?<LoadingOutlined /> :"Save"}
                             onCancel={() => {
                                 this.toggelModal(false);
                             }}
                             width={600}
                         >
                             <Form
-                                ref={this.state.calenderForm}
+                                ref={calenderForm}
                                 Callback={this.Callback}
-                                FormFields={this.state.FormFields}
+                                FormFields={FormFields}
                             />
                         </Modal>
                     ) : null //adding a commit

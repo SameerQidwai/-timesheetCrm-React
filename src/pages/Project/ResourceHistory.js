@@ -4,7 +4,7 @@ import { SettingOutlined, DownOutlined } from "@ant-design/icons"; //Icons
 import { Link } from "react-router-dom"; 
 
 import HistModal from "./HistModal";
-import { getRecord, getResources, delResource } from "../../service/opportunities";
+import { getRecord, getLeadSkills, delLeadSkill } from "../../service/opportunities";
 
 import moment from "moment"
 
@@ -94,7 +94,7 @@ class ResourceHistory extends Component {
     }
 
     fetchAll = (proId, id) =>{
-        Promise.all([ getRecord(id), getResources(id)])
+        Promise.all([ getRecord(id), getLeadSkills(id)])
         .then(res => {
             this.setState({
                 desc: res[0].success? res[0].data : {},
@@ -109,8 +109,8 @@ class ResourceHistory extends Component {
         })
     }
 
-    getResources = (id) =>{
-        getResources(id).then(res=>{
+    getLeadSkills = (id) =>{
+        getLeadSkills(id).then(res=>{
             if(res.success){
                 this.setState({
                     desc: res.data,
@@ -126,7 +126,7 @@ class ResourceHistory extends Component {
 
     handleDelete = (rId) => {
         const { id } = this.props.match.params //opputunityId
-        delResource(id,rId).then((res) => {
+        delLeadSkill(id,rId).then((res) => {
             if (res.success) {
                 // this.props.history.push('/Employees')
             }
@@ -135,7 +135,7 @@ class ResourceHistory extends Component {
 
     callBack = () => {
         const { ProId } = this.state
-        this.getResources(ProId)
+        this.getLeadSkills(ProId)
     };
 
     render() {

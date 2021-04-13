@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Table, Menu, Dropdown, Button, Popconfirm, Row, Col, Typography, Modal, } from "antd";
-import { DownOutlined, SettingOutlined, PlusSquareOutlined, } from "@ant-design/icons"; //Icons
+import { DownOutlined, SettingOutlined, PlusSquareOutlined, LoadingOutlined} from "@ant-design/icons"; //Icons
 import { Link } from "react-router-dom";
 
 import Form from "../../../components/Core/Form";
@@ -135,18 +135,20 @@ class Panels extends Component {
 
     toggelModal = (status) => {
         if (status) {
-            this.setState({ openModal: status });
+            this.setState({ openModal: status, loading: false });
         } else {
             this.setState({
                 // set state
                 FormFields: { ...this.state.FormFields, initialValues: {} },
                 openModal: status,
                 editPanel: false,
+                loading: false
             });
         }
     };
 
     submit = () => {
+        this.setState({loading: true})
         this.dynamoForm.current.refs.time_off.submit();
     };
 
@@ -196,7 +198,7 @@ class Panels extends Component {
     };
 
     render() {
-        const data = this.state.data;
+        const { data, openModal, editPanel, FormFields , loading} = this.state;
         const columns = this.columns;
         return (
             <>
@@ -218,35 +220,29 @@ class Panels extends Component {
                     </Col>
                     <Col span={24}>
                         <Table
+                            rowKey= {data=> data.id}
                             columns={columns}
                             dataSource={data}
                             size="small"
                         />
                     </Col>
                 </Row>
-                {this.state.openModal ? (
+                {openModal ? (
                     <Modal
-                        title={
-                            this.state.editPanel
-                            ? "Edit Panel"
-                            : "Add New Panel"
-                        }
+                        title={ editPanel ? "Edit Panel" : "Add New Panel" }
                         maskClosable={false}
                         centered
-                        visible={this.state.openModal}
-                        onOk={() => {
-                            this.submit();
-                        }}
-                        okText={"Save"}
-                        onCancel={() => {
-                            this.toggelModal(false);
-                        }}
+                        visible={openModal}
+                        onOk={() => { this.submit(); }}
+                        okButtonProps={{ disabled: loading }}
+                        okText={loading ?<LoadingOutlined /> :"Save"}
+                        onCancel={() => { this.toggelModal(false); }}
                         width={400}
                     >
                         <Form
                             ref={this.dynamoForm}
                             Callback={this.Callback}
-                            FormFields={this.state.FormFields}
+                            FormFields={FormFields}
                         />
                     </Modal>
                 ) : null}

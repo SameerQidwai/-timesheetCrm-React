@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Typography, Row, Col, Popconfirm, Modal, Button, Table, Dropdown, Menu, } from "antd";
-import { SettingOutlined, DownOutlined, PlusSquareOutlined, } from "@ant-design/icons"; //Icons
+import { SettingOutlined, DownOutlined, PlusSquareOutlined, LoadingOutlined} from "@ant-design/icons"; //Icons
 import Forms from "../../../components/Core/Form";
 
 import { getList, addList, delLabel, editLabel, } from "../../../service/holiday-type";
@@ -102,6 +102,7 @@ class HolidayTypes extends Component {
     };
 
     submit = () => {
+        this.setState({loading: false})
         this.HalForm.current.refs.type_form.submit();
     };
 
@@ -147,7 +148,7 @@ class HolidayTypes extends Component {
     };
 
     render() {
-        const { data, isVisible } = this.state;
+        const { data, isVisible, editType, FormFields, loading } = this.state;
         return (
             <>
                 <Row justify="space-between">
@@ -176,17 +177,18 @@ class HolidayTypes extends Component {
                 />
                 {isVisible && (
                     <Modal
-                        title={this.state.editType ? "Edit Type" : "Add Type"}
+                        title={editType ? "Edit Type" : "Add Type"}
                         maskClosable={false}
                         centered
                         visible={isVisible}
-                        okText={"Save"}
+                        okButtonProps={{ disabled: loading }}
+                        okText={loading ?<LoadingOutlined /> :"Save"}
                         width={400}
                         onCancel={() => {
-                            delete this.state.FormFields.initialValues; // delete initialValues of fields on close
+                            delete FormFields.initialValues; // delete initialValues of fields on close
                             this.setState({
                                 isVisible: false, //close
-                                FormFields: this.state.FormFields, //delete Formfields on Close
+                                FormFields: FormFields, //delete Formfields on Close
                             });
                         }}
                         onOk={() => {
@@ -197,7 +199,7 @@ class HolidayTypes extends Component {
                             <Forms
                                 ref={this.HalForm}
                                 Callback={this.Callback}
-                                FormFields={this.state.FormFields}
+                                FormFields={FormFields}
                             />
                         </Row>
                     </Modal>

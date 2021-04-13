@@ -38,16 +38,15 @@ export const getRecord = (id) => {
                     email: contactPerson.email,
                     address: contactPerson.address,
                     stateId:contactPerson.stateId,
+                    username: data.username
                 }
                 const detail = {
-                    smsfBankAccountId: data.smsfBankAccountId,
-                    superAnnuationId: data.superAnnuationId,
-                    superAnnuationName: data.superAnnuationName,
-                    tfn: data.tfn,
-                    memberNumber: data.memberNumber,
-                    training: data.training,
-                    taxFreeThreshold: data.taxFreeThreshold,
-                    helpHECS: data.helpHECS
+                    superannuationName: data.superannuationName,
+                    superannuationBankName: data.superannuationBankName,
+                    superannuationBankAccountOrMembershipNumber: data.superannuationBankAccountOrMembershipNumber,
+                    superannuationAbnOrUsi: data.superannuationAbnOrUsi,
+                    superannuationBankBsb: data.superannuationBankBsb,
+                    superannuationAddress: data.superannuationAddress,
                 }
                 const kin = {
                     nextOfKinDateOfBirth: data.nextOfKinDateOfBirth? moment(data.nextOfKinDateOfBirth) : null,
@@ -63,6 +62,9 @@ export const getRecord = (id) => {
                     bankName: bankAccount.name,
                     bankAccountNo: bankAccount.accountNo,
                     bankBsb: bankAccount.bsb,
+                    memberNumber: data.memberNumber,
+                    taxFreeThreshold: data.taxFreeThreshold,
+                    helpHECS: data.helpHECS,
                 }
                 const employmentContracts = data.employmentContracts.length >0 ? data.employmentContracts[0] : {}
                 const billing ={
@@ -80,12 +82,7 @@ export const getRecord = (id) => {
                     comments: employmentContracts.comments
                 }
                 const smsf = {
-                    smsfName: data.smsfName,
-                    smsfABN: data.smsfABN,
-                    smsfAddress: data.smsfAddress,
-                    smsfBankName: data.smsfBankName,
-                    smsfBankBsb: data.smsfBankBsb,
-                    smsfBankAccountNo: data.smsfBankAccountNo,
+                    training: data.training,
                 }
                 return {success, data, basic, detail, kin, bank, billing, smsf}
             };

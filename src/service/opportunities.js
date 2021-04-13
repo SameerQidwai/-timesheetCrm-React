@@ -94,7 +94,6 @@ export const getRecord = (id) => {
         });
 };
 
-
 export const delList = (id) => {
     return axios
         .delete(url + `/${id}`)
@@ -127,12 +126,12 @@ export const editList = (data) => {
         });
 };
 
-export const addResource = (id, data) => {
+export const addLeadSkill = (id, data) => {
     return axios
         .post(url + `/${id}/resources`, data)
         .then((res) => {
-            const { success } = res.data;
-            if (success) return {success};
+            const { success, data } = res.data;
+            if (success) return {success, data: data[0]};
         })
         .catch((err) => {
             return {
@@ -143,14 +142,13 @@ export const addResource = (id, data) => {
         });
 };
 
-export const getResources = (id)=>{
+export const getLeadSkills = (id)=>{
     return axios
         .get(url + `/${id}/resources`)
         .then((res) => {
             const { success, data } = res.data;
             if (success) {
                 // console.log(data);
-                data.map(el => el.user = [{...el.user, chosen: true}] )
                 return { success: success, data: data }
             };
         })
@@ -163,7 +161,7 @@ export const getResources = (id)=>{
         });
 };
 
-export const getResource = (oppId, resId) => {
+export const getLeadSkill = (oppId, resId) => {
     return axios
         .get(url + `/${oppId}/resources/${resId}`)
         .then((res) => {
@@ -179,9 +177,93 @@ export const getResource = (oppId, resId) => {
         });
 };
 
-export const editResource = (oppId, resId, data) => {
+export const editLeadSkill = (oppId, resId, data) => {
     return axios
         .put(url + `/${oppId}/resources/${resId}`, data)
+        .then((res) => {
+            const { success, data } = res.data;
+            if (success) return {success, data: data[0]};
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                status: false,
+                message: err.message,
+            };
+        });
+};
+
+export const delLeadSkill = (oppId, resId) => {
+    console.log(oppId, resId);
+    return axios
+        .delete(url + `/${oppId}/resources/${resId}`)
+        .then((res) => {
+            const { success } = res.data;
+            console.log(res);
+            if (success) return {success};
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                status: false,
+                message: err.message,
+            };
+        });
+};
+
+export const addLeadSkillResource = (oppId, skillId,  data) => {
+    return axios
+        .post(url + `/${oppId}/resources/${skillId}/allocations`, data)
+        .then((res) => {
+            const { success, data } = res.data;
+            console.log(data);
+            if (success) return {success, data: data};
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                status: false,
+                message: err.message,
+            };
+        });
+};
+
+export const getLeadSkillResource = (oppId,skillId, resId) => {
+    return axios
+        .get(url + `/${oppId}/resources/${skillId}/allocations/${resId}`)
+        .then((res) => {
+            const { success, data } = res.data;
+            return {success, data}
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                status: false,
+                message: err.message,
+            };
+        });
+};
+
+export const editLeadSkillResource = (oppId, skillId, resId, data) => {
+    console.log({oppId, skillId, resId, data});
+    return axios
+        .put(url + `/${oppId}/resources/${skillId}/allocations/${resId}`, data)
+        .then((res) => {
+            const { success, data } = res.data;
+            if (success) return {success, data};
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                status: false,
+                message: err.message,
+            };
+        });
+};
+
+export const delLeadSkillResource = (oppId, skillId, resId,) => {
+    return axios
+        .delete(url + `/${oppId}/resources/${skillId}/allocations/${resId}`)
         .then((res) => {
             const { success } = res.data;
             if (success) return {success};
@@ -195,9 +277,10 @@ export const editResource = (oppId, resId, data) => {
         });
 };
 
-export const delResource = (oppId, resId) => {
+export const selectLeadSkillResource = (oppId, skillId, resId) => {
+    console.log(oppId, skillId, resId);
     return axios
-        .delete(url + `/${oppId}/resources/${resId}`)
+        .patch(url + `/${oppId}/resources/${skillId}/allocations/${resId}/mark-as-selected`)
         .then((res) => {
             const { success } = res.data;
             if (success) return {success};

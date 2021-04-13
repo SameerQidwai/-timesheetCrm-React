@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Modal } from "antd";
-import { UploadOutlined } from "@ant-design/icons"; //Icons
+import { LoadingOutlined, UploadOutlined } from "@ant-design/icons"; //Icons
 
 import Form from "../../components/Core/Form";
 import moment from "moment";
@@ -10,6 +10,7 @@ class InfoModal extends Component {
         super();
         this.timeRef = React.createRef();
         this.state = {
+            loading: false,
             data: {
                 name: "001",
                 code: "002",
@@ -219,6 +220,7 @@ class InfoModal extends Component {
 
     submit = () => {
         //submit button click
+        this.setState({loading: true})
         this.timeRef.current.refs.off_form.submit();
     };
 
@@ -273,6 +275,7 @@ class InfoModal extends Component {
 
     render() {
         const { edit, visible } = this.props;
+        const { loading, Fields } = this.state
         return (
             <Modal
                 title={edit ? "Edit Travel" : "Add Travel"}
@@ -280,14 +283,15 @@ class InfoModal extends Component {
                 centered
                 visible={visible}
                 onOk={() => { this.submit(); }}
-                okText={"Save"}
+                okButtonProps={{ disabled: loading }}
+                okText={loading ?<LoadingOutlined /> :"Save"}
                 onCancel={this.onCancel}
                 width={900}
             >
                 <Form
                     ref={this.timeRef}
                     Callback={this.BasicCall}
-                    FormFields={this.state.Fields}
+                    FormFields={Fields}
                 />
             </Modal>
         );

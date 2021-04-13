@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { Modal, Tabs, Row, Col, Button, Input, Select } from "antd";
-import { UploadOutlined, PlusSquareFilled, CloseOutlined, UserOutlined } from "@ant-design/icons"; //Icons
+import { Modal, Tabs, Row, Col, Button, Input, Select,  } from "antd";
+import { LoadingOutlined } from "@ant-design/icons"; //Icons
 
 import Form from "../../../components/Core/Form";
 import moment from "moment";
@@ -29,7 +29,7 @@ class InfoModal extends Component {
             kinSubmitted: false,
             bankSubmitted: false,
             smsfSubmitted: false,
-
+            loading: false,
             CONTACT:[],
             sContact: null,
             data: {
@@ -307,7 +307,7 @@ class InfoModal extends Component {
                     {
                         object: "detail",
                         fieldCol: 12,
-                        key: "superAnnuationName",
+                        key: "superannuationName",
                         size: "small",
                         // rules:[{ required: true }],
                         type: "Input",
@@ -316,11 +316,11 @@ class InfoModal extends Component {
                     {
                         object: "detail",
                         fieldCol: 12,
-                        key: "accountType",
+                        key: "superannuationType",
                         size: "small",
                         data: [
-                            { label: "Superannuation", value: true },
-                            { label: "SMSF", value: false },
+                            { label: "Public", value: 'P' },
+                            { label: "SMSF", value: 'S' },
                         ],
                         // rules: [ { required: true, message: "Gender is Obviously required", }, ],
                         type: "Select",
@@ -328,133 +328,7 @@ class InfoModal extends Component {
                         // shape: "solid",
                         itemStyle: { marginBottom: 10 },
                         onChange: function FundTypeCond (value){
-                            const superannuation = [
-                                {
-                                    Placeholder: "Membership / Account",
-                                    fieldCol: 12,
-                                    size: "small",
-                                    type: "Text",
-                                    labelAlign: "right",
-                                },
-                                {
-                                    Placeholder: "USI Number",
-                                    fieldCol: 12,
-                                    size: "small",
-                                    type: "Text",
-                                    labelAlign: "right",
-                                },
-                                {
-                                    object: "detail",
-                                    fieldCol: 12,
-                                    key: "memberNumber",
-                                    size: "small",
-                                    type: "Input",
-                                    itemStyle: { marginBottom: "10px" },
-                                },
-                                {
-                                    object: "detail",
-                                    fieldCol: 12,
-                                    key: "usiNumber",
-                                    size: "small",
-                                    type: "Input",
-                                    itemStyle: { marginBottom: "10px" },
-                                },
-                            ]
-                            const smsf = [
-                                {
-                                    Placeholder: "SMSF ABN",
-                                    fieldCol: 12,
-                                    size: "small",
-                                    type: "Text",
-                                    labelAlign: "right",
-                                },
-                                {
-                                    Placeholder: "ESA Address",
-                                    fieldCol: 12,
-                                    size: "small",
-                                    type: "Text",
-                                    labelAlign: "right",
-                                },
-                                {
-                                    object: "detail",
-                                    fieldCol: 12,
-                                    key: "smsfABN",
-                                    size: "small",
-                                    type: "Input",
-                                    itemStyle: { marginBottom: "10px" },
-                                },
-                                {
-                                    object: "detail",
-                                    fieldCol: 12,
-                                    key: "smsfAddress",
-                                    size: "small",
-                                    type: "Input",
-                                    itemStyle: { marginBottom: "10px" },
-                                },
-                                {
-                                    Placeholder: "Bank Account Name",
-                                    fieldCol: 12,
-                                    size: "small",
-                                    type: "Text",
-                                    labelAlign: "right",
-                                },
-                                {
-                                    Placeholder: "BSB Number",
-                                    fieldCol: 12,
-                                    size: "small",
-                                    type: "Text",
-                                    labelAlign: "right",
-                                },
-                                {
-                                    object: "detail",
-                                    fieldCol: 12,
-                                    key: "smsfBankName",
-                                    size: "small",
-                                    type: "Input",
-                                    itemStyle: { marginBottom: "10px" },
-                                },
-                                {
-                                    object: "detail",
-                                    fieldCol: 12,
-                                    key: "smsfBankBsb",
-                                    size: "small",
-                                    type: "Input",
-                                    itemStyle: { marginBottom: "10px" },
-                                },
-                                {
-                                    Placeholder: "Bank Account Number",
-                                    fieldCol: 24,
-                                    size: "small",
-                                    type: "Text",
-                                    labelAlign: "right",
-                                },
-                                {
-                                    object: "detail",
-                                    fieldCol: 12,
-                                    key: "smsfBankAccountNo",
-                                    size: "small",
-                                    type: "Input",
-                                    itemStyle: { marginBottom: "10px" },
-                                },
-                            ]
-                            let { fields } = this.state.DetailFields
-                            const { detail } = this.detailRef.current.refs.detail_form.getFieldsValue(); // get the values from from data
-                            const { superAnnuationName, accountType } = detail
-                            
-                            if (value){
-                                fields.splice(4, fields.length)
-                                fields = fields.concat(superannuation)
-                            }else if (value === false){
-                                fields.splice(4, fields.length)
-                                fields = fields.concat(smsf)
-                            }else{
-                                fields.splice(4, fields.length)
-                            }
-                            const details = { superAnnuationName: superAnnuationName, accountType: accountType }
-                            this.detailRef.current.refs.detail_form.setFieldsValue({ detail: details })
-                            this.setState({
-                                DetailFields: {...this.state.DetailFields, fields,}
-                            })
+                            this.onFundType(value)
                         }.bind(this)
                     },
 
@@ -1045,14 +919,15 @@ class InfoModal extends Component {
     };
 
     fetchAll = (edit) =>{
-        console.log(edit);
         const { editEmp } = this.props
         Promise.all([ getStates(), edit ? this.getRecord(editEmp) : getOrgPersons(1) ])
         .then(res => {
             const { BasicFields } = this.state
+            console.log('usernmae', res[1].username);
             BasicFields.fields[15].data = res[0].data;
                 this.setState({
                     BasicFields,
+                    sUsername: edit ? res[1].username: null,
                     CONTACT: !edit ? res[1].data: [],
                 })
         })
@@ -1062,15 +937,17 @@ class InfoModal extends Component {
     }
     
     submit = () => {
+        this.setState({loading: true})
         this.basicRef.current && this.basicRef.current.refs.basic_form.submit();
         this.detailRef.current && this.detailRef.current.refs.detail_form.submit();
         this.kinRef.current && this.kinRef.current.refs.kin_form.submit();
         this.bankRef.current && this.bankRef.current.refs.bank_form.submit();
         this.billingRef.current && this.billingRef.current.refs.billing_form.submit();
-        this.smsfRef.current && this.smsfRef.current.refs.smsf_form.submit();
+        // this.smsfRef.current && this.smsfRef.current.refs.smsf_form.submit();
     };
 
     BasicCall = (vake) => {
+        console.log(vake);
         this.setState(
             {
                 mergeObj: {
@@ -1086,8 +963,7 @@ class InfoModal extends Component {
                     this.state.detailSubmitted &&
                     this.state.kinSubmitted &&
                     this.state.bankSubmitted &&
-                    this.state.billingSubmitted &&
-                    this.state.smsfSubmitted 
+                    this.state.billingSubmitted 
                 ) {
                     //check if both form is submittef
                     if (!this.props.editEmp) {
@@ -1124,8 +1000,7 @@ class InfoModal extends Component {
                     this.state.detailSubmitted &&
                     this.state.kinSubmitted &&
                     this.state.bankSubmitted &&
-                    this.state.billingSubmitted &&
-                    this.state.smsfSubmitted 
+                    this.state.billingSubmitted 
                 ) {
                     //check if both form is submittef
                     if (!this.props.editEmp) {
@@ -1157,8 +1032,7 @@ class InfoModal extends Component {
                     this.state.detailSubmitted &&
                     this.state.kinSubmitted &&
                     this.state.bankSubmitted &&
-                    this.state.billingSubmitted  &&
-                    this.state.smsfSubmitted 
+                    this.state.billingSubmitted 
                 ) {
                     //check if both form is submittef
                     if (!this.props.editEmp) {
@@ -1190,8 +1064,7 @@ class InfoModal extends Component {
                     this.state.kinSubmitted &&
                     this.state.bankSubmitted &&
                     this.state.detailSubmitted &&
-                    this.state.billingSubmitted &&
-                    this.state.smsfSubmitted 
+                    this.state.billingSubmitted 
                 ) {
                     //check if both form is submittef
                     if (!this.props.editEmp) {
@@ -1219,6 +1092,9 @@ class InfoModal extends Component {
                         bankName: bank.name? bank.name: '',
                         bankAccountNo: bank.accountNo? bank.accountNo: '',
                         bankBsb: bank.bsb? bank.bsb: '',
+                        memberNumber: bank.memberNumber,
+                        taxFreeThreshold: bank.taxFreeThreshold,
+                        helpHECS: bank.helpHECS,
                     },
                 },
                 bankSubmitted: true, // level form submitted
@@ -1229,8 +1105,7 @@ class InfoModal extends Component {
                     this.state.kinSubmitted &&
                     this.state.bankSubmitted &&
                     this.state.detailSubmitted &&
-                    this.state.billingSubmitted &&
-                    this.state.smsfSubmitted 
+                    this.state.billingSubmitted 
                 ) {
                     //check if both form is submittef
                     if (!this.props.editEmp) {
@@ -1270,8 +1145,7 @@ class InfoModal extends Component {
                     this.state.kinSubmitted &&
                     this.state.bankSubmitted &&
                     this.state.detailSubmitted &&
-                    this.state.billingSubmitted &&
-                    this.state.smsfSubmitted 
+                    this.state.billingSubmitted 
                 ) {
                     //check if both form is submittef
                     if (!this.props.editEmp) {
@@ -1310,27 +1184,28 @@ class InfoModal extends Component {
     };
 
     getRecord = (id) => {
-        console.log('getRecord');
-        getRecord(id).then(res=>{
+        return getRecord(id).then(res=>{
             if (res.success){
-                console.log(res.smsf);
                 this.basicRef.current.refs.basic_form.setFieldsValue({ basic: res.basic, });
 
                 this.detailRef.current.refs.detail_form.setFieldsValue({ detail: res.detail, });
-
+                
                 this.kinRef.current.refs.kin_form.setFieldsValue({ kin: res.kin, });
-
+                
                 this.bankRef.current.refs.bank_form.setFieldsValue({ bank: res.bank, });
-
+                
                 this.billingRef.current.refs.billing_form.setFieldsValue({ billing: res.billing, })
 
-                this.smsfRef.current.refs.smsf_form.setFieldsValue({ smsf: res.smsf, })
+                this.onFundType(res.detail&& res.detail.superannuationType)
+                return {username: res.basic.username}
+                // this.smsfRef.current.refs.smsf_form.setFieldsValue({ smsf: res.smsf, })
             }
         })
     };
 
     editRecord = (value) => {
         const { editEmp, callBack } = this.props;
+        console.log(value);
         this.setState({
             basicSubmitted: false,
             kinSubmitted: false,
@@ -1387,14 +1262,142 @@ class InfoModal extends Component {
         this.setState({
             sContact: null,
         },()=>{
-            console.log('sameer');
             this.basicRef.current.refs.basic_form.resetFields();
+        })
+    }
+
+    onFundType = (value)=>{
+        const superannuation = [
+            {
+                Placeholder: "Membership / Account",
+                fieldCol: 12,
+                size: "small",
+                type: "Text",
+                labelAlign: "right",
+            },
+            {
+                Placeholder: "USI Number",
+                fieldCol: 12,
+                size: "small",
+                type: "Text",
+                labelAlign: "right",
+            },
+            {
+                object: "detail",
+                fieldCol: 12,
+                key: "superannuationBankAccountOrMembershipNumber",
+                size: "small",
+                type: "Input",
+                itemStyle: { marginBottom: "10px" },
+            },
+            {
+                object: "detail",
+                fieldCol: 12,
+                key: "superannuationAbnOrUsi",
+                size: "small",
+                type: "Input",
+                itemStyle: { marginBottom: "10px" },
+            },
+        ]
+        const smsf = [
+            {
+                Placeholder: "SMSF ABN",
+                fieldCol: 12,
+                size: "small",
+                type: "Text",
+                labelAlign: "right",
+            },
+            {
+                Placeholder: "ESA Address",
+                fieldCol: 12,
+                size: "small",
+                type: "Text",
+                labelAlign: "right",
+            },
+            {
+                object: "detail",
+                fieldCol: 12,
+                key: "superannuationAbnOrUsi",
+                size: "small",
+                type: "Input",
+                itemStyle: { marginBottom: "10px" },
+            },
+            {
+                object: "detail",
+                fieldCol: 12,
+                key: "superannuationAddress",
+                size: "small",
+                type: "Input",
+                itemStyle: { marginBottom: "10px" },
+            },
+            {
+                Placeholder: "Bank Account Name",
+                fieldCol: 12,
+                size: "small",
+                type: "Text",
+                labelAlign: "right",
+            },
+            {
+                Placeholder: "BSB Number",
+                fieldCol: 12,
+                size: "small",
+                type: "Text",
+                labelAlign: "right",
+            },
+            {
+                object: "detail",
+                fieldCol: 12,
+                key: "superannuationBankName",
+                size: "small",
+                type: "Input",
+                itemStyle: { marginBottom: "10px" },
+            },
+            {
+                object: "detail",
+                fieldCol: 12,
+                key: "superannuationBankBsb",
+                size: "small",
+                type: "Input",
+                itemStyle: { marginBottom: "10px" },
+            },
+            {
+                Placeholder: "Bank Account Number",
+                fieldCol: 24,
+                size: "small",
+                type: "Text",
+                labelAlign: "right",
+            },
+            {
+                object: "detail",
+                fieldCol: 12,
+                key: "superannuationBankAccountOrMembershipNumber",
+                size: "small",
+                type: "Input",
+                itemStyle: { marginBottom: "10px" },
+            },
+        ]
+        let { fields } = this.state.DetailFields
+        const { detail } = this.detailRef.current.refs.detail_form.getFieldsValue(); // get the values from from data
+        const { superAnnuationName, superannuationType } = detail
+        if (superannuationType === 'P'){
+            fields.splice(4, fields.length)
+            fields = fields.concat(superannuation)
+        }else if (superannuationType === 'S'){
+            fields.splice(4, fields.length)
+            fields = fields.concat(smsf)
+        }else{
+            fields.splice(4, fields.length)
+        }
+        const details = { superAnnuationName: superAnnuationName, superannuationType: superannuationType }
+        this.detailRef.current.refs.detail_form.setFieldsValue({ detail: details })
+        this.setState({
+            DetailFields: {...this.state.DetailFields, fields,}
         })
     }
 
     render() {
         const { editEmp, visible } = this.props;
-        const { BasicFields, DetailFields, KinFields, BankFields, BillingFields, SmsfFields,  CONTACT, sContact, sUsername } = this.state;
+        const { BasicFields, DetailFields, KinFields, BankFields, BillingFields, SmsfFields,  CONTACT, sContact, sUsername, loading } = this.state;
 
         return (
             <Modal
@@ -1402,10 +1405,9 @@ class InfoModal extends Component {
                 maskClosable={false}
                 centered
                 visible={visible}
-                onOk={() => {
-                    this.submit();
-                }}
-                okText={"Save"}
+                onOk={() => { this.submit(); }}
+                okButtonProps={{ disabled: loading }}
+                okText={loading ?<LoadingOutlined /> :"Save"}
                 onCancel={this.onCancel}
                 width={900}
             >
@@ -1438,9 +1440,9 @@ class InfoModal extends Component {
                             value={sUsername}
                             placeholder="Email"
                             size="small"
+                            type="email"
                             // prefix={<UserOutlined />} 
                             onChange={(e, value)=>{
-                                console.log(e);
                                 this.setState({
                                     sUsername: e.target.value
                                 })
@@ -1485,13 +1487,13 @@ class InfoModal extends Component {
                             FormFields={BankFields}
                         />
                     </TabPane>
-                    <TabPane tab=" SMSF Details" key="SMSF" forceRender>
+                    {/* <TabPane tab=" SMSF Details" key="SMSF" forceRender>
                         <Form
                             ref={this.smsfRef}
                             Callback={this.SmsfCall}
                             FormFields={SmsfFields}
                         />
-                    </TabPane>
+                    </TabPane> */}
                 </Tabs>
             </Modal>
         );

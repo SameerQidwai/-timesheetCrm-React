@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Modal, Tabs } from "antd";
-import { CloseOutlined, PlusSquareOutlined } from "@ant-design/icons"; //Icons
-import moment from "moment";
+import { LoadingOutlined } from "@ant-design/icons"; //Icons
 import Form from "../../components/Core/Form";
 
 import { addList, getRecord, editList } from "../../service/opportunities";
@@ -23,6 +22,7 @@ class InfoModal extends Component {
             datesSubmitted: false,
             billingSubmitted: false,
             check: false,
+            loading: false,
 
             SKILLS: [],
             STATES: [],
@@ -574,6 +574,7 @@ class InfoModal extends Component {
 
     submit = () => {
         //submit button click
+        this.setState({loading: true})
         this.basicRef.current.refs.basic_form.submit();
         this.tenderRef.current.refs.tender_form.submit();
         this.billingRef.current && this.billingRef.current.refs.billing_form.submit();
@@ -745,17 +746,16 @@ class InfoModal extends Component {
 
     render() {
         const { editPro, visible, close } = this.props;
-        const { BasicFields, tenderFields, DatesFields, BillingFields } = this.state
+        const { BasicFields, tenderFields, DatesFields, BillingFields, loading } = this.state
         return (
             <Modal
                 title={editPro? "Edit opportunity" : "Add New opportunity"}
                 maskClosable={false}
                 centered
                 visible={visible}
-                onOk={() => {
-                    this.submit();
-                }}
-                okText={"Save"}
+                onOk={() => { this.submit(); }}
+                okButtonProps={{ disabled: loading }}
+                okText={loading ?<LoadingOutlined /> :"Save"}
                 onCancel={close}
                 width={750}
             >

@@ -1,10 +1,10 @@
-import React, { Component, useState } from "react";
+import React, { Component, useState, useReducer } from "react";
 import { Row, Col, Menu, Button, Dropdown, Descriptions, Table, Popconfirm } from "antd";
 import { SettingOutlined, DownOutlined } from "@ant-design/icons"; //Icons
 import { Link } from "react-router-dom"; 
 
 import ResModal from "./Modals/ResModal";
-import { getRecord, getResources, delResource } from "../../service/opportunities";
+import { getRecord, getLeadSkills, delLeadSkill, delLeadSkillResource, selectLeadSkillResource } from "../../service/opportunities";
 
 import moment from "moment"
 
@@ -60,7 +60,7 @@ class Resource extends Component {
                 title: "Action",
                 key: "action",
                 align: "right",
-                render: (record) => (
+                render: (text, record, index) => (
                     <Dropdown
                         overlay={
                             <Menu>
@@ -74,16 +74,14 @@ class Resource extends Component {
                                 </Menu.Item>
                                 <Menu.Item
                                     onClick={() => {
-                                        console.log(record.id);
-                                        this.setState({ infoModal: true, editRex: record.id, resource: false });
+                                        this.setState({ infoModal: true, editRex: record, resource: false, skillId: false, tableIndex: index });
                                     }}
                                 >
                                     Edit
                                 </Menu.Item>
                                 <Menu.Item 
                                     onClick={() => {
-                                        console.log(record.id);
-                                        this.setState({ infoModal: true, editRex: false, resource: true });
+                                        this.setState({ infoModal: true, skillId: record.id, resource: true, editRex:false, tableIndex: index });
                                     }}
                                 >
                                         Add
@@ -115,7 +113,7 @@ class Resource extends Component {
     }
 
     fetchAll = (id) =>{
-        Promise.all([ getRecord(id), getResources(id)])
+        Promise.all([ getRecord(id), getLeadSkills(id)])
         .then(res => {
             this.setState({
                 desc: res[0].success? res[0].data : {},
@@ -130,13 +128,15 @@ class Resource extends Component {
         })
     }
 
-    getResources = (id) =>{
-        getResources(id).then(res=>{
+    getLeadSkills = (id) =>{
+        getLeadSkills(id).then(res=>{
             if(res.success){
                 this.setState({
                     data: res.data,
                     editRex: false,
                     infoModal: false,
+                    skillId: false,
+                    tableIndex:false
                 })
             }
         })
@@ -147,23 +147,31 @@ class Resource extends Component {
     };
 
     handleDelete = (rId) => {
-        const { id } = this.props.match.params //opputunityId
-        console.log(id);
-        delResource(id, rId).then((res) => {
+        const { leadId } = this.state //opputunityId
+        delLeadSkill(leadId, rId).then((res) => {
             if (res.success) {
-                this.props.history.push('/Employees')
+                this.callBack()
             }
         });
     };
 
-    callBack = () => {
-        const { leadId } = this.state
-        console.log(leadId);
-        this.getResources(leadId)
+    callBack = (value) => {
+        let { leadId, skillId, editRex, tableIndex } = this.state
+        // // let data = this.state.data;
+        // if (editRex){ // edit skill value
+        //     data[tableIndex] = value
+        // }else if (skillId){ // add new Resource in skill
+        //     data[tableIndex].opportunityResourceAllocations = [...data[tableIndex].opportunityResourceAllocations, value] 
+        // }else{
+        //     data = [...data, value]
+        // }
+        // this.setState({data,editRex: false, infoModal: false, skillId: false})
+        this.getLeadSkills(leadId)
     };
 
     render() {
-        const { desc, data, infoModal, editRex, leadId, resource } = this.state;
+        const { desc, data, infoModal, editRex, leadId, resource , skillId} = this.state;
+        console.log(data);
         return (
             <>
                 <Descriptions
@@ -196,8 +204,18 @@ class Resource extends Component {
                     columns={this.columns}
                     dataSource={data}
                     expandable={{
-                        expandedRowRender: record => <NestedTable/>,
-                        rowExpandable: record => record.user.length > 0,
+                        expandedRowRender: record => {
+                            console.log("NESTED TABLE:", record.opportunityResourceAllocations);
+                            return (
+                            <NestedTable 
+                                data={record.opportunityResourceAllocations} 
+                                skill={record.id} 
+                                leadId={leadId} 
+                                panelId={desc.panelId}
+                                callBack={this.callBack}
+                            />)
+                        },
+                        // rowExpandable: record => record.user.length > 0,
                       }}
                     size="small"
                 />
@@ -205,87 +223,56 @@ class Resource extends Component {
                     <ResModal
                         visible={infoModal}
                         editRex={editRex}
-                        leadId = {leadId}
+                        skillId={skillId}
+                        leadId={leadId}
                         panelId = {desc.panelId}
                         close={this.closeModal}
                         callBack={this.callBack}
-                        resource={resource}
                     />
                 )}
+
             </>
         );
     }
 }
 
 
-function NestedTable(key) {
-    // const [data, setData] = useState(
-    //     [
-    //     {
-    //         id: 0,
-    //         code: '001',
-    //         name: 'Ovias Ford',
-    //         sale: 100,
-    //         cost: 50,
-    //         hours: 80,
-    //         selected: true,
-    //     },
-    //     {
-    //         id: 1,
-    //         code: '002',
-    //         name: 'Musab Cavil',
-    //         sale: 200,
-    //         cost: 50,
-    //         hours: 100,
-    //         selected: false,
-    //     },
-    //     {
-    //         id: 2,
-    //         code: '003',
-    //         name: 'Noor Uddin',
-    //         sale: 150,
-    //         cost: 30,
-    //         hours: 150,
-    //         selected: false,
-    //     },
-    // ]
-    // );
-    const data = []
-    for (let i = 0; i < 19; ++i) {
-        data.push({
-            id: i,
-            code: '2014-12-24 23:12:00',
-            name: 'Sameer Ahmed Qidwai',
-            sale: 150,
-            cost: 30,
-            hours: 150,
-        });
-      }
-    const [ visible, setVisible ] = useState(false)
-    const [selectedRowKeys, setSelectedRowKeys] = useState([0])
+function NestedTable(props) {
+    const [data, setData] = useState(props.data);
+    const [visible, setVisible ] = useState(false)
+    const [editRex, setEditRex] = useState(false)
+    const [selectedRowKeys, setSelectedRowKeys] = useState([data.findIndex(el => el.isMarkedAsSelected === true)+1])
     const columns = [
-        { title: 'Code', dataIndex: 'code', key: 'code' },
-        { title: 'Name', dataIndex: 'name', key: 'name' },
-        { title: 'Buy Cost', dataIndex: 'cost', key: 'cost' },
-        { title: 'Billable Hours', dataIndex: 'hours', key: 'hours' },
+        { 
+            title: 'Name', 
+            dataIndex: 'contactPerson', 
+            key: 'contactPerson' ,
+            render: (record) =>(record &&`${record.firstName} ${record.lastName}`)
+        },
+        { title: 'Buy Cost', dataIndex: 'buyingRate', key: 'buyingRate' },
+        { title: 'Sale Cost', dataIndex: 'sellingRate', key: 'sellingRate' },
+        // { title: 'Billable Hours', dataIndex: 'hours', key: 'hours' },
         {
             title: "Action",
             key: "action",
             align: "right",
-            render: (record) => (
+            render: (text, record, index) => (
                 <Dropdown
                     overlay={
                         <Menu>
                             <Menu.Item danger>
                                 <Popconfirm
                                     title="Sure to delete?"
-                                    // onConfirm={() => this.handleDelete(record.id) }
+                                    onConfirm={() => handleDelete(text.id) }
                                 >
                                     Delete
                                 </Popconfirm>
                             </Menu.Item>
                             <Menu.Item
-                                onClick={()=>{setVisible(true)}}
+                                onClick={()=>{
+                                    setEditRex({...text, tableIndex: index})
+                                    setVisible(true)
+                                }}
                             >
                                 Edit
                             </Menu.Item>
@@ -300,17 +287,42 @@ function NestedTable(key) {
         },
     ];
 
+    const handleDelete = (rId) => {
+        const { leadId, skill } = props
+        delLeadSkillResource(leadId, skill, rId).then((res) => {
+            if (res.success) {
+                props.callBack()
+            //     this.props.history.push('/Employees')
+            }
+        });
+    };
+
     const onSelectChange = (selected, Rows) =>  {
+        const { leadId, skill } = props
         console.log(selected, Rows)
         setSelectedRowKeys(selected)
+        selectLeadSkillResource(leadId, skill, Rows[0].id).then(res=>{
+            console.log(res);
+        })
+        // [data.findIndex(el => el.isMarkedAsSelected === true)]
     }
 
-    return <div style={{padding: 10, paddingLeft: 20}}> 
+    const callBack = (value) => {
+        setVisible(false)
+        // if (editRex){
+        //     data[editRex.index] = value
+        //     setData(data)
+        // }else{
+            props.callBack()
+        // }
+    };
+
+    return <div style={{ paddingRight: 20}}> 
         <Table
-            key={key}
+            key={props.skill}
             rowKey={(record) => record.id} 
             columns={columns} 
-            dataSource={data} 
+            dataSource={props.data} 
             pagination={false}
             rowSelection={{
                 type: 'radio',
@@ -318,16 +330,17 @@ function NestedTable(key) {
                 onChange: onSelectChange
             }}
         />
-        <ResModal
+        {visible && <ResModal
             visible={visible}
-            resource
-            // editRex={editRex}
-            // leadId = {leadId}
-            // panelId = {desc.panelId}
+            editRex={editRex}
+            skillId={props.skill}
+            leadId = {props.leadId}
+            panelId = {props.panelId}
             close={()=>{setVisible(false)}}
-            // callBack={this.callBack}
-        />
+            callBack={callBack}
+        />}
     </div>
 };
+
 
 export default Resource;

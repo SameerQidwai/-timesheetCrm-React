@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Table, Menu, Dropdown, Button, Popconfirm, Row, Col, Typography, Modal, } from "antd";
-import { DownOutlined, SettingOutlined, PlusSquareOutlined, } from "@ant-design/icons"; //Icons
+import { DownOutlined, SettingOutlined, PlusSquareOutlined, LoadingOutlined } from "@ant-design/icons"; //Icons
 
 import Form from "../../components/Core/Form";
 import "../styles/table.css";
@@ -58,6 +58,7 @@ class LeaveCategories extends Component {
             data: [],
             openModal: false,
             editTimeoff: false,
+            loading: false,
             FormFields: {
                 formId: "time_off",
                 justify: "center",
@@ -130,6 +131,7 @@ class LeaveCategories extends Component {
     };
 
     submit = () => {
+        this.setState({loading:true})
         this.dynamoForm.current.refs.time_off.submit();
     };
 
@@ -173,7 +175,7 @@ class LeaveCategories extends Component {
     };
 
     render() {
-        const data = this.state.data;
+        const {data, editTimeoff, openModal, loading, FormFields } = this.state;
         const columns = this.columns;
         return (
             <>
@@ -202,16 +204,15 @@ class LeaveCategories extends Component {
                         />
                     </Col>
                 </Row>
-                {this.state.openModal ? (
+                {openModal ? (
                     <Modal
-                        title={ this.state.editTimeoff ? "Edit Leave Category" : "Add Leave Category" }
+                        title={ editTimeoff ? "Edit Leave Category" : "Add Leave Category" }
                         maskClosable={false}
                         centered
-                        visible={ this.state.openModal }
-                        onOk={() => {
-                            this.submit();
-                        }}
-                        okText={"Save"}
+                        visible={ openModal }
+                        onOk={() => { this.submit(); }}
+                        okButtonProps={{ disabled: loading }}
+                        okText={loading ?<LoadingOutlined /> :"Save"}
                         onCancel={() => {
                             this.toggelModal(false);
                         }}
@@ -220,7 +221,7 @@ class LeaveCategories extends Component {
                         <Form
                             ref={this.dynamoForm}
                             Callback={this.Callback}
-                            FormFields={this.state.FormFields}
+                            FormFields={FormFields}
                         />
                     </Modal>
                 ) : null}

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Typography, Row, Col, Popconfirm, Modal, Button, Table, Dropdown, Menu, } from "antd";
-import { SettingOutlined, DownOutlined, PlusSquareOutlined, } from "@ant-design/icons"; //Icons
+import { SettingOutlined, DownOutlined, PlusSquareOutlined, LoadingOutlined} from "@ant-design/icons"; //Icons
 import Forms from "../../../components/Core/Form";
 
 import { getList, addList, delLabel, editLabel } from "../../../service/level";
@@ -55,7 +55,7 @@ class Levels extends Component {
             newSkill: "",
             data: [],
             editLevel: false,
-
+            loading: false,
             FormFields: {
                 formId: "level_form",
                 FormCol: 20,
@@ -107,6 +107,7 @@ class Levels extends Component {
     };
 
     submit = () => {
+        this.setState({loading: true})
         this.levelForm.current.refs.level_form.submit();
     };
 
@@ -148,7 +149,7 @@ class Levels extends Component {
     };
 
     render() {
-        const data = this.state.data;
+        const {data, isVisible, editLevel, FormFields, loading} = this.state;
         return (
             <>
                 <Row justify="space-between">
@@ -175,21 +176,21 @@ class Levels extends Component {
                     dataSource={data}
                     size="small"
                 />
-                {this.state.isVisible && (
+                {isVisible && (
                     <Modal
                         title={
-                            this.state.editLevel ? "Edit Level" : "Add Level"
+                            editLevel ? "Edit Level" : "Add Level"
                         }
                         maskClosable={false}
                         centered
-                        visible={this.state.isVisible}
+                        visible={isVisible}
                         okText={"Save"}
                         width={400}
                         onCancel={() => {
                             this.setState({
                                 isVisible: false, //close
                                 FormFields: {
-                                    ...this.state.FormFields,
+                                    ...FormFields,
                                     initialValues: {},
                                 }, //delete Formfields on Close
                             });
@@ -202,7 +203,7 @@ class Levels extends Component {
                             <Forms
                                 ref={this.levelForm}
                                 Callback={this.Callback}
-                                FormFields={this.state.FormFields}
+                                FormFields={FormFields}
                             />
                         </Row>
                     </Modal>

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { Modal, Tabs, Row, Col, Button, Input } from "antd";
-import { UploadOutlined, PlusSquareFilled, CloseOutlined, } from "@ant-design/icons"; //Icons
+import { Modal } from "antd";
+import { LoadingOutlined } from "@ant-design/icons"; //Icons
 
 import Form from "../../../components/Core/Form";
 
@@ -19,6 +19,7 @@ class BillModal extends Component {
             detailSubmitted: false,
             kinSubmitted: false,
             skillSubmitted: false,
+            loading: false,
             data: {
                 pay_email: "Trigger.payme@oneLm.com",
                 h_rate: "90",
@@ -285,6 +286,7 @@ class BillModal extends Component {
     };
 
     submit = () => {
+        this.setState({loading: true})
         this.billingRef.current && this.billingRef.current.refs.billing_form.submit();
     };
 
@@ -337,7 +339,7 @@ class BillModal extends Component {
 
     render() {
         const { editCntrct, visible, close } = this.props;
-        const { BillingFields } = this.state;
+        const { BillingFields, loading } = this.state;
 
         return (
             <Modal
@@ -346,7 +348,8 @@ class BillModal extends Component {
                 centered
                 visible={visible}
                 onOk={() => { this.submit(); }}
-                okText={"Save"}
+                okButtonProps={{ disabled: loading }}
+                okText={loading ?<LoadingOutlined /> :"Save"}
                 onCancel={close}
                 width={900}
             >

@@ -39,6 +39,7 @@ export const getRecord = (id) => {
                     email: contactPerson.email,
                     address: contactPerson.address,
                     stateId:contactPerson.stateId,
+                    username: data.username
                 }
                 const kin = {
                     nextOfKinDateOfBirth: data.nextOfKinDateOfBirth? moment(data.nextOfKinDateOfBirth) : null,
