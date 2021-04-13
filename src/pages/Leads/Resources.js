@@ -181,11 +181,11 @@ class Resource extends Component {
                     layout="horizontal"
                     // extra={<Button type="primary">Edit</Button>}
                 >
-                    <Item label="First Name">{desc.title}</Item>
-                    <Item label="Last Name">{desc.value}</Item>
-                    <Item label="Phone">{desc.startDate ? moment(desc.startDate).format('ddd DD MM YYYY'): null} </Item>
-                    <Item label="Email">{desc.endDate ? moment(desc.endDate).format('ddd DD MM YYYY'): null}</Item>
-                    <Item label="Address">{desc.bidDate ? moment(desc.bidDate).format('ddd DD MM YYYY'): null}</Item>
+                    <Item label="Title">{desc.title}</Item>
+                    <Item label="Value">{desc.value}</Item>
+                    <Item label="Start Date">{desc.startDate ? moment(desc.startDate).format('ddd DD MM YYYY'): null} </Item>
+                    <Item label="End Date">{desc.endDate ? moment(desc.endDate).format('ddd DD MM YYYY'): null}</Item>
+                    <Item label="Bid Date">{desc.bidDate ? moment(desc.bidDate).format('ddd DD MM YYYY'): null}</Item>
                     {/* <Item label="Gender">{data.gender}</Item> */}
                 </Descriptions>
                 <Row justify="end">
