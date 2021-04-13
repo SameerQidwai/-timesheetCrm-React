@@ -155,7 +155,7 @@ const pageLinks = [
     },
     {
         component: OpportunityResources,
-        link: "/opportunity/resources/:id",
+        link: "/opportunity/:id/resources",
     },
     {
         component: Projects,

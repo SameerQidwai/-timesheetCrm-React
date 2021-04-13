@@ -171,7 +171,7 @@ class Resource extends Component {
 
     render() {
         const { desc, data, infoModal, editRex, leadId, resource , skillId} = this.state;
-        console.log(data);
+        console.log(data)
         return (
             <>
                 <Descriptions
@@ -205,7 +205,6 @@ class Resource extends Component {
                     dataSource={data}
                     expandable={{
                         expandedRowRender: record => {
-                            console.log("NESTED TABLE:", record.opportunityResourceAllocations);
                             return (
                             <NestedTable 
                                 data={record.opportunityResourceAllocations} 
@@ -241,7 +240,7 @@ function NestedTable(props) {
     const [data, setData] = useState(props.data);
     const [visible, setVisible ] = useState(false)
     const [editRex, setEditRex] = useState(false)
-    const [selectedRowKeys, setSelectedRowKeys] = useState([data.findIndex(el => el.isMarkedAsSelected === true)+1])
+    const [selectedRowKeys, setSelectedRowKeys] = useState(data ? [data[data.findIndex(el => el.isMarkedAsSelected === true)].id]: [])
     const columns = [
         { 
             title: 'Name', 
@@ -296,6 +295,7 @@ function NestedTable(props) {
             }
         });
     };
+    console.log(selectedRowKeys)
 
     const onSelectChange = (selected, Rows) =>  {
         const { leadId, skill } = props
