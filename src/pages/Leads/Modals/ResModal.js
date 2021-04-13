@@ -269,8 +269,8 @@ class InfoModal extends Component {
 
     editSkill = (data) => {
         const { editRex, leadId, callBack } = this.props;
-        data.id = editRex
-        editLeadSkill(leadId, editRex, data).then((res) => {
+        data.id = editRex.id
+        editLeadSkill(leadId, editRex.id, data).then((res) => {
             if(res.success){
                 callBack(res.data)
             }
