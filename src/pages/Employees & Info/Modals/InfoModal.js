@@ -17,9 +17,8 @@ class InfoModal extends Component {
         this.billingRef = React.createRef();
         this.detailRef = React.createRef();
         this.kinRef = React.createRef();
-        // this.detailRef = React.createRef();
         this.bankRef = React.createRef();
-        this.smsfRef = React.createRef();
+        this.trainRef = React.createRef();
         
         this.state = {
             editEmp: false,
@@ -28,7 +27,7 @@ class InfoModal extends Component {
             detailSubmitted: false,
             kinSubmitted: false,
             bankSubmitted: false,
-            smsfSubmitted: false,
+            trainSubmitted: false,
             loading: false,
             CONTACT:[],
             sContact: null,
@@ -824,8 +823,8 @@ class InfoModal extends Component {
                 ],
             },
 
-            SmsfFields: {
-                formId: "smsf_form",
+            TrainFields: {
+                formId: "train_form",
                 FormCol: 24,
                 FieldSpace: 24,
                 justifyField: "center",
@@ -833,79 +832,20 @@ class InfoModal extends Component {
                 size: "middle",
                 fields:[
                     {
-                        Placeholder: "SMSF ABN",
-                        fieldCol: 12,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                    },
-                    {
-                        Placeholder: "ESA Address",
-                        fieldCol: 12,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                    },
-                    {
-                        object: "smsf",
-                        fieldCol: 12,
-                        key: "smsfABN",
-                        size: "small",
-                        type: "Input",
-                        itemStyle: { marginBottom: "10px" },
-                    },
-                    {
-                        object: "smsf",
-                        fieldCol: 12,
-                        key: "smsfAddress",
-                        size: "small",
-                        type: "Input",
-                        itemStyle: { marginBottom: "10px" },
-                    },
-                    {
-                        Placeholder: "Bank Account Name",
-                        fieldCol: 12,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                    },
-                    {
-                        Placeholder: "BSB Number",
-                        fieldCol: 12,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                    },
-                    {
-                        object: "smsf",
-                        fieldCol: 12,
-                        key: "smsfBankName",
-                        size: "small",
-                        type: "Input",
-                        itemStyle: { marginBottom: "10px" },
-                    },
-                    {
-                        object: "smsf",
-                        fieldCol: 12,
-                        key: "smsfBankBsb",
-                        size: "small",
-                        type: "Input",
-                        itemStyle: { marginBottom: "10px" },
-                    },
-                    {
-                        Placeholder: "Bank Account Number",
+                        Placeholder: "Training",
                         fieldCol: 24,
                         size: "small",
                         type: "Text",
                         labelAlign: "right",
                     },
                     {
-                        object: "smsf",
-                        fieldCol: 12,
-                        key: "smsfBankAccountNo",
+                        object: "train",
+                        fieldCol: 24,
+                        key: "training",
                         size: "small",
-                        type: "Input",
-                        itemStyle: { marginBottom: "10px" },
+                        mode:{ minRows: 8, maxRows:12},
+                        // rules:[{ required: true }],
+                        type: "Textarea",
                     },
                 ]
             },
@@ -943,7 +883,7 @@ class InfoModal extends Component {
         this.kinRef.current && this.kinRef.current.refs.kin_form.submit();
         this.bankRef.current && this.bankRef.current.refs.bank_form.submit();
         this.billingRef.current && this.billingRef.current.refs.billing_form.submit();
-        // this.smsfRef.current && this.smsfRef.current.refs.smsf_form.submit();
+        this.trainRef.current && this.trainRef.current.refs.train_form.submit();
     };
 
     BasicCall = (vake) => {
@@ -962,8 +902,9 @@ class InfoModal extends Component {
                     this.state.basicSubmitted &&
                     this.state.detailSubmitted &&
                     this.state.kinSubmitted &&
-                    this.state.bankSubmitted &&
-                    this.state.billingSubmitted 
+                    this.state.bankSubmitted && 
+                    this.state.billingSubmitted && 
+                    this.state.trainSubmitted
                 ) {
                     //check if both form is submittef
                     if (!this.props.editEmp) {
@@ -1000,7 +941,8 @@ class InfoModal extends Component {
                     this.state.detailSubmitted &&
                     this.state.kinSubmitted &&
                     this.state.bankSubmitted &&
-                    this.state.billingSubmitted 
+                    this.state.billingSubmitted && 
+                    this.state.trainSubmitted
                 ) {
                     //check if both form is submittef
                     if (!this.props.editEmp) {
@@ -1032,7 +974,8 @@ class InfoModal extends Component {
                     this.state.detailSubmitted &&
                     this.state.kinSubmitted &&
                     this.state.bankSubmitted &&
-                    this.state.billingSubmitted 
+                    this.state.billingSubmitted && 
+                    this.state.trainSubmitted
                 ) {
                     //check if both form is submittef
                     if (!this.props.editEmp) {
@@ -1088,11 +1031,10 @@ class InfoModal extends Component {
                 mergeObj: {
                     ...this.state.mergeObj,
                     ...{
-                        smsfBankAccountId: bank.smsfBankAccountId? bank.smsfBankAccountId: '',
-                        bankName: bank.name? bank.name: '',
-                        bankAccountNo: bank.accountNo? bank.accountNo: '',
-                        bankBsb: bank.bsb? bank.bsb: '',
-                        memberNumber: bank.memberNumber,
+                        bankName: bank.bankName? bank.bankName: '',
+                        bankAccountNo: bank.bankAccountNo? bank.bankAccountNo: '',
+                        bankBsb: bank.bankBsb? bank.bankBsb: '',
+                        tfn: bank.tfn ? bank.tfn: '',
                         taxFreeThreshold: bank.taxFreeThreshold,
                         helpHECS: bank.helpHECS,
                     },
@@ -1105,7 +1047,8 @@ class InfoModal extends Component {
                     this.state.kinSubmitted &&
                     this.state.bankSubmitted &&
                     this.state.detailSubmitted &&
-                    this.state.billingSubmitted 
+                    this.state.billingSubmitted && 
+                    this.state.trainSubmitted
                 ) {
                     //check if both form is submittef
                     if (!this.props.editEmp) {
@@ -1120,24 +1063,18 @@ class InfoModal extends Component {
         );
     };
 
-    SmsfCall = (vake) => {
+    TrainCall = (vake) => {
         // this will work after I get the Object from the form
-        console.log(vake);
-        const { smsf } = vake
+        const { train } = vake
         this.setState(
             {
                 mergeObj: {
                     ...this.state.mergeObj,
                     ...{ // to send the defaut value
-                        smsfName: smsf.smsfName? smsf.smsfName: '', 
-                        smsfABN: smsf.smsfABN? smsf.smsfABN: '',
-                        smsfAddress: smsf.smsfAddress? smsf.smsfAddress: '',
-                        smsfBankName: smsf.smsfBankName? smsf.smsfBankName: '',
-                        smsfBankBsb: smsf.smsfBankBsb? smsf.smsfBankBsb: '',
-                        smsfBankAccountNo: smsf.smsfBankAccountNo? smsf.smsfBankAccountNo: '',
+                        training: train.training? train.training: '', 
                     },
                 },
-                smsfSubmitted: true, // level form submitted
+                trainSubmitted: true, // level form submitted
             },
             () => {
                 if (
@@ -1145,7 +1082,8 @@ class InfoModal extends Component {
                     this.state.kinSubmitted &&
                     this.state.bankSubmitted &&
                     this.state.detailSubmitted &&
-                    this.state.billingSubmitted 
+                    this.state.billingSubmitted && 
+                    this.state.trainSubmitted
                 ) {
                     //check if both form is submittef
                     if (!this.props.editEmp) {
@@ -1172,7 +1110,7 @@ class InfoModal extends Component {
             bankSubmitted: false,
             detailSubmitted: false,
             billingSubmitted: false,
-            smsfSubmitted: false,
+            trainSubmitted: false,
         })
         addList(data).then(res=>{
             console.log(res);
@@ -1196,9 +1134,9 @@ class InfoModal extends Component {
                 
                 this.billingRef.current.refs.billing_form.setFieldsValue({ billing: res.billing, })
 
-                this.onFundType(res.detail&& res.detail.superannuationType)
+                this.trainRef.current.refs.train_form.setFieldsValue({ train: res.train, })
+                this.onFundType(res.detail&& res.detail)
                 return {username: res.basic.username}
-                // this.smsfRef.current.refs.smsf_form.setFieldsValue({ smsf: res.smsf, })
             }
         })
     };
@@ -1212,7 +1150,7 @@ class InfoModal extends Component {
             bankSubmitted: false,
             detailSubmitted: false,
             billingSubmitted: false,
-            smsfSubmitted: false,
+            trainSubmitted: false,
         })
         editList(editEmp, value).then((res) => {
             if(res.success){
@@ -1397,7 +1335,7 @@ class InfoModal extends Component {
 
     render() {
         const { editEmp, visible } = this.props;
-        const { BasicFields, DetailFields, KinFields, BankFields, BillingFields, SmsfFields,  CONTACT, sContact, sUsername, loading } = this.state;
+        const { BasicFields, DetailFields, KinFields, BankFields, BillingFields, TrainFields,  CONTACT, sContact, sUsername, loading } = this.state;
 
         return (
             <Modal
@@ -1480,20 +1418,20 @@ class InfoModal extends Component {
                             FormFields={KinFields}
                         />
                     </TabPane>
-                    <TabPane tab="Banking Details" key="bank" forceRender>
+                    <TabPane tab="Banking/Tax Details" key="bank" forceRender>
                         <Form
                             ref={this.bankRef}
                             Callback={this.BankCall}
                             FormFields={BankFields}
                         />
                     </TabPane>
-                    {/* <TabPane tab=" SMSF Details" key="SMSF" forceRender>
+                    <TabPane tab="Training Detail" key="train" forceRender>
                         <Form
-                            ref={this.smsfRef}
-                            Callback={this.SmsfCall}
-                            FormFields={SmsfFields}
+                            ref={this.trainRef}
+                            Callback={this.TrainCall}
+                            FormFields={TrainFields}
                         />
-                    </TabPane> */}
+                    </TabPane>
                 </Tabs>
             </Modal>
         );

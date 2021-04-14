@@ -47,6 +47,7 @@ export const getRecord = (id) => {
                     superannuationAbnOrUsi: data.superannuationAbnOrUsi,
                     superannuationBankBsb: data.superannuationBankBsb,
                     superannuationAddress: data.superannuationAddress,
+                    superannuationType: data.superannuationType
                 }
                 const kin = {
                     nextOfKinDateOfBirth: data.nextOfKinDateOfBirth? moment(data.nextOfKinDateOfBirth) : null,
@@ -57,15 +58,16 @@ export const getRecord = (id) => {
                     nextOfKinRelation: data.nextOfKinRelation
                 }
                 const bankAccount = data.bankAccounts.length > 0 ? data.bankAccounts[0] : {}
+                console.log(data.bankAccounts);
                 const bank = {
-                    smsfBankAccountId: bankAccount.smsfBankAccountId,
-                    bankName: bankAccount.name,
-                    bankAccountNo: bankAccount.accountNo,
-                    bankBsb: bankAccount.bsb,
-                    memberNumber: data.memberNumber,
-                    taxFreeThreshold: data.taxFreeThreshold,
-                    helpHECS: data.helpHECS,
+                        bankName: bankAccount.name,
+                        bankAccountNo: bankAccount.accountNo,
+                        bankBsb: bankAccount.bsb,
+                        tfn: data.tfn,
+                        taxFreeThreshold: data.taxFreeThreshold,
+                        helpHECS: data.helpHECS,
                 }
+                console.log(bank);
                 const employmentContracts = data.employmentContracts.length >0 ? data.employmentContracts[0] : {}
                 const billing ={
                     employeeId: employmentContracts.employeeId,
@@ -81,10 +83,10 @@ export const getRecord = (id) => {
                     remunerationAmountPer: employmentContracts.remunerationAmountPer,  
                     comments: employmentContracts.comments
                 }
-                const smsf = {
+                const train = {
                     training: data.training,
                 }
-                return {success, data, basic, detail, kin, bank, billing, smsf}
+                return {success, data, basic, detail, kin, bank, billing, train}
             };
         })
         .catch((err) => {
