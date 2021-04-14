@@ -233,17 +233,19 @@ class ProfitLoss extends Component {
         }
     }
     componentDidMount = () =>{
-        console.log(this.props);
         this.Columns()
     }
 
     Columns = () =>{
         const { columns, data } = this.state
         const { billing } = this.props
-        console.log(billing.totalMonths);
+        console.log(billing.cm$);
         const len = billing.totalMonths>0 ? billing.totalMonths : 0
         let month = billing.startDate
-        console.log(billing);
+        let revenue = (billing.discount / len).toFixed(2);
+        let cm = ((revenue * billing.cmPercentage ) / 100).toFixed(2);
+        let cos = (revenue - cm).toFixed(2);
+        console.log(cm);
         let array = []
         for (var i = 1; i <=len; i++){
             array.push(
@@ -271,10 +273,15 @@ class ProfitLoss extends Component {
                     ]
                 },
             )
+            data[0][i] = revenue
+            data[1][i] = cos
+            data[2][i] = cm
+            data[3][i] = billing.cmPercentage
             month = moment(month).add(1, 'months')
         }
         this.setState({
             columns: [...columns, ...array],
+            data
             // billing,
         })
     }
@@ -287,14 +294,13 @@ class ProfitLoss extends Component {
     render(){
         const { data, columns } = this.state
         const { billing } = this.props
-        // this.Columns()
         return (
             <Row justify="center">
                 <Col span={4}>
                     <Title level={5} >Rev - Discount Value</Title>
                 </Col>
                 <Col span={5}>
-                    <Text>$ {billing.discount} / {billing.totalMonths} Months  = $ {billing.discount / billing.totalMonths}</Text>
+                    <Text>$ {billing.discount} / {billing.totalMonths} Months  = $ {(billing.discount / billing.totalMonths).toFixed(2)}</Text>
                 </Col>
                 <Col span={24}>
                     <Row >

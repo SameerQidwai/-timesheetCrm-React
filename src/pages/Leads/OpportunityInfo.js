@@ -25,7 +25,8 @@ class OpportunityInfo extends Component {
             infoModal: false,
             leadId: false,
             data: { },
-            billing: {}
+            billing: {},
+            renderTabs: false
         };
     }
     componentDidMount = ()=>{
@@ -40,7 +41,8 @@ class OpportunityInfo extends Component {
                     data: res.data,
                     billing: res.billing,
                     leadId: id,
-                    infoModal: false
+                    infoModal: false,
+                    renderTabs: true
                 })
             }
         })
@@ -64,7 +66,7 @@ class OpportunityInfo extends Component {
     };
 
     render() {
-        const { data, infoModal, leadId, billing } = this.state;
+        const { data, infoModal, leadId, billing,renderTabs } = this.state;
         const DescTitle = (
             <Row justify="space-between">
                 <Col>Opportunity Basic Information</Col>
@@ -78,8 +80,8 @@ class OpportunityInfo extends Component {
                                     </Popconfirm>
                                 </Menu.Item>
                                 <Menu.Item onClick={() => { 
-                                    // this.setState({ infoModal: true, });
-                                     }} > Edit </Menu.Item>
+                                    this.setState({ infoModal: true, });
+                                    }} > Edit </Menu.Item>
                                 <Menu.Item>
                                     <Link
                                         to={{
@@ -131,27 +133,29 @@ class OpportunityInfo extends Component {
                     <Item label="Bid Date">{data.bidDate ? moment(data.bidDate).format('ddd DD MM YYYY'): null}</Item>
                     {/* <Item label="Gender">{data.gender}</Item> */}
                 </Descriptions>
-                <Tabs
-                    type="card"
-                    style={{ marginTop: "50px" }}
-                    defaultActiveKey="profitloss"   
-                >
-                    <TabPane tab="Comments" key="comments">
-                        <Comments id={leadId} />
-                    </TabPane>
-                    <TabPane tab="Travels" key="travels">
-                        <Travels id={leadId} />
-                    </TabPane>
-                    <TabPane tab="Attachments" key="attachments">
-                        <Attachments />
-                    </TabPane>
-                    <TabPane tab="Bank Account" key="account">
-                        <Bank id={leadId} title={data.name} />
-                    </TabPane>
-                    <TabPane tab="Projected Profit & Loss" key="profitloss">
-                        <ProfitLoss id={leadId} billing={billing} />
-                    </TabPane>
-                </Tabs>
+                {renderTabs &&(
+                    <Tabs
+                        type="card"
+                        style={{ marginTop: "50px" }}
+                        defaultActiveKey="profitloss"   
+                    >
+                        <TabPane tab="Comments" key="comments">
+                            <Comments id={leadId} />
+                        </TabPane>
+                        <TabPane tab="Travels" key="travels">
+                            <Travels id={leadId} />
+                        </TabPane>
+                        <TabPane tab="Attachments" key="attachments">
+                            <Attachments />
+                        </TabPane>
+                        <TabPane tab="Bank Account" key="account">
+                            <Bank id={leadId} title={data.name} />
+                        </TabPane>
+                        <TabPane tab="Projected Profit & Loss" key="profitloss">
+                            <ProfitLoss id={leadId} billing={billing} />
+                        </TabPane>
+                    </Tabs>
+                )}
                 {infoModal && (
                     <InfoModal
                         visible={infoModal}
