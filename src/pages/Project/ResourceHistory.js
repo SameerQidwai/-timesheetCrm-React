@@ -3,7 +3,7 @@ import { Row, Col, Menu, Button, Dropdown, Descriptions, Table, Popconfirm } fro
 import { SettingOutlined, DownOutlined } from "@ant-design/icons"; //Icons
 import { Link } from "react-router-dom"; 
 
-import HistModal from "./HistModal";
+import HistModal from "./Modals/HistModal";
 import { getRecord, getLeadSkills, delLeadSkill } from "../../service/opportunities";
 
 import moment from "moment"

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Api } from "./constant";
 import moment from "moment";
-const url = `${Api}/opportunities`;
+const url = `${Api}/projects`;
 
 export const addList = (data) => {
     return axios
@@ -85,7 +85,7 @@ export const getRecord = (id) => {
                 const manage = {
                     accountDirectorId: data.accountDirectorId,
                     accountManagerId: data.accountManagerId,
-                    opportunityManagerId: data.opportunityManagerId,
+                    projectManagerId: data.projectManagerId,
                 }
                 data.ContactName= data.contactPerson && data.contactPerson.firstName + ' ' + data.contactPerson.lastName
                 return {success, data, basic, tender, billing, dates, manage};
@@ -172,7 +172,19 @@ export const getLeadSkill = (oppId, resId) => {
         .get(url + `/${oppId}/resources/${resId}`)
         .then((res) => {
             const { success, data } = res.data;
-            return {success, data: data[0]}
+            console.log(data);
+            if (success){
+                let obj = {
+                    panelSkillId:  data.panelSkillId,
+                    panelSkillStandardLevelId:  data.panelSkillStandardLevelId,
+                    contactPersonId:  data.opportunityResourceAllocations && data.opportunityResourceAllocations.contactPersonId,
+                    billableHours: data.billableHours,
+                    buyingRate:  data.opportunityResourceAllocations && data.opportunityResourceAllocations.buyingRate,
+                    sellingRate:  data.opportunityResourceAllocations && data.opportunityResourceAllocations.sellingRate,
+                }
+                console.log(obj);
+                return {success, data: data[0]}
+            }
         })
         .catch((err) => {
             return {
@@ -287,38 +299,6 @@ export const selectLeadSkillResource = (oppId, skillId, resId) => {
     console.log(oppId, skillId, resId);
     return axios
         .patch(url + `/${oppId}/resources/${skillId}/allocations/${resId}/mark-as-selected`)
-        .then((res) => {
-            const { success } = res.data;
-            if (success) return {success};
-        })
-        .catch((err) => {
-            return {
-                error: "Please login again!",
-                status: false,
-                message: err.message,
-            };
-        });
-};
-
-export const workIsLost = (oppId) => {
-    return axios
-        .put(url + `/${oppId}/lost`)
-        .then((res) => {
-            const { success } = res.data;
-            if (success) return {success};
-        })
-        .catch((err) => {
-            return {
-                error: "Please login again!",
-                status: false,
-                message: err.message,
-            };
-        });
-};
-
-export const workWon = (oppId, data) => {
-    return axios
-        .put(url + `/${oppId}/win`, data)
         .then((res) => {
             const { success } = res.data;
             if (success) return {success};

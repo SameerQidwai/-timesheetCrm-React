@@ -4,8 +4,8 @@ import { LoadingOutlined } from "@ant-design/icons"; //Icons
 import moment from "moment";
 import Form from "../../../components/Core/Form";
 
-import { addList, getRecord, editList } from "../../../service/opportunities";
-import { getOrganizations, getStates, getOrgPersons, getPanels } from "../../../service/constant-Apis";
+import { addList, getRecord, editList, workWon } from "../../../service/opportunities";
+import { getOrganizations, getStates, getOrgPersons, getPanels, getEmployees } from "../../../service/constant-Apis";
 
 const { TabPane } = Tabs;
 
@@ -16,12 +16,14 @@ class InfoModal extends Component {
         this.tenderRef = React.createRef();
         this.billingRef = React.createRef();
         this.datesRef = React.createRef();
+        this.manageRef = React.createRef();
         this.state = {
             editLead: false,
             basicSubmitted: false,
             tenderSubmitted: false,
             datesSubmitted: false,
             billingSubmitted: false,
+            manageSubmitted: false,
             check: false,
             leadValue: 0,
             SKILLS: [],
@@ -543,7 +545,7 @@ class InfoModal extends Component {
                     {
                         object: "obj",
                         fieldCol: 12,
-                        key: "d_hours",
+                        key: "hoursPerDay",
                         size: "small",
                         // rules:[{ required: true }],
                         type: "InputNumber",
@@ -590,6 +592,76 @@ class InfoModal extends Component {
                 ],
             },
 
+            ManageFields: {
+                formId: "manage_form",
+                FormCol: 24,
+                FieldSpace: 24,
+                justifyField: "center",
+                FormLayout: "inline",
+                size: "middle",
+                fields: [
+                    {
+                        Placeholder: "Account Director",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                    },
+                    {
+                        Placeholder: "Account Manager",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                    },
+                    {
+                        object: "obj",
+                        fieldCol: 12,
+                        key: "accountDirectorId",
+                        size: "small",
+                        data: [],
+                        type: "Select",
+                    },
+                    {
+                        object: "obj",
+                        fieldCol: 12,
+                        key: "accountManagerId",
+                        size: "small",
+                        data: [],
+                        type: "Select",
+                    },
+                    // {
+                    //     Placeholder: "Project Manager",
+                    //     fieldCol: 12,
+                    //     size: "small",
+                    //     type: "Text",
+                    //     labelAlign: "right",
+                    // },
+                    {
+                        Placeholder: "Opportunity Manager",
+                        fieldCol: 24,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                    },
+                    // {
+                    //     object: "obj",
+                    //     fieldCol: 12,
+                    //     key: "proM",
+                    //     size: "small",
+                    //     data: [],
+                    //     type: "Select",
+                    // },
+                    {
+                        object: "obj",
+                        fieldCol: 12,
+                        key: "opportunityManagerId",
+                        size: "small",
+                        data: [],
+                        type: "Select",
+                    },
+                ]
+            }
         };
     }
     componentDidMount = () =>{
@@ -598,23 +670,32 @@ class InfoModal extends Component {
 
     fetchAll = () =>{
         console.log('fetchAll');
-        const { editLead }= this.props;  
-        //
+        const { editLead, project }= this.props;  
+        const { ManageFields } = this.state
         const dates = {entryDate: moment(new Date())}
         this.datesRef.current.refs.dates_form.setFieldsValue({ obj: dates, }); 
         // to set the Default entryDate for new Oppurtunity                              
-                                                                     // either call this or call that
-        Promise.all([ getPanels(), getOrganizations(), getStates(), editLead && this.getRecord(editLead)])
+        if (project){
+            ManageFields.fields[4].Placeholder = "Project Manager"
+            ManageFields.fields[5].key = "projectManagerId"
+            // this.setState ({ManageFields})
+        }
+                                                 // either call this or call that
+        Promise.all([ getPanels(), getOrganizations(), getStates(), editLead && this.getRecord(editLead), getEmployees()])
         .then(res => {
             if (res[1].success) {res[1].data[0].disabled = true}
-            const { BasicFields } = this.state;
-                BasicFields.fields[3].data = res[0].success? res[0].data : [];
-                BasicFields.fields[6].data = res[1].success? res[1].data : [];
-                BasicFields.fields[14].data = res[2].success? res[2].data : [];
-                BasicFields.fields[7].data = res[3].success? res[3].data : [];
-            this.setState({
-                BasicFields,
-            })
+            const { BasicFields, ManageFields } = this.state;
+            BasicFields.fields[3].data = res[0].success? res[0].data : [];
+            BasicFields.fields[6].data = res[1].success? res[1].data : [];
+            BasicFields.fields[14].data = res[2].success? res[2].data : [];
+            BasicFields.fields[7].data = res[3].success? res[3].data : [];
+
+            ManageFields.fields[2].data = res[4].success ? res[4].data: [];
+            ManageFields.fields[3].data = res[4].success ? res[4].data: [];
+            ManageFields.fields[5].data = res[4].success ? res[4].data: [];
+            // ManageFields.fields[7].data = res[4].success ? res[4].data: [];
+            
+            this.setState({ BasicFields, ManageFields })
         })
         .catch(e => {
             console.log(e);
@@ -628,6 +709,7 @@ class InfoModal extends Component {
         this.tenderRef.current.refs.tender_form.submit();
         this.billingRef.current && this.billingRef.current.refs.billing_form.submit();
         this.datesRef.current && this.datesRef.current.refs.dates_form.submit();
+        this.manageRef.current && this.manageRef.current.refs.manage_form.submit();
     };
 
     BasicCall = (vake) => { 
@@ -649,19 +731,15 @@ class InfoModal extends Component {
                 basicSubmitted: true, // skill form submitted
             },
             () => {
-                if (
-                    this.state.basicSubmitted &&
-                    this.state.tenderSubmitted &&
-                    this.state.billingSubmitted &&
-                    this.state.datesSubmitted
-                ) {
+                const { basicSubmitted, tenderSubmitted, billingSubmitted, datesSubmitted, manageSubmitted, mergeObj } = this.state
+                if ( basicSubmitted && tenderSubmitted && billingSubmitted && datesSubmitted && manageSubmitted) {
                     //check if both form is submittef
                     if (!this.props.editLead) {
                         
-                        this.addOpportunity(this.state.mergeObj); //add skill
+                        this.addOpportunity(mergeObj); //add skill
                     } else {
                         
-                        this.editRecord(this.state.mergeObj); //edit skill
+                        this.editProject(mergeObj); //edit skill
                     }
                 }
             }
@@ -683,19 +761,15 @@ class InfoModal extends Component {
                 tenderSubmitted: true, // skill form submitted
             },
             () => {
-                if (
-                    this.state.basicSubmitted &&
-                    this.state.tenderSubmitted &&
-                    this.state.billingSubmitted &&
-                    this.state.datesSubmitted
-                ) {
+                const { basicSubmitted, tenderSubmitted, billingSubmitted, datesSubmitted, manageSubmitted, mergeObj } = this.state
+                if ( basicSubmitted && tenderSubmitted && billingSubmitted && datesSubmitted && manageSubmitted) {
                     //check if both form is submittef
                     if (!this.props.editLead) {
                         
-                        this.addOpportunity(this.state.mergeObj); //add skill
+                        this.addOpportunity(mergeObj); //add skill
                     } else {
                         
-                        this.editRecord(this.state.mergeObj); //edit skill
+                        this.editProject(mergeObj); //edit skill
                     }
                 }
             }
@@ -719,19 +793,15 @@ class InfoModal extends Component {
                 billingSubmitted: true, // level form submitted
             },
             () => {
-                if (
-                    this.state.basicSubmitted &&
-                    this.state.tenderSubmitted &&
-                    this.state.billingSubmitted &&
-                    this.state.datesSubmitted
-                ) {
+                const { basicSubmitted, tenderSubmitted, billingSubmitted, datesSubmitted, manageSubmitted, mergeObj } = this.state
+                if ( basicSubmitted && tenderSubmitted && billingSubmitted && datesSubmitted && manageSubmitted) {
                     //check if both form is submittef
                     if (!this.props.editLead) {
                         
-                        this.addOpportunity(this.state.mergeObj); //add skill
+                        this.addOpportunity(mergeObj); //add skill
                     } else {
                         
-                        this.editRecord(this.state.mergeObj); //edit skill
+                        this.editProject(mergeObj); //edit skill
                     }
                 }
             }
@@ -750,15 +820,48 @@ class InfoModal extends Component {
                 datesSubmitted: true, // level form submitted
             },
             () => {
-                const { basicSubmitted, tenderSubmitted, billingSubmitted, datesSubmitted, mergeObj } = this.state
-                if ( basicSubmitted && tenderSubmitted && billingSubmitted && datesSubmitted ) {
+                const { basicSubmitted, tenderSubmitted, billingSubmitted, datesSubmitted, manageSubmitted, mergeObj } = this.state
+                if ( basicSubmitted && tenderSubmitted && billingSubmitted && datesSubmitted && manageSubmitted) {
                     //check if both form is submittef
                     if (!this.props.editLead) {
                         
                         this.addOpportunity(mergeObj); //add skill
                     } else {
                         
-                        this.editRecord(mergeObj); //edit skill
+                        this.editProject(mergeObj); //edit skill
+                    }
+                }
+            }
+        );
+    };
+
+    ManageCall = (vake) => {
+        // this will work after I get the Object from the form
+        vake = vake.obj
+        
+        this.setState(
+            {
+                mergeObj: {
+                    ...this.state.mergeObj,
+                    ...{
+                        accountDirectorId: vake.accountDirectorId ? vake.accountDirectorId : null,
+                        accountManagerId: vake.accountManagerId ? vake.accountManagerId : null,
+                        opportunityManagerId: vake.opportunityManagerId ? vake.opportunityManagerId : null,
+                        projectManagerId: vake.projectManagerId ? vake.projectManagerId : null,
+                    },
+                },
+                manageSubmitted: true, // level form submitted
+            },
+            () => {
+                const { basicSubmitted, tenderSubmitted, billingSubmitted, datesSubmitted, manageSubmitted, mergeObj } = this.state
+                if ( basicSubmitted && tenderSubmitted && billingSubmitted && datesSubmitted && manageSubmitted) {
+                    //check if both form is submittef
+                    if (!this.props.editLead) {
+                        
+                        this.addOpportunity(mergeObj); //add skill
+                    } else {
+                        
+                        this.editProject(mergeObj); //edit skill
                     }
                 }
             }
@@ -767,8 +870,7 @@ class InfoModal extends Component {
 
     addOpportunity = (value) => {
         const { callBack } = this.props;
-        console.log(value);
-        this.setState({basicSubmitted: false, tenderSubmitted: false, billingSubmitted: false, datesSubmitted: false})
+        this.setState({basicSubmitted: false, tenderSubmitted: false, billingSubmitted: false, datesSubmitted: false, manageSubmitted: false})
         addList(value).then((res) => {
             if(res.success){
                 callBack()
@@ -776,27 +878,46 @@ class InfoModal extends Component {
         });
     };
 
+    editProject = () =>{
+        const { project } = this.props
+        if (project){
+            this.workWon()
+        }else{
+            this.editRecord()
+        }
+    }
+
     getRecord = (id) => {
+        const { ManageFields }= this.state
+        console.log(ManageFields.fields[4], ManageFields.fields[5]);
         return getRecord(id).then((res) => {
             if (res.success){
-                const {basic, tender, billing, dates } = res
+                const { basic, tender, billing, dates, manage } = res
+
                 const contactPersons = getOrgPersons(basic.organizationId)
                 this.basicRef.current.refs.basic_form.setFieldsValue({ obj: basic, });
                 this.tenderRef.current.refs.tender_form.setFieldsValue({ obj: tender, });
                 this.billingRef.current.refs.billing_form.setFieldsValue({ obj: billing, });
                 this.datesRef.current.refs.dates_form.setFieldsValue({ obj: dates, });
+                this.manageRef.current.refs.manage_form.setFieldsValue({ obj: manage, });
                 return contactPersons
             }
         })
 
     };
 
-    editRecord = (data) => {
+    editRecord = () => {
         const { editLead, callBack } = this.props;
-        console.log(this.props);
-        data.id = editLead
-        this.setState({basicSubmitted: false, tenderSubmitted: false, billingSubmitted: false, datesSubmitted: false})
-        editList(data).then((res) => {
+        const { mergeObj } = this.state
+        mergeObj.id = editLead
+        this.setState({
+            basicSubmitted: false, 
+            tenderSubmitted: false, 
+            billingSubmitted: false, 
+            datesSubmitted: false, 
+            manageSubmitted: false
+        })
+        editList(mergeObj).then((res) => {
             console.log(res);
             if(res.success){
                 callBack()
@@ -804,9 +925,28 @@ class InfoModal extends Component {
         });
     };
 
+    workWon = () =>{
+        const { editLead, callBack } = this.props;
+        const { mergeObj } = this.state
+        console.log('workWon');
+        this.setState({
+            basicSubmitted: false, 
+            tenderSubmitted: false, 
+            billingSubmitted: false, 
+            datesSubmitted: false, 
+            manageSubmitted: false
+        })
+        workWon(editLead, mergeObj).then((res) => {
+            console.log(res);
+            if(res.success){
+                callBack()
+            }
+        });
+    }
+
     render() {
         const { editLead, visible, close } = this.props;
-        const { BasicFields, tenderFields, DatesFields, BillingFields, loading } = this.state
+        const { BasicFields, tenderFields, DatesFields, BillingFields, ManageFields, loading } = this.state
         return (
             <Modal
                 title={editLead? "Edit opportunity" : "Add New opportunity"}
@@ -851,6 +991,13 @@ class InfoModal extends Component {
                             ref={this.billingRef}
                             Callback={this.BillingCall}
                             FormFields={BillingFields}
+                        />
+                    </TabPane>                    
+                    <TabPane tab="Manage" key="manage" forceRender>
+                        <Form
+                            ref={this.manageRef}
+                            Callback={this.ManageCall}
+                            FormFields={ManageFields}
                         />
                     </TabPane>                    
                 </Tabs>

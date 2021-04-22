@@ -3,9 +3,9 @@ import { Table, Menu, Dropdown, Button, Popconfirm, Row, Col,Typography, Modal }
 import { DownOutlined, SettingOutlined, PlusSquareOutlined, FilterOutlined} from '@ant-design/icons'; //Icons
 import { Link } from 'react-router-dom'
 
-import InfoModal from './InfoModal'
+import InfoModal from './Modals/InfoModal'
 
-import { getList, delList } from "../../service/opportunities";
+import { getList, delList } from "../../service/projects";
 
 import '../styles/table.css'
 import moment from "moment";
@@ -71,15 +71,13 @@ class Projects extends Component {
                                 })}
                             >Edit</Menu.Item>
                             <Menu.Item >
-                                {/* <Link to={{ pathname: '/admin/calender/holidays' ,query: record.key}} className="nav-link"> */}
+                                <Link to={{ pathname: `/projects/${record.id}/info`}} className="nav-link">
                                     View
-                                {/* </Link> */}
+                                </Link>
                             </Menu.Item >
                              <Menu.Item>
                                 <Link
-                                    to={{
-                                        pathname: `/projects/resources/${record.id}`,
-                                    }}
+                                    to={{ pathname: `/projects/${record.id}/resources`, }}
                                     className="nav-link"
                                 >
                                     Resources
@@ -97,23 +95,22 @@ class Projects extends Component {
         ];
 
         this.state = {
-            data : [
-                {title: 'Service', organization: {name: 'PSO'}, value: '1000.00', startDate: '12 10 2020', endDate: '12 4 2021'},
-                {title: 'Web Application', organization: {name: 'Technologics'}, value: '200000.00', startDate: '12 10 2020', endDate: '12 4 2021'},
-            ],
+            data : [ ],
             openModal: false,
             editPro:false,
         }
     }
 
     componentDidMount = () =>{
-        // this.getList()
+        this.getList()
     }
 
     getList = () =>{
         getList().then(res=>{
             this.setState({
-                data: res.success ? res.data : []
+                data: res.success ? res.data : [],
+                openModal: false,
+                editPro: false
             })
         })
     }
@@ -127,10 +124,7 @@ class Projects extends Component {
     };
 
     callBack =()=>{ // this will work after I get the Object from the form
-        this.setState({
-            openModal: false,
-            editPro: false
-        })
+        this.getList()
     }
 
     closeModal = () =>{

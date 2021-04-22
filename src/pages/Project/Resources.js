@@ -3,8 +3,8 @@ import { Row, Col, Menu, Button, Dropdown, Descriptions, Table, Popconfirm } fro
 import { SettingOutlined, DownOutlined } from "@ant-design/icons"; //Icons
 import { Link } from "react-router-dom"; 
 
-import InfoModal from "./ResModal";
-import { getRecord, getLeadSkills, delLeadSkill } from "../../service/opportunities";
+import ResModal from "./Modals/ResModal";
+import { getRecord, getLeadSkills, delLeadSkill } from "../../service/projects";
 
 import moment from "moment"
 
@@ -17,18 +17,27 @@ class OrgInfo extends Component {
         this.columns = [
             {
                 title: "Skill",
-                dataIndex: "panelSkillId",
-                key: "panelSkillId",
+                dataIndex: "panelSkill",
+                key: "panelSkill",
+                render: (record) =>(
+                    record && record.label
+                )
             },
             {
                 title: "Level",
-                dataIndex: "panelSkillStandardLevelId",
-                key: "panelSkillStandardLevelId",
+                dataIndex: "panelSkillStandardLevel",
+                key: "panelSkillStandardLevel",
+                render: (record)=>(
+                    record && record.levelLabel
+                )
             },
             {
                 title: "Employee Name",
-                dataIndex: "userId",
-                key: "userId",
+                dataIndex: "opportunityResourceAllocations",
+                key: "opportunityResourceAllocations",
+                render: (record)=>(
+                    record && record[0] && record[0].contactPerson && `${record[0].contactPerson.firstName	} ${record[0].contactPerson.lastName	}`
+                )
             },
             {
                 title: "Billable Hours",
@@ -37,24 +46,31 @@ class OrgInfo extends Component {
             },
             {
                 title: "Buy Cost",
-                dataIndex: "buyingRate",
-                key: "buyingRate",
+                dataIndex: "opportunityResourceAllocations",
+                key: "opportunityResourceAllocations",
+                render:(record)=>(
+                    // console.log(record)
+                    record && record[0] && record[0].buyingRate
+                )
             },
             {
                 title: "Sale Cost",
-                dataIndex: "sellingRate",
-                key: "sellingRate",
+                dataIndex: "opportunityResourceAllocations",
+                key: "opportunityResourceAllocations",
+                render:(record)=>(
+                    record && record[0] && record[0].sellingRate
+                )
             },
-            {
-                title: "Start Date",
-                dataIndex: "startDate",
-                key: "startDate",
-            },
-            {
-                title: "End Date",
-                dataIndex: "endDate",
-                key: "endDate",
-            },
+            // {
+            //     title: "Start Date",
+            //     dataIndex: "startDate",
+            //     key: "startDate",
+            // },
+            // {
+            //     title: "End Date",
+            //     dataIndex: "endDate",
+            //     key: "endDate",
+            // },
             {
                 title: "Action",
                 key: "action",
@@ -103,10 +119,10 @@ class OrgInfo extends Component {
             infoModal: false,
             editRex: false,
             ProId: false,
-            data: [
-                {panelSkillId: 'Developer', panelSkillStandardLevelId: 'Senior', userId: 'Faizan', billableHours: '8', buyingRate: '20', sellingRate: '23', startDate: '12 10 2020', endDate: '12 4 2021'},
-                {panelSkillId: 'Designer', panelSkillStandardLevelId: 'Senior', userId: 'Adam', billableHours: 8, buyingRate: 10, sellingRate: 15, startDate: '12 10 2020', endDate: '12 4 2021'},
-            ],
+            // data: [
+            //     {panelSkillId: 'Developer', panelSkillStandardLevelId: 'Senior', userId: 'Faizan', billableHours: '8', buyingRate: '20', sellingRate: '23', startDate: '12 10 2020', endDate: '12 4 2021'},
+            //     {panelSkillId: 'Designer', panelSkillStandardLevelId: 'Senior', userId: 'Adam', billableHours: 8, buyingRate: 10, sellingRate: 15, startDate: '12 10 2020', endDate: '12 4 2021'},
+            // ],
             desc: {title: 'Service', organization: {name: 'PSO'}, value: '1000.00', startDate: '12 10 2020', endDate: '12 4 2021'},
         };
     }
@@ -114,16 +130,18 @@ class OrgInfo extends Component {
     componentDidMount = ()=>{
         const { id } = this.props.match.params
         // console.log(this.props.match.params);
-        // this.fetchAll(id)
+        this.fetchAll(id)
     }
 
     fetchAll = (id) =>{
         Promise.all([ getRecord(id), getLeadSkills(id)])
         .then(res => {
+            console.log(res[1].data[4]);
             this.setState({
                 desc: res[0].success? res[0].data : {},
                 editRex: false,
                 ProId: id,
+                infoModal: false,
                 data: res[1].success? res[1].data : [],
             })
         })
@@ -136,8 +154,9 @@ class OrgInfo extends Component {
         getLeadSkills(id).then(res=>{
             if(res.success){
                 this.setState({
-                    desc: res.data,
-                    editRex: false
+                    data: res.success? res.data : [],
+                    editRex: false,
+                    infoModal: false
                 })
             }
         })
@@ -190,7 +209,7 @@ class OrgInfo extends Component {
                     size="small"
                 />
                 {infoModal && (
-                    <InfoModal
+                    <ResModal
                         visible={infoModal}
                         editRex={editRex}
                         ProId = {ProId}

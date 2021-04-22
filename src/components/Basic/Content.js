@@ -29,6 +29,7 @@ import OpportunityInfo from "../../pages/Leads/OpportunityInfo";
 import OpportunityResources from "../../pages/Leads/Resources";
 
 import Projects from "../../pages/Project/Projects";
+import ProjectInfo from "../../pages/Project/ProjectInfo";
 import ProjectResources from "../../pages/Project/Resources";
 import ResourceHistory from "../../pages/Project/ResourceHistory";
 import Calender from "../Calender/Calender";
@@ -162,12 +163,12 @@ const pageLinks = [
         link: "/projects",
     },
     {
-        component: Projects,
-        link: "/projects/info:id",
+        component: ProjectInfo,
+        link: "/projects/:id/info",
     },
     {
         component: ProjectResources,
-        link: "/projects/resources/:id",
+        link: "/projects/:id/resources",
     },
     {
         component: ResourceHistory,

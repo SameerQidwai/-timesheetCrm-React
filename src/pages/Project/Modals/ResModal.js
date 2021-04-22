@@ -1,16 +1,15 @@
 import React, { Component } from "react";
 import { Modal, Tabs } from "antd";
 import { LoadingOutlined } from "@ant-design/icons"; //Icons
-import moment from "moment";
-import Form from "../../components/Core/Form";
+import Form from "../../../components/Core/Form";
 
-import { addLeadSkill, getLeadSkills, editLeadSkill } from "../../service/opportunities";
-import { getPanelSkills, getStandardLevels, getContactPersons  } from "../../service/constant-Apis";
+import { addLeadSkill, getLeadSkill, editLeadSkill } from "../../../service/projects";
+import { getPanelSkills, getStandardLevels, getContactPersons  } from "../../../service/constant-Apis";
 
 
 const { TabPane } = Tabs;
 
-class InfoModal extends Component {
+class ResModal extends Component {
     constructor() {
         super();
         this.resourceRef = React.createRef();
@@ -19,7 +18,6 @@ class InfoModal extends Component {
             resourceSubmitted: false,
             check: false,
             loading: false,
-
             SKILLS: [],
             STATES: [],
             ORGS: [],
@@ -32,7 +30,71 @@ class InfoModal extends Component {
                 FormLayout: "inline",
                 size: "middle",
                 fields: [
-                   
+                    {
+                        Placeholder: "Skill",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                    {
+                        Placeholder: "Level",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                    {
+                        object: "obj",
+                        fieldCol: 12,
+                        key: 'panelSkillId',
+                        size: "small",
+                        // rules:[{ required: true }],
+                        data: [],
+                        type: "Select",
+                        onChange: function func(e, value) {
+                            const { ResourceFields } = this.state
+                            ResourceFields.fields[3].data = value? value.levels: []
+                            const  { obj } = this.resourceRef.current.refs.resource_form.getFieldsValue() // const
+                            obj['panelSkillStandardLevelId'] = undefined
+                            obj['userId'] = undefined;
+                            this.resourceRef.current.refs.resource_form.setFieldsValue({ obj, })
+                            this.setState({ResourceFields})
+                        }.bind(this),
+                    },
+                    {
+                        object: "obj",
+                        fieldCol: 12,
+                        key: 'panelSkillStandardLevelId',
+                        size: "small",
+                        // rules:[{ required: true }],
+                        data: [],
+                        type: "Select",
+                        onChange: function func(e, value) {
+                            const { ResourceFields } = this.state
+                            getContactPersons().then(res=>{
+                                ResourceFields.fields[6].data = res.success? res.data: []
+                                const { obj } = this.resourceRef.current.refs.resource_form.getFieldsValue() // const
+                                console.log(obj);
+                                obj['userId'] = undefined;
+                                this.resourceRef.current.refs.resource_form.setFieldsValue({ obj, })
+                                this.setState({ResourceFields})
+                            })
+                            
+                        }.bind(this),
+                    },
+
+
+                    {
+                        Placeholder: "Employee",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
                     {
                         Placeholder: "Bill Hours",
                         fieldCol:12,
@@ -40,6 +102,24 @@ class InfoModal extends Component {
                         type: "Text",
                         labelAlign: "right",
                         // itemStyle:{marginBottom:'10px'},
+                    },
+                    {
+                        object: "obj",
+                        fieldCol: 12,
+                        key: 'contactPersonId',
+                        size: "small",
+                        // rules:[{ required: true }],
+                        data: [],
+                        type: "Select",
+                    },
+                    {
+                        object: "obj",
+                        fieldCol: 12,
+                        key: 'billableHours',
+                        size: "small",
+                        // rules:[{ required: true }],
+                        type: "InputNumber",
+                        fieldStyle: { width: "100%" },
                     },
 
                     {
@@ -51,13 +131,12 @@ class InfoModal extends Component {
                         // itemStyle:{marginBottom:'10px'},
                     },
                     {
-                        object: "obj",
+                        Placeholder: "Sale Cost",
                         fieldCol: 12,
-                        key: 'billableHours',
                         size: "small",
-                        // rules:[{ required: true }],
-                        type: "InputNumber",
-                        fieldStyle: { width: "100%" },
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
                     },
                     {
                         object: "obj",
@@ -69,23 +148,6 @@ class InfoModal extends Component {
                         fieldStyle: { width: "100%" },
                     },
                     {
-                        Placeholder: "Sale Cost",
-                        fieldCol: 12,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
-                    },
-                    {
-                        Placeholder: "Start Date",
-                        fieldCol: 12,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
-                    },
-                    
-                    {
                         object: "obj",
                         fieldCol: 12,
                         key: 'sellingRate',
@@ -94,44 +156,6 @@ class InfoModal extends Component {
                         type: "InputNumber",
                         fieldStyle: { width: "100%" },
                     },
-                    {
-                        object: "obj",
-                        fieldCol: 12,
-                        key: "s_date",
-                        size: "small",
-                        type: "DatePicker",
-                        fieldStyle: { width: "100%" },
-                        // rules: [
-                        //     {
-                        //         required: true,
-                        //         message: "Start Date is required",
-                        //     },
-                        // ],
-                    },
-                    {
-                        Placeholder: "End Date",
-                        fieldCol: 24,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
-                    },
-                   
-                    {
-                        object: "obj",
-                        fieldCol: 12,
-                        key: "e_date",
-                        size: "small",
-                        type: "DatePicker",
-                        fieldStyle: { width: "100%" },
-                        // rules: [
-                        //     {
-                        //         required: true,
-                        //         message: "Start Date is required",
-                        //     },
-                        // ],
-                    },
-
                 ],
             },
         };
@@ -166,20 +190,22 @@ class InfoModal extends Component {
     ResourceCall = (vake) => {
         // this will work after I get the Object from the form
         const { editRex } = this.props
+        vake = vake.obj
+        vake.isMarkedAsSelected = true
         if (editRex){
             console.log('edit');
-            this.editRecord(vake.obj)
+            this.editRecord(vake)
 
         }else{
             console.log('add');
-            this.addRecord(vake.obj)
+            this.addRecord(vake)
         }
     };
 
     addRecord = (data) =>{
-        const { proId, callBack } = this.props
-        console.log(proId);
-        addLeadSkill(proId, data).then(res=>{
+        const { ProId, callBack } = this.props
+        console.log(ProId);
+        addLeadSkill(ProId, data).then(res=>{
             if(res.success){
                 callBack()
             }
@@ -188,9 +214,9 @@ class InfoModal extends Component {
     
     
     getRecord = (skills) => {
-        const { proId, editRex } = this.props;
-        console.log(proId, editRex);
-        getLeadSkills(proId, editRex).then((resR) => {
+        const { ProId, editRex } = this.props;
+        console.log(ProId, editRex);
+        getLeadSkill(ProId, editRex).then((resR) => {
             console.log(resR.data);
             if (resR.success){
                 const skillIndex = skills.findIndex(skill =>skill.value === resR.data.panelSkillId)
@@ -207,9 +233,9 @@ class InfoModal extends Component {
     };
 
     editRecord = (data) => {
-        const { editRex, proId, callBack } = this.props;
+        const { editRex, ProId, callBack } = this.props;
         data.id = editRex
-        editLeadSkill(editRex, proId, data).then((res) => {
+        editLeadSkill(editRex, ProId, data).then((res) => {
             if(res.success){
                 callBack()
             }
@@ -241,4 +267,4 @@ class InfoModal extends Component {
     }
 }
 
-export default InfoModal;
+export default ResModal;

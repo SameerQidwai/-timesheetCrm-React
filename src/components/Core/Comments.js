@@ -1,17 +1,6 @@
 import React, { Component } from "react";
 
-import {
-    Row,
-    Col,
-    Comment,
-    Tooltip,
-    Avatar,
-    Popconfirm,
-    Form,
-    Input,
-    List,
-    Upload,
-} from "antd";
+import { Row, Col, Comment, Tooltip, Avatar, Popconfirm, Form, Input, List, Upload, } from "antd";
 
 import moment from "moment";
 

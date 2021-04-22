@@ -128,7 +128,6 @@ export const getOrgPersons = (id) =>{
     });
 }
 
-
 export const getOrganizations = (id) => {
     return axios
         .get(`${Api}/Organizations`)

@@ -21,7 +21,7 @@ class BillModal extends Component {
             loading: false,
             data: {
                 pay_email: "Trigger.payme@oneLm.com",
-                h_rate: "90",
+                h_rate: "90",   
                 mem_ac: "98098",
                 b_ac: "CPAL98304829101",
                 pay_f: "Weekly",

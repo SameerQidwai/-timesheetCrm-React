@@ -11,14 +11,14 @@ import ProfitLoss from "../../components/Core/ProfitLoss";
 
 import InfoModal from "./Modals/InfoModal";
 
-import { getRecord, delList, workIsLost } from "../../service/opportunities";
+import { getRecord, delList } from "../../service/projects";
 
 import moment from "moment"
 
 const { Item } = Descriptions;
 const { TabPane } = Tabs;
 
-class OpportunityInfo extends Component {
+class ProjectInfo extends Component {
     constructor() {
         super();
         this.state = {
@@ -27,7 +27,6 @@ class OpportunityInfo extends Component {
             data: { },
             billing: {},
             renderTabs: false,
-            moveToProject: false,
         };
     }
     componentDidMount = ()=>{
@@ -44,71 +43,44 @@ class OpportunityInfo extends Component {
                     leadId: id,
                     infoModal: false,
                     renderTabs: true,
-                    moveToProject: false,
                 })
             }
         })
     }
 
     closeModal = () => {
-        this.setState({ infoModal: false, moveToProject: false, });
+        this.setState({ infoModal: false });
     };
 
     handleDelete = (id) => {
         delList(id).then((res) => {
             if (res.success) {
-                this.props.history.push('/opportunities')
+                this.props.history.push('/Employees')
             }
         });
     };
 
     callBack = () => {
-        const { leadId, moveToProject } = this.state
-        if (moveToProject){
-            this.props.history.push('/opportunities')
-        }else{
-            this.getRecord(leadId)
-        }
+        const { leadId } = this.state
+        this.getRecord(leadId)
     };
 
     render() {
-        const { data, infoModal, leadId, billing, renderTabs, moveToProject } = this.state;
+        const { data, infoModal, leadId, billing, renderTabs } = this.state;
         const DescTitle = (
             <Row justify="space-between">
-                <Col>Opportunity Basic Information</Col>
+                <Col>Project Basic Information</Col>
                 <Col>
                     <Dropdown
                         overlay={
                             <Menu>
-                                <Menu.Item>
-                                    <Popconfirm 
-                                        title="Opportunity is Done!?" 
-                                        onConfirm={() => {
-                                            this.setState({ infoModal: true, moveToProject: true});
-                                        }}
-                                        okText="Yes"
-                                        cancelText="No" 
-                                    >
-                                        Won
-                                    </Popconfirm>
-                                </Menu.Item>
-                                <Menu.Item>
-                                    <Popconfirm 
-                                        title="Opportunity Lost!?" 
-                                        onConfirm={() => { workIsLost(leadId) }}
-                                        okText="Yes"
-                                        cancelText="No"  
-                                    >
-                                        Lost
-                                    </Popconfirm>
-                                </Menu.Item>
                                 <Menu.Item onClick={() => { 
                                     this.setState({ infoModal: true});
                                     }} > Edit </Menu.Item>
                                 <Menu.Item>
                                     <Link
                                         to={{
-                                            pathname: `/opportunity/${leadId}/resources`,
+                                            pathname: `/projects/${leadId}/resources`,
                                         }}
                                         className="nav-link"
                                     >
@@ -182,8 +154,7 @@ class OpportunityInfo extends Component {
                 {infoModal && (
                     <InfoModal
                         visible={infoModal}
-                        editLead={leadId}
-                        project={moveToProject}
+                        editPro={leadId}
                         close={this.closeModal}
                         callBack={this.callBack}
                     />
@@ -193,4 +164,4 @@ class OpportunityInfo extends Component {
     }
 }
 
-export default OpportunityInfo;
+export default ProjectInfo;
