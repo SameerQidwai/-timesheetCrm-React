@@ -148,22 +148,6 @@ class BillModal extends Component {
                         // ],
                         itemStyle: { marginBottom: 1 },
                     },
-                    // {
-                    //     object: "billing",
-                    //     fieldCol: 12,
-                    //     key: "GST",
-                    //     size: "small",
-                    //     type: "InputNumber",
-                    //     shape: "$",
-                    //     fieldStyle: { width: "100%" },
-                    //     // rules: [
-                    //     //     {
-                    //     //         required: true,
-                    //     //         message: "How much he Cost",
-                    //     //     },
-                    //     // ],
-                    //     itemStyle: { marginBottom: 1 },
-                    // },
                     {
                         Placeholder: "Comments",
                         fieldCol: 24,
@@ -180,77 +164,6 @@ class BillModal extends Component {
                         type: "Textarea",
                         itemStyle: { marginBottom: 1 },
                     },
-                    // {
-                    //     Placeholder: "Payslip Email",
-                    //     fieldCol: 12,
-                    //     size: "small",
-                    //     type: "Text",
-                    //     labelAlign: "right",
-                    //     // itemStyle:{marginBottom:'10px'},
-                    // },
-                    // {
-                    //     Placeholder: "Work Hours In a Day",
-                    //     fieldCol: 12,
-                    //     size: "small",
-                    //     type: "Text",
-                    //     labelAlign: "right",
-                    //     // itemStyle:{marginBottom:'10px'},
-                    // },
-                    // {
-                    //     object: "billing",
-                    //     fieldCol: 12,
-                    //     key: "payslipEmail",
-                    //     size: "small",
-                    //     type: "input",
-                    //     // rules: [
-                    //     //     {
-                    //     //         required: true,
-                    //     //         message: "Payment Email is required",
-                    //     //     },
-                    //     // ],
-                    //     itemStyle: { marginBottom: 1 },
-                    // },
-                    // {
-                    //     object: "billing",
-                    //     fieldCol: 12,
-                    //     key: "noOfHours",
-                    //     size: "small",
-                    //     type: "InputNumber",
-                    //     // shape: " Hours",
-                    //     fieldStyle: { width: "100%" },
-                    //     // rules: [
-                    //     //     {
-                    //     //         required: true,
-                    //     //         message: "How much he Cost",
-                    //     //     },
-                    //     // ],
-                    //     itemStyle: { marginBottom: 1 },
-                    // },
-                    // {
-                    //     Placeholder: "Remuneration Amount",
-                    //     fieldCol: 12,
-                    //     size: "small",
-                    //     type: "Text",
-                    //     labelAlign: "right",
-                    //     // itemStyle:{marginBottom:'10px'},
-                    // },
-                    
-                    // {
-                    //     object: "billing",
-                    //     fieldCol: 12,
-                    //     key: "remunerationAmount",
-                    //     size: "small",
-                    //     type: "InputNumber",
-                    //     shape: "$",
-                    //     fieldStyle: { width: "100%" },
-                    //     // rules: [
-                    //     //     {
-                    //     //         required: true,
-                    //     //         message: "How much he Cost",
-                    //     //     },
-                    //     // ],
-                    //     itemStyle: { marginBottom: 1 },
-                    // },
                     
                 ],
             },

@@ -150,7 +150,7 @@ class InfoModal extends Component {
                         fieldCol: 12,
                         key: "title",
                         size: "small",
-                        // rules:[{ required: true }],
+                        // rules:[{ required: true, type: 'email', message: 'Important' }],
                         type: "Input",
                     },
                     {

@@ -10,7 +10,7 @@ import { getPanelSkills, getStandardLevels, getEmployees, getSubContractors  } f
 
 const { TabPane } = Tabs;
 
-class InfoModal extends Component {
+class ResModal extends Component {
     constructor() {
         super();
         this.resourceRef = React.createRef();
@@ -41,7 +41,7 @@ class InfoModal extends Component {
                         // itemStyle:{marginBottom:'10px'},
                     },
                     {
-                        Placeholder: "Buy Cost",
+                        Placeholder: "Effort Rate",
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -60,20 +60,72 @@ class InfoModal extends Component {
                     {
                         object: "obj",
                         fieldCol: 12,
-                        key: 'buyingRate',
+                        key: 'effortRate',
                         size: "small",
-                        // rules:[{ required: true }],
                         type: "InputNumber",
                         fieldStyle: { width: "100%" },
-                    },                   
+                        rangeMin: 0,
+                        rangeMax: 100,
+                    },
                     {
-                        Placeholder: "Sale Cost",
-                        fieldCol: 24,
+                        Placeholder: "Start Date",
+                        fieldCol: 12,
                         size: "small",
                         type: "Text",
                         labelAlign: "right",
                         // itemStyle:{marginBottom:'10px'},
                     },
+                    {
+                        Placeholder: "End Date",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                    {
+                        object: "obj",
+                        fieldCol: 12,
+                        key: 'startDate',
+                        size: "small",
+                        // rules:[{ required: true }],
+                        type: "DatePicker",
+                        fieldStyle: { width: "100%" },
+                    }, 
+                    {
+                        object: "obj",
+                        fieldCol: 12,
+                        key: 'endDate',
+                        size: "small",
+                        // rules:[{ required: true }],
+                        type: "DatePicker",
+                        fieldStyle: { width: "100%" },
+                    },
+                    {
+                        Placeholder: "Buy Cost",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                    {
+                        Placeholder: "Sale Cost",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                    {
+                        object: "obj",
+                        fieldCol: 12,
+                        key: 'buyingRate',
+                        size: "small",
+                        // rules:[{ required: true }],
+                        type: "InputNumber",
+                        fieldStyle: { width: "100%" },
+                    }, 
                     {
                         object: "obj",
                         fieldCol: 12,
@@ -179,11 +231,15 @@ class InfoModal extends Component {
             const { ResourceFields } = this.state
             const { editRex } = this.props
             if(editRex){
+                console.log(editRex);
                 const obj = {
                     contactPersonId: editRex.contactPersonId,
                     billableHours: editRex.billableHours,
-                    buyingRate: editRex.buyingRate,
                     sellingRate: editRex.sellingRate,
+                    effortRate: editRex.effortRate,
+                    buyingRate: editRex.buyingRate,
+                    endDate: editRex.endDate ? moment(editRex.endDate): null,
+                    startDate: editRex.startDate ? moment(editRex.startDate): null,
                 }
                 this.resourceRef.current.refs.resource_form.setFieldsValue({ obj, })
             }
@@ -209,7 +265,7 @@ class InfoModal extends Component {
                 const obj = {
                     panelSkillId: editRex.panelSkillId,
                     panelSkillStandardLevelId: editRex.panelSkillStandardLevelId,
-                    billableHours: editRex.billableHours
+                    billableHours: editRex.billableHours,
                 }
                 this.resourceRef.current.refs.resource_form.setFieldsValue({ obj, })
             }
@@ -312,4 +368,4 @@ class InfoModal extends Component {
     }
 }
 
-export default InfoModal;
+export default ResModal;

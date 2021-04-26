@@ -5,16 +5,11 @@ class Bank extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: {
-                // title: "Musab",
-                // bank: "Bank of United",
-                // acc_no: "BOU7XXXXXXXXX",
-                // bsb: "",
-            },
+            data: props.bank
         };
     }
     componentDidMount = () => {
-        console.log("Bank", this.props);
+        console.log("Bank", this.state.data, this.props);
     };
     render() {
         const { data } = this.state;
@@ -27,10 +22,10 @@ class Bank extends Component {
                 layout="horizontal"
                 // extra={<Button type="primary">Edit</Button>}
             >
-                <Item label="Account Title">{data.title}</Item>
-                <Item label="Bank Name">{data.bank} </Item>
-                <Item label="Account Number">{data.acc_no} </Item>
-                <Item label="BSB">{data.bsb}</Item>
+                {/* <Item label="Account Title">{data.title}</Item> */}
+                <Item label="Bank Name">{data.bankName} </Item>
+                <Item label="Account Number">{data.bankAccountNo} </Item>
+                <Item label="BSB">{data.bankBsb}</Item>
             </Descriptions>
         );
     }

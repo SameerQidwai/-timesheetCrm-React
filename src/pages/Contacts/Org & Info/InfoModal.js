@@ -621,7 +621,6 @@ class InfoModal extends Component {
                     },
                 ],
             },
-
             FutureFields: {
                 //creating Component
                 formId: "future_form",
@@ -880,6 +879,7 @@ class InfoModal extends Component {
     FutureCall = (vake) => {
         // this will work after I get the Object from the form
         vake = vake.obj
+        console.log(vake);
         this.setState(
             {
                 mergeObj: {

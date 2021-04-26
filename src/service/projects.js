@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Api } from "./constant";
 import moment from "moment";
+import ListBody from "antd/lib/transfer/ListBody";
 const url = `${Api}/projects`;
 
 export const addList = (data) => {
@@ -167,9 +168,9 @@ export const getLeadSkills = (id)=>{
         });
 };
 
-export const getLeadSkill = (oppId, resId) => {
+export const getLeadSkill = (proId, resId) => {
     return axios
-        .get(url + `/${oppId}/resources/${resId}`)
+        .get(url + `/${proId}/resources/${resId}`)
         .then((res) => {
             const { success, data } = res.data;
             console.log(data);
@@ -177,13 +178,16 @@ export const getLeadSkill = (oppId, resId) => {
                 let obj = {
                     panelSkillId:  data.panelSkillId,
                     panelSkillStandardLevelId:  data.panelSkillStandardLevelId,
-                    contactPersonId:  data.opportunityResourceAllocations && data.opportunityResourceAllocations.contactPersonId,
+                    contactPersonId:  data.opportunityResourceAllocations[0] && data.opportunityResourceAllocations[0].contactPersonId,
                     billableHours: data.billableHours,
-                    buyingRate:  data.opportunityResourceAllocations && data.opportunityResourceAllocations.buyingRate,
-                    sellingRate:  data.opportunityResourceAllocations && data.opportunityResourceAllocations.sellingRate,
+                    buyingRate:  data.opportunityResourceAllocations[0] && data.opportunityResourceAllocations[0].buyingRate,
+                    sellingRate:  data.opportunityResourceAllocations[0] && data.opportunityResourceAllocations[0].sellingRate,
+                    startDate: data.opportunityResourceAllocations[0] && data.opportunityResourceAllocations[0].startDate,
+                    endDate: data.opportunityResourceAllocations[0] && data.opportunityResourceAllocations[0].endDate,
+                    effortRate: data.opportunityResourceAllocations[0] && data.opportunityResourceAllocations[0].effortRate,
+                    allocationId: data.opportunityResourceAllocations[0] && data.opportunityResourceAllocations[0].id
                 }
-                console.log(obj);
-                return {success, data: data[0]}
+                return {success, data: obj}
             }
         })
         .catch((err) => {
@@ -195,9 +199,11 @@ export const getLeadSkill = (oppId, resId) => {
         });
 };
 
-export const editLeadSkill = (oppId, resId, data) => {
+export const editLeadSkill = (proId, resId, data) => {
+    console.log(proId, resId, data);
+    // return { success: false }
     return axios
-        .put(url + `/${oppId}/resources/${resId}`, data)
+        .put(url + `/${proId}/resources/${resId}`, data)
         .then((res) => {
             const { success, data } = res.data;
             if (success) return {success, data: data[0]};
@@ -211,10 +217,10 @@ export const editLeadSkill = (oppId, resId, data) => {
         });
 };
 
-export const delLeadSkill = (oppId, resId) => {
-    console.log(oppId, resId);
+export const delLeadSkill = (proId, resId) => {
+    console.log(proId, resId);
     return axios
-        .delete(url + `/${oppId}/resources/${resId}`)
+        .delete(url + `/${proId}/resources/${resId}`)
         .then((res) => {
             const { success } = res.data;
             console.log(res);
@@ -229,9 +235,9 @@ export const delLeadSkill = (oppId, resId) => {
         });
 };
 
-export const addLeadSkillResource = (oppId, skillId,  data) => {
+export const addLeadSkillResource = (proId, skillId,  data) => {
     return axios
-        .post(url + `/${oppId}/resources/${skillId}/allocations`, data)
+        .post(url + `/${proId}/resources/${skillId}/allocations`, data)
         .then((res) => {
             const { success, data } = res.data;
             console.log(data);
@@ -246,9 +252,9 @@ export const addLeadSkillResource = (oppId, skillId,  data) => {
         });
 };
 
-export const getLeadSkillResource = (oppId,skillId, resId) => {
+export const getLeadSkillResource = (proId,skillId, resId) => {
     return axios
-        .get(url + `/${oppId}/resources/${skillId}/allocations/${resId}`)
+        .get(url + `/${proId}/resources/${skillId}/allocations/${resId}`)
         .then((res) => {
             const { success, data } = res.data;
             return {success, data}
@@ -262,10 +268,10 @@ export const getLeadSkillResource = (oppId,skillId, resId) => {
         });
 };
 
-export const editLeadSkillResource = (oppId, skillId, resId, data) => {
-    console.log({oppId, skillId, resId, data});
+export const editLeadSkillResource = (proId, skillId, resId, data) => {
+    console.log({proId, skillId, resId, data});
     return axios
-        .put(url + `/${oppId}/resources/${skillId}/allocations/${resId}`, data)
+        .put(url + `/${proId}/resources/${skillId}/allocations/${resId}`, data)
         .then((res) => {
             const { success, data } = res.data;
             if (success) return {success, data};
@@ -279,9 +285,9 @@ export const editLeadSkillResource = (oppId, skillId, resId, data) => {
         });
 };
 
-export const delLeadSkillResource = (oppId, skillId, resId,) => {
+export const delLeadSkillResource = (proId, skillId, resId,) => {
     return axios
-        .delete(url + `/${oppId}/resources/${skillId}/allocations/${resId}`)
+        .delete(url + `/${proId}/resources/${skillId}/allocations/${resId}`)
         .then((res) => {
             const { success } = res.data;
             if (success) return {success};
@@ -295,10 +301,100 @@ export const delLeadSkillResource = (oppId, skillId, resId,) => {
         });
 };
 
-export const selectLeadSkillResource = (oppId, skillId, resId) => {
-    console.log(oppId, skillId, resId);
+export const selectLeadSkillResource = (proId, skillId, resId) => {
+    console.log(proId, skillId, resId);
     return axios
-        .patch(url + `/${oppId}/resources/${skillId}/allocations/${resId}/mark-as-selected`)
+        .patch(url + `/${proId}/resources/${skillId}/allocations/${resId}/mark-as-selected`)
+        .then((res) => {
+            const { success } = res.data;
+            if (success) return {success};
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                status: false,
+                message: err.message,
+            };
+        });
+};
+
+export const addOrder = (proId, data) => {
+    console.log(proId, data);
+    return axios
+        .post(url + `/${proId}/purchaseOrders`, data)
+        .then((res) => {
+            const { success } = res.data;
+            if (success) return {success};
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                status: false,
+                message: err.message,
+            };
+        });
+};
+
+export const getOrders = (proId) => {
+    console.log(proId);
+    return axios
+        .get(url + `/${proId}/purchaseOrders`)
+        .then((res) => {
+            const { success, data } = res.data;
+            console.log(res.data);
+            if (success) return { success: success, data: data };
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                success: false,
+                message: err.message,
+            };
+        });
+};
+
+export const editOrder = (proId, id, data) => {
+    return axios
+        .put(url + `/${proId}/purchaseOrders/${id}`, data)
+        .then((res) => {
+            const { success } = res.data;
+            if (success) return {success};
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                status: false,
+                message: err.message,
+            };
+        });
+};
+
+
+export const getOrder = (proId,id) => {
+    return axios
+        .get(url + `/${proId}/purchaseOrders/${id}`)
+        .then((res) => {
+            const { success, data } = res.data;
+            if (success) {
+               const obj = {...data,
+                    issueDate: data.issueDate ? moment(data.issueDate): null,
+                    expiryDate: data.expiryDate ? moment(data.expiryDate): null
+                }
+                return {success, data: obj };
+            }
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                status: false,
+                message: err.message,
+            };
+        });
+};
+
+export const delOrder = (id) => {
+    return axios
+        .delete(url + `/${id}`)
         .then((res) => {
             const { success } = res.data;
             if (success) return {success};

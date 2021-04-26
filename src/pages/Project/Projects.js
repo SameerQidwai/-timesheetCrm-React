@@ -75,6 +75,11 @@ class Projects extends Component {
                                     View
                                 </Link>
                             </Menu.Item >
+                            <Menu.Item >
+                                <Link to={{ pathname: `/projects/${record.id}/purchase-order`}} className="nav-link">
+                                    Purchase Order
+                                </Link>
+                            </Menu.Item >
                              <Menu.Item>
                                 <Link
                                     to={{ pathname: `/projects/${record.id}/resources`, }}

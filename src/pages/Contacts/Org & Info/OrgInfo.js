@@ -21,17 +21,8 @@ class OrgInfo extends Component {
         this.state = {
             infoModal: false,
             editOrg: false,
-            data: {
-                key: 2,
-                EBA: "89898987",
-                address: "New York",
-                contact: "+923316785557",
-                contactName: "Farukh",
-                email: "son's@g.com",
-                name: "Musab & sons ",
-                phone: "+921218967889",
-                website: "M&S.com.us",
-            },
+            data: { },
+            bank: {}
         };
     }
     closeModal = () => {
@@ -56,7 +47,7 @@ class OrgInfo extends Component {
         getOrgRecord(id).then((res) => {
             console.log(res.data);
             if(res.success){
-                this.setState({data: res.data})
+                this.setState({data: res.data,bank: res.bank})
             }
         })
     }
@@ -69,7 +60,7 @@ class OrgInfo extends Component {
     };
 
     render() {
-        const { data, infoModal, editOrg } = this.state;
+        const { data, bank, infoModal, editOrg } = this.state;
         const DescTitle = (
             <Row justify="space-between">
                 <Col>{data.name}</Col>
@@ -138,7 +129,7 @@ class OrgInfo extends Component {
                         <ChildOrg {...this.props.match.params} />
                     </TabPane>
                     <TabPane tab="Bank Account" key="5">
-                        <Bank {...this.props.match.params} title={data.name} />
+                        <Bank {...this.props.match.params} title={data.name} bank={bank} />
                     </TabPane>
                 </Tabs>
                 {infoModal && (

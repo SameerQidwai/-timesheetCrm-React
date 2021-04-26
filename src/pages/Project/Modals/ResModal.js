@@ -21,7 +21,7 @@ class ResModal extends Component {
             SKILLS: [],
             STATES: [],
             ORGS: [],
-
+            data: {},
             ResourceFields: {
                 formId: "resource_form",
                 FormCol: 24,
@@ -85,10 +85,8 @@ class ResModal extends Component {
                             
                         }.bind(this),
                     },
-
-
                     {
-                        Placeholder: "Employee",
+                        Placeholder: "Resource",
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -96,8 +94,8 @@ class ResModal extends Component {
                         // itemStyle:{marginBottom:'10px'},
                     },
                     {
-                        Placeholder: "Bill Hours",
-                        fieldCol:12,
+                        Placeholder: "Effort Rate",
+                        fieldCol: 12,
                         size: "small",
                         type: "Text",
                         labelAlign: "right",
@@ -115,13 +113,47 @@ class ResModal extends Component {
                     {
                         object: "obj",
                         fieldCol: 12,
-                        key: 'billableHours',
+                        key: 'effortRate',
                         size: "small",
-                        // rules:[{ required: true }],
                         type: "InputNumber",
                         fieldStyle: { width: "100%" },
+                        rangeMin: 0,
+                        rangeMax: 100,
                     },
-
+                    {
+                        Placeholder: "Start Date",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                    {
+                        Placeholder: "End Date",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                    {
+                        object: "obj",
+                        fieldCol: 12,
+                        key: 'startDate',
+                        size: "small",
+                        // rules:[{ required: true }],
+                        type: "DatePicker",
+                        fieldStyle: { width: "100%" },
+                    }, 
+                    {
+                        object: "obj",
+                        fieldCol: 12,
+                        key: 'endDate',
+                        size: "small",
+                        // rules:[{ required: true }],
+                        type: "DatePicker",
+                        fieldStyle: { width: "100%" },
+                    },
                     {
                         Placeholder: "Buy Cost",
                         fieldCol: 12,
@@ -146,7 +178,7 @@ class ResModal extends Component {
                         // rules:[{ required: true }],
                         type: "InputNumber",
                         fieldStyle: { width: "100%" },
-                    },
+                    }, 
                     {
                         object: "obj",
                         fieldCol: 12,
@@ -217,7 +249,7 @@ class ResModal extends Component {
         const { ProId, editRex } = this.props;
         console.log(ProId, editRex);
         getLeadSkill(ProId, editRex).then((resR) => {
-            console.log(resR.data);
+            // console.log(resR.data);
             if (resR.success){
                 const skillIndex = skills.findIndex(skill =>skill.value === resR.data.panelSkillId)
                 getContactPersons().then(resP=>{
@@ -225,7 +257,7 @@ class ResModal extends Component {
                     ResourceFields.fields[3].data = skills[skillIndex] ? skills[skillIndex].levels : []
                     ResourceFields.fields[6].data = resP.success? resP.data: []
                     this.resourceRef.current.refs.resource_form.setFieldsValue({ obj: resR.data })
-                    this.setState({ResourceFields})
+                    this.setState({ ResourceFields, allocationId: resR.data.allocationId })
                 })
             }
         })
@@ -247,11 +279,11 @@ class ResModal extends Component {
         const { ResourceFields, loading } = this.state
         return (
             <Modal
-                title={editRex? "Edit opportunity" : "Add Resource"}
+                title={editRex? "Edit Resource" : "Add Resource"}
                 maskClosable={false}
                 centered
                 visible={visible}
-                onOk={() => { this.submit(); }}
+                onOk={() => { this.submit(); }} 
                 okButtonProps={{ disabled: loading }}
                 okText={loading ?<LoadingOutlined /> :"Save"}
                 onCancel={close}

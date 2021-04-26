@@ -25,3 +25,75 @@ Upload Files
 today's meeting
 
 ek to kaam pata chal gaya k hr resource k lye 3 fields add krni han aur PO ki taraf start lena hai. baki baad me discuss krlenge
+
+
+Add required:
+    Contact person:
+        Basic 
+            names
+            gender 
+            staet
+
+        clearnce
+            if level is selected all
+
+    Organisation
+        Basic
+            Name:
+            Bussine Type
+
+        insuranace 
+             if insurer required remaning 
+
+        
+        
+
+    Employee
+        contract
+            all fields other than email and comments
+        personal
+            conact person Id
+            usermane
+        superanaution 
+            All fields if Account Type is selected
+
+        Bank 
+            if anyone required all only bacnks fields
+
+    Contractor
+        personal
+            contact person id
+            uersame
+        contract 
+            all fieldsa other than comments
+
+    opportuinty
+        Info
+            delete field opp id
+            Panel
+            Organi
+            Name
+            Type
+
+        resource
+            skill
+                all
+            resource
+                all
+
+    Project
+        DATE iNFO
+            Bid date field remove
+            start date 
+            daily hours
+        forecaste
+            go
+            get
+            go/get
+            dicounted value 
+            upside value
+
+        Resources
+            History hide
+            delete remove
+

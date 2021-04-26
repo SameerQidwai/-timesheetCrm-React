@@ -32,6 +32,7 @@ import Projects from "../../pages/Project/Projects";
 import ProjectInfo from "../../pages/Project/ProjectInfo";
 import ProjectResources from "../../pages/Project/Resources";
 import ResourceHistory from "../../pages/Project/ResourceHistory";
+import PurchaseOrder from "../../pages/Project/PurchaseOrder";
 import Calender from "../Calender/Calender";
 
 const { Content } = Layout;
@@ -104,7 +105,7 @@ const pageLinks = [
     },
     {
         component: OrgInfo,
-        link: "/organisations/info/:id",
+        link: "/organisations/:id/info",
     },
     {
         component: Contact,
@@ -165,6 +166,10 @@ const pageLinks = [
     {
         component: ProjectInfo,
         link: "/projects/:id/info",
+    },
+    {
+        component: PurchaseOrder,
+        link: "/projects/:id/purchase-order",
     },
     {
         component: ProjectResources,

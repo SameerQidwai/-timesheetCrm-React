@@ -18,7 +18,7 @@ class Organizations extends Component {
                 title: "Code",
                 dataIndex: "id",
                 key: "id",
-                render: (record) => `00${record}`,
+                render: (record) => `CLT-00${record}`,
             },
             {
                 title: "Name",
@@ -50,7 +50,7 @@ class Organizations extends Component {
                                 >Edit </Menu.Item>
                                 <Menu.Item>
                                     <Link
-                                        to={{ pathname: `/organisations/info/${record.id}`, }}
+                                        to={{ pathname: `/organisations/${record.id}/info`, }}
                                         className="nav-link"
                                     >View </Link>
                                 </Menu.Item>
