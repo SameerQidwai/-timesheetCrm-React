@@ -1,4 +1,5 @@
 import axios from "axios";
+import { message } from "antd";
 
 import { Api } from "./constant";
 import moment from "moment";
@@ -99,13 +100,16 @@ export const getRecord = (id) => {
 };
 
 export const addList = (data) => {
+        message.loading({ content: 'Loading...', key: 1 })
     return axios
         .post(url, data)
         .then((res) => {
             const { success } = res.data;
+            message.success({ content: 'Success!', key: 1})
             if (success) return {success: true, data: res.data};
         })
         .catch((err) => {
+            message.error({ content: 'Error!', key: 1})
             return {
                 error: "Please login again!",
                 status: false,
@@ -131,13 +135,17 @@ export const delList = (id) => {
 };
 
 export const editList = (id, data) => {
+        message.loading({ content: 'Loading...', key: id })
+
     return axios
         .put(url + `/${id}`, data)
         .then((res) => {
             const { success } = res.data;
+            message.success({ content: 'Success!', key: id})
             if (success) return {success};
         })
         .catch((err) => {
+            message.error({ content: 'Error!', key: id})
             return {
                 error: "Please login again!",
                 status: false,

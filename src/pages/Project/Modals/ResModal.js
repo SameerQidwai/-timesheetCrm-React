@@ -22,6 +22,7 @@ class ResModal extends Component {
             STATES: [],
             ORGS: [],
             data: {},
+
             ResourceFields: {
                 formId: "resource_form",
                 FormCol: 24,
@@ -50,6 +51,7 @@ class ResModal extends Component {
                         object: "obj",
                         fieldCol: 12,
                         key: 'panelSkillId',
+                        disabled: true,
                         size: "small",
                         // rules:[{ required: true }],
                         data: [],
@@ -68,6 +70,7 @@ class ResModal extends Component {
                         object: "obj",
                         fieldCol: 12,
                         key: 'panelSkillStandardLevelId',
+                        disabled: true,
                         size: "small",
                         // rules:[{ required: true }],
                         data: [],
@@ -75,15 +78,22 @@ class ResModal extends Component {
                         onChange: function func(e, value) {
                             const { ResourceFields } = this.state
                             getContactPersons().then(res=>{
-                                ResourceFields.fields[6].data = res.success? res.data: []
+                                ResourceFields.fields[7].data = res.success? res.data: []
                                 const { obj } = this.resourceRef.current.refs.resource_form.getFieldsValue() // const
-                                console.log(obj);
                                 obj['userId'] = undefined;
                                 this.resourceRef.current.refs.resource_form.setFieldsValue({ obj, })
                                 this.setState({ResourceFields})
                             })
                             
                         }.bind(this),
+                    },
+                    {
+                        Placeholder: "Work Hours",
+                        fieldCol:12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
                     },
                     {
                         Placeholder: "Resource",
@@ -94,31 +104,23 @@ class ResModal extends Component {
                         // itemStyle:{marginBottom:'10px'},
                     },
                     {
-                        Placeholder: "Effort Rate",
+                        object: "obj",
                         fieldCol: 12,
+                        key: 'billableHours',
                         size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
+                        // rules:[{ required: true }],
+                        type: "InputNumber",
+                        fieldStyle: { width: "100%" },
                     },
                     {
                         object: "obj",
                         fieldCol: 12,
                         key: 'contactPersonId',
+                        disabled: true,
                         size: "small",
                         // rules:[{ required: true }],
                         data: [],
                         type: "Select",
-                    },
-                    {
-                        object: "obj",
-                        fieldCol: 12,
-                        key: 'effortRate',
-                        size: "small",
-                        type: "InputNumber",
-                        fieldStyle: { width: "100%" },
-                        rangeMin: 0,
-                        rangeMax: 100,
                     },
                     {
                         Placeholder: "Start Date",
@@ -155,6 +157,14 @@ class ResModal extends Component {
                         fieldStyle: { width: "100%" },
                     },
                     {
+                        Placeholder: "Effort Rate",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                    {
                         Placeholder: "Buy Cost",
                         fieldCol: 12,
                         size: "small",
@@ -163,12 +173,14 @@ class ResModal extends Component {
                         // itemStyle:{marginBottom:'10px'},
                     },
                     {
-                        Placeholder: "Sale Cost",
+                        object: "obj",
                         fieldCol: 12,
+                        key: 'effortRate',
                         size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
+                        type: "InputNumber",
+                        fieldStyle: { width: "100%" },
+                        rangeMin: 0,
+                        rangeMax: 100,
                     },
                     {
                         object: "obj",
@@ -179,6 +191,14 @@ class ResModal extends Component {
                         type: "InputNumber",
                         fieldStyle: { width: "100%" },
                     }, 
+                    {
+                        Placeholder: "Sale Cost",
+                        fieldCol: 24,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
                     {
                         object: "obj",
                         fieldCol: 12,
@@ -194,7 +214,7 @@ class ResModal extends Component {
     }
     componentDidMount = () =>{
         const { editRex, panelId } = this.props
-        console.log({editRex}, {panelId});
+        console.log({editRex}, {panelId}); 
         this.openModal()
     }
 
@@ -267,7 +287,7 @@ class ResModal extends Component {
     editRecord = (data) => {
         const { editRex, ProId, callBack } = this.props;
         data.id = editRex
-        editLeadSkill(editRex, ProId, data).then((res) => {
+        editLeadSkill(ProId, editRex, data).then((res) => {
             if(res.success){
                 callBack()
             }

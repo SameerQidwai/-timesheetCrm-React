@@ -137,14 +137,14 @@ class OpportunityInfo extends Component {
                     <Item label="Project Name">{data.title}</Item>
                     <Item label="Estimated Value">{data.value}</Item>
                     <Item label="Organisation">{
-                        data.organizationName ? 
+                        data.organization ? 
                             <Link
                                 to={{
                                     pathname: `/organizations/info/${data.organizationId}`,
                                 }}
                                 className="nav-link"
                             >
-                                {data.organizationName}
+                                {data.organization.name}
                             </Link>
                         : 
                             'No Organisation'

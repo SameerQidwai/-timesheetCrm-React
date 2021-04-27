@@ -42,38 +42,12 @@ class InfoModal extends Component {
                 size: "middle",
                 fields: [
                     {
-                        Placeholder: "Opportunity ID",
-                        fieldCol: 12,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
-                    },
-                    {
                         Placeholder: "Panel",
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
                         labelAlign: "right",
                         // itemStyle:{marginBottom:'10px'},
-                    },
-                    {
-                        object: "obj",
-                        fieldCol: 12,
-                        key: "id",
-                        size: "small",
-                        disabled: true,
-                        type: "Input",
-                        itemStyle:{marginBottom: 1},
-                    },
-                    {
-                        object: "obj",
-                        fieldCol: 12,
-                        key: "panelId",
-                        size: "small",
-                        // rules:[{ required: true }],
-                        data: [],
-                        type: "Select",
                     },
                     {
                         Placeholder: "Organisation",
@@ -84,12 +58,13 @@ class InfoModal extends Component {
                         // itemStyle:{marginBottom:'10px'},
                     },
                     {
-                        Placeholder: "Delegate Contact Person",
+                        object: "obj",
                         fieldCol: 12,
+                        key: "panelId",
                         size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
+                        // rules:[{ required: true }],
+                        data: [],
+                        type: "Select",
                     },
                     {
                         object: "obj",
@@ -106,19 +81,35 @@ class InfoModal extends Component {
                                     console.log(res.data);
                                     if(res.success){
                                         const { BasicFields } = this.state
-                                        BasicFields.fields[7].data = res.data
+                                        BasicFields.fields[6].data = res.data
                                         this.setState({ BasicFields })
                                     }
                                 })
                             }else{
                                 const { BasicFields } = this.state
-                                BasicFields.fields[7].data = []
+                                BasicFields.fields[6].data = []
                                 const { obj } = this.basicRef.current.refs.basic_form.getFieldsValue();
                                 obj.contactPersonId = undefined
                                 this.basicRef.current.refs.basic_form.setFieldsValue({ obj: obj, });
                                 this.setState({ BasicFields })
                             }
                         }.bind(this)
+                    },
+                    {
+                        Placeholder: "Delegate Contact Person",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                    {
+                        Placeholder: "Name",
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
                     },
                     {
                         object: "obj",
@@ -130,12 +121,12 @@ class InfoModal extends Component {
                         type: "Select",
                     },
                     {
-                        Placeholder: "Name",
+                        object: "obj",
                         fieldCol: 12,
+                        key: "title",
                         size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
+                        // rules:[{ required: true, type: 'email', message: 'Important' }],
+                        type: "Input",
                     },
                     {
                         Placeholder: "Type",
@@ -146,12 +137,12 @@ class InfoModal extends Component {
                         // itemStyle:{marginBottom:'10px'},
                     },
                     {
-                        object: "obj",
+                        Placeholder: "State",
                         fieldCol: 12,
-                        key: "title",
                         size: "small",
-                        // rules:[{ required: true }],
-                        type: "Input",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
                     },
                     {
                         object: "obj",
@@ -164,22 +155,6 @@ class InfoModal extends Component {
                         type: "Select",
                     },
                     {
-                        Placeholder: "State",
-                        fieldCol: 12,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
-                    },
-                    {
-                        Placeholder: "Qualified Ops",
-                        fieldCol: 12,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
-                    },
-                    {
                         object: "obj",
                         fieldCol: 12,
                         key: "stateId",
@@ -189,7 +164,14 @@ class InfoModal extends Component {
                         type: "Select",
                         itemStyle: { marginBottom: "10px" },
                     },
-                    
+                    {
+                        Placeholder: "Qualified Ops",
+                        fieldCol: 24,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
                     {
                         object: "obj",
                         fieldCol: 12,
@@ -337,7 +319,6 @@ class InfoModal extends Component {
                             this.billingRef.current.refs.billing_form.setFieldsValue({ obj: obj, });
                         }.bind(this)
                     },
-                    
                     {
                         Placeholder: "CM",
                         size: "small",
@@ -360,7 +341,7 @@ class InfoModal extends Component {
                         key: "cm$",
                         size: "small",
                         shape: '$',
-                        disabled: true,
+                        readOnly: true,
                         // rules:[{ required: true }],
                         type: "InputNumber",
                         fieldStyle: { width: "100%" },
@@ -369,6 +350,7 @@ class InfoModal extends Component {
                         object: "obj",
                         fieldCol: 12,
                         key: "goPercentage",
+                        readOnly: true,
                         size: "small",
                         shape: '%',
                         // rules:[{ required: true }],
@@ -406,6 +388,7 @@ class InfoModal extends Component {
                         key: "getPercentage",
                         size: "small",
                         shape: '%',
+                        readOnly: true,
                         // rules:[{ required: true }],
                         type: "InputNumber",
                         rangeMin: 0,
@@ -425,7 +408,7 @@ class InfoModal extends Component {
                         key: "goget",
                         size: "small",
                         shape: '%',
-                        disabled: true,
+                        readOnly: true,
                         // rules:[{ required: true }],
                         type: "InputNumber",
                         fieldStyle: { width: "100%" },
@@ -451,7 +434,7 @@ class InfoModal extends Component {
                         fieldCol: 12,
                         key: "discount",
                         size: "small",
-                        disabled: true,
+                        readOnly: true,
                         shape: '$',
                         // rules:[{ required: true }],
                         type: "InputNumber",
@@ -462,7 +445,7 @@ class InfoModal extends Component {
                         fieldCol: 12,
                         key: "upside",
                         size: "small",
-                        disabled: true,
+                        readOnly: true,
                         shape: '$',
                         // rules:[{ required: true }],
                         type: "InputNumber",
@@ -660,13 +643,13 @@ class InfoModal extends Component {
         this.datesRef.current.refs.dates_form.setFieldsValue({ obj: dates, }); 
         Promise.all([ getPanels(), getOrganizations(), getStates(), editPro && this.getRecord(editPro), getEmployees()])
         .then(res => {
-            if (res[1].success) {res[1].data[0].disabled = true}
+            if (res[1].success) {res[1].data[0].readOnly = true}
             console.log(res);
             const { BasicFields, ManageFields } = this.state;
-            BasicFields.fields[3].data = res[0].success? res[0].data : [];
-            BasicFields.fields[6].data = res[1].success? res[1].data : [];
-            BasicFields.fields[14].data = res[2].success? res[2].data : [];
-            BasicFields.fields[7].data = res[3].success? res[3].data : [];
+            BasicFields.fields[2].data = res[0].success? res[0].data : [];
+            BasicFields.fields[3].data = res[1].success? res[1].data : [];
+            BasicFields.fields[11].data = res[2].success? res[2].data : [];
+            BasicFields.fields[6].data = res[3].success? res[3].data : [];
 
             ManageFields.fields[2].data = res[4].success ? res[4].data: [];
             ManageFields.fields[3].data = res[4].success ? res[4].data: [];
@@ -903,7 +886,7 @@ class InfoModal extends Component {
                 centered
                 visible={visible}
                 onOk={() => { this.submit(); }}
-                okButtonProps={{ disabled: loading }}
+                okButtonProps={{ readOnly: loading }}
                 okText={loading ?<LoadingOutlined /> :"Save"}
                 onCancel={close}
                 width={750}

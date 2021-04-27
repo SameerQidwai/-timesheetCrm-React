@@ -76,6 +76,7 @@ class InfoModal extends Component {
                         fieldCol: 12, // this is only label 1
                         size: "small",
                         Placeholder: "Contact person Code",
+                        rangeMin: true,
                         type: "Text",
                         labelAlign: "left",
                     },
@@ -93,8 +94,8 @@ class InfoModal extends Component {
                         fieldCol: 12,
                         key: "cpCode",
                         size: "small",
-                        disabled: true,
-                        // rules:[{ required: true }],
+                        readOnly: true,
+                        rules:[{ required: true, message: 'Select Contact Person !!' }],
                         type: "Input",
                         labelAlign: "left",
                         itemStyle: { marginBottom: 10 },
@@ -323,12 +324,10 @@ class InfoModal extends Component {
                         ],
                         // rules: [ { required: true, message: "Gender is Obviously required", }, ],
                         type: "Select",
-                        // mode: "button",
-                        // shape: "solid",
                         itemStyle: { marginBottom: 10 },
-                        onChange: function FundTypeCond (value){
+                        onChange: (value) =>{
                             this.onFundType(value)
-                        }.bind(this)
+                        }
                     },
 
                     // {
@@ -478,7 +477,10 @@ class InfoModal extends Component {
                         key: "bankName",
                         size: "small",
                         type: "Input",
-                        itemStyle: { marginBottom: "10px" },
+                        onChange: (e)=>{
+                            this.setBankReq(e)
+                        },
+                        itemStyle: { marginBottom: 10 },
                     },
                     {
                         object: "bank",
@@ -486,7 +488,10 @@ class InfoModal extends Component {
                         key: "bankAccountNo",
                         size: "small",
                         type: "Input",
-                        itemStyle: { marginBottom: "10px" },
+                        onChange: (e)=>{
+                            this.setBankReq(e)
+                        },
+                        itemStyle: { marginBottom: 10 },
                     },
                     {
                         Placeholder: "BSB Number",
@@ -508,16 +513,21 @@ class InfoModal extends Component {
                         key: "bankBsb",
                         size: "small",
                         type: "Input",
-                        itemStyle: { marginBottom: "10px" },
+                        onChange: (e)=>{
+                            this.setBankReq(e)
+                        },
+                        itemStyle: { marginBottom: 10 },
                     },
                     {
                         object: "bank",
                         fieldCol: 12,
                         key: "tfn",
                         size: "small",
-                        // rules:[{ required: true }],
                         type: "Input",
-                        itemStyle: { marginBottom: "10px" },
+                        onChange: (e)=>{
+                            this.setBankReq(e)
+                        },
+                        itemStyle: { marginBottom: 10 },
                     },
                     {
                         Placeholder: "Tax-free Threshold",
@@ -577,6 +587,7 @@ class InfoModal extends Component {
                 fields: [
                     {
                         Placeholder: "Employment Status",
+                        rangeMin: true,
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -612,12 +623,7 @@ class InfoModal extends Component {
                                 this.setState({BillingFields})
                             }
                         }.bind(this),
-                        // rules: [
-                        //     {
-                        //         required: true,
-                        //         message: "Account Number",
-                        //     },
-                        // ],
+                        rules: [ { required: true, message: "Status is Required", }, ],
                         itemStyle: { marginBottom: 1 },
                     },
                     {
@@ -636,6 +642,7 @@ class InfoModal extends Component {
                     },
                     {
                         Placeholder: "Full Work Hours",
+                        rangeMin: true,
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -645,6 +652,7 @@ class InfoModal extends Component {
                     {
                         Placeholder: "Contract Start Date",
                         fieldCol: 12,
+                        rangeMin: true,
                         size: "small",
                         type: "Text",
                         labelAlign: "right",
@@ -659,12 +667,7 @@ class InfoModal extends Component {
                         type: "InputNumber",
                         // shape: " Hours",
                         fieldStyle: { width: "100%" },
-                        // rules: [
-                        //     {
-                        //         required: true,
-                        //         message: "How much he Cost",
-                        //     },
-                        // ],
+                        rules: [ { required: true, message: "Work Hours is Required", }, ],
                         itemStyle: { marginBottom: 1 },
                     },
                     {
@@ -681,12 +684,7 @@ class InfoModal extends Component {
                             { label: "Monthly", value: 5 },
                         ],
                         fieldStyle: { width: "100%" },
-                        // rules: [
-                        //     {
-                        //         required: true,
-                        //         message: "How much he Cost",
-                        //     },
-                        // ],
+                        rules: [ { required: true, message: "Work Hours is Required", }, ],
                         itemStyle: { marginBottom: 1 },
                     },
                     {
@@ -696,16 +694,12 @@ class InfoModal extends Component {
                         size: "small",
                         type: "DatePicker",
                         fieldStyle: { width: "100%" },
-                        // rules: [
-                        //     {
-                        //         required: true,
-                        //         message: "Start Date is required",
-                        //     },
-                        // ],
+                        rules: [ { required: true, message: "Start Date is Required", }, ],
                         itemStyle: { marginBottom: 1 },
                     },
                     {
                         Placeholder: "Contract End Date",
+                        rangeMin: true,
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -714,6 +708,7 @@ class InfoModal extends Component {
                     },
                     {
                         Placeholder: "Annual Base Salary",
+                        rangeMin: true,
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -727,12 +722,7 @@ class InfoModal extends Component {
                         size: "small",
                         type: "DatePicker",
                         fieldStyle: { width: "100%" },
-                        // rules: [
-                        //     {
-                        //         required: true,
-                        //         message: "Start Date is required",
-                        //     },
-                        // ],
+                        rules: [ { required: true, message: "End Date is Required", }, ],
                         itemStyle: { marginBottom: 1 },
                     },
                     {
@@ -743,46 +733,18 @@ class InfoModal extends Component {
                         type: "InputNumber",
                         shape: "$",
                         fieldStyle: { width: "100%" },
-                        // rules: [
-                        //     {
-                        //         required: true,
-                        //         message: "How much he Cost",
-                        //     },
-                        // ],
+                        rules: [ { required: true, message: "Salary is Required", }, ],
                         itemStyle: { marginBottom: 1 },
                     },  
-                    // {
-                    //     Placeholder: "Hourly Rate",
-                    //     fieldCol: 12,
-                    //     size: "small",
-                    //     type: "Text",
-                    //     labelAlign: "right",
-                    //     // itemStyle:{marginBottom:'10px'},
-                    // },
                     {
                         Placeholder: "Pay Frequence",
+                        rangeMin: true,
                         fieldCol: 24,
                         size: "small",
                         type: "Text",
                         labelAlign: "right",
                         // itemStyle:{marginBottom:'10px'},
                     },
-                    // {
-                    //     object: "billing",
-                    //     fieldCol: 12,
-                    //     key: "hourlyrate",
-                    //     size: "small",
-                    //     type: "InputNumber",
-                    //     shape: "$",
-                    //     fieldStyle: { width: "100%" },
-                    //     // rules: [
-                    //     //     {
-                    //     //         required: true,
-                    //     //         message: "How much he Cost",
-                    //     //     },
-                    //     // ],
-                    //     itemStyle: { marginBottom: 1 },
-                    // }, 
                     {
                         object: "billing",
                         fieldCol: 12,
@@ -796,12 +758,7 @@ class InfoModal extends Component {
                             { label: "Monthly", value: 5 },
                         ],
                         type: "Select",
-                        // rules: [
-                        //     {
-                        //         required: true,
-                        //         message: "Payment Frequncy is required",
-                        //     },
-                        // ],
+                        rules: [ { required: true, message: "Payment Frequncy is required", }, ],
                         itemStyle: { marginBottom: 1 },
                     },
                     {
@@ -875,7 +832,40 @@ class InfoModal extends Component {
             console.log(e);
         })
     }
-    
+
+    setBankReq = () =>{
+        const { bank } = this.bankRef.current.refs.bank_form.getFieldsValue() // const
+        const { bankAccountNo, bankBsb, bankName, tfn } = bank
+        const { BankFields } = this.state
+        const { fields } = BankFields
+        if(bankAccountNo|| bankBsb|| bankName|| tfn) {
+            fields[0].rangeMin= true
+            fields[1].rangeMin= true
+            fields[4].rangeMin= true
+            fields[5].rangeMin= true
+
+            fields[2].rules= [ { required: true, message: "Account Name is required", }, ]
+            fields[3].rules= [ { required: true, message: "Account Number is required", }, ]
+            fields[6].rules= [ { required: true, message: "BSB Number is required", }, ]
+            fields[7].rules= [ { required: true, message: "Tax File Number is required", }, ]
+
+        }else{
+            fields[0].rangeMin= false
+            fields[1].rangeMin= false
+            fields[4].rangeMin= false
+            fields[5].rangeMin= false
+
+            fields[2].rules = [{required: false, message: ''}]
+            fields[3].rules = [{required: false, message: ''}]
+            fields[6].rules = [{required: false, message: ''}]
+            fields[7].rules = [{required: false, message: ''}]
+        }
+
+        this.setState({
+            BankFields: {...BankFields, fields:[...fields]}
+        })
+    }
+
     submit = () => {
         this.setState({loading: true})
         this.basicRef.current && this.basicRef.current.refs.basic_form.submit();
@@ -1208,6 +1198,7 @@ class InfoModal extends Component {
         const superannuation = [
             {
                 Placeholder: "Membership / Account",
+                rangeMin: true,
                 fieldCol: 12,
                 size: "small",
                 type: "Text",
@@ -1215,6 +1206,7 @@ class InfoModal extends Component {
             },
             {
                 Placeholder: "USI Number",
+                rangeMin: true,
                 fieldCol: 12,
                 size: "small",
                 type: "Text",
@@ -1226,7 +1218,8 @@ class InfoModal extends Component {
                 key: "superannuationBankAccountOrMembershipNumber",
                 size: "small",
                 type: "Input",
-                itemStyle: { marginBottom: "10px" },
+                rules: [ { required: true, message: "Membership / Account is required", }, ],
+                itemStyle: { marginBottom: 10 },
             },
             {
                 object: "detail",
@@ -1234,12 +1227,15 @@ class InfoModal extends Component {
                 key: "superannuationAbnOrUsi",
                 size: "small",
                 type: "Input",
-                itemStyle: { marginBottom: "10px" },
+                rules: [ { required: true, message: "USI Number is required", }, ],
+                itemStyle: { marginBottom: 10 },
             },
         ]
+
         const smsf = [
             {
                 Placeholder: "SMSF ABN",
+                rangeMin: true,
                 fieldCol: 12,
                 size: "small",
                 type: "Text",
@@ -1247,6 +1243,7 @@ class InfoModal extends Component {
             },
             {
                 Placeholder: "ESA Address",
+                rangeMin: true,
                 fieldCol: 12,
                 size: "small",
                 type: "Text",
@@ -1254,11 +1251,13 @@ class InfoModal extends Component {
             },
             {
                 object: "detail",
+                
                 fieldCol: 12,
                 key: "superannuationAbnOrUsi",
                 size: "small",
                 type: "Input",
-                itemStyle: { marginBottom: "10px" },
+                rules: [ { required: true, message: "SMSF ABN is required", }, ],
+                itemStyle: { marginBottom: 10 },
             },
             {
                 object: "detail",
@@ -1266,10 +1265,12 @@ class InfoModal extends Component {
                 key: "superannuationAddress",
                 size: "small",
                 type: "Input",
-                itemStyle: { marginBottom: "10px" },
+                rules: [ { required: true, message: "ESA Address is required", }, ],
+                itemStyle: { marginBottom: 10 },
             },
             {
                 Placeholder: "Bank Account Name",
+                rangeMin: true,
                 fieldCol: 12,
                 size: "small",
                 type: "Text",
@@ -1277,6 +1278,7 @@ class InfoModal extends Component {
             },
             {
                 Placeholder: "BSB Number",
+                rangeMin: true,
                 fieldCol: 12,
                 size: "small",
                 type: "Text",
@@ -1288,7 +1290,8 @@ class InfoModal extends Component {
                 key: "superannuationBankName",
                 size: "small",
                 type: "Input",
-                itemStyle: { marginBottom: "10px" },
+                rules: [ { required: true, message: "Account Name is required", }, ],
+                itemStyle: { marginBottom: 10 },
             },
             {
                 object: "detail",
@@ -1296,10 +1299,12 @@ class InfoModal extends Component {
                 key: "superannuationBankBsb",
                 size: "small",
                 type: "Input",
-                itemStyle: { marginBottom: "10px" },
+                rules: [ { required: true, message: "BSB Number is required", }, ],
+                itemStyle: { marginBottom: 10 },
             },
             {
                 Placeholder: "Bank Account Number",
+                rangeMin: true,
                 fieldCol: 24,
                 size: "small",
                 type: "Text",
@@ -1311,6 +1316,7 @@ class InfoModal extends Component {
                 key: "superannuationBankAccountOrMembershipNumber",
                 size: "small",
                 type: "Input",
+                rules: [ { required: true, message: "Account Number is required", }, ],
                 itemStyle: { marginBottom: "10px" },
             },
         ]

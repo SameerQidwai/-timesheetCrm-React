@@ -1,16 +1,21 @@
 import axios from "axios";
 import { Api } from "./constant";
+import { message } from "antd";
 import moment from "moment";
+
 const url = `${Api}/opportunities`;
 
 export const addList = (data) => {
+    message.loading({ content: 'Loading...', key: 1 })
     return axios
         .post(url, data)
         .then((res) => {
             const { success } = res.data;
+            message.success({ content: 'Success!', key: 1})
             if (success) return {success};
         })
         .catch((err) => {
+            message.error({ content: 'Error!', key: 1})
             return {
                 error: "Please login again!",
                 status: false,
@@ -117,13 +122,16 @@ export const delList = (id) => {
 };
 
 export const editList = (data) => {
+    message.loading({ content: 'Loading...', key: data.id })
     return axios
-        .put(url + `/${data.id}`, data)
+        .put(url + `/${data.id}`, data, {timeout: 5000})
         .then((res) => {
             const { success } = res.data;
+            message.success({ content: 'Success!', key: data.id})
             if (success) return {success};
         })
         .catch((err) => {
+            message.error({ content: 'Error!', key: data.id})
             return {
                 error: "Please login again!",
                 status: false,
@@ -133,13 +141,16 @@ export const editList = (data) => {
 };
 
 export const addLeadSkill = (id, data) => {
+    message.loading({ content: 'Loading...', key: id })
     return axios
         .post(url + `/${id}/resources`, data)
         .then((res) => {
             const { success, data } = res.data;
+            message.success({ content: 'Success!', key: id})
             if (success) return {success, data: data[0]};
         })
         .catch((err) => {
+            message.error({ content: 'Error!', key: id})
             return {
                 error: "Please login again!",
                 status: false,
@@ -184,13 +195,16 @@ export const getLeadSkill = (oppId, resId) => {
 };
 
 export const editLeadSkill = (oppId, resId, data) => {
+    message.loading({ content: 'Loading...', key:  resId})
     return axios
         .put(url + `/${oppId}/resources/${resId}`, data)
         .then((res) => {
             const { success, data } = res.data;
+            message.success({ content: 'Success!', key: resId})
             if (success) return {success, data: data[0]};
         })
         .catch((err) => {
+            message.error({ content: 'Error!', key: resId})
             return {
                 error: "Please login again!",
                 status: false,
@@ -218,14 +232,16 @@ export const delLeadSkill = (oppId, resId) => {
 };
 
 export const addLeadSkillResource = (oppId, skillId,  data) => {
+    message.loading({ content: 'Loading...', key:  skillId})
     return axios
         .post(url + `/${oppId}/resources/${skillId}/allocations`, data)
         .then((res) => {
             const { success, data } = res.data;
-            console.log(data);
+            message.success({ content: 'Success!', key: skillId})
             if (success) return {success, data: data};
         })
         .catch((err) => {
+            message.error({ content: 'Error!', key: skillId})
             return {
                 error: "Please login again!",
                 status: false,
@@ -251,14 +267,17 @@ export const getLeadSkillResource = (oppId,skillId, resId) => {
 };
 
 export const editLeadSkillResource = (oppId, skillId, resId, data) => {
+    message.loading({ content: 'Loading...', key: resId })
     console.log({oppId, skillId, resId, data});
     return axios
         .put(url + `/${oppId}/resources/${skillId}/allocations/${resId}`, data)
         .then((res) => {
             const { success, data } = res.data;
+            message.success({ content: 'Success!', key: resId})
             if (success) return {success, data};
         })
         .catch((err) => {
+            message.error({ content: 'Error!', key: resId})
             return {
                 error: "Please login again!",
                 status: false,
@@ -317,13 +336,16 @@ export const workIsLost = (oppId) => {
 };
 
 export const workWon = (oppId, data) => {
+    message.loading({ content: 'Loading...', key: oppId })
     return axios
         .put(url + `/${oppId}/win`, data)
         .then((res) => {
             const { success } = res.data;
+            message.success({ content: 'Success!', key: oppId})
             if (success) return {success};
         })
         .catch((err) => {
+            message.error({ content: 'Error!', key: oppId})
             return {
                 error: "Please login again!",
                 status: false,

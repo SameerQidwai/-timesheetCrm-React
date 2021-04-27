@@ -136,7 +136,6 @@ class OrgInfo extends Component {
     fetchAll = (id) =>{
         Promise.all([ getRecord(id), getLeadSkills(id)])
         .then(res => {
-            console.log(res[1].data[4]);
             this.setState({
                 desc: res[0].success? res[0].data : {},
                 editRex: false,

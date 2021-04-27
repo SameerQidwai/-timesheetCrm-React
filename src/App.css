@@ -31,6 +31,14 @@
 .App-link {
   color: #61dafb;
 }
+input[readOnly] {
+  color: #372f2f;
+  background-color: #f5f5f5;
+}
+input[type="text"][readOnly] {
+  color: #372f2f;
+  background-color: #f5f5f5;
+}
 input[disabled] {
   color: #372f2f;
 }

@@ -90,6 +90,7 @@ class InfoModal extends Component {
                 fields: [
                     {
                         Placeholder: "First Name",
+                        rangeMin: true,
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -98,6 +99,7 @@ class InfoModal extends Component {
                     },
                     {
                         Placeholder: "Last Name",
+                        rangeMin: true,
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -110,7 +112,7 @@ class InfoModal extends Component {
                         fieldCol: 12,
                         key: "firstName",
                         size: "small",
-                        // rules:[{ required: true }],
+                        rules:[{ required: true, message: 'First Name is Required' }],
                         type: "input",
                         labelAlign: "right",
                         itemStyle: { marginBottom: 10 },
@@ -120,7 +122,7 @@ class InfoModal extends Component {
                         fieldCol: 12,
                         key: "lastName",
                         size: "small",
-                        // rules:[{ required: true }],
+                        rules:[{ required: true, message: 'Last Name is Required' }],
                         type: "input",
                         labelAlign: "right",
                         itemStyle: { marginBottom: 10 },
@@ -162,6 +164,7 @@ class InfoModal extends Component {
                     },
                     {
                         Placeholder: "Gender",
+                        rangeMin: true,
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -170,6 +173,7 @@ class InfoModal extends Component {
                     },
                     {
                         Placeholder: "State",
+                        rangeMin: true,
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -180,6 +184,8 @@ class InfoModal extends Component {
                         object: "basic",
                         fieldCol: 12,
                         key: "gender",
+                        rangeMin: true,
+                        rules:[{ required: true, message: 'Gender is Required' }],
                         size: "small",
                         data: [
                             { label: "Male", value: "M" },
@@ -194,6 +200,7 @@ class InfoModal extends Component {
                         object: "basic",
                         fieldCol: 12,
                         key: "stateId",
+                        rules:[{ required: true, message: 'State is Required' }],
                         size: "small",
                         // rules:[{ required: true }],
                         type: "Select",
@@ -332,13 +339,34 @@ class InfoModal extends Component {
                         // rules: [ { required: true, message: "Gender is Obviously required", }, ],
                         type: "Select",
                         itemStyle: { marginBottom: 10 },
+                        onChange: (value) => {
+                            const { fields } = this.state.SecurityFields
+                            if (value){
+                                fields[1].rangeMin= true
+                                fields[4].rangeMin= true
+                                fields[5].rangeMin= true
+
+                                fields[3].rules= [ { required: true, message: "Date Granted is required", }, ]
+                                fields[6].rules= [ { required: true, message: "Expiry Date is required", }, ]
+                                fields[7].rules= [ { required: true, message: "Current Sponsor is required", }, ]
+
+                            }else{
+                                fields[1].rangeMin= false
+                                fields[4].rangeMin= false
+                                fields[5].rangeMin= false
+
+                                fields[3].rules = [{required: false, message: ''}]
+                                fields[6].rules = [{required: false, message: ''}]
+                                fields[7].rules = [{required: false, message: ''}]
+                            }
+                            this.setState({SecurityFields: {...this.state.SecurityFields, fields: [...fields]}})
+                        }
                     },
                     {
                         object: "sec",
                         fieldCol: 12,
                         key: "clearanceGrantedDate",
                         size: "small",
-                        // rules:[{ required: true }],
                         type: "DatePicker",
                         fieldStyle: { width: "100%" },
                         // rules: [

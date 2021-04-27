@@ -1,31 +1,9 @@
 import axios from "axios";
+import { message } from "antd";
 
 import { Api } from "./constant";
 
 const url = `${Api}/panels`;
-
-// export const timeOff = () => {
-//     return axios
-//         .get(`${Api}/panels`)
-//         .then((res) => {
-//             const { success, data } = res.data;
-//             data.map((el) => {
-//                 el.value = el.id;
-//                 delete el.id;
-//                 delete el.createdAt;
-//                 delete el.deletedAt;
-//                 delete el.updatedAt;
-//             });
-//             if (success) return { success: success, data: data };
-//         })
-//         .catch((err) => {
-//             return {
-//                 error: "Please login again!",
-//                 success: false,
-//                 message: err.message,
-//             };
-//         });
-// };
 
 export const getList = () => {
     return axios
@@ -44,13 +22,16 @@ export const getList = () => {
 };
 
 export const addList = (data) => {
+    message.loading({ content: 'Loading...', key: 1 })
     return axios
         .post(url, data)
         .then((res) => {
             const { success } = res.data;
+            message.success({ content: 'Success!', key: 1})
             if (success) return success;
         })
         .catch((err) => {
+            message.error({ content: 'Error!', key: 1})
             return {
                 error: "Please login again!",
                 status: false,
@@ -76,13 +57,16 @@ export const delLabel = (id) => {
 };
 
 export const editLabel = (data) => {
+    message.loading({ content: 'Loading...', key: data.id })
     return axios
         .put(url + `/${data.id}`, data)
         .then((res) => {
             const { success } = res.data;
+            message.success({ content: 'Success!', key: data.id})
             if (success) return success;
         })
         .catch((err) => {
+            message.error({ content: 'Error!', key: data.id})
             return {
                 error: "Please login again!",
                 status: false,

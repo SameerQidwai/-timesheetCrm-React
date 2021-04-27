@@ -41,7 +41,8 @@ class InfoModal extends Component {
                 size: "middle",
                 fields: [
                     {
-                        Placeholder: "Name *",
+                        Placeholder: "Name",
+                        rangeMin: true, 
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -61,7 +62,7 @@ class InfoModal extends Component {
                         fieldCol: 12,
                         key: "name",
                         size: "small",
-                        rules:[{ required: true, message: 'Name is mandatory' }],
+                        rules:[{ required: true, message: 'Name is Required' }],
                         type: "Input",
                         itemStyle:{marginBottom: 1},
                     },
@@ -108,6 +109,7 @@ class InfoModal extends Component {
                     },
                     {
                         Placeholder: "Business Type",
+                        rangeMin: true,
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -127,7 +129,7 @@ class InfoModal extends Component {
                         fieldCol: 12,
                         key: "businessType",
                         size: "small",
-                        // rules:[{ required: true }],
+                        rules:[{ required: true, message: 'Business Type is Required' }],
                         type: "Select",
                         data: [
                             {label: 'Sole Trader', value: 1 },
@@ -345,6 +347,31 @@ class InfoModal extends Component {
                         type: "Input",
                         labelAlign: "left",
                         itemStyle: { marginBottom: "10px" },
+                        onChange: (e) =>{
+                            const { value } =  e.target
+                            const { InsuredFields } = this.state
+                            const { fields } = InsuredFields
+                            if (value){
+                                fields[2].rangeMin = true
+                                fields[3].rangeMin = true
+                                fields[4].rangeMin = true
+
+                                fields[6].rules = [ { required: true, message: "Policy Number is required", }, ]
+                                fields[7].rules = [ { required: true, message: "Sum Insured is required", }, ]
+                                fields[8].rules = [ { required: true, message: "Expiry Date is required", }, ]
+                            }else{
+                                fields[2].rangeMin = false
+                                fields[3].rangeMin = false
+                                fields[4].rangeMin = false
+
+                                fields[6].rules = [ { required: false, message: "", }, ]
+                                fields[7].rules = [ { required: false, message: "", }, ]
+                                fields[8].rules = [ { required: false, message: "", }, ]
+                            }
+                            this.setState({
+                                InsuredFields: {...InsuredFields, fields: [...fields]}
+                            })
+                        }
                     },
                     {
                         object: "obj",
@@ -379,7 +406,7 @@ class InfoModal extends Component {
                         itemStyle: { marginBottom: "10px" },
                     },
                     {
-                        Placeholder: "Public Liability",
+                        Placeholder: "Public Liability", //9
                         fieldCol: 24,
                         size: "small",
                         type: "Title",
@@ -433,6 +460,31 @@ class InfoModal extends Component {
                         type: "Input",
                         labelAlign: "left",
                         itemStyle: { marginBottom: 10 },
+                        onChange: (e) =>{
+                            const { value } =  e.target
+                            const { InsuredFields } = this.state
+                            const { fields } = InsuredFields
+                            if (value){
+                                fields[11].rangeMin = true
+                                fields[12].rangeMin = true
+                                fields[13].rangeMin = true
+
+                                fields[15].rules = [ { required: true, message: "Policy Number is required", }, ]
+                                fields[16].rules = [ { required: true, message: "Sum Insured is required", }, ]
+                                fields[17].rules = [ { required: true, message: "Expiry Date is required", }, ]
+                            }else{
+                                fields[11].rangeMin = false
+                                fields[12].rangeMin = false
+                                fields[13].rangeMin = false
+
+                                fields[15].rules = [ { required: false, message: "", }, ]
+                                fields[16].rules = [ { required: false, message: "", }, ]
+                                fields[17].rules = [ { required: false, message: "", }, ]
+                            }
+                            this.setState({
+                                InsuredFields: {...InsuredFields, fields: [...fields]}
+                            })
+                        }
                     },
                     {
                         object: "obj",
@@ -470,7 +522,7 @@ class InfoModal extends Component {
                         itemStyle: { marginBottom: "10px" },
                     },
                     {
-                        Placeholder: "Worker’s Compensation",
+                        Placeholder: "Worker’s Compensation", //18
                         fieldCol: 24,
                         size: "small",
                         type: "Title",
@@ -524,6 +576,31 @@ class InfoModal extends Component {
                         type: "Input",
                         labelAlign: "left",
                         itemStyle: { marginBottom: 10 },
+                        onChange: (e) =>{
+                            const { value } =  e.target
+                            const { InsuredFields } = this.state
+                            const { fields } = InsuredFields
+                            if (value){
+                                fields[20].rangeMin = true
+                                fields[21].rangeMin = true
+                                fields[22].rangeMin = true
+
+                                fields[24].rules = [ { required: true, message: "Policy Number is required", }, ]
+                                fields[25].rules = [ { required: true, message: "Sum Insured is required", }, ]
+                                fields[26].rules = [ { required: true, message: "Expiry Date is required", }, ]
+                            }else{
+                                fields[20].rangeMin = false
+                                fields[21].rangeMin = false
+                                fields[22].rangeMin = false
+                                
+                                fields[24].rules = [ { required: false, message: "", }, ]
+                                fields[25].rules = [ { required: false, message: "", }, ]
+                                fields[26].rules = [ { required: false, message: "", }, ]
+                            }
+                            this.setState({
+                                InsuredFields: {...InsuredFields, fields: [...fields]}
+                            })
+                        }
                     },
                     {
                         object: "obj",

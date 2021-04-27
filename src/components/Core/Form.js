@@ -132,7 +132,7 @@ class Forms extends Component {
                                         //         {this.filedformat( item.type, item.Placeholder, item.data, item.mode, item.rangeMin, item.rangeMax, item.showTime, item.shape, item.size, item.fieldStyle, item.disabled, item.onChange, item.onClick, item.onBlur, item.onClear )}
                                         //     </Tooltip>) 
                                         //     :
-                                            this.filedformat( item.type, item.Placeholder, item.data, item.mode, item.rangeMin, item.rangeMax, item.showTime, item.shape, item.size, item.fieldStyle, item.disabled, item.onChange, item.onClick, item.onBlur, item.onClear, item.tooltip, item.tooltipTitle, item.tooltipTrigger )
+                                            this.filedformat( item.type, item.Placeholder, item.data, item.mode, item.rangeMin, item.rangeMax, item.showTime, item.shape, item.size, item.fieldStyle, item.disabled, item.readOnly, item.onChange, item.onClick, item.onBlur, item.onClear, item.tooltip, item.tooltipTitle, item.tooltipTrigger )
                                         }
                                     </Item>
                                 </Col>
@@ -172,7 +172,7 @@ class Forms extends Component {
         );
     };
 
-    filedformat = ( type, placeholder, data, mode, min, max, showTime, shape, size, style, disabled, onChange, onClick, onBlur, onClear, tooltip, tTitle, tTrigger ) => {
+    filedformat = ( type, placeholder, data, mode, min, max, showTime, shape, size, style, disabled, readOnly, onChange, onClick, onBlur, onClear, tooltip, tTitle, tTrigger ) => {
         let item = null;
         switch (type) {
             case "Title":
@@ -186,6 +186,7 @@ class Forms extends Component {
                 item = (
                     <Text strong={mode} onClick={onClick} style={style} disabled={disabled}>
                         { tooltip? <Tooltip title={tTitle} trigger={tTrigger}> {placeholder}</Tooltip> :   placeholder }
+                        {min && <span style={{color: 'red'}}> * </span>}
                     </Text>
                 );
                 break;
@@ -225,6 +226,7 @@ class Forms extends Component {
                         onBlur={onBlur}
                         onChange={onChange}
                         disabled={disabled}
+                        readOnly={readOnly}
                     />
                 );
                 break;
@@ -383,6 +385,7 @@ class Forms extends Component {
                         style={style}
                         size={size}
                         disabled={disabled}
+                        readOnly={readOnly}
                         onBlur={onBlur}
                         onChange={onChange}
                     />
