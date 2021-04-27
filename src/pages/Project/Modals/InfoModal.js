@@ -465,6 +465,7 @@ class InfoModal extends Component {
                 fields: [
                     {
                         Placeholder: "Start Date",
+                        rangeMin: true,
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -485,13 +486,8 @@ class InfoModal extends Component {
                         key: "startDate",
                         size: "small",
                         type: "DatePicker",
+                        rules:[{ required: true, message: 'Start Date is Required' }],
                         fieldStyle: { width: "100%" },
-                        // rules: [
-                        //     {
-                        //         required: true,
-                        //         message: "Start Date is required",
-                        //     },
-                        // ],
                     },
                     {
                         object: "obj",
@@ -500,16 +496,11 @@ class InfoModal extends Component {
                         size: "small",
                         type: "DatePicker",
                         fieldStyle: { width: "100%" },
-                        // rules: [
-                        //     {
-                        //         required: true,
-                        //         message: "Start Date is required",
-                        //     },
-                        // ],
                     },
  
                     {
                         Placeholder: "Daily Hours",
+                        rangeMin: true,
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -517,47 +508,22 @@ class InfoModal extends Component {
                         // itemStyle:{marginBottom:'10px'},
                     },
                     {
-                        Placeholder: "Bid Date",
+                        Placeholder: "Entry Date",
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
                         labelAlign: "right",
                         // itemStyle:{marginBottom:'10px'},
                     },
-                  
                     {
                         object: "obj",
                         fieldCol: 12,
                         key: "hoursPerDay",
                         size: "small",
-                        // rules:[{ required: true }],
+                        rules:[{ required: true, message: 'Dailty Hours is Required' }],
                         type: "InputNumber",
                         fieldStyle: { width: "100%" },
                     },
-                    {
-                        object: "obj",
-                        fieldCol: 12,
-                        key: "bidDate",
-                        size: "small",
-                        type: "DatePicker",
-                        fieldStyle: { width: "100%" },
-                        // rules: [
-                        //     {
-                        //         required: true,
-                        //         message: "Start Date is required",
-                        //     },
-                        // ],
-                    },
-                    
-                    {
-                        Placeholder: "Entry Date",
-                        fieldCol: 24,
-                        size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
-                    },
-                    
                     {
                         object: "obj",
                         fieldCol: 12,
@@ -565,12 +531,6 @@ class InfoModal extends Component {
                         size: "small",
                         type: "DatePicker",
                         fieldStyle: { width: "100%" },
-                        // rules: [
-                        //     {
-                        //         required: true,
-                        //         message: "Start Date is required",
-                        //     },
-                        // ],
                     },
                 ],
             },

@@ -79,14 +79,14 @@ class OrgInfo extends Component {
                     <Dropdown
                         overlay={
                             <Menu>
-                                <Menu.Item danger>
+                                {/* <Menu.Item danger>
                                     <Popconfirm
                                         title="Sure to delete?"
                                         onConfirm={() => this.handleDelete(record.id) }
                                     >
                                         Delete
                                     </Popconfirm>
-                                </Menu.Item>
+                                </Menu.Item> */}
                                 <Menu.Item
                                     onClick={() => {
                                         this.setState({ infoModal: true, editRex: record.id, });
@@ -95,14 +95,14 @@ class OrgInfo extends Component {
                                     Edit
                                 </Menu.Item>
                                 <Menu.Item >
-                                <Link
+                                {/* <Link
                                     to={{
                                         pathname: `/projects/${id}/resources/rates/${record.id}`,
                                     }}
                                     className="nav-link"
                                 >
                                     History
-                                </Link>
+                                </Link> */}
                                 </Menu.Item>
                             </Menu>
                         }

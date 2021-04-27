@@ -39,6 +39,7 @@ class BillModal extends Component {
                 fields: [
                     {
                         Placeholder: "Employment Status",
+                        rangeMin: true,
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -64,12 +65,7 @@ class BillModal extends Component {
                             { label: "Full Time", value: 3 },
                         ],
                         type: "Select",
-                        // rules: [
-                        //     {
-                        //         required: true,
-                        //         message: "Account Number",
-                        //     },
-                        // ],
+                        rules: [ { required: true, message: "Status is Required", }, ],
                         itemStyle: { marginBottom: 1 },
                     },
                     {
@@ -88,6 +84,7 @@ class BillModal extends Component {
                     },
                     {
                         Placeholder: "Full Work Hours",
+                        rangeMin: true,
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -96,6 +93,7 @@ class BillModal extends Component {
                     },
                     {
                         Placeholder: "Contract Start Date",
+                        rangeMin: true,
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -111,12 +109,7 @@ class BillModal extends Component {
                         type: "InputNumber",
                         // shape: " Hours",
                         fieldStyle: { width: "100%" },
-                        // rules: [
-                        //     {
-                        //         required: true,
-                        //         message: "How much he Cost",
-                        //     },
-                        // ],
+                        rules: [ { required: true, message: "Work Hours is Required", }, ],
                         itemStyle: { marginBottom: 1 },
                     },
                     {
@@ -134,12 +127,7 @@ class BillModal extends Component {
                             { label: "Monthly", value: 5 },
                         ],
                         fieldStyle: { width: "100%" },
-                        // rules: [
-                        //     {
-                        //         required: true,
-                        //         message: "How much he Cost",
-                        //     },
-                        // ],
+                        rules: [ { required: true, message: "Work Hours is Required", }, ],
                         itemStyle: { marginBottom: 1 },
                     },
                     {
@@ -149,16 +137,12 @@ class BillModal extends Component {
                         size: "small",
                         type: "DatePicker",
                         fieldStyle: { width: "100%" },
-                        // rules: [
-                        //     {
-                        //         required: true,
-                        //         message: "Start Date is required",
-                        //     },
-                        // ],
+                        rules: [ { required: true, message: "Start Date is Required", }, ],
                         itemStyle: { marginBottom: 1 },
                     },
                     {
                         Placeholder: "Contract End Date",
+                        rangeMin: true,
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -167,6 +151,7 @@ class BillModal extends Component {
                     },
                     {
                         Placeholder: "Annual Base Salary",
+                        rangeMin: true,
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -180,12 +165,7 @@ class BillModal extends Component {
                         size: "small",
                         type: "DatePicker",
                         fieldStyle: { width: "100%" },
-                        // rules: [
-                        //     {
-                        //         required: true,
-                        //         message: "Start Date is required",
-                        //     },
-                        // ],
+                        rules: [ { required: true, message: "End Date is Required", }, ],
                         itemStyle: { marginBottom: 1 },
                     },
                     {
@@ -196,46 +176,18 @@ class BillModal extends Component {
                         type: "InputNumber",
                         shape: "$",
                         fieldStyle: { width: "100%" },
-                        // rules: [
-                        //     {
-                        //         required: true,
-                        //         message: "How much he Cost",
-                        //     },
-                        // ],
+                        rules: [ { required: true, message: "Salary is Required", }, ],
                         itemStyle: { marginBottom: 1 },
                     },  
-                    // {
-                    //     Placeholder: "Hourly Rate",
-                    //     fieldCol: 12,
-                    //     size: "small",
-                    //     type: "Text",
-                    //     labelAlign: "right",
-                    //     // itemStyle:{marginBottom:'10px'},
-                    // },
                     {
                         Placeholder: "Pay Frequence",
+                        rangeMin: true,
                         fieldCol: 24,
                         size: "small",
                         type: "Text",
                         labelAlign: "right",
                         // itemStyle:{marginBottom:'10px'},
                     },
-                    // {
-                    //     object: "billing",
-                    //     fieldCol: 12,
-                    //     key: "hourlyrate",
-                    //     size: "small",
-                    //     type: "InputNumber",
-                    //     shape: "$",
-                    //     fieldStyle: { width: "100%" },
-                    //     // rules: [
-                    //     //     {
-                    //     //         required: true,
-                    //     //         message: "How much he Cost",
-                    //     //     },
-                    //     // ],
-                    //     itemStyle: { marginBottom: 1 },
-                    // }, 
                     {
                         object: "billing",
                         fieldCol: 12,
@@ -249,12 +201,7 @@ class BillModal extends Component {
                             { label: "Monthly", value: 5 },
                         ],
                         type: "Select",
-                        // rules: [
-                        //     {
-                        //         required: true,
-                        //         message: "Payment Frequncy is required",
-                        //     },
-                        // ],
+                        rules: [ { required: true, message: "Payment Frequncy is required", }, ],
                         itemStyle: { marginBottom: 1 },
                     },
                     {

@@ -45,9 +45,6 @@ Add required:
         insuranace 
              if insurer required remaning 
 
-        
-        
-
     Employee
         contract
             all fields other than email and comments

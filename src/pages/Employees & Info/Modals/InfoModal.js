@@ -108,12 +108,6 @@ class InfoModal extends Component {
                         // rules:[{ required: true }],
                         type: "DatePicker",
                         fieldStyle: { width: "100%" },
-                        // rules: [
-                        //     {
-                        //         required: true,
-                        //         message: "Date of Birth is required",
-                        //     },
-                        // ],
                         itemStyle: { marginBottom: 10 },
                     },
                     {

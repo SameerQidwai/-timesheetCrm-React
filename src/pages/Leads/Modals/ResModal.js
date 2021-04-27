@@ -34,6 +34,7 @@ class ResModal extends Component {
                 fields: [
                     {
                         Placeholder: "Resource",
+                        rangeMin: true,
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -42,6 +43,7 @@ class ResModal extends Component {
                     },
                     {
                         Placeholder: "Effort Rate",
+                        rangeMin: true,
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -53,7 +55,7 @@ class ResModal extends Component {
                         fieldCol: 12,
                         key: 'contactPersonId',
                         size: "small",
-                        // rules:[{ required: true }],
+                        rules:[{ required: true, message: 'Resource is Required' }],
                         data: [],
                         type: "Select",
                     },
@@ -61,6 +63,7 @@ class ResModal extends Component {
                         object: "obj",
                         fieldCol: 12,
                         key: 'effortRate',
+                        rules:[{ required: true, message: 'Effort Rate is Required' }],
                         size: "small",
                         type: "InputNumber",
                         fieldStyle: { width: "100%" },
@@ -69,6 +72,7 @@ class ResModal extends Component {
                     },
                     {
                         Placeholder: "Start Date",
+                        rangeMin: true,
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -77,6 +81,7 @@ class ResModal extends Component {
                     },
                     {
                         Placeholder: "End Date",
+                        rangeMin: true,
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -87,8 +92,8 @@ class ResModal extends Component {
                         object: "obj",
                         fieldCol: 12,
                         key: 'startDate',
+                        rules:[{ required: true, message: 'Start Date is Required' }],
                         size: "small",
-                        // rules:[{ required: true }],
                         type: "DatePicker",
                         fieldStyle: { width: "100%" },
                     }, 
@@ -97,12 +102,13 @@ class ResModal extends Component {
                         fieldCol: 12,
                         key: 'endDate',
                         size: "small",
-                        // rules:[{ required: true }],
+                        rules:[{ required: true, message: 'End Date is Required' }],
                         type: "DatePicker",
                         fieldStyle: { width: "100%" },
                     },
                     {
                         Placeholder: "Buy Cost",
+                        rangeMin: true,
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -111,6 +117,7 @@ class ResModal extends Component {
                     },
                     {
                         Placeholder: "Sale Cost",
+                        rangeMin: true,
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -122,7 +129,7 @@ class ResModal extends Component {
                         fieldCol: 12,
                         key: 'buyingRate',
                         size: "small",
-                        // rules:[{ required: true }],
+                        rules:[{ required: true, message: 'Buying Rate is Required' }],
                         type: "InputNumber",
                         fieldStyle: { width: "100%" },
                     }, 
@@ -131,7 +138,7 @@ class ResModal extends Component {
                         fieldCol: 12,
                         key: 'sellingRate',
                         size: "small",
-                        // rules:[{ required: true }],
+                        rules:[{ required: true, message: 'Selling Rate is Required' }],
                         type: "InputNumber",
                         fieldStyle: { width: "100%" },
                     },
@@ -148,6 +155,7 @@ class ResModal extends Component {
                 fields: [
                     {
                         Placeholder: "Skill",
+                        rangeMin: true,
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -156,6 +164,7 @@ class ResModal extends Component {
                     },
                     {
                         Placeholder: "Level",
+                        rangeMin: true,
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -167,7 +176,7 @@ class ResModal extends Component {
                         fieldCol: 12,
                         key: 'panelSkillId',
                         size: "small",
-                        // rules:[{ required: true }],
+                        rules:[{ required: true, message: 'Skill is Required' }],
                         data: [],
                         type: "Select",
                         onChange: function func(e, value) {
@@ -184,7 +193,7 @@ class ResModal extends Component {
                         fieldCol: 12,
                         key: 'panelSkillStandardLevelId',
                         size: "small",
-                        // rules:[{ required: true }],
+                        rules:[{ required: true, message: 'Level is Required' }],
                         data: [],
                         type: "Select",
                         onChange: function func(e, value) {
@@ -194,6 +203,7 @@ class ResModal extends Component {
                     },
                     {
                         Placeholder: "Work Hours",
+                        rangeMin: true,
                         fieldCol:24,
                         size: "small",
                         type: "Text",
@@ -205,7 +215,7 @@ class ResModal extends Component {
                         fieldCol: 12,
                         key: 'billableHours',
                         size: "small",
-                        // rules:[{ required: true }],
+                        rules:[{ required: true, message: 'Nillable Hours is Required' }],
                         type: "InputNumber",
                         fieldStyle: { width: "100%" },
                     },
