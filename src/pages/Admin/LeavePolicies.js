@@ -372,7 +372,6 @@ class LeavePolicies extends Component {
     };
 
     submit = () => {
-        this.setState({loading: true})
         this.dynamoForm_1.current.refs.title_form.submit();
         this.dynamoForm_2.current.refs.hours_form.submit();
     };
@@ -470,6 +469,7 @@ class LeavePolicies extends Component {
     editRecord = () => {
         const { mergeObj } = this.state;
         mergeObj.id = this.state.editTimeoff;
+        this.setState({loading: true})
         editLabel(mergeObj).then((res) => {
             if (res) {
                 this.getData();
@@ -480,7 +480,7 @@ class LeavePolicies extends Component {
 
     renderTable = () => {
         const { mergeObj } = this.state;
-        console.log({ mergeObj });
+        this.setState({loading: true})
         addList(mergeObj).then((res) => {
             this.getData();
         });

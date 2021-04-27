@@ -233,7 +233,6 @@ class BillModal extends Component {
     };
 
     submit = () => {
-        this.setState({loading: true})
         this.billingRef.current && this.billingRef.current.refs.billing_form.submit();
     };
 
@@ -255,6 +254,7 @@ class BillModal extends Component {
     };
 
     addContract = (data) => {
+        this.setState({loading: true,})
         const { callBack } = this.props;
         addList(data).then(res=>{
             console.log(res);
@@ -276,6 +276,7 @@ class BillModal extends Component {
     };
 
     editRecord = (data) => {
+        this.setState({loading: true,})
         const { editCntrct, callBack } = this.props;
         editList(editCntrct, data).then((res) => {
             if(res.success){

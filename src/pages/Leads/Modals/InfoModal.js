@@ -690,7 +690,7 @@ class InfoModal extends Component {
 
     submit = () => {
         //submit button click
-        this.setState({loading: true})
+        
         this.basicRef.current.refs.basic_form.submit();
         this.tenderRef.current.refs.tender_form.submit();
         this.billingRef.current && this.billingRef.current.refs.billing_form.submit();
@@ -901,7 +901,8 @@ class InfoModal extends Component {
             tenderSubmitted: false, 
             billingSubmitted: false, 
             datesSubmitted: false, 
-            manageSubmitted: false
+            manageSubmitted: false,
+            loading: true
         })
         editList(mergeObj).then((res) => {
             console.log(res);
@@ -920,7 +921,8 @@ class InfoModal extends Component {
             tenderSubmitted: false, 
             billingSubmitted: false, 
             datesSubmitted: false, 
-            manageSubmitted: false
+            manageSubmitted: false,
+            loading: true
         })
         workWon(editLead, mergeObj).then((res) => {
             console.log(res);

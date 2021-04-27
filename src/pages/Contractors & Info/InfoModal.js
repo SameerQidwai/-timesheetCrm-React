@@ -676,7 +676,6 @@ class InfoModal extends Component {
 
     submit = () => {
         //submit button click
-        this.setState({loading: true})
         this.basicRef.current && this.basicRef.current.refs.basic_form.submit();
         this.billingRef.current && this.billingRef.current.refs.billing_form.submit();
         this.kinRef.current && this.kinRef.current.refs.kin_form.submit();
@@ -771,7 +770,8 @@ class InfoModal extends Component {
         this.setState({
             basicSubmitted: false,
             kinSubmitted: false,
-            billingSubmitted: false
+            billingSubmitted: false,
+            loading: true,
         })
         addList(data).then(res=>{
             if(res.success){
@@ -796,7 +796,9 @@ class InfoModal extends Component {
         this.setState({
             basicSubmitted: false,
             kinSubmitted: false,
-            billingSubmitted: false
+            billingSubmitted: false,
+            loading: true,
+            
         })
         editList(editCont, value).then((res) => {
             if(res.success){

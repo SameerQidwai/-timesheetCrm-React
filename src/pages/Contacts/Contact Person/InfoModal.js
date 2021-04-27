@@ -299,6 +299,7 @@ class InfoModal extends Component {
                 // fields: this.newSkillField(0),
                 fields: [],
             },
+
             SecurityFields: {
                 //creating Component
                 formId: "security_form",
@@ -643,7 +644,7 @@ class InfoModal extends Component {
 
     submit = () => {
         //submit button click
-        this.setState({ loading: true })
+        
         this.basicRef.current && this.basicRef.current.refs.basic_form.submit();
         this.associateRef.current && this.associateRef.current.refs.associate_form.submit();
         this.skillRef.current && this.skillRef.current.refs.skill_form.submit();
@@ -783,6 +784,7 @@ class InfoModal extends Component {
             detailSubmitted: false,
             skillSubmitted: false,
             securitySubmitted: false,
+            loading: true
         })
         addList(value).then((res) => {
             if(res.success){
@@ -871,6 +873,7 @@ class InfoModal extends Component {
             detailSubmitted: false,
             skillSubmitted: false,
             securitySubmitted: false,
+            loading: true
         })
         console.log(value);
         editList(value).then((res) => {

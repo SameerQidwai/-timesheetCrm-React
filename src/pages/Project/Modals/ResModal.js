@@ -51,7 +51,7 @@ class ResModal extends Component {
                         object: "obj",
                         fieldCol: 12,
                         key: 'panelSkillId',
-                        disabled: true,
+                        // disabled: true,
                         size: "small",
                         // rules:[{ required: true }],
                         data: [],
@@ -70,7 +70,7 @@ class ResModal extends Component {
                         object: "obj",
                         fieldCol: 12,
                         key: 'panelSkillStandardLevelId',
-                        disabled: true,
+                        // disabled: true,
                         size: "small",
                         // rules:[{ required: true }],
                         data: [],
@@ -116,7 +116,7 @@ class ResModal extends Component {
                         object: "obj",
                         fieldCol: 12,
                         key: 'contactPersonId',
-                        disabled: true,
+                        // disabled: true,
                         size: "small",
                         // rules:[{ required: true }],
                         data: [],
@@ -235,12 +235,12 @@ class ResModal extends Component {
     
     submit = () => {
         //submit button click
-        this.setState({loading: true})
         this.resourceRef.current && this.resourceRef.current.refs.resource_form.submit();
     };
 
     ResourceCall = (vake) => {
         // this will work after I get the Object from the form
+        this.setState({loading: true})
         const { editRex } = this.props
         vake = vake.obj
         vake.isMarkedAsSelected = true
@@ -255,6 +255,7 @@ class ResModal extends Component {
     };
 
     addRecord = (data) =>{
+        
         const { ProId, callBack } = this.props
         console.log(ProId);
         addLeadSkill(ProId, data).then(res=>{

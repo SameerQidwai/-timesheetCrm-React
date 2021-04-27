@@ -581,7 +581,6 @@ class InfoModal extends Component {
     submit = () => {
         //submit button click
         // console.log(this.detailRef.current);
-        this.setState({loading: true})
         this.basicRef.current && this.basicRef.current.refs.basic_form.submit();
         this.detailRef.current &&
             this.detailRef.current.refs.detail_form.submit();
@@ -683,120 +682,9 @@ class InfoModal extends Component {
         );
     };
 
-    // SkillCall = (vake) => {
-    //     // this will work after I get the Object from the form
-    //     console.log(vake);
-    //     this.setState(
-    //         {
-    //             mergeObj: {
-    //                 ...this.state.mergeObj,
-    //                 skill: { ...vake.skill },
-    //             },
-    //             skillSubmitted: true, // level form submitted
-    //         },
-    //         () => {
-    //             if (
-    //                 this.state.basicSubmitted &&
-    //                 this.state.detailSubmitted &&
-    //                 this.state.billingSubmitted &&
-    //                 this.state.skillSubmitted
-    //             ) {
-    //                 //check if both form is submittef
-    //                 if (!this.props.editClient) {
-    //                     console.log("emes");
-    //                     this.addClient(this.state.mergeObj); //add skill
-    //                 } else {
-    //                     console.log("edit");
-    //                     this.editRecord(this.state.mergeObj); //edit skill
-    //                 }
-    //             }
-    //         }
-    //     );
-    // };
-
-    // insertSkill = () => {
-    //     const { SkillFields } = this.state;
-    //     let obj = SkillFields.fields[SkillFields.fields.length - 1]; // get the inster number for keys
-    //     const item_no = obj ? parseInt(obj.key) + 1 : 0;
-    //     SkillFields.fields = SkillFields.fields.concat(
-    //         ...this.newSkillField(item_no)
-    //     );
-    //     this.setState({
-    //         SkillFields,
-    //     });
-    // };
-
-    // newSkillField = (item_no) => {
-    //     //inserting new fields in modals
-    //     const splice_key = [`skill${item_no}`, `pirority${item_no}`, item_no];
-    //     return [
-    //         {
-    //             object: "skill",
-    //             fieldCol: 11,
-    //             layout: { wrapperCol: { span: 23 } },
-    //             key: `skill${item_no}`,
-    //             size: "small",
-    //             // rules:[{ required: true }],
-    //             data: this.skill_data,
-    //             type: "Select",
-    //             labelAlign: "left",
-    //             rules: [
-    //                 {
-    //                     required: true,
-    //                     message: "skill is required",
-    //                 },
-    //             ],
-    //         },
-    //         {
-    //             object: "skill",
-    //             fieldCol: 11,
-    //             layout: { wrapperCol: { span: 20 } },
-    //             key: `pirority${item_no}`,
-    //             size: "small",
-    //             // rules:[{ required: true }],
-    //             data: this.priority_data,
-    //             type: "Select",
-    //             labelAlign: "left",
-    //             itemStyle: { marginBottom: "5px" },
-    //             rules: [
-    //                 {
-    //                     required: true,
-    //                     message: "skill is required",
-    //                 },
-    //             ],
-    //         },
-    //         {
-    //             fieldCol: 2,
-    //             size: "small",
-    //             Placeholder: <CloseOutlined />,
-    //             key: item_no,
-    //             // rules:[{ required: true }],
-    //             type: "Text",
-    //             style: {
-    //                 textAlign: "right",
-    //             },
-    //             fieldStyle: {
-    //                 cursor: "pointer",
-    //             },
-    //             onClick: function func(value, e) {
-    //                 const { SkillFields } = this.state;
-    //                 SkillFields.fields = SkillFields.fields.filter((obj) => {
-    //                     return (
-    //                         obj.key !== splice_key[0] &&
-    //                         obj.key !== splice_key[1] &&
-    //                         obj.key !== splice_key[2]
-    //                     );
-    //                 });
-
-    //                 this.setState({
-    //                     SkillFields,
-    //                 });
-    //             }.bind(this),
-    //         },
-    //     ];
-    // };
 
     addClient = (value) => {
+        this.setState({loading: true})
         console.log("addClient", value);
         const { rows, callBack } = this.props;
         value.key = rows; // get new key
@@ -805,17 +693,6 @@ class InfoModal extends Component {
     };
 
     getRecord = (data) => {
-        // console.log(data);
-        // const { SkillFields } = this.state;
-
-        // let result = data.skill ? Object.keys(data.skill).length / 2 : 0; // field to inserted
-
-        // for (let i = 1; i < result; i++) {
-        //     //field insert array
-        //     SkillFields.fields = SkillFields.fields.concat(
-        //         this.newSkillField(i)
-        //     );
-        // }
 
         let basic = {
             // exist: true,
@@ -870,6 +747,7 @@ class InfoModal extends Component {
     };
 
     editRecord = (value) => {
+        this.setState({loading: true})
         const { editClient, callBack } = this.props;
         value.key = editClient;
         callBack(value, editClient);
@@ -961,32 +839,6 @@ class InfoModal extends Component {
                             FormFields={BillingFields}
                         />
                     </TabPane>
-                    {/* <TabPane tab="Skill" key="5" forceRender>
-                        <Row justify="end">
-                            <Col>
-                                <Button
-                                    type="primary"
-                                    size="small"
-                                    onClick={this.insertSkill}
-                                >
-                                    <PlusSquareFilled /> Insert Skill
-                                </Button>
-                            </Col>
-                            <Col span="24">
-                                <Row>
-                                    <Col span="11">Skill</Col>
-                                    <Col span="11">Level</Col>
-                                </Row>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Form
-                                ref={this.skillRef}
-                                Callback={this.SkillCall}
-                                FormFields={SkillFields}
-                            />
-                        </Row>
-                    </TabPane> */}
                 </Tabs>
             </Modal>
         );

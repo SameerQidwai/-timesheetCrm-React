@@ -167,6 +167,7 @@ class Calenders extends Component {
     };
 
     addCal = (value) => {
+        this.setState({loading: true})
         addList(value).then((res) => {
             if (res) {
                 this.getData();
@@ -187,6 +188,7 @@ class Calenders extends Component {
 
     editRecord = (obj) => {
         const { editTimeoff } = this.state;
+        this.setState({loading: true})
         obj.id = editTimeoff;
         editLabel(obj).then((res) => {
             if (res) {
@@ -196,7 +198,6 @@ class Calenders extends Component {
     };
 
     submit = () => {
-        this.setState({loading: true})
         this.state.calenderForm.current.refs.calenderId.submit();
     };
 

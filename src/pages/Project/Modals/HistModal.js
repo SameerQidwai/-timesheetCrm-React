@@ -159,7 +159,6 @@ class InfoModal extends Component {
     
     submit = () => {
         //submit button click
-        this.setState({loading: true})
         this.resourceRef.current && this.resourceRef.current.refs.resource_form.submit();
     };
 
@@ -177,6 +176,7 @@ class InfoModal extends Component {
     };
 
     addRecord = (data) =>{
+        this.setState({loading: true})
         const { proId, callBack } = this.props
         console.log(proId);
         addLeadSkill(proId, data).then(res=>{
@@ -207,6 +207,7 @@ class InfoModal extends Component {
     };
 
     editRecord = (data) => {
+        this.setState({loading: true})
         const { editRex, proId, callBack } = this.props;
         data.id = editRex
         editLeadSkill(editRex, proId, data).then((res) => {

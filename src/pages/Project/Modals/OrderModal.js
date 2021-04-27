@@ -149,7 +149,6 @@ class OrderModal extends Component {
     
     submit = () => {
         //submit button click
-        this.setState({loading: true})
         this.orderRef.current && this.orderRef.current.refs.order_form.submit();
     };
 
@@ -167,6 +166,7 @@ class OrderModal extends Component {
     };
 
     addRecord = (data) =>{
+        this.setState({loading: true})
         const { ProId, callBack } = this.props
         console.log(ProId, data);
         addOrder(ProId, data).then(res=>{
@@ -191,6 +191,7 @@ class OrderModal extends Component {
     };
 
     editRecord = (data) => {
+        this.setState({loading: true})
         const { editRex, ProId, callBack } = this.props;
         data.id = editRex
         editOrder(ProId, editRex, data).then((res) => {

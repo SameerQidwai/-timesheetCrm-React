@@ -396,7 +396,6 @@ class PanelInfo extends Component {
     };
 
     submit = () => {
-        this.setState({ loading: true })
         this.dynamoForm_1.current.refs.title_form.submit();
         this.dynamoForm_2.current.refs.hours_form.submit();
     };
@@ -465,6 +464,7 @@ class PanelInfo extends Component {
 
     renderTable = () => {
         const { mergeObj } = this.state;
+        this.setState({ loading: true })
         addList(mergeObj).then((res) => {
             this.getData();
         });
@@ -507,6 +507,7 @@ class PanelInfo extends Component {
 
     editRecord = () => {
         const { mergeObj, editPS } = this.state;
+        this.setState({ loading: true })
         mergeObj.id = editPS;
         editLabel(mergeObj).then((res) => {
             if (res) {

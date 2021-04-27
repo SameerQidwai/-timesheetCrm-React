@@ -166,6 +166,7 @@ class CalenerHolidays extends Component {
         }
     };
     addType = (value) => {
+        this.setState({loading: true})
         addList(value).then((res) => {
             if (res) {
                 this.getData();
@@ -195,6 +196,7 @@ class CalenerHolidays extends Component {
 
     editRecord = (obj) => {
         const { editTimeoff } = this.state;
+        this.setState({loading: true})
         obj.id = editTimeoff;
         editLabel(obj).then((res) => {
             if (res) {
@@ -204,7 +206,6 @@ class CalenerHolidays extends Component {
     };
 
     submit = () => {
-        this.setState({loading: true})
         this.holidayForm.current.refs.form.submit();
     };
 

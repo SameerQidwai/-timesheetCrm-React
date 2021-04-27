@@ -94,16 +94,16 @@ class OrgInfo extends Component {
                                 >
                                     Edit
                                 </Menu.Item>
-                                <Menu.Item >
-                                {/* <Link
-                                    to={{
-                                        pathname: `/projects/${id}/resources/rates/${record.id}`,
-                                    }}
-                                    className="nav-link"
-                                >
-                                    History
-                                </Link> */}
-                                </Menu.Item>
+                                {/* <Menu.Item >
+                                    <Link
+                                        to={{
+                                            pathname: `/projects/${id}/resources/rates/${record.id}`,
+                                        }}
+                                        className="nav-link"
+                                    >
+                                        History
+                                    </Link>
+                                </Menu.Item> */}
                             </Menu>
                         }
                     >

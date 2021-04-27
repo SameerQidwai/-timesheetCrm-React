@@ -280,7 +280,7 @@ class InfoModal extends Component {
 
     submit = () => {
         //submit button click
-        this.setState({loading: true})
+        
         this.timeRef.current.refs.off_form.submit();
     };
 
@@ -299,6 +299,7 @@ class InfoModal extends Component {
 
     addTimeOff = (value) => {
         const { rows, callBack } = this.props;
+        this.setState({loading: true})
         value.key = rows; // get new key
         callBack(value, false);
         this.onCancel();
@@ -313,6 +314,7 @@ class InfoModal extends Component {
     };
 
     editRecord = (value) => {
+        this.setState({loading: true})
         const { editOff, callBack } = this.props;
         value.key = editOff;
         callBack(value, editOff);

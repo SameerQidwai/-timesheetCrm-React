@@ -102,7 +102,6 @@ class HolidayTypes extends Component {
     };
 
     submit = () => {
-        this.setState({loading: false})
         this.HalForm.current.refs.type_form.submit();
     };
 
@@ -115,6 +114,7 @@ class HolidayTypes extends Component {
     };
 
     addType = (value) => {
+        this.setState({loading: false})
         addList(value).then((res) => {
             if (res) {
                 this.HalForm.current.refs.type_form.resetFields();
@@ -138,6 +138,7 @@ class HolidayTypes extends Component {
 
     editRecord = (obj) => {
         const { editType } = this.state;
+        this.setState({loading: false})
         obj.id = editType;
         editLabel(obj).then((res) => {
             if (res) {

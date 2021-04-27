@@ -804,7 +804,6 @@ class InfoModal extends Component {
 
     submit = () => {
         //submit button click
-        this.setState({loading: true})
         this.basicRef.current.refs.basic_form.submit();
         this.billingRef.current && this.billingRef.current.refs.billing_form.submit();
         this.insuredRef.current && this.insuredRef.current.refs.insured_form.submit();
@@ -991,7 +990,8 @@ class InfoModal extends Component {
             billingSubmitted:false, 
             insuredSubmitted:false, 
             bankSubmitted:false, 
-            futureSubmitted:false 
+            futureSubmitted:false,
+            loading: true
         })
         addList(value).then((res) => {
             if(res.success){
@@ -1030,7 +1030,8 @@ class InfoModal extends Component {
             billingSubmitted:false, 
             insuredSubmitted:false, 
             bankSubmitted:false, 
-            futureSubmitted:false 
+            futureSubmitted:false,
+            loading: false
         })
         editList(value).then((res) => {
             console.log(res);

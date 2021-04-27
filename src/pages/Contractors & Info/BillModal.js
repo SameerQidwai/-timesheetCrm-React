@@ -38,19 +38,19 @@ class BillModal extends Component {
                 fields: [
                     {
                         Placeholder: "Contract Start Date",
+                        rangeMin: true,
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
                         labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
                     },
                     {
                         Placeholder: "Contract End Date",
+                        rangeMin: true,
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
                         labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
                     },
                     {
                         object: "billing",
@@ -59,13 +59,8 @@ class BillModal extends Component {
                         size: "small",
                         type: "DatePicker",
                         fieldStyle: { width: "100%" },
-                        // rules: [
-                        //     {
-                        //         required: true,
-                        //         message: "Start Date is required",
-                        //     },
-                        // ],
-                        itemStyle: { marginBottom: 1 },
+                        rules: [ { required: true, message: "Start Date is required", }, ],
+                        labelAlign: "right",
                     },
                     {
                         object: "billing",
@@ -74,37 +69,23 @@ class BillModal extends Component {
                         size: "small",
                         type: "DatePicker",
                         fieldStyle: { width: "100%" },
-                        // rules: [
-                        //     {
-                        //         required: true,
-                        //         message: "Start Date is required",
-                        //     },
-                        // ],
-                        itemStyle: { marginBottom: 1 },
+                        rules: [ { required: true, message: "End Date is required", }, ],
                     },
                     {
                         Placeholder: "Contract Payment Basis",
+                        rangeMin: true,
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
                         labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
                     },
-                    // {
-                    //     Placeholder: `Total Contract ${'here'}`,
-                    //     fieldCol: 12,
-                    //     size: "small",
-                    //     type: "Text",
-                    //     labelAlign: "right",
-                    //     // itemStyle:{marginBottom:'10px'},
-                    // },
                     {
                         Placeholder: `Total Fee`,
+                        rangeMin: true,
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
                         labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
                     },
                     {
                         object: "billing",
@@ -119,18 +100,12 @@ class BillModal extends Component {
                             { label: "Monthly", value: 5 },
                         ],
                         type: "Select",
-                        // rules: [
-                        //     {
-                        //         required: true,
-                        //         message: "Payment Frequncy is required",
-                        //     },
-                        // ],
+                        rules: [ { required: true, message: "Payment Frequncy is required", }, ],
                         onChange: function onChange(value, option) {
                             const { BillingFields } = this.state
                             BillingFields.fields[5].Placeholder = `Total Fee ${value ?option.label: ''}`
                             this.setState({BillingFields})
                         }.bind(this),
-                        itemStyle: { marginBottom: 1 },
                     },
                     {
                         object: "billing",
@@ -140,13 +115,7 @@ class BillModal extends Component {
                         type: "InputNumber",
                         shape: "$",
                         fieldStyle: { width: "100%" },
-                        // rules: [
-                        //     {
-                        //         required: true,
-                        //         message: "How much he Cost",
-                        //     },
-                        // ],
-                        itemStyle: { marginBottom: 1 },
+                        rules: [ { required: true, message: "Total Fee is Required", }, ],
                     },
                     {
                         Placeholder: "Comments",
@@ -154,7 +123,6 @@ class BillModal extends Component {
                         size: "small",
                         type: "Text",
                         labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
                     },
                     {
                         object: "billing",
@@ -162,7 +130,6 @@ class BillModal extends Component {
                         key: "comments",
                         size: "small",
                         type: "Textarea",
-                        itemStyle: { marginBottom: 1 },
                     },
                     
                 ],
@@ -178,7 +145,6 @@ class BillModal extends Component {
     };
 
     submit = () => {
-        this.setState({loading: true})
         this.billingRef.current && this.billingRef.current.refs.billing_form.submit();
     };
 
@@ -200,6 +166,7 @@ class BillModal extends Component {
     };
 
     addContract = (data) => {
+        this.setState({loading: true})
         const { callBack } = this.props;
         addList(data).then(res=>{
             console.log(res);
@@ -221,6 +188,7 @@ class BillModal extends Component {
     };
 
     editRecord = (data) => {
+        this.setState({loading: true})
         const { editCntrct, callBack } = this.props;
         editList(editCntrct, data).then((res) => {
             if(res.success){

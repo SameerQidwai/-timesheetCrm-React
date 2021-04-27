@@ -220,11 +220,11 @@ class Roles extends Component {
     };
 
     callPermission = () => {
-        this.setState({ perModal: true });
+        this.setState({ perModal: true, loading: true });
     };
 
     submit = () => {
-        this.setState({loading: true})
+        
         this.roleForm.current.refs.role_form.submit();
     };
 

@@ -43,6 +43,7 @@ class InfoModal extends Component {
                 fields: [
                     {
                         Placeholder: "Panel",
+                        rangeMin: true,
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -51,6 +52,7 @@ class InfoModal extends Component {
                     },
                     {
                         Placeholder: "Organisation",
+                        rangeMin: true,
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -62,7 +64,7 @@ class InfoModal extends Component {
                         fieldCol: 12,
                         key: "panelId",
                         size: "small",
-                        // rules:[{ required: true }],
+                        rules:[{ required: true, message: 'Panel is Required' }],
                         data: [],
                         type: "Select",
                     },
@@ -71,7 +73,7 @@ class InfoModal extends Component {
                         fieldCol: 12,
                         key: "organizationId",
                         size: "small",
-                        // rules:[{ required: true }],
+                        rules:[{ required: true, message: 'Organisation' }],
                         data: [],
                         type: "Select",
                         onChange: function func(value) {
@@ -105,6 +107,7 @@ class InfoModal extends Component {
                     },
                     {
                         Placeholder: "Name",
+                        rangeMin: true,
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -125,11 +128,12 @@ class InfoModal extends Component {
                         fieldCol: 12,
                         key: "title",
                         size: "small",
-                        // rules:[{ required: true, type: 'email', message: 'Important' }],
+                        rules:[{ required: true, message: 'Name is Required' }],
                         type: "Input",
                     },
                     {
                         Placeholder: "Type",
+                        rangeMin: true,
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -149,7 +153,7 @@ class InfoModal extends Component {
                         fieldCol: 12,
                         key: "type",
                         size: "small",
-                        // rules:[{ required: true }],
+                        rules:[{ required: true, message: 'Type is Required' }],
                         data: [{label: 'MILESTONE BASE', value: 1},
                             {label: 'TIME BASE', value: 2}],
                         type: "Select",
@@ -625,7 +629,6 @@ class InfoModal extends Component {
 
     submit = () => {
         //submit button click
-        this.setState({loading: true})
         this.basicRef.current.refs.basic_form.submit();
         this.tenderRef.current.refs.tender_form.submit();
         this.billingRef.current && this.billingRef.current.refs.billing_form.submit();
@@ -790,7 +793,14 @@ class InfoModal extends Component {
     addProject = (value) => {
         const { callBack } = this.props;
         console.log(value);
-        this.setState({basicSubmitted: false, tenderSubmitted: false, billingSubmitted: false, datesSubmitted: false, manageSubmitted: false})
+        this.setState({
+            basicSubmitted: false, 
+            tenderSubmitted: false, 
+            billingSubmitted: false, 
+            datesSubmitted: false, 
+            manageSubmitted: false,
+            loading: true
+        })
         addList(value).then((res) => {
             if(res.success){
                 callBack()
@@ -826,7 +836,8 @@ class InfoModal extends Component {
             tenderSubmitted: false, 
             billingSubmitted: false, 
             datesSubmitted: false, 
-            manageSubmitted: false
+            manageSubmitted: false,
+            loading: true
         })
         editList(data).then((res) => {
             console.log(res);

@@ -1,17 +1,4 @@
-training field is not completed just yet
-
-
-I did add, edit and delete of skill
-    Resurce
-        add (done but Employee couldn't show in the database)
-        edit 
-        delete 
-        select person
-
-correct your fellow and add comment in ResModal because of conditions
-
 lead skilldelete is not working right now
-
 
 bring contact person as Panel skill and level requirment
 assoisiation status
@@ -19,8 +6,6 @@ can't edit assoisiation of a contactperson it will be not be availabe as an empl
 opportuinty status L, O ajeeb sa lag raga ge
 
 Upload Files 
-
-
 
 today's meeting
 

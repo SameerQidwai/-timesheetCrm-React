@@ -280,7 +280,6 @@ class LeaseModal extends Component {
     };
 
     submit = () => {
-        this.setState({loading: true})
         this.leaseRef.current && this.leaseRef.current.refs.lease_form.submit();
     }
 
@@ -299,6 +298,7 @@ class LeaseModal extends Component {
     };
 
     addContract = (data) => {
+        this.setState({loading: true})
         const { callBack, empId } = this.props;
         addList(empId, data).then(res=>{
             console.log(res);
@@ -321,6 +321,7 @@ class LeaseModal extends Component {
     };
 
     editRecord = (data) => {
+        this.setState({loading: true})
         const { editLease, callBack, empId } = this.props;
         editList(empId, editLease, data).then((res) => {
             if(res.success){

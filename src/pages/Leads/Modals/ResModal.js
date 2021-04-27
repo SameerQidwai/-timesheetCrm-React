@@ -289,7 +289,6 @@ class ResModal extends Component {
     
     submit = () => {
         //submit button click
-        this.setState({loading: true})
         this.resourceRef.current && this.resourceRef.current.refs.resource_form.submit();
     };
 
@@ -314,6 +313,7 @@ class ResModal extends Component {
     };
 
     addSkill = (data) =>{
+        this.setState({loading: true})
         const { leadId, callBack } = this.props
         console.log(leadId);
         addLeadSkill(leadId, data).then(res=>{
@@ -325,6 +325,7 @@ class ResModal extends Component {
     }
 
     addResourse = ( data) =>{
+        this.setState({loading: true})
         const {callBack, leadId, skillId } = this.props
         addLeadSkillResource(leadId, skillId, data).then(res=>{
             if(res.success){
@@ -334,6 +335,7 @@ class ResModal extends Component {
     }
 
     editSkill = (data) => {
+        this.setState({loading: true})
         const { editRex, leadId, callBack } = this.props;
         data.id = editRex.id
         editLeadSkill(leadId, editRex.id, data).then((res) => {
@@ -344,6 +346,7 @@ class ResModal extends Component {
     };
 
     editResource = (data) => {
+        this.setState({loading: true})
         const { editRex, leadId, skillId, callBack } = this.props;
         data.id = editRex
         editLeadSkillResource(leadId, skillId , editRex.id, data).then((res) => {

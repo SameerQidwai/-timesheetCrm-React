@@ -107,7 +107,6 @@ class Levels extends Component {
     };
 
     submit = () => {
-        this.setState({loading: true})
         this.levelForm.current.refs.level_form.submit();
     };
 
@@ -120,6 +119,7 @@ class Levels extends Component {
     };
 
     addType = (value) => {
+        this.setState({loading: true})
         addList(value).then((res) => {
             if (res) {
                 this.getData();
@@ -139,6 +139,7 @@ class Levels extends Component {
         });
     };
     editRecord = (obj) => {
+        this.setState({loading: true})
         const { editLevel } = this.state;
         obj.id = editLevel;
         editLabel(obj).then((res) => {

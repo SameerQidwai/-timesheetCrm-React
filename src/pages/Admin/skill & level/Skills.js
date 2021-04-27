@@ -322,7 +322,6 @@ class Skills extends Component {
 
     submit = () => {
         //submit button click
-        this.setState({loading: true})
         this.skillForm.current.refs.skill_form.submit();
         this.levelForm.current.refs.level_form.submit();
     };
@@ -387,6 +386,7 @@ class Skills extends Component {
     };
 
     addSkill = (value) => {
+        this.setState({loading: true})
         const { mergeObj } = this.state;
         console.log({ mergeObj });
         addList(mergeObj).then((res) => {
@@ -423,6 +423,7 @@ class Skills extends Component {
     };
 
     editRecord = () => {
+        this.setState({loading: true})
         const { mergeObj, editSkill } = this.state;
         mergeObj.id = editSkill;
         console.log(mergeObj);

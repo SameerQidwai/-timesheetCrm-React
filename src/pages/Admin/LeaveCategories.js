@@ -131,7 +131,6 @@ class LeaveCategories extends Component {
     };
 
     submit = () => {
-        this.setState({loading:true})
         this.dynamoForm.current.refs.time_off.submit();
     };
 
@@ -147,6 +146,7 @@ class LeaveCategories extends Component {
     };
 
     addType = (value) => {
+        this.setState({loading:true})
         addList(value).then((res) => {
             if (res) {
                 this.getData();
@@ -166,6 +166,7 @@ class LeaveCategories extends Component {
     };
 
     editRecord = (obj) => {
+        this.setState({loading:true})
         obj.id = this.state.editTimeoff;
         editLabel(obj).then((res) => {
             if (res) {
