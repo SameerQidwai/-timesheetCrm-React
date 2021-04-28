@@ -18,7 +18,7 @@ class Organizations extends Component {
                 title: "Code",
                 dataIndex: "id",
                 key: "id",
-                render: (record) => `CLT-00${record}`,
+                render: (record) => `ORG-00${record}`,
             },
             {
                 title: "Name",

@@ -7,6 +7,7 @@ import ResModal from "./Modals/ResModal";
 import { getRecord, getLeadSkills, delLeadSkill, delLeadSkillResource, selectLeadSkillResource } from "../../service/opportunities";
 
 import moment from "moment"
+import { formatCurrency } from "../../service/constant";
 
 const { Item } = Descriptions;
 
@@ -26,36 +27,13 @@ class Resource extends Component {
                 key: "panelSkillStandardLevel",
                 render: (record)=> {return record && record.levelLabel}
             },
-            // {
-            //     title: "Resource Name",
-            //     dataIndex: "user",
-            //     key: "user",
-            //     render: (record)=> {return record &&
-            //         <Link
-            //                     to={{
-            //                         pathname: `/Employees/info/${record.id}`,
-            //                     }}
-            //                     className="nav-link"
-            //                 >
-            //         {record.contactPersonOrganization && record.contactPersonOrganization.contactPerson && `${record.contactPersonOrganization.contactPerson.firstName} ${record.contactPersonOrganization.contactPerson.lastName}`}
-            //         </Link>
-            //     }
-            // },
+          
             {
                 title: "Total Hours",
                 dataIndex: "billableHours",
                 key: "billableHours",
             },
-            // {
-            //     title: "Buy Cost",
-            //     dataIndex: "buyingRate",
-            //     key: "buyingRate",
-            // },
-            // {
-            //     title: "Sale Cost",
-            //     dataIndex: "sellingRate",
-            //     key: "sellingRate",
-            // },
+           
             {
                 title: "Action",
                 key: "action",
@@ -182,7 +160,7 @@ class Resource extends Component {
                     // extra={<Button type="primary">Edit</Button>}
                 >
                     <Item label="Title">{desc.title}</Item>
-                    <Item label="Value">{desc.value}</Item>
+                    <Item label="Value">{formatCurrency(desc.value)}</Item>
                     <Item label="Start Date">{desc.startDate ? moment(desc.startDate).format('ddd DD MM YYYY'): null} </Item>
                     <Item label="End Date">{desc.endDate ? moment(desc.endDate).format('ddd DD MM YYYY'): null}</Item>
                     <Item label="Bid Date">{desc.bidDate ? moment(desc.bidDate).format('ddd DD MM YYYY'): null}</Item>

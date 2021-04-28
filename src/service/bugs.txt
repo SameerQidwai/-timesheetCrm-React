@@ -97,18 +97,18 @@ Project Resources required not done yet
 MEETING  28- April -2021
 contract end date Employee optional
 
-effort rate default 100 and put % sirgn 
+                                                                                    effort rate default 100 and put % sirgn 
 
-organization code will start from org now
+                                                                                    organization code will start from org now
 short title for organization
-Money Format value
+                                                                                    Money Format value
 
-Go/get will be delete from project
+                                                                                    Go/get will be delete from project
 
-skill and resource is disabled in Project Resource
+                                                                                    skill and resource is disabled in Project Resource
 
 
- comments in purchase order is validating
+                                                                                    comments in purchase order is validating
 
 
 For later future disscuss in meeting 28-April-2021

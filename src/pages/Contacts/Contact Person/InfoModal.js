@@ -278,6 +278,7 @@ class InfoModal extends Component {
                     // },
                 ],
             },
+            
             associateFields: {
                 formId: "associate_form",
                 FormCol: 24,
