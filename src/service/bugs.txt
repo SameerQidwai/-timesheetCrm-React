@@ -42,13 +42,6 @@ Add required:
         Bank 
             if anyone required all only bacnks fields
 
-    Contractor
-        personal
-            contact person id
-            uersame
-        contract 
-            all fieldsa other than comments
-
     opportuinty
         Info
             delete field opp id
@@ -79,3 +72,44 @@ Add required:
             History hide
             delete remove
 
+I did't put Requred on usernam/emails in Employee and contractor
+
+SubContractor required is not completed as well
+     Contractor
+        personal
+            contact person id
+            uersame
+        contract 
+            all fieldsa other than comments
+
+Project Resources required not done yet 
+    Project
+        resource
+            skill
+            resource
+
+        Purcahse order
+            other than comments and descriptions
+
+        Novated Lease
+
+
+MEETING  28- April -2021
+contract end date Employee optional
+
+effort rate default 100 and put % sirgn 
+
+organization code will start from org now
+short title for organization
+Money Format value
+
+Go/get will be delete from project
+
+skill and resource is disabled in Project Resource
+
+
+ comments in purchase order is validating
+
+
+For later future disscuss in meeting 28-April-2021
+add delegate Contact Person can be add while adding Organisation 

@@ -118,7 +118,7 @@ class Contact extends Component {
     };
 
     toggelModal = (status) => {
-        this.setState({ openModal: status });
+        this.setState({ openModal: status, editCP: false, });
     };
 
     Callback = () => {
