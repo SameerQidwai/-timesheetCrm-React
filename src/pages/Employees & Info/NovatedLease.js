@@ -8,6 +8,7 @@ import { getRecord as empRecord } from "../../service/Employees";
 import { getList, delList } from "../../service/employee-leases";
 
 import "../styles/table.css";
+import { formatCurrency } from "../../service/constant";
 
 const { Title } = Typography;
 const { Item } = Descriptions;
@@ -30,6 +31,7 @@ class NovatedLease extends Component {
                 title: "Finance Amount",
                 dataIndex: "financedAmount",
                 key: "financedAmount",
+                render: record => `$ ${formatCurrency(record)}` 
             },
             {
                 title: "Start Date",

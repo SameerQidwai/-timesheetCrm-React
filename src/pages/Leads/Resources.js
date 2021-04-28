@@ -160,7 +160,7 @@ class Resource extends Component {
                     // extra={<Button type="primary">Edit</Button>}
                 >
                     <Item label="Title">{desc.title}</Item>
-                    <Item label="Value">{formatCurrency(desc.value)}</Item>
+                    <Item label="Value">{ '$ ' + formatCurrency(desc.value)}</Item>
                     <Item label="Start Date">{desc.startDate ? moment(desc.startDate).format('ddd DD MM YYYY'): null} </Item>
                     <Item label="End Date">{desc.endDate ? moment(desc.endDate).format('ddd DD MM YYYY'): null}</Item>
                     <Item label="Bid Date">{desc.bidDate ? moment(desc.bidDate).format('ddd DD MM YYYY'): null}</Item>
@@ -227,8 +227,8 @@ function NestedTable(props) {
             key: 'contactPerson' ,
             render: (record) =>(record &&`${record.firstName} ${record.lastName}`)
         },
-        { title: 'Buy Cost', dataIndex: 'buyingRate', key: 'buyingRate' },
-        { title: 'Sale Cost', dataIndex: 'sellingRate', key: 'sellingRate' },
+        { title: 'Buy Cost', dataIndex: 'buyingRate', key: 'buyingRate', render: (record)=> `$ ${formatCurrency(record)}` },
+        { title: 'Sale Cost', dataIndex: 'sellingRate', key: 'sellingRate', render: (record)=> `$ ${formatCurrency(record)}`},
         // { title: 'Billable Hours', dataIndex: 'hours', key: 'hours' },
         {
             title: "Action",
