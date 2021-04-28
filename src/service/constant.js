@@ -18,3 +18,5 @@ export const formatCurrency = (amount) => {
     return  `${amount.toLocaleString()}`
   }; //end
   
+// export const Api = "http://192.168.0.191:3301/api/v1";
+ 
