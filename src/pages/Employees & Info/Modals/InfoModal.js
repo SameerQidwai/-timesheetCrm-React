@@ -851,26 +851,7 @@ class InfoModal extends Component {
                     username: this.state.sUsername
                 },
                 basicSubmitted: true, // skill form submitted
-            },
-            () => {
-                if (
-                    this.state.basicSubmitted &&
-                    this.state.detailSubmitted &&
-                    this.state.kinSubmitted &&
-                    this.state.bankSubmitted && 
-                    this.state.billingSubmitted && 
-                    this.state.trainSubmitted
-                ) {
-                    //check if both form is submittef
-                    if (!this.props.editEmp) {
-                        console.log("emes");
-                        this.addEmployee(this.state.mergeObj); //add skill
-                    } else {
-                        console.log("edit");
-                        this.editRecord(this.state.mergeObj); //edit skill
-                    }
-                }
-            }
+            }, () => this.validateForm()
         );
     };
 
@@ -889,26 +870,7 @@ class InfoModal extends Component {
                     latestEmploymentContract: vake.billing,
                 },
                 billingSubmitted: true, // level form submitted
-            },
-            () => {
-                if (
-                    this.state.basicSubmitted &&
-                    this.state.detailSubmitted &&
-                    this.state.kinSubmitted &&
-                    this.state.bankSubmitted &&
-                    this.state.billingSubmitted && 
-                    this.state.trainSubmitted
-                ) {
-                    //check if both form is submittef
-                    if (!this.props.editEmp) {
-                        console.log("emes");
-                        this.addEmployee(this.state.mergeObj); //add skill
-                    } else {
-                        console.log("edit");
-                        this.editRecord(this.state.mergeObj); //edit skill
-                    }
-                }
-            }
+            },() => this.validateForm()
         );
     };
 
@@ -922,26 +884,7 @@ class InfoModal extends Component {
                     ...vake.detail,
                 },
                 detailSubmitted: true, // level form submitted
-            },
-            () => {
-                if (
-                    this.state.basicSubmitted &&
-                    this.state.detailSubmitted &&
-                    this.state.kinSubmitted &&
-                    this.state.bankSubmitted &&
-                    this.state.billingSubmitted && 
-                    this.state.trainSubmitted
-                ) {
-                    //check if both form is submittef
-                    if (!this.props.editEmp) {
-                        console.log("emes");
-                        this.addEmployee(this.state.mergeObj); //add skill
-                    } else {
-                        console.log("edit");
-                        this.editRecord(this.state.mergeObj); //edit skill
-                    }
-                }
-            }
+            }, () => this.validateForm()
         );
     };
 
@@ -955,25 +898,7 @@ class InfoModal extends Component {
                     ...vake.kin,
                 },
                 kinSubmitted: true, // level form submitted
-            },
-            () => {
-                if (
-                    this.state.basicSubmitted &&
-                    this.state.kinSubmitted &&
-                    this.state.bankSubmitted &&
-                    this.state.detailSubmitted &&
-                    this.state.billingSubmitted 
-                ) {
-                    //check if both form is submittef
-                    if (!this.props.editEmp) {
-                        console.log("emes");
-                        this.addEmployee(this.state.mergeObj); //add skill
-                    } else {
-                        console.log("edit");
-                        this.editRecord(this.state.mergeObj); //edit skill
-                    }
-                }
-            }
+            },() => this.validateForm()
         );
     };
 
@@ -995,26 +920,7 @@ class InfoModal extends Component {
                     },
                 },
                 bankSubmitted: true, // level form submitted
-            },
-            () => {
-                if (
-                    this.state.basicSubmitted &&
-                    this.state.kinSubmitted &&
-                    this.state.bankSubmitted &&
-                    this.state.detailSubmitted &&
-                    this.state.billingSubmitted && 
-                    this.state.trainSubmitted
-                ) {
-                    //check if both form is submittef
-                    if (!this.props.editEmp) {
-                        console.log("emes");
-                        this.addEmployee(this.state.mergeObj); //add skill
-                    } else {
-                        console.log("edit");
-                        this.editRecord(this.state.mergeObj); //edit skill
-                    }
-                }
-            }
+            },() => this.validateForm()
         );
     };
 
@@ -1030,28 +936,23 @@ class InfoModal extends Component {
                     },
                 },
                 trainSubmitted: true, // level form submitted
-            },
-            () => {
-                if (
-                    this.state.basicSubmitted &&
-                    this.state.kinSubmitted &&
-                    this.state.bankSubmitted &&
-                    this.state.detailSubmitted &&
-                    this.state.billingSubmitted && 
-                    this.state.trainSubmitted
-                ) {
-                    //check if both form is submittef
-                    if (!this.props.editEmp) {
-                        console.log("emes");
-                        this.addEmployee(this.state.mergeObj); //add skill
-                    } else {
-                        console.log("edit");
-                        this.editRecord(this.state.mergeObj); //edit skill
-                    }
-                }
-            }
+            }, () => this.validateForm()
         );
     };
+
+    validateForm = () => {
+        const { basicSubmitted, kinSubmitted, bankSubmitted, detailSubmitted, billingSubmitted, trainSubmitted,  mergeObj } = this.state
+        if ( basicSubmitted && kinSubmitted && bankSubmitted && detailSubmitted && billingSubmitted && trainSubmitted ) {
+            //check if both form is submittef
+            if (!this.props.editEmp) {
+                console.log("emes");
+                this.addEmployee(mergeObj); //add skill
+            } else {
+                console.log("edit");
+                this.editRecord(mergeObj); //edit skill
+            }
+        }
+    }
 
     addEmployee = (data) => {
         console.log("addEmployee", data);
@@ -1115,29 +1016,6 @@ class InfoModal extends Component {
                 callBack()
             }
         });
-    };
-
-    onCancel = () => {
-        const { BasicFields, BillingFields, DetailFields, KinFields, BankFields} = this.state;
-
-        delete BasicFields.initialValues; // delete initialValues of fields on close
-        delete DetailFields.initialValues;
-        delete KinFields.initialValues;
-        delete BillingFields.initialValues;
-        this.setState(
-            {
-                basicSubmitted: false,
-                detailSubmitted: false,
-                billingSubmitted: false,
-                BasicFields: { ...BasicFields }, //delete Formfields on Close
-                BillingFields: { ...BillingFields },
-                DetailFields: { ...DetailFields },
-                mergeObj: {},
-            },
-            () => {
-                this.props.close();
-            }
-        );
     };
 
     onContact = (value) => {
@@ -1307,7 +1185,7 @@ class InfoModal extends Component {
     }
 
     render() {
-        const { editEmp, visible } = this.props;
+        const { editEmp, visible, close } = this.props;
         const { BasicFields, DetailFields, KinFields, BankFields, BillingFields, TrainFields,  CONTACT, sContact, sUsername, loading } = this.state;
 
         return (
@@ -1319,7 +1197,7 @@ class InfoModal extends Component {
                 onOk={() => { this.submit(); }}
                 okButtonProps={{ disabled: loading }}
                 okText={loading ?<LoadingOutlined /> :"Save"}
-                onCancel={this.onCancel}
+                onCancel={()=> close()}
                 width={900}
             >
                 <Row style={{marginBottom:"1em"}} justify="space-between">

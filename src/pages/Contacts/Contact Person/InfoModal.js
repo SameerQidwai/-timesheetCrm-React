@@ -699,19 +699,7 @@ class InfoModal extends Component {
             {
                 mergeObj: { ...this.state.mergeObj, contactPersonOrganizations: vars, },
                 associateSubmitted: true, // level form submitted
-            },
-            () => {
-                const { basicSubmitted, associateSubmitted, skillSubmitted, securitySubmitted, mergeObj } = this.state
-                if ( basicSubmitted && associateSubmitted && skillSubmitted && securitySubmitted ) {
-                    //check if both form is submittef
-                    if (!this.props.editCP) {
-                        this.addPerson(mergeObj); //add skill
-                    } else {
-                        console.log("edit");
-                        this.editRecord(mergeObj); //edit skill
-                    }
-                }
-            }
+            }, () => this.validateForm()
         );
     };
 
@@ -733,19 +721,7 @@ class InfoModal extends Component {
                     standardSkillStandardLevelIds: vars,
                 },
                 skillSubmitted: true, // level form submitted
-            },
-            () => {
-                const { basicSubmitted, associateSubmitted, skillSubmitted, securitySubmitted, mergeObj } = this.state
-                if ( basicSubmitted && associateSubmitted && skillSubmitted && securitySubmitted ) {
-                    //check if both form is submittef
-                    if (!this.props.editCP) {
-                        this.addPerson(mergeObj); //add skill
-                    } else {
-                        console.log("edit");
-                        this.editRecord(mergeObj); //edit skill
-                    }
-                }
-            }
+            }, () => this.validateForm()
         );
     };
 
@@ -760,21 +736,21 @@ class InfoModal extends Component {
                     ...vake.sec,
                 },
                 securitySubmitted: true, // skill form submitted
-            },
-            () => {
-                const { basicSubmitted, associateSubmitted, skillSubmitted, securitySubmitted, mergeObj } = this.state
-                if ( basicSubmitted && associateSubmitted && skillSubmitted && securitySubmitted ) {
-                    //check if both form is submittef
-                    if (!this.props.editCP) {
-                        this.addPerson(mergeObj); //add skill
-                    } else {
-                        console.log("edit");
-                        this.editRecord(mergeObj); //edit skill
-                    }
-                }
-            }
+            }, () => this.validateForm()
         );
     };
+    validateForm = () => {
+        const { basicSubmitted, associateSubmitted, skillSubmitted, securitySubmitted, mergeObj } = this.state
+        if ( basicSubmitted && associateSubmitted && skillSubmitted && securitySubmitted ) {
+            //check if both form is submittef
+            if (!this.props.editCP) {
+                this.addPerson(mergeObj); //add skill
+            } else {
+                console.log("edit");
+                this.editRecord(mergeObj); //edit skill
+            }
+        }
+    }
 
     addPerson = (value) => {
         const { callBack } = this.props;
