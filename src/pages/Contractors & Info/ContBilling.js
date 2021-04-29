@@ -3,7 +3,7 @@ import { Popconfirm, Typography, Dropdown, Button, Table, Menu, Descriptions } f
 
 import { PlusSquareOutlined, SettingOutlined, DownOutlined, } from "@ant-design/icons"; //Icons
 
-import BillModal from "./BillModal";
+import BillModal from "./Modals/BillModal";
 import { getRecord as subContRecord } from "../../service/contractors"
 import { getList, delList } from "../../service/subContrators-contracts";
 

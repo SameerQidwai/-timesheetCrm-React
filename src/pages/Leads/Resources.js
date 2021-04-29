@@ -222,6 +222,7 @@ function NestedTable(props) {
     const [selectedRowKeys, setSelectedRowKeys] = useState((props.data && props.data.findIndex(el => el.isMarkedAsSelected === true)!==-1)? [props.data[props.data.findIndex(el => el.isMarkedAsSelected === true)].id]: [])
     const columns = [
         { 
+            
             title: 'Name', 
             dataIndex: 'contactPerson', 
             key: 'contactPerson' ,

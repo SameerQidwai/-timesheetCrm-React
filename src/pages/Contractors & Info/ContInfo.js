@@ -9,7 +9,7 @@ import Travels from "../../components/Core/Travels";
 import Attachments from "../../components/Core/Attachments";
 import Bank from "../../components/Core/Bank";
 
-import InfoModal from "./InfoModal";
+import InfoModal from "./Modals/InfoModal";
 
 import { getRecord, delList } from "../../service/contractors";
 import  moment from "moment";

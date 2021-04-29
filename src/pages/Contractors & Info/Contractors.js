@@ -4,7 +4,7 @@ import { PlusSquareOutlined, SettingOutlined, FilterOutlined, DownOutlined, } fr
 
 import { Link } from "react-router-dom";
 
-import InfoModal from "./InfoModal";
+import InfoModal from "./Modals/InfoModal";
 
 import { getList } from "../../service/contractors";
 import "../styles/table.css";
