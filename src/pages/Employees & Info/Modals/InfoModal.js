@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Modal, Tabs, Row, Col, Button, Input, Select,  } from "antd";
+import { Modal, Tabs, Row, Col, Button, Input, Select, Form as AntForm  } from "antd";
 import { LoadingOutlined } from "@ant-design/icons"; //Icons
 
 import Form from "../../../components/Core/Form";
@@ -19,6 +19,7 @@ class InfoModal extends Component {
         this.kinRef = React.createRef();
         this.bankRef = React.createRef();
         this.trainRef = React.createRef();
+        this.emailRef = React.createRef();
         
         this.state = {
             editEmp: false,
@@ -28,6 +29,7 @@ class InfoModal extends Component {
             kinSubmitted: false,
             bankSubmitted: false,
             trainSubmitted: false,
+            emailSubmitted: false,
             loading: false,
             CONTACT:[],
             sContact: null,
@@ -137,12 +139,7 @@ class InfoModal extends Component {
                         type: "Input",
                         labelAlign: "left",
                         disabled: false,
-                        rules: [
-                            {
-                                required: true,
-                                message: "First Name is required",
-                            },
-                        ],
+                        
                         itemStyle: { marginBottom: 10 },
                     },
                     {
@@ -833,6 +830,7 @@ class InfoModal extends Component {
     }
 
     submit = () => {
+        this.emailRef.current.submit();
         this.basicRef.current && this.basicRef.current.refs.basic_form.submit();
         this.detailRef.current && this.detailRef.current.refs.detail_form.submit();
         this.kinRef.current && this.kinRef.current.refs.kin_form.submit();
@@ -940,9 +938,26 @@ class InfoModal extends Component {
         );
     };
 
+
+    EmailCall = (vake) => {
+        console.log('Email submit', vake);
+        this.setState(
+            {
+                mergeObj: {
+                    ...this.state.mergeObj,
+                    ...vake.basic,
+                    // username: this.state.sUsername
+                },
+                emailSubmitted: true, // skill form submitted
+            },()=> this.validateForm()
+            
+        );
+    }
+
+
     validateForm = () => {
-        const { basicSubmitted, kinSubmitted, bankSubmitted, detailSubmitted, billingSubmitted, trainSubmitted,  mergeObj } = this.state
-        if ( basicSubmitted && kinSubmitted && bankSubmitted && detailSubmitted && billingSubmitted && trainSubmitted ) {
+        const { basicSubmitted, kinSubmitted, bankSubmitted, detailSubmitted, billingSubmitted, emailSubmitted, trainSubmitted,  mergeObj } = this.state
+        if ( basicSubmitted && kinSubmitted && bankSubmitted && detailSubmitted && billingSubmitted && trainSubmitted && emailSubmitted) {
             //check if both form is submittef
             if (!this.props.editEmp) {
                 console.log("emes");
@@ -953,6 +968,7 @@ class InfoModal extends Component {
             }
         }
     }
+        
 
     addEmployee = (data) => {
         console.log("addEmployee", data);
@@ -1184,10 +1200,11 @@ class InfoModal extends Component {
         })
     }
 
+
+
     render() {
         const { editEmp, visible, close } = this.props;
         const { BasicFields, DetailFields, KinFields, BankFields, BillingFields, TrainFields,  CONTACT, sContact, sUsername, loading } = this.state;
-
         return (
             <Modal
                 title={editEmp ? "Edit Employee" : "Add Employee"}
@@ -1223,21 +1240,28 @@ class InfoModal extends Component {
                             }
                             style={{width:"100%"}}
                         />
+                       
                     </Col> }
-                    <Col span={8}>
-                        <Input
-                            value={sUsername}
-                            placeholder="Email"
-                            size="small"
-                            type="email"
-                            // prefix={<UserOutlined />} 
-                            onChange={(e, value)=>{
-                                this.setState({
-                                    sUsername: e.target.value
-                                })
-                            }}
-                            style={{width:"100%"}}
-                        /> 
+                    <Col span={8}> 
+
+                    <AntForm
+                    size={'small'}
+                    ref={this.emailRef}
+                    onFinish={this.EmailCall}
+                    >
+                        <AntForm.Item
+                        name={'username'}
+                        rules={[{required: true, type: 'email', message: 'Email is Required'}]}
+                        >
+                            <Input
+                                placeholder="Email"
+                                size="small"
+                                // prefix={<UserOutlined />} 
+                                
+                                style={{width:"100%"}}
+                                /> 
+                        </AntForm.Item>
+                    </AntForm>
                     </Col>
                 </Row>
                 <Tabs type="card">
