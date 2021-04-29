@@ -120,9 +120,9 @@ class InfoModal extends Component {
                         labelAlign: "left",
                     },
                     {
+                        Placeholder: "Last Name",
                         fieldCol: 12, // this is only label 8
                         size: "small",
-                        Placeholder: "Last Name",
                         disabled: false,
                         // rules:[{ required: true }],
                         type: "Text",
@@ -183,16 +183,7 @@ class InfoModal extends Component {
                         fieldCol: 12,
                         key: "phoneNumber",
                         size: "small",
-                        // rules:[{ required: true }],
                         type: "input",
-                        // rules: [
-                        //     {
-                        //         // required: true,
-                        //         type: "string",
-                        //         message: "Enter minimum 8 Numbers",
-                        //         min: 6,
-                        //     },
-                        // ],
                         itemStyle: { marginBottom: 10 },
                     },
                     {
@@ -200,19 +191,8 @@ class InfoModal extends Component {
                         fieldCol: 12,
                         key: "email",
                         size: "small",
-                        // rules:[{ required: true }],
                         type: "Input",
                         disabled: false,
-                        // rules: [
-                        //     {
-                        //         type: "email",
-                        //         message: "The input is not valid E-mail!",
-                        //     },
-                        //     {
-                        //         required: true,
-                        //         message: "Please input your E-mail!",
-                        //     },
-                        // ],
                         itemStyle: { marginBottom: 10 },
                     },
                     {
@@ -626,12 +606,6 @@ class InfoModal extends Component {
                         key: "payslipEmail",
                         size: "small",
                         type: "input",
-                        // rules: [
-                        //     {
-                        //         required: true,
-                        //         message: "Payment Email is required",
-                        //     },
-                        // ],
                         itemStyle: { marginBottom: 1 },
                     },
                     {
@@ -693,7 +667,6 @@ class InfoModal extends Component {
                     },
                     {
                         Placeholder: "Contract End Date",
-                        rangeMin: true,
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -716,7 +689,6 @@ class InfoModal extends Component {
                         size: "small",
                         type: "DatePicker",
                         fieldStyle: { width: "100%" },
-                        rules: [ { required: true, message: "End Date is Required", }, ],
                         itemStyle: { marginBottom: 1 },
                     },
                     {

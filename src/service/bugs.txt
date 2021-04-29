@@ -80,7 +80,7 @@ SubContractor required is not completed as well
             contact person id
             uersame
         contract 
-            all fieldsa other than comments
+            all fields other than comments
 
 Project Resources required not done yet 
     Project
@@ -95,7 +95,7 @@ Project Resources required not done yet
 
 
 MEETING  28- April -2021
-contract end date Employee optional
+                                                                                    contract end date Employee optional
 
                                                                                     effort rate default 100 and put % sirgn 
 

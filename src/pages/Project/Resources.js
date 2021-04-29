@@ -51,7 +51,7 @@ class OrgInfo extends Component {
                 key: "opportunityResourceAllocations",
                 render:(record)=>(
                     // console.log(record)
-                    record && record[0] && '$' + formatCurrency(record[0].buyingRate)
+                    record && record[0] && '$ ' + formatCurrency(record[0].buyingRate)
                 )
             },
             {
@@ -59,7 +59,7 @@ class OrgInfo extends Component {
                 dataIndex: "opportunityResourceAllocations",
                 key: "opportunityResourceAllocations",
                 render:(record)=>(
-                    record && record[0] && '$' +  formatCurrency(record[0].sellingRate)
+                    record && record[0] && '$ ' +  formatCurrency(record[0].sellingRate)
                 )
             },
             // {
@@ -192,7 +192,7 @@ class OrgInfo extends Component {
                     // extra={<Button type="primary">Edit</Button>}
                 >
                     <Item label="Project Name">{desc.title}</Item>
-                    <Item label="Estimated Value">{'$' + formatCurrency(desc.value)}</Item>
+                    <Item label="Estimated Value">{'$ ' + formatCurrency(desc.value)}</Item>
                     <Item label="Organisation">{desc.organizationName ? desc.organization.name :' No Organisation'}</Item>
                     <Item label="Start date">{desc.startDate ? moment(desc.startDate).format('ddd DD MM YYYY'): null} </Item>
                     <Item label="End Date">{desc.endDate ? moment(desc.endDate).format('ddd DD MM YYYY'): null}</Item>

@@ -142,7 +142,6 @@ class BillModal extends Component {
                     },
                     {
                         Placeholder: "Contract End Date",
-                        rangeMin: true,
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -165,7 +164,6 @@ class BillModal extends Component {
                         size: "small",
                         type: "DatePicker",
                         fieldStyle: { width: "100%" },
-                        rules: [ { required: true, message: "End Date is Required", }, ],
                         itemStyle: { marginBottom: 1 },
                     },
                     {

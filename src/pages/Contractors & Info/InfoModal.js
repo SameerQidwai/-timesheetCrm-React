@@ -74,6 +74,7 @@ class InfoModal extends Component {
                         fieldCol: 12, // this is only label 1
                         size: "small",
                         Placeholder: "Contact person Code",
+                        rangeMin: true,
                         type: "Text",
                         labelAlign: "left",
                     },
@@ -93,7 +94,7 @@ class InfoModal extends Component {
                         size: "small",
                         // rules:[{ required: true }],
                         type: "Input",
-                        disabled: true,
+                        readOnly: true,
                         labelAlign: "left",
                         itemStyle: { marginBottom: 10 },
                     },
