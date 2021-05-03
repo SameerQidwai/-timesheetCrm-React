@@ -859,7 +859,6 @@ class InfoModal extends Component {
         // cnecking if type is selected
         if (vake.billing.type ){
             vake.billing.type === 1 ? vake.billing.remunerationAmountPer = 1 : vake.billing.remunerationAmountPer = 7
-            //check what type is selected
         }
         this.setState(
             {
@@ -909,10 +908,10 @@ class InfoModal extends Component {
                 mergeObj: {
                     ...this.state.mergeObj,
                     ...{
-                        bankName: bank.bankName? bank.bankName: '',
-                        bankAccountNo: bank.bankAccountNo? bank.bankAccountNo: '',
-                        bankBsb: bank.bankBsb? bank.bankBsb: '',
-                        tfn: bank.tfn ? bank.tfn: '',
+                        bankName: bank.bankName ?? '',
+                        bankAccountNo: bank.bankAccountNo?? '',
+                        bankBsb: bank.bankBsb?? '',
+                        tfn: bank.tfn ?? '',
                         taxFreeThreshold: bank.taxFreeThreshold,
                         helpHECS: bank.helpHECS,
                     },
