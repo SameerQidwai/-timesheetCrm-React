@@ -9,9 +9,10 @@ fields={
     initialValues:{obj:{key:'value'}},
     fields:[ 
         { //fileds
+
             object: 'Object in what value to get objec',
-            fieldCol: 'how manu column should get',
             key: 'key of the object to get',
+            fieldCol: 'how manu column should get',
             Placeholder: 'placeholder to show in the input fields && span to put things also i.e <Icons/>',
             label: 'Label of the fields ',
             rules:[{types:'types of rules', message:'to show on rule'}],

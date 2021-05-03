@@ -80,7 +80,7 @@ SubContractor required is not completed as well
             contact person id
             uersame
         contract 
-            all fieldsa other than comments
+            all fields other than comments
 
 Project Resources required not done yet 
     Project
@@ -96,19 +96,16 @@ Project Resources required not done yet
 
 MEETING  28- April -2021
 contract end date Employee optional
-
 effort rate default 100 and put % sirgn 
-
 organization code will start from org now
-short title for organization
 Money Format value
-
 Go/get will be delete from project
-
 skill and resource is disabled in Project Resource
+comments in purchase order is validating
 
+Pending and or in progress
 
- comments in purchase order is validating
+short title for organization
 
 
 For later future disscuss in meeting 28-April-2021

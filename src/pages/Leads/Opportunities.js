@@ -9,6 +9,7 @@ import { getList, delList } from "../../service/opportunities";
 
 import '../styles/table.css'
 import moment from "moment";
+import { formatCurrency } from '../../service/constant';
 const { Title } = Typography
 
 class Opportunities extends Component {
@@ -39,6 +40,7 @@ class Opportunities extends Component {
                 title: 'Revenue',
                 dataIndex: 'value',
                 key: 'value',
+                render: (record)=>  `$ ${formatCurrency(record)}` 
             },
             {
                 title: 'Start Date',

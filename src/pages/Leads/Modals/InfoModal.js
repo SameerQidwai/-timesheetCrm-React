@@ -705,29 +705,18 @@ class InfoModal extends Component {
             {
                 mergeObj: {
                     ...this.state.mergeObj,
-                    ...{panelId: vake.panelId ?vake.panelId : null,
-                        organizationId: vake.organizationId ?vake.organizationId : null,
-                        contactPersonId: vake.contactPersonId ?vake.contactPersonId : null,
-                        title: vake.title ?vake.title : '',
-                        type: vake.type ?vake.type : '',
-                        stateId: vake.stateId ?vake.stateId : null,
-                        qualifiedOps: vake.qualifiedOps ?vake.qualifiedOps : false,
+                    ...{panelId: vake.panelId ?? null,
+                        organizationId: vake.organizationId ?? null,
+                        contactPersonId: vake.contactPersonId ?? null,
+                        title: vake.title ?? '',
+                        type: vake.type ?? '',
+                        stateId: vake.stateId ?? null,
+                        qualifiedOps: vake.qualifiedOps ?? false,
                     },
                 },
                 basicSubmitted: true, // skill form submitted
-            },
-            () => {
-                const { basicSubmitted, tenderSubmitted, billingSubmitted, datesSubmitted, manageSubmitted, mergeObj } = this.state
-                if ( basicSubmitted && tenderSubmitted && billingSubmitted && datesSubmitted && manageSubmitted) {
-                    //check if both form is submittef
-                    if (!this.props.editLead) {
-                        
-                        this.addOpportunity(mergeObj); //add skill
-                    } else {
-                        
-                        this.editProject(mergeObj); //edit skill
-                    }
-                }
+            }, () => {
+                this.validateForm()
             }
         );
     };
@@ -740,24 +729,13 @@ class InfoModal extends Component {
                 mergeObj: {
                     ...this.state.mergeObj,
                     ...{
-                        tender: vake.tender ? vake.tender : '',
-                        tenderNumber: vake.tenderNumber ? vake.tenderNumber : '',
+                        tender: vake.tender ?? '',
+                        tenderNumber: vake.tenderNumber ?? '',
                     },
                 },
                 tenderSubmitted: true, // skill form submitted
-            },
-            () => {
-                const { basicSubmitted, tenderSubmitted, billingSubmitted, datesSubmitted, manageSubmitted, mergeObj } = this.state
-                if ( basicSubmitted && tenderSubmitted && billingSubmitted && datesSubmitted && manageSubmitted) {
-                    //check if both form is submittef
-                    if (!this.props.editLead) {
-                        
-                        this.addOpportunity(mergeObj); //add skill
-                    } else {
-                        
-                        this.editProject(mergeObj); //edit skill
-                    }
-                }
+            }, () => {
+                this.validateForm()
             }
         );
     };
@@ -770,26 +748,15 @@ class InfoModal extends Component {
                 mergeObj: {
                     ...this.state.mergeObj,
                     ...{
-                        value: vake.value ? vake.value : 0,
-                        cmPercentage: vake.cmPercentage ? vake.cmPercentage : 0,
-                        goPercentage: vake.goPercentage ? vake.goPercentage : 0,
-                        getPercentage: vake.getPercentage ? vake.getPercentage : 0,
+                        value: vake.value ?? 0,
+                        cmPercentage: vake.cmPercentage ?? 0,
+                        goPercentage: vake.goPercentage ?? 0,
+                        getPercentage: vake.getPercentage ?? 0,
                     },
                 },
                 billingSubmitted: true, // level form submitted
-            },
-            () => {
-                const { basicSubmitted, tenderSubmitted, billingSubmitted, datesSubmitted, manageSubmitted, mergeObj } = this.state
-                if ( basicSubmitted && tenderSubmitted && billingSubmitted && datesSubmitted && manageSubmitted) {
-                    //check if both form is submittef
-                    if (!this.props.editLead) {
-                        
-                        this.addOpportunity(mergeObj); //add skill
-                    } else {
-                        
-                        this.editProject(mergeObj); //edit skill
-                    }
-                }
+            }, () => {
+                this.validateForm()
             }
         );
     };
@@ -804,19 +771,8 @@ class InfoModal extends Component {
                     ...vake,
                 },
                 datesSubmitted: true, // level form submitted
-            },
-            () => {
-                const { basicSubmitted, tenderSubmitted, billingSubmitted, datesSubmitted, manageSubmitted, mergeObj } = this.state
-                if ( basicSubmitted && tenderSubmitted && billingSubmitted && datesSubmitted && manageSubmitted) {
-                    //check if both form is submittef
-                    if (!this.props.editLead) {
-                        
-                        this.addOpportunity(mergeObj); //add skill
-                    } else {
-                        
-                        this.editProject(mergeObj); //edit skill
-                    }
-                }
+            }, () => {
+                this.validateForm()
             }
         );
     };
@@ -830,29 +786,32 @@ class InfoModal extends Component {
                 mergeObj: {
                     ...this.state.mergeObj,
                     ...{
-                        accountDirectorId: vake.accountDirectorId ? vake.accountDirectorId : null,
-                        accountManagerId: vake.accountManagerId ? vake.accountManagerId : null,
-                        opportunityManagerId: vake.opportunityManagerId ? vake.opportunityManagerId : null,
-                        projectManagerId: vake.projectManagerId ? vake.projectManagerId : null,
+                        accountDirectorId: vake.accountDirectorId ?? null,
+                        accountManagerId: vake.accountManagerId ?? null,
+                        opportunityManagerId: vake.opportunityManagerId ?? null,
+                        projectManagerId: vake.projectManagerId ?? null,
                     },
                 },
                 manageSubmitted: true, // level form submitted
-            },
-            () => {
-                const { basicSubmitted, tenderSubmitted, billingSubmitted, datesSubmitted, manageSubmitted, mergeObj } = this.state
-                if ( basicSubmitted && tenderSubmitted && billingSubmitted && datesSubmitted && manageSubmitted) {
-                    //check if both form is submittef
-                    if (!this.props.editLead) {
-                        
-                        this.addOpportunity(mergeObj); //add skill
-                    } else {
-                        
-                        this.editProject(mergeObj); //edit skill
-                    }
-                }
+            }, () => {
+                this.validateForm()
             }
         );
     };
+
+    validateForm = () => {
+        const { basicSubmitted, tenderSubmitted, billingSubmitted, datesSubmitted, manageSubmitted, mergeObj } = this.state
+        if ( basicSubmitted && tenderSubmitted && billingSubmitted && datesSubmitted && manageSubmitted) {
+            //check if both form is submittef
+            if (!this.props.editLead) {
+                
+                this.addOpportunity(mergeObj); //add skill
+            } else {
+                
+                this.editProject(mergeObj); //edit skill
+            }
+        }
+    }
 
     addOpportunity = (value) => {
         const { callBack } = this.props;
@@ -946,11 +905,6 @@ class InfoModal extends Component {
                 okText={loading ?<LoadingOutlined /> :"Save"}
                 onCancel={close}
                 width={750}
-                // footer={[
-                //         <Button key="1" style={{float:'left'}} type="primary"> Add To Project</Button>,
-                //         <Button key="2" onClick={close}>Cancel</Button>,
-                //         <Button key="3" type="primary" onClick={() => { this.submit(); }}> Save </Button>
-                //   ]}
             >
                 <Tabs type="card">
                     <TabPane tab="Opportunity Info" key="basic" forceRender>

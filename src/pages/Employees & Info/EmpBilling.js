@@ -9,6 +9,7 @@ import { getList, delList } from "../../service/employee-contracts";
 
 import moment from "moment"
 import "../styles/table.css";
+import { formatCurrency } from "../../service/constant";
 
 
 const { Title } = Typography;
@@ -48,6 +49,7 @@ class EmpBilling extends Component {
                 title: "Rate",
                 dataIndex: "remunerationAmount",
                 key: "remunerationAmount",
+                render: (record)=> `$ ${formatCurrency(record)}`
             },
             {
                 title: "Rate Duration",

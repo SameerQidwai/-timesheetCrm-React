@@ -1,12 +1,12 @@
 import React, { Component } from "react";
-import { Modal, Tabs, Row, Col, Select, Input } from "antd";
+import { Modal, Tabs, Row, Col, Select, Input, Form as AntForm } from "antd";
 import { LoadingOutlined } from "@ant-design/icons"; //Icons
-import Form from "../../components/Core/Form";
+import Form from "../../../components/Core/Form";
 import moment from "moment";
 
-import { addList, getRecord, editList } from "../../service/contractors";
-import { getContactRecord } from "../../service/conatct-person";
-import { getOrganizations, getOrgPersons, getStates } from "../../service/constant-Apis";
+import { addList, getRecord, editList } from "../../../service/contractors";
+import { getContactRecord } from "../../../service/conatct-person";
+import { getOrganizations, getOrgPersons, getStates } from "../../../service/constant-Apis";
 
 const { TabPane } = Tabs;
 
@@ -16,11 +16,13 @@ class InfoModal extends Component {
         this.basicRef = React.createRef();
         this.billingRef = React.createRef();
         this.kinRef = React.createRef();
+        this.emailRef = React.createRef();
         this.state = {
             editCont: false,
             basicSubmitted: false,
             billingSubmitted: false,
             kinSubmitted: false,
+            emailSubmitted: false,
             CONTACTS:[],
             sContact: null,
             ORGS: [],
@@ -74,6 +76,7 @@ class InfoModal extends Component {
                         fieldCol: 12, // this is only label 1
                         size: "small",
                         Placeholder: "Contact person Code",
+                        rangeMin: true,
                         type: "Text",
                         labelAlign: "left",
                     },
@@ -91,9 +94,16 @@ class InfoModal extends Component {
                         fieldCol: 12,
                         key: "cpCode",
                         size: "small",
+                         rules: [
+                            {
+                                required: true,
+                                message: "Code is Required",
+                            },
+                        ],
+                    
                         // rules:[{ required: true }],
                         type: "Input",
-                        disabled: true,
+                        readOnly: true,
                         labelAlign: "left",
                         itemStyle: { marginBottom: 10 },
                     },
@@ -105,12 +115,7 @@ class InfoModal extends Component {
                         // rules:[{ required: true }],
                         type: "DatePicker",
                         fieldStyle: { width: "100%" },
-                        // rules: [
-                        //     {
-                        //         required: true,
-                        //         message: "Date of Birth is required",
-                        //     },
-                        // ],
+                       
                         itemStyle: { marginBottom: 10 },
                     },
                     {
@@ -140,12 +145,12 @@ class InfoModal extends Component {
                         type: "Input",
                         labelAlign: "left",
                         disabled: false,
-                        rules: [
-                            {
-                                required: true,
-                                message: "First Name is required",
-                            },
-                        ],
+                        // rules: [
+                        //     {
+                        //         required: true,
+                        //         message: "First Name is required",
+                        //     },
+                        // ],
                         itemStyle: { marginBottom: 10 },
                     },
                     {
@@ -388,6 +393,7 @@ class InfoModal extends Component {
                 fields: [
                     {
                         Placeholder: "Contract Start Date",
+                        rangeMin: true,
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -398,6 +404,7 @@ class InfoModal extends Component {
                         Placeholder: "Contract End Date",
                         fieldCol: 12,
                         size: "small",
+                        rangeMin: true,
                         type: "Text",
                         labelAlign: "right",
                         // itemStyle:{marginBottom:'10px'},
@@ -408,13 +415,14 @@ class InfoModal extends Component {
                         key: "startDate",
                         size: "small",
                         type: "DatePicker",
+
                         fieldStyle: { width: "100%" },
-                        // rules: [
-                        //     {
-                        //         required: true,
-                        //         message: "Start Date is required",
-                        //     },
-                        // ],
+                        rules: [
+                            {
+                                required: true,
+                                message: "Start Date is Required",
+                            },
+                        ],
                         itemStyle: { marginBottom: 1 },
                     },
                     {
@@ -424,18 +432,19 @@ class InfoModal extends Component {
                         size: "small",
                         type: "DatePicker",
                         fieldStyle: { width: "100%" },
-                        // rules: [
-                        //     {
-                        //         required: true,
-                        //         message: "Start Date is required",
-                        //     },
-                        // ],
+                        rules: [
+                            {
+                                required: true,
+                                message: "End Date is Required",
+                            },
+                        ],
                         itemStyle: { marginBottom: 1 },
                     },
 
                     {
                         Placeholder: "Contract Payment Basis",
                         fieldCol: 12,
+                        rangeMin: true,
                         size: "small",
                         type: "Text",
                         labelAlign: "right",
@@ -453,6 +462,7 @@ class InfoModal extends Component {
                         Placeholder: `Total Fee`,
                         fieldCol: 12,
                         size: "small",
+                        rangeMin: true,
                         type: "Text",
                         labelAlign: "right",
                         // itemStyle:{marginBottom:'10px'},
@@ -470,12 +480,12 @@ class InfoModal extends Component {
                             { label: "Monthly", value: 5 },
                         ],
                         type: "Select",
-                        // rules: [
-                        //     {
-                        //         required: true,
-                        //         message: "Payment Frequncy is required",
-                        //     },
-                        // ],
+                        rules: [
+                            {
+                                required: true,
+                                message: "Payment Frequncy is Required",
+                            },
+                        ],
                         onChange: function onChange(value, option) {
                             const { BillingFields } = this.state
                             BillingFields.fields[5].Placeholder = `Total Fee ${value ?option.label: ''}`
@@ -491,18 +501,19 @@ class InfoModal extends Component {
                         type: "InputNumber",
                         shape: "$",
                         fieldStyle: { width: "100%" },
-                        // rules: [
-                        //     {
-                        //         required: true,
-                        //         message: "How much he Cost",
-                        //     },
-                        // ],
+                        rules: [
+                            {
+                                required: true,
+                                message: "Total Fee is Required",
+                            },
+                        ],
                         itemStyle: { marginBottom: 1 },
                     },
                     {
                         Placeholder: "Full Work Hours",
                         fieldCol: 24,
                         size: "small",
+                        rangeMin: true,
                         type: "Text",
                         labelAlign: "right",
                         // itemStyle:{marginBottom:'10px'},
@@ -515,12 +526,12 @@ class InfoModal extends Component {
                         type: "InputNumber",
                         // shape: " Hours",
                         fieldStyle: { width: "100%" },
-                        // rules: [
-                        //     {
-                        //         required: true,
-                        //         message: "How much he Cost",
-                        //     },
-                        // ],
+                        rules: [
+                            {
+                                required: true,
+                                message: "Work Hour is Reqired",
+                            },
+                        ],
                         itemStyle: { marginBottom: 1 },
                     },
                     {
@@ -537,12 +548,12 @@ class InfoModal extends Component {
                             { label: "Monthly", value: 5 },
                         ],
                         fieldStyle: { width: "100%" },
-                        // rules: [
-                        //     {
-                        //         required: true,
-                        //         message: "How much he Cost",
-                        //     },
-                        // ],
+                        rules: [
+                            {
+                                required: true,
+                                message: "Work Frequency is Required",
+                            },
+                        ],
                         itemStyle: { marginBottom: 1 },
                     },
                     {
@@ -561,78 +572,7 @@ class InfoModal extends Component {
                         type: "Textarea",
                         itemStyle: { marginBottom: 1 },
                     },
-                    // {
-                    //     Placeholder: "Payslip Email",
-                    //     fieldCol: 12,
-                    //     size: "small",
-                    //     type: "Text",
-                    //     labelAlign: "right",
-                    //     // itemStyle:{marginBottom:'10px'},
-                    // },
-                    // {
-                    //     Placeholder: "Work Hours In a Day",
-                    //     fieldCol: 12,
-                    //     size: "small",
-                    //     type: "Text",
-                    //     labelAlign: "right",
-                    //     // itemStyle:{marginBottom:'10px'},
-                    // },
-                    // {
-                    //     object: "billing",
-                    //     fieldCol: 12,
-                    //     key: "payslipEmail",
-                    //     size: "small",
-                    //     type: "input",
-                    //     // rules: [
-                    //     //     {
-                    //     //         required: true,
-                    //     //         message: "Payment Email is required",
-                    //     //     },
-                    //     // ],
-                    //     itemStyle: { marginBottom: 1 },
-                    // },
-                    // {
-                    //     object: "billing",
-                    //     fieldCol: 12,
-                    //     key: "noOfHours",
-                    //     size: "small",
-                    //     type: "InputNumber",
-                    //     // shape: " Hours",
-                    //     fieldStyle: { width: "100%" },
-                    //     // rules: [
-                    //     //     {
-                    //     //         required: true,
-                    //     //         message: "How much he Cost",
-                    //     //     },
-                    //     // ],
-                    //     itemStyle: { marginBottom: 1 },
-                    // },
-                    // {
-                    //     Placeholder: "Remuneration Amount",
-                    //     fieldCol: 12,
-                    //     size: "small",
-                    //     type: "Text",
-                    //     labelAlign: "right",
-                    //     // itemStyle:{marginBottom:'10px'},
-                    // },
-                    
-                    // {
-                    //     object: "billing",
-                    //     fieldCol: 12,
-                    //     key: "remunerationAmount",
-                    //     size: "small",
-                    //     type: "InputNumber",
-                    //     shape: "$",
-                    //     fieldStyle: { width: "100%" },
-                    //     // rules: [
-                    //     //     {
-                    //     //         required: true,
-                    //     //         message: "How much he Cost",
-                    //     //     },
-                    //     // ],
-                    //     itemStyle: { marginBottom: 1 },
-                    // },
-                    
+                   
                 ],
             },
         };
@@ -674,12 +614,50 @@ class InfoModal extends Component {
         })
     }
 
+
+
+
     submit = () => {
         //submit button click
+        console.log('Refff', this.emailRef);
+        this.emailRef.current.submit();
         this.basicRef.current && this.basicRef.current.refs.basic_form.submit();
         this.billingRef.current && this.billingRef.current.refs.billing_form.submit();
         this.kinRef.current && this.kinRef.current.refs.kin_form.submit();
     };
+
+
+
+    ValidateForm  = () => {
+        const {editCont} = this.props;
+        const {billingSubmitted,basicSubmitted, kinSubmitted, emailSubmitted, mergeObj} = this.state;
+            if ( basicSubmitted && billingSubmitted && kinSubmitted && emailSubmitted) {
+                //check if both form is submittef
+                if (!editCont) {
+                    console.log("emes");
+                    this.addContactor(mergeObj); //add skill
+                } else {
+                    console.log("edit");
+                    this.editRecord(mergeObj); //edit skill
+                }
+            }
+    }
+
+    EmailCall = (vake) => {
+        console.log('Email submit', vake);
+        const { editCont } = this.props
+        this.setState(
+            {
+                mergeObj: {
+                    ...this.state.mergeObj,
+                    ...vake.basic,
+                    // username: this.state.sUsername
+                },
+                emailSubmitted: true, // skill form submitted
+            },()=> this.ValidateForm()
+            
+        );
+    }
 
     BasicCall = (vake) => {
         // this will work after  got  Object from the skill from
@@ -689,22 +667,11 @@ class InfoModal extends Component {
                 mergeObj: {
                     ...this.state.mergeObj,
                     ...vake.basic,
-                    username: this.state.sUsername
+                    // username: this.state.sUsername
                 },
                 basicSubmitted: true, // skill form submitted
             },
-            () => {
-                if ( this.state.basicSubmitted && this.state.billingSubmitted && this.state.kinSubmitted ) {
-                    //check if both form is submittef
-                    if (!editCont) {
-                        console.log("emes");
-                        this.addContactor(this.state.mergeObj); //add skill
-                    } else {
-                        console.log("edit");
-                        this.editRecord(this.state.mergeObj); //edit skill
-                    }
-                }
-            }
+            () => this.ValidateForm()
         );
     };
 
@@ -720,24 +687,13 @@ class InfoModal extends Component {
                 },
                 billingSubmitted: true, // level form submitted
             },
-            () => {
-                if ( this.state.basicSubmitted && this.state.billingSubmitted && this.state.kinSubmitted) {
-                    //check if both form is submittef
-                    if (!editCont) {
-                        console.log("emes");
-                        this.addContactor(this.state.mergeObj); //add skill
-                    } else {
-                        console.log("edit");
-                        this.editRecord(this.state.mergeObj); //edit skill
-                    }
-                }
-            }
+            () => this.ValidateForm()
         );
     };
 
     KinCall = (vake) => {
         // this will work after I get the Object from the form
-        console.log(vake);
+        // console.log(vake);
         const { editCont } = this.props 
         this.setState(
             {
@@ -747,18 +703,7 @@ class InfoModal extends Component {
                 },
                 kinSubmitted: true, // level form submitted
             },
-            () => {
-                if ( this.state.basicSubmitted && this.state.billingSubmitted && this.state.kinSubmitted) {
-                    //check if both form is submittef
-                    if (!editCont) {
-                        console.log("emes");
-                        this.addContactor(this.state.mergeObj); //add skill
-                    } else {
-                        console.log("edit");
-                        this.editRecord(this.state.mergeObj); //edit skill
-                    }
-                }
-            }
+            () => this.ValidateForm()
         );
     };
 
@@ -932,20 +877,33 @@ class InfoModal extends Component {
                         />
                     </Col> }
                     <Col span={7}>
+                    <AntForm
+                    size={'small'}
+                    ref={this.emailRef}
+                    onFinish={this.EmailCall}
+                    // layout={}
+                    > 
+
+                    <AntForm.Item
+                    name={'username'}
+                    rules={[{required: true, type: 'email', message: 'Email is Required'}]}
+                    >
                         <Input
-                            value={sUsername}
+                            // value={sUsername}
                             placeholder="Email"
                             size="small"
-                            type="email"
+                            // type="email"
                             // prefix={<UserOutlined />} 
-                            onChange={(e, value)=>{
-                                console.log(e);
-                                this.setState({
-                                    sUsername: e.target.value
-                                })
-                            }}
+                            // onChange={(e, value)=>{
+                            //     console.log(e);
+                            //     this.setState({
+                            //         sUsername: e.target.value
+                            //     })
+                            // }}
                             style={{width:"100%"}}
                         /> 
+                    </AntForm.Item>
+                    </AntForm>
                     </Col>
                 </Row>
                 <Tabs type="card">

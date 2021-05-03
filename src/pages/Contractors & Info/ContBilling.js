@@ -3,12 +3,13 @@ import { Popconfirm, Typography, Dropdown, Button, Table, Menu, Descriptions } f
 
 import { PlusSquareOutlined, SettingOutlined, DownOutlined, } from "@ant-design/icons"; //Icons
 
-import BillModal from "./BillModal";
+import BillModal from "./Modals/BillModal";
 import { getRecord as subContRecord } from "../../service/contractors"
 import { getList, delList } from "../../service/subContrators-contracts";
 
 import moment from "moment"
 import "../styles/table.css";
+import { formatCurrency } from "../../service/constant";
 
 
 const { Title } = Typography;
@@ -41,6 +42,7 @@ class EmpBilling extends Component {
                 title: "Rate",
                 dataIndex: "remunerationAmount",
                 key: "remunerationAmount",
+                render: record =>   `$ ${formatCurrency(record)}`
             },
             {
                 title: "Rate Duration",

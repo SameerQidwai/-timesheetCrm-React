@@ -14,6 +14,7 @@ import InfoModal from "./Modals/InfoModal";
 import { getRecord, delList } from "../../service/projects";
 
 import moment from "moment"
+import { formatCurrency } from "../../service/constant";
 
 const { Item } = Descriptions;
 const { TabPane } = Tabs;
@@ -107,7 +108,7 @@ class ProjectInfo extends Component {
                     // extra={<Button type="primary">Edit</Button>}
                 >
                     <Item label="Project Name">{data.title}</Item>
-                    <Item label="Estimated Value">{data.value}</Item>
+                    <Item label="Estimated Value">{'$ ' + formatCurrency(data.value)}</Item>
                     <Item label="Organisation">{
                         data.organizationName ? 
                             <Link

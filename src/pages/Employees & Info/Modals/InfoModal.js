@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Modal, Tabs, Row, Col, Button, Input, Select,  } from "antd";
+import { Modal, Tabs, Row, Col, Button, Input, Select, Form as AntForm  } from "antd";
 import { LoadingOutlined } from "@ant-design/icons"; //Icons
 
 import Form from "../../../components/Core/Form";
@@ -19,6 +19,7 @@ class InfoModal extends Component {
         this.kinRef = React.createRef();
         this.bankRef = React.createRef();
         this.trainRef = React.createRef();
+        this.emailRef = React.createRef();
         
         this.state = {
             editEmp: false,
@@ -28,6 +29,7 @@ class InfoModal extends Component {
             kinSubmitted: false,
             bankSubmitted: false,
             trainSubmitted: false,
+            emailSubmitted: false,
             loading: false,
             CONTACT:[],
             sContact: null,
@@ -120,9 +122,9 @@ class InfoModal extends Component {
                         labelAlign: "left",
                     },
                     {
+                        Placeholder: "Last Name",
                         fieldCol: 12, // this is only label 8
                         size: "small",
-                        Placeholder: "Last Name",
                         disabled: false,
                         // rules:[{ required: true }],
                         type: "Text",
@@ -137,12 +139,7 @@ class InfoModal extends Component {
                         type: "Input",
                         labelAlign: "left",
                         disabled: false,
-                        rules: [
-                            {
-                                required: true,
-                                message: "First Name is required",
-                            },
-                        ],
+                        
                         itemStyle: { marginBottom: 10 },
                     },
                     {
@@ -183,16 +180,7 @@ class InfoModal extends Component {
                         fieldCol: 12,
                         key: "phoneNumber",
                         size: "small",
-                        // rules:[{ required: true }],
                         type: "input",
-                        // rules: [
-                        //     {
-                        //         // required: true,
-                        //         type: "string",
-                        //         message: "Enter minimum 8 Numbers",
-                        //         min: 6,
-                        //     },
-                        // ],
                         itemStyle: { marginBottom: 10 },
                     },
                     {
@@ -200,19 +188,8 @@ class InfoModal extends Component {
                         fieldCol: 12,
                         key: "email",
                         size: "small",
-                        // rules:[{ required: true }],
                         type: "Input",
                         disabled: false,
-                        // rules: [
-                        //     {
-                        //         type: "email",
-                        //         message: "The input is not valid E-mail!",
-                        //     },
-                        //     {
-                        //         required: true,
-                        //         message: "Please input your E-mail!",
-                        //     },
-                        // ],
                         itemStyle: { marginBottom: 10 },
                     },
                     {
@@ -626,12 +603,6 @@ class InfoModal extends Component {
                         key: "payslipEmail",
                         size: "small",
                         type: "input",
-                        // rules: [
-                        //     {
-                        //         required: true,
-                        //         message: "Payment Email is required",
-                        //     },
-                        // ],
                         itemStyle: { marginBottom: 1 },
                     },
                     {
@@ -693,7 +664,6 @@ class InfoModal extends Component {
                     },
                     {
                         Placeholder: "Contract End Date",
-                        rangeMin: true,
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -716,7 +686,6 @@ class InfoModal extends Component {
                         size: "small",
                         type: "DatePicker",
                         fieldStyle: { width: "100%" },
-                        rules: [ { required: true, message: "End Date is Required", }, ],
                         itemStyle: { marginBottom: 1 },
                     },
                     {
@@ -861,6 +830,7 @@ class InfoModal extends Component {
     }
 
     submit = () => {
+        this.emailRef.current.submit();
         this.basicRef.current && this.basicRef.current.refs.basic_form.submit();
         this.detailRef.current && this.detailRef.current.refs.detail_form.submit();
         this.kinRef.current && this.kinRef.current.refs.kin_form.submit();
@@ -879,26 +849,7 @@ class InfoModal extends Component {
                     username: this.state.sUsername
                 },
                 basicSubmitted: true, // skill form submitted
-            },
-            () => {
-                if (
-                    this.state.basicSubmitted &&
-                    this.state.detailSubmitted &&
-                    this.state.kinSubmitted &&
-                    this.state.bankSubmitted && 
-                    this.state.billingSubmitted && 
-                    this.state.trainSubmitted
-                ) {
-                    //check if both form is submittef
-                    if (!this.props.editEmp) {
-                        console.log("emes");
-                        this.addEmployee(this.state.mergeObj); //add skill
-                    } else {
-                        console.log("edit");
-                        this.editRecord(this.state.mergeObj); //edit skill
-                    }
-                }
-            }
+            }, () => this.validateForm()
         );
     };
 
@@ -908,7 +859,6 @@ class InfoModal extends Component {
         // cnecking if type is selected
         if (vake.billing.type ){
             vake.billing.type === 1 ? vake.billing.remunerationAmountPer = 1 : vake.billing.remunerationAmountPer = 7
-            //check what type is selected
         }
         this.setState(
             {
@@ -917,26 +867,7 @@ class InfoModal extends Component {
                     latestEmploymentContract: vake.billing,
                 },
                 billingSubmitted: true, // level form submitted
-            },
-            () => {
-                if (
-                    this.state.basicSubmitted &&
-                    this.state.detailSubmitted &&
-                    this.state.kinSubmitted &&
-                    this.state.bankSubmitted &&
-                    this.state.billingSubmitted && 
-                    this.state.trainSubmitted
-                ) {
-                    //check if both form is submittef
-                    if (!this.props.editEmp) {
-                        console.log("emes");
-                        this.addEmployee(this.state.mergeObj); //add skill
-                    } else {
-                        console.log("edit");
-                        this.editRecord(this.state.mergeObj); //edit skill
-                    }
-                }
-            }
+            },() => this.validateForm()
         );
     };
 
@@ -950,26 +881,7 @@ class InfoModal extends Component {
                     ...vake.detail,
                 },
                 detailSubmitted: true, // level form submitted
-            },
-            () => {
-                if (
-                    this.state.basicSubmitted &&
-                    this.state.detailSubmitted &&
-                    this.state.kinSubmitted &&
-                    this.state.bankSubmitted &&
-                    this.state.billingSubmitted && 
-                    this.state.trainSubmitted
-                ) {
-                    //check if both form is submittef
-                    if (!this.props.editEmp) {
-                        console.log("emes");
-                        this.addEmployee(this.state.mergeObj); //add skill
-                    } else {
-                        console.log("edit");
-                        this.editRecord(this.state.mergeObj); //edit skill
-                    }
-                }
-            }
+            }, () => this.validateForm()
         );
     };
 
@@ -983,25 +895,7 @@ class InfoModal extends Component {
                     ...vake.kin,
                 },
                 kinSubmitted: true, // level form submitted
-            },
-            () => {
-                if (
-                    this.state.basicSubmitted &&
-                    this.state.kinSubmitted &&
-                    this.state.bankSubmitted &&
-                    this.state.detailSubmitted &&
-                    this.state.billingSubmitted 
-                ) {
-                    //check if both form is submittef
-                    if (!this.props.editEmp) {
-                        console.log("emes");
-                        this.addEmployee(this.state.mergeObj); //add skill
-                    } else {
-                        console.log("edit");
-                        this.editRecord(this.state.mergeObj); //edit skill
-                    }
-                }
-            }
+            },() => this.validateForm()
         );
     };
 
@@ -1014,35 +908,16 @@ class InfoModal extends Component {
                 mergeObj: {
                     ...this.state.mergeObj,
                     ...{
-                        bankName: bank.bankName? bank.bankName: '',
-                        bankAccountNo: bank.bankAccountNo? bank.bankAccountNo: '',
-                        bankBsb: bank.bankBsb? bank.bankBsb: '',
-                        tfn: bank.tfn ? bank.tfn: '',
+                        bankName: bank.bankName ?? '',
+                        bankAccountNo: bank.bankAccountNo?? '',
+                        bankBsb: bank.bankBsb?? '',
+                        tfn: bank.tfn ?? '',
                         taxFreeThreshold: bank.taxFreeThreshold,
                         helpHECS: bank.helpHECS,
                     },
                 },
                 bankSubmitted: true, // level form submitted
-            },
-            () => {
-                if (
-                    this.state.basicSubmitted &&
-                    this.state.kinSubmitted &&
-                    this.state.bankSubmitted &&
-                    this.state.detailSubmitted &&
-                    this.state.billingSubmitted && 
-                    this.state.trainSubmitted
-                ) {
-                    //check if both form is submittef
-                    if (!this.props.editEmp) {
-                        console.log("emes");
-                        this.addEmployee(this.state.mergeObj); //add skill
-                    } else {
-                        console.log("edit");
-                        this.editRecord(this.state.mergeObj); //edit skill
-                    }
-                }
-            }
+            },() => this.validateForm()
         );
     };
 
@@ -1058,28 +933,41 @@ class InfoModal extends Component {
                     },
                 },
                 trainSubmitted: true, // level form submitted
-            },
-            () => {
-                if (
-                    this.state.basicSubmitted &&
-                    this.state.kinSubmitted &&
-                    this.state.bankSubmitted &&
-                    this.state.detailSubmitted &&
-                    this.state.billingSubmitted && 
-                    this.state.trainSubmitted
-                ) {
-                    //check if both form is submittef
-                    if (!this.props.editEmp) {
-                        console.log("emes");
-                        this.addEmployee(this.state.mergeObj); //add skill
-                    } else {
-                        console.log("edit");
-                        this.editRecord(this.state.mergeObj); //edit skill
-                    }
-                }
-            }
+            }, () => this.validateForm()
         );
     };
+
+
+    EmailCall = (vake) => {
+        console.log('Email submit', vake);
+        this.setState(
+            {
+                mergeObj: {
+                    ...this.state.mergeObj,
+                    ...vake.basic,
+                    // username: this.state.sUsername
+                },
+                emailSubmitted: true, // skill form submitted
+            },()=> this.validateForm()
+            
+        );
+    }
+
+
+    validateForm = () => {
+        const { basicSubmitted, kinSubmitted, bankSubmitted, detailSubmitted, billingSubmitted, emailSubmitted, trainSubmitted,  mergeObj } = this.state
+        if ( basicSubmitted && kinSubmitted && bankSubmitted && detailSubmitted && billingSubmitted && trainSubmitted && emailSubmitted) {
+            //check if both form is submittef
+            if (!this.props.editEmp) {
+                console.log("emes");
+                this.addEmployee(mergeObj); //add skill
+            } else {
+                console.log("edit");
+                this.editRecord(mergeObj); //edit skill
+            }
+        }
+    }
+        
 
     addEmployee = (data) => {
         console.log("addEmployee", data);
@@ -1143,29 +1031,6 @@ class InfoModal extends Component {
                 callBack()
             }
         });
-    };
-
-    onCancel = () => {
-        const { BasicFields, BillingFields, DetailFields, KinFields, BankFields} = this.state;
-
-        delete BasicFields.initialValues; // delete initialValues of fields on close
-        delete DetailFields.initialValues;
-        delete KinFields.initialValues;
-        delete BillingFields.initialValues;
-        this.setState(
-            {
-                basicSubmitted: false,
-                detailSubmitted: false,
-                billingSubmitted: false,
-                BasicFields: { ...BasicFields }, //delete Formfields on Close
-                BillingFields: { ...BillingFields },
-                DetailFields: { ...DetailFields },
-                mergeObj: {},
-            },
-            () => {
-                this.props.close();
-            }
-        );
     };
 
     onContact = (value) => {
@@ -1334,10 +1199,11 @@ class InfoModal extends Component {
         })
     }
 
-    render() {
-        const { editEmp, visible } = this.props;
-        const { BasicFields, DetailFields, KinFields, BankFields, BillingFields, TrainFields,  CONTACT, sContact, sUsername, loading } = this.state;
 
+
+    render() {
+        const { editEmp, visible, close } = this.props;
+        const { BasicFields, DetailFields, KinFields, BankFields, BillingFields, TrainFields,  CONTACT, sContact, sUsername, loading } = this.state;
         return (
             <Modal
                 title={editEmp ? "Edit Employee" : "Add Employee"}
@@ -1347,7 +1213,7 @@ class InfoModal extends Component {
                 onOk={() => { this.submit(); }}
                 okButtonProps={{ disabled: loading }}
                 okText={loading ?<LoadingOutlined /> :"Save"}
-                onCancel={this.onCancel}
+                onCancel={()=> close()}
                 width={900}
             >
                 <Row style={{marginBottom:"1em"}} justify="space-between">
@@ -1373,21 +1239,28 @@ class InfoModal extends Component {
                             }
                             style={{width:"100%"}}
                         />
+                       
                     </Col> }
-                    <Col span={8}>
-                        <Input
-                            value={sUsername}
-                            placeholder="Email"
-                            size="small"
-                            type="email"
-                            // prefix={<UserOutlined />} 
-                            onChange={(e, value)=>{
-                                this.setState({
-                                    sUsername: e.target.value
-                                })
-                            }}
-                            style={{width:"100%"}}
-                        /> 
+                    <Col span={8}> 
+
+                    <AntForm
+                    size={'small'}
+                    ref={this.emailRef}
+                    onFinish={this.EmailCall}
+                    >
+                        <AntForm.Item
+                        name={'username'}
+                        rules={[{required: true, type: 'email', message: 'Email is Required'}]}
+                        >
+                            <Input
+                                placeholder="Email"
+                                size="small"
+                                // prefix={<UserOutlined />} 
+                                
+                                style={{width:"100%"}}
+                                /> 
+                        </AntForm.Item>
+                    </AntForm>
                     </Col>
                 </Row>
                 <Tabs type="card">

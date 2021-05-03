@@ -3,6 +3,7 @@ import { Row, Col, Table, Typography } from "antd";
 import moment from "moment";
 import "../Styles/table.css"
 import { getRecord } from "../../service/opportunities";
+import { formatCurrency } from "../../service/constant";
 const { Title, Text } = Typography
 
 class ProfitLoss extends Component {
@@ -33,196 +34,7 @@ class ProfitLoss extends Component {
                       },
                     ]
                 },
-                // {
-                //     title: 'Jul-21',
-                //     children: [
-                //       {
-                //         title: '22',
-                //         render: (record) =>{
-                //             if (record.key === 'R') {
-                //                 return `$ ${record[1]}`
-                //             }else if (record.key === 'C'){
-                //                 return `$ ${record[1]}`
-                //             }else if (record.key === '$'){
-                //                 return <b>{`$ ${record[1]}`}</b>
-                //             }else if (record.key === '%'){
-                //                 return <b>{` ${record[1]} %`}</b>
-                //             }
-                //         }
-                //       },
-                //     ]
-                // },
-                // {
-                //     title: 'Aug-21',
-                //     children: [
-                //         {
-                //             title: '22',
-                //             render: (record) =>{
-                //                 if (record.key === 'R') {
-                //                     return `$ ${record[2]}`
-                //                 }else if (record.key === 'C'){
-                //                     return `$ ${record[2]}`
-                //                 }else if (record.key === '$'){
-                //                     return <b>{`$ ${record[2]}`}</b>
-                //                 }else if (record.key === '%'){
-                //                     return <b>{` ${record[2]} %`}</b>
-                //                 }
-                //             }
-                //           },
-                //     ]
-                // },
-                // {
-                //     title: 'Sep-21',
-                //     children: [
-                //         {
-                //             title: '22',
-                //             render: (record) =>{
-                //                 if (record.key === 'R') {
-                //                     return `$ ${record[3]}`
-                //                 }else if (record.key === 'C'){
-                //                     return `$ ${record[3]}`
-                //                 }else if (record.key === '$'){
-                //                     return <b>{`$ ${record[3]}`}</b>
-                //                 }else if (record.key === '%'){
-                //                     return <b>{` ${record[3]} %`}</b>
-                //                 }
-                //             }
-                //         }
-                //     ]
-                // },
-                // {
-                //     title: 'Oct-21',
-                //     children: [
-                //         {
-                //             title: '20',
-                //             render: (record) =>{
-                //                 if (record.key === 'R') {
-                //                     return `$ ${record[4]}`
-                //                 }else if (record.key === 'C'){
-                //                     return `$ ${record[4]}`
-                //                 }else if (record.key === '$'){
-                //                     return <b>{`$ ${record[4]}`}</b>
-                //                 }else if (record.key === '%'){
-                //                     return <b>{` ${record[4]} %`}</b>
-                //                 }
-                //             }
-                //         }
-                //     ]
-                // },
-                // {
-                //     title: 'Nov-21',
-                //     children: [
-                //         {
-                //             title: '22',
-                //             render: (record) =>{
-                //                 if (record.key === 'R') {
-                //                     return `$ ${record[5]}`
-                //                 }else if (record.key === 'C'){
-                //                     return `$ ${record[5]}`
-                //                 }else if (record.key === '$'){
-                //                     return <b>{`$ ${record[5]}`}</b>
-                //                 }else if (record.key === '%'){
-                //                     return <b>{` ${record[5]} %`}</b>
-                //                 }
-                //             }
-                //         }
-                //     ]
-                // },
-                // {
-                //     title: 'Dec-21',
-                //     children: [
-                //         {
-                //             title: '21',
-                //             render: (record) =>{
-                //                 if (record.key === 'R') {
-                //                     return `$ ${record[6]}`
-                //                 }else if (record.key === 'C'){
-                //                     return `$ ${record[6]}`
-                //                 }else if (record.key === '$'){
-                //                     return <b>{`$ ${record[6]}`}</b>
-                //                 }else if (record.key === '%'){
-                //                     return <b>{` ${record[6]} %`}</b>
-                //                 }
-                //             }
-                //         }
-                //     ]
-                // },
-                // {
-                //     title: 'Jan-22',
-                //     children: [
-                //         {
-                //             title: '19',
-                //             render: (record) =>{
-                //                 if (record.key === 'R') {
-                //                     return `$ ${record[7]}`
-                //                 }else if (record.key === 'C'){
-                //                     return `$ ${record[7]}`
-                //                 }else if (record.key === '$'){
-                //                     return <b>{`$ ${record[7]}`}</b>
-                //                 }else if (record.key === '%'){
-                //                     return <b>{` ${record[7]} %`}</b>
-                //                 }
-                //             }
-                //         }
-                //     ]
-                // },
-                // {
-                //     title: 'Feb-22',
-                //     children: [
-                //         {
-                //             title: '20',
-                //             render: (record) =>{
-                //                 if (record.key === 'R') {
-                //                     return `$ ${record[8]}`
-                //                 }else if (record.key === 'C'){
-                //                     return `$ ${record[8]}`
-                //                 }else if (record.key === '$'){
-                //                     return <b>{`$ ${record[8]}`}</b>
-                //                 }else if (record.key === '%'){
-                //                     return <b>{` ${record[8]} %`}</b>
-                //                 }
-                //             }
-                //         }
-                //     ]
-                // },
-                // {
-                //     title: 'Mar-22',
-                //     children: [
-                //         {
-                //             title: '22',
-                //             render: (record) =>{
-                //                 if (record.key === 'R') {
-                //                     return `$ ${record[9]}`
-                //                 }else if (record.key === 'C'){
-                //                     return `$ ${record[9]}`
-                //                 }else if (record.key === '$'){
-                //                     return <b>{`$ ${record[9]}`}</b>
-                //                 }else if (record.key === '%'){
-                //                     return <b>{` ${record[9]} %`}</b>
-                //                 }
-                //             }
-                //         }
-                //     ]
-                // },
-                // {
-                //     title: 'Apr-22',
-                //     children: [
-                //         {
-                //             title: '18',
-                //             render: (record) =>{
-                //                 if (record.key === 'R') {
-                //                     return `$ ${record[10]}`
-                //                 }else if (record.key === 'C'){
-                //                     return `$ ${record[10]}`
-                //                 }else if (record.key === '$'){
-                //                     return <b>{`$ ${record[10]}`}</b>
-                //                 }else if (record.key === '%'){
-                //                     return <b>{` ${record[10]} %`}</b>
-                //                 }
-                //             }
-                //         }
-                //     ]
-                // },
+               
             ],
             data:[
                 {key: 'R', label: 'Revenue'},
@@ -273,10 +85,10 @@ class ProfitLoss extends Component {
                     ]
                 },
             )
-            data[0][i] = revenue
-            data[1][i] = cos
-            data[2][i] = cm
-            data[3][i] = billing.cmPercentage
+            data[0][i] = formatCurrency(revenue)
+            data[1][i] = formatCurrency(cos)
+            data[2][i] = formatCurrency(cm)
+            data[3][i] = formatCurrency(billing.cmPercentage)
             month = moment(month).add(1, 'months')
         }
         this.setState({
@@ -300,7 +112,7 @@ class ProfitLoss extends Component {
                     <Title level={5} >Rev - Discount Value</Title>
                 </Col>
                 <Col span={5}>
-                    <Text>$ {billing.discount} / {billing.totalMonths} Months  = $ {(billing.discount / billing.totalMonths).toFixed(2)}</Text>
+                    <Text>$ {formatCurrency(billing.discount)} / {billing.totalMonths} Months  = $ {formatCurrency((billing.discount / billing.totalMonths).toFixed(2))}</Text>
                 </Col>
                 <Col span={24}>
                     <Row >

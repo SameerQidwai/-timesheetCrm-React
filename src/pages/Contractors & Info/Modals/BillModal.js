@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { Modal } from "antd";
 import { LoadingOutlined } from "@ant-design/icons"; //Icons
-import Form from "../../components/Core/Form";
+import Form from "../../../components/Core/Form";
 
 import moment from "moment";
-import { addList, editList, getRecord } from "../../service/subContrators-contracts";
+import { addList, editList, getRecord } from "../../../service/subContrators-contracts";
 
 class BillModal extends Component {
     constructor() {
