@@ -1,0 +1,76 @@
+import { message } from "antd";
+import axios from "axios";
+
+import { Api } from "./constant";
+
+const url = `${Api}/timesheets`;
+
+export const getList = (data) => {
+    return axios
+        .get(url +`?startDate=${data.startDate}&endDate=${data.endDate}`)
+        .then((res) => {
+            const { success, data } = res.data;
+            if (success) return { success: success, data: data };
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                success: false,
+                message: err.message,
+            };
+        });
+};
+
+export const addList = (data) => {
+    message.loading({ content: 'Loading...', key: 1 })
+    return axios
+        .post(url, data)
+        .then((res) => {
+            const { success } = res.data;
+            message.success({ content: 'Success!', key: 1})
+            if (success) return success;
+        })
+        .catch((err) => {
+            message.error({ content: 'Error!', key: 1})
+            return {
+                error: "Please login again!",
+                status: false,
+                message: err.message,
+            };
+        });
+};
+
+export const delLabel = (id) => {
+    return axios
+        .delete(url + `/${id}`)
+        .then((res) => {
+            const { success } = res.data;
+            if (success) return success;
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                status: false,
+                message: err.message,
+            };
+        });
+};
+
+export const editLabel = (data) => {
+    message.loading({ content: 'Loading...', key: data.is })
+    return axios
+        .put(url + `/${data.id}`, data)
+        .then((res) => {
+            const { success } = res.data;
+            message.success({ content: 'Success!', key: data.is})
+            if (success) return success;
+        })
+        .catch((err) => {
+            message.error({ content: 'Error!', key: data.is})
+            return {
+                error: "Please login again!",
+                status: false,
+                message: err.message,
+            };
+        });
+};

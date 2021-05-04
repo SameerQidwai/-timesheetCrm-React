@@ -4,7 +4,7 @@ import { Row, Col, Table, Modal, Input, Button, Select, Typography, Popconfirm, 
 import { CloseCircleOutlined, CheckOutlined, SaveOutlined, LoadingOutlined } from "@ant-design/icons"; //Icons
 import Form from "../components/Core/Form";
 import moment from "moment";
-
+import {  getList } from "../service/timesheet"
 import "./styles/table.css";
 
 const { Title } = Typography;
@@ -18,39 +18,40 @@ class TimeSheet extends Component {
         this.state = {
             isVisible: false,
             proVisible: false,
+            startDate: moment().startOf("month"), 
+            endDate: moment().endOf("months"),
             dataIndex: {},
-            columns: [],
             loading: false,
             data: [
                 {
                     key: 1,
                     project: "Project 1",
-                    1: {
+                    '1/5': {
                         start: "09:22",
                         end: "22:02",
                         break: "2",
                     },
-                    2: {
+                    '2/5': {
                         start: "10:00",
                         end: "20:00",
                         break: "4",
                     },
-                    3: {
+                    '3/5': {
                         start: "11:22",
                         end: "13:11",
                         break: "5",
                     },
-                    4: {
+                    '4/5': {
                         start: "16:20",
                         end: "17:10",
                         break: "18",
                     },
-                    5: {
+                    '5/5': {
                         start: "02:23",
                         end: "14:23",
                         break: "5",
                     },
-                    6: {
+                    '6/5': {
                         start: "15:05",
                         end: "20:1",
                         break: "1",
@@ -81,6 +82,7 @@ class TimeSheet extends Component {
                 },
             ],
             comments: null,
+
             FormFields: {
                 // Add new Time break and table in time-sheet
                 formId: "time_form",
@@ -139,568 +141,83 @@ class TimeSheet extends Component {
                     },
                 ],
             },
-        };
 
-        this.column = [
-            {
-                title: "Project",
-                dataIndex: "project",
-                key: "project",
-                fixed: "left",
-                width: 300,
-                render: (value, record, dataIndex) => (
-                    <Row justify="space-between">
-                        <Col span={20}>{value}</Col>
-                        <Col span={3}>
-                            <Row justify="space-between">
-                                <Col>
-                                    <Popconfirm
-                                        title="Sure to delete?"
-                                        onConfirm={() => this.delRow(dataIndex)}
-                                    >
-                                        <CloseCircleOutlined
-                                            style={{
-                                                color: "red",
-                                                fontSize: "1.2em",
-                                            }}
-                                        />
-                                    </Popconfirm>
-                                </Col>
-                            </Row>
-                        </Col>
-                    </Row>
-                ),
-            },
-            {
-                title: "title",
-                dataIndex: 1,
-                key: 1,
-                width: 200,
-                align: "center",
-                render: (value, record, rowIndex) =>
-                    value ? (
-                        <Row style={{ border: "1px solid" }}>
-                            <Col span={24}>Start Time: {value["start"]}</Col>
-                            <Col span={24}>End Time: {value["end"]}</Col>
-                            <Col span={24}>Break: {value["break"]}</Col>
+            columns : [
+                {
+                    title: "Project",
+                    dataIndex: "project",
+                    key: "project",
+                    fixed: "left",
+                    width: 300,
+                    render: (value, record, dataIndex) => (
+                        <Row justify="space-between">
+                            <Col span={20}>{value}</Col>
+                            <Col span={3}>
+                                <Row justify="space-between">
+                                    <Col>
+                                        <Popconfirm
+                                            title="Sure to delete?"
+                                            onConfirm={() => this.delRow(dataIndex)}
+                                        >
+                                            <CloseCircleOutlined
+                                                style={{
+                                                    color: "red",
+                                                    fontSize: "1.2em",
+                                                }}
+                                            />
+                                        </Popconfirm>
+                                    </Col>
+                                </Row>
+                            </Col>
                         </Row>
-                    ) : null,
-            },
-            {
-                title: "title",
-                dataIndex: 2,
-                key: 2,
-                width: 200,
-                align: "center",
-                render: (value, record, rowIndex) =>
-                    value ? (
-                        <Row style={{ border: "1px solid" }}>
-                            <Col span={24}>Start Time: {value["start"]}</Col>
-                            <Col span={24}>End Time: {value["end"]}</Col>
-                            <Col span={24}>Break: {value["break"]}</Col>
-                        </Row>
-                    ) : null,
-            },
-            {
-                title: "title",
-                dataIndex: 3,
-                key: 3,
-                width: 200,
-                align: "center",
-                render: (value, record, rowIndex) =>
-                    value ? (
-                        <Row style={{ border: "1px solid" }}>
-                            <Col span={24}>Start Time: {value["start"]}</Col>
-                            <Col span={24}>End Time: {value["end"]}</Col>
-                            <Col span={24}>Break: {value["break"]}</Col>
-                        </Row>
-                    ) : null,
-            },
-            {
-                title: "title",
-                dataIndex: 4,
-                key: 4,
-                width: 200,
-                align: "center",
-                render: (value, record, rowIndex) =>
-                    value ? (
-                        <Row style={{ border: "1px solid" }}>
-                            <Col span={24}>Start Time: {value["start"]}</Col>
-                            <Col span={24}>End Time: {value["end"]}</Col>
-                            <Col span={24}>Break: {value["break"]}</Col>
-                        </Row>
-                    ) : null,
-            },
-            {
-                title: "title",
-                dataIndex: 5,
-                key: 5,
-                width: 200,
-                align: "center",
-                render: (value, record, rowIndex) =>
-                    value ? (
-                        <Row style={{ border: "1px solid" }}>
-                            <Col span={24}>Start Time: {value["start"]}</Col>
-                            <Col span={24}>End Time: {value["end"]}</Col>
-                            <Col span={24}>Break: {value["break"]}</Col>
-                        </Row>
-                    ) : null,
-            },
-            {
-                title: "title",
-                dataIndex: 6,
-                key: 6,
-                width: 200,
-                align: "center",
-                render: (value, record, rowIndex) =>
-                    value ? (
-                        <Row style={{ border: "1px solid" }}>
-                            <Col span={24}>Start Time: {value["start"]}</Col>
-                            <Col span={24}>End Time: {value["end"]}</Col>
-                            <Col span={24}>Break: {value["break"]}</Col>
-                        </Row>
-                    ) : null,
-            },
-            {
-                title: "title",
-                dataIndex: 7,
-                key: 7,
-                width: 200,
-                align: "center",
-                render: (value, record, rowIndex) =>
-                    value ? (
-                        <Row style={{ border: "1px solid" }}>
-                            <Col span={24}>Start Time: {value["start"]}</Col>
-                            <Col span={24}>End Time: {value["end"]}</Col>
-                            <Col span={24}>Break: {value["break"]}</Col>
-                        </Row>
-                    ) : null,
-            },
-            {
-                title: "title",
-                dataIndex: 8,
-                key: 8,
-                width: 200,
-                align: "center",
-                render: (value, record, rowIndex) =>
-                    value ? (
-                        <Row style={{ border: "1px solid" }}>
-                            <Col span={24}>Start Time: {value["start"]}</Col>
-                            <Col span={24}>End Time: {value["end"]}</Col>
-                            <Col span={24}>Break: {value["break"]}</Col>
-                        </Row>
-                    ) : null,
-            },
-            {
-                title: "title",
-                dataIndex: 9,
-                key: 9,
-                width: 200,
-                align: "center",
-                render: (value, record, rowIndex) =>
-                    value ? (
-                        <Row style={{ border: "1px solid" }}>
-                            <Col span={24}>Start Time: {value["start"]}</Col>
-                            <Col span={24}>End Time: {value["end"]}</Col>
-                            <Col span={24}>Break: {value["break"]}</Col>
-                        </Row>
-                    ) : null,
-            },
-            {
-                title: "title",
-                dataIndex: 10,
-                key: 10,
-                width: 200,
-                align: "center",
-                render: (value, record, rowIndex) =>
-                    value ? (
-                        <Row style={{ border: "1px solid" }}>
-                            <Col span={24}>Start Time: {value["start"]}</Col>
-                            <Col span={24}>End Time: {value["end"]}</Col>
-                            <Col span={24}>Break: {value["break"]}</Col>
-                        </Row>
-                    ) : null,
-            },
-            {
-                title: "title",
-                dataIndex: 10,
-                key: 10,
-                width: 200,
-                align: "center",
-                render: (value, record, rowIndex) =>
-                    value ? (
-                        <Row style={{ border: "1px solid" }}>
-                            <Col span={24}>Start Time: {value["start"]}</Col>
-                            <Col span={24}>End Time: {value["end"]}</Col>
-                            <Col span={24}>Break: {value["break"]}</Col>
-                        </Row>
-                    ) : null,
-            },
-            {
-                title: "title",
-                dataIndex: 11,
-                key: 11,
-                width: 200,
-                align: "center",
-                render: (value, record, rowIndex) =>
-                    value ? (
-                        <Row style={{ border: "1px solid" }}>
-                            <Col span={24}>Start Time: {value["start"]}</Col>
-                            <Col span={24}>End Time: {value["end"]}</Col>
-                            <Col span={24}>Break: {value["break"]}</Col>
-                        </Row>
-                    ) : null,
-            },
-            {
-                title: "title",
-                dataIndex: 12,
-                key: 12,
-                width: 200,
-                align: "center",
-                render: (value, record, rowIndex) =>
-                    value ? (
-                        <Row style={{ border: "1px solid" }}>
-                            <Col span={24}>Start Time: {value["start"]}</Col>
-                            <Col span={24}>End Time: {value["end"]}</Col>
-                            <Col span={24}>Break: {value["break"]}</Col>
-                        </Row>
-                    ) : null,
-            },
-            {
-                title: "title",
-                dataIndex: 13,
-                key: 13,
-                width: 200,
-                align: "center",
-                render: (value, record, rowIndex) =>
-                    value ? (
-                        <Row style={{ border: "1px solid" }}>
-                            <Col span={24}>Start Time: {value["start"]}</Col>
-                            <Col span={24}>End Time: {value["end"]}</Col>
-                            <Col span={24}>Break: {value["break"]}</Col>
-                        </Row>
-                    ) : null,
-            },
-            {
-                title: "title",
-                dataIndex: 14,
-                key: 14,
-                width: 200,
-                align: "center",
-                render: (value, record, rowIndex) =>
-                    value ? (
-                        <Row style={{ border: "1px solid" }}>
-                            <Col span={24}>Start Time: {value["start"]}</Col>
-                            <Col span={24}>End Time: {value["end"]}</Col>
-                            <Col span={24}>Break: {value["break"]}</Col>
-                        </Row>
-                    ) : null,
-            },
-            {
-                title: "title",
-                dataIndex: 15,
-                key: 15,
-                width: 200,
-                align: "center",
-                render: (value, record, rowIndex) =>
-                    value ? (
-                        <Row style={{ border: "1px solid" }}>
-                            <Col span={24}>Start Time: {value["start"]}</Col>
-                            <Col span={24}>End Time: {value["end"]}</Col>
-                            <Col span={24}>Break: {value["break"]}</Col>
-                        </Row>
-                    ) : null,
-            },
-            {
-                title: "title",
-                dataIndex: 16,
-                key: 16,
-                width: 200,
-                align: "center",
-                render: (value, record, rowIndex) =>
-                    value ? (
-                        <Row style={{ border: "1px solid" }}>
-                            <Col span={24}>Start Time: {value["start"]}</Col>
-                            <Col span={24}>End Time: {value["end"]}</Col>
-                            <Col span={24}>Break: {value["break"]}</Col>
-                        </Row>
-                    ) : null,
-            },
-            {
-                title: "title",
-                dataIndex: 17,
-                key: 17,
-                width: 200,
-                align: "center",
-                render: (value, record, rowIndex) =>
-                    value ? (
-                        <Row style={{ border: "1px solid" }}>
-                            <Col span={24}>Start Time: {value["start"]}</Col>
-                            <Col span={24}>End Time: {value["end"]}</Col>
-                            <Col span={24}>Break: {value["break"]}</Col>
-                        </Row>
-                    ) : null,
-            },
-            {
-                title: "title",
-                dataIndex: 18,
-                key: 18,
-                width: 200,
-                align: "center",
-                render: (value, record, rowIndex) =>
-                    value ? (
-                        <Row style={{ border: "1px solid" }}>
-                            <Col span={24}>Start Time: {value["start"]}</Col>
-                            <Col span={24}>End Time: {value["end"]}</Col>
-                            <Col span={24}>Break: {value["break"]}</Col>
-                        </Row>
-                    ) : null,
-            },
-            {
-                title: "title",
-                dataIndex: 19,
-                key: 19,
-                width: 200,
-                align: "center",
-                render: (value, record, rowIndex) =>
-                    value ? (
-                        <Row style={{ border: "1px solid" }}>
-                            <Col span={24}>Start Time: {value["start"]}</Col>
-                            <Col span={24}>End Time: {value["end"]}</Col>
-                            <Col span={24}>Break: {value["break"]}</Col>
-                        </Row>
-                    ) : null,
-            },
-            {
-                title: "title",
-                dataIndex: 20,
-                key: 20,
-                width: 200,
-                align: "center",
-                render: (value, record, rowIndex) =>
-                    value ? (
-                        <Row style={{ border: "1px solid" }}>
-                            <Col span={24}>Start Time: {value["start"]}</Col>
-                            <Col span={24}>End Time: {value["end"]}</Col>
-                            <Col span={24}>Break: {value["break"]}</Col>
-                        </Row>
-                    ) : null,
-            },
-            {
-                title: "title",
-                dataIndex: 21,
-                key: 21,
-                width: 200,
-                align: "center",
-                render: (value, record, rowIndex) =>
-                    value ? (
-                        <Row style={{ border: "1px solid" }}>
-                            <Col span={24}>Start Time: {value["start"]}</Col>
-                            <Col span={24}>End Time: {value["end"]}</Col>
-                            <Col span={24}>Break: {value["break"]}</Col>
-                        </Row>
-                    ) : null,
-            },
-            {
-                title: "title",
-                dataIndex: 22,
-                key: 22,
-                width: 200,
-                align: "center",
-                render: (value, record, rowIndex) =>
-                    value ? (
-                        <Row style={{ border: "1px solid" }}>
-                            <Col span={24}>Start Time: {value["start"]}</Col>
-                            <Col span={24}>End Time: {value["end"]}</Col>
-                            <Col span={24}>Break: {value["break"]}</Col>
-                        </Row>
-                    ) : null,
-            },
-            {
-                title: "title",
-                dataIndex: 23,
-                key: 23,
-                width: 200,
-                align: "center",
-                render: (value, record, rowIndex) =>
-                    value ? (
-                        <Row style={{ border: "1px solid" }}>
-                            <Col span={24}>Start Time: {value["start"]}</Col>
-                            <Col span={24}>End Time: {value["end"]}</Col>
-                            <Col span={24}>Break: {value["break"]}</Col>
-                        </Row>
-                    ) : null,
-            },
-            {
-                title: "title",
-                dataIndex: 25,
-                key: 25,
-                width: 200,
-                align: "center",
-                render: (value, record, rowIndex) =>
-                    value ? (
-                        <Row style={{ border: "1px solid" }}>
-                            <Col span={24}>Start Time: {value["start"]}</Col>
-                            <Col span={24}>End Time: {value["end"]}</Col>
-                            <Col span={24}>Break: {value["break"]}</Col>
-                        </Row>
-                    ) : null,
-            },
-            {
-                title: "title",
-                dataIndex: 26,
-                key: 26,
-                width: 200,
-                align: "center",
-                render: (value, record, rowIndex) =>
-                    value ? (
-                        <Row style={{ border: "1px solid" }}>
-                            <Col span={24}>Start Time: {value["start"]}</Col>
-                            <Col span={24}>End Time: {value["end"]}</Col>
-                            <Col span={24}>Break: {value["break"]}</Col>
-                        </Row>
-                    ) : null,
-            },
-            {
-                title: "title",
-                dataIndex: 27,
-                key: 27,
-                width: 200,
-                align: "center",
-                render: (value, record, rowIndex) =>
-                    value ? (
-                        <Row style={{ border: "1px solid" }}>
-                            <Col span={24}>Start Time: {value["start"]}</Col>
-                            <Col span={24}>End Time: {value["end"]}</Col>
-                            <Col span={24}>Break: {value["break"]}</Col>
-                        </Row>
-                    ) : null,
-            },
-            {
-                title: "title",
-                dataIndex: 28,
-                key: 28,
-                width: 200,
-                align: "center",
-                render: (value, record, rowIndex) =>
-                    value ? (
-                        <Row style={{ border: "1px solid" }}>
-                            <Col span={24}>Start Time: {value["start"]}</Col>
-                            <Col span={24}>End Time: {value["end"]}</Col>
-                            <Col span={24}>Break: {value["break"]}</Col>
-                        </Row>
-                    ) : null,
-            },
-            {
-                title: "title",
-                dataIndex: 29,
-                key: 29,
-                width: 200,
-                align: "center",
-                render: (value, record, rowIndex) =>
-                    value ? (
-                        <Row style={{ border: "1px solid" }}>
-                            <Col span={24}>Start Time: {value["start"]}</Col>
-                            <Col span={24}>End Time: {value["end"]}</Col>
-                            <Col span={24}>Break: {value["break"]}</Col>
-                        </Row>
-                    ) : null,
-            },
-            {
-                title: "title",
-                dataIndex: 30,
-                key: 30,
-                width: 200,
-                align: "center",
-                render: (value, record, rowIndex) =>
-                    value ? (
-                        <Row style={{ border: "1px solid" }}>
-                            <Col span={24}>Start Time: {value["start"]}</Col>
-                            <Col span={24}>End Time: {value["end"]}</Col>
-                            <Col span={24}>Break: {value["break"]}</Col>
-                        </Row>
-                    ) : null,
-            },
-            {
-                title: "title",
-                dataIndex: 31,
-                key: 31,
-                width: 200,
-                align: "center",
-                render: (value, record, rowIndex) =>
-                    value ? (
-                        <Row style={{ border: "1px solid" }}>
-                            <Col span={24}>Start Time: {value["start"]}</Col>
-                            <Col span={24}>End Time: {value["end"]}</Col>
-                            <Col span={24}>Break: {value["break"]}</Col>
-                        </Row>
-                    ) : null,
-            },
-        ];
+                    ),
+                },
+            ]
+        };
     }
 
     componentDidMount = () => {
-        this.Columns();
+        const { startDate, endDate } = this.state
+        // this.Columns();
+        this.columns(startDate, endDate)
     };
 
-    Columns = (date, dateString) => {
-        // console.log(dateString)
-        date = dateString ? new Date(date).setDate(1) : new Date().setDate(1); // set date for the selected month or current month
-        console.log(new Date(date));
-        let month = new Date(date).getMonth(); // get month for the month
-        const monthChange = month; // set month to compare whether to run the function or not
-        var loopindex = 1;
-        this.state.columns = this.column.map((col, index) => {
-            // reCreate the table columns to insert onCell click
-            // console.log(index);
-            if (col.dataIndex === "project") {
-                // don't change anything for 1st column
-                return col;
-            }
-            var day = new Date(date).toLocaleString("en-us", {
-                weekday: "short",
-            }); // to get day Name i.e mon, tue
-            var numDate = new Date(date).getDate(); // to get day date
-            var monthName = new Date(date).getMonth() + 1; // to get day month
-
-            date = new Date(date).setDate(new Date(date).getDate() + 1); // set next date before return
-            month = new Date(date).getMonth(); // get month to check whether to return in next loop or not
-            loopindex = monthChange === month ? loopindex + 1 : loopindex;
-            return {
-                ...col,
-                title: this.columnTitle(day, monthName, numDate), //Set title for the column
+    columns = (startDate, endDate) =>{
+        const { columns }  = this.state
+        let date = undefined
+        for (let i = startDate.format('D') ; i <= endDate.format('D'); i++) {
+            date = date ?? startDate
+            columns.push({
+                title: <span>
+                    <div>{date.format('ddd')}</div>
+                    <div> {date.format('DD MMM')} </div>
+                </span>,
+                dataIndex: date.format('D/M'),
+                key: date.format('D/M'),
+                width: 200,
+                align: "center",
                 onCell: (record, rowIndex) => ({
                     // onCell
                     record, // record to print
                     onClick: (event) => {
                         // on Click Function
-                        // console.log(day, numDate, month, monthChange)
-                        this.getRecord(record, rowIndex, col.dataIndex); // call function to save data in
+                        this.getRecord(record, rowIndex, date.format('D/M')); // call function to save data in
                     },
                 }),
-            };
-        });
-        for (let i = loopindex; i < 31; i++) {
-            // To pop columns for 31 month and feburary
-            this.state.columns.pop(); // pop
+                render: (value, record, rowIndex) =>
+                    value && (
+                        <Row style={{ border: "1px solid" }}>
+                            <Col span={24}>Start Time: {value["start"]}</Col>
+                            <Col span={24}>End Time: {value["end"]}</Col>
+                            <Col span={24}>Break: {value["break"]}</Col>
+                        </Row>
+                    )
+            })
+            date = date.add(1, 'days')
         }
-        this.setState({
-            // change column state
-            columns: this.state.columns,
-        });
-    };
+        this.setState({columns}, ()=>{console.log(this.state.columns);})
+    }
 
-    columnTitle = (day, month, numDate) => {
-        // create column title
-        return (
-            <>
-                <div>{day}</div>
-                <div>
-                    {month}/{numDate}
-                </div>
-            </>
-        );
-    };
 
     delRow(dataIndex) {
         const data = this.state.data.filter(function (obj, index) {
@@ -789,11 +306,21 @@ class TimeSheet extends Component {
                     </Col>
                     <Col>
                         <DatePicker
+
                             size="large"
                             mode="month"
                             picker="month"
                             format="MMM-YYYY"
-                            onChange={this.Columns}
+                            onChange={(value)=>{this.setState({Cmonth: value})}}
+                            defaultValue={moment(new Date())}
+                        />
+                        <DatePicker
+
+                            size="large"
+                            // mode="month"
+                            // picker="month"
+                            format={'DD/MM/YYYY'}
+                            oonChange={(value)=>{this.setState({Cdate: value})}}
                             defaultValue={moment(new Date())}
                         />
                     </Col>
@@ -802,7 +329,8 @@ class TimeSheet extends Component {
                             size="small"
                             type="primary"
                             onClick={() => {
-                                this.setState({ proVisible: true });
+                                console.log({startDate: moment().startOf("month").format('DD/M/YYYY'), endDate: moment().endOf("months").format('DD/M/YYYY')})
+                                getList({startDate: moment().startOf("month").format('DD/M/YYYY'), endDate: moment().endOf("month").format('DD/M/YYYY')})
                             }}
                         >
                             Add Project
