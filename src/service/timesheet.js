@@ -3,13 +3,15 @@ import axios from "axios";
 
 import { Api } from "./constant";
 
-const url = `${Api}/timesheets`;
+const url = `${Api}/timesheets/`;
 
-export const getList = (data) => {
+export const getList = (keys) => {
+    console.log(`${keys.startDate}&${keys.endDate}&${keys.userId}`);
     return axios
-        .get(url +`?startDate=${data.startDate}&endDate=${data.endDate}`)
+        .get(url + `${keys.startDate}&${keys.endDate}&${keys.userId}`)
         .then((res) => {
             const { success, data } = res.data;
+            console.log(res);
             if (success) return { success: success, data: data };
         })
         .catch((err) => {
@@ -21,14 +23,14 @@ export const getList = (data) => {
         });
 };
 
-export const addList = (data) => {
+export const addTime = (keys ,data) => {
     message.loading({ content: 'Loading...', key: 1 })
     return axios
-        .post(url, data)
+        .post(url +`${keys.startDate}&${keys.endDate}&${keys.userId}`, data)
         .then((res) => {
-            const { success } = res.data;
+            const { success, data } = res.data;
             message.success({ content: 'Success!', key: 1})
-            if (success) return success;
+            if (success) return {success, data};
         })
         .catch((err) => {
             message.error({ content: 'Error!', key: 1})
@@ -40,14 +42,17 @@ export const addList = (data) => {
         });
 };
 
-export const delLabel = (id) => {
+export const editTime = (entryId ,data) => {
+    message.loading({ content: 'Loading...', key: 1 })
     return axios
-        .delete(url + `/${id}`)
+        .put(url +`entries/${entryId}`, data)
         .then((res) => {
-            const { success } = res.data;
-            if (success) return success;
+            const { success, data } = res.data;
+            message.success({ content: 'Success!', key: 1})
+            if (success) return {success, data};
         })
         .catch((err) => {
+            message.error({ content: 'Error!', key: 1})
             return {
                 error: "Please login again!",
                 status: false,
@@ -55,6 +60,45 @@ export const delLabel = (id) => {
             };
         });
 };
+
+export const deleteTime = (entryId ) => {
+    message.loading({ content: 'Loading...', key: 1 })
+    return axios
+        .delete(url +`entries/${entryId}`)
+        .then((res) => {
+            const { success, data } = res.data;
+            message.success({ content: 'Success!', key: 1})
+            if (success) return {success, data};
+        })
+        .catch((err) => {
+            message.error({ content: 'Error!', key: 1})
+            return {
+                error: "Please login again!",
+                status: false,
+                message: err.message,
+            };
+        });
+};
+export const reviewTimeSheet = (keys, stage) => {
+    message.loading({ content: 'Loading...', key: 1 })
+    console.log(`${keys.startDate}&${keys.endDate}&${keys.userId}/projectEntries/${keys.pEntryId}/${stage}`);
+    return axios
+        .post(url + `${keys.startDate}&${keys.endDate}&${keys.userId}/projectEntries/${keys.pEntryId}/${stage}`)
+        .then((res) => {
+            const { success, data } = res.data;
+            message.success({ content: 'Success!', key: 1})
+            if (success) return {success, data};
+        })
+        .catch((err) => {
+            message.error({ content: 'Error!', key: 1})
+            return {
+                error: "Please login again!",
+                status: false,
+                message: err.message,
+            };
+        });
+};
+
 
 export const editLabel = (data) => {
     message.loading({ content: 'Loading...', key: data.is })

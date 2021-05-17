@@ -43,7 +43,15 @@ class InfoModal extends Component {
                     {
                         Placeholder: "Name",
                         rangeMin: true, 
-                        fieldCol: 12,
+                        fieldCol: 9,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                    {
+                        Placeholder: "Title",
+                        fieldCol: 3,
                         size: "small",
                         type: "Text",
                         labelAlign: "right",
@@ -59,10 +67,18 @@ class InfoModal extends Component {
                     },
                     {
                         object: "obj",
-                        fieldCol: 12,
+                        fieldCol: 9,
                         key: "name",
                         size: "small",
                         rules:[{ required: true, message: 'Name is Required' }],
+                        type: "Input",
+                        itemStyle:{marginBottom: 1},
+                    },
+                    {
+                        object: "obj",
+                        fieldCol: 3,
+                        key: "title",
+                        size: "small",
                         type: "Input",
                         itemStyle:{marginBottom: 1},
                     },
@@ -192,7 +208,7 @@ class InfoModal extends Component {
                     //             Click or drag Other Doc <UploadOutlined />
                     //         </>
                     //     ),
-
+            
                     //     type: "Dragger",
                     //     labelAlign: "right",
                     //     valuePropName: "fileList",
@@ -791,10 +807,11 @@ class InfoModal extends Component {
             BasicFields: {
                 ...BasicFields,
                 fields: BasicFields.fields.filter(el =>{
-                    if (el.Placeholder === 'Business Type'){
-                        el.fieldCol = 24
-                        return el
-                    }else if (el.Placeholder !=='Delegate Contact person' && el.key !== "delegate_cp"){
+                    // if (el.Placeholder === 'Business Type'){
+                    //     el.fieldCol = 24
+                    //     return el
+                    // }else 
+                    if (el.Placeholder !=='Delegate Contact person' && el.key !== "delegate_cp"){
                         return el
                     }
                 })
@@ -821,6 +838,7 @@ class InfoModal extends Component {
                     ...this.state.mergeObj,
                     ...{
                         name: vake.name? vake.name : '',
+                        title: vake.title ?? '',
                         parentOrganizationId: vake.parent? vake.parent : null,
                         phoneNumber: vake.phone? vake.phone : '',
                         delegatecontactPersonOrganizationId: vake.delegate_cp? vake.delegate_cp: null,

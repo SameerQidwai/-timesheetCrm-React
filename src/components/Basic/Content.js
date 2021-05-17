@@ -20,7 +20,7 @@ import ContBilling from "../../pages/Contractors & Info/ContBilling";
 // import Clients from "../../pages/Clients & info/Clients";
 // import ClientsInfo from "../../pages/Clients & info/ClientInfo";
 import Contact from "../../pages/Contacts/Contact Person/Contact";
-import TimeSheet from "../../pages/TimeSheet";
+import TimeSheet from "../../pages/Time Sheet/TimeSheet";
 import TimeOff from "../../pages/Time/TimeOff";
 import Travels from "../../pages/Travel/Travels";
 
