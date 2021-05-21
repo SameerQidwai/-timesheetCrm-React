@@ -2,6 +2,9 @@
     font-weight: 600;
     font-size: medium;
 }
+.ant-table-summary {
+    background-color: #fafafa;
+}
 
 /* .ant-table-wrapper.TimeSheetTable {
     height: 75vh;

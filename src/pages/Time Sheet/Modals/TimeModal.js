@@ -158,9 +158,9 @@ class TimeModal extends Component {
                 onCancel={close}
                 width={540}
                 footer={[
-                    <Button type="primary"  danger style={{float: "left"}} onClick={this.handleDelete}> Delete </Button>,
+                    <Button type="primary"  danger disabled={!editTime} style={{float: "left"}} onClick={this.handleDelete}> Delete </Button>,
                     <Button key="cancel" onClick={close}> Cancel </Button>,
-                    <Button key="ok" type="primary" loading={loading} onClick={() => { this.submit(); }}>
+                    <Button key="ok" type="primary" loading={loading}  onClick={() => { this.submit(); }}>
                       {loading ?<LoadingOutlined /> :"Save"}
                     </Button>,
                     

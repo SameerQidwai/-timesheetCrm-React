@@ -1,11 +1,12 @@
 import React, { Component } from "react";
-
 import { Row, Col, Table, Modal, Input, Button, Select, Typography, Popconfirm, DatePicker, Space, Tag, } from "antd";
-import { CloseCircleOutlined, CheckOutlined, SaveOutlined, LoadingOutlined } from "@ant-design/icons"; //Icons
+import { CloseCircleOutlined, DownloadOutlined, SaveOutlined, LoadingOutlined } from "@ant-design/icons"; //Icons
 import moment from "moment";
 import TimeModal from "./Modals/TimeModal"
+import AttachModal from "./Modals/AttachModal";
+import ExportToExcel from '../../components/Core/ExportToExcel'
 import {  getList, reviewTimeSheet } from "../../service/timesheet"
-import { getProjects } from "../../service/constant-Apis";
+import { getCustomApi, getContactPersons } from "../../service/constant-Apis";
 import "../styles/table.css";
 
 const { Title } = Typography;
@@ -19,6 +20,7 @@ class TimeSheet extends Component {
         this.state = {
             isVisible: false,
             proVisible: false,
+            isAttach: false,
             sheetDates: {
                 startDate: moment().startOf("month"), 
                 endDate: moment().endOf("month"),
@@ -27,6 +29,9 @@ class TimeSheet extends Component {
             timeObj: false,
             editTime: false,
             loading: false,
+            eData: [],
+            USERS:[],
+            sUser:{},
             data: [
                 {
                     prjoectId: 1,
@@ -160,9 +165,15 @@ class TimeSheet extends Component {
                     fixed: "left",
                     width: 300,
                     render: (value, record, index) => (
-                        <Row >
+                        <Row gutter={[0, 10]}>
                             <Col span={24}>
-                                {value} 
+                                <Row justify="space-between">
+                                    <Col> {value} </Col>
+                                    {record.status === 'SV' || record.status === 'RJ' && <Col> 
+                                        <DownloadOutlined onClick={()=>{this.exportData(record, index)}}/>
+                                        <SaveOutlined onClick={()=>{this.setState({isAttach: true})} } style={{color: '#1890ff', marginLeft:10}}/>
+                                    </Col>}
+                                </Row>
                             </Col>
                             {record.status === 'SV' || record.status === 'RJ' ?<Col sapn={12}>
                                 <Popconfirm
@@ -202,11 +213,26 @@ class TimeSheet extends Component {
     }
 
     componentDidMount = () => {
-        this.getSheet()
-        this.getProjects()        
+        this.fetchAll()
+        // this.columns()
     };
-    getProjects = () =>{
-        getProjects().then(res=>{
+
+    fetchAll = (id) =>{
+        Promise.all([ getCustomApi('projects'), getContactPersons()])
+        .then(res => {
+            this.setState({
+                projects: res[0].success? res[0].data : {},
+                USERS: res[1].success? res[1].data : [],
+            },()=>this.columns())
+            
+        })
+        .catch(e => {
+            console.log(e);
+        })
+    }
+
+    getProjects = (value) =>{
+        getCustomApi(`projects?userId=${value}`).then(res=>{
             if(res.success){
                 this.setState({
                     projects: res.data
@@ -217,43 +243,50 @@ class TimeSheet extends Component {
     }
 
     getSheet = () =>{
-        const { startDate, endDate } = this.state.sheetDates
-        getList({userId:1, startDate: startDate.format('DD-MM-YYYY'), endDate: endDate.format('DD-MM-YYYY')}).then(res=>{
-            if (res.success){
-                this.setState({
-                    timesheet: res.success && res.data,
-                    data: res.data ? res.data.projects: []
-                })
-            }
-        })
-        this.columns(startDate, endDate)
+        const { sUser, sheetDates } = this.state
+        const { startDate, endDate } = sheetDates
+        if(sUser.value){
+            getList({userId: sUser.value, startDate: startDate.format('DD-MM-YYYY'), endDate: endDate.format('DD-MM-YYYY')}).then(res=>{
+                if (res.success){
+                    this.setState({
+                        timesheet: res.success && res.data,
+                        data: res.data ? res.data.projects: []
+                    })
+                }
+            })
+        }
+        this.columns()
     }
 
-    columns = (startDate, endDate) =>{
+    columns = () =>{
+        const { startDate, endDate } = this.state.sheetDates
         let { columns }  = this.state
         let date = undefined
         let key = undefined
         columns = [columns[0]]
         for (let i = startDate.format('D') ; i <= endDate.format('D'); i++) {
             date = date ?? moment(startDate.format())
-            key = date.format('D/M')
             columns.push({
                 title: <span>
                     <div>{date.format('ddd')}</div>
                     <div> {date.format('DD MMM')} </div>
                 </span>,
                 dataIndex: date.format('D/M'),
+                key: date.format('D/M'),
                 width: 200,
                 editable: true,
                 align: "center",
-                render: (value, record, rowIndex) =>
-                    value && (
-                        <Row style={{ border: "1px solid" }}>
+                render: (value, record, rowIndex) =>{
+                    if(value){
+                    let duration = moment.duration(value["actualHours"],'hours')
+                        {return <Row style={{ border: "1px solid" }}>
                             <Col span={24}>Start Time: {value["startTime"]}</Col>
                             <Col span={24}>End Time: {value["endTime"]}</Col>
                             <Col span={24}>Break: {value["breakHours"]}</Col>
-                        </Row>
-                    ),
+                            <Col span={24}>Total: {`${duration.hours()}:${duration.minutes()}`}</Col>
+                        </Row>}
+                    }
+                },
             })
             date = date.add(1, 'days')
         }
@@ -269,7 +302,9 @@ class TimeSheet extends Component {
                     // dataIndex: col.dataIndex,
                     onDoubleClick: (event) => {
                         // on Click Function
-                        this.getRecord(record,rowIndex, col.dataIndex); // call function to save data in
+                        if (record.status === 'SV' || record.status === 'RJ' || !record.status){
+                            this.getRecord(record,rowIndex, col.dataIndex); // call function to save data in
+                        }
                     },
                   }),
                 };
@@ -358,6 +393,53 @@ class TimeSheet extends Component {
         })
     };
 
+    exportData = (record) =>{
+        console.log(record);
+        const { startDate, endDate } = this.state.sheetDates
+      
+        let columns= [
+            { title: "Project Name:"},//pixels width 
+            { title: record.project},//pixels width 
+        ]
+        let data= [
+            [
+                {value: 'Date:'},
+                {value: moment().format('DD-MMM-YYYY')}
+            ],
+            [{xSteps: 1},],
+            [
+                {value: "Date", style: {font: {bold: true}}},
+                {value: "Start Time ", style: {font: {bold: true}}},
+                {value: "end Time", style: {font: {bold: true}}},
+                {value: "Break", style: {font: {bold: true}}},
+            ],
+        ]
+        let date = undefined
+        let key = undefined
+        for (let i = startDate.format('D') ; i <= endDate.format('D'); i++) {
+            date = date ?? moment(startDate.format())
+            key = date.format('D/M')
+            data.push(
+                record[key] ? [
+                    {value: date.format('DD-MMM-YYYY')},
+                    {value: record[key].startTime},
+                    {value: record[key].endTime},
+                    {value: record[key].breakHours},
+                ]: 
+                [
+                    {value: date.format('DD-MMM-YYYY')},
+                ]
+            )
+            date = date.add(1, 'days')
+        }
+        this.setState({
+            eData: [{columns, data}],
+            isDownload: true
+        },()=>{
+            console.log(this.state.eData);
+        })        
+    }
+
     commentSec = (e) => {
         this.setState({
             comments: e.target.value,
@@ -365,12 +447,38 @@ class TimeSheet extends Component {
     };
 
     render() {
-        const { loading, data, isVisible, proVisible, columns, editTime, timeObj, sheetDates, projects, sProject } = this.state
+        const { loading, data, isVisible, proVisible, columns, editTime, timeObj, sheetDates, projects, sProject, isAttach, isDownload, eData, USERS, sUser } = this.state
         return (
             <>
                 <Row justify="space-between">
                     <Col>
                         <Title>Timesheet</Title>
+                    </Col>
+                    <Col style={{ width: 200 }}>
+                        <Select
+                            size="large"
+                            placeholder="Select User"
+                            options={USERS}
+                            value={sUser.value}           
+                            optionFilterProp="label"
+                            style={{ width: 200 }}
+                            filterOption={
+                                (input, option) =>
+                                    option.label
+                                        .toLowerCase()
+                                        .indexOf(input.toLowerCase()) >= 0
+                                // console.log(option.label)
+                                // console.log(input.toLowerCase())
+                            }
+                            onSelect={(value, option)=>{
+                                this.setState({
+                                    sUser: option
+                                },()=>{
+                                    this.getSheet()
+                                    this.getProjects(value)
+                                })
+                            }}
+                        />
                     </Col>
                     <Col>
                         <DatePicker
@@ -398,28 +506,45 @@ class TimeSheet extends Component {
                         <Button
                             size="small"
                             type="primary"
-                            onClick={() => {
-                              this.setState({proVisible: true})
-                            }}
+                            onClick={() => { this.setState({proVisible: true}) }}
                         >
                             Add Project
                         </Button>
                     </Col>
                 </Row>
                 <Table
-                    columns={columns}
                     size="small"
+                    className="timeSheet-table"
                     scroll={{
                         // x: "calc(700px + 100%)",
                         x: "'max-content'",
                     }}
                     // scroll={{ x: "calc(700px + 100%)", y: "" }}
-                    // footer={() => "Footer"}
-                    rowKey={data=>data.projectId}
                     bordered
                     pagination={false}
+                    rowKey={data=>data.projectId}
+                    columns={columns}
                     dataSource={data}
-                    className="timeSheet-table"
+                    summary={ data => {
+                        const { columns } = this.state
+                        if(data.length>0)
+                        return (
+                            <Table.Summary.Row>
+                                {columns.map(({key})=>{
+                                    let value = 0
+                                    data.map(rowData =>{
+                                        if(key !== 'project' ){
+                                            value =+ rowData[key] ?rowData[key]['actualHours'] :0
+                                        }
+                                    })
+                                    if(key === 'project'){
+                                        return <Table.Summary.Cell>Total Work In A day </Table.Summary.Cell>
+                                    }else{
+                                        return <Table.Summary.Cell>{value}</Table.Summary.Cell>
+                                    }
+                                })}
+                        </Table.Summary.Row>)
+                      }}
                 />
                 {isVisible && (
                     <TimeModal
@@ -431,7 +556,20 @@ class TimeSheet extends Component {
                         callBack={this.callBack}
                     />
                 )}
-
+                {isAttach && (
+                    <AttachModal
+                        visible={isAttach}
+                        close={()=>this.setState({isAttach: false, editTime: false})}
+                        // callBack={this.callBack}
+                    />
+                )}
+                {isDownload && (
+                    <ExportToExcel
+                        download={isDownload}
+                        close={()=>this.setState({isDownload: false, editTime: false})}
+                        data={eData}
+                    />
+                )}
                 {proVisible && (
                     <Modal
                         title="Add Project"
@@ -483,6 +621,7 @@ class TimeSheet extends Component {
                             </Col>
                         </Row>
                     </Modal>
+                    
                 )}
             </>
         );

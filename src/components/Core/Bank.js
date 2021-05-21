@@ -5,7 +5,7 @@ class Bank extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: props.bank
+            data: props.bank ?? {}
         };
     }
     componentDidMount = () => {

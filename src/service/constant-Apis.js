@@ -209,3 +209,24 @@ export const getProjects = () => {
             };
         });
 };
+
+export const getCustomApi = (url) => {
+    return axios
+        .get(`${Api}/${url}`)
+        .then((res) => {
+            const { success, data } = res.data;
+            var pros = []
+            // console.log(data);
+            data.map((el) => {
+                pros.push({value: el.id, label: el.title})
+            });
+            if (success) return { success: success, data: pros };
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                success: false,
+                message: err.message,
+            };
+        });
+};

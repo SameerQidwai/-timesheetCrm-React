@@ -68,7 +68,7 @@ class Attachments extends Component {
             name: "file",
             multiple: true,
             listType: "picture",
-            action: "https://www.mocky.io/v2/5cc8019d300000980a055e76",
+            action: "https://www.mocky.io/v2/kia",
             onChange(info) {
                 const { status } = info.file;
                 if (status !== "uploading") {
