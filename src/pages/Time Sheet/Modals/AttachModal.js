@@ -4,23 +4,34 @@ import { UploadOutlined, LoadingOutlined,InboxOutlined } from "@ant-design/icons
 import '../../styles/upload.css'
 import TextArea from 'antd/lib/input/TextArea';
 import Dragger from 'antd/lib/upload/Dragger';
+import { Api } from "../../../service/constant";
+import { addFiles } from "../../../service/constant-Apis";
 class AttachModal extends Component{
     constructor(){
         super()
         this.state ={
-            fileList: []
+            fileList: [],
+            progress: 0,
+            fileIds: [],
         }
     }
     componentDidMount=()=>{
         // console.log(`object`, object)
     }
     
-    handleUpload = () => {
+    handleUpload = (file) => {
         const { fileList } = this.state;
         let formData = new FormData();
-        fileList.forEach((file, index) => {
-            formData.append(`files[${index}]`, file);
-        });
+        // formData.append('files', file)
+        // console.log(formData);
+        console.log(file);
+        // fileList.forEach((file, index) => {
+        // });
+        addFiles(formData).then(res=>{
+            if (res.success){
+                console.log('after service',res.data);
+            }
+        })
 
         this.setState({
             uploading: true,
@@ -34,27 +45,37 @@ class AttachModal extends Component{
             name: "file",
             multiple: true,
             listType: "picture",
-            onRemove: (file) => {
-                this.setState((state) => {
-                    const index = state.fileList.indexOf(file);
-                    const newFileList = state.fileList.slice();
-                    newFileList.splice(index, 1);
-                    return {
-                        fileList: newFileList,
-                    };
-                });
-            },
-            beforeUpload: (file) => {
-                console.log(file);
-                this.setState(
-                    (state) => ({
-                        fileList: [...state.fileList, file],
-                    }),
-                    () => {
-                        console.log(`fileList 41`, this.state.fileList)
+            customRequest: (option)=>{
+                const { onSuccess, onError, file, onProgress } = option;
+                const formData = new FormData();
+                const  config = {
+                    headers: {"content-type": "multipart/form-data"},
+                    onUploadProgress: event =>{
+                        const percent = Math.floor((event.loaded / event.total) * 100);
+                        this.setState({progress: percent});
+                        if (percent === 100) {
+                          setTimeout(() => this.setState({progres: 0}), 1000);
+                        }
+                        onProgress({ percent: (event.loaded / event.total) * 100 });
+                      }
                     }
-                );
-                return false;
+                    formData.append('files', file)
+                    addFiles(formData, config).then((res,err)=>{
+                        if (res.success){
+                            console.log(res);
+                            onSuccess("Ok");
+                            this.setState({
+                                fileList: [...this.state.fileList, file],
+                                fileIds: [...this.state.fileIds, ...res.data]
+                            },()=>{
+                                console.log(this.state.fileIds);
+                            })
+                        }else{
+                            console.log("Eroor: ", err);
+                            const error = new Error("Some error");
+                            onError({ err });
+                        }
+                    })
             },
             fileList,
         };

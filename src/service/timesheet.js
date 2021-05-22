@@ -11,7 +11,6 @@ export const getList = (keys) => {
         .get(url + `${keys.startDate}&${keys.endDate}&${keys.userId}`)
         .then((res) => {
             const { success, data } = res.data;
-            console.log(res);
             if (success) return { success: success, data: data };
         })
         .catch((err) => {
@@ -29,8 +28,11 @@ export const addTime = (keys ,data) => {
         .post(url +`${keys.startDate}&${keys.endDate}&${keys.userId}`, data)
         .then((res) => {
             const { success, data } = res.data;
-            message.success({ content: 'Success!', key: 1})
-            if (success) return {success, data};
+            if (success) {
+                message.success({ content: 'Success!', key: 1})
+                data.actualHours = data.hours
+                return {success, data}
+            };
         })
         .catch((err) => {
             message.error({ content: 'Error!', key: 1})
@@ -48,8 +50,11 @@ export const editTime = (entryId ,data) => {
         .put(url +`entries/${entryId}`, data)
         .then((res) => {
             const { success, data } = res.data;
-            message.success({ content: 'Success!', key: 1})
-            if (success) return {success, data};
+            if (success) {
+                message.success({ content: 'Success!', key: 1})
+                data.actualHours = data.hours
+                return {success, data}
+            };
         })
         .catch((err) => {
             message.error({ content: 'Error!', key: 1})

@@ -210,6 +210,29 @@ export const getProjects = () => {
         });
 };
 
+export const addFiles = (data, config) => {
+    // const header ={ 'content-type': 'multipart/form-data',  'Accept': 'application/json'}
+    return axios
+        .post(`${Api}/files`, data, config)
+        .then((res) => {
+            const { status } = res;
+            if (status === 200) {
+                const { success, data } = res.data;
+                console.log(data);
+                return { success, data };
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+            return {}
+            // return {
+            //     error: err.response.status,
+            //     status: false,
+            //     message: err.message,
+            // };
+        });
+};
+
 export const getCustomApi = (url) => {
     return axios
         .get(`${Api}/${url}`)

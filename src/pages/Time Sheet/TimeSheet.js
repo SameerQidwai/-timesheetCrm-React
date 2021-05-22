@@ -33,67 +33,67 @@ class TimeSheet extends Component {
             USERS:[],
             sUser:{},
             data: [
-                {
-                    prjoectId: 1,
-                    project: "Project 1",
-                    status : 'SB',
-                    '1/5': {
-                        startTime: "09:22",
-                        endTime: "22:02",
-                        breakHours: "2",
-                        notes: 'sameer'
-                    },
-                    '2/5': {
-                        startTime: "10:00",
-                        endTime: "20:00",
-                        breakHours: "4",
-                    },
-                    '3/5': {
-                        startTime: "11:22",
-                        endTime: "13:11",
-                        breakHours: "5",
-                    },
-                    '4/5': {
-                        startTime: "16:20",
-                        endTime: "17:10",
-                        breakHours: "18",
-                    },
-                    '5/5': {
-                        startTime: "02:23",
-                        endTime: "14:23",
-                        breakHours: "5",
-                    },
-                    '6/5': {
-                        start: "15:05",
-                        end: "20:1",
-                        breakHours: "1",
-                    },
-                },
-                {
-                    prjoectIdprjoectId: 2,
-                    project: "Project 2",
-                    status : 'AP',
-                    1: {
-                        start: "10:00",
-                        end: "20:00",
-                        break: "4",
-                    },
-                },
-                {
-                    prjoectId: 3,
-                    project: "Project 3",
-                    status : 'RJ',
-                    3: {
-                        start: "15:05",
-                        end: "20:1",
-                        break: "1",
-                    },
-                },
-                {
-                    prjoectId: 4,
-                    status : 'SV',
-                    project: "Project 4",
-                },
+                // {
+                //     prjoectId: 1,
+                //     project: "Project 1",
+                //     status : 'SB',
+                //     '1/5': {
+                //         startTime: "09:22",
+                //         endTime: "22:02",
+                //         breakHours: "2",
+                //         notes: 'sameer'
+                //     },
+                //     '2/5': {
+                //         startTime: "10:00",
+                //         endTime: "20:00",
+                //         breakHours: "4",
+                //     },
+                //     '3/5': {
+                //         startTime: "11:22",
+                //         endTime: "13:11",
+                //         breakHours: "5",
+                //     },
+                //     '4/5': {
+                //         startTime: "16:20",
+                //         endTime: "17:10",
+                //         breakHours: "18",
+                //     },
+                //     '5/5': {
+                //         startTime: "02:23",
+                //         endTime: "14:23",
+                //         breakHours: "5",
+                //     },
+                //     '6/5': {
+                //         start: "15:05",
+                //         end: "20:1",
+                //         breakHours: "1",
+                //     },
+                // },
+                // {
+                //     prjoectIdprjoectId: 2,
+                //     project: "Project 2",
+                //     status : 'AP',
+                //     1: {
+                //         start: "10:00",
+                //         end: "20:00",
+                //         break: "4",
+                //     },
+                // },
+                // {
+                //     prjoectId: 3,
+                //     project: "Project 3",
+                //     status : 'RJ',
+                //     3: {
+                //         start: "15:05",
+                //         end: "20:1",
+                //         break: "1",
+                //     },
+                // },
+                // {
+                //     prjoectId: 4,
+                //     status : 'SV',
+                //     project: "Project 4",
+                // },
             ],
             comments: null,
             sProject: {},
@@ -169,7 +169,7 @@ class TimeSheet extends Component {
                             <Col span={24}>
                                 <Row justify="space-between">
                                     <Col> {value} </Col>
-                                    {record.status === 'SV' || record.status === 'RJ' && <Col> 
+                                    {(record.status === 'SV' || record.status === 'RJ') && <Col> 
                                         <DownloadOutlined onClick={()=>{this.exportData(record, index)}}/>
                                         <SaveOutlined onClick={()=>{this.setState({isAttach: true})} } style={{color: '#1890ff', marginLeft:10}}/>
                                     </Col>}
@@ -278,6 +278,8 @@ class TimeSheet extends Component {
                 align: "center",
                 render: (value, record, rowIndex) =>{
                     if(value){
+                        // let dummy =moment.duration(1.05,'hours')
+                        // console.log(dummy, `${dummy.hours()}:${dummy.minutes()}`);
                     let duration = moment.duration(value["actualHours"],'hours')
                         {return <Row style={{ border: "1px solid" }}>
                             <Col span={24}>Start Time: {value["startTime"]}</Col>
@@ -322,7 +324,6 @@ class TimeSheet extends Component {
             row: rowIndex,
             col: colKey 
         }
-        console.log(timeObj);
         if (record[colKey]) {
             
             let obj = {
@@ -394,7 +395,6 @@ class TimeSheet extends Component {
     };
 
     exportData = (record) =>{
-        console.log(record);
         const { startDate, endDate } = this.state.sheetDates
       
         let columns= [
@@ -412,6 +412,7 @@ class TimeSheet extends Component {
                 {value: "Start Time ", style: {font: {bold: true}}},
                 {value: "end Time", style: {font: {bold: true}}},
                 {value: "Break", style: {font: {bold: true}}},
+                {value: "Total Hours", style: {font: {bold: true}}},
             ],
         ]
         let date = undefined
@@ -425,6 +426,7 @@ class TimeSheet extends Component {
                     {value: record[key].startTime},
                     {value: record[key].endTime},
                     {value: record[key].breakHours},
+                    {value: record[key].actualHours},
                 ]: 
                 [
                     {value: date.format('DD-MMM-YYYY')},
@@ -435,8 +437,6 @@ class TimeSheet extends Component {
         this.setState({
             eData: [{columns, data}],
             isDownload: true
-        },()=>{
-            console.log(this.state.eData);
         })        
     }
 
@@ -467,8 +467,6 @@ class TimeSheet extends Component {
                                     option.label
                                         .toLowerCase()
                                         .indexOf(input.toLowerCase()) >= 0
-                                // console.log(option.label)
-                                // console.log(input.toLowerCase())
                             }
                             onSelect={(value, option)=>{
                                 this.setState({
@@ -487,7 +485,6 @@ class TimeSheet extends Component {
                             picker="month"
                             format="MMM-YYYY"
                             onChange={(value)=>{
-                                console.log(value);
                                 this.setState({
                                     sheetDates : {
                                         cMonth: value ?? moment(),
@@ -534,13 +531,14 @@ class TimeSheet extends Component {
                                     let value = 0
                                     data.map(rowData =>{
                                         if(key !== 'project' ){
-                                            value =+ rowData[key] ?rowData[key]['actualHours'] :0
+                                            value += (rowData[key] ? rowData[key]['actualHours'] :0)
                                         }
                                     })
                                     if(key === 'project'){
                                         return <Table.Summary.Cell>Total Work In A day </Table.Summary.Cell>
                                     }else{
-                                        return <Table.Summary.Cell>{value}</Table.Summary.Cell>
+                                        let duration = moment.duration(value,'hours')
+                                        return <Table.Summary.Cell align="center">{`${duration.hours()}:${duration.minutes()}`}</Table.Summary.Cell>
                                     }
                                 })}
                         </Table.Summary.Row>)
@@ -585,14 +583,11 @@ class TimeSheet extends Component {
                         }}
                         onOk={() => {
                             const { data, sProject } = this.state
-                            console.log(data, sProject);
                             data.push({
                                 projectId: sProject.value,
                                 project: sProject.label,
                             })
-                            this.setState({ proVisible: false, data: [...data], sProject:{} },()=>{
-                                console.log(this.state.data)
-                            });
+                            this.setState({ proVisible: false, data: [...data], sProject:{} });
                         }}
                     >
                         <Row justify="space-around">
@@ -608,11 +603,8 @@ class TimeSheet extends Component {
                                             option.label
                                                 .toLowerCase()
                                                 .indexOf(input.toLowerCase()) >= 0
-                                        // console.log(option.label)
-                                        // console.log(input.toLowerCase())
                                     }
                                     onSelect={(value, option)=>{
-                                        console.log(this.state.data)
                                         this.setState({
                                             sProject: option
                                         })
