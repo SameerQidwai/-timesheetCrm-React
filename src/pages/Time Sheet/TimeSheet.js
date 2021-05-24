@@ -171,7 +171,7 @@ class TimeSheet extends Component {
                                     <Col> {value} </Col>
                                     {(record.status === 'SV' || record.status === 'RJ') && <Col> 
                                         <DownloadOutlined onClick={()=>{this.exportData(record, index)}}/>
-                                        <SaveOutlined onClick={()=>{this.setState({isAttach: true})} } style={{color: '#1890ff', marginLeft:10}}/>
+                                        <SaveOutlined onClick={()=>{this.openAttachModal(record, index)} } style={{color: '#1890ff', marginLeft:10}}/>
                                     </Col>}
                                 </Row>
                             </Col>
@@ -248,6 +248,7 @@ class TimeSheet extends Component {
         if(sUser.value){
             getList({userId: sUser.value, startDate: startDate.format('DD-MM-YYYY'), endDate: endDate.format('DD-MM-YYYY')}).then(res=>{
                 if (res.success){
+                    console.log(res.data.projects)
                     this.setState({
                         timesheet: res.success && res.data,
                         data: res.data ? res.data.projects: []
@@ -393,6 +394,16 @@ class TimeSheet extends Component {
             }
         })
     };
+
+    openAttachModal = (record, index) =>{
+        const timeObj= {
+            projectEntryId: record.projectEntryId,
+            projectId: record.projectId,
+            project: record.project,
+            rowIndex: index
+        }
+        this.setState({ timeObj, isAttach: true })
+    }
 
     exportData = (record) =>{
         const { startDate, endDate } = this.state.sheetDates
@@ -557,7 +568,8 @@ class TimeSheet extends Component {
                 {isAttach && (
                     <AttachModal
                         visible={isAttach}
-                        close={()=>this.setState({isAttach: false, editTime: false})}
+                        timeObj={timeObj}
+                        close={()=>this.setState({isAttach: false, editTime: false, timeObj: false})}
                         // callBack={this.callBack}
                     />
                 )}

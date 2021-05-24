@@ -123,3 +123,22 @@ export const editLabel = (data) => {
             };
         });
 };
+
+export const addProjectNote = (id, data) => {
+    message.loading({ content: 'Loading...', key: data.is })
+    return axios
+        .patch(url + `/projectEntries/${id}`, data)
+        .then((res) => {
+            const { success } = res.data;
+            message.success({ content: 'Success!', key: data.is})
+            if (success) return success;
+        })
+        .catch((err) => {
+            message.error({ content: 'Error!', key: data.is})
+            return {
+                error: "Please login again!",
+                status: false,
+                message: err.message,
+            };
+        });
+};

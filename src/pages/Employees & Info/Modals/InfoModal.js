@@ -846,7 +846,6 @@ class InfoModal extends Component {
                 mergeObj: {
                     ...this.state.mergeObj,
                     ...vake.basic,
-                    username: this.state.sUsername
                 },
                 basicSubmitted: true, // skill form submitted
             }, () => this.validateForm()
@@ -944,7 +943,7 @@ class InfoModal extends Component {
             {
                 mergeObj: {
                     ...this.state.mergeObj,
-                    ...vake.basic,
+                    username: vake.username,
                     // username: this.state.sUsername
                 },
                 emailSubmitted: true, // skill form submitted
@@ -1249,7 +1248,7 @@ class InfoModal extends Component {
                     onFinish={this.EmailCall}
                     >
                         <AntForm.Item
-                        name={'username'}
+                        name={['username']}
                         rules={[{required: true, type: 'email', message: 'Email is Required'}]}
                         >
                             <Input

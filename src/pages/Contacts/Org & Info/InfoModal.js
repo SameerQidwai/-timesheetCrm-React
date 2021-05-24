@@ -807,10 +807,10 @@ class InfoModal extends Component {
             BasicFields: {
                 ...BasicFields,
                 fields: BasicFields.fields.filter(el =>{
-                    // if (el.Placeholder === 'Business Type'){
-                    //     el.fieldCol = 24
-                    //     return el
-                    // }else 
+                    if (el.Placeholder === 'Business Type'){
+                        el.fieldCol = 24
+                        return el
+                    }else 
                     if (el.Placeholder !=='Delegate Contact person' && el.key !== "delegate_cp"){
                         return el
                     }
