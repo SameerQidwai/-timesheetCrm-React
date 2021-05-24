@@ -4,12 +4,9 @@ import { Row, Col, Comment, Tooltip, Avatar, Popconfirm, Form, Input, List, Uplo
 
 import moment from "moment";
 
-import {
-    DeleteOutlined,
-    DeleteFilled,
-    SendOutlined,
-    PaperClipOutlined,
-} from "@ant-design/icons";
+import { DeleteOutlined, DeleteFilled, SendOutlined, PaperClipOutlined, } from "@ant-design/icons";
+
+import { getComments, addComment, addFiles } from "../../service/constant-Apis";
 
 import "../Styles/comment.css";
 
@@ -23,57 +20,26 @@ class Comments extends Component {
         this.state = {
             isHovered: {},
             fileList: [],
-            data: [
-                // coments
-                // {
-                //     key: 0,
-                //     author: "Han Solo",
-                //     content: `I am Han Solo`,
-                //     date: "2020-1-1",
-                // },
-                // {
-                //     key: 1,
-                //     author: "Musab tarq",
-                //     content: `I am Musab Tariq`,
-                //     date: "2020-2-10",
-                // },
-                // {
-                //     key: 2,
-                //     author: "Ovais raza",
-                //     content: `I am Ovais Raza`,
-                //     date: "2020-3-19",
-                // },
-                // {
-                //     key: 3,
-                //     author: "Shabaz ",
-                //     content: `Shahbz here`,
-                //     date: "2020-4-25",
-                // },
-                // {
-                //     key: 4,
-                //     author: "Rabi cube",
-                //     content: `I am Rabi`,
-                //     date: "2020-5-5",
-                // },
-                // {
-                //     key: 5,
-                //     author: "Me Me",
-                //     content: `Project Looks Good so far`,
-                //     date: "2020-9-20",
-                // },
-                // {
-                //     key: 5,
-                //     author: "You",
-                //     content: `Prevented`,
-                //     date: "2020-9-20",
-                // },
-            ],
+            fileIds: [],
+            data: [ ],
             value: null,
         };
     }
     componentDidMount() {
         this.scrollToBottom(); //scroll to bottom
-        console.log(this.props);
+        const { target, targetId } = this.props
+        this.getComments(target, targetId)
+    }
+
+    getComments = (target, targetId) =>{
+        getComments(target, targetId).then(res=>{
+            if(res.success){
+                console.log(res);
+                this.setState({
+                    data: res.data?? []
+                })
+            }
+        })
     }
 
     scrollToBottom = () => {
@@ -111,45 +77,49 @@ class Comments extends Component {
 
     addComent = (e) => {
         // add new Comment
-        const { value, data, fileList } = this.state; // textbar code and comment data
-
+        const { value, data, fileList, fileIds } = this.state; // textbar code and comment data
         if (!e.shiftKey && (value || fileList.length > 0)) {
             // if shift key is pressed and has value insert new Comment on press Enter
             let comment = {
                 // comment
-                key: data[data.length - 1].key,
+                key: 1,
                 author: "Han Solo",
                 content: value,
                 files: fileList,
-                date: moment().format(),
+                attachments: fileIds
+                // date: moment().format(),
             };
-
-            this.setState(
-                {
-                    data: [...data, comment], // add comment to comment data
-                    value: null, // set TextArea empty
-                    fileList: [],
-                },
-                () => {
-                    setTimeout(() => {
-                        this.scrollToBottom(); // after comment pushed scroll to bottom
-                        this.setState({
-                            value: null, // first setValue null can't remove send press Enter
-                        });
-                    }, 0);
+            const { target, targetId } = this.props
+            addComment(target, targetId, comment).then(res=>{
+                console.log(res);
+                if (res.success){
+                    this.setState({
+                        data: [...data, comment], // add comment to comment data
+                        value: null, // set TextArea empty
+                        fileList: [],
+                        fileIds: [],
+                    },() => {
+                        setTimeout(() => {
+                            this.scrollToBottom(); // after comment pushed scroll to bottom
+                            this.setState({
+                                value: null, // first setValue null can't remove send press Enter
+                            });
+                        }, 0);
+                    });
                 }
-            );
+            })
         }
     };
 
     logScroll = (e) => {
-        if (!e.target.scrollTop) {
+        const { scrollHeight, scrollTop, clientHeight } = e.target
+        if (!scrollTop) {
             //check the value of scroll if it is not 0 don't run
-            e.persist(e.target.scrollTop); // allow change of event and use it after
+            e.persist(scrollTop); // allow change of event and use it after
             setTimeout(() => {
                 // wait one Second befroe call the function
                 const { data } = this.state;
-                if (!e.target.scrollTop && data.length < 500) {
+                if (!scrollTop && data.length < 500) {
                     // check if the scroll value is still Zero
                     console.log("done");
                     this.setState({
@@ -159,18 +129,12 @@ class Comments extends Component {
                     console.log("Empty");
                 }
             }, 1000);
-        } else if (
-            e.target.scrollHeight - e.target.scrollTop ===
-            e.target.clientHeight
-        ) {
+        } else if ( scrollHeight - scrollTop === clientHeight ) {
             //check if Scroll is on bottom
             e.persist(e.target);
             setTimeout(() => {
                 // wait One second before call the function
-                if (
-                    e.target.scrollHeight - e.target.scrollTop ===
-                    e.target.clientHeight
-                ) {
+                if ( scrollHeight - scrollTop === clientHeight ) {
                     console.log("I will get rendered now");
                 }
             }, 1000);
@@ -179,17 +143,14 @@ class Comments extends Component {
 
     actions = (list) => {
         const array = [];
-        list.forEach((el) => {
-            array.push(
-                <span>
-                    <PaperClipOutlined />{" "}
-                    <a href={el.uid} download={el.name}>
-                        {el.name}
-                    </a>
-                </span>
-            );
-        });
-        return array;
+        return list.map((el) => 
+            <span>
+                <PaperClipOutlined />{" "}
+                <a href={el.uid} download={el.name}>
+                    {el.name}
+                </a>
+            </span>
+        );
     };
 
     commentRender = (item, index, isHovered) => {
@@ -197,7 +158,7 @@ class Comments extends Component {
         return (
             <Comment
                 key={index}
-                author={<a>{item.author}</a>}
+                author={<a>{item.author?? '??????'}</a>}
                 avatar={
                     <Avatar
                         style={{
@@ -208,9 +169,9 @@ class Comments extends Component {
                                     ]
                                 ],
                         }}
-                        alt={item.author}
+                        alt={item.author ?? '??????'}
                     >
-                        {item.author[0].toUpperCase()}
+                        {item.author? item.author[0].toUpperCase() : '?'}
                     </Avatar>
                 }
                 actions={actions} //action
@@ -218,11 +179,11 @@ class Comments extends Component {
                 datetime={
                     <>
                         <Tooltip
-                            title={moment(item.date).format(
+                            title={moment(item.createdAt).format(
                                 "YYYY-MM-DD HH:mm:ss"
                             )}
                         >
-                            <span>{moment(item.date).fromNow()}</span>
+                            <span>{moment(item.createdAt).fromNow()}</span>
                         </Tooltip>
                         <Tooltip key="comment-basic-delete" title="Delete">
                             <span
@@ -256,67 +217,52 @@ class Comments extends Component {
         );
     };
 
-    handleUpload = () => {
-        const { fileList } = this.state;
-        let formData = new FormData();
-        fileList.forEach((file, index) => {
-            formData.append(`files[${index}]`, file);
-        });
+    handleUpload = async option=>{
+        const { onSuccess, onError, file, onProgress } = option;
+        const formData = new FormData();
+        const  config = {
+            headers: {"content-type": "multipart/form-data"},
+            onUploadProgress: event =>{
+                const percent = Math.floor((event.loaded / event.total) * 100);
+                this.setState({progress: percent});
+                if (percent === 100) {
+                  setTimeout(() => this.setState({progres: 0}), 1000);
+                }
+                onProgress({ percent: (event.loaded / event.total) * 100 });
+              }
+            }
+            formData.append('files', file)
+            // addFiles(formData, config).then((res,err)=>{
+            //     if (res.success){
+            //         onSuccess("Ok");
+                    this.setState({
+                        fileList: [...this.state.fileList, file],
+                        // fileIds: [...this.state.fileIds, ...res.data]
+                    })
+                // }else{
+                //     console.log("Eroor: ", err);
+                //     const error = new Error("Some error");
+                //     onError({ err });
+                // }
+            // })
+    }
 
-        this.setState({
-            uploading: true,
+    onRemove = (file) => {
+        this.setState((state) => {
+            const index = state.fileList.indexOf(file);
+            const newFileList = state.fileList.slice();
+            const fileIds = state.fileIds
+            newFileList.splice(index, 1);
+            fileIds.splice(index, 1);
+            return {
+                fileIds,
+                fileList: newFileList,
+            };
         });
-
-        // You can use any AJAX library you like
-        // reqwest({
-        //   url: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-        //   method: 'post',
-        //   processData: false,
-        //   data: formData,
-        //   success: () => {
-        //     this.setState({
-        //       fileList: [],
-        //       uploading: false,
-        //     });
-        //     message.success('upload successfully.');
-        //   },
-        //   error: () => {
-        //     this.setState({
-        //       uploading: false,
-        //     });
-        //     message.error('upload failed.');
-        //   },
-        // });
-    };
+    }
 
     render() {
         const { data, isHovered, value, fileList } = this.state;
-        const props = {
-            onRemove: (file) => {
-                this.setState((state) => {
-                    const index = state.fileList.indexOf(file);
-                    const newFileList = state.fileList.slice();
-                    newFileList.splice(index, 1);
-                    return {
-                        fileList: newFileList,
-                    };
-                });
-            },
-            listType: "text",
-            beforeUpload: (file) => {
-                console.log(file);
-                this.setState(
-                    (state) => ({
-                        fileList: [...state.fileList, file],
-                    }),
-                    () => {}
-                );
-                return false;
-            },
-            fileList,
-            multiple: true,
-        };
-
         return (
             <Row justify="space-around">
                 <Col style={styles.cSec} span={24} onScroll={this.logScroll}>
@@ -364,10 +310,12 @@ class Comments extends Component {
                             onKeyDown={this.handelEmpty}
                             value={value}
                         />
-                        {/* <Row>
-                <Col> */}
                         <Upload
-                            {...props}
+                            listType= "text"
+                            multiple={true}
+                            customRequest={this.handleUpload}
+                            onRemove= {this.onRemove}
+                            fileList={fileList}
                             style={{ backgroundColor: "rosybrown" }}
                             className="upload-list-inline"
                         >
@@ -376,13 +324,11 @@ class Comments extends Component {
                                 style={{ fontSize: 0 }}
                             />
                         </Upload>
-                        {/* </Col>
-              </Row> */}
                     </Form.Item>
                 </Col>
                 {/* alignSelf: "flex-end", marginBottom:20 * fileList.length */}
                 <Col
-                    span="1"
+                    span={1}
                     style={{
                         alignSelf: "flex-end",
                         marginBottom: (30 * fileList.length) / 4 + 1,
@@ -392,17 +338,9 @@ class Comments extends Component {
                         <SendOutlined
                             onClick={this.addComent}
                             className="sendIcon"
-                            style={
-                                isHovered["sendIcon"]
-                                    ? styles.sendIconHoverd
-                                    : styles.sendIcon
-                            }
-                            onMouseOver={() => {
-                                this.deleteIcon("sendIcon", true);
-                            }}
-                            onMouseOut={() => {
-                                this.deleteIcon("sendIcon", false);
-                            }}
+                            style={ isHovered["sendIcon"] ? styles.sendIconHoverd : styles.sendIcon }
+                            onMouseOver={() => { this.deleteIcon("sendIcon", true); }}
+                            onMouseOut={() => { this.deleteIcon("sendIcon", false); }}
                         />
                     </Form.Item>
                 </Col>

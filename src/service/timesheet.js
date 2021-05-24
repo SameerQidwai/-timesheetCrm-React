@@ -106,16 +106,16 @@ export const reviewTimeSheet = (keys, stage) => {
 
 
 export const editLabel = (data) => {
-    message.loading({ content: 'Loading...', key: data.is })
+    message.loading({ content: 'Loading...', key: data.id })
     return axios
         .put(url + `/${data.id}`, data)
         .then((res) => {
             const { success } = res.data;
-            message.success({ content: 'Success!', key: data.is})
+            message.success({ content: 'Success!', key: data.id})
             if (success) return success;
         })
         .catch((err) => {
-            message.error({ content: 'Error!', key: data.is})
+            message.error({ content: 'Error!', key: data.id})
             return {
                 error: "Please login again!",
                 status: false,
@@ -125,16 +125,16 @@ export const editLabel = (data) => {
 };
 
 export const addProjectNote = (id, data) => {
-    message.loading({ content: 'Loading...', key: data.is })
+    message.loading({ content: 'Loading...', key: id })
     return axios
         .patch(url + `/projectEntries/${id}`, data)
         .then((res) => {
             const { success } = res.data;
-            message.success({ content: 'Success!', key: data.is})
+            message.success({ content: 'Success!', key: id})
             if (success) return success;
         })
         .catch((err) => {
-            message.error({ content: 'Error!', key: data.is})
+            message.error({ content: 'Error!', key: id})
             return {
                 error: "Please login again!",
                 status: false,
@@ -142,3 +142,4 @@ export const addProjectNote = (id, data) => {
             };
         });
 };
+

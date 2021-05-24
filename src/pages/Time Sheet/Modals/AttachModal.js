@@ -5,7 +5,7 @@ import '../../styles/upload.css'
 import TextArea from 'antd/lib/input/TextArea';
 import Dragger from 'antd/lib/upload/Dragger';
 import { Api } from "../../../service/constant";
-import { addFiles } from "../../../service/constant-Apis";
+import { addFiles, getAttachments } from "../../../service/constant-Apis";
 import { addProjectNote } from "../../../service/timesheet";
 class AttachModal extends Component{
     constructor(){
@@ -14,11 +14,27 @@ class AttachModal extends Component{
             fileList: [],
             progress: 0,
             fileIds: [],
-            note: undefined
+            notes: undefined
         }
     }
     componentDidMount=()=>{
         console.log(`object`, this.props)
+        const { projectEntryId } = this.props.timeObj
+        this.getRecord('PEN', projectEntryId)
+    }
+
+    getRecord = (target, targetId) =>{
+        const { notes } = this.props.timeObj
+        getAttachments(target, targetId).then(res=>{
+            if(res.success){
+                console.log(res);
+                this.setState({
+                    fileList: res.fileList,
+                    fileIds: res.fileIds,
+                    notes: notes
+                })
+            }
+        })
     }
     
     handleUpload = async option=>{
@@ -67,13 +83,15 @@ class AttachModal extends Component{
 
     addNotes = () =>{
         const { timeObj, close } = this.props
-        const { note, fileIds } = this.state
+        const { notes, fileIds } = this.state
         const obj = {
-            note,
-            attachment: fileIds
+            note: notes,
+            attachments: fileIds
         }
+        console.log(obj);
         addProjectNote(timeObj.projectEntryId, obj).then(res=>{
             if(res.success){
+                console.log(res);
                 close()
             }
         })
@@ -81,7 +99,7 @@ class AttachModal extends Component{
 
     render (){
         const { visible, editTime, loading, close } = this.props
-        const {  fileList, note } = this.state;
+        const {  fileList, notes } = this.state;
         return(
             <Modal
                 title={editTime ? "Edit Attachments & Notes" : "Add Attachments & Notes"}
@@ -99,10 +117,10 @@ class AttachModal extends Component{
                     <Col span={24}>
                         <div>
                             <Dragger 
-                                className="upload-list-inline"
                                 name= "file"
                                 multiple={true}
                                 listType= "picture"
+                                className="upload-list-inline"
                                 customRequest={this.handleUpload}
                                 onRemove= {this.onRemove}
                                 fileList={fileList}
@@ -121,10 +139,10 @@ class AttachModal extends Component{
                             allowClear
                             onChange={(e)=>{
                                 this.setState({
-                                    note: e.target.value
+                                    notes: e.target.value
                                 })
                             }}
-                            value={note}
+                            value={notes}
                         />
                     </Col>
                 </Row>

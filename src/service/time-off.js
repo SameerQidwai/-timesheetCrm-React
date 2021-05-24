@@ -57,16 +57,16 @@ export const delLabel = (id) => {
 };
 
 export const editLabel = (data) => {
-    message.loading({ content: 'Loading...', key: data.is })
+    message.loading({ content: 'Loading...', key: data.id })
     return axios
         .put(url + `/${data.id}`, data)
         .then((res) => {
             const { success } = res.data;
-            message.success({ content: 'Success!', key: data.is})
+            message.success({ content: 'Success!', key: data.id})
             if (success) return success;
         })
         .catch((err) => {
-            message.error({ content: 'Error!', key: data.is})
+            message.error({ content: 'Error!', key: data.id})
             return {
                 error: "Please login again!",
                 status: false,

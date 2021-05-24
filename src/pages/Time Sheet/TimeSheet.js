@@ -248,7 +248,6 @@ class TimeSheet extends Component {
         if(sUser.value){
             getList({userId: sUser.value, startDate: startDate.format('DD-MM-YYYY'), endDate: endDate.format('DD-MM-YYYY')}).then(res=>{
                 if (res.success){
-                    console.log(res.data.projects)
                     this.setState({
                         timesheet: res.success && res.data,
                         data: res.data ? res.data.projects: []
@@ -279,14 +278,13 @@ class TimeSheet extends Component {
                 align: "center",
                 render: (value, record, rowIndex) =>{
                     if(value){
-                        // let dummy =moment.duration(1.05,'hours')
-                        // console.log(dummy, `${dummy.hours()}:${dummy.minutes()}`);
-                    let duration = moment.duration(value["actualHours"],'hours')
-                        {return <Row style={{ border: "1px solid" }}>
+                    // let duration = moment.duration(value["actualHours"],'hours')
+                    // <Col span={24}>Total: {`${duration.hours()}:${duration.minutes()}`}</Col>
+                    {return <Row style={{ border: "1px solid" }}>
                             <Col span={24}>Start Time: {value["startTime"]}</Col>
                             <Col span={24}>End Time: {value["endTime"]}</Col>
                             <Col span={24}>Break: {value["breakHours"]}</Col>
-                            <Col span={24}>Total: {`${duration.hours()}:${duration.minutes()}`}</Col>
+                            <Col span={24}>Total Hours: {value["actualHours"]}</Col>
                         </Row>}
                     }
                 },
@@ -399,6 +397,7 @@ class TimeSheet extends Component {
         const timeObj= {
             projectEntryId: record.projectEntryId,
             projectId: record.projectId,
+            notes: record.notes,
             project: record.project,
             rowIndex: index
         }
@@ -548,8 +547,9 @@ class TimeSheet extends Component {
                                     if(key === 'project'){
                                         return <Table.Summary.Cell>Total Work In A day </Table.Summary.Cell>
                                     }else{
-                                        let duration = moment.duration(value,'hours')
-                                        return <Table.Summary.Cell align="center">{`${duration.hours()}:${duration.minutes()}`}</Table.Summary.Cell>
+                                        // let duration = moment.duration(value,'hours')
+                                        // return <Table.Summary.Cell align="center">{`${duration.hours()}:${duration.minutes()}`}</Table.Summary.Cell>
+                                        return <Table.Summary.Cell align="center">{value}</Table.Summary.Cell>
                                     }
                                 })}
                         </Table.Summary.Row>)
@@ -561,7 +561,7 @@ class TimeSheet extends Component {
                         timeObj={timeObj}
                         editTime={editTime}
                         sheetDates={sheetDates}
-                        close={()=>this.setState({isVisible: false, editTime: false})}
+                        close={()=>this.setState({isVisible: false, editTime: false, timeObj: false})}
                         callBack={this.callBack}
                     />
                 )}
@@ -576,7 +576,7 @@ class TimeSheet extends Component {
                 {isDownload && (
                     <ExportToExcel
                         download={isDownload}
-                        close={()=>this.setState({isDownload: false, editTime: false})}
+                        close={()=>this.setState({isDownload: false, editTime: false, timeObj: false})}
                         data={eData}
                     />
                 )}
