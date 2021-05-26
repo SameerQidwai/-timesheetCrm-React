@@ -239,8 +239,8 @@ class BillModal extends Component {
         const {editCntrct, editEmp} = this.props
         const { billing } = vake;
         billing.noOfHoursPer = 1; 
-        billing.startDate = billing.startDate ? new Date (moment(billing.startDate).format("DD-MMM-YYYY")).getTime(): null
-        billing.endDate = billing.endDate ? new Date (moment(billing.endDate).format("DD-MMM-YYYY")).getTime(): null
+        billing.startDate = billing.startDate ? moment(billing.startDate).valueOf(): null
+        billing.endDate = billing.endDate ? moment(billing.endDate).valueOf(): null
         billing.employeeId = editEmp;
         if (!editCntrct) {
             console.log("emes");
@@ -254,6 +254,7 @@ class BillModal extends Component {
     addContract = (data) => {
         this.setState({loading: true,})
         const { callBack } = this.props;
+        console.log(data);
         addList(data).then(res=>{
             console.log(res);
             if(res.success){

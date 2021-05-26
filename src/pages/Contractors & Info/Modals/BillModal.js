@@ -46,7 +46,6 @@ class BillModal extends Component {
                     },
                     {
                         Placeholder: "Contract End Date",
-                        rangeMin: true,
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -69,7 +68,6 @@ class BillModal extends Component {
                         size: "small",
                         type: "DatePicker",
                         fieldStyle: { width: "100%" },
-                        rules: [ { required: true, message: "End Date is required", }, ],
                     },
                     {
                         Placeholder: "Contract Payment Basis",
@@ -153,8 +151,8 @@ class BillModal extends Component {
         const {editCntrct, editEmp} = this.props
         const { billing } = vake;
         billing.noOfHoursPer = 1; 
-        billing.startDate = billing.startDate ? new Date (moment(billing.startDate).format("DD-MMM-YYYY")).getTime(): null
-        billing.endDate = billing.endDate ? new Date (moment(billing.endDate).format("DD-MMM-YYYY")).getTime(): null
+        billing.startDate = billing.startDate ? moment(billing.startDate).valueOf(): null
+        billing.endDate = billing.endDate ? moment(billing.endDate).valueOf(): null
         billing.employeeId = editEmp;
         if (!editCntrct) {
             console.log("emes");

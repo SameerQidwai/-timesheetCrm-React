@@ -127,27 +127,29 @@ class OrgInfo extends Component {
                     <Item label="Date Of Birth">{data.dateOfBirth ? moment(data.dateOfBirth).format('DD MM YYYY'): null}</Item>
                     <Item label="Gender">{data.gender}</Item>
                 </Descriptions>
-                <Tabs
-                    type="card"
-                    style={{ marginTop: "50px" }}
-                    defaultActiveKey="5"
-                >
-                    <TabPane tab="Project" key="project">
-                        <Projects id={emp} />
-                    </TabPane>
-                    <TabPane tab="Travels" key="travels">
-                        <Travels id={emp} />
-                    </TabPane>
-                    <TabPane tab="Comments" key="comments">
-                        <Comments id={emp} />
-                    </TabPane>
-                    <TabPane tab="Attachments" key="attachments">
-                        <Attachments />
-                    </TabPane>
-                    <TabPane tab="Bank Account" key="account">
-                        <Bank id={emp} title={data.name} />
-                    </TabPane>
-                </Tabs>
+               {emp &&( 
+                    <Tabs
+                        type="card"
+                        style={{ marginTop: "50px" }}
+                        defaultActiveKey="5"
+                    >
+                        <TabPane tab="Project" key="project">
+                            <Projects id={emp} />
+                        </TabPane>
+                        <TabPane tab="Travels" key="travels">
+                            <Travels id={emp} />
+                        </TabPane>
+                        <TabPane tab="Comments" key="comments">
+                            <Comments target="EMP" targetId={emp} />
+                        </TabPane>
+                        <TabPane tab="Attachments" key="attachments">
+                            <Attachments target="EMP" targetId={emp}  />
+                        </TabPane>
+                        <TabPane tab="Bank Account" key="account">
+                            <Bank id={emp} title={data.name} />
+                        </TabPane>
+                    </Tabs>
+                )}
                 {infoModal && (
                     <InfoModal
                         visible={infoModal}

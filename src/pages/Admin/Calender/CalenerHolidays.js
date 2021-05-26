@@ -152,11 +152,11 @@ class CalenerHolidays extends Component {
     Callback = (vake) => {
         const { calendarId } = this.state;
         // this will work after I get the Object
-        vake.obj.date = moment(vake.obj.date).format("DD-MMM-YYYY");
+        vake.obj.date = moment(vake.obj.date).valueOf();
         const obj = {
             calendarId: calendarId,
             holidayTypeId: vake.obj.label,
-            date: new Date(vake.obj.date).getTime(),
+            date: vake.obj.date.valueOf(),
         };
         if (!this.state.editTimeoff) {
             // to add new datas

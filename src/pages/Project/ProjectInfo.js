@@ -133,16 +133,16 @@ class ProjectInfo extends Component {
                     <Tabs
                         type="card"
                         style={{ marginTop: "50px" }}
-                        defaultActiveKey="profitloss"   
+                        // defaultActiveKey="profitloss"   
                     >
                         <TabPane tab="Comments" key="comments">
-                            <Comments id={leadId} />
+                            <Comments targetId={leadId} target="PEN" />
                         </TabPane>
                         <TabPane tab="Travels" key="travels">
                             <Travels id={leadId} />
                         </TabPane>
                         <TabPane tab="Attachments" key="attachments">
-                            <Attachments />
+                            <Attachments targetId={leadId} target="PEN" />
                         </TabPane>
                         <TabPane tab="Bank Account" key="account">
                             <Bank id={leadId} title={data.name} />

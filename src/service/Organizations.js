@@ -29,7 +29,6 @@ export const getOrgRecord = (id) => {
             const { success, data } = res.data;
             if (success) {
                 const vake = data
-                console.log(data);
                 const basic = {
                     name: vake.name,
                     parent: vake.parentOrganization && vake.parentOrganization.id,

@@ -6,7 +6,9 @@ import moment from "moment";
 
 import { DeleteOutlined, DeleteFilled, SendOutlined, PaperClipOutlined, } from "@ant-design/icons";
 
-import { getComments, addComment, addFiles } from "../../service/constant-Apis";
+import { addFiles } from "../../service/Attachment-Apis";
+import { getComments, addComment, delComments } from "../../service/comment-Apis";
+import { Api } from "../../service/constant"
 
 import "../Styles/comment.css";
 
@@ -53,11 +55,14 @@ class Comments extends Component {
         });
     };
     
-    handleDelete = (key) => {
-        console.log(key);
-        this.setState({
-            data: this.state.data.filter((item) => item.key !== key),
-        });
+    handleDelete = (id) => {
+        delComments(id).then(res=>{
+            if(res.success){
+                this.setState({
+                    data: this.state.data.filter((item) => item.id !== id),
+                });
+            }
+        })
     };
 
     handelEmpty = (e) => {
@@ -142,22 +147,65 @@ class Comments extends Component {
     };
 
     actions = (list) => {
-        const array = [];
         return list.map((el) => 
             <span>
                 <PaperClipOutlined />{" "}
-                <a href={el.uid} download={el.name}>
+                <a href={`${Api}/files/${el.uid}`} download={el.name} target="_blank">
                     {el.name}
                 </a>
             </span>
         );
     };
 
+    handleUpload = async option=>{
+        const { onSuccess, onError, file, onProgress } = option;
+        const formData = new FormData();
+        const  config = {
+            headers: {"content-type": "multipart/form-data"},
+            onUploadProgress: event =>{
+                const percent = Math.floor((event.loaded / event.total) * 100);
+                this.setState({progress: percent});
+                if (percent === 100) {
+                  setTimeout(() => this.setState({progres: 0}), 1000);
+                }
+                onProgress({ percent: (event.loaded / event.total) * 100 });
+              }
+            }
+            formData.append('files', file)
+            addFiles(formData, config).then((res,err)=>{
+                if (res.success){
+                    onSuccess("Ok");
+                    this.setState({
+                        fileList: [...this.state.fileList, file],
+                        fileIds: [...this.state.fileIds, ...res.data]
+                    })
+                }else{
+                    console.log("Eroor: ", err);
+                    const error = new Error("Some error");
+                    onError({ err });
+                }
+            })
+    }
+
+    onRemove = (file) => {
+        this.setState((state) => {
+            const index = state.fileList.indexOf(file);
+            const newFileList = state.fileList.slice();
+            const fileIds = state.fileIds
+            newFileList.splice(index, 1);
+            fileIds.splice(index, 1);
+            return {
+                fileIds,
+                fileList: newFileList,
+            };
+        });
+    }
+
     commentRender = (item, index, isHovered) => {
-        const actions = item.files && this.actions(item.files); //Function can not be pass to array Prop
+        const actions = item.attachments && this.actions(item.attachments); //Function can not be pass to array Prop
         return (
             <Comment
-                key={index}
+                key={item.id}
                 author={<a>{item.author?? '??????'}</a>}
                 avatar={
                     <Avatar
@@ -198,7 +246,7 @@ class Comments extends Component {
                                 <Popconfirm
                                     title="You Want to delete comment?"
                                     onConfirm={() => {
-                                        this.handleDelete(item.key);
+                                        this.handleDelete(item.id);
                                     }}
                                     okText="Yes"
                                     cancelText="No"
@@ -213,53 +261,9 @@ class Comments extends Component {
                         </Tooltip>
                     </>
                 }
-            ></Comment>
+            />
         );
     };
-
-    handleUpload = async option=>{
-        const { onSuccess, onError, file, onProgress } = option;
-        const formData = new FormData();
-        const  config = {
-            headers: {"content-type": "multipart/form-data"},
-            onUploadProgress: event =>{
-                const percent = Math.floor((event.loaded / event.total) * 100);
-                this.setState({progress: percent});
-                if (percent === 100) {
-                  setTimeout(() => this.setState({progres: 0}), 1000);
-                }
-                onProgress({ percent: (event.loaded / event.total) * 100 });
-              }
-            }
-            formData.append('files', file)
-            // addFiles(formData, config).then((res,err)=>{
-            //     if (res.success){
-            //         onSuccess("Ok");
-                    this.setState({
-                        fileList: [...this.state.fileList, file],
-                        // fileIds: [...this.state.fileIds, ...res.data]
-                    })
-                // }else{
-                //     console.log("Eroor: ", err);
-                //     const error = new Error("Some error");
-                //     onError({ err });
-                // }
-            // })
-    }
-
-    onRemove = (file) => {
-        this.setState((state) => {
-            const index = state.fileList.indexOf(file);
-            const newFileList = state.fileList.slice();
-            const fileIds = state.fileIds
-            newFileList.splice(index, 1);
-            fileIds.splice(index, 1);
-            return {
-                fileIds,
-                fileList: newFileList,
-            };
-        });
-    }
 
     render() {
         const { data, isHovered, value, fileList } = this.state;
@@ -331,7 +335,7 @@ class Comments extends Component {
                     span={1}
                     style={{
                         alignSelf: "flex-end",
-                        marginBottom: (30 * fileList.length) / 4 + 1,
+                        marginBottom: fileList.length > 2 ?((30 * fileList.length) / 4 + 1): 25,
                     }}
                 >
                     <Form.Item>

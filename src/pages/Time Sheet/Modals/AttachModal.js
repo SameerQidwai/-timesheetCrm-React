@@ -5,7 +5,7 @@ import '../../styles/upload.css'
 import TextArea from 'antd/lib/input/TextArea';
 import Dragger from 'antd/lib/upload/Dragger';
 import { Api } from "../../../service/constant";
-import { addFiles, getAttachments } from "../../../service/constant-Apis";
+import { addFiles, getAttachments } from "../../../service/Attachment-Apis";
 import { addProjectNote } from "../../../service/timesheet";
 class AttachModal extends Component{
     constructor(){
@@ -17,6 +17,7 @@ class AttachModal extends Component{
             notes: undefined
         }
     }
+    
     componentDidMount=()=>{
         console.log(`object`, this.props)
         const { projectEntryId } = this.props.timeObj
@@ -88,18 +89,17 @@ class AttachModal extends Component{
             note: notes,
             attachments: fileIds
         }
-        console.log(obj);
         addProjectNote(timeObj.projectEntryId, obj).then(res=>{
             if(res.success){
-                console.log(res);
                 close()
             }
         })
     }
 
     render (){
-        const { visible, editTime, loading, close } = this.props
+        const { visible, editTime, loading, close, timeObj } = this.props
         const {  fileList, notes } = this.state;
+        const disabled = (timeObj.status === 'SB' || timeObj.status === 'AP') 
         return(
             <Modal
                 title={editTime ? "Edit Attachments & Notes" : "Add Attachments & Notes"}
@@ -107,7 +107,7 @@ class AttachModal extends Component{
                 centered
                 visible={visible}
                 onOk={() => { this.addNotes() }}
-                okButtonProps={{ disabled: loading }}
+                okButtonProps={{ disabled: loading, disabled: disabled  }}
                 okText={loading ?<LoadingOutlined /> :"Save"}
                 onCancel={close}
                 width={540}
@@ -121,6 +121,7 @@ class AttachModal extends Component{
                                 multiple={true}
                                 listType= "picture"
                                 className="upload-list-inline"
+                                disabled={disabled}
                                 customRequest={this.handleUpload}
                                 onRemove= {this.onRemove}
                                 fileList={fileList}

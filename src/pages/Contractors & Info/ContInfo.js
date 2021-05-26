@@ -128,27 +128,29 @@ class ContInfo extends Component {
                     <Item label="Date Of Birth">{data.dateOfBirth ? moment(data.dateOfBirth).format('DD MM YYYY'): null}</Item>
                     <Item label="Gender">{data.gender}</Item>
                 </Descriptions>
-                <Tabs
-                    type="card"
-                    style={{ marginTop: "50px" }}
-                    defaultActiveKey="1"
-                >
-                    <TabPane tab="Project" key="1">
-                        <Projects id={editCont} />
-                    </TabPane>
-                    <TabPane tab="Travels" key="2">
-                        <Travels id={editCont} />
-                    </TabPane>
-                    <TabPane tab="Comments" key="4">
-                        <Comments id={editCont} />
-                    </TabPane>
-                    <TabPane tab="Attachments" key="5">
-                        <Attachments />
-                    </TabPane>
-                    <TabPane tab="Bank Account" key="6   ">
-                        <Bank id={editCont} title={data.name} />
-                    </TabPane>
-                </Tabs>
+                {editCont && (
+                    <Tabs
+                        type="card"
+                        style={{ marginTop: "50px" }}
+                        defaultActiveKey="1"
+                    >
+                        <TabPane tab="Projects" key="projects">
+                            <Projects id={editCont} />
+                        </TabPane>
+                        <TabPane tab="Travels" key="travels">
+                            <Travels id={editCont} />
+                        </TabPane>
+                        <TabPane tab="Comments" key="comments">
+                            <Comments target="CON" targetId={editCont} />
+                        </TabPane>
+                        <TabPane target="CON" targetId={editCont} tab="Attachments" key="attachments">
+                            <Attachments />
+                        </TabPane>
+                        <TabPane tab="Bank Account" key="bank">
+                            <Bank id={editCont} title={data.name} />
+                        </TabPane>
+                    </Tabs>
+                )}
                 {infoModal && (
                     <InfoModal
                         visible={infoModal}

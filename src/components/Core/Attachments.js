@@ -3,6 +3,8 @@ import { Upload, message, Button, Row, Col } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import moment from "moment";
 
+import { addFiles, getAttachments , addAttachments, delAttachment} from "../../service/Attachment-Apis";
+
 import "../Styles/attachments.css"
 // const { Dragger } = Upload;
 
@@ -12,97 +14,99 @@ class Attachments extends Component {
         this.UploadRef = createRef();
         this.state = {
             fileList: [],
-            defaultFiles: [
-                {
-                    lastModified: 1604306389553,
-                    lastModifiedDate: moment("Nov 02 2020").format(
-                        "ddd MMM DD YYYY"
-                    ),
-                    name: "favicon.ico",
-                    size: 3150,
-                    type: "image/vnd.microsoft.icon",
-                    uid: "rc-upload-1605695781556-2",
-                    webkitRelativePath: "",
-                },
-                {
-                    lastModified: 1604306389553,
-                    lastModifiedDate: moment("Nov 02 2020").format(
-                        "ddd MMM DD YYYY"
-                    ),
-                    name: "index.html",
-                    size: 1721,
-                    type: "text/html",
-                    uid: "rc-upload-1605695781556-4",
-                    webkitRelativePath: "",
-                },
-                {
-                    lastModified: 1604306389553,
-                    lastModifiedDate: moment("Nov 02 2020").format(
-                        "ddd MMM DD YYYY"
-                    ),
-                    name: "robots.txt",
-                    size: 67,
-                    type: "text/plain",
-                    uid: "rc-upload-1605695781556-6",
-                    webkitRelativePath: "",
-                },
-                {
-                    lastModified: 1604306389553,
-                    lastModifiedDate: moment("Nov 02 2020").format(
-                        "ddd MMM DD YYYY"
-                    ),
-                    name: "logo512.png",
-                    size: 9664,
-                    type: "image/png",
-                    uid: "rc-upload-1605695781556-8",
-                    webkitRelativePath: "",
-                    // thumbUrl: "",
-                    url: "downlod.com",
-                },
-            ],
+            fileIds: [],
         };
     }
+
+    componentDidMount=()=>{
+        const { target, targetId } = this.props
+        this.getRecord(target, targetId)
+    }
+
+    getRecord = (target, targetId) =>{
+        getAttachments(target, targetId).then(res=>{
+            if(res.success){
+                this.setState({
+                    fileList: res.fileList,
+                    fileIds: res.fileIds,
+                })
+            }
+        })
+    }
+    
+    handleUpload = async option=>{
+        const { onSuccess, onError, file, onProgress } = option;
+        const formData = new FormData();
+        const  config = {
+            headers: {"content-type": "multipart/form-data"},
+            onUploadProgress: event =>{
+                const percent = Math.floor((event.loaded / event.total) * 100);
+                this.setState({progress: percent});
+                if (percent === 100) {
+                  setTimeout(() => this.setState({progres: 0}), 1000);
+                }
+                onProgress({ percent: (event.loaded / event.total) * 100 });
+              }
+            }
+            formData.append('files', file)
+            addFiles(formData, config).then((res,err)=>{
+                if (res.success){
+                    onSuccess("Ok");
+                    const { target, targetId } = this.props
+                    const data = {
+                        files: res.data
+                    }
+                    addAttachments(target, targetId, data).then(attach=>{
+                        if (attach.success){
+                            this.setState({
+                                fileList: [...this.state.fileList, attach.data],
+                                fileIds: [...this.state.fileIds, ...res.data]
+                            })
+                        }
+                    })
+                }else{
+                    console.log("Eroor: ", err);
+                    const error = new Error("Some error");
+                    onError({ err });
+                }
+            })
+    }
+
+    onRemove = (file) => {
+        console.log(file);
+        delAttachment(file.id).then(res=>{
+            if(res.success){
+                this.setState((state) => {
+                    const index = state.fileList.indexOf(file);
+                    const newFileList = state.fileList.slice();
+                    const fileIds = state.fileIds
+                    newFileList.splice(index, 1);
+                    fileIds.splice(index, 1);
+                    return {
+                        fileIds,
+                        fileList: newFileList,
+                    };
+                });
+            }
+        })
+    }
+
     render() {
-        const { defaultFiles, fileList } = this.state;
-        const props = {
-            name: "file",
-            multiple: true,
-            listType: "picture",
-            action: "https://www.mocky.io/v2/kia",
-            onChange(info) {
-                const { status } = info.file;
-                if (status !== "uploading") {
-                    console.log(info.file, info.fileList);
-                }
-                if (status === "done") {
-                    message.success(
-                        `${info.file.name} file uploaded successfully.`
-                    );
-                } else if (status === "error") {
-                    message.error(`${info.file.name} file upload failed.`);
-                }
-            },
-            defaultFileList: defaultFiles,
-            showUploadList: {
-                showRemoveIcon: true,
-            },
-        };
+        const { fileList } = this.state;
         return (
             <Row>
-                {/* <Col span="24" style={{ textAlign: "right" }}>
-                    <UploadOutlined
-                        style={{ fontSize: 24 }}
-                        onClick={() => {
-                            this.UploadRef.current.click();
-                        }}
-                    />
-                </Col> */}
                 <Col span="24">
-                    <Upload {...props}>
-                        <Button
-                            type="ghost"
-                            // ref={this.UploadRef}
-                        >
+                    <Upload 
+                        multiple={true}
+                        showUploadList= {{showRemoveIcon: true }}
+                        listType= "picture"
+                        fileList={fileList}
+                        customRequest={this.handleUpload}
+                        onRemove= {this.onRemove}
+                        // className="upload-list-inline"
+                        style={{ backgroundColor: "rosybrown" }}
+                    >
+                        <Button type="ghost" >
                             <UploadOutlined /> Upload new File
                         </Button>
                     </Upload>

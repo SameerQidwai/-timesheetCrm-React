@@ -6,6 +6,7 @@ import Comments from "../../../components/Core/Comments";
 import Projects from "../../../components/Core/Projects";
 import Opportunity from "../../../components/Core/Opportunities";
 import Bank from "../../../components/Core/Bank";
+import Attachments from "../../../components/Core/Attachments";
 import ChildOrg from "./ChildOrg"; 
 
 import InfoModal from "./InfoModal";
@@ -46,7 +47,6 @@ class OrgInfo extends Component {
     };
     getOrgRecord = (id) =>{
         getOrgRecord(id).then((res) => {
-            console.log(res.data);
             if(res.success){
                 this.setState({
                     data: res.data,
@@ -120,7 +120,7 @@ class OrgInfo extends Component {
                     <Tabs
                         type="card"
                         style={{ marginTop: "50px" }}
-                        defaultActiveKey="comments"
+                        defaultActiveKey="attachments"
                     >
                         <TabPane tab="Project" key="project">
                             <Projects {...this.props.match.params} />
@@ -128,12 +128,16 @@ class OrgInfo extends Component {
                         <TabPane tab="Opportunity" key="opportunity">
                             <Opportunity {...this.props.match.params} />
                         </TabPane>
-                        <TabPane tab="Comments" key="comments">
-                            <Comments targetId={renderTabs} target="ORG" />
-                        </TabPane>
                         <TabPane tab="Sub-organization" key="sub">
                             <ChildOrg {...this.props.match.params} />
                         </TabPane>
+                        <TabPane tab="Attachments" key="attachments">
+                            <Attachments targetId={renderTabs} target="ORG" />
+                        </TabPane>
+                        <TabPane tab="Comments" key="comments">
+                            <Comments targetId={renderTabs} target="ORG" />
+                        </TabPane>
+                        
                         <TabPane tab="Bank Account" key="Bank">
                             <Bank {...this.props.match.params} title={data.name} bank={bank} />
                         </TabPane>

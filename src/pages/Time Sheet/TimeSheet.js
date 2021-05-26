@@ -169,10 +169,12 @@ class TimeSheet extends Component {
                             <Col span={24}>
                                 <Row justify="space-between">
                                     <Col> {value} </Col>
-                                    {(record.status === 'SV' || record.status === 'RJ') && <Col> 
+                                    {/* {(record.status === 'SV' || record.status === 'RJ') && */}
+                                     <Col> 
                                         <DownloadOutlined onClick={()=>{this.exportData(record, index)}}/>
                                         <SaveOutlined onClick={()=>{this.openAttachModal(record, index)} } style={{color: '#1890ff', marginLeft:10}}/>
-                                    </Col>}
+                                    </Col>
+                                    {/* } */}
                                 </Row>
                             </Col>
                             {record.status === 'SV' || record.status === 'RJ' ?<Col sapn={12}>
@@ -284,7 +286,7 @@ class TimeSheet extends Component {
                             <Col span={24}>Start Time: {value["startTime"]}</Col>
                             <Col span={24}>End Time: {value["endTime"]}</Col>
                             <Col span={24}>Break: {value["breakHours"]}</Col>
-                            <Col span={24}>Total Hours: {value["actualHours"]}</Col>
+                            <Col span={24}>Total Hours: {value["actualHours"] && value["actualHours"].toFixed(2)}</Col>
                         </Row>}
                     }
                 },
@@ -399,6 +401,7 @@ class TimeSheet extends Component {
             projectId: record.projectId,
             notes: record.notes,
             project: record.project,
+            status: record.status,
             rowIndex: index
         }
         this.setState({ timeObj, isAttach: true })
@@ -455,6 +458,29 @@ class TimeSheet extends Component {
             comments: e.target.value,
         });
     };
+    
+    summaryFooter = (data) =>{
+        const { columns } = this.state
+        if(data.length>0)
+        return (
+            <Table.Summary.Row>
+                {columns.map(({key})=>{
+                    let value = 0
+                    data.map(rowData =>{
+                        if(key !== 'project' ){
+                            value += (rowData[key] ? rowData[key]['actualHours'] :0)
+                        }
+                    })
+                    if(key === 'project'){
+                        return <Table.Summary.Cell>Total Work In A day </Table.Summary.Cell>
+                    }else{
+                        // let duration = moment.duration(value,'hours')
+                        // return <Table.Summary.Cell align="center">{`${duration.hours()}:${duration.minutes()}`}</Table.Summary.Cell>
+                        return <Table.Summary.Cell align="center">{value && value.toFixed(2)}</Table.Summary.Cell>
+                    }
+                })}
+        </Table.Summary.Row>)
+    }
 
     render() {
         const { loading, data, isVisible, proVisible, columns, editTime, timeObj, sheetDates, projects, sProject, isAttach, isDownload, eData, USERS, sUser } = this.state
@@ -532,28 +558,7 @@ class TimeSheet extends Component {
                     rowKey={data=>data.projectId}
                     columns={columns}
                     dataSource={data}
-                    summary={ data => {
-                        const { columns } = this.state
-                        if(data.length>0)
-                        return (
-                            <Table.Summary.Row>
-                                {columns.map(({key})=>{
-                                    let value = 0
-                                    data.map(rowData =>{
-                                        if(key !== 'project' ){
-                                            value += (rowData[key] ? rowData[key]['actualHours'] :0)
-                                        }
-                                    })
-                                    if(key === 'project'){
-                                        return <Table.Summary.Cell>Total Work In A day </Table.Summary.Cell>
-                                    }else{
-                                        // let duration = moment.duration(value,'hours')
-                                        // return <Table.Summary.Cell align="center">{`${duration.hours()}:${duration.minutes()}`}</Table.Summary.Cell>
-                                        return <Table.Summary.Cell align="center">{value}</Table.Summary.Cell>
-                                    }
-                                })}
-                        </Table.Summary.Row>)
-                      }}
+                    summary={ columnData => this.summaryFooter(columnData)}
                 />
                 {isVisible && (
                     <TimeModal

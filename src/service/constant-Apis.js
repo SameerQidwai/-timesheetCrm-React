@@ -210,57 +210,6 @@ export const getProjects = () => {
         });
 };
 
-export const getAttachments = (target, targetId) => {
-    return axios
-        .get(`${Api}/attachments/${target}/${targetId}`)
-        .then((res) => {
-            const { success, data } = res.data;
-            var fileIds = []
-            var fileList = []
-            // console.log(data);
-            data.map((el) => {
-                fileIds.push(el.fileId)
-                fileList.push( {
-                    uid: el.file.uniqueName,
-                    name: el.file.originalName,
-                    // status: 'done',
-                    // response: 'Server Error 500', // custom error message to show
-                    // url: 'http://www.baidu.com/xxx.png',
-                  })
-            });
-            if (success) return { success, fileList, fileIds };
-        })
-        .catch((err) => {
-            return {
-                error: "Please login again!",
-                success: false,
-                message: err.message,
-            };
-        });
-}; 
-
-export const getComments = (target, targetId) => {
-    return axios
-        .get(`${Api}/comments/${target}/${targetId}`)
-        .then((res) => {
-            const { success, data } = res.data;
-            var fileIds = []
-            var fileList = []
-            // console.log(data);
-            // data.map((el) => {
-            //     fileIds.push(el.fileId)
-            // });
-            if (success) return { success, data  };
-        })
-        .catch((err) => {
-            return {
-                error: "Please login again!",
-                success: false,
-                message: err.message,
-            };
-        });
-}; 
-
 export const getCustomApi = (url) => {
     return axios
         .get(`${Api}/${url}`)
@@ -279,52 +228,5 @@ export const getCustomApi = (url) => {
                 success: false,
                 message: err.message,
             };
-        });
-};
-
-
-export const addFiles = (data, config) => {
-    // const header ={ 'content-type': 'multipart/form-data',  'Accept': 'application/json'}
-    return axios
-        .post(`${Api}/files`, data, config)
-        .then((res) => {
-            const { status } = res;
-            if (status === 200) {
-                const { success, data } = res.data;
-                console.log(data);
-                return { success, data };
-            }
-        })
-        .catch((err) => {
-            console.log(err);
-            return {}
-            // return {
-            //     error: err.response.status,
-            //     status: false,
-            //     message: err.message,
-            // };
-        });
-};
-
-export const addComment = (target, targetId, data) => {
-    // const header ={ 'content-type': 'multipart/form-data',  'Accept': 'application/json'}
-    return axios
-        .post(`${Api}/comments/${target}/${targetId}`, data)
-        .then((res) => {
-            const { status } = res;
-            if (status === 200) {
-                const { success, data } = res.data;
-                console.log(data);
-                return { success, data };
-            }
-        })
-        .catch((err) => {
-            console.log(err);
-            return {}
-            // return {
-            //     error: err.response.status,
-            //     status: false,
-            //     message: err.message,
-            // };
         });
 };

@@ -112,7 +112,7 @@ export const editLabel = (data) => {
         .then((res) => {
             const { success } = res.data;
             message.success({ content: 'Success!', key: data.id})
-            if (success) return success;
+            if (success) return {success};
         })
         .catch((err) => {
             message.error({ content: 'Error!', key: data.id})
@@ -131,7 +131,7 @@ export const addProjectNote = (id, data) => {
         .then((res) => {
             const { success } = res.data;
             message.success({ content: 'Success!', key: id})
-            if (success) return success;
+            if (success) return {success};
         })
         .catch((err) => {
             message.error({ content: 'Error!', key: id})
