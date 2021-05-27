@@ -372,6 +372,7 @@ export const getOrders = (proId) => {
 };
 
 export const editOrder = (proId, id, data) => {
+    
     message.loading({ content: 'Loading...', key: id })
     return axios
         .put(url + `/${proId}/purchaseOrders/${id}`, data)
@@ -389,7 +390,6 @@ export const editOrder = (proId, id, data) => {
             };
         });
 };
-
 
 export const getOrder = (proId,id) => {
     return axios
@@ -413,9 +413,9 @@ export const getOrder = (proId,id) => {
         });
 };
 
-export const delOrder = (id) => {
+export const delOrder = (proId,id) => {
     return axios
-        .delete(url + `/${id}`)
+        .delete(url + `/${proId}/purchaseOrders/${id}`)
         .then((res) => {
             const { success } = res.data;
             if (success) return {success};

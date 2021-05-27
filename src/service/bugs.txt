@@ -110,3 +110,10 @@ short title for organization
 
 For later future disscuss in meeting 28-April-2021
 add delegate Contact Person can be add while adding Organisation 
+
+
+NEW BUGS
+comments are not getting attahment when added
+PURCHASE ORDER EDIT
+// this needs to be correct 
+    in comments definging it agaia to meet the criteria with 

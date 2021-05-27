@@ -98,6 +98,15 @@ class Comments extends Component {
             addComment(target, targetId, comment).then(res=>{
                 console.log(res);
                 if (res.success){
+                    let comment = {
+                        // comment
+                        key: 1,
+                        author: "Han Solo",
+                        content: value,
+                        attachments: fileList,
+                        fileIds: fileIds
+                        // date: moment().format(),
+                    };
                     this.setState({
                         data: [...data, comment], // add comment to comment data
                         value: null, // set TextArea empty
@@ -147,6 +156,7 @@ class Comments extends Component {
     };
 
     actions = (list) => {
+        console.log(list);
         return list.map((el) => 
             <span>
                 <PaperClipOutlined />{" "}
@@ -173,6 +183,7 @@ class Comments extends Component {
             }
             formData.append('files', file)
             addFiles(formData, config).then((res,err)=>{
+                console.log('show me', res);
                 if (res.success){
                     onSuccess("Ok");
                     this.setState({

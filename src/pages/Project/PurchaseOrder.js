@@ -40,38 +40,36 @@ class PurchaseOrder extends Component {
                 key: "expense",
                 render: record => `$ ${formatCurrency(record)}`
             },
-            // {
-            //     title: "Action",
-            //     key: "action",
-            //     align: "right",
-            //     render: (record) => (
-            //         <Dropdown
-            //             overlay={
-            //                 <Menu>
-            //                     <Menu.Item danger>
-            //                         <Popconfirm
-            //                             title="Sure to delete?"
-            //                             onConfirm={() => this.handleDelete(record.id) }
-            //                         >
-            //                             Delete
-            //                         </Popconfirm>
-            //                     </Menu.Item>
-            //                     <Menu.Item
-            //                         onClick={() => {
-            //                             this.setState({ openModal: true, editRex: record.id, });
-            //                         }}
-            //                     >
-            //                         Edit
-            //                     </Menu.Item>
-            //                 </Menu>
-            //             }
-            //         >
-            //             <Button size="small">
-            //                 <SettingOutlined /> Option <DownOutlined />
-            //             </Button>
-            //         </Dropdown>
-            //     ),
-            // },
+            {
+                title: "Action",
+                key: "action",
+                align: "right",
+                render: (record) => (
+                    <Dropdown
+                        overlay={
+                            <Menu>
+                                <Menu.Item danger>
+                                    <Popconfirm
+                                        title="Sure to delete?"
+                                        onConfirm={() => this.handleDelete(record.id) }
+                                    >
+                                        Delete
+                                    </Popconfirm>
+                                </Menu.Item>
+                                <Menu.Item
+                                    onClick={() => { this.setState({ openModal: true, editRex: record.id, }); }}
+                                >
+                                    Edit
+                                </Menu.Item>
+                            </Menu>
+                        }
+                    >
+                        <Button size="small">
+                            <SettingOutlined /> Option <DownOutlined />
+                        </Button>
+                    </Dropdown>
+                ),
+            },
         ];
 
         this.state = {
@@ -122,10 +120,10 @@ class PurchaseOrder extends Component {
     };
 
     handleDelete = (rId) => {
-        const { id } = this.props.match.params //opputunityId
-        delOrder(id,rId).then((res) => {
+        const { ProId } = this.state //opputunityId
+        delOrder(ProId,rId).then((res) => {
             if (res.success) {
-                this.props.history.push('/Employees')
+                this.getRecords(ProId)
             }
         });
     };
