@@ -145,6 +145,8 @@ class FormItems extends Component {
                         asize={size}
                         style={style}
                         prefix={mode}
+                        disabled={disabled}
+                        readOnly={readOnly}
                     />
                 );
                 break;
@@ -235,6 +237,7 @@ class FormItems extends Component {
                         onBlur={onBlur}
                         onChange={onChange}
                         format={'DD/MM/YYYY'}
+                        disabled={disabled}
                     />
                 );
                 break;
@@ -245,6 +248,7 @@ class FormItems extends Component {
                         use12Hours={mode === "use12Hours"}
                         size={size}
                         style={style}
+                        disabled={disabled}
                     />
                 );
                 break;

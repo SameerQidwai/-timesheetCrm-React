@@ -4,9 +4,6 @@ export const Api = "http://54.91.49.138:8000/api/v1"; //live api
 // export const Api = "http://192.168.0.243:3000/api/v1";
 // export const Api = "http://192.168.0.191:3301/api/v1";
 
-
-
-
 export const formatCurrency = (amount) => {
     //console.log('=== === === formatCurrency === === ===');
     return String(amount).replace(/^\d+/, (amount) =>
@@ -20,5 +17,17 @@ export const formatCurrency = (amount) => {
     return  `${amount.toLocaleString()}`
   }; //end
   
+export const localStore = () => {
+  var archive = {}, // Notice change here
+        keys = Object.keys(localStorage),
+        i = keys.length;
+
+    while ( i-- ) {
+        archive[ keys[i] ] = localStorage.getItem( keys[i] );
+    }
+    console.log(archive);
+    return archive;
+}
+
 // export const Api = "http://192.168.0.191:3301/api/v1";
  

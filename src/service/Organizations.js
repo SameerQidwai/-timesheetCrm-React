@@ -31,6 +31,7 @@ export const getOrgRecord = (id) => {
                 const vake = data
                 const basic = {
                     name: vake.name,
+                    title: vake.title,
                     parent: vake.parentOrganization && vake.parentOrganization.id,
                     phone: vake.phoneNumber,
                     delegate_cp: vake.delegatecontactPersonOrganization && vake.delegatecontactPersonOrganization.id,

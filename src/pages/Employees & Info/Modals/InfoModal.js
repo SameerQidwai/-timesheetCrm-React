@@ -5,7 +5,7 @@ import { LoadingOutlined } from "@ant-design/icons"; //Icons
 import FormItems from "../../../components/Core/FormItems";
 import moment from "moment";
 
-import { getOrgPersons, getStates } from "../../../service/constant-Apis";
+import { getEmpPersons, getStates } from "../../../service/constant-Apis";
 import { getContactRecord } from "../../../service/conatct-person";
 import { addList, getRecord, editList } from "../../../service/Employees";
 const { TabPane } = Tabs;
@@ -668,7 +668,7 @@ class InfoModal extends Component {
 
     fetchAll = (edit) =>{
         const { editEmp } = this.props
-        Promise.all([ getStates(), edit ? this.getRecord(editEmp) : getOrgPersons(1) ])
+        Promise.all([ getStates(), edit ? this.getRecord(editEmp) : getEmpPersons(1) ])
         .then(res => {
             const { BasicFields } = this.state
             BasicFields[15].data = res[0].data;

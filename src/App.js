@@ -1,23 +1,29 @@
-import React from 'react';
-import {BrowserRouter as Router} from 'react-router-dom' // Route Library
-
-
-import './App.css';
-
+import React, { createContext } from 'react';
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom' // Route Library
 import Layout from './components/Basic/Drawer/Sidebar'
 import Login from './pages/Login/Login'
+import './App.css';
 function App() {
-  const login = 'sameer'
   return (
       <Router>
-        {
-          login !=='sameer' ?
-          <Login />
-          :
-            <Layout/>
-        }
+        <Switch>
+          <Route path="/" exact> 
+            <Login />
+          </Route>
+          <Layout/>
+        </Switch>
       </Router>
     );
-}
+  }
+  
+  export default App;
 
-export default App;
+//   loggedIn()?
+//   <Switch>
+//     <Route path="/" exact> 
+//       <Login />
+//     </Route>
+//     <Layout/>
+//   </Switch>:
+//   <Redirect to={{ pathname: '/'}} /> 
+// }

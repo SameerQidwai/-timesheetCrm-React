@@ -81,7 +81,7 @@ class Contractors extends Component {
                                 <Menu.Item>
                                     <Link
                                         to={{
-                                            pathname: `/sub-contractors/info/${record.id}`,
+                                            pathname: `/sub-contractors/${record.id}/info`,
                                         }}
                                         className="nav-link"
                                     >
@@ -91,7 +91,7 @@ class Contractors extends Component {
                                 <Menu.Item>
                                     <Link
                                         to={{
-                                            pathname: `/sub-contractors/contracts/${record.id}`,
+                                            pathname: `/sub-contractors/${record.id}/contracts`,
                                         }}
                                         className="nav-link"
                                     >

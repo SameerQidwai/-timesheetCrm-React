@@ -93,7 +93,7 @@ class OrgInfo extends Component {
                                 <Menu.Item>
                                     <Link
                                         to={{
-                                            pathname: `/Employee/contracts/${emp}`,
+                                            pathname: `/Employee/${emp}/contracts`,
                                         }}
                                         className="nav-link"
                                     >
@@ -140,10 +140,10 @@ class OrgInfo extends Component {
                             <Travels id={emp} />
                         </TabPane>
                         <TabPane tab="Comments" key="comments">
-                            <Comments target="EMP" targetId={emp} />
+                            <Comments targetType="EMP" targetId={emp} />
                         </TabPane>
                         <TabPane tab="Attachments" key="attachments">
-                            <Attachments target="EMP" targetId={emp}  />
+                            <Attachments targetType="EMP" targetId={emp}  />
                         </TabPane>
                         <TabPane tab="Bank Account" key="account">
                             <Bank id={emp} title={data.name} />

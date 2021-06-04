@@ -136,13 +136,13 @@ class ProjectInfo extends Component {
                         // defaultActiveKey="profitloss"   
                     >
                         <TabPane tab="Comments" key="comments">
-                            <Comments targetId={leadId} target="PEN" />
+                            <Comments targetId={leadId} targetType="PEN" />
                         </TabPane>
                         <TabPane tab="Travels" key="travels">
                             <Travels id={leadId} />
                         </TabPane>
                         <TabPane tab="Attachments" key="attachments">
-                            <Attachments targetId={leadId} target="PEN" />
+                            <Attachments targetId={leadId} targetType="PEN" />
                         </TabPane>
                         <TabPane tab="Bank Account" key="account">
                             <Bank id={leadId} title={data.name} />

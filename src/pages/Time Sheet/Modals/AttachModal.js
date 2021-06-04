@@ -24,9 +24,9 @@ class AttachModal extends Component{
         this.getRecord('PEN', projectEntryId)
     }
 
-    getRecord = (target, targetId) =>{
+    getRecord = (targetType, targetId) =>{
         const { notes } = this.props.timeObj
-        getAttachments(target, targetId).then(res=>{
+        getAttachments(targetType, targetId).then(res=>{
             if(res.success){
                 console.log(res);
                 this.setState({

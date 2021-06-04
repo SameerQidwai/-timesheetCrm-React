@@ -8,7 +8,7 @@ import logo from "./logo.png";
 // import Calender from '../../Calender/Calender' //Custom component
 import Menus from "./Menus";
 import Navbar from "../Navbar";
-import Pages from "../Content";
+import PrivateRoute from "../Content/PrivateRoute";
 
 const { Header, Sider } = Layout;
 
@@ -67,7 +67,6 @@ class Drawers extends Component {
                         )}
                         {/* <Divider >.</Divider> */}
                     </div>
-
                     <Menus />
                 </Sider>
                 <Layout className="site-layout">
@@ -75,7 +74,6 @@ class Drawers extends Component {
                         className="site-layout-background"
                         style={{ padding: 0 }}
                     >
-                        {" "}
                         {/**Have to set this header here to trigger toggle sidebar */}
                         <Row justify="start">
                             <span className="trigger" onClick={this.toggle}>
@@ -86,13 +84,12 @@ class Drawers extends Component {
                                 )}
                             </span>
                             <Col flex="auto">
-                                {" "}
                                 {/*span={22}*/}
                                 <Navbar /> {/**Navr bar links */}
                             </Col>
                         </Row>
                     </Header>
-                    <Pages /> {/**page Content Router Component*/}
+                    <PrivateRoute /> {/**page Content Router Component*/}
                 </Layout>
             </Layout>
         );

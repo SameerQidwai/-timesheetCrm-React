@@ -5,11 +5,11 @@ import { Api } from "./constant";
 const url = `${Api}/comments/`;
 
 
-export const addComment = (target, targetId, data) => {
+export const addComment = (targetType, targetId, data) => {
     // const header ={ 'content-type': 'multipart/form-data',  'Accept': 'application/json'}
     console.log(`data`, data)
     return axios
-        .post(`${url}${target}/${targetId}`, data)
+        .post(`${url}${targetType}/${targetId}`, data)
         .then((res) => {
             const { status } = res;
             if (status === 200) {
@@ -29,9 +29,9 @@ export const addComment = (target, targetId, data) => {
         });
 };
 
-export const getComments = (target, targetId) => {
+export const getComments = (targetType, targetId) => {
     return axios
-        .get(`${url}${target}/${targetId}`)
+        .get(`${url}${targetType}/${targetId}`)
         .then((res) => {
             const { success, data } = res.data;
             if (success) return { success, data  };

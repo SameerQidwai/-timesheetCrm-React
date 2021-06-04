@@ -1,11 +1,7 @@
 import React, { Component } from "react";
-import { Menu, Dropdown, Row, Col, Space } from "antd";
-import {
-    CaretDownOutlined,
-    DownOutlined,
-    SettingOutlined,
-} from "@ant-design/icons"; //Icons
-import { Link, withRouter } from "react-router-dom";
+import { Menu, Dropdown, Row, Col, Space, message } from "antd";
+import { CaretDownOutlined, DownOutlined, SettingOutlined, LogoutOutlined, ProfileOutlined } from "@ant-design/icons"; //Icons
+import { Link, Redirect, withRouter } from "react-router-dom";
 
 import "../Styles/Navbar.css";
 
@@ -50,6 +46,12 @@ const NavItem = [
 ];
 
 class Navbar extends Component {
+    constructor(){
+        super()
+        this.state ={
+            logout: false
+        }
+    }
     getNavMenuItems = (menusData) => {
         if (!menusData) {
             return [];
@@ -74,10 +76,7 @@ class Navbar extends Component {
         return item.items ? (
             <Dropdown overlay={this.getDropMenu(item.items, i)} key={i}>
                 <span className="navItem">
-                    {item.text}{" "}
-                    <span>
-                        <CaretDownOutlined />
-                    </span>
+                    {item.text} <span> <CaretDownOutlined /> </span>
                 </span>
             </Dropdown>
         ) : (
@@ -88,8 +87,28 @@ class Navbar extends Component {
             </span>
         );
     };
+    logOut = () =>{
+        message.loading({ content: 'Loading...', key: 'logout' })
+        localStorage.clear();
+        this.setState({
+            logout: true
+        },()=>{
+            message.info({ content: 'Logout successfully!', key: 'logout' })
+        })
+    }
 
     render() {
+        const { logout } = this.state
+        const options = (
+            <Menu onClick={this.handleMenuClick}>
+              <Menu.Item key="profile">
+                  <Link to={"/profile"} className="nav-link">
+                    Profile <ProfileOutlined />
+                  </Link>
+                </Menu.Item>
+              <Menu.Item key="logout" onClick={this.logOut}>Logout <LogoutOutlined /></Menu.Item>
+            </Menu>
+          ); 
         return (
             <nav className="navbar navbar-expand-lg navbar-dark bg-dark rounded ">
                 <div
@@ -102,16 +121,18 @@ class Navbar extends Component {
                             <Space size="large">
                                 <Link
                                     to="/admin/global-settings"
-                                    className="nav-drop"
+                                    // className="nav-drop"
                                 >
                                     <SettingOutlined />
                                 </Link>
-
-                                <DownOutlined />
+                                <Dropdown overlay={options} placement="bottomCenter" >
+                                    <Link><DownOutlined /></Link>
+                                </Dropdown>
                             </Space>
                         </Col>
                     </Row>
                 </div>
+                {logout && <Redirect to={{ pathname: '/'}} /> }
             </nav>
         );
     }

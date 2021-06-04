@@ -29,14 +29,13 @@ class Comments extends Component {
     }
     componentDidMount() {
         this.scrollToBottom(); //scroll to bottom
-        const { target, targetId } = this.props
-        this.getComments(target, targetId)
+        const { targetType, targetId } = this.props
+        this.getComments(targetType, targetId)
     }
 
-    getComments = (target, targetId) =>{
-        getComments(target, targetId).then(res=>{
+    getComments = (targetType, targetId) =>{
+        getComments(targetType, targetId).then(res=>{
             if(res.success){
-                console.log(res);
                 this.setState({
                     data: res.data?? []
                 })
@@ -94,21 +93,12 @@ class Comments extends Component {
                 attachments: fileIds
                 // date: moment().format(),
             };
-            const { target, targetId } = this.props
-            addComment(target, targetId, comment).then(res=>{
+            const { targetType, targetId } = this.props
+            addComment(targetType, targetId, comment).then(res=>{
                 console.log(res);
                 if (res.success){
-                    let comment = {
-                        // comment
-                        key: 1,
-                        author: "Han Solo",
-                        content: value,
-                        attachments: fileList,
-                        fileIds: fileIds
-                        // date: moment().format(),
-                    };
                     this.setState({
-                        data: [...data, comment], // add comment to comment data
+                        data: [...data, res.data], // add comment to comment data
                         value: null, // set TextArea empty
                         fileList: [],
                         fileIds: [],
@@ -156,11 +146,10 @@ class Comments extends Component {
     };
 
     actions = (list) => {
-        console.log(list);
         return list.map((el) => 
             <span>
                 <PaperClipOutlined />{" "}
-                <a href={`${Api}/files/${el.uid}`} download={el.name} target="_blank">
+                <a href={`${Api}/files/${el.uid}`} download={el.name} target="_blank" rel="noopener noreferrer">
                     {el.name}
                 </a>
             </span>
@@ -183,7 +172,6 @@ class Comments extends Component {
             }
             formData.append('files', file)
             addFiles(formData, config).then((res,err)=>{
-                console.log('show me', res);
                 if (res.success){
                     onSuccess("Ok");
                     this.setState({

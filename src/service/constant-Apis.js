@@ -128,6 +128,28 @@ export const getOrgPersons = (id) =>{
     });
 }
 
+export const getEmpPersons = (id) =>{
+    console.log(id);
+    return axios
+    .get(`${Api}/employees/get/contact-persons`)
+    .then((res) => {
+        console.log(res);
+        const { success, data } = res.data;
+        var cps = []
+        data.map((el) => {
+            cps.push({value: el.id, label: el.firstName +' ' +el.lastName})
+        });
+        if (success) return { success: success, data: cps };
+    })
+    .catch((err) => {
+        return {
+            error: "Please login again!",
+            success: false,
+            message: err.message,
+        };
+    });
+}
+
 export const getOrganizations = (id) => {
     return axios
         .get(`${Api}/Organizations`)

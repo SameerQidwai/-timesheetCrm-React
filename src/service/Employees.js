@@ -39,7 +39,8 @@ export const getRecord = (id) => {
                     email: contactPerson.email,
                     address: contactPerson.address,
                     stateId:contactPerson.stateId,
-                    username: data.username
+                    username: data.username,
+                    password: data.password
                 }
                 const detail = {
                     superannuationName: data.superannuationName,
@@ -59,7 +60,6 @@ export const getRecord = (id) => {
                     nextOfKinRelation: data.nextOfKinRelation
                 }
                 const bankAccount = data.bankAccounts.length > 0 ? data.bankAccounts[0] : {}
-                console.log(data.bankAccounts);
                 const bank = {
                         bankName: bankAccount.name,
                         bankAccountNo: bankAccount.accountNo,
@@ -68,7 +68,6 @@ export const getRecord = (id) => {
                         taxFreeThreshold: data.taxFreeThreshold,
                         helpHECS: data.helpHECS,
                 }
-                console.log(bank);
                 const employmentContracts = data.employmentContracts.length >0 ? data.employmentContracts[0] : {}
                 const billing ={
                     employeeId: employmentContracts.employeeId,

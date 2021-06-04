@@ -19,12 +19,12 @@ class Attachments extends Component {
     }
 
     componentDidMount=()=>{
-        const { target, targetId } = this.props
-        this.getRecord(target, targetId)
+        const { targetType, targetId } = this.props
+        this.getRecord(targetType, targetId)
     }
 
-    getRecord = (target, targetId) =>{
-        getAttachments(target, targetId).then(res=>{
+    getRecord = (targetType, targetId) =>{
+        getAttachments(targetType, targetId).then(res=>{
             if(res.success){
                 this.setState({
                     fileList: res.fileList,
@@ -52,11 +52,11 @@ class Attachments extends Component {
             addFiles(formData, config).then((res,err)=>{
                 if (res.success){
                     onSuccess("Ok");
-                    const { target, targetId } = this.props
+                    const { targetType, targetId } = this.props
                     const data = {
                         files: res.data
                     }
-                    addAttachments(target, targetId, data).then(attach=>{
+                    addAttachments(targetType, targetId, data).then(attach=>{
                         if (attach.success){
                             this.setState({
                                 fileList: [...this.state.fileList, attach.data],

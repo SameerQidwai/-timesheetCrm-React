@@ -132,10 +132,10 @@ class OrgInfo extends Component {
                             <ChildOrg {...this.props.match.params} />
                         </TabPane>
                         <TabPane tab="Attachments" key="attachments">
-                            <Attachments targetId={renderTabs} target="ORG" />
+                            <Attachments targetId={renderTabs} targetType="ORG" />
                         </TabPane>
                         <TabPane tab="Comments" key="comments">
-                            <Comments targetId={renderTabs} target="ORG" />
+                            <Comments targetId={renderTabs} targetType="ORG" />
                         </TabPane>
                         
                         <TabPane tab="Bank Account" key="Bank">

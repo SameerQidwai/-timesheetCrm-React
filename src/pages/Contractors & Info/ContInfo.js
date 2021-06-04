@@ -94,7 +94,7 @@ class ContInfo extends Component {
                                 <Menu.Item>
                                     <Link
                                         to={{
-                                            pathname: `/sub-contractors/contracts/${editCont}`,
+                                            pathname: `/sub-contractors/${editCont}/contracts`,
                                         }}
                                         className="nav-link"
                                     >
@@ -141,9 +141,9 @@ class ContInfo extends Component {
                             <Travels id={editCont} />
                         </TabPane>
                         <TabPane tab="Comments" key="comments">
-                            <Comments target="CON" targetId={editCont} />
+                            <Comments targetType="CON" targetId={editCont} />
                         </TabPane>
-                        <TabPane target="CON" targetId={editCont} tab="Attachments" key="attachments">
+                        <TabPane targetType="CON" targetId={editCont} tab="Attachments" key="attachments">
                             <Attachments />
                         </TabPane>
                         <TabPane tab="Bank Account" key="bank">

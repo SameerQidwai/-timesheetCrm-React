@@ -22,14 +22,14 @@ export const addFiles = (data, config) => {
             // return {
             //     error: err.response.status,
             //     status: false,
-            //     message: err.message,
+            //     message: err.message, 
             // };
         });
 };
 
-export const addAttachments = (target, targetId, data) => {
+export const addAttachments = (targetType, targetId, data) => {
     return axios
-        .post(`${url}${target}/${targetId}`, data)
+        .post(`${url}${targetType}/${targetId}`, data)
         .then((res) => {
             const { status } = res;
             if (status === 200) {
@@ -41,7 +41,7 @@ export const addAttachments = (target, targetId, data) => {
                     fileId: data[0].fileId,
                     status: data[0].status,
                     targetId: data[0].targetId,
-                    target: data[0].type,
+                    targetType: data[0].type,
                     uid: data[0]&&data[0].file.uniqueName,
                     name: data[0]&&data[0].file.originalName,
                     type: data[0]&&data[0].file.type,
@@ -61,9 +61,9 @@ export const addAttachments = (target, targetId, data) => {
         });
 };
 
-export const getAttachments = (target, targetId) => {
+export const getAttachments = (targetType, targetId) => {
     return axios
-        .get(`${url}${target}/${targetId}`)
+        .get(`${url}${targetType}/${targetId}`)
         .then((res) => {
             const { success, data } = res.data;
             var fileIds = []
@@ -76,7 +76,7 @@ export const getAttachments = (target, targetId) => {
                     fileId: el.fileId,
                     status: el.status,
                     targetId: el.targetId,
-                    target: el.type,
+                    targetType: el.targetType,
                     uid: el.file.uniqueName,
                     name: el.file.originalName,
                     type: el.file.type,
