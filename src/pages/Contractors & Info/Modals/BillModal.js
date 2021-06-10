@@ -153,7 +153,7 @@ class BillModal extends Component {
         billing.noOfHoursPer = 1; 
         billing.startDate = billing.startDate ? moment(billing.startDate).valueOf(): null
         billing.endDate = billing.endDate ? moment(billing.endDate).valueOf(): null
-        billing.employeeId = editEmp;
+        billing.subContractorId = editEmp;
         if (!editCntrct) {
             console.log("emes");
             this.addContract(billing); //add skill
@@ -165,6 +165,7 @@ class BillModal extends Component {
 
     addContract = (data) => {
         this.setState({loading: true})
+        console.log(data);
         const { callBack } = this.props;
         addList(data).then(res=>{
             console.log(res);

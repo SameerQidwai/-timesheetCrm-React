@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Col, Form } from 'antd'
 import FormItems from '../../components/Core/FormItems'
+import { upadteSettings } from '../../service/Login-Apis';
 
 function OtherDetails(props) {
     const [form] = Form.useForm();
@@ -482,7 +483,14 @@ function OtherDetails(props) {
         }
         setBankFields([...newFields])
     }
-
+    const changeSetings = (values) =>{
+        const obj = { ...values.bank, ...values.kin, ...values.bank, ...values.train }
+        upadteSettings(obj).then(res=>{
+            if(res.success){
+                console.log(res.data);
+            }
+        })
+    }
     return (
         <Form
             id={'my-form'}
@@ -491,6 +499,7 @@ function OtherDetails(props) {
             size="small"
             layout="inline"
             style={{padding: 50, paddingTop:20}}
+            onFinish={changeSetings}
         >
             <FormItems FormFields={detailFields} />
             <FormItems FormFields={kinFields} />

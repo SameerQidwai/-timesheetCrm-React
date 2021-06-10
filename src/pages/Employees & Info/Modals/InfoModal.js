@@ -828,9 +828,31 @@ class InfoModal extends Component {
                 
                 fieldCol: 12,
                 key: "superannuationAbnOrUsi",
+                shape: "ABN",
                 size: "small",
                 type: "Input",
-                rules: [ { required: true, message: "SMSF ABN is required", }, ],
+                rules: [ 
+                    { required: true, message: "SMSF ABN is required", },
+                    ({ getFieldValue }) => ({
+                        validator(rules, value) {
+                            let val = value.toString()
+                            let weights = new Array(10, 1, 3, 5, 7, 9, 11, 13, 15, 17, 19);
+                        if (val.length === 11) { 
+                            let sum = 0;
+                            weights.forEach(function(weight, position) {
+                                let digit = val[position] - (position ? 0 : 1);
+                                sum += weight * digit;
+                            });
+                            console.log(sum % 89);
+                            if (sum % 89 === 0){
+                                return Promise.resolve();
+                            }
+                            return Promise.reject(new Error('ABN is not valid'));
+                        }
+                        return Promise.reject(new Error('Must contain 11 digits'));
+                        },
+                    }),
+                ],
                 itemStyle: { marginBottom: 10 },
             },
             {

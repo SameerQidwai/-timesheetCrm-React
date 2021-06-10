@@ -6,6 +6,7 @@ import {
 import Form from "../../components/Core/Form";
 import "../styles/table.css";
 import Permission from "./Permission";
+import { addList, delLabel, editLabel, getList } from "../../service/Roles-Apis";
 
 const { Title } = Typography;
 
@@ -16,18 +17,18 @@ class Roles extends Component {
         this.columns = [
             {
                 title: "Title",
-                dataIndex: "title",
-                key: "title",
+                dataIndex: "label",
+                key: "label",
             },
             {
                 title: "Action",
                 key: "action",
                 align: "right",
-                render: (record) => (
+                render: (record, obj , index) => (
                     <Dropdown
                         overlay={
                             <Menu>
-                                <Menu.Item danger>
+                                {/* <Menu.Item danger>
                                     <Popconfirm
                                         title="Sure to delete?"
                                         onConfirm={() =>
@@ -36,15 +37,15 @@ class Roles extends Component {
                                     >
                                         Delete
                                     </Popconfirm>
-                                </Menu.Item>
+                                </Menu.Item> */}
                                 <Menu.Item
                                     onClick={() => {
-                                        this.getRecord(record);
+                                        this.getRecord(record, index);
                                     }}
                                 >
                                     Edit
                                 </Menu.Item>
-                                <Menu.Item onClick={this.callPermission}>
+                                <Menu.Item onClick={()=>this.callPermission(record, index)}>
                                     {/* <Link to={{ pathname: '/admin/calender/holidays' ,query: record.key}} className="nav-link"> */}
                                     Permissions
                                     {/* </Link> */}
@@ -75,60 +76,12 @@ class Roles extends Component {
                     title: "Project Manager",
                 },
             ],
-            perData: [
-                {
-                    key: 1,
-                    category: "Skills",
-                    create: true,
-                    update: false,
-                    read: true,
-                    delete: false,
-                },
-                {
-                    key: 2,
-                    category: "Employees",
-                    create: true,
-                    update: true,
-                    read: true,
-                    delete: true,
-                },
-                {
-                    key: 3,
-                    category: "Projects",
-                    create: true,
-                    update: false,
-                    read: true,
-                    delete: false,
-                },
-                {
-                    key: 4,
-                    category: "Time Off",
-                    create: true,
-                    update: false,
-                    read: false,
-                    delete: false,
-                },
-                {
-                    key: 5,
-                    category: "Travler",
-                    create: false,
-                    update: true,
-                    read: true,
-                    delete: false,
-                },
-                {
-                    key: 6,
-                    category: "opportunity",
-                    create: false,
-                    update: true,
-                    read: false,
-                    delete: true,
-                },
-            ],
+            
 
             openModal: false,
-            editTimeoff: false,
+            editRole: false,
             perModal: false,
+            permissions: false,
             loading: false,
             FormFields: {
                 formId: "role_form",
@@ -147,7 +100,7 @@ class Roles extends Component {
                             labelCol: { span: 4 },
                             wrapperCol: { span: 0 },
                         },
-                        key: "title",
+                        key: "label",
                         label: "Title",
                         size: "small",
                         // rules:[{ required: true }],
@@ -158,78 +111,102 @@ class Roles extends Component {
             },
         };
     }
+    componentDidMount = () =>{
+        this.getRoles()
+    }
 
-    toggelModal = (status) => {
-        this.setState({ openModal: status });
+    getRoles = () =>{
+        getList().then(res=>{
+            if(res.success){
+                this.setState({
+                    data: res.data,
+                    openModal: false,
+                    editRole: false,
+                })
+            }
+        })
+    }
 
-        if (this.state.openModal) {
+    closeModal = () => {
             this.roleForm.current.refs.role_form.resetFields(); // to reset file
-            delete this.state.FormFields.initialValues; // to delete intilize if not written
             this.setState({
-                // set state
-                FormFields: this.state.FormFields,
-                editTimeoff: false,
+                openModal: false,
+                editRole: false,
             });
-        }
     };
 
     Callback = (vake) => {
         // this will work after I get the Object from the form
-        if (!this.state.editTimeoff) {
-            vake.obj.key = this.state.data.length + 1;
-            this.setState(
-                {
-                    data: [...this.state.data, vake.obj],
-                },
-                () => {
-                    this.toggelModal(false);
-                    this.roleForm.current.refs.role_form.resetFields();
-                    console.log("Data Rendered");
-                }
-            );
+        const { editRole } = this.state
+        if (!editRole) {
+            this.addRecord(vake.obj)
         } else {
             this.editRecord(vake.obj);
         }
     };
-
-    getRecord = (data) => {
+    addRecord = (data) => {
+        addList(data).then(res=>{
+            if (res.success){
+                this.setState({
+                    data: [...this.state.data, res.data],
+                    openModal: false
+                })
+            }
+        })
+    }
+    getRecord = (data, index) => {
         this.setState({
-            FormFields: {
-                ...this.state.FormFields,
-                initialValues: { obj: data },
-            },
-            editTimeoff: data.key,
-        });
-
-        this.toggelModal(true);
+            editRole: data.id,
+            openModal: true,
+            roleIndex: index
+        },()=>{
+            this.roleForm.current.refs.role_form.setFieldsValue({obj:data})
+        })
     };
 
     editRecord = (obj) => {
-        obj.key = this.state.editTimeoff;
-        this.state.data[obj.key - 1] = obj;
-
-        this.setState(
-            {
-                data: [...this.state.data],
-                mergeObj: {},
-            },
-            () => {
-                this.toggelModal(false);
+        const { editRole, roleIndex, data } = this.state
+        editLabel(editRole, obj).then(res=>{
+            if (res.success){
+                data[roleIndex] = res.data
+                console.log(data);
+                this.setState({
+                    data: [...data],
+                    editRole: false,
+                    openModal: false,
+                    roleIndex: false
+                })
             }
-        );
+        })
     };
 
-    callPermission = () => {
-        this.setState({ perModal: true, loading: true });
+    callPermission = (record, index) => {
+        this.setState({ perModal: true, editRole: record.id,  roleIndex: index, permissions: record.permissions});
     };
 
-    submit = () => {
-        
-        this.roleForm.current.refs.role_form.submit();
-    };
+    updatePermission = (value) =>{
+        const {roleIndex, data } = this.state
+        data[roleIndex] = value
+        console.log(data);
+        this.setState({
+            data: [...data],
+            editRole: false,
+            openModal: false,
+            roleIndex: false,
+            perModal: false
+        })
+    }
+    perColse = () =>{
+        this.setState({
+            perModal: false,
+            editRole: false,
+            openModal: false,
+            roleIndex: false
+        })
+    }
 
     render() {
-        const {data, openModal, editTimeoff, FormFields, perData, perModal, loading} = this.state;
+        const {data, openModal, editRole, FormFields, perModal, loading, permissions} = this.state;
         const columns = this.columns;
         return (
             <>
@@ -240,53 +217,44 @@ class Roles extends Component {
                     <Col style={{ textAlign: "end" }}>
                         <Button
                             type="primary"
-                            onClick={() => {
-                                this.toggelModal(true);
-                            }}
+                            onClick={() => { this.setState({openModal: true}) }}
                             size="small"
-                        >
-                            <PlusSquareOutlined />
-                            Add Roles
-                        </Button>
+                        > <PlusSquareOutlined /> Add Roles </Button>
                     </Col>
                     <Col span={24}>
                         <Table
+                            rowKey="id"
                             columns={columns}
                             dataSource={data}
                             size="small"
                         />
                     </Col>
                 </Row>
-                {openModal ? (
+                {openModal && (
                     <Modal
-                        title={ editTimeoff ? "Edit Role" : "Add New Role" }
+                        title={ editRole ? "Edit Role" : "Add New Role" }
                         maskClosable={false}
                         centered
                         visible={openModal}
-                        onOk={() => {
-                            this.submit();
-                        }}
-                        okButtonProps={{ disabled: loading }}
+                        okButtonProps={{ disabled: loading, htmlType: 'submit', form: 'role_form' }}
                         okText={loading ?<LoadingOutlined /> :"Save"}
-                        onCancel={() => {
-                            this.toggelModal(false);
-                        }}
+                        onCancel={() => { this.closeModal() }}
                         width={600}
                     >
                         <Form
                             ref={this.roleForm}
-                            Callback={() => this.Callback()}
+                            Callback={this.Callback}
                             FormFields={FormFields}
                         />
                     </Modal>
-                ) : null}
-                <Permission
+                )}
+                {perModal && <Permission
                     isVisible={perModal}
-                    Callback={() => {
-                        this.setState({ perModal: false });
-                    }}
-                    data={perData}
-                />
+                    Callback={this.updatePermission}
+                    perData={permissions}
+                    eidtPer={editRole}
+                    closeModal={this.perColse}
+                />}
             </>
         );
     }

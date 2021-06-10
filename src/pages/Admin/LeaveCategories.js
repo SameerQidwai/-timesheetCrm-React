@@ -98,6 +98,7 @@ class LeaveCategories extends Component {
                     data: res.data,
                     openModal: false,
                     editTimeoff: false,
+                    loading: false,
                     FormFields: {
                         ...this.state.FormFields,
                         initialValues: {},
@@ -147,6 +148,7 @@ class LeaveCategories extends Component {
 
     addType = (value) => {
         this.setState({loading:true})
+        console.log(value);
         addList(value).then((res) => {
             if (res) {
                 this.getData();

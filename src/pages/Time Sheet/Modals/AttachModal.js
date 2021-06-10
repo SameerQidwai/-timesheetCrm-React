@@ -4,7 +4,7 @@ import { UploadOutlined, LoadingOutlined,InboxOutlined } from "@ant-design/icons
 import '../../styles/upload.css'
 import TextArea from 'antd/lib/input/TextArea';
 import Dragger from 'antd/lib/upload/Dragger';
-import { Api } from "../../../service/constant";
+import { Api, localStore } from "../../../service/constant";
 import { addFiles, getAttachments } from "../../../service/Attachment-Apis";
 import { addProjectNote } from "../../../service/timesheet";
 class AttachModal extends Component{
@@ -28,7 +28,6 @@ class AttachModal extends Component{
         const { notes } = this.props.timeObj
         getAttachments(targetType, targetId).then(res=>{
             if(res.success){
-                console.log(res);
                 this.setState({
                     fileList: res.fileList,
                     fileIds: res.fileIds,
@@ -57,8 +56,8 @@ class AttachModal extends Component{
                 if (res.success){
                     onSuccess("Ok");
                     this.setState({
-                        fileList: [...this.state.fileList, file],
-                        fileIds: [...this.state.fileIds, ...res.data]
+                        fileList: [...this.state.fileList, res.file],
+                        fileIds: [...this.state.fileIds, res.file.fileId]
                     })
                 }else{
                     console.log("Eroor: ", err);

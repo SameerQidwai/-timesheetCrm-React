@@ -1,12 +1,12 @@
 import { message } from "antd";
 import axios from "axios";
 
-import { Api } from "./constant";
+import { Api, headers } from "./constant";
 
 const url = `${Api}/timesheets/`;
 
 export const getList = (keys) => {
-    console.log(`${keys.startDate}&${keys.endDate}&${keys.userId}`);
+    console.log(`${keys.startDate}&${keys.endDate}&${keys.userId}`,{headers:headers});
     return axios
         .get(url + `${keys.startDate}&${keys.endDate}&${keys.userId}`)
         .then((res) => {
@@ -25,7 +25,7 @@ export const getList = (keys) => {
 export const addTime = (keys ,data) => {
     message.loading({ content: 'Loading...', key: 1 })
     return axios
-        .post(url +`${keys.startDate}&${keys.endDate}&${keys.userId}`, data)
+        .post(url +`${keys.startDate}&${keys.endDate}&${keys.userId}`, data, {headers:headers})
         .then((res) => {
             const { success, data } = res.data;
             if (success) {
@@ -47,7 +47,7 @@ export const addTime = (keys ,data) => {
 export const editTime = (entryId ,data) => {
     message.loading({ content: 'Loading...', key: 1 })
     return axios
-        .put(url +`entries/${entryId}`, data)
+        .put(url +`entries/${entryId}`, data, {headers:headers})
         .then((res) => {
             const { success, data } = res.data;
             if (success) {
@@ -88,7 +88,7 @@ export const reviewTimeSheet = (keys, stage) => {
     message.loading({ content: 'Loading...', key: 1 })
     console.log(`${keys.startDate}&${keys.endDate}&${keys.userId}/projectEntries/${keys.pEntryId}/${stage}`);
     return axios
-        .post(url + `${keys.startDate}&${keys.endDate}&${keys.userId}/projectEntries/${keys.pEntryId}/${stage}`)
+        .post(url + `${keys.startDate}&${keys.endDate}&${keys.userId}/projectEntries/${keys.pEntryId}/${stage}`, {headers:headers})
         .then((res) => {
             const { success, data } = res.data;
             message.success({ content: 'Success!', key: 1})
@@ -108,7 +108,7 @@ export const reviewTimeSheet = (keys, stage) => {
 export const editLabel = (data) => {
     message.loading({ content: 'Loading...', key: data.id })
     return axios
-        .put(url + `/${data.id}`, data)
+        .put(url + `/${data.id}`, data, {headers:headers})
         .then((res) => {
             const { success } = res.data;
             message.success({ content: 'Success!', key: data.id})
@@ -125,9 +125,10 @@ export const editLabel = (data) => {
 };
 
 export const addProjectNote = (id, data) => {
+    console.log({headers:headers});
     message.loading({ content: 'Loading...', key: id })
     return axios
-        .patch(url + `/projectEntries/${id}`, data)
+        .patch(url + `/projectEntries/${id}`, data, {headers:headers})
         .then((res) => {
             const { success } = res.data;
             message.success({ content: 'Success!', key: id})

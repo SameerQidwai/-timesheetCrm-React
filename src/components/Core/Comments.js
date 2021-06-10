@@ -175,8 +175,8 @@ class Comments extends Component {
                 if (res.success){
                     onSuccess("Ok");
                     this.setState({
-                        fileList: [...this.state.fileList, file],
-                        fileIds: [...this.state.fileIds, ...res.data]
+                        fileList: [...this.state.fileList, res.file],
+                        fileIds: [...this.state.fileIds, res.file.fileId]
                     })
                 }else{
                     console.log("Eroor: ", err);

@@ -2,7 +2,6 @@ import React, { Component, createRef } from "react";
 import { Upload, message, Button, Row, Col } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import moment from "moment";
-
 import { addFiles, getAttachments , addAttachments, delAttachment} from "../../service/Attachment-Apis";
 
 import "../Styles/attachments.css"
@@ -26,6 +25,7 @@ class Attachments extends Component {
     getRecord = (targetType, targetId) =>{
         getAttachments(targetType, targetId).then(res=>{
             if(res.success){
+                console.log(res.fileList);
                 this.setState({
                     fileList: res.fileList,
                     fileIds: res.fileIds,
@@ -54,13 +54,14 @@ class Attachments extends Component {
                     onSuccess("Ok");
                     const { targetType, targetId } = this.props
                     const data = {
-                        files: res.data
+                        files: [res.file.fileId]
                     }
+
                     addAttachments(targetType, targetId, data).then(attach=>{
                         if (attach.success){
                             this.setState({
                                 fileList: [...this.state.fileList, attach.data],
-                                fileIds: [...this.state.fileIds, ...res.data]
+                                fileIds: [...this.state.fileIds, res.file.fileId]
                             })
                         }
                     })

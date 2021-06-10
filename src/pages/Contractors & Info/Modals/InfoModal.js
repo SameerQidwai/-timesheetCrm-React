@@ -650,11 +650,11 @@ class InfoModal extends Component {
             {
                 mergeObj: {
                     ...this.state.mergeObj,
-                    ...vake.basic,
+                    ...vake,
                     // username: this.state.sUsername
                 },
                 emailSubmitted: true, // skill form submitted
-            },()=> this.ValidateForm()
+            },()=> this.ValidateForm() 
             
         );
     }
@@ -727,10 +727,12 @@ class InfoModal extends Component {
 
     getRecord = (id) => {
         return getRecord(id).then(res=>{
+            console.log(this.emailRef);
             if (res.success){
                 this.basicRef.current.refs.basic_form.setFieldsValue({ basic: res.basic, });
                 this.kinRef.current.refs.kin_form.setFieldsValue({ kin: res.kin, });
                 this.billingRef.current.refs.billing_form.setFieldsValue({ billing: res.billing, })
+                this.emailRef.current.setFieldsValue({ username: res.basic.username })
                 return {username: res.basic.username}
             }
         })

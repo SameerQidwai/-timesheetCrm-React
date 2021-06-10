@@ -6,6 +6,7 @@ import Form from "../../../components/Core/Form";
 
 import moment from "moment";
 import { addTime, editTime, deleteTime } from "../../../service/timesheet";
+import { localStore } from "../../../service/constant";
 
 class TimeModal extends Component {
     constructor() {
@@ -29,7 +30,7 @@ class TimeModal extends Component {
                         fieldCol: 8,
                         // layout: { labelCol: { span: 4 }, wrapperCol: { span: 0 } },
                         key: "startTime",
-                        label: "Strat",
+                        label: "Start",
                         labelAlign: "right",
                         type: "TimePicker",
                         size: "small",
@@ -108,9 +109,9 @@ class TimeModal extends Component {
 
     addTime = (data) => {
         this.setState({loading: true})
-        const { callBack, sheetDates } = this.props;
+        const { callBack, sheetDates, user } = this.props;
         const { startDate, endDate} = sheetDates
-        const query = {userId: 1, startDate: startDate.format('DD-MM-YYYY'), endDate: endDate.endOf("month").format('DD-MM-YYYY')}
+        const query = {userId: user, startDate: startDate.format('DD-MM-YYYY'), endDate: endDate.endOf("month").format('DD-MM-YYYY')}
         addTime(query, data).then(res=>{
             if(res.success){
                 callBack(res.data);

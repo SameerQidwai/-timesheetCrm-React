@@ -253,7 +253,7 @@ class LeavePolicies extends Component {
                 object: "obj",
                 fieldCol: 4,
                 layout: { wrapperCol: { span: 23 } },
-                key: splice_key[3],
+                key: splice_key[2],
                 size: "small",
                 // rules:[{ required: true }],
                 type: "Select",
@@ -271,7 +271,7 @@ class LeavePolicies extends Component {
                 object: "obj",
                 fieldCol: 4,
                 layout: { wrapperCol: { span: 23 } },
-                key: splice_key[4],
+                key: splice_key[3],
                 size: "small",
                 // rules:[{ required: true }],
                 type: "Select",
@@ -289,7 +289,7 @@ class LeavePolicies extends Component {
                 object: "obj",
                 fieldCol: 3,
                 layout: { wrapperCol: { span: 23 } },
-                key: splice_key[5],
+                key: splice_key[4],
                 size: "small",
                 // rules:[{ required: true }],
                 type: "InputNumber",
@@ -301,7 +301,7 @@ class LeavePolicies extends Component {
                 object: "obj",
                 fieldCol: 3,
                 layout: { wrapperCol: { span: 23 } },
-                key: splice_key[6],
+                key: splice_key[5],
                 size: "small",
                 // rules:[{ required: true }],
                 type: "InputNumber",
@@ -313,7 +313,7 @@ class LeavePolicies extends Component {
                 fieldCol: 1,
                 size: "small",
                 Placeholder: <CloseOutlined />,
-                key: splice_key[7],
+                key: splice_key[6],
                 // rules:[{ required: true }],
                 type: "Text",
                 style: {
@@ -330,7 +330,9 @@ class LeavePolicies extends Component {
                                 obj.key !== splice_key[1] &&
                                 obj.key !== splice_key[2] &&
                                 obj.key !== splice_key[3] &&
-                                obj.key !== splice_key[4]
+                                obj.key !== splice_key[4] &&
+                                obj.key !== splice_key[5] &&
+                                obj.key !== splice_key[6]
                             );
                         }
                     );
@@ -402,15 +404,16 @@ class LeavePolicies extends Component {
 
     Callback2 = (vake) => {
         // this will work after I get the Object from the form
-        console.log(vake.obj);
         const { obj } = vake;
         const vars = [];
-        let result = Object.keys(obj).length / 4;
+        let result = Object.keys(obj).length / 6;
         for (let i = 0; i < result; i++) {
             vars.push({
-                timeOffTypeId: obj[`timeoff${i}`],
-                hours: obj[`hours${i}`],
-                increaseEvery: obj[`incAt${i}`],
+                timeOffTypeId: obj[`category${i}`],
+                earnHours: obj[`earnHours${i}`],
+                earnEvery: obj[`earnEvery${i}`],
+                resetEvery: obj[`resetEvery${i}`],
+                resetHours: obj[`resetHours${i}`],
                 threshold: obj[`threshold${i}`],
             });
         }
@@ -445,9 +448,11 @@ class LeavePolicies extends Component {
                 this.newField(i)
             );
             let el = array[i];
-            vars[`timeoff${i}`] = el.timeOffType.id;
-            vars[`hours${i}`] = el.hours;
-            vars[`incAt${i}`] = el.increaseEvery;
+            vars[`category${i}`] = el.timeOffType.id;
+            vars[`earnHours${i}`] = el.earnHours;
+            vars[`earnEvery${i}`] = el.earnEvery;
+            vars[`resetEvery${i}`] = el.resetEvery;
+            vars[`resetHours${i}`] = el.resetHours;
             vars[`threshold${i}`] = el.threshold;
         }
 
@@ -481,6 +486,7 @@ class LeavePolicies extends Component {
     renderTable = () => {
         const { mergeObj } = this.state;
         this.setState({loading: true})
+        console.log(mergeObj);
         addList(mergeObj).then((res) => {
             this.getData();
         });

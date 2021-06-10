@@ -93,6 +93,7 @@ export const getRecord = (id) => {
                     projectManagerId: data.projectManagerId,
                 }
                 data.ContactName= data.contactPerson && data.contactPerson.firstName + ' ' + data.contactPerson.lastName
+                data.organizationName = data.organization && data.organization.name 
                 return {success, data, basic, tender, billing, dates, manage};
             }
         })

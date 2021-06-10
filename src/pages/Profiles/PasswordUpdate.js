@@ -1,20 +1,21 @@
 import React, { useState } from 'react'
 import { Input, Form, Row, Col, Typography, Button, message } from 'antd'
 import { Redirect } from 'react-router'
+import { upadtePassword } from '../../service/Login-Apis'
 
 const { Password } = Input
 const { Title } = Typography
 const PasswordUpdate = (props) => {
-    const [logout, setLogout] = useState(false)    
+    const [logout, setLogout] = useState(false)   
+
     const changePassword = (values) =>{
-        if ('12341234' === values.oldPassword){
-            message.success({ content: 'Passowrd Changed'})
-            localStorage.clear()
-            setLogout(true)
-            return 
-        }else{
-            message.error({ content: 'Passowrd is Incorrect'})
-        }
+        console.log(values);
+        upadtePassword(values).then(res=>{
+            if(res.success){
+                localStorage.clear()
+                setLogout(true)
+            }
+        })
     }
     return(
         <Row style={{padding: 50, paddingTop:20}} >
@@ -50,7 +51,7 @@ const PasswordUpdate = (props) => {
                         <Password  autoComplete="new-password" />
                     </Form.Item>
                     <Form.Item 
-                        name="password" 
+                        name="newPassword" 
                         label="New Password"
                         rules={[{
                                 required: true,
@@ -67,7 +68,7 @@ const PasswordUpdate = (props) => {
                     <Form.Item 
                         name="confirm"
                         label="Confirm Password"
-                        dependencies={['password']}
+                        dependencies={['newPassword']}
                         hasFeedback
                         rules={[
                         {
@@ -76,10 +77,10 @@ const PasswordUpdate = (props) => {
                         },
                         ({ getFieldValue }) => ({
                             validator(_, value) {
-                            if (!value || getFieldValue('password') === value) {
+                            if (!value || getFieldValue('newPassword') === value) {
                                 return Promise.resolve();
                             }
-                            return Promise.reject(new Error('The two passwords that you entered do not match!'));
+                            return Promise.reject(new Error('Passwords do not match!'));
                             },
                         }),
                         ]}

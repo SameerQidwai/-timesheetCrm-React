@@ -1,19 +1,26 @@
 import axios from "axios";
 
-import { Api } from "./constant";
+import { Api, headers, localStore } from "./constant";
 
 const url = `${Api}/attachments/`;
 
 export const addFiles = (data, config) => {
-    // const header ={ 'content-type': 'multipart/form-data',  'Accept': 'application/json'}
     return axios
-        .post(`${Api}/files`, data, config)
+        .post(`${Api}/files`, data, {headers: {"content-type": "multipart/form-data", Authorization: localStore().accessToken}})
         .then((res) => {
             const { status } = res;
             if (status === 200) {
                 const { success, data } = res.data;
-                console.log(data);
-                return { success, data };
+                const file = {
+                    fileId: data[0].id,
+                    uid: data[0]&&data[0].uniqueName,
+                    name: data[0]&&data[0].originalName,
+                    type: data[0]&&data[0].type,
+                    url: `${Api}/files/${data[0]&&data[0].uniqueName}`,
+                    thumbUrl:thumbUrl(data[0].type)
+                }
+                console.log(res);
+                return { success, file };
             }
         })
         .catch((err) => {
@@ -28,8 +35,9 @@ export const addFiles = (data, config) => {
 };
 
 export const addAttachments = (targetType, targetId, data) => {
+    console.log({headers:headers});
     return axios
-        .post(`${url}${targetType}/${targetId}`, data)
+        .post(`${url}${targetType}/${targetId}`, data, {headers:headers})
         .then((res) => {
             const { status } = res;
             if (status === 200) {
@@ -45,7 +53,8 @@ export const addAttachments = (targetType, targetId, data) => {
                     uid: data[0]&&data[0].file.uniqueName,
                     name: data[0]&&data[0].file.originalName,
                     type: data[0]&&data[0].file.type,
-                    url: `${Api}/files/${data[0]&&data[0].file.uniqueName}`
+                    url: `${Api}/files/${data[0]&&data[0].file.uniqueName}`,
+                    thumbUrl: thumbUrl(data[0].file.type)
                 }
                 return { success, data };
             }
@@ -62,12 +71,14 @@ export const addAttachments = (targetType, targetId, data) => {
 };
 
 export const getAttachments = (targetType, targetId) => {
+    console.log(targetType, targetId);
     return axios
         .get(`${url}${targetType}/${targetId}`)
         .then((res) => {
             const { success, data } = res.data;
             var fileIds = []
             var fileList = []
+            console.log(data);
             data.map((el) => {
                 fileIds.push(el.id)
                 fileList.push( {
@@ -79,8 +90,9 @@ export const getAttachments = (targetType, targetId) => {
                     targetType: el.targetType,
                     uid: el.file.uniqueName,
                     name: el.file.originalName,
-                    type: el.file.type,
-                    url: `${Api}/files/${el.file.uniqueName}`
+                    type: el.file.type === 'png'? 'image/png': el.file.type,
+                    url: `${Api}/files/${el.file.uniqueName}`,
+                    thumbUrl: thumbUrl(el.file.type)
                 })
             });
             if (success) return { success, fileList, fileIds };
@@ -93,7 +105,23 @@ export const getAttachments = (targetType, targetId) => {
             };
         });
 };
-
+const thumbUrl = (type) =>{
+    if (type === 'pdf') {
+        return "/icons/pdf.png";
+    }else if ( type === 'doc' || type === 'docx'){
+        return "/icons/doc.png";
+    }else if ( type === 'xls' || type === 'xlsx'){
+        return "/icons/xls.png";
+    }else if ( type === 'ppt' || type === 'pptx'){
+        return "/icons/ppt.png";
+    }else if (type === 'csv'){
+        return "/icons/csv.png";
+    }else if (/(webp|svg|png|gif|jpg|jpeg|jfif|bmp|dpg|ico)$/i.test(type)){
+        return "/icons/img.png"
+    }else{
+        return "/icons/default.png"
+    }
+}
 export const delAttachment = (id,) => {
     return axios
         .delete(`${url}${id}`)

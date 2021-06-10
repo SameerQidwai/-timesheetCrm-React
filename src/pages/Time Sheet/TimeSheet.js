@@ -6,7 +6,7 @@ import TimeModal from "./Modals/TimeModal"
 import AttachModal from "./Modals/AttachModal";
 import ExportToExcel from '../../components/Core/ExportToExcel'
 import {  getList, reviewTimeSheet } from "../../service/timesheet"
-import { getCustomApi, getContactPersons } from "../../service/constant-Apis";
+import { getCustomApi, getContactPersons, getUsers } from "../../service/constant-Apis";
 import "../styles/table.css";
 
 const { Title } = Typography;
@@ -220,7 +220,7 @@ class TimeSheet extends Component {
     };
 
     fetchAll = (id) =>{
-        Promise.all([ getCustomApi('projects'), getContactPersons()])
+        Promise.all([ getCustomApi('projects'), getUsers()])
         .then(res => {
             this.setState({
                 projects: res[0].success? res[0].data : {},
@@ -566,6 +566,7 @@ class TimeSheet extends Component {
                         timeObj={timeObj}
                         editTime={editTime}
                         sheetDates={sheetDates}
+                        user={sUser.value}
                         close={()=>this.setState({isVisible: false, editTime: false, timeObj: false})}
                         callBack={this.callBack}
                     />

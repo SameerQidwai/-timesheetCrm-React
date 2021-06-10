@@ -25,9 +25,9 @@ export const localStore = () => {
     while ( i-- ) {
         archive[ keys[i] ] = localStorage.getItem( keys[i] );
     }
-    console.log(archive);
     return archive;
 }
 
+export const headers = { 'content-type': 'application/json','Authorization' : `${localStore().accessToken}`}
 // export const Api = "http://192.168.0.191:3301/api/v1";
  

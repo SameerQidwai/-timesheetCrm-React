@@ -17,7 +17,7 @@ function Login() {
     const loginFunc = (value) => {
 
         login(value).then(res=>{
-            if(res.success){
+            if(res&& res.success){
                 //set local storage
                 const keys = Object.keys(res.data)
                 let len = keys.length

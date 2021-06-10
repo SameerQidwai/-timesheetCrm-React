@@ -337,6 +337,7 @@ class InfoModal extends Component {
                             { label: "NV1 - Negative Vetting 1", value: "NV1" },
                             { label: "NV2 - Negative Vetting 2", value: "NV2" },
                             { label: "PV - Positive Vetting", value: "PV" },
+                            { label: "No clearance", value: "NC" },
                         ],
                         // rules: [ { required: true, message: "Gender is Obviously required", }, ],
                         type: "Select",

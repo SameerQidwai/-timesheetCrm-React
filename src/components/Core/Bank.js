@@ -23,7 +23,7 @@ class Bank extends Component {
                 // extra={<Button type="primary">Edit</Button>}
             >
                 {/* <Item label="Account Title">{data.title}</Item> */}
-                <Item label="Bank Name">{data.bankName} </Item>
+                <Item label="Bank Account Name">{data.bankName} </Item>
                 <Item label="Account Number">{data.bankAccountNo} </Item>
                 <Item label="BSB">{data.bankBsb}</Item>
             </Descriptions>
