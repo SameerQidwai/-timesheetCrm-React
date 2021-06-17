@@ -19,7 +19,6 @@ export const addFiles = (data, config) => {
                     url: `${Api}/files/${data[0]&&data[0].uniqueName}`,
                     thumbUrl:thumbUrl(data[0].type)
                 }
-                console.log(res);
                 return { success, file };
             }
         })

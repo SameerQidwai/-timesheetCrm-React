@@ -19,6 +19,7 @@ function Login() {
         login(value).then(res=>{
             if(res&& res.success){
                 //set local storage
+                console.log(res.data);
                 const keys = Object.keys(res.data)
                 let len = keys.length
                 while ( len-- ) {

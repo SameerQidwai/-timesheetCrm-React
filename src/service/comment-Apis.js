@@ -31,7 +31,7 @@ export const addComment = (targetType, targetId, data) => {
 
 export const getComments = (targetType, targetId) => {
     return axios
-        .get(`${url}${targetType}/${targetId}`)
+        .get(`${url}${targetType}/${targetId}`, {headers:headers})
         .then((res) => {
             const { success, data } = res.data;
             if (success) return { success, data  };
@@ -47,7 +47,7 @@ export const getComments = (targetType, targetId) => {
 
 export const delComments = (id,) => {
     return axios
-        .delete(`${url}${id}`)
+        .delete(`${url}${id}`, {headers:headers})
         .then((res) => {
             const { success } = res.data;
             if (success) return { success };

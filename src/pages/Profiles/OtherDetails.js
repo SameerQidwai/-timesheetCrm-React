@@ -283,25 +283,25 @@ function OtherDetails(props) {
         },
     ]);
 
-    const [trainField, setTrainFields] = useState([
-        {
-            Placeholder: "Training",
-            fieldCol: 24,
-            size: "small",
-            type: "Title",
-            mode: 3,
-            labelAlign: "right",
-        },
-        {
-            object: "train",
-            fieldCol: 24,
-            key: "training",
-            size: "small",
-            mode:{ minRows: 8, maxRows:12},
-            // rules:[{ required: true }],
-            type: "Textarea",
-        },
-    ]);
+    // const [trainField, setTrainFields] = useState([
+    //     {
+    //         Placeholder: "Training",
+    //         fieldCol: 24,
+    //         size: "small",
+    //         type: "Title",
+    //         mode: 3,
+    //         labelAlign: "right",
+    //     },
+    //     {
+    //         object: "train",
+    //         fieldCol: 24,
+    //         key: "training",
+    //         size: "small",
+    //         mode:{ minRows: 8, maxRows:12},
+    //         // rules:[{ required: true }],
+    //         type: "Textarea",
+    //     },
+    // ]);
 
     useEffect(() => {
         const { train, bank, kin, detail } = props.data
@@ -484,7 +484,7 @@ function OtherDetails(props) {
         setBankFields([...newFields])
     }
     const changeSetings = (values) =>{
-        const obj = { ...values.bank, ...values.kin, ...values.bank, ...values.train }
+        const obj = { ...values.detail, ...values.kin, ...values.bank }
         upadteSettings(obj).then(res=>{
             if(res.success){
                 console.log(res.data);
@@ -504,7 +504,7 @@ function OtherDetails(props) {
             <FormItems FormFields={detailFields} />
             <FormItems FormFields={kinFields} />
             <FormItems FormFields={bankFields} />
-            <FormItems FormFields={trainField} />
+            {/* <FormItems FormFields={trainField} /> */}
             <Col span={24} style={{padding: 20}}>
                 <Button htmlType={"submit"} type="primary" size="middle" style={{float: "right"}}> Save </Button>
             </Col>           

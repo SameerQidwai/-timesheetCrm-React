@@ -3,7 +3,7 @@ import { Tabs } from 'antd'
 import PersonalDetails from './PersonalDetails'
 import PersonalContract from './Contract'
 import PasswordUpdate from './PasswordUpdate'
-import { getRecord } from '../../service/Employees'
+import { getSettings } from '../../service/Login-Apis'
 import OtherDetails from './OtherDetails'
 
 const { TabPane } = Tabs
@@ -16,17 +16,22 @@ const Profile = ()=>{
         getData()
     }, [])
     const getData = () =>{
-        getRecord(3).then(res=>{
+        getSettings().then(res=>{
             if(res.success){
                 console.log(res);
                 setBasic(res.basic)
                 setContract(res.billing)
-                setDetails({train:res.train, kin: res.kin, detail: res.detail, bank: res.bank})
+                setDetails({
+                    kin: res.kin, 
+                    detail: res.detail, 
+                    bank: res.bank
+                    // train:res.train, 
+                })
             }
         })
     }
     return (
-        <Tabs type="card" defaultActiveKey="others">
+        <Tabs type="card" defaultActiveKey="personal">
             <TabPane tab="Personal Details" key="personal">
                 {basic&& <PersonalDetails data={basic}/>}
             </TabPane>

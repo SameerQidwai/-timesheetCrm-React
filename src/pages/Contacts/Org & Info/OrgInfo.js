@@ -120,7 +120,7 @@ class OrgInfo extends Component {
                     <Tabs
                         type="card"
                         style={{ marginTop: "50px" }}
-                        defaultActiveKey="attachments"
+                        defaultActiveKey="comments"
                     >
                         <TabPane tab="Project" key="project">
                             <Projects {...this.props.match.params} />
