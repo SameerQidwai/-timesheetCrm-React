@@ -9,8 +9,30 @@ export const login = (data) => {
         .post(`${Api}/login`, data)
         .then((res) => {
             const { success, data, message } = res.data;
-                    messageAlert.success({ content: message, key: 'logout'})
-            if (success) return {success, data};
+                messageAlert.success({ content: message, key: 'logout'})
+            if (success){
+                let permissions = {}
+                let role = data.role
+                console.log(data.role);
+                delete data.role
+                role.permissions.map(el=>{
+                    if (permissions[el.resource]){
+                        permissions[el.resource][`${el.action}${el.grant}`] = true
+                    }else { 
+                        var key = `${el.action}${el.grant}`
+                        console.log(key);
+                        permissions[el.resource] = {[key]: true}
+                    }
+                })
+                const keys = Object.keys(data)
+                let len = keys.length
+                while ( len-- ) {
+                    const key = keys[len]
+                    localStorage.setItem(key, data[key])
+                }
+                return {success, data};
+            } 
+            
         })
         .catch((err) => {
                 messageAlert.error({ content: err.message, key: 'logout'})
