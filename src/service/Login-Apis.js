@@ -14,7 +14,9 @@ export const login = (data) => {
                 let permissions = {}
                 let role = data.role
                 console.log(data.role);
+
                 delete data.role
+                
                 role.permissions.map(el=>{
                     if (permissions[el.resource]){
                         permissions[el.resource][`${el.action}${el.grant}`] = true
