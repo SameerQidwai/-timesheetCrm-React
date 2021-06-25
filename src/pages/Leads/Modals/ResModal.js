@@ -4,19 +4,8 @@ import { LoadingOutlined } from "@ant-design/icons"; //Icons
 import moment from "moment";
 import Form from "../../../components/Core/Form";
 
-import {
-  addLeadSkill,
-  getLeadSkill,
-  editLeadSkill,
-  addLeadSkillResource,
-  editLeadSkillResource,
-} from "../../../service/opportunities";
-import {
-  getPanelSkills,
-  getStandardLevels,
-  getEmployees,
-  getSubContractors,
-} from "../../../service/constant-Apis";
+import { addLeadSkill, getLeadSkill, editLeadSkill, addLeadSkillResource, editLeadSkillResource, } from "../../../service/opportunities";
+import { getPanelSkills, getStandardLevels, getOrgPersons, } from "../../../service/constant-Apis";
 
 const { TabPane } = Tabs;
 
@@ -140,6 +129,7 @@ class ResModal extends Component {
             object: "obj",
             fieldCol: 12,
             key: "buyingRate",
+            shape: '$',
             size: "small",
             rules: [{ required: true, message: "Buying Rate is Required" }],
             type: "InputNumber",
@@ -149,6 +139,7 @@ class ResModal extends Component {
             object: "obj",
             fieldCol: 12,
             key: "sellingRate",
+            shape: '$',
             size: "small",
             rules: [{ required: true, message: "Selling Rate is Required" }],
             type: "InputNumber",
@@ -248,14 +239,11 @@ class ResModal extends Component {
   };
 
   fetchRes = () => {
-    Promise.all([getEmployees(), getSubContractors()])
+    const customeUrl = `helpers/contact-persons`
+    Promise.all([getOrgPersons(customeUrl)])
       .then((res) => {
         console.log(res[0]);
-        const data = res[0].success
-          ? res[0].data.concat(res[1].success ? res[1].data : [])
-          : res[1].success
-          ? res[1].data
-          : [];
+        const data = res[0].success ? res[0].data :[]
         const { ResourceFields } = this.state;
         const { editRex } = this.props;
         if (editRex) {
@@ -263,7 +251,7 @@ class ResModal extends Component {
           const obj = {
             contactPersonId: editRex.contactPersonId,
             billableHours: editRex.billableHours,
-            sellingRate: editRex.sellingRate,
+            sellingRate: editRex.sellingRate, 
             effortRate: editRex.effortRate,
             buyingRate: editRex.buyingRate,
             endDate: editRex.endDate ? moment(editRex.endDate) : null,

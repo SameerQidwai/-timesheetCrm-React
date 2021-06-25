@@ -5,13 +5,7 @@ import moment from "moment";
 import Form from "../../../components/Core/Form";
 
 import { addList, getRecord, editList } from "../../../service/projects";
-import {
-  getOrganizations,
-  getStates,
-  getOrgPersons,
-  getPanels,
-  getEmployees,
-} from "../../../service/constant-Apis";
+import { getOrganizations, getStates, getOrgPersons, getPanels, getEmployees, } from "../../../service/constant-Apis";
 
 const { TabPane } = Tabs;
 
@@ -84,8 +78,8 @@ class InfoModal extends Component {
             type: "Select",
             onChange: function func(value) {
               if (value) {
-                console.log(value);
-                getOrgPersons(value).then((res) => {
+                const customeUrl = `helpers/contact-persons?organizationId=${value}`
+                getOrgPersons(customeUrl).then((res) => {
                   console.log(res.data);
                   if (res.success) {
                     const { BasicFields } = this.state;
@@ -348,14 +342,6 @@ class InfoModal extends Component {
             labelAlign: "right",
             // itemStyle:{marginBottom:'10px'},
           },
-          // {
-          //     Placeholder: "GO",
-          //     size: "small",
-          //     fieldCol: 12,
-          //     type: "Text",
-          //     labelAlign: "right",
-          //     // itemStyle:{marginBottom:'10px'},
-          // },
           {
             object: "obj",
             fieldCol: 12,
@@ -368,110 +354,6 @@ class InfoModal extends Component {
             fieldStyle: { width: "100%" },
           },
           // {
-          //     object: "obj",
-          //     fieldCol: 12,
-          //     key: "goPercentage",
-          //     readOnly: true,
-          //     size: "small",
-          //     shape: '%',
-          //     // rules:[{ required: true }],
-          //     type: "InputNumber",
-          //     fieldStyle: { width: "100%" },
-          //     rangeMin: 0,
-          //     rangeMax: 100,
-          //     onChange: function name(value) {
-          //         const { obj } = this.billingRef.current.refs.billing_form.getFieldsValue();
-          //         obj.goget =  obj.getPercentage? (obj.getPercentage * value) /100 : 0
-          //         obj.discount =  (obj.goget && obj.value)? (obj.value * obj.goget) /100 : 0
-          //         obj.upside =  obj.discount? (obj.value - obj.discount) : 0
-          //         this.billingRef.current.refs.billing_form.setFieldsValue({ obj: obj, });
-          //     }.bind(this)
-          // },
-          // {
-          //     Placeholder: "Get",
-          //     size: "small",
-          //     fieldCol: 12,
-          //     type: "Text",
-          //     labelAlign: "right",
-          //     // itemStyle:{marginBottom:'10px'},
-          // },
-          // {
-          //     Placeholder: "GO/Get",
-          //     size: "small",
-          //     fieldCol: 12,
-          //     type: "Text",
-          //     labelAlign: "right",
-          //     // itemStyle:{marginBottom:'10px'},
-          // },
-          // {
-          //     object: "obj",
-          //     fieldCol: 12,
-          //     key: "getPercentage",
-          //     size: "small",
-          //     shape: '%',
-          //     readOnly: true,
-          //     // rules:[{ required: true }],
-          //     type: "InputNumber",
-          //     rangeMin: 0,
-          //     rangeMax: 100,
-          //     fieldStyle: { width: "100%" },
-          //     onChange: function name(value) {
-          //         const { obj } = this.billingRef.current.refs.billing_form.getFieldsValue();
-          //         obj.goget =  obj.goPercentage? (obj.goPercentage * value) /100 : 0
-          //         obj.discount =  (obj.goget && obj.value)? (obj.value * obj.goget) /100 : 0
-          //         obj.upside =  obj.discount? (obj.value - obj.discount) : 0
-          //         this.billingRef.current.refs.billing_form.setFieldsValue({ obj: obj, });
-          //     }.bind(this)
-          // },
-          // {
-          //     object: "obj",
-          //     fieldCol: 12,
-          //     key: "goget",
-          //     size: "small",
-          //     shape: '%',
-          //     readOnly: true,
-          //     // rules:[{ required: true }],
-          //     type: "InputNumber",
-          //     fieldStyle: { width: "100%" },
-          // },
-          // {
-          //     Placeholder: "Discounted Value",
-          //     size: "small",
-          //     fieldCol: 12,
-          //     type: "Text",
-          //     labelAlign: "right",
-          //     // itemStyle:{marginBottom:'10px'},
-          // },
-          // {
-          //     Placeholder: "Upside Value",
-          //     size: "small",
-          //     fieldCol: 12,
-          //     type: "Text",
-          //     labelAlign: "right",
-          //     // itemStyle:{marginBottom:'10px'},
-          // },
-          // {
-          //     object: "obj",
-          //     fieldCol: 12,
-          //     key: "discount",
-          //     size: "small",
-          //     readOnly: true,
-          //     shape: '$',
-          //     // rules:[{ required: true }],
-          //     type: "InputNumber",
-          //     fieldStyle: { width: "100%" },
-          // },
-          // {
-          //     object: "obj",
-          //     fieldCol: 12,
-          //     key: "upside",
-          //     size: "small",
-          //     readOnly: true,
-          //     shape: '$',
-          //     // rules:[{ required: true }],
-          //     type: "InputNumber",
-          //     fieldStyle: { width: "100%" },
-          // },
         ],
       },
 
@@ -622,13 +504,8 @@ class InfoModal extends Component {
     const { editPro } = this.props;
     const dates = { entryDate: moment(new Date()) };
     this.datesRef.current.refs.dates_form.setFieldsValue({ obj: dates });
-    Promise.all([
-      getPanels(),
-      getOrganizations(),
-      getStates(),
-      editPro && this.getRecord(editPro),
-      getEmployees(),
-    ])
+    const customeUrl = `helpers/contact-persons?active=1`
+    Promise.all([ getPanels(), getOrganizations(), getStates(), editPro && this.getRecord(editPro), getOrgPersons(customeUrl), ])
       .then((res) => {
         if (res[1].success) {
           res[1].data[0].readOnly = true;

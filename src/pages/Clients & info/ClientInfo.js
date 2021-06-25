@@ -4,7 +4,7 @@ import { SettingOutlined, DownOutlined } from "@ant-design/icons"; //Icons
 
 import Comments from "../../components/Core/Comments";
 import Projects from "../../components/Core/Projects";
-import Travels from "../../components/Core/Travels";
+// import Travels from "../../components/Core/Travels";
 import Attachments from "../../components/Core/Attachments";
 import Bank from "../../components/Core/Bank";
 
@@ -116,9 +116,9 @@ class ContInfo extends Component {
                     <TabPane tab="Project" key="1">
                         <Projects id={id} />
                     </TabPane>
-                    <TabPane tab="Travels" key="2">
+                    {/* <TabPane tab="Travels" key="2">
                         <Travels id={id} />
-                    </TabPane>
+                    </TabPane> */}
                     <TabPane tab="Comments" key="4">
                         <Comments id={id} />
                     </TabPane>

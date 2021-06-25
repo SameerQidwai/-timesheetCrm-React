@@ -239,14 +239,14 @@ function NestedTable(props) {
                 <Dropdown
                     overlay={
                         <Menu>
-                            <Menu.Item danger>
+                            {/* <Menu.Item danger>
                                 <Popconfirm
                                     title="Sure to delete?"
                                     onConfirm={() => handleDelete(text.id) }
                                 >
                                     Delete
                                 </Popconfirm>
-                            </Menu.Item>
+                            </Menu.Item> */}
                             <Menu.Item
                                 onClick={()=>{
                                     setEditRex({...text, tableIndex: index})

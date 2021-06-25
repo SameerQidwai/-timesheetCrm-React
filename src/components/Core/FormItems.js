@@ -42,11 +42,7 @@ class FormItems extends Component {
         if (shape === "$"){
             return `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
         }else if(shape === 'ABN'){ //17 136 900 313
-            // return `${value}`.replace(/^(.{2})(.{3})(.*)$/, "$1 $2 $3")
-            // return `${value}`.replace(/^(.{2})(.{3})(.{3})(.*)$/, "$1 $2 $3")
-            // return `${value}`.substr(0, 2) + " " + `${value}`.substr(2, 5) + " " + `${value}`.substr(7, 10);
             return `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
-            // return `$ ${value}`.replace(/^(?:\d-?\d{10}|\d(?:[ \.]?\d){10})$/g)
         }else{
             return shape ? `${value}${shape}` : `${value}`
         }

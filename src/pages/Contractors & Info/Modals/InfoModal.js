@@ -776,7 +776,8 @@ class InfoModal extends Component {
     };
 
     onOrg = (value) => {
-        getOrgPersons(value).then(res=>{
+        const customeUrl = `helpers/contact-persons?organizationId=${value}&active=0`
+        getOrgPersons(customeUrl).then(res=>{
             if(res.success){
                 this.setState({
                     sOrg: value,

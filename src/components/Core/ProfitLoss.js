@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Row, Col, Table, Typography } from "antd";
 import moment from "moment";
+import { isoWeekdayCalc } from 'moment-weekday-calc';
 import "../Styles/table.css"
 import { getRecord } from "../../service/opportunities";
 import { formatCurrency } from "../../service/constant";
@@ -48,25 +49,33 @@ class ProfitLoss extends Component {
         this.Columns()
     }
 
+    getWeekdays = (startDate, endDate) =>{
+        console.log(startDate.format('DD MM YYYY'), endDate.format('DD MM YYYY'));
+        return moment().isoWeekdayCalc(startDate,endDate,[1,2,3,4,5])
+    }
+
     Columns = () =>{
         const { columns, data } = this.state
         const { billing } = this.props
-        console.log(billing.cm$);
         const len = billing.totalMonths>0 ? billing.totalMonths : 0
         let month = billing.startDate
         let revenue = (billing.discount / len).toFixed(2);
         let cm = ((revenue * billing.cmPercentage ) / 100).toFixed(2);
         let cos = (revenue - cm).toFixed(2);
+        let startDate = ''
+        let endDate = ''
         console.log(cm);
         let array = []
         for (var i = 1; i <=len; i++){
+            startDate = i===1 ? month : moment(month).set('date', 1); 
+            endDate = i===len ? billing.endDate : moment(startDate).endOf('month');
             array.push(
                 {
                     title: moment(month).format('MMM YY'),
                     width:500,
                     children: [
                       {
-                        title: '22',
+                        title: this.getWeekdays(startDate, endDate),
                         dataIndex: i,
                         key: i,
                         render: (record, records) =>{
@@ -126,9 +135,6 @@ class ProfitLoss extends Component {
                             <Text>{billing.cmPercentage} %</Text>
                         </Col>
                     </Row>
-                </Col>
-                <Col span={24}>
-                    <Title level={3} underline>Exp Vitcom - Opportunity</Title>
                 </Col>
                 <Table
                     rowKey= {(data =>data.label)}

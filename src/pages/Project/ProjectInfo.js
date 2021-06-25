@@ -4,7 +4,7 @@ import { SettingOutlined, DownOutlined } from "@ant-design/icons"; //Icons
 import { Link } from "react-router-dom"; 
 
 import Comments from "../../components/Core/Comments";
-import Travels from "../../components/Core/Travels";
+// import Travels from "../../components/Core/Travels";
 import Attachments from "../../components/Core/Attachments";
 import Bank from "../../components/Core/Bank";
 import ProfitLoss from "../../components/Core/ProfitLoss";
@@ -138,9 +138,9 @@ class ProjectInfo extends Component {
                         <TabPane tab="Comments" key="comments">
                             <Comments targetId={leadId} targetType="WOR" />
                         </TabPane>
-                        <TabPane tab="Travels" key="travels">
+                        {/* <TabPane tab="Travels" key="travels">
                             <Travels id={leadId} />
-                        </TabPane>
+                        </TabPane> */}
                         <TabPane tab="Attachments" key="attachments">
                             <Attachments targetId={leadId} targetType="WOR" />
                         </TabPane>

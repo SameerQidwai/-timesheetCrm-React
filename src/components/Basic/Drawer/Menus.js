@@ -34,12 +34,12 @@ const listData = [
         link: "/time-off",
         key: "/time-off",
     },
-    {
-        text: "Travels",
-        icon: <DingdingOutlined />,
-        link: "/travles",
-        key: "/travles",
-    },
+    // {
+    //     text: "Travels",
+    //     icon: <DingdingOutlined />,
+    //     link: "/travles",
+    //     key: "/travles",
+    // },
     {
         text: "Reporting",
         icon: <FileTextOutlined />,

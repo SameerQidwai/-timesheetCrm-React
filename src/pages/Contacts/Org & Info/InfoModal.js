@@ -6,7 +6,7 @@ import { UploadOutlined, LoadingOutlined } from "@ant-design/icons"; //Icons
 import moment from "moment";
 import Form from "../../../components/Core/Form";
 import { addList, getOrgRecord, editList } from "../../../service/Organizations";
-import { getContactPersons, getOrganizations, getOrgPersons } from "../../../service/constant-Apis";
+import { getOrganizations, getOrgPersons } from "../../../service/constant-Apis";
 
 const { TabPane } = Tabs;
 
@@ -234,21 +234,24 @@ class InfoModal extends Component {
                         rules:[
                             ({ getFieldValue }) => ({
                                 validator(rules, value) {
-                                    let val = value.toString()
-                                    let weights = new Array(10, 1, 3, 5, 7, 9, 11, 13, 15, 17, 19);
-                                if (val.length === 11) { 
-                                    let sum = 0;
-                                    weights.forEach(function(weight, position) {
-                                        let digit = val[position] - (position ? 0 : 1);
-                                        sum += weight * digit;
-                                    });
-                                    console.log(sum % 89);
-                                    if (sum % 89 === 0){
-                                        return Promise.resolve();
-                                    }
-                                    return Promise.reject(new Error('ABN is not valid'));
-                                }
-                                return Promise.reject(new Error('Must contain 11 digits'));
+                                    if (value){
+                                        let val = value.toString()
+                                        let weights = new Array(10, 1, 3, 5, 7, 9, 11, 13, 15, 17, 19);
+                                        if (val.length === 11) {
+                                            let sum = 0;
+                                            weights.forEach(function(weight, position) {
+                                                let digit = val[position] - (position ? 0 : 1);
+                                                sum += weight * digit;
+                                            });
+                                            console.log(sum % 89);
+                                            if (sum % 89 === 0){
+                                                return Promise.resolve();
+                                            }
+                                            return Promise.reject(new Error('ABN is not valid'));
+                                        }
+                                        return Promise.reject(new Error('Must contain 11 digits'));
+                                        }
+                                    return Promise.resolve();
                                 },
                             }),
                         ],
@@ -781,7 +784,9 @@ class InfoModal extends Component {
 
     fetchAll = () =>{
         const {editOrg}= this.props;
-        Promise.all([ getOrganizations(editOrg), getOrgPersons(editOrg), getContactPersons() ])
+        const customeUrl = `helpers/contact-persons?organizationId=${editOrg}`
+        // , getContactPersons() 
+        Promise.all([ getOrganizations(editOrg), getOrgPersons(customeUrl)])
         .then(res => {
             const { BasicFields } = this.state;
             BasicFields.fields[5].data = res[0].data;

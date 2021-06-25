@@ -78,8 +78,8 @@ class InfoModal extends Component {
                         type: "Select",
                         onChange: function func(value) {
                             if (value){
-                                console.log(value);
-                                getOrgPersons(value).then(res=>{
+                                const customeUrl = `helpers/contact-persons?organizationId=${value}`
+                                getOrgPersons(customeUrl).then(res=>{
                                     console.log(res.data);
                                     if(res.success){
                                         const { BasicFields } = this.state
@@ -655,7 +655,6 @@ class InfoModal extends Component {
     }
 
     fetchAll = () =>{
-        console.log('fetchAll');
         const { editLead, project }= this.props;  
         const { ManageFields } = this.state
         const dates = {entryDate: moment(new Date())}
@@ -666,8 +665,8 @@ class InfoModal extends Component {
             ManageFields.fields[5].key = "projectManagerId"
             // this.setState ({ManageFields})
         }
-                                                 // either call this or call that
-        Promise.all([ getPanels(), getOrganizations(), getStates(), editLead && this.getRecord(editLead), getEmployees()])
+        const customeUrl = `helpers/contact-persons?active=1`                                        // either call this or call that
+        Promise.all([ getPanels(), getOrganizations(), getStates(), editLead && this.getRecord(editLead), getOrgPersons(customeUrl)])
         .then(res => {
             if (res[1].success) {res[1].data[0].disabled = true}
             const { BasicFields, ManageFields } = this.state;

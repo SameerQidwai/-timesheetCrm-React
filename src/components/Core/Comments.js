@@ -1,17 +1,6 @@
 import React, { Component } from "react";
 
-import {
-    Row,
-    Col,
-    Comment,
-    Tooltip,
-    Avatar,
-    Popconfirm,
-    Form,
-    Input,
-    List,
-    Upload,
-} from "antd";
+import { Row, Col, Comment, Tooltip, Avatar, Popconfirm, Form, Input, List, Upload, } from "antd";
 
 import moment from "moment";
 
@@ -23,11 +12,7 @@ import {
 } from "@ant-design/icons";
 
 import { addFiles } from "../../service/Attachment-Apis";
-import {
-    getComments,
-    addComment,
-    delComments,
-} from "../../service/comment-Apis";
+import { getComments, addComment, delComments, } from "../../service/comment-Apis";
 import { Api, localStore } from "../../service/constant";
 
 import "../Styles/comment.css";
@@ -55,7 +40,7 @@ class Comments extends Component {
 
     getComments = (targetType, targetId) => {
         getComments(targetType, targetId).then((res) => {
-            if (res.success) {
+            if (res && res.success) {
                 this.setState({
                     data: res.data ?? [],
                 });

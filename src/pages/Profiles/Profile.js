@@ -17,7 +17,7 @@ const Profile = ()=>{
     }, [])
     const getData = () =>{
         getSettings().then(res=>{
-            if(res.success){
+            if(res && res.success){
                 console.log(res);
                 setBasic(res.basic)
                 setContract(res.billing)

@@ -239,6 +239,7 @@ class BillModal extends Component {
         const {editCntrct, editEmp} = this.props
         const { billing } = vake;
         billing.noOfHoursPer = 1; 
+        billing.type === 1 ? billing.remunerationAmountPer = 1 : billing.remunerationAmountPer = 7
         billing.startDate = billing.startDate ? moment(billing.startDate).valueOf(): null
         billing.endDate = billing.endDate ? moment(billing.endDate).valueOf(): null
         billing.employeeId = editEmp;

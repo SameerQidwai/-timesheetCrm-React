@@ -12,7 +12,7 @@ import OrgInfo from "../../../pages/Contacts/Org & Info/OrgInfo";
 import Contact from "../../../pages/Contacts/Contact Person/Contact";
 import TimeSheet from "../../../pages/Time Sheet/TimeSheet";
 import TimeOff from "../../../pages/Time/TimeOff";
-import Travels from "../../../pages/Travel/Travels";
+// import Travels from "../../../pages/Travel/Travels";
 
 import Opportunities from "../../../pages/Leads/Opportunities";
 import OpportunityInfo from "../../../pages/Leads/OpportunityInfo";
@@ -85,10 +85,10 @@ const pageLinks = [
         component: TimeOff,
         link: "/time-off",
     },
-    {
-        component: Travels,
-        link: "/travles",
-    },
+    // {
+    //     component: Travels,
+    //     link: "/travles",
+    // },
 ];
 
 class UserContent extends Component {

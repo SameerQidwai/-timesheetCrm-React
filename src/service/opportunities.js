@@ -71,7 +71,7 @@ export const getRecord = (id) => {
                     getPercentage: data.getPercentage ? data.getPercentage: 0,
                     goPercentage: data.goPercentage? data.goPercentage: 0,
                     // these Four keys are for Profit and lost
-                    totalMonths: (data.startDate && data.endDate) ? Math.round(moment(data.endDate).diff(moment(data.startDate), 'months', true)) : 0, 
+                    totalMonths: (data.startDate && data.endDate) ? Math.ceil(moment(data.endDate).diff(moment(data.startDate), 'months', true)) : 0, 
                     endDate: data.endDate ? moment(data.endDate): null,
                     startDate: data.startDate ? moment(data.startDate): null,
                     value: data.value? data.value: 0,

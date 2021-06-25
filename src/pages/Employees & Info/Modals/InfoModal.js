@@ -5,7 +5,7 @@ import { LoadingOutlined } from "@ant-design/icons"; //Icons
 import FormItems from "../../../components/Core/FormItems";
 import moment from "moment";
 
-import { getEmpPersons, getStates } from "../../../service/constant-Apis";
+import { getEmpPersons, getOrgPersons, getStates } from "../../../service/constant-Apis";
 import { getContactRecord } from "../../../service/conatct-person";
 import { addList, getRecord, editList } from "../../../service/Employees";
 const { TabPane } = Tabs;
@@ -668,7 +668,8 @@ class InfoModal extends Component {
 
     fetchAll = (edit) =>{
         const { editEmp } = this.props
-        Promise.all([ getStates(), edit ? this.getRecord(editEmp) : getEmpPersons(1) ])
+        const customeUrl = `helpers/contact-persons?organizationId=1&active=0`
+        Promise.all([ getStates(), edit ? this.getRecord(editEmp) : getOrgPersons(customeUrl) ])
         .then(res => {
             const { BasicFields } = this.state
             BasicFields[15].data = res[0].data;
@@ -837,19 +838,19 @@ class InfoModal extends Component {
                         validator(rules, value) {
                             let val = value.toString()
                             let weights = new Array(10, 1, 3, 5, 7, 9, 11, 13, 15, 17, 19);
-                        if (val.length === 11) { 
-                            let sum = 0;
-                            weights.forEach(function(weight, position) {
-                                let digit = val[position] - (position ? 0 : 1);
-                                sum += weight * digit;
-                            });
-                            console.log(sum % 89);
-                            if (sum % 89 === 0){
-                                return Promise.resolve();
+                            if (val.length === 11) { 
+                                let sum = 0;
+                                weights.forEach(function(weight, position) {
+                                    let digit = val[position] - (position ? 0 : 1);
+                                    sum += weight * digit;
+                                });
+                                console.log(sum % 89);
+                                if (sum % 89 === 0){
+                                    return Promise.resolve();
+                                }
+                                return Promise.reject(new Error('ABN is not valid'));
                             }
-                            return Promise.reject(new Error('ABN is not valid'));
-                        }
-                        return Promise.reject(new Error('Must contain 11 digits'));
+                            return Promise.reject(new Error('Must contain 11 digits'));
                         },
                     }),
                 ],

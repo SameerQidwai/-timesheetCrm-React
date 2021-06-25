@@ -30,6 +30,7 @@ export const addComment = (targetType, targetId, data) => {
 };
 
 export const getComments = (targetType, targetId) => {
+    console.log(headers);
     return axios
         .get(`${url}${targetType}/${targetId}`, {headers:headers})
         .then((res) => {

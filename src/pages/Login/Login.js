@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Redirect, useLocation } from "react-router-dom";
 import { Row, Col, Typography, Input, Button, Form } from "antd";
 import { login, loggedIn } from '../../service/Login-Apis'
+import { localStore } from "../../service/constant";
 const { Title } = Typography;
 const { Password } = Input;
 
@@ -19,13 +20,7 @@ function Login() {
         login(value).then(res=>{
             if(res&& res.success){
                 //set local storage
-                console.log(res.data);
-                const keys = Object.keys(res.data)
-                let len = keys.length
-                while ( len-- ) {
-                    const key = keys[len]
-                    localStorage.setItem(key, res.data[key])
-                }
+                console.log(JSON.parse(localStore().permissions))
                 setRedirectToReferrer(true)
             }
         })

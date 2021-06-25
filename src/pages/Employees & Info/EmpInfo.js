@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 import Comments from "../../components/Core/Comments";
 import Projects from "../../components/Core/Projects";
-import Travels from "../../components/Core/Travels";
+// import Travels from "../../components/Core/Travels";
 import Attachments from "../../components/Core/Attachments";
 import Bank from "../../components/Core/Bank";
 
@@ -136,9 +136,9 @@ class OrgInfo extends Component {
                         <TabPane tab="Project" key="project">
                             <Projects id={emp} />
                         </TabPane>
-                        <TabPane tab="Travels" key="travels">
+                        {/* <TabPane tab="Travels" key="travels">
                             <Travels id={emp} />
-                        </TabPane>
+                        </TabPane> */}
                         <TabPane tab="Comments" key="comments">
                             <Comments targetType="EMP" targetId={emp} />
                         </TabPane>

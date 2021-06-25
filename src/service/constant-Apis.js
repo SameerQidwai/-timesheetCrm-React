@@ -106,16 +106,15 @@ export const getSubContractors = () => {
         });
 };
 
-export const getOrgPersons = (id) =>{
-    console.log(id);
+export const getOrgPersons = (url) =>{
     return axios
-    .get(`${Api}/sub-contractors/get/contact-persons?organizationId=${id}`)
+    .get(`${Api}/${url}`)
     .then((res) => {
-        console.log(res);
         const { success, data } = res.data;
         var cps = []
+        console.log(data);
         data.map((el) => {
-            cps.push({value: el.id, label: el.firstName +' ' +el.lastName})
+            cps.push({value: el.id, label: el.firstName +' ' +el.lastName, status: 'Employee'})
         });
         if (success) return { success: success, data: cps };
     })
@@ -133,7 +132,6 @@ export const getEmpPersons = (id) =>{
     return axios
     .get(`${Api}/employees/get/contact-persons`)
     .then((res) => {
-        console.log(res);
         const { success, data } = res.data;
         var cps = []
         data.map((el) => {

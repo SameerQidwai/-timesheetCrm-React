@@ -483,6 +483,7 @@ function OtherDetails(props) {
         }
         setBankFields([...newFields])
     }
+
     const changeSetings = (values) =>{
         const obj = { ...values.detail, ...values.kin, ...values.bank }
         upadteSettings(obj).then(res=>{
@@ -491,6 +492,7 @@ function OtherDetails(props) {
             }
         })
     }
+    
     return (
         <Form
             id={'my-form'}

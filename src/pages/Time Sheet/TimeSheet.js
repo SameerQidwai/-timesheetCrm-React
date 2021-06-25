@@ -6,7 +6,7 @@ import TimeModal from "./Modals/TimeModal"
 import AttachModal from "./Modals/AttachModal";
 import ExportToExcel from '../../components/Core/ExportToExcel'
 import {  getList, reviewTimeSheet } from "../../service/timesheet"
-import { getCustomApi, getContactPersons, getUsers } from "../../service/constant-Apis";
+import { getCustomApi, getContactPersons, getUsers, getOrgPersons } from "../../service/constant-Apis";
 import "../styles/table.css";
 
 const { Title } = Typography;
@@ -32,69 +32,7 @@ class TimeSheet extends Component {
             eData: [],
             USERS:[],
             sUser:{},
-            data: [
-                // {
-                //     prjoectId: 1,
-                //     project: "Project 1",
-                //     status : 'SB',
-                //     '1/5': {
-                //         startTime: "09:22",
-                //         endTime: "22:02",
-                //         breakHours: "2",
-                //         notes: 'sameer'
-                //     },
-                //     '2/5': {
-                //         startTime: "10:00",
-                //         endTime: "20:00",
-                //         breakHours: "4",
-                //     },
-                //     '3/5': {
-                //         startTime: "11:22",
-                //         endTime: "13:11",
-                //         breakHours: "5",
-                //     },
-                //     '4/5': {
-                //         startTime: "16:20",
-                //         endTime: "17:10",
-                //         breakHours: "18",
-                //     },
-                //     '5/5': {
-                //         startTime: "02:23",
-                //         endTime: "14:23",
-                //         breakHours: "5",
-                //     },
-                //     '6/5': {
-                //         start: "15:05",
-                //         end: "20:1",
-                //         breakHours: "1",
-                //     },
-                // },
-                // {
-                //     prjoectIdprjoectId: 2,
-                //     project: "Project 2",
-                //     status : 'AP',
-                //     1: {
-                //         start: "10:00",
-                //         end: "20:00",
-                //         break: "4",
-                //     },
-                // },
-                // {
-                //     prjoectId: 3,
-                //     project: "Project 3",
-                //     status : 'RJ',
-                //     3: {
-                //         start: "15:05",
-                //         end: "20:1",
-                //         break: "1",
-                //     },
-                // },
-                // {
-                //     prjoectId: 4,
-                //     status : 'SV',
-                //     project: "Project 4",
-                // },
-            ],
+            data: [ ],
             comments: null,
             sProject: {},
             projects: [],
@@ -220,7 +158,8 @@ class TimeSheet extends Component {
     };
 
     fetchAll = (id) =>{
-        Promise.all([ getCustomApi('projects'), getUsers()])
+        const customeUrl = `helpers/contact-persons?active=1`
+        Promise.all([ getCustomApi('projects'), getOrgPersons(customeUrl)])
         .then(res => {
             this.setState({
                 projects: res[0].success? res[0].data : {},
@@ -496,13 +435,14 @@ class TimeSheet extends Component {
                             placeholder="Select User"
                             options={USERS}
                             value={sUser.value}           
-                            optionFilterProp="label"
+                            optionFilterProp={["label", "value"]}
                             style={{ width: 200 }}
                             filterOption={
-                                (input, option) =>
-                                    option.label
-                                        .toLowerCase()
-                                        .indexOf(input.toLowerCase()) >= 0
+                                (input, option) =>{
+                                    const label = option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                    const value = option.value.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                        return label || value
+                                }
                             }
                             onSelect={(value, option)=>{
                                 this.setState({
