@@ -80,7 +80,6 @@ class InfoModal extends Component {
                             if (value){
                                 const customeUrl = `helpers/contact-persons?organizationId=${value}`
                                 getOrgPersons(customeUrl).then(res=>{
-                                    console.log(res.data);
                                     if(res.success){
                                         const { BasicFields } = this.state
                                         BasicFields.fields[6].data = res.data
@@ -665,8 +664,8 @@ class InfoModal extends Component {
             ManageFields.fields[5].key = "projectManagerId"
             // this.setState ({ManageFields})
         }
-        const customeUrl = `helpers/contact-persons?active=1`                                        // either call this or call that
-        Promise.all([ getPanels(), getOrganizations(), getStates(), editLead && this.getRecord(editLead), getOrgPersons(customeUrl)])
+                                               // either call this or call that
+        Promise.all([ getPanels(), getOrganizations(), getStates(), editLead && this.getRecord(editLead)])
         .then(res => {
             if (res[1].success) {res[1].data[0].disabled = true}
             const { BasicFields, ManageFields } = this.state;
@@ -837,8 +836,8 @@ class InfoModal extends Component {
         return getRecord(id).then((res) => {
             if (res.success){
                 const { basic, tender, billing, dates, manage } = res
-
-                const contactPersons = getOrgPersons(basic.organizationId)
+                const customeUrl = `helpers/contact-persons?organizationId=${basic.organizationId}` 
+                const contactPersons = getOrgPersons(customeUrl)
                 this.basicRef.current.refs.basic_form.setFieldsValue({ obj: basic, });
                 this.tenderRef.current.refs.tender_form.setFieldsValue({ obj: tender, });
                 this.billingRef.current.refs.billing_form.setFieldsValue({ obj: billing, });

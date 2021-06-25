@@ -504,8 +504,7 @@ class InfoModal extends Component {
     const { editPro } = this.props;
     const dates = { entryDate: moment(new Date()) };
     this.datesRef.current.refs.dates_form.setFieldsValue({ obj: dates });
-    const customeUrl = `helpers/contact-persons?active=1`
-    Promise.all([ getPanels(), getOrganizations(), getStates(), editPro && this.getRecord(editPro), getOrgPersons(customeUrl), ])
+    Promise.all([ getPanels(), getOrganizations(), getStates(), editPro && this.getRecord(editPro), ])
       .then((res) => {
         if (res[1].success) {
           res[1].data[0].readOnly = true;
@@ -678,12 +677,11 @@ class InfoModal extends Component {
       if (res.success) {
         const { basic, tender, billing, dates, manage } = res;
 
-        const contactPersons = getOrgPersons(basic.organizationId);
+        const customeUrl = `helpers/contact-persons?organizationId=${basic.organizationId}` 
+        const contactPersons = getOrgPersons(customeUrl)
         this.basicRef.current.refs.basic_form.setFieldsValue({ obj: basic });
         this.tenderRef.current.refs.tender_form.setFieldsValue({ obj: tender });
-        this.billingRef.current.refs.billing_form.setFieldsValue({
-          obj: billing,
-        });
+        this.billingRef.current.refs.billing_form.setFieldsValue({ obj: billing, });
         this.datesRef.current.refs.dates_form.setFieldsValue({ obj: dates });
         this.manageRef.current.refs.manage_form.setFieldsValue({ obj: manage });
         return contactPersons;

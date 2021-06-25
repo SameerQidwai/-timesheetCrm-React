@@ -54,6 +54,14 @@ class ProfitLoss extends Component {
         return moment().isoWeekdayCalc(startDate,endDate,[1,2,3,4,5])
     }
 
+    calculateData = () =>{
+        const { data } = this.state
+        const { billing } = this.props
+        const len = billing.totalMonths>0 ? billing.totalMonths : 0
+        const noOfDays = billing.startDate.diff(billing.endDate, "days")
+        // let startDate = 
+    }
+
     Columns = () =>{
         const { columns, data } = this.state
         const { billing } = this.props
