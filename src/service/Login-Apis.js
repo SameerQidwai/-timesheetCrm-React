@@ -9,24 +9,25 @@ export const login = (data) => {
         .post(`${Api}/login`, data)
         .then((res) => {
             const { success, data, message } = res.data;
-                messageAlert.success({ content: message, key: 'logout'})
+            messageAlert.success({ content: message, key: 'logout', duration: 100})
             if (success){
                 let permissions = {}
                 let role = data.role
                 console.log(data.role);
-                delete data.role
+                data.role = role.roleId
                 role.permissions.map(el=>{
-                    if (permissions[el.resource]){
-                        permissions[el.resource][`${el.action}${el.grant}`] = true
-                    }else { 
-                        var key = `${el.action}${el.grant}`
-                        console.log(key);
-                        permissions[el.resource] = {[key]: true}
+                    if(!permissions[el.resource]){
+                        permissions[el.resource] = {}
                     }
+                    if (!permissions[el.resource][el.action]){
+                        permissions[el.resource][el.action] = {}
+                    }
+                    permissions[el.resource][el.action][el.grant] = true
                 })
+                data.permissions = JSON.stringify(permissions)
                 const keys = Object.keys(data)
-                let len = keys.length
-                while ( len-- ) {
+                let len = keys.length -1
+                for( len; len>=0; len-- ) {
                     const key = keys[len]
                     localStorage.setItem(key, data[key])
                 }
