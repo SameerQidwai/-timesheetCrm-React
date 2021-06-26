@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import { Route } from "react-router-dom"; // Route Library
+import { Route, Switch, Redirect } from "react-router-dom"; // Route Library
 
 import { Layout } from "antd";
 
@@ -34,11 +34,17 @@ import PurchaseOrder from "../../../pages/Project/PurchaseOrder";
 import Calender from "../../Calender/Calender";
 
 import Profile from "../../../pages/Profiles/Profile"
+import { localStore } from "../../../service/constant";
 
 const { Content } = Layout;
 
 const pageLinks = [
     // Page link and router
+    {
+        component: Profile,
+        link: "/profile",
+        key: "PROFILE"
+    },
     {
         component: Calender,
         link: "/calender",
@@ -46,127 +52,157 @@ const pageLinks = [
     {
         component: Admin,
         link: "/admin/global-settings",
+        key: 'ADMIN_OPTIONS',
     },
     {
         component: Admin,
         link: "/admin/calenders/holidays/:id",
+        key: 'ADMIN_OPTIONS',
     },
     {
         component: Admin,
         link: "/admin/calenders",
+        key: 'ADMIN_OPTIONS'
     },
     {
         component: Admin,
         link: "/admin/holiday-types",
+        key: 'ADMIN_OPTIONS'
     },
     {
         component: Admin,
         link: "/admin/leave-categories",
+        key: 'ADMIN_OPTIONS'
     },
     {
         component: Admin,
         link: "/admin/leave-policies",
+        key: 'ADMIN_OPTIONS'
     },
     {
         component: Admin,
         link: "/admin/roles",
+        key: 'ADMIN_OPTIONS'
     },
     {
         component: Admin,
         link: "/admin/standard-levels",
+        key: 'ADMIN_OPTIONS'
     },
     {
         component: Admin,
         link: "/admin/skills",
+        key: 'ADMIN_OPTIONS'
     },
     {
         component: Admin,
         link: "/admin/panels",
+        key: 'ADMIN_OPTIONS'
     },
     {
         component: Admin,
         link: "/admin/panels/skills/:id",
+        key: 'ADMIN_OPTIONS'
     },
     {
         component: Admin,
         link: "/check",
+        key: 'ADMIN_OPTIONS'
     },
     {
         component: Organizations,
         link: "/organisations",
+        key: 'ORGANIZATIONS'
     },
     {
         component: OrgInfo,
         link: "/organisations/:id/info",
+        key: 'ORGANIZATIONS'
     },
     {
         component: Contact,
         link: "/contact",
+        key: 'CONTACT_PERSONS'
     },
     {
         component: Employees,
         link: "/Employees",
+        key: "USERS"
     },
     {
         component: EmpInfo,
         link: "/Employees/:id/info",
+        key: "USERS"
     },
     {
         component: EmpBilling,
         link: "/Employee/:id/contracts",
+        key: "USERS"
     },
     {
         component: NovatedLease,
         link: "/Employee/:id/novated-lease",
+        key: "USERS"
     },
     {
         component: Contractors,
         link: "/sub-contractors",
+        key: "USERS"
     },
     {
         component: ContInfo,
         link: "/sub-contractors/:id/info",
+        key: "USERS"
     },
     {
         component: ContBilling,
         link: "/sub-contractors/:id/contracts",
+        key: "USERS"
     },
     {
         component: Opportunities,
         link: "/opportunities",
+        key: "OPPORTUNITIES"
     },
     {
         component: OpportunityInfo,
         link: "/opportunity/:id/info",
+        key: "OPPORTUNITIES"
     },
     {
         component: OpportunityResources,
         link: "/opportunity/:id/resources",
+        key: "OPPORTUNITIES"
     },
     {
         component: Projects,
         link: "/projects",
+        key: "PROJECTS"
     },
     {
         component: ProjectInfo,
         link: "/projects/:id/info",
+        key: "PROJECTS"
     },
     {
         component: PurchaseOrder,
         link: "/projects/:id/purchase-order",
+        key: "PROJECTS"
     },
     {
         component: ProjectResources,
         link: "/projects/:id/resources",
+        key: "PROJECTS"
     },
     {
         component: ResourceHistory,
-        // link: "/project/:projectId/resources/:resourcesId/rate/:id",
         link: "/projects/:proId/resources/rates/:id",
+        key: "PROJECTS"
     },
     {
         component: TimeSheet,
         link: "/time-sheet",
+        key: "TIMESHEETS"
     },
     {
         component: TimeOff,
@@ -176,27 +212,41 @@ const pageLinks = [
     //     component: Travels,
     //     link: "/travles",
     // },
-    {
-        component: Profile,
-        link: "/profile",
-    },
 ];
 
 class AdminContent extends Component {
-    // getPageLink = () => {
-    //     return pageLinks.map((el, i) => (
-    //         <Route exact path={el.link} component={el.component} key={i} />
-    //     ));
-    // };
+    constructor(props){
+        super()
+        this.state = {
+            allowedRoutes:[]
+        }
+    }
+    componentDidMount = () =>{
+        this.getPageLink()
+    }
+    getPageLink = () => {
+        const permissions = JSON.parse(localStore().permissions)
+        let { allowedRoutes } = this.state
+           console.log(permissions)
+           allowedRoutes[0] = pageLinks[0]
+       pageLinks.map(el=>{
+            if(permissions[el.key]&& permissions[el.key]['read']){
+                allowedRoutes.push(el)
+            }
+       })
+       this.setState({allowedRoutes})
+    };
 
     render() {
+        const { allowedRoutes } = this.state
         return (
-            <div >
+            <Switch >
                 {/* {this.getPageLink()} */}
-                {pageLinks.map((el, i) => (
+                {allowedRoutes.map((el, i) => (
                     <Route exact path={el.link} component={el.component} key={i} />
                 ))}
-            </div>
+                <Redirect to="/profile" />
+            </Switch>
         );
     }
 }

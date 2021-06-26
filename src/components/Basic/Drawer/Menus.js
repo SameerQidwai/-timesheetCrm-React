@@ -12,6 +12,7 @@ import {
 } from "@ant-design/icons"; //Icons
 
 import "../../Styles/Menus.css";
+import { localStore } from "../../../service/constant";
 
 const { SubMenu } = Menu;
 
@@ -26,7 +27,7 @@ const listData = [
         text: "Timesheets",
         icon: <CalendarOutlined />,
         link: "/time-sheet",
-        key: "/login",
+        key: "TIMESHEETS",
     },
     {
         text: "Time Offs",
@@ -68,8 +69,32 @@ const listData = [
 ];
 
 class Menus extends Component {
+    constructor(){
+        super()
+        this.state = {
+            allowedMenu: []
+        }
+    }
+    componentDidMount = () =>{
+        this.getAllowedMenu()
+    }
+    getAllowedMenu = () =>{
+        const permissions = JSON.parse(localStore().permissions)
+        let { allowedMenu } = this.state
+            console.log(permissions)
+            // allowedMenu[0] = pageLinks[0]
+            listData.map(el=>{
+                console.log(el.key);
+                if(permissions[el.key]&& permissions[el.key]['read']){
+                    allowedMenu.push(el)
+                }
+            })
+       this.setState({allowedMenu})
+    }
+
     MenuRender = () => {
-        return listData.map((item, i) =>
+        const { allowedMenu } = this.state
+        return allowedMenu.map((item, i) =>
             item.subMenu ? (
                 <SubMenu key={item.key} icon={item.icon} title={item.text}>
                     {item.subMenu.map((sub, j) => (

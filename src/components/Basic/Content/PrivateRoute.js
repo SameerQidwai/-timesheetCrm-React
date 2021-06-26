@@ -25,7 +25,8 @@ function PrivateRoute () {
             }}
         >
             { loggedIn()?
-                admin ? <AdminContent />: <UserContent />                
+                // admin ? <AdminContent />: <UserContent />
+                <AdminContent />                
                 :
                 <Redirect to={{ pathname: '/'}} /> 
             }

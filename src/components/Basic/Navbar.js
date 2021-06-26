@@ -4,6 +4,7 @@ import { CaretDownOutlined, DownOutlined, SettingOutlined, LogoutOutlined, Profi
 import { Link, Redirect, withRouter } from "react-router-dom";
 
 import "../Styles/Navbar.css";
+import { localStore } from "../../service/constant";
 
 const NavItem = [
     {
@@ -12,10 +13,12 @@ const NavItem = [
             { text: "Organisations", link: "/organisations" },
             { text: "Contact", link: "/contact" },
         ],
+        key: 'CONTACT_PERSONS'
     },
     {
         text: "Opportunities",
         link: "/opportunities",
+        key: "OPPORTUNITIES"
     },
     {
         text: "Resources",
@@ -23,35 +26,40 @@ const NavItem = [
             { text: "Employees", link: "/Employees" },
             { text: "Sub Contractors", link: "/sub-contractors" },
         ],
+        key: "USERS"
     },
     {
         text: "Projects",
         link: "/projects",
+        key: "PROJECTS"
     },
-    // {
-    //     text:'Admin',
-    //     items: [
-    //         {text:'Global-Settings',
-    //         link: '/admin/global-settings'},
-    //         {text:'Calander-list',
-    //         link: '/admin/calender'},
-    //         {text:'Time Offs',
-    //         link: '/admin/time-offs'},
-    //         {text:'Time Off Policies',
-    //         link: '/admin/time-off-policies'},
-    //         {text:'Role & Permissions',
-    //         link: '/admin/roles'},
-    //     ],
-    // }
 ];
 
 class Navbar extends Component {
     constructor(){
         super()
         this.state ={
-            logout: false
+            logout: false,
+            allowedNavItem: [],
         }
     }
+    componentDidMount = () =>{
+        this.getAllowedItems()
+    }
+    getAllowedItems = ()=>{
+        const permissions = JSON.parse(localStore().permissions)
+        let { allowedNavItem } = this.state
+            console.log(permissions)
+            // allowedNavItem[0] = pageLinks[0]
+            NavItem.map(el=>{
+                console.log(el.key);
+                if(permissions[el.key]&& permissions[el.key]['read']){
+                    allowedNavItem.push(el)
+                }
+            })
+       this.setState({allowedNavItem})
+    }
+    
     getNavMenuItems = (menusData) => {
         if (!menusData) {
             return [];
@@ -72,6 +80,7 @@ class Navbar extends Component {
             </Menu>
         );
     };
+
     getSubMenuOrItem = (item, i) => {
         return item.items ? (
             <Dropdown overlay={this.getDropMenu(item.items, i)} key={i}>
@@ -87,6 +96,7 @@ class Navbar extends Component {
             </span>
         );
     };
+
     logOut = () =>{
         message.loading({ content: 'Loading...', key: 'logout' })
         localStorage.clear();
@@ -98,7 +108,7 @@ class Navbar extends Component {
     }
 
     render() {
-        const { logout } = this.state
+        const { logout, allowedNavItem } = this.state
         const options = (
             <Menu onClick={this.handleMenuClick}>
               <Menu.Item key="profile">
@@ -116,7 +126,7 @@ class Navbar extends Component {
                     id="navbarsExample10"
                 >
                     <Row justify="space-between">
-                        <Col>{this.getNavMenuItems(NavItem)}</Col>
+                        <Col>{this.getNavMenuItems(allowedNavItem)}</Col>
                         <Col xs={{ span: 2 }} md={{ span: 2 }}>
                             <Space size="large">
                                 <Link
