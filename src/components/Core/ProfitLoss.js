@@ -46,7 +46,7 @@ class ProfitLoss extends Component {
         }
     }
     componentDidMount = () =>{
-        this.Columns()
+        this.calculateData()
     }
 
     getWeekdays = (startDate, endDate) =>{
@@ -58,24 +58,46 @@ class ProfitLoss extends Component {
         const { data } = this.state
         const { billing } = this.props
         const len = billing.totalMonths>0 ? billing.totalMonths : 0
-        const noOfDays = billing.startDate.diff(billing.endDate, "days")
-        // let startDate = 
+        let startDate = moment(billing.startDate)
+        let endDate = moment(billing.endDate)
+        let noOfDays = 0
+        for (var i =1; i<=len; i++){
+            startDate = i===1 ? billing.startDate : moment(startDate).set('date', 1); 
+            endDate = i===len ? billing.endDate: moment(startDate).endOf('month');
+            noOfDays = noOfDays + this.getWeekdays(startDate, endDate)
+            startDate = moment(startDate).add(1, 'months')
+        }
+        let revenue = (billing.discount / noOfDays)
+        let cm = (revenue * billing.cmPercentage /100 )
+        let cos = (revenue - cm)
+        for (var i =1; i<= len; i++){
+            console.log(i, len);
+            startDate = i===1 ? billing.startDate  : moment(startDate).set('date', 1); 
+            endDate = i===len ? billing.endDate: moment(startDate).endOf('month');
+            let workDays = this.getWeekdays(startDate, endDate)
+            data[0][i] = formatCurrency((revenue * workDays).toFixed(2))
+            data[1][i] = formatCurrency((cos * workDays).toFixed(2))
+            data[2][i] = formatCurrency((cm * workDays).toFixed(2))
+            data[3][i] = formatCurrency(billing.cmPercentage)
+            startDate = moment(startDate).add(1, 'months')
+        }
+        console.log(data);
+        this.setState({data},()=>{
+            this.Columns()
+
+        })
     }
 
     Columns = () =>{
-        const { columns, data } = this.state
+        const { columns } = this.state
         const { billing } = this.props
         const len = billing.totalMonths>0 ? billing.totalMonths : 0
         let month = billing.startDate
-        let revenue = (billing.discount / len).toFixed(2);
-        let cm = ((revenue * billing.cmPercentage ) / 100).toFixed(2);
-        let cos = (revenue - cm).toFixed(2);
         let startDate = ''
         let endDate = ''
-        console.log(cm);
         let array = []
         for (var i = 1; i <=len; i++){
-            startDate = i===1 ? month : moment(month).set('date', 1); 
+            startDate = i===1 ? billing.startDate : moment(startDate).set('date', 1); 
             endDate = i===len ? billing.endDate : moment(startDate).endOf('month');
             array.push(
                 {
@@ -102,16 +124,12 @@ class ProfitLoss extends Component {
                     ]
                 },
             )
-            data[0][i] = formatCurrency(revenue)
-            data[1][i] = formatCurrency(cos)
-            data[2][i] = formatCurrency(cm)
-            data[3][i] = formatCurrency(billing.cmPercentage)
+            
+            startDate = moment(startDate).add(1, 'months')
             month = moment(month).add(1, 'months')
         }
         this.setState({
             columns: [...columns, ...array],
-            data
-            // billing,
         })
     }
 

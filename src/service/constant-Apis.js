@@ -112,11 +112,10 @@ export const getOrgPersons = (url) =>{
     .then((res) => {
         const { success, data } = res.data;
         var cps = []
-        console.log(data);
-        data.map((el) => {
-            cps.push({value: el.id, label: el.firstName +' ' +el.lastName, status: 'Employee'})
-        });
-        if (success) return { success: success, data: cps };
+        // data.map((el) => {
+        //     cps.push({value: el.id, label: el.firstName +' ' +el.lastName, status: 'Employee'})
+        // });
+        if (success) return { success: success, data: data };
     })
     .catch((err) => {
         return {

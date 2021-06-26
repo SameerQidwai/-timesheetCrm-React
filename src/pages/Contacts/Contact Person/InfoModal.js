@@ -571,7 +571,7 @@ class InfoModal extends Component {
 
     newAssociateField = (item_no) =>{
         const { orgs_data } = this.state
-        const splice_key = [`organizationId${item_no}`, `designation${item_no}`, `startDate${item_no}`,`endDate${item_no}`, item_no];
+        const splice_key = [`organizationId${item_no}`, `designation${item_no}`, `startDate${item_no}`,`endDate${item_no}`,`id${item_no}` ,item_no, ];
         return [
            
             {
@@ -612,6 +612,15 @@ class InfoModal extends Component {
                 type: "DatePicker",
             },
             {
+                object: "asso",
+                fieldCol: 6,
+                key: splice_key[4],
+                hidden: true,
+                size: "small",
+                // rules:[{ required: true }],
+                type: "Input",
+            },
+            {
                 fieldCol: 2,
                 size: "small",
                 Placeholder: <CloseOutlined />,
@@ -628,7 +637,8 @@ class InfoModal extends Component {
                             obj.key !== splice_key[1] &&
                             obj.key !== splice_key[2] &&
                             obj.key !== splice_key[3] &&
-                            obj.key !== splice_key[4] 
+                            obj.key !== splice_key[4] &&
+                            obj.key !== splice_key[5]
                         );
                     });
                     const {asso} = this.associateRef.current.refs.associate_form.getFieldsValue() // const
@@ -641,6 +651,7 @@ class InfoModal extends Component {
                     this.setState({ associateFields, });
                 }.bind(this),
             },
+            
         ]
     }
 
@@ -688,6 +699,7 @@ class InfoModal extends Component {
             for (let i = 0; i < result; i++) {
                 if(asso[`organizationId${i}`]){
                     vars.push({
+                        id: asso[`id${i}`] ?? 0,
                         designation: asso[`designation${i}`],
                         organizationId: asso[`organizationId${i}`],
                         startDate: asso[`startDate${i}`],
@@ -801,12 +813,15 @@ class InfoModal extends Component {
                     }
                     if(assoEl){ // checking if the next assoEl have obj to insert value and fields into form 
                         associateFields.fields = associateFields.fields.concat( this.newAssociateField(i) );
+                        asso[`id${i}`] = assoEl.id
                         asso[`designation${i}`] = assoEl.designation
                         asso[`organizationId${i}`] = assoEl.organizationId
                         asso[`startDate${i}`] = assoEl.startDate && moment(assoEl.startDate)
                         asso[`endDate${i}`] = assoEl.endDate && moment (assoEl.endDate)
                     }
+                    
                 }
+                console.log(asso);
                 if (skillArray.length === 0){ // checking if skill is not have any data when getting record to edited and insert an new Empty fields
                     console.log(skillArray.length, 'skill length null');
                     SkillFields.fields = SkillFields.fields.concat( this.newSkillField(0));

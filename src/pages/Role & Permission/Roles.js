@@ -28,28 +28,8 @@ class Roles extends Component {
                     <Dropdown
                         overlay={
                             <Menu>
-                                {/* <Menu.Item danger>
-                                    <Popconfirm
-                                        title="Sure to delete?"
-                                        onConfirm={() =>
-                                            this.handleDelete(record.key)
-                                        }
-                                    >
-                                        Delete
-                                    </Popconfirm>
-                                </Menu.Item> */}
-                                <Menu.Item
-                                    onClick={() => {
-                                        this.getRecord(record, index);
-                                    }}
-                                >
-                                    Edit
-                                </Menu.Item>
-                                <Menu.Item onClick={()=>this.callPermission(record, index)}>
-                                    {/* <Link to={{ pathname: '/admin/calender/holidays' ,query: record.key}} className="nav-link"> */}
-                                    Permissions
-                                    {/* </Link> */}
-                                </Menu.Item>
+                                <Menu.Item disabled={record.isSystem} onClick={() => { this.getRecord(record, index); }} > Edit </Menu.Item>
+                                <Menu.Item onClick={()=>this.callPermission(record, index)}> Permissions </Menu.Item>
                             </Menu>
                         }
                     >
@@ -82,6 +62,7 @@ class Roles extends Component {
             editRole: false,
             perModal: false,
             permissions: false,
+            isSystem: false,
             loading: false,
             FormFields: {
                 formId: "role_form",
@@ -180,8 +161,9 @@ class Roles extends Component {
         })
     };
 
-    callPermission = (record, index) => {
-        this.setState({ perModal: true, editRole: record.id,  roleIndex: index, permissions: record.permissions});
+    callPermission = (record, index) => {//record.isSystem
+        console.log(record);
+        this.setState({ perModal: true, editRole: record.id,  roleIndex: index, permissions: record.permissions??[], isSystem: record.isSystem});
     };
 
     updatePermission = (value) =>{
@@ -206,7 +188,7 @@ class Roles extends Component {
     }
 
     render() {
-        const {data, openModal, editRole, FormFields, perModal, loading, permissions} = this.state;
+        const {data, openModal, editRole, FormFields, perModal, loading, permissions, isSystem} = this.state;
         const columns = this.columns;
         return (
             <>
@@ -252,6 +234,7 @@ class Roles extends Component {
                     isVisible={perModal}
                     Callback={this.updatePermission}
                     perData={permissions}
+                    isSystem={isSystem}
                     eidtPer={editRole}
                     closeModal={this.perColse}
                 />}

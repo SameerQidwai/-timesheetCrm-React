@@ -165,6 +165,7 @@ class Permission extends Component {
 
     componentDidMount = () =>{
         this.handleRawDtata()
+        console.log(this.props.isSystem);
     }
 
     changePermission = (grant, action, index) =>{
@@ -247,7 +248,7 @@ class Permission extends Component {
 
     render (){
         const { loading, permissions } = this.state
-        const { closeModal } = this.props
+        const { closeModal, isSysytem } = this.props
         return (
                 <Modal
                     title="Edit Permission"
@@ -255,7 +256,7 @@ class Permission extends Component {
                     centered
                     visible={this.props.isVisible}
                     onOk={this.setPermissions}
-                    okButtonProps={{ disabled: loading }}
+                    okButtonProps={{ disabled: loading || isSysytem }}
                     okText={loading ?<LoadingOutlined /> :"Save"}
                     onCancel={()=>{closeModal()}}
                     width={700}

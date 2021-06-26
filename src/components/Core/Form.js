@@ -109,6 +109,7 @@ class Forms extends Component {
                                     span={item.fieldCol}
                                     offset={item.filedOffset}
                                     key={j + 1}
+                                    hidden={item.hidden === true}
                                     style={item.style}
                                 >
                                     <Item

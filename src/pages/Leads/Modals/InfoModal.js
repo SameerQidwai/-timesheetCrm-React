@@ -664,19 +664,21 @@ class InfoModal extends Component {
             ManageFields.fields[5].key = "projectManagerId"
             // this.setState ({ManageFields})
         }
-                                               // either call this or call that
-        Promise.all([ getPanels(), getOrganizations(), getStates(), editLead && this.getRecord(editLead)])
+        // either call this or call that
+        const customeUrl = `helpers/contact-persons?active=1&employee=1&associated=1`
+        Promise.all([ getPanels(), getOrganizations(), getStates(), getOrgPersons(customeUrl), editLead && this.getRecord(editLead)])
         .then(res => {
+            console.log(res[3]);
             if (res[1].success) {res[1].data[0].disabled = true}
             const { BasicFields, ManageFields } = this.state;
             BasicFields.fields[2].data = res[0].success? res[0].data : [];
             BasicFields.fields[3].data = res[1].success? res[1].data : [];
             BasicFields.fields[11].data = res[2].success? res[2].data : [];
-            BasicFields.fields[6].data = res[3].success? res[3].data : [];
+            BasicFields.fields[6].data = res[4].success? res[4].data : [];
 
-            ManageFields.fields[2].data = res[4].success ? res[4].data: [];
-            ManageFields.fields[3].data = res[4].success ? res[4].data: [];
-            ManageFields.fields[5].data = res[4].success ? res[4].data: [];
+            ManageFields.fields[2].data = res[3].success ? res[3].data: [];
+            ManageFields.fields[3].data = res[3].success ? res[3].data: [];
+            ManageFields.fields[5].data = res[3].success ? res[3].data: [];
             // ManageFields.fields[7].data = res[4].success ? res[4].data: [];
             
             this.setState({ BasicFields, ManageFields })
@@ -778,7 +780,7 @@ class InfoModal extends Component {
     ManageCall = (vake) => {
         // this will work after I get the Object from the form
         vake = vake.obj
-        
+        console.log('these are managers', vake)
         this.setState(
             {
                 mergeObj: {
@@ -831,19 +833,20 @@ class InfoModal extends Component {
     }
 
     getRecord = (id) => {
-        const { ManageFields }= this.state
-        console.log(ManageFields.fields[4], ManageFields.fields[5]);
         return getRecord(id).then((res) => {
             if (res.success){
                 const { basic, tender, billing, dates, manage } = res
-                const customeUrl = `helpers/contact-persons?organizationId=${basic.organizationId}` 
-                const contactPersons = getOrgPersons(customeUrl)
                 this.basicRef.current.refs.basic_form.setFieldsValue({ obj: basic, });
                 this.tenderRef.current.refs.tender_form.setFieldsValue({ obj: tender, });
                 this.billingRef.current.refs.billing_form.setFieldsValue({ obj: billing, });
                 this.datesRef.current.refs.dates_form.setFieldsValue({ obj: dates, });
                 this.manageRef.current.refs.manage_form.setFieldsValue({ obj: manage, });
-                return contactPersons
+
+                const customeUrl = `helpers/contact-persons?organizationId=${basic.organizationId}` 
+                return getOrgPersons(customeUrl).then(resp=>{
+                    console.log(resp);
+                    return {success: resp.success, data: resp.data}
+                })
             }
         })
 
