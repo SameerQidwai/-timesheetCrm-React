@@ -24,14 +24,12 @@ export const login = (data) => {
                     }
                     permissions[el.resource][el.action][el.grant] = true
                 })
-                console.log(permissions);
                 data.permissions = JSON.stringify(permissions)
                 const keys = Object.keys(data)
-                let len = keys.length
+                let len = keys.length -1
                 for( len; len>=0; len-- ) {
                     const key = keys[len]
                     localStorage.setItem(key, data[key])
-                    localStorage.getItem(key)
                 }
                 return {success, data};
             } 
