@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Api } from "./constant";
+import { Api, setToken } from "./constant";
 import { message } from "antd";
 import moment from "moment";
 
@@ -12,6 +12,7 @@ export const addList = (data) => {
         .then((res) => {
             const { success } = res.data;
             message.success({ content: 'Success!', key: 1})
+            setToken(res.headers&& res.headers.authorization)
             if (success) return {success};
         })
         .catch((err) => {
@@ -29,6 +30,7 @@ export const getList = () => {
         .get(url)
         .then((res) => {
             const { success, data } = res.data;
+            setToken(res.headers&& res.headers.authorization)
             if (success) return { success: success, data: data };
         })
         .catch((err) => {
@@ -93,6 +95,7 @@ export const getRecord = (id) => {
                     opportunityManagerId: data.opportunityManagerId,
                 }
                 data.ContactName= data.contactPerson && data.contactPerson.firstName + ' ' + data.contactPerson.lastName
+                setToken(res.headers&& res.headers.authorization)
                 return {success, data, basic, tender, billing, dates, manage};
             }
         })
@@ -110,6 +113,7 @@ export const delList = (id) => {
         .delete(url + `/${id}`)
         .then((res) => {
             const { success } = res.data;
+            setToken(res.headers&& res.headers.authorization)
             if (success) return {success};
         })
         .catch((err) => {
@@ -128,6 +132,7 @@ export const editList = (data) => {
         .then((res) => {
             const { success } = res.data;
             message.success({ content: 'Success!', key: data.id})
+            setToken(res.headers&& res.headers.authorization)
             if (success) return {success};
         })
         .catch((err) => {
@@ -147,6 +152,7 @@ export const addLeadSkill = (id, data) => {
         .then((res) => {
             const { success, data } = res.data;
             message.success({ content: 'Success!', key: id})
+            setToken(res.headers&& res.headers.authorization)
             if (success) return {success, data: data[0]};
         })
         .catch((err) => {
@@ -166,6 +172,7 @@ export const getLeadSkills = (id)=>{
             const { success, data } = res.data;
             if (success) {
                 // console.log(data);
+                setToken(res.headers&& res.headers.authorization)
                 return { success: success, data: data }
             };
         })
@@ -183,6 +190,7 @@ export const getLeadSkill = (oppId, resId) => {
         .get(url + `/${oppId}/resources/${resId}`)
         .then((res) => {
             const { success, data } = res.data;
+            setToken(res.headers&& res.headers.authorization)
             return {success, data: data[0]}
         })
         .catch((err) => {
@@ -201,6 +209,7 @@ export const editLeadSkill = (oppId, resId, data) => {
         .then((res) => {
             const { success, data } = res.data;
             message.success({ content: 'Success!', key: resId})
+            setToken(res.headers&& res.headers.authorization)
             if (success) return {success, data: data[0]};
         })
         .catch((err) => {
@@ -219,7 +228,7 @@ export const delLeadSkill = (oppId, resId) => {
         .delete(url + `/${oppId}/resources/${resId}`)
         .then((res) => {
             const { success } = res.data;
-            console.log(res);
+            setToken(res.headers&& res.headers.authorization)
             if (success) return {success};
         })
         .catch((err) => {
@@ -238,6 +247,7 @@ export const addLeadSkillResource = (oppId, skillId,  data) => {
         .then((res) => {
             const { success, data } = res.data;
             message.success({ content: 'Success!', key: skillId})
+            setToken(res.headers&& res.headers.authorization)
             if (success) return {success, data: data};
         })
         .catch((err) => {
@@ -255,6 +265,7 @@ export const getLeadSkillResource = (oppId,skillId, resId) => {
         .get(url + `/${oppId}/resources/${skillId}/allocations/${resId}`)
         .then((res) => {
             const { success, data } = res.data;
+            setToken(res.headers&& res.headers.authorization)
             return {success, data}
         })
         .catch((err) => {
@@ -274,6 +285,7 @@ export const editLeadSkillResource = (oppId, skillId, resId, data) => {
         .then((res) => {
             const { success, data } = res.data;
             message.success({ content: 'Success!', key: resId})
+            setToken(res.headers&& res.headers.authorization)
             if (success) return {success, data};
         })
         .catch((err) => {
@@ -291,6 +303,7 @@ export const delLeadSkillResource = (oppId, skillId, resId,) => {
         .delete(url + `/${oppId}/resources/${skillId}/allocations/${resId}`)
         .then((res) => {
             const { success } = res.data;
+            setToken(res.headers&& res.headers.authorization)
             if (success) return {success};
         })
         .catch((err) => {
@@ -308,6 +321,7 @@ export const selectLeadSkillResource = (oppId, skillId, resId) => {
         .patch(url + `/${oppId}/resources/${skillId}/allocations/${resId}/mark-as-selected`)
         .then((res) => {
             const { success } = res.data;
+            setToken(res.headers&& res.headers.authorization)
             if (success) return {success};
         })
         .catch((err) => {
@@ -324,6 +338,7 @@ export const workIsLost = (oppId) => {
         .put(url + `/${oppId}/lost`)
         .then((res) => {
             const { success } = res.data;
+            setToken(res.headers&& res.headers.authorization)
             if (success) return {success};
         })
         .catch((err) => {
@@ -342,6 +357,7 @@ export const workWon = (oppId, data) => {
         .then((res) => {
             const { success } = res.data;
             message.success({ content: 'Success!', key: oppId})
+            setToken(res.headers&& res.headers.authorization)
             if (success) return {success};
         })
         .catch((err) => {

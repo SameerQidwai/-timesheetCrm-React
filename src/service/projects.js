@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Api } from "./constant";
+import { Api, setToken } from "./constant";
 import moment from "moment";
 import { message } from "antd";
 
@@ -12,6 +12,7 @@ export const addList = (data) => {
         .then((res) => {
             const { success } = res.data;
             message.success({ content: 'Success!', key: 1})
+            setToken(res.headers&& res.headers.authorization)
             if (success) return {success};
         })
         .catch((err) => {
@@ -29,6 +30,7 @@ export const getList = () => {
         .get(url)
         .then((res) => {
             const { success, data } = res.data;
+            setToken(res.headers&& res.headers.authorization)
             if (success) return { success: success, data: data };
         })
         .catch((err) => {
@@ -45,7 +47,6 @@ export const getRecord = (id) => {
         .get(url + `/${id}`)
         .then((res) => {
             const { success, data } = res.data;
-            // console.log(data);
             if (success) {
                 const basic = {
                     id: data.id,
@@ -94,6 +95,7 @@ export const getRecord = (id) => {
                 }
                 data.ContactName= data.contactPerson && data.contactPerson.firstName + ' ' + data.contactPerson.lastName
                 data.organizationName = data.organization && data.organization.name 
+                setToken(res.headers&& res.headers.authorization)
                 return {success, data, basic, tender, billing, dates, manage};
             }
         })
@@ -111,6 +113,7 @@ export const delList = (id) => {
         .delete(url + `/${id}`)
         .then((res) => {
             const { success } = res.data;
+            setToken(res.headers&& res.headers.authorization)
             if (success) return {success};
         })
         .catch((err) => {
@@ -129,6 +132,7 @@ export const editList = (data) => {
         .then((res) => {
             const { success } = res.data;
             message.success({ content: 'Success!', key: data.id})
+            setToken(res.headers&& res.headers.authorization)
             if (success) return {success};
         })
         .catch((err) => {
@@ -148,6 +152,7 @@ export const addLeadSkill = (id, data) => {
         .then(res=>{
         const { success } = res.data
         message.success({ content: 'Success!', key: id})
+        setToken(res.headers&& res.headers.authorization)
         if(success) return { success }
     })
     .catch(err=>{
@@ -167,7 +172,7 @@ export const getLeadSkills = (id)=>{
         .then((res) => {
             const { success, data } = res.data;
             if (success) {
-                // console.log(data);
+                setToken(res.headers&& res.headers.authorization)
                 return { success: success, data: data }
             };
         })
@@ -198,6 +203,7 @@ export const getLeadSkill = (proId, resId) => {
                     effortRate: data.opportunityResourceAllocations && data.opportunityResourceAllocations[0].effortRate,
                     allocationId: data.opportunityResourceAllocations && data.opportunityResourceAllocations[0].id
                 }
+                setToken(res.headers&& res.headers.authorization)
                 return {success, data: obj}
             }
         })
@@ -212,13 +218,13 @@ export const getLeadSkill = (proId, resId) => {
 
 export const editLeadSkill = (proId, resId, data) => {
     message.loading({ content: 'Loading...', key: resId })
-    console.log(proId, resId, data);
     // return { success: false }
     return axios
         .put(url + `/${proId}/resources/${resId}`, data)
         .then((res) => {
             const { success, data } = res.data;
             message.success({ content: 'Success!', key: resId})
+            setToken(res.headers&& res.headers.authorization)
             if (success) return {success, data: data[0]};
         })
         .catch((err) => {
@@ -232,12 +238,11 @@ export const editLeadSkill = (proId, resId, data) => {
 };
 
 export const delLeadSkill = (proId, resId) => {
-    console.log(proId, resId);
     return axios
         .delete(url + `/${proId}/resources/${resId}`)
         .then((res) => {
             const { success } = res.data;
-            console.log(res);
+            setToken(res.headers&& res.headers.authorization)
             if (success) return {success};
         })
         .catch((err) => {
@@ -256,7 +261,7 @@ export const addLeadSkillResource = (proId, skillId,  data) => {
         .then((res) => {
             const { success, data } = res.data;
             message.success({ content: 'Success!', key: skillId})
-            console.log(data);
+            setToken(res.headers&& res.headers.authorization)
             if (success) return {success, data: data};
         })
         .catch((err) => {
@@ -274,6 +279,7 @@ export const getLeadSkillResource = (proId,skillId, resId) => {
         .get(url + `/${proId}/resources/${skillId}/allocations/${resId}`)
         .then((res) => {
             const { success, data } = res.data;
+            setToken(res.headers&& res.headers.authorization)
             return {success, data}
         })
         .catch((err) => {
@@ -286,11 +292,11 @@ export const getLeadSkillResource = (proId,skillId, resId) => {
 };
 
 export const editLeadSkillResource = (proId, skillId, resId, data) => {
-    console.log({proId, skillId, resId, data});
     return axios
         .put(url + `/${proId}/resources/${skillId}/allocations/${resId}`, data)
         .then((res) => {
             const { success, data } = res.data;
+            setToken(res.headers&& res.headers.authorization)
             if (success) return {success, data};
         })
         .catch((err) => {
@@ -307,6 +313,7 @@ export const delLeadSkillResource = (proId, skillId, resId,) => {
         .delete(url + `/${proId}/resources/${skillId}/allocations/${resId}`)
         .then((res) => {
             const { success } = res.data;
+            setToken(res.headers&& res.headers.authorization)
             if (success) return {success};
         })
         .catch((err) => {
@@ -319,11 +326,11 @@ export const delLeadSkillResource = (proId, skillId, resId,) => {
 };
 
 export const selectLeadSkillResource = (proId, skillId, resId) => {
-    console.log(proId, skillId, resId);
     return axios
         .patch(url + `/${proId}/resources/${skillId}/allocations/${resId}/mark-as-selected`)
         .then((res) => {
             const { success } = res.data;
+            setToken(res.headers&& res.headers.authorization)
             if (success) return {success};
         })
         .catch((err) => {
@@ -337,12 +344,12 @@ export const selectLeadSkillResource = (proId, skillId, resId) => {
 
 export const addOrder = (proId, data) => {
     message.loading({ content: 'Loading...', key: proId })
-    console.log(proId, data);
     return axios
         .post(url + `/${proId}/purchaseOrders`, data)
         .then((res) => {
             const { success } = res.data;
             message.success({ content: 'Success!', key: proId})
+            setToken(res.headers&& res.headers.authorization)
             if (success) return {success};
         })
         .catch((err) => {
@@ -360,7 +367,7 @@ export const getOrders = (proId) => {
         .get(url + `/${proId}/purchaseOrders`)
         .then((res) => {
             const { success, data } = res.data;
-            console.log(res.data);
+            setToken(res.headers&& res.headers.authorization)
             if (success) return { success: success, data: data };
         })
         .catch((err) => {
@@ -380,6 +387,7 @@ export const editOrder = (proId, id, data) => {
         .then((res) => {
             const { success } = res.data;
             message.success({ content: 'Success!', key: id})
+            setToken(res.headers&& res.headers.authorization)
             if (success) return {success};
         })
         .catch((err) => {
@@ -402,6 +410,7 @@ export const getOrder = (proId,id) => {
                     issueDate: data.issueDate ? moment(data.issueDate): null,
                     expiryDate: data.expiryDate ? moment(data.expiryDate): null
                 }
+                setToken(res.headers&& res.headers.authorization)
                 return {success, data: obj };
             }
         })
@@ -419,6 +428,7 @@ export const delOrder = (proId,id) => {
         .delete(url + `/${proId}/purchaseOrders/${id}`)
         .then((res) => {
             const { success } = res.data;
+            setToken(res.headers&& res.headers.authorization)
             if (success) return {success};
         })
         .catch((err) => {

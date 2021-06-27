@@ -100,7 +100,6 @@ class Comments extends Component {
             };
             const { targetType, targetId } = this.props;
             addComment(targetType, targetId, comment).then((res) => {
-                console.log(res);
                 if (res.success) {
                     this.setState(
                         {
@@ -133,7 +132,6 @@ class Comments extends Component {
                 const { data } = this.state;
                 if (!scrollTop && data.length < 500) {
                     // check if the scroll value is still Zero
-                    console.log("done");
                     // this.setState({
                     //     data: [...data, ...data], //data inserted
                     // });

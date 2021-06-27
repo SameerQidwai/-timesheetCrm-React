@@ -6,9 +6,9 @@ import { localStore } from "../../service/constant";
 const { Title } = Typography;
 const { Password } = Input;
 
-function Login() {
+function Login(props) {
     const { state } = useLocation();
-    const { from } = state || { from: { pathname: "/organisations" } };
+    const { from } = state || { from: { pathname: "/profile" } };
     const [redirectToReferrer, setRedirectToReferrer] = useState(false);
 
     useEffect(() => {
@@ -16,12 +16,14 @@ function Login() {
     },[])
 
     const loginFunc = (value) => {
-
+        
+        console.log(value);
         login(value).then(res=>{
             if(res&& res.success){
                 //set local storage
                 console.log(JSON.parse(localStore().permissions))
-                setRedirectToReferrer(true)
+                window.location.href="/profile"
+                // setRedirectToReferrer(true)
             }
         })
     };

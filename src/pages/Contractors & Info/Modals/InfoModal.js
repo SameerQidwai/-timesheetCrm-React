@@ -266,6 +266,23 @@ class InfoModal extends Component {
                         itemStyle: { marginBottom: 10 },
                     },
                     {
+                        Placeholder: "Role",
+                        fieldCol: 24,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                    },
+                    {
+                        object: "basic",
+                        fieldCol: 12,
+                        key: "role_id",
+                        size: "small",
+                        // rules:[{ required: true }],
+                        type: "Select",
+                        data: [],
+                        itemStyle: { marginBottom: 10 },
+                    },
+                    {
                         Placeholder: "Address",
                         fieldCol: 24,
                         size: "small",
@@ -599,14 +616,15 @@ class InfoModal extends Component {
     };
 
     fetchAll = (edit) =>{
-        Promise.all([ getStates(), edit ? this.getRecord(edit) : getOrganizations()])
+        Promise.all([ getStates(), getStates(), edit ? this.getRecord(edit) : getOrganizations()])
         .then(res => {
             const { BasicFields } = this.state
             BasicFields.fields[15].data = res[0].data;
+            BasicFields.fields[17].data = res[1].data;
                 this.setState({
                     BasicFields,
-                    sUsername: edit ? res[1].username: null,
-                    ORGS: !edit ? res[1].data.filter((item) => item.value !== 1): [],
+                    sUsername: edit ? res[2].username: null,
+                    ORGS: !edit ? res[2].data.filter((item) => item.value !== 1): [],
                 })
         })
         .catch(e => {
@@ -727,7 +745,6 @@ class InfoModal extends Component {
 
     getRecord = (id) => {
         return getRecord(id).then(res=>{
-            console.log(this.emailRef);
             if (res.success){
                 this.basicRef.current.refs.basic_form.setFieldsValue({ basic: res.basic, });
                 this.kinRef.current.refs.kin_form.setFieldsValue({ kin: res.kin, });

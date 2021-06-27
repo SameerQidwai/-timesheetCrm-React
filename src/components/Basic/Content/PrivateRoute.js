@@ -14,7 +14,6 @@ const { Content } = Layout;
 function PrivateRoute () {
     const location = useLocation();
     const admin = true
-    // console.log('loggedIn()',loggedIn());
     return (
         <Content
             className="site-layout-background"

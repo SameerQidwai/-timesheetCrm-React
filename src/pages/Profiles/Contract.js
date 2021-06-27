@@ -197,7 +197,6 @@ const PersonalContract = (props)=> {
         },
     ];
     useEffect(() => {
-        console.log(props.data);
         form.setFieldsValue({billing: props.data})
     }, [])
     return (

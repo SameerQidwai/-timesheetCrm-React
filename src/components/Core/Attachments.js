@@ -25,7 +25,6 @@ class Attachments extends Component {
     getRecord = (targetType, targetId) =>{
         getAttachments(targetType, targetId).then(res=>{
             if(res.success){
-                console.log(res.fileList);
                 this.setState({
                     fileList: res.fileList,
                     fileIds: res.fileIds,
@@ -74,7 +73,6 @@ class Attachments extends Component {
     }
 
     onRemove = (file) => {
-        console.log(file);
         delAttachment(file.id).then(res=>{
             if(res.success){
                 this.setState((state) => {

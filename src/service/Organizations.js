@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { Api } from "./constant";
+import { Api, setToken } from "./constant";
 import moment from "moment";
 import { message } from "antd";
 
@@ -11,6 +11,7 @@ export const getList = () => {
         .get(url)
         .then((res) => {
             const { success, data } = res.data;
+            setToken(res.headers&& res.headers.authorization)
             if (success) return { success: success, data: data };
         })
         .catch((err) => {
@@ -71,6 +72,7 @@ export const getOrgRecord = (id) => {
                     currentForecast: vake.currentFinancialYearTotalForecast ,
                     nextForecast: vake.nextFinancialYearTotalForecast ,
                 }
+                setToken(res.headers&& res.headers.authorization)
                 return {success,basic, billing, insured, bank, future, data}
             }
         })
@@ -90,6 +92,7 @@ export const addList = (data) => {
         .then((res) => {
                         message.success({ content: 'Success!', key: 1})
             const { success } = res.data;
+            setToken(res.headers&& res.headers.authorization)
             if (success) return {success};
         })
         .catch((err) => {
@@ -107,6 +110,7 @@ export const delOrg = (id) => {
         .delete(url + `/${id}`)
         .then((res) => {
             const { success } = res.data;
+            setToken(res.headers&& res.headers.authorization)
             if (success) return {success};
         })
         .catch((err) => {
@@ -124,7 +128,8 @@ export const editList = (data) => {
         .put(url + `/${data.id}`, data)
         .then((res) => {
             const { success } = res.data;
-                        message.success({ content: 'Success!', key: data.id})
+            message.success({ content: 'Success!', key: data.id})
+            setToken(res.headers&& res.headers.authorization)
             if (success) return {success};
         })
         .catch((err) => {

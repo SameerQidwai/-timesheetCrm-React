@@ -99,10 +99,8 @@ class TimeModal extends Component {
         obj.startTime = obj.startTime.format('HH:mm')
         obj.endTime = obj.endTime.format('HH:mm')
         if (editTime) {
-            console.log("edit TimeSheet", editTime.entryId,obj);
             this.editRecord(editTime.entryId,obj); //edit Time
         } else {
-            console.log("Add Timesheet", obj);
             this.addTime(obj); //add Time
         }
     };

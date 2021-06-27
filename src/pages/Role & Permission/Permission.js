@@ -26,68 +26,68 @@ class Permission extends Component {
             },
             {
                 title: 'Create',
-                key: 'create',
-                dataIndex: 'create',
+                key: 'CREATE',
+                dataIndex: 'CREATE',
                 render: (text, record, rowIndex) => {
                     {return  record.key === "TIMESHEETS" ?
-                        <Checkbox.Group name={'create'} value={text} options={['Any', 'Manage', 'Own']} onChange={(values)=>this.changePermission(values, 'create', rowIndex)} />
+                        <Checkbox.Group name={'CREATE'} value={text} options={['ANY', 'MANAGE', 'OWN']} onChange={(values)=>this.changePermission(values, 'CREATE', rowIndex)} />
                         : record.key === "PROFILE" ?
                             null
                         :
-                        // <Checkbox checked={'create'} onChange={this.handleCheckboxChangeFactory(rowIndex, "read")} >Any</Checkbox>
-                        <Checkbox.Group name={'create'} value={text} options={['Any']} onChange={(values)=>this.changePermission(values, 'create', rowIndex)} />
+                        // <Checkbox checked={'CREATE'} onChange={this.handleCheckboxChangeFactory(rowIndex, "READ")} >ANY</Checkbox>
+                        <Checkbox.Group name={'CREATE'} value={text} options={['ANY']} onChange={(values)=>this.changePermission(values, 'CREATE', rowIndex)} />
                     }
                 },
             },
             {
                 title: 'Update',
-                key: 'update',
-                dataIndex: 'update',
+                key: 'UPDATE',
+                dataIndex: 'UPDATE',
                 render: (text, record, rowIndex) => {
                     {return  record.key === "PROJECTS" || record.key === "OPPORTUNITIES"?
-                        <Checkbox.Group name={'update'} value={text} options={['Any', 'Manage']} onChange={(values)=>this.changePermission(values, 'update', rowIndex)} />
+                        <Checkbox.Group name={'UPDATE'} value={text} options={['ANY', 'MANAGE']} onChange={(values)=>this.changePermission(values, 'UPDATE', rowIndex)} />
                         : record.key === "TIMESHEETS" ?
-                            <Checkbox.Group name={'update'} value={text} options={['Any', 'Manage', 'Own']} onChange={(values)=>this.changePermission(values, 'update', rowIndex)} />
+                            <Checkbox.Group name={'UPDATE'} value={text} options={['ANY', 'MANAGE', 'OWN']} onChange={(values)=>this.changePermission(values, 'UPDATE', rowIndex)} />
                         : record.key === "PROFILE" ?
-                            <Checkbox.Group name={'update'} value={text} options={['Own']} onChange={(values)=>this.changePermission(values, 'update', rowIndex)} />
+                            <Checkbox.Group name={'UPDATE'} value={text} options={['OWN']} onChange={(values)=>this.changePermission(values, 'UPDATE', rowIndex)} />
                         :
-                            <Checkbox.Group name={'update'} value={text} options={['Any']} onChange={(values)=>this.changePermission(values, 'update', rowIndex)} />
+                            <Checkbox.Group name={'UPDATE'} value={text} options={['ANY']} onChange={(values)=>this.changePermission(values, 'UPDATE', rowIndex)} />
                     }
                 },
             },
             {
                 title: 'Read',
-                key: 'read',
-                dataIndex: 'read',
+                key: 'READ',
+                dataIndex: 'READ',
                 render: (text, record,  rowIndex) => {
                     {return  record.key === "PROJECTS" || record.key === "OPPORTUNITIES" || record.key === "TIMESHEETS" ?
-                        <Checkbox.Group name={'read'} value={text} options={['Any', 'Manage', 'Own']} onChange={(values)=>this.changePermission(values, 'read', rowIndex)} />
+                        <Checkbox.Group name={'READ'} value={text} options={['ANY', 'MANAGE', 'OWN']} onChange={(values)=>this.changePermission(values, 'READ', rowIndex)} />
                         : record.key === "PROFILE" ?
                             null
                         :
-                        <Checkbox.Group name={'read'} value={text} options={['Any']} onChange={(values)=>this.changePermission(values, 'read', rowIndex)} />
+                        <Checkbox.Group name={'READ'} value={text} options={['ANY']} onChange={(values)=>this.changePermission(values, 'READ', rowIndex)} />
                     }
                 },
             },
             {
                 title: 'Delete',
-                key: 'delete',
-                dataIndex: 'delete',
+                key: 'DELETE',
+                dataIndex: 'DELETE',
                 render: (text, record, rowIndex) => {
                     {return  record.key === "PROFILE" ?
                         null 
                         :
-                        <Checkbox.Group name={'delete'} value={text} options={['Any']} onChange={(values)=>this.changePermission(values, 'delete', rowIndex)} />
+                        <Checkbox.Group name={'DELETE'} value={text} options={['ANY']} onChange={(values)=>this.changePermission(values, 'DELETE', rowIndex)} />
                     }
                 },
             },
             {
                 title: 'Approval',
-                key: 'approval',
-                dataIndex: 'approval',
+                key: 'APPROVAL',
+                dataIndex: 'APPROVAL',
                 render: (text, record, rowIndex) => {
                     {return  record.key === "TIMESHEETS" && (
-                            <Checkbox.Group name={'approval'} value={text} options={['Any', 'Manage']} onChange={(values)=>this.changePermission(values, 'approval', rowIndex)} />
+                            <Checkbox.Group name={'APPROVAL'} value={text} options={['ANY', 'MANAGE']} onChange={(values)=>this.changePermission(values, 'APPROVAL', rowIndex)} />
                         )
                     }
                 },
@@ -100,64 +100,34 @@ class Permission extends Component {
                 {
                     key: 'ADMIN_OPTIONS',
                     category: "Admin Options",
-                    // create: ['Any'],
-                    // update: ['Any'],
-                    // read: ['Any'],
-                    // delete: ['Any'],
                 },
                 {
                     key: 'CONTACT_PERSONS',
                     category: "Contact Persons",
-                    // create: ['Any'],
-                    // update: ['Any'],
-                    // read: ['Any'],
-                    // delete: ['Any'],
                 },
                 {
                     key: 'ORGANIZATIONS',
                     category: "Organisations",
-                    // create: ['Any'],
-                    // update: ['Any'],
-                    // read: ['Any'],
-                    // delete: ['Any'],
                 },
                 {
                     key: 'USERS',
                     category: "Users",
-                    // create: ['Any'],
-                    // update: ['Any'],
-                    // read: ['Any'],
-                    // delete: ['Any'],
                 },
                 {
                     key: 'PROJECTS',
                     category: "Projects",
-                    // create: ['Any'],
-                    // update: ['Any', 'Manage'],
-                    // read: ['Any', 'Manage', 'Own'],
-                    // delete: ['Any'],
                 },
                 {
                     key: 'OPPORTUNITIES',
                     category: "Opportunities",
-                    // create: ['Any'],
-                    // update: ['Any', 'Manage'],
-                    // read: ['Any', 'Manage', 'Own'],
-                    // delete: ['Any'],
                 },
                 {
                     key: 'TIMESHEETS',
                     category: "Timesheets",
-                    // create: ['Any', 'Manage', 'Own'],
-                    // update: ['Any', 'Manage', 'Own'],
-                    // read: ['Any', 'Manage', 'Own'],
-                    // delete: ['Any'],
-                    // approval: ['Any', 'Manage']
                 },
                 {
                     key: 'PROFILE',
                     category: "Profile",
-                    // update: ['Own'],
                 },
             ],
         }
@@ -165,7 +135,6 @@ class Permission extends Component {
 
     componentDidMount = () =>{
         this.handleRawDtata()
-        console.log(this.props.isSystem);
     }
 
     changePermission = (grant, action, index) =>{
@@ -183,39 +152,39 @@ class Permission extends Component {
         this.setState({loading: true})
         permissions.forEach((el,index)=>{
             for(let i=0; i<= constant[el.key].len; i++){
-                if (el['create']&&el['create'][i]){
+                if (el['CREATE']&&el['CREATE'][i]){
                     perObjs.push({
                         resource: el.key,
-                        action: 'create',
-                        grant: el['create'][i]
+                        action: 'CREATE',
+                        grant: el['CREATE'][i]
                     })
                 }
-                if (el['delete']&&el['delete'][i]){
+                if (el['DELETE']&&el['DELETE'][i]){
                     perObjs.push({
                         resource: el.key,
-                        action: 'delete',
-                        grant: el['delete'][i]
+                        action: 'DELETE',
+                        grant: el['DELETE'][i]
                     })
                 }
-                if (el['update']&&el['update'][i]){
+                if (el['UPDATE']&&el['UPDATE'][i]){
                     perObjs.push({
                         resource: el.key,
-                        action: 'update',
-                        grant: el['update'][i]
+                        action: 'UPDATE',
+                        grant: el['UPDATE'][i]
                     })
                 }
-                if (el['read']&&el['read'][i]){
+                if (el['READ']&&el['READ'][i]){
                     perObjs.push({
                         resource: el.key,
-                        action: 'read',
-                        grant: el['read'][i]
+                        action: 'READ',
+                        grant: el['READ'][i]
                     })
                 }
-                if (el['approval']&& el['approval'][i]){
+                if (el['APPROVAL']&& el['APPROVAL'][i]){
                     perObjs.push({
                         resource: el.key,
-                        action: 'approval',
-                        grant: el['approval'][i]
+                        action: 'APPROVAL',
+                        grant: el['APPROVAL'][i]
                     })
                 }
             }

@@ -1,15 +1,16 @@
 import { message as messageAlert } from "antd";
 import axios from "axios";
 
-import { Api, localStore, headers } from "./constant";
+import { Api, localStore, headers, setToken } from "./constant";
 import moment from "moment";
 
 export const login = (data) => {
     return axios
         .post(`${Api}/login`, data)
         .then((res) => {
+            console.log(res);
             const { success, data, message } = res.data;
-            messageAlert.success({ content: message, key: 'logout', duration: 100})
+            messageAlert.success({ content: message, key: 'logout'}, 5)
             if (success){
                 let permissions = {}
                 let role = data.role
@@ -36,7 +37,7 @@ export const login = (data) => {
             
         })
         .catch((err) => {
-                messageAlert.error({ content: err.message, key: 'logout'})
+                messageAlert.error({ content: err.message, key: 'logout'}, 5)
             return {
                 error: "Please login again!",
                 status: false,
@@ -50,7 +51,8 @@ export const upadtePassword = (data) => {
         .patch(`${Api}/password`, data, {headers:headers})
         .then((res) => {
             const { success, data, message } = res.data;
-                    messageAlert.success({ content: message, key: 'logout'})
+                    messageAlert.success({ content: message, key: 'logout'}, 5)
+                    setToken(res.headers&& res.headers.authorization)
             if (success) return {success, data};
         })
         .catch((err) => {
@@ -68,7 +70,6 @@ export const getSettings = () => {
         .get(`${Api}/settings`, {headers: headers})
         .then((res) => {
             const { success, data, message } = res.data;
-            console.log('res',res);
             if (success) {
                 const contactPerson = data.contactPersonOrganization ? data.contactPersonOrganization.contactPerson : {}
                 const basic = {
@@ -125,6 +126,7 @@ export const getSettings = () => {
                     remunerationAmountPer: employmentContracts.remunerationAmountPer,  
                     comments: employmentContracts.comments
                 }
+                setToken(res.headers&& res.headers.authorization)
                 return { success, data, basic, detail, kin, bank, billing }
             }
         })
@@ -145,6 +147,7 @@ export const upadteSettings = (data) => {
         .then((res) => {
             const { success, data, message } = res.data;
                     messageAlert.success({ content: message, key: 'logout'})
+                    setToken(res.headers&& res.headers.authorization)
             if (success) return {success, data};
         })
         .catch((err) => {

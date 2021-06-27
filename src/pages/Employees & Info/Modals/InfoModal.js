@@ -182,6 +182,23 @@ class InfoModal extends Component {
                     itemStyle: { marginBottom: 10 },
                 },
                 {
+                    Placeholder: "Role",
+                    fieldCol: 24,
+                    size: "small",
+                    type: "Text",
+                    labelAlign: "right",
+                },
+                {
+                    object: "basic",
+                    fieldCol: 12,
+                    key: "role_id",
+                    size: "small",
+                    // rules:[{ required: true }],
+                    type: "Select",
+                    data: [],
+                    itemStyle: { marginBottom: 10 },
+                },
+                {
                     Placeholder: "Address",
                     fieldCol: 24,
                     size: "small",
@@ -669,13 +686,14 @@ class InfoModal extends Component {
     fetchAll = (edit) =>{
         const { editEmp } = this.props
         const customeUrl = `helpers/contact-persons?organizationId=1&active=0`
-        Promise.all([ getStates(), edit ? this.getRecord(editEmp) : getOrgPersons(customeUrl) ])
+        Promise.all([ getStates(),getStates() , edit ? this.getRecord(editEmp) : getOrgPersons(customeUrl) ])
         .then(res => {
             const { BasicFields } = this.state
             BasicFields[15].data = res[0].data;
+            BasicFields[17].data = res[1].data;
                 this.setState({
                     BasicFields,
-                    CONTACT: !edit ? res[1].data: [],
+                    CONTACT: !edit ? res[2].data: [],
                 })
         })
         .catch(e => {

@@ -1,7 +1,7 @@
 import { message } from "antd";
 import axios from "axios";
 
-import { Api } from "./constant";
+import { Api, setToken } from "./constant";
 
 const url = `${Api}/time-off-types`;
 
@@ -10,6 +10,7 @@ export const getList = () => {
         .get(url)
         .then((res) => {
             const { success, data } = res.data;
+            setToken(res.headers&& res.headers.authorization)
             if (success) return { success: success, data: data };
         })
         .catch((err) => {
@@ -28,6 +29,7 @@ export const addList = (data) => {
         .then((res) => {
             const { success } = res.data;
             message.success({ content: 'Success!', key: 1})
+            setToken(res.headers&& res.headers.authorization)
             if (success) return success;
         })
         .catch((err) => {
@@ -45,6 +47,7 @@ export const delLabel = (id) => {
         .delete(url + `/${id}`)
         .then((res) => {
             const { success } = res.data;
+            setToken(res.headers&& res.headers.authorization)
             if (success) return success;
         })
         .catch((err) => {
@@ -63,6 +66,7 @@ export const editLabel = (data) => {
         .then((res) => {
             const { success } = res.data;
             message.success({ content: 'Success!', key: data.id})
+            setToken(res.headers&& res.headers.authorization)
             if (success) return success;
         })
         .catch((err) => {

@@ -5,7 +5,7 @@ import { DownOutlined, SettingOutlined, PlusSquareOutlined, CloseOutlined, Loadi
 import Form from "../../../components/Core/Form";
 
 import { getlevels, getSkills, getList, editLabel, addList, delLabel, } from "../../../service/panelSkill";
-import { getStandardLevels } from "../../../service/constant-Apis";
+import { getSkillLevels as selectedSkill } from "../../../service/constant-Apis";
 import Operation from "antd/lib/transfer/operation";
 
 const { Title } = Typography;
@@ -122,13 +122,28 @@ class PanelInfo extends Component {
                         ],
                         type: "Select",
                         data: [],
-                        // onChange: function name(value, option) {
-                        //     if (value){
-                        //         console.log(option);
-                        //         const { FormFields_1 } = this.state
-                        //         this.setState({skill_pirority: option.level, FormFields_1})
-                        //     }  
-                        // }.bind(this),
+                        onChange: (value, option) =>{
+                            if (value){
+                                let skill = `skill=${option.value}`
+                                selectedSkill(skill).then(res=>{
+                                    if(res.success){
+                                        const { FormFields_1 } = this.state
+                                        const { fields } = FormFields_1
+                                        fields.map((el, index)=>{
+                                            if(index===1 || index%6===1){
+                                                el.data = res.data
+                                            }
+                                            return el
+                                        })
+                                        this.setState({
+                                            skill_pirority: res.data,
+                                            FormFields_1: {...FormFields_1, fields: fields}
+                                        })
+                                    }
+                                })
+                                // const { FormFields_1 } = this.state
+                            }  
+                        },
                         labelAlign: "left",
                         itemStyle: { marginBottom: "5px" },
                     },
@@ -140,11 +155,10 @@ class PanelInfo extends Component {
                         style: { textAlign: "right" },
                         size: "small",
                         itemStyle: { marginBottom: "10px" },
-                        onClick: function func(value, e) {
+                        onClick: (value, e) =>{
                             let obj = this.state.FormFields_1.fields[
                                 this.state.FormFields_1.fields.length - 1
                             ]; // get the inster number for keys
-                            console.log(obj);
                             const item_no = obj ? parseInt(obj.key) + 1 : 0;
                             this.state.FormFields_1.fields = this.state.FormFields_1.fields.concat(
                                 ...this.newField(item_no)
@@ -152,7 +166,7 @@ class PanelInfo extends Component {
                             this.setState({
                                 FormFields_1: this.state.FormFields_1,
                             });
-                        }.bind(this),
+                        },
                     },
                     {
                         fieldCol: 8,
@@ -199,6 +213,7 @@ class PanelInfo extends Component {
             FormFields_1: {
                 formId: "hours_form",
                 justify: "center",
+                preserve: false,
                 FormCol: 24,
                 // FieldSpace: { xs: 12, sm: 16, md: 12},
                 // layout: {labelCol: { span: 12 }},
@@ -218,32 +233,32 @@ class PanelInfo extends Component {
             },
             () => {
                 this.getData();
-                this.getSkilllevels();
+                this.getSkills();
             }
         );
     }
-    getSkilllevels = () => {
-        getlevels().then((level_res) => {
-            getSkills().then((skill_res) => {
-                if (level_res.success && skill_res.success) {
-                    const { FormFields } = this.state;
-                    FormFields.fields[3].data = skill_res.data;
-                    this.setState({
-                        FormFields,
-                        skill_pirority: level_res.data,
-                    });
-                }
-            });
+    getSkills = () => {
+        getSkills().then((skill_res) => {
+            if (skill_res.success) {
+                const { FormFields } = this.state;
+                FormFields.fields[3].data = skill_res.data;
+                this.setState({
+                    FormFields,
+                });
+            }
         });
     };
     // getSkilllevels = () => {
-    //     getStandardLevels().then(res=>{
-    //         const { FormFields } = this.state;
-    //         console.log(res.data);
-    //         FormFields.fields[3].data = res.data;
-    //         this.setState({
-    //             FormFields,
-    //             // skill_pirority: level_res.data,
+    //     getlevels().then((level_res) => {
+    //         getSkills().then((skill_res) => {
+    //             if (level_res.success && skill_res.success) {
+    //                 const { FormFields } = this.state;
+    //                 FormFields.fields[3].data = skill_res.data;
+    //                 this.setState({
+    //                     FormFields,
+    //                     skill_pirority: level_res.data,
+    //                 });
+    //             }
     //         });
     //     });
     // };
@@ -274,19 +289,13 @@ class PanelInfo extends Component {
     newField = (item_no) => {
         const { skill_pirority } = this.state;
         //inserting new fields in modals
-        const splice_key = [
-            `level${item_no}`,
-            `pirority${item_no}`,
-            `stceil${item_no}`,
-            `ltceil${item_no}`,
-            item_no,
-        ];
+        const splice_key = [ `level${item_no}`, `pirority${item_no}`, `stceil${item_no}`, `ltceil${item_no}`, `id${item_no}`, item_no, ];
         return [
             {
                 object: "obj",
                 fieldCol: 8,
                 layout: { wrapperCol: { span: 20 } },
-                key: `level${item_no}`,
+                key: splice_key[0],
                 size: "small",
                 // rules:[{ required: true }],
                 type: "Input",
@@ -297,7 +306,7 @@ class PanelInfo extends Component {
                 object: "obj",
                 fieldCol: 7,
                 layout: { wrapperCol: { span: 20 } },
-                key: `pirority${item_no}`,
+                key: splice_key[1],
                 size: "small",
                 // rules:[{ required: true }],
                 data: skill_pirority,
@@ -309,7 +318,7 @@ class PanelInfo extends Component {
                 object: "obj",
                 fieldCol: 4,
                 layout: { wrapperCol: { span: 20 } },
-                key: `stceil${item_no}`,
+                key: splice_key[2],
                 size: "small",
                 // rules:[{ required: true }],
                 type: "InputNumber",
@@ -320,7 +329,7 @@ class PanelInfo extends Component {
                 object: "obj",
                 fieldCol: 4,
                 layout: { wrapperCol: { span: 20 } },
-                key: `ltceil${item_no}`,
+                key: splice_key[3],
                 size: "small",
                 // rules:[{ required: true }],
                 type: "InputNumber",
@@ -328,10 +337,19 @@ class PanelInfo extends Component {
                 itemStyle: { marginBottom: "5px" },
             },
             {
+                object: "obj",
+                fieldCol: 6,
+                key: splice_key[4],
+                hidden: true,
+                size: "small",
+                // rules:[{ required: true }],
+                type: "Input",
+            },
+            {
                 fieldCol: 1,
                 size: "small",
                 Placeholder: <CloseOutlined />,
-                key: item_no,
+                key: splice_key[5],
                 // rules:[{ required: true }],
                 type: "Text",
                 style: {
@@ -340,7 +358,7 @@ class PanelInfo extends Component {
                 fieldStyle: {
                     cursor: "pointer",
                 },
-                onClick: function func(value, e) {
+                onClick: (value, e) =>{
                     this.state.FormFields_1.fields = this.state.FormFields_1.fields.filter(
                         (obj) => {
                             return (
@@ -348,7 +366,8 @@ class PanelInfo extends Component {
                                 obj.key !== splice_key[1] &&
                                 obj.key !== splice_key[2] &&
                                 obj.key !== splice_key[3] &&
-                                obj.key !== splice_key[4]
+                                obj.key !== splice_key[4] &&
+                                obj.key !== splice_key[5]
                             );
                         }
                     );
@@ -356,7 +375,7 @@ class PanelInfo extends Component {
                     this.setState({
                         FormFields_1: this.state.FormFields_1,
                     });
-                }.bind(this),
+                },
             },
         ];
     };
@@ -431,15 +450,19 @@ class PanelInfo extends Component {
         // this will work after I get the Object from the form
         const { obj } = vake;
         const vars = [];
-        let result = Object.keys(obj).length / 4;
+        let result = Object.keys(obj).length / 5;
         for (let i = 0; i < result; i++) {
-            vars.push({
-                levelLabel: obj[`level${i}`],
-                standardLevelId: obj[`pirority${i}`],
-                shortTermCeil: obj[`stceil${i}`],
-                longTermCeil: obj[`ltceil${i}`],
-            });
+            if(obj[`pirority${i}`]){
+                vars.push({
+                    id: obj[`id${i}`] ?? 0,
+                    levelLabel: obj[`level${i}`],
+                    standardLevelId: obj[`pirority${i}`],
+                    shortTermCeil: obj[`stceil${i}`],
+                    longTermCeil: obj[`ltceil${i}`],
+                });
+            }
         }
+        console.log(vars);
         this.setState(
             {
                 mergeObj: {
@@ -473,36 +496,45 @@ class PanelInfo extends Component {
     getRecord = (data, text) => {
         const vars = {};
         const array = data.panelSkillStandardLevels;
-        console.log(array);
-        let result = array.length;
-        for (let i = 0; i < result; i++) {
-            this.state.FormFields_1.fields = this.state.FormFields_1.fields.concat(
-                this.newField(i)
-            );
-            let el = array[i];
-            vars[`level${i}`] = el.levelLabel;
-            vars[`pirority${i}`] = el.standardLevel.id;
-            vars[`stceil${i}`] = el.shortTermCeil;
-            vars[`ltceil${i}`] = el.longTermCeil;
-        }
-
         var obj = {
             key: data.id,
             label: data.label,
             standard: data.standardSkill.id,
         };
-        this.setState({
-            FormFields: {
-                ...this.state.FormFields,
-                initialValues: { obj: obj },
-            },
-            FormFields_1: {
-                ...this.state.FormFields_1,
-                initialValues: { obj: vars },
-            },
-            editPS: data.id,
-            openModal: true,
-        });
+        selectedSkill(`skill=${obj.standard}`).then(res=>{
+            if(res.success){
+                this.setState({
+                    skill_pirority: res.data
+                },()=>{
+                    let result = array.length;
+                    for (let i = 0; i < result; i++) {
+                        this.state.FormFields_1.fields = this.state.FormFields_1.fields.concat(
+                            this.newField(i)
+                        );
+                        let el = array[i];
+                        vars[`id${i}`] = el.id;
+                        vars[`level${i}`] = el.levelLabel;
+                        vars[`pirority${i}`] = el.standardLevel.id;
+                        vars[`stceil${i}`] = el.shortTermCeil;
+                        vars[`ltceil${i}`] = el.longTermCeil;
+                    }
+                    this.setState({
+                        FormFields: {
+                            ...this.state.FormFields,
+                            initialValues: { obj: obj },
+                        },
+                        FormFields_1: {
+                            ...this.state.FormFields_1,
+                            initialValues: { obj: vars },
+                        },
+                        editPS: data.id,
+                        openModal: true,
+                    });
+                    
+                })
+            }
+        })
+        
     };
 
     editRecord = () => {

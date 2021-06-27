@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { Api } from "./constant";
+import { Api, setToken } from "./constant";
 import moment from "moment";
 import { message } from "antd";
 
@@ -11,6 +11,7 @@ export const getList = (empId) => {
         .get(url+ `${empId}/leases`)
         .then((res) => {
             const { success, data } = res.data;
+            setToken(res.headers&& res.headers.authorization)
             if (success) return { success: success, data: data };
         })
         .catch((err) => {
@@ -30,6 +31,7 @@ export const addList = (empId, data) => {
             console.log(res);
             const { success } = res.data;
             message.success({ content: 'Success!', key: empId})
+            setToken(res.headers&& res.headers.authorization)
             if (success) return {success};
         })
         .catch((err) => {
@@ -51,6 +53,7 @@ export const getRecord = (empId, id) => {
                 data.startDate = data.startDate && moment(data.startDate)
                 data.endDate = data.endDate && moment(data.endDate) 
                 data.totalDeduction = (data.preTaxDeductionAmount ? data.preTaxDeductionAmount : 0) + (data.postTaxDeductionAmount ? data.postTaxDeductionAmount : 0)
+                setToken(res.headers&& res.headers.authorization)
                 return {success, data}
             }
         })
@@ -68,6 +71,7 @@ export const delList = (empId, id) => {
         .delete(url+ `${empId}/leases/${id}`)
         .then((res) => {
             const { success } = res.data;
+            setToken(res.headers&& res.headers.authorization)
             if (success) return {success};
         })
         .catch((err) => {
@@ -86,6 +90,7 @@ export const editList = (empId, id, data) => {
         .then((res) => {
             const { success } = res.data;
             message.success({ content: 'Success!', key: id})
+            setToken(res.headers&& res.headers.authorization)
             if (success) return {success};
         })
         .catch((err) => {

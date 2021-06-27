@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { Api, headers, localStore } from "./constant";
+import { Api, headers, localStore, setToken } from "./constant";
 
 const url = `${Api}/attachments/`;
 
@@ -19,6 +19,7 @@ export const addFiles = (data, config) => {
                     url: `${Api}/files/${data[0]&&data[0].uniqueName}`,
                     thumbUrl:thumbUrl(data[0].type)
                 }
+                setToken(res.headers && res.headers.authorization)
                 return { success, file };
             }
         })
@@ -55,6 +56,7 @@ export const addAttachments = (targetType, targetId, data) => {
                     url: `${Api}/files/${data[0]&&data[0].file.uniqueName}`,
                     thumbUrl: thumbUrl(data[0].file.type)
                 }
+                setToken(res.headers && res.headers.authorization)
                 return { success, data };
             }
         })
@@ -94,6 +96,7 @@ export const getAttachments = (targetType, targetId) => {
                     thumbUrl: thumbUrl(el.file.type)
                 })
             });
+            setToken(res.headers && res.headers.authorization)
             if (success) return { success, fileList, fileIds };
         })
         .catch((err) => {
@@ -126,6 +129,7 @@ export const delAttachment = (id,) => {
         .delete(`${url}${id}`)
         .then((res) => {
             const { success } = res.data;
+            setToken(res.headers && res.headers.authorization)
             if (success) return { success };
         })
         .catch((err) => {

@@ -40,6 +40,14 @@ class Contractors extends Component {
                 }
             },
             {
+                title: "Organisation",
+                dataIndex: "contactPersonOrganization",
+                key: "contactPersonOrganization",
+                render: (record) =>{
+                    return record && record.organization && record.organization.name
+                }
+            },
+            {
                 title: "Phone",
                 dataIndex: "contactPersonOrganization",
                 key: "contactPersonOrganization",

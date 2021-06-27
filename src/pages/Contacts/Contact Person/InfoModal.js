@@ -629,7 +629,7 @@ class InfoModal extends Component {
                 type: "Text",
                 style: { textAlign: "right", },
                 fieldStyle: { cursor: "pointer", },
-                onClick: function func(value, e) {
+                onClick: (value, e) => {
                     const { associateFields } = this.state;
                     associateFields.fields = associateFields.fields.filter((obj) => {
                         return (
@@ -641,15 +641,8 @@ class InfoModal extends Component {
                             obj.key !== splice_key[5]
                         );
                     });
-                    const {asso} = this.associateRef.current.refs.associate_form.getFieldsValue() // const
-                    delete asso[splice_key[0]];
-                    delete asso[splice_key[1]];
-                    delete asso[splice_key[2]];
-                    delete asso[splice_key[3]];
-                    delete asso[splice_key[4]];
-                    this.associateRef.current.refs.associate_form.setFieldsValue({ asso, })
                     this.setState({ associateFields, });
-                }.bind(this),
+                },
             },
             
         ]

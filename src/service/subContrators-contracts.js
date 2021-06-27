@@ -1,7 +1,7 @@
 import { message } from "antd";
 import axios from "axios";
 
-import { Api } from "./constant";
+import { Api, setToken } from "./constant";
 
 const url = `${Api}/sub-contractors-contracts`;
 
@@ -10,6 +10,7 @@ export const getList = (id) => {
         .get(url+ `?subContractorId=${id}`)
         .then((res) => {
             const { success, data } = res.data;
+            setToken(res.headers&& res.headers.authorization)
             if (success) return { success: success, data: data };
         })
         .catch((err) => {
@@ -26,6 +27,7 @@ export const getRecord = (id) => {
         .get(url + `/${id}`)
         .then((res) => {
             const { success, data } = res.data;
+            setToken(res.headers&& res.headers.authorization)
             if (success) return {success, data};
         })
         .catch((err) => {
@@ -42,9 +44,9 @@ export const addList = (data) => {
     return axios
         .post(url, data)
         .then((res) => {
-            console.log(res);
             const { success } = res.data;
             message.success({ content: 'Success!', key: 1})
+            setToken(res.headers&& res.headers.authorization)
             if (success) return {success};
         })
         .catch((err) => {
@@ -62,6 +64,7 @@ export const delList = (id) => {
         .delete(url + `/${id}`)
         .then((res) => {
             const { success } = res.data;
+            setToken(res.headers&& res.headers.authorization)
             if (success) return {success};
         })
         .catch((err) => {
@@ -80,6 +83,7 @@ export const editList = (id, data) => {
         .then((res) => {
             const { success } = res.data;
             message.success({ content: 'Success!', key: id})
+            setToken(res.headers&& res.headers.authorization)
             if (success) return {success};
         })
         .catch((err) => {

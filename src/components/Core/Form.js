@@ -18,7 +18,6 @@ const validateMessages = {
 };
 
 const normFile = (e) => {
-    // console.log("Upload event:");
     if (Array.isArray(e)) {
         return e;
     }
@@ -33,16 +32,11 @@ class Forms extends Component {
     }
 
     multipleUpload = (file, filelist, key, multiple) => {
-        console.log(file, filelist, key, multiple);
         const { uploadKeys } = this.state;
-        console.log("multipleUpload", file, key, multiple, uploadKeys);
         this.state.uploadKeys[key] = file;
         this.setState(
             {
                 uploadKeys: { ...uploadKeys },
-            },
-            () => {
-                console.log(this.state);
             }
         );
         return false;
@@ -99,6 +93,7 @@ class Forms extends Component {
                     layout={FormFields.FormLayout}
                     {...FormFields.layout}
                     initialValues={FormFields.initialValues}
+                    preserve={FormFields.preserve===false? false : true}
                 >
                     {FormFields.fields ? (
                         // <Col span={FormFields.RowfieldCol}>
@@ -252,8 +247,6 @@ class Forms extends Component {
                                 option.label
                                     .toLowerCase()
                                     .indexOf(input.toLowerCase()) >= 0
-                            // console.log(option.label)
-                            // console.log(input.toLowerCase())
                         }
                         disabled={disabled}
                     />

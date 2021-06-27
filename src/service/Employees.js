@@ -1,7 +1,7 @@
 import axios from "axios";
 import { message } from "antd";
 
-import { Api } from "./constant";
+import { Api, setToken } from "./constant";
 import moment from "moment";
 
 const url = `${Api}/employees`;
@@ -11,6 +11,7 @@ export const getList = () => {
         .get(url)
         .then((res) => {
             const { success, data } = res.data;
+            setToken(res.headers&& res.headers.authorization)
             if (success) return { success: success, data: data };
         })
         .catch((err) => {
@@ -40,7 +41,8 @@ export const getRecord = (id) => {
                     address: contactPerson.address,
                     stateId:contactPerson.stateId,
                     username: data.username,
-                    password: data.password
+                    password: data.password,
+                    role_id: data.role_id
                 }
                 const detail = {
                     superannuationName: data.superannuationName,

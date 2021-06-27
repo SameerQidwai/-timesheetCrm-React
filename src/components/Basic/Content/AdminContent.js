@@ -227,10 +227,9 @@ class AdminContent extends Component {
     getPageLink = () => {
         const permissions = JSON.parse(localStore().permissions)
         let { allowedRoutes } = this.state
-           console.log(permissions)
-           allowedRoutes[0] = pageLinks[0]
-       pageLinks.map(el=>{
-            if(permissions[el.key]&& permissions[el.key]['read']){
+        allowedRoutes[0] = pageLinks[0]
+        pageLinks.map(el=>{
+            if(permissions[el.key]&& permissions[el.key]['READ']){
                 allowedRoutes.push(el)
             }
        })
@@ -242,7 +241,7 @@ class AdminContent extends Component {
         return (
             <Switch >
                 {/* {this.getPageLink()} */}
-                {allowedRoutes.map((el, i) => (
+                {pageLinks.map((el, i) => (
                     <Route exact path={el.link} component={el.component} key={i} />
                 ))}
                 <Redirect to="/profile" />

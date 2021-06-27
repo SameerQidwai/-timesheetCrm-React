@@ -49,11 +49,9 @@ class Navbar extends Component {
     getAllowedItems = ()=>{
         const permissions = JSON.parse(localStore().permissions)
         let { allowedNavItem } = this.state
-            console.log(permissions)
             // allowedNavItem[0] = pageLinks[0]
             NavItem.map(el=>{
-                console.log(el.key);
-                if(permissions[el.key]&& permissions[el.key]['read']){
+                if(permissions[el.key]&& permissions[el.key]['READ']){
                     allowedNavItem.push(el)
                 }
             })

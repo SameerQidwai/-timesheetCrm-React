@@ -81,11 +81,9 @@ class Menus extends Component {
     getAllowedMenu = () =>{
         const permissions = JSON.parse(localStore().permissions)
         let { allowedMenu } = this.state
-            console.log(permissions)
             // allowedMenu[0] = pageLinks[0]
             listData.map(el=>{
-                console.log(el.key);
-                if(permissions[el.key]&& permissions[el.key]['read']){
+                if(permissions[el.key]&& permissions[el.key]['READ']){
                     allowedMenu.push(el)
                 }
             })

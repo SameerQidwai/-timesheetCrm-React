@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { Api, headers } from "./constant";
+import { Api, headers, setToken } from "./constant";
 
 const url = `${Api}/comments/`;
 
@@ -14,7 +14,7 @@ export const addComment = (targetType, targetId, data) => {
             const { status } = res;
             if (status === 200) {
                 const { success, data } = res.data;
-                console.log('after data',data);
+                setToken(res.headers && res.headers.authorization)
                 return { success, data };
             }
         })
@@ -30,11 +30,11 @@ export const addComment = (targetType, targetId, data) => {
 };
 
 export const getComments = (targetType, targetId) => {
-    console.log(headers);
     return axios
         .get(`${url}${targetType}/${targetId}`, {headers:headers})
         .then((res) => {
             const { success, data } = res.data;
+            setToken(res.headers && res.headers.authorization)
             if (success) return { success, data  };
         })
         .catch((err) => {
@@ -51,6 +51,7 @@ export const delComments = (id,) => {
         .delete(`${url}${id}`, {headers:headers})
         .then((res) => {
             const { success } = res.data;
+            setToken(res.headers && res.headers.authorization)
             if (success) return { success };
         })
         .catch((err) => {

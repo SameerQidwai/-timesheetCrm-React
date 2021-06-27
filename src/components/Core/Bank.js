@@ -8,9 +8,6 @@ class Bank extends Component {
             data: props.bank ?? {}
         };
     }
-    componentDidMount = () => {
-        console.log("Bank", this.state.data, this.props);
-    };
     render() {
         const { data } = this.state;
         // data.title = this.props.title;

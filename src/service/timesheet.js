@@ -1,16 +1,16 @@
 import { message } from "antd";
 import axios from "axios";
 
-import { Api, headers } from "./constant";
+import { Api, headers, setToken } from "./constant";
 
 const url = `${Api}/timesheets/`;
 
 export const getList = (keys) => {
-    console.log(`${keys.startDate}&${keys.endDate}&${keys.userId}`,{headers:headers});
     return axios
         .get(url + `${keys.startDate}&${keys.endDate}&${keys.userId}`)
         .then((res) => {
             const { success, data } = res.data;
+            setToken(res.headers&& res.headers.authorization)
             if (success) return { success: success, data: data };
         })
         .catch((err) => {
@@ -31,6 +31,7 @@ export const addTime = (keys ,data) => {
             if (success) {
                 message.success({ content: 'Success!', key: 1})
                 data.actualHours = data.hours
+                setToken(res.headers&& res.headers.authorization)
                 return {success, data}
             };
         })
@@ -53,6 +54,7 @@ export const editTime = (entryId ,data) => {
             if (success) {
                 message.success({ content: 'Success!', key: 1})
                 data.actualHours = data.hours
+                setToken(res.headers&& res.headers.authorization)
                 return {success, data}
             };
         })
@@ -73,6 +75,7 @@ export const deleteTime = (entryId ) => {
         .then((res) => {
             const { success, data } = res.data;
             message.success({ content: 'Success!', key: 1})
+            setToken(res.headers&& res.headers.authorization)
             if (success) return {success, data};
         })
         .catch((err) => {
@@ -86,12 +89,12 @@ export const deleteTime = (entryId ) => {
 };
 export const reviewTimeSheet = (keys, stage) => {
     message.loading({ content: 'Loading...', key: 1 })
-    console.log(`${keys.startDate}&${keys.endDate}&${keys.userId}/projectEntries/${keys.pEntryId}/${stage}`);
     return axios
         .post(url + `${keys.startDate}&${keys.endDate}&${keys.userId}/projectEntries/${keys.pEntryId}/${stage}`, {headers:headers})
         .then((res) => {
             const { success, data } = res.data;
             message.success({ content: 'Success!', key: 1})
+            setToken(res.headers&& res.headers.authorization)
             if (success) return {success, data};
         })
         .catch((err) => {
@@ -112,6 +115,7 @@ export const editLabel = (data) => {
         .then((res) => {
             const { success } = res.data;
             message.success({ content: 'Success!', key: data.id})
+            setToken(res.headers&& res.headers.authorization)
             if (success) return {success};
         })
         .catch((err) => {
@@ -125,13 +129,13 @@ export const editLabel = (data) => {
 };
 
 export const addProjectNote = (id, data) => {
-    console.log({headers:headers});
     message.loading({ content: 'Loading...', key: id })
     return axios
         .patch(url + `/projectEntries/${id}`, data, {headers:headers})
         .then((res) => {
             const { success } = res.data;
             message.success({ content: 'Success!', key: id})
+            setToken(res.headers&& res.headers.authorization)
             if (success) return {success};
         })
         .catch((err) => {
