@@ -95,7 +95,11 @@ class Skills extends Component {
         const { data_skill } = this.state
         return (
             <>
-                <Table columns={this.columns} dataSource={data_skill} size="small"/>
+                <Table 
+                    columns={this.columns} 
+                    dataSource={data_skill} 
+                    size="small"
+                />
             </>
         )
     }

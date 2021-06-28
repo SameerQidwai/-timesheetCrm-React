@@ -3,6 +3,7 @@ import { Redirect, useLocation } from "react-router-dom";
 import { Row, Col, Typography, Input, Button, Form } from "antd";
 import { login, loggedIn } from '../../service/Login-Apis'
 import { localStore } from "../../service/constant";
+import { getSettings } from "../../service/global-apis";
 const { Title } = Typography;
 const { Password } = Input;
 
@@ -22,7 +23,12 @@ function Login(props) {
             if(res&& res.success){
                 //set local storage
                 console.log(JSON.parse(localStore().permissions))
-                window.location.href="/profile"
+                getSettings().then(res=>{
+                    if(res.success){
+                        localStorage.setItem('pageSize', res.data.recordsPerPage)
+                    }
+                    window.location.href="/profile"
+                })
                 // setRedirectToReferrer(true)
             }
         })

@@ -28,10 +28,11 @@ export const upadteSettings = (data) => {
     return axios
         .post(url, data, {headers:headers})
         .then((res) => {
-            const { success, message } = res.data;
+            const { success, message, data } = res.data;
             messageAlert.success({ content: message, key: 1},5)
             if (success) setToken(res.headers&& res.headers.authorization)
-            return {success};
+            
+            return {success, data};
         })
         .catch((err) => {
                         messageAlert.error({ content: 'Error!', key: 1},5)
