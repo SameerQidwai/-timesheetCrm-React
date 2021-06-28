@@ -239,7 +239,7 @@ class Global extends Component {
         const value = childData.obj
         upadteSettings(value).then(res=>{
             if(res.success){
-
+                // localStorage.setItem('pageSize', res.data.recordsPerPage)
             }
         })
     };
