@@ -22,7 +22,7 @@ export const setToken = (token) =>{
 }
 
 export const localStore = () => {
-  var archive = {}, // Notice change here
+  var archive = {}, // Notice change here    
   keys = Object.keys(localStorage),
   i = keys.length;
 
