@@ -14,7 +14,7 @@ import InfoModal from "./Modals/InfoModal";
 import { getRecord, delList, workIsLost } from "../../service/opportunities";
 
 import moment from "moment"
-import { formatCurrency } from "../../service/constant";
+import { formatCurrency, localStore } from "../../service/constant";
 
 const { Item } = Descriptions;
 const { TabPane } = Tabs;
@@ -29,6 +29,7 @@ class OpportunityInfo extends Component {
             billing: {},
             renderTabs: false,
             moveToProject: false,
+            permissions: {},
         };
     }
     componentDidMount = ()=>{
@@ -37,6 +38,7 @@ class OpportunityInfo extends Component {
     }
 
     getRecord = (id) =>{
+        const { OPPORTUNITIES }= JSON.parse(localStore().permissions)
         getRecord(id).then(res=>{
             if(res.success){
                 this.setState({
@@ -46,6 +48,7 @@ class OpportunityInfo extends Component {
                     infoModal: false,
                     renderTabs: true,
                     moveToProject: false,
+                    permissions: OPPORTUNITIES
                 })
             }
         })
@@ -73,7 +76,7 @@ class OpportunityInfo extends Component {
     };
 
     render() {
-        const { data, infoModal, leadId, billing, renderTabs, moveToProject } = this.state;
+        const { data, infoModal, leadId, billing, renderTabs, moveToProject, permissions } = this.state;
         const DescTitle = (
             <Row justify="space-between">
                 <Col>Opportunity Basic Information</Col>
@@ -81,7 +84,9 @@ class OpportunityInfo extends Component {
                     <Dropdown
                         overlay={
                             <Menu>
-                                <Menu.Item>
+                                <Menu.Item 
+                                    disabled={!permissions['UPDATE']}
+                                >
                                     <Popconfirm 
                                         title="Opportunity is Done!?" 
                                         onConfirm={() => {
@@ -93,7 +98,9 @@ class OpportunityInfo extends Component {
                                         Won
                                     </Popconfirm>
                                 </Menu.Item>
-                                <Menu.Item>
+                                <Menu.Item 
+                                    disabled={!permissions['UPDATE']}
+                                >
                                     <Popconfirm 
                                         title="Opportunity Lost!?" 
                                         onConfirm={() => { workIsLost(leadId) }}
@@ -104,8 +111,10 @@ class OpportunityInfo extends Component {
                                     </Popconfirm>
                                 </Menu.Item>
                                 <Menu.Item onClick={() => { 
-                                    this.setState({ infoModal: true});
-                                    }} > Edit </Menu.Item>
+                                        this.setState({ infoModal: true});
+                                    }} 
+                                    disabled={!permissions['UPDATE']}
+                                    > Edit </Menu.Item>
                                 <Menu.Item>
                                     <Link
                                         to={{

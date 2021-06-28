@@ -22,6 +22,7 @@ export const addFiles = (data, config) => {
                 setToken(res.headers && res.headers.authorization)
                 return { success, file };
             }
+            return { success: false }
         })
         .catch((err) => {
             console.log(err);
@@ -35,7 +36,6 @@ export const addFiles = (data, config) => {
 };
 
 export const addAttachments = (targetType, targetId, data) => {
-    console.log({headers:headers});
     return axios
         .post(`${url}${targetType}/${targetId}`, data, {headers:headers})
         .then((res) => {
@@ -59,6 +59,7 @@ export const addAttachments = (targetType, targetId, data) => {
                 setToken(res.headers && res.headers.authorization)
                 return { success, data };
             }
+            return { success: false }
         })
         .catch((err) => {
             console.log(err);
@@ -72,32 +73,33 @@ export const addAttachments = (targetType, targetId, data) => {
 };
 
 export const getAttachments = (targetType, targetId) => {
-    console.log(targetType, targetId);
     return axios
         .get(`${url}${targetType}/${targetId}`)
         .then((res) => {
             const { success, data } = res.data;
-            var fileIds = []
-            var fileList = []
-            console.log(data);
-            data.map((el) => {
-                fileIds.push(el.id)
-                fileList.push( {
-                    id: el.id,
-                    createdAt: el.createdAt,
-                    fileId: el.fileId,
-                    status: el.status,
-                    targetId: el.targetId,
-                    targetType: el.targetType,
-                    uid: el.file.uniqueName,
-                    name: el.file.originalName,
-                    type: el.file.type === 'png'? 'image/png': el.file.type,
-                    url: `${Api}/files/${el.file.uniqueName}`,
-                    thumbUrl: thumbUrl(el.file.type)
-                })
-            });
-            setToken(res.headers && res.headers.authorization)
-            if (success) return { success, fileList, fileIds };
+            if (success) {
+                var fileIds = []
+                var fileList = []
+                data.map((el) => {
+                    fileIds.push(el.id)
+                    fileList.push( {
+                        id: el.id,
+                        createdAt: el.createdAt,
+                        fileId: el.fileId,
+                        status: el.status,
+                        targetId: el.targetId,
+                        targetType: el.targetType,
+                        uid: el.file.uniqueName,
+                        name: el.file.originalName,
+                        type: el.file.type === 'png'? 'image/png': el.file.type,
+                        url: `${Api}/files/${el.file.uniqueName}`,
+                        thumbUrl: thumbUrl(el.file.type)
+                    })
+                });
+                setToken(res.headers && res.headers.authorization)
+                return { success, fileList, fileIds }
+            };
+            return { success: false }
         })
         .catch((err) => {
             return {
@@ -130,7 +132,7 @@ export const delAttachment = (id,) => {
         .then((res) => {
             const { success } = res.data;
             setToken(res.headers && res.headers.authorization)
-            if (success) return { success };
+            return { success };
         })
         .catch((err) => {
             return {

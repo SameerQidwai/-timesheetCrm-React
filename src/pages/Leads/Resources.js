@@ -7,7 +7,7 @@ import ResModal from "./Modals/ResModal";
 import { getRecord, getLeadSkills, delLeadSkill, delLeadSkillResource, selectLeadSkillResource } from "../../service/opportunities";
 
 import moment from "moment"
-import { formatCurrency } from "../../service/constant";
+import { formatCurrency, localStore } from "../../service/constant";
 
 const { Item } = Descriptions;
 
@@ -54,6 +54,7 @@ class Resource extends Component {
                                     onClick={() => {
                                         this.setState({ infoModal: true, editRex: record, resource: false, skillId: false, tableIndex: index });
                                     }}
+                                    disabled={this.state&& !this.state.permissions['UPDATE']}
                                 >
                                     Edit
                                 </Menu.Item>
@@ -63,6 +64,7 @@ class Resource extends Component {
                                     }}
                                 >
                                         Add
+                                        disabled={this.state&& !this.state.permissions['CREATE']}
                                 </Menu.Item>
                             </Menu>
                         }
@@ -81,7 +83,8 @@ class Resource extends Component {
             leadId: false,
             data: [],
             desc: {},
-            resource: false
+            resource: false,
+            permissons: {}
         };
     }
 
@@ -91,6 +94,7 @@ class Resource extends Component {
     }
 
     fetchAll = (id) =>{
+        const { OPPORTUNITIES }= JSON.parse(localStore().permissions)
         Promise.all([ getRecord(id), getLeadSkills(id)])
         .then(res => {
             this.setState({
@@ -99,6 +103,7 @@ class Resource extends Component {
                 infoModal: false,
                 leadId: id,
                 data: res[1].success? res[1].data : [],
+                permissions: OPPORTUNITIES
             })
         })
         .catch(e => {
@@ -148,8 +153,7 @@ class Resource extends Component {
     };
 
     render() {
-        const { desc, data, infoModal, editRex, leadId, resource , skillId} = this.state;
-        console.log(data)
+        const { desc, data, infoModal, editRex, leadId, resource , skillId, permissions} = this.state;
         return (
             <>
                 <Descriptions
@@ -171,7 +175,9 @@ class Resource extends Component {
                         <Button 
                             type="primary" 
                             size='small'  
-                            onClick={() => { this.setState({ infoModal: true, editRex: false, resource: false }) }}>
+                            onClick={() => { this.setState({ infoModal: true, editRex: false, resource: false }) }}
+                            disabled={permissions['CREATE']}
+                            >
                                 Add New
                         </Button>
                     </Col>
@@ -190,6 +196,7 @@ class Resource extends Component {
                                 leadId={leadId} 
                                 panelId={desc.panelId}
                                 callBack={this.callBack}
+                                permissions={permissions}
                             />)
                         },
                         // rowExpandable: record => record.user.length > 0,
@@ -252,6 +259,7 @@ function NestedTable(props) {
                                     setEditRex({...text, tableIndex: index})
                                     setVisible(true)
                                 }}
+                                disabled={props.permissions['UPDATE']}
                             >
                                 Edit
                             </Menu.Item>
@@ -275,11 +283,9 @@ function NestedTable(props) {
             }
         });
     };
-    console.log(selectedRowKeys)
 
     const onSelectChange = (selected, Rows) =>  {
         const { leadId, skill } = props
-        console.log(selected, Rows)
         setSelectedRowKeys(selected)
         selectLeadSkillResource(leadId, skill, Rows[0].id).then(res=>{
             console.log(res);

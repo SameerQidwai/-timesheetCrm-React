@@ -7,7 +7,6 @@ const url = `${Api}/comments/`;
 
 export const addComment = (targetType, targetId, data) => {
     // const header ={ 'content-type': 'multipart/form-data',  'Accept': 'application/json'}
-    console.log(`data`, data)
     return axios
         .post(`${url}${targetType}/${targetId}`, data, {headers:headers})
         .then((res) => {

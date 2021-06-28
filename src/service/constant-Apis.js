@@ -307,3 +307,22 @@ export const getSkillLevels = (skill) =>{
             };
         });
 }
+
+export const getRoles = () =>{
+    return axios
+        .get(`${Api}/helpers/roles`)
+        .then((res) => {
+            const { success, data } = res.data;
+            if (success){
+                setToken(res.headers&& res.headers.authorization)
+                return { success: success, data: data };
+            }
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                success: false,
+                message: err.message,
+            };
+        });
+}

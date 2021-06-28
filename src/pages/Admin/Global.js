@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Row, Button, Space, Popconfirm } from "antd";
-
+import { getSettings, upadteSettings } from "../../service/global-apis"
 import Form from "../../components/Core/Form";
 
 import "../styles/table.css";
@@ -176,7 +176,7 @@ class Global extends Component {
                 {
                     object: "obj",
                     fieldCol: 20,
-                    key: "rpPage",
+                    key: "recordsPerPage",
                     label: "Records Per Page",
                     size: "small",
                     // rules:[{ required: true, message: 'Insert your Password Please' }],
@@ -224,15 +224,30 @@ class Global extends Component {
             // }
         };
     }
+    componentDidMount = () =>{
+        this.getApi()
+    }
+    getApi = () =>{
+        getSettings().then(res=>{
+            if(res.success){
+                this.dynamoForm_1.current.refs.globalForm.setFieldsValue({obj: res.data});
+            }
+        })
+    }
 
     Callback = (childData) => {
-        this.setState({ data: childData });
-        console.log(childData);
+        const value = childData.obj
+        upadteSettings(value).then(res=>{
+            if(res.success){
+
+            }
+        })
     };
 
     submit = () => {
         this.dynamoForm_1.current.refs.globalForm.submit();
     };
+
     reset = () => {
         this.dynamoForm_1.current.refs.globalForm.resetFields();
     };

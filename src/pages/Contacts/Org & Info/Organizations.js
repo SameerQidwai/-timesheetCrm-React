@@ -7,6 +7,7 @@ import InfoModal from "./InfoModal";
 import { getList, delOrg } from "../../../service/Organizations";
 
 import "../../styles/table.css";
+import { localStore } from "../../../service/constant";
 
 const { Title } = Typography;
 
@@ -39,14 +40,15 @@ class Organizations extends Component {
                     <Dropdown
                         overlay={
                             <Menu>
-                                <Menu.Item danger>
+                                {/* <Menu.Item danger>
                                     <Popconfirm
                                         title="Sure to delete?"
                                         onConfirm={() => this.handleDelete(record.id) }
                                     >Delete</Popconfirm>
-                                </Menu.Item>
+                                </Menu.Item> */}
                                 <Menu.Item
                                     onClick={() => { this.setState({ infoModal: true, editOrg: record.id }); }}
+                                    disabled={this.state&& !this.state.permissions['UPDATE']}
                                 >Edit </Menu.Item>
                                 <Menu.Item>
                                     <Link
@@ -69,6 +71,7 @@ class Organizations extends Component {
             infoModal: false,
             editOrg: false, //creating Component
             data: [],
+            permissions: {}
         };
     }
     
@@ -77,12 +80,14 @@ class Organizations extends Component {
     }
 
     getData = () => {
+        const { ORGANIZATIONS }= JSON.parse(localStore().permissions)
         getList().then((res) => {
             if (res.success) {
                 this.setState({
                     data: res.data,
                     infoModal: false,
                     editOrg: false,
+                    permissions: ORGANIZATIONS
                 });
             }
         });
@@ -107,7 +112,7 @@ class Organizations extends Component {
     };
 
     render() {
-        const { data, infoModal, editOrg } = this.state;
+        const { data, infoModal, editOrg, permissions } = this.state;
         const columns = this.columns;
         return (
             <>
@@ -128,6 +133,7 @@ class Organizations extends Component {
                                     type="primary"
                                     onClick={() => { this.setState({ infoModal: true }); }}
                                     size="small"
+                                    disabled={!permissions['CREATE']}
                                 >
                                     <PlusSquareOutlined />
                                     Organisations

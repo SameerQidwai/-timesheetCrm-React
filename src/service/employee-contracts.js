@@ -1,17 +1,17 @@
 import axios from "axios";
-import { message } from "antd";
+import { message as messageAlert} from "antd";
 
-import { Api, setToken } from "./constant";
+import { Api, headers, setToken } from "./constant";
 
 const url = `${Api}/employment-contracts`;
 
 export const getList = (id) => {
     return axios
-        .get(url+ `?employeeId=${id}`)
+        .get(url+ `?employeeId=${id}`, {headers:headers})
         .then((res) => {
             const { success, data } = res.data;
-            setToken(res.headers&& res.headers.authorization)
-            if (success) return { success: success, data: data };
+            if (success)  setToken(res.headers&& res.headers.authorization)
+            return { success, data };
         })
         .catch((err) => {
             return {
@@ -24,11 +24,11 @@ export const getList = (id) => {
 
 export const getRecord = (id) => {
     return axios
-        .get(url + `/${id}`)
+        .get(url + `/${id}`, {headers:headers})
         .then((res) => {
             const { success, data } = res.data;
-            setToken(res.headers&& res.headers.authorization)
-            if (success) return {success, data};
+            if (success)  setToken(res.headers&& res.headers.authorization)
+            return { success, data };
         })
         .catch((err) => {
             return {
@@ -40,18 +40,17 @@ export const getRecord = (id) => {
 };
 
 export const addList = (data) => {
-    message.loading({ content: 'Loading...', key: 1 })
+    messageAlert.loading({ content: 'Loading...', key: 1 })
     return axios
-        .post(url, data)
+        .post(url, data, {headers:headers})
         .then((res) => {
-            console.log(res);
-            const { success } = res.data;
-            message.success({ content: 'Success!', key: 1})
-            setToken(res.headers&& res.headers.authorization)
-            if (success) return {success};
+            const { success, message } = res.data;
+            messageAlert.success({ content: message, key: 1})
+            if (success) setToken(res.headers&& res.headers.authorization)
+            return {success};
         })
         .catch((err) => {
-            message.error({ content: 'Error!', key: 1})
+            messageAlert.error({ content: err.message, key: 1})
             return {
                 error: "Please login again!",
                 status: false,
@@ -62,7 +61,7 @@ export const addList = (data) => {
 
 export const delList = (id) => {
     return axios
-        .delete(url + `/${id}`)
+        .delete(url + `/${id}`, {headers:headers})
         .then((res) => {
             const { success } = res.data;
             setToken(res.headers&& res.headers.authorization)
@@ -78,17 +77,17 @@ export const delList = (id) => {
 };
 
 export const editList = (id, data) => {
-    message.loading({ content: 'Loading...', key: id })
+    messageAlert.loading({ content: 'Loading...', key: id })
     return axios
-        .put(url + `/${id}`, data)
+        .put(url + `/${id}`, data, {headers:headers})
         .then((res) => {
-            const { success } = res.data;
-            message.success({ content: 'Success!', key: id})
+            const { success, message } = res.data;
+            messageAlert.success({ content: message, key: id})
             setToken(res.headers&& res.headers.authorization)
             if (success) return {success};
         })
         .catch((err) => {
-            message.error({ content: 'Error!', key: id})
+            messageAlert.error({ content: err.message, key: id})
             return {
                 error: "Please login again!",
                 status: false,

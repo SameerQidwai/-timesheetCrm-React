@@ -60,9 +60,11 @@ class Permission extends Component {
                 key: 'READ',
                 dataIndex: 'READ',
                 render: (text, record,  rowIndex) => {
-                    {return  record.key === "PROJECTS" || record.key === "OPPORTUNITIES" || record.key === "TIMESHEETS" ?
+                    {return  record.key === "PROJECTS" || record.key === "TIMESHEETS" ?
                         <Checkbox.Group name={'READ'} value={text} options={['ANY', 'MANAGE', 'OWN']} onChange={(values)=>this.changePermission(values, 'READ', rowIndex)} />
-                        : record.key === "PROFILE" ?
+                        : record.key === "OPPORTUNITIES"? 
+                            <Checkbox.Group name={'READ'} value={text} options={['ANY', 'MANAGE']} onChange={(values)=>this.changePermission(values, 'READ', rowIndex)} />
+                            :record.key === "PROFILE" ?
                             null
                         :
                         <Checkbox.Group name={'READ'} value={text} options={['ANY']} onChange={(values)=>this.changePermission(values, 'READ', rowIndex)} />

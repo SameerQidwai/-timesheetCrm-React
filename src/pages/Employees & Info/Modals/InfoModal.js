@@ -5,7 +5,7 @@ import { LoadingOutlined } from "@ant-design/icons"; //Icons
 import FormItems from "../../../components/Core/FormItems";
 import moment from "moment";
 
-import { getEmpPersons, getOrgPersons, getStates } from "../../../service/constant-Apis";
+import { getEmpPersons, getOrgPersons, getRoles, getStates } from "../../../service/constant-Apis";
 import { getContactRecord } from "../../../service/conatct-person";
 import { addList, getRecord, editList } from "../../../service/Employees";
 const { TabPane } = Tabs;
@@ -191,7 +191,7 @@ class InfoModal extends Component {
                 {
                     object: "basic",
                     fieldCol: 12,
-                    key: "role_id",
+                    key: "roleId",
                     size: "small",
                     // rules:[{ required: true }],
                     type: "Select",
@@ -685,8 +685,8 @@ class InfoModal extends Component {
 
     fetchAll = (edit) =>{
         const { editEmp } = this.props
-        const customeUrl = `helpers/contact-persons?organizationId=1&active=0`
-        Promise.all([ getStates(),getStates() , edit ? this.getRecord(editEmp) : getOrgPersons(customeUrl) ])
+        const customUrl = `helpers/contact-persons?organizationId=1&active=&associated=1`
+        Promise.all([ getStates(), getRoles() , edit ? this.getRecord(editEmp) : getOrgPersons(customUrl) ])
         .then(res => {
             const { BasicFields } = this.state
             BasicFields[15].data = res[0].data;

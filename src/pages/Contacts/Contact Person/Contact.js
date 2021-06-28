@@ -5,7 +5,7 @@ import { DownOutlined, SettingOutlined, PlusSquareOutlined, FilterOutlined, Uplo
 
 import InfoModal from "./InfoModal";
 import { getList, delList } from "../../../service/conatct-person";
-
+import { localStore } from "../../../service/constant";
 import "../../styles/table.css";
 
 const { Title } = Typography;
@@ -42,13 +42,6 @@ class Contact extends Component {
                 dataIndex: "phoneNumber",
                 key: "phoneNumber",
             },
-            // {
-            //     title: "Organization",
-            //     render: (record) => {
-            //         const value = record.contactPersonOrganizations
-            //         console.log(value[value.length-1])
-            //     },
-            // },
             {
                 title: "Action",
                 key: "action",
@@ -69,6 +62,7 @@ class Contact extends Component {
                                 </Menu.Item> */}
                                 <Menu.Item
                                     onClick={() => { this.setState({ openModal: true, editCP: record.id }); }}
+                                    disabled={this.state&& !this.state.permissions['UPDATE']}
                                 >Edit</Menu.Item>
                                 {/* <Menu.Item> */}
                                     {/* <Link to={{ pathname: '/admin/calender/holidays' ,query: record.key}} className="nav-link"> */}
@@ -90,6 +84,7 @@ class Contact extends Component {
             data: [],
             openModal: false,
             editCP: false,
+            permissions: {}
         };
     }
 
@@ -98,12 +93,15 @@ class Contact extends Component {
     }
 
     getData = () => {
+        const { CONTACT_PERSONS }= JSON.parse(localStore().permissions)
         getList().then((res) => {
+            console.log(res);
             if (res.success) {
                 this.setState({
                     data: res.data,
                     openModal: false,
                     editCP: false,
+                    permissions: CONTACT_PERSONS
                 });
             }
         });
@@ -130,7 +128,7 @@ class Contact extends Component {
     };
 
     render() {
-        const {data, openModal, editCP} = this.state;
+        const {data, openModal, editCP, permissions} = this.state;
         const columns = this.columns;
         return (
             <>
@@ -151,6 +149,7 @@ class Contact extends Component {
                                     type="primary"
                                     size="small"
                                     onClick={() => { this.setState({ openModal: true, }); }}
+                                    disabled={!permissions['CREATE']}
                                 >
                                     <PlusSquareOutlined />
                                     Contact Person

@@ -158,8 +158,8 @@ class TimeSheet extends Component {
     };
 
     fetchAll = (id) =>{
-        const customeUrl = `helpers/contact-persons?active=1`
-        Promise.all([ getCustomApi('projects'), getOrgPersons(customeUrl)])
+        const customUrl = `helpers/contact-persons?active=1&associated=1`
+        Promise.all([ getCustomApi('projects'), getOrgPersons(customUrl)])
         .then(res => {
             this.setState({
                 projects: res[0].success? res[0].data : {},

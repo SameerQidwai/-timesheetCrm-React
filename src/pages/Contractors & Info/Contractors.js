@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import InfoModal from "./Modals/InfoModal";
 
 import { getList } from "../../service/contractors";
+import { localStore } from "../../service/constant";
 import "../styles/table.css";
 
 const { Title } = Typography;
@@ -83,6 +84,7 @@ class Contractors extends Component {
                                     onClick={() => {
                                         this.setState({ infoModal: true, editCont: record.id, });
                                     }}
+                                    disabled={this.state&& !this.state.permissions['UPDATE']}
                                 >
                                     Edit
                                 </Menu.Item>
@@ -121,6 +123,7 @@ class Contractors extends Component {
             infoModal: false,
             editCont: false,
             data: [],
+            permissions: {}
         };
     }
     componentDidMount = () =>{
@@ -128,20 +131,20 @@ class Contractors extends Component {
     }
 
     getList = () =>{
-        console.log('getList');
+        const { USERS }= JSON.parse(localStore().permissions)
         getList().then(res=>{
             if (res.success){
                 this.setState({
                     data: res.data,
                     infoModal: false,
                     editCont: false,
+                    permissions: USERS
                 })
             }
         })
     }
     
     callBack = () => {
-        console.log('callBack');
         this.getList()
     };
 
@@ -161,7 +164,7 @@ class Contractors extends Component {
     };
 
     render() {
-        const { data, infoModal, editCont } = this.state;
+        const { data, infoModal, editCont, permissions } = this.state;
         const columns = this.columns;
         return (
             <>
@@ -173,7 +176,6 @@ class Contractors extends Component {
                         <Row justify="space-between">
                             <Col>
                                 <Button type="default" size="small">
-                                    {" "}
                                     <FilterOutlined />
                                     Filter
                                 </Button>
@@ -181,12 +183,10 @@ class Contractors extends Component {
                             <Col>
                                 <Button
                                     type="primary"
-                                    onClick={() => {
-                                        this.setState({ infoModal: true });
-                                    }}
+                                    onClick={() => { this.setState({ infoModal: true }); }}
                                     size="small"
+                                    disabled={!permissions['CREATE']}
                                 >
-                                    {" "}
                                     <PlusSquareOutlined />
                                     Contactors
                                 </Button>

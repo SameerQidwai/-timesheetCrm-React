@@ -1,22 +1,22 @@
 import axios from "axios";
-import { Api, setToken } from "./constant";
-import { message } from "antd";
+import { Api, headers, setToken } from "./constant";
+import { message as messageAlert } from "antd";
 import moment from "moment";
 
 const url = `${Api}/opportunities`;
 
 export const addList = (data) => {
-    message.loading({ content: 'Loading...', key: 1 })
+    messageAlert.loading({ content: 'Loading...', key: 1 },5)
     return axios
-        .post(url, data)
+        .post(url, data, {headers:headers})
         .then((res) => {
-            const { success } = res.data;
-            message.success({ content: 'Success!', key: 1})
-            setToken(res.headers&& res.headers.authorization)
-            if (success) return {success};
+            const { success, message } = res.data;
+            messageAlert.success({ content: message, key: 1},5)
+            if (success) setToken(res.headers&& res.headers.authorization)
+            return {success};
         })
         .catch((err) => {
-            message.error({ content: 'Error!', key: 1})
+            messageAlert.error({ content: err.message, key: 1})
             return {
                 error: "Please login again!",
                 status: false,
@@ -27,11 +27,12 @@ export const addList = (data) => {
 
 export const getList = () => {
     return axios
-        .get(url)
+        .get(url, {headers:headers})
         .then((res) => {
             const { success, data } = res.data;
-            setToken(res.headers&& res.headers.authorization)
-            if (success) return { success: success, data: data };
+            if (success) setToken(res.headers&& res.headers.authorization)
+
+            return { success, data };
         })
         .catch((err) => {
             return {
@@ -44,7 +45,7 @@ export const getList = () => {
 
 export const getRecord = (id) => {
     return axios
-        .get(url + `/${id}`)
+        .get(url + `/${id}`, {headers:headers})
         .then((res) => {
             const { success, data } = res.data;
             // console.log(data);
@@ -98,6 +99,7 @@ export const getRecord = (id) => {
                 setToken(res.headers&& res.headers.authorization)
                 return {success, data, basic, tender, billing, dates, manage};
             }
+            return { success }
         })
         .catch((err) => {
             return {
@@ -110,11 +112,11 @@ export const getRecord = (id) => {
 
 export const delList = (id) => {
     return axios
-        .delete(url + `/${id}`)
+        .delete(url + `/${id}`, {headers:headers})
         .then((res) => {
             const { success } = res.data;
-            setToken(res.headers&& res.headers.authorization)
-            if (success) return {success};
+            if (success)  setToken(res.headers&& res.headers.authorization)
+            return {success};
         })
         .catch((err) => {
             return {
@@ -126,17 +128,17 @@ export const delList = (id) => {
 };
 
 export const editList = (data) => {
-    message.loading({ content: 'Loading...', key: data.id })
+    messageAlert.loading({ content: 'Loading...', key: data.id })
     return axios
-        .put(url + `/${data.id}`, data, {timeout: 5000})
+        .put(url + `/${data.id}`, data, {timeout: 5000}, {headers:headers})
         .then((res) => {
-            const { success } = res.data;
-            message.success({ content: 'Success!', key: data.id})
+            const { success, message } = res.data;
+            messageAlert.success({ content: message, key: data.id},5)
             setToken(res.headers&& res.headers.authorization)
             if (success) return {success};
         })
         .catch((err) => {
-            message.error({ content: 'Error!', key: data.id})
+            messageAlert.error({ content: err.message, key: data.id})
             return {
                 error: "Please login again!",
                 status: false,
@@ -146,17 +148,17 @@ export const editList = (data) => {
 };
 
 export const addLeadSkill = (id, data) => {
-    message.loading({ content: 'Loading...', key: id })
+    messageAlert.loading({ content: 'Loading...', key: id })
     return axios
-        .post(url + `/${id}/resources`, data)
+        .post(url + `/${id}/resources`, data, {headers:headers})
         .then((res) => {
-            const { success, data } = res.data;
-            message.success({ content: 'Success!', key: id})
+            const { success, data, message } = res.data;
+            messageAlert.success({ content: message, key: id})
             setToken(res.headers&& res.headers.authorization)
             if (success) return {success, data: data[0]};
         })
         .catch((err) => {
-            message.error({ content: 'Error!', key: id})
+            messageAlert.error({ content: err.message, key: id})
             return {
                 error: "Please login again!",
                 status: false,
@@ -167,7 +169,7 @@ export const addLeadSkill = (id, data) => {
 
 export const getLeadSkills = (id)=>{
     return axios
-        .get(url + `/${id}/resources`)
+        .get(url + `/${id}/resources`, {headers:headers})
         .then((res) => {
             const { success, data } = res.data;
             if (success) {
@@ -187,7 +189,7 @@ export const getLeadSkills = (id)=>{
 
 export const getLeadSkill = (oppId, resId) => {
     return axios
-        .get(url + `/${oppId}/resources/${resId}`)
+        .get(url + `/${oppId}/resources/${resId}`, {headers:headers})
         .then((res) => {
             const { success, data } = res.data;
             setToken(res.headers&& res.headers.authorization)
@@ -203,17 +205,17 @@ export const getLeadSkill = (oppId, resId) => {
 };
 
 export const editLeadSkill = (oppId, resId, data) => {
-    message.loading({ content: 'Loading...', key:  resId})
+    messageAlert.loading({ content: 'Loading...', key:  resId})
     return axios
-        .put(url + `/${oppId}/resources/${resId}`, data)
+        .put(url + `/${oppId}/resources/${resId}`, data, {headers:headers})
         .then((res) => {
-            const { success, data } = res.data;
-            message.success({ content: 'Success!', key: resId})
+            const { success, data, message } = res.data;
+            messageAlert.success({ content: message, key: resId})
             setToken(res.headers&& res.headers.authorization)
             if (success) return {success, data: data[0]};
         })
         .catch((err) => {
-            message.error({ content: 'Error!', key: resId})
+            messageAlert.error({ content: err.message, key: resId})
             return {
                 error: "Please login again!",
                 status: false,
@@ -225,7 +227,7 @@ export const editLeadSkill = (oppId, resId, data) => {
 export const delLeadSkill = (oppId, resId) => {
     console.log(oppId, resId);
     return axios
-        .delete(url + `/${oppId}/resources/${resId}`)
+        .delete(url + `/${oppId}/resources/${resId}`, {headers:headers})
         .then((res) => {
             const { success } = res.data;
             setToken(res.headers&& res.headers.authorization)
@@ -241,17 +243,17 @@ export const delLeadSkill = (oppId, resId) => {
 };
 
 export const addLeadSkillResource = (oppId, skillId,  data) => {
-    message.loading({ content: 'Loading...', key:  skillId})
+    messageAlert.loading({ content: 'Loading...', key:  skillId})
     return axios
-        .post(url + `/${oppId}/resources/${skillId}/allocations`, data)
+        .post(url + `/${oppId}/resources/${skillId}/allocations`, data, {headers:headers})
         .then((res) => {
-            const { success, data } = res.data;
-            message.success({ content: 'Success!', key: skillId})
+            const { success, data, message } = res.data;
+            messageAlert.success({ content: message, key: skillId})
             setToken(res.headers&& res.headers.authorization)
             if (success) return {success, data: data};
         })
         .catch((err) => {
-            message.error({ content: 'Error!', key: skillId})
+            messageAlert.error({ content: err.message, key: skillId})
             return {
                 error: "Please login again!",
                 status: false,
@@ -262,7 +264,7 @@ export const addLeadSkillResource = (oppId, skillId,  data) => {
 
 export const getLeadSkillResource = (oppId,skillId, resId) => {
     return axios
-        .get(url + `/${oppId}/resources/${skillId}/allocations/${resId}`)
+        .get(url + `/${oppId}/resources/${skillId}/allocations/${resId}`, {headers:headers})
         .then((res) => {
             const { success, data } = res.data;
             setToken(res.headers&& res.headers.authorization)
@@ -278,18 +280,18 @@ export const getLeadSkillResource = (oppId,skillId, resId) => {
 };
 
 export const editLeadSkillResource = (oppId, skillId, resId, data) => {
-    message.loading({ content: 'Loading...', key: resId })
+    messageAlert.loading({ content: 'Loading...', key: resId })
     console.log({oppId, skillId, resId, data});
     return axios
-        .put(url + `/${oppId}/resources/${skillId}/allocations/${resId}`, data)
+        .put(url + `/${oppId}/resources/${skillId}/allocations/${resId}`, data, {headers:headers})
         .then((res) => {
-            const { success, data } = res.data;
-            message.success({ content: 'Success!', key: resId})
+            const { success, data, message } = res.data;
+            messageAlert.success({ content: message, key: resId})
             setToken(res.headers&& res.headers.authorization)
             if (success) return {success, data};
         })
         .catch((err) => {
-            message.error({ content: 'Error!', key: resId})
+            messageAlert.error({ content: err.message, key: resId})
             return {
                 error: "Please login again!",
                 status: false,
@@ -300,7 +302,7 @@ export const editLeadSkillResource = (oppId, skillId, resId, data) => {
 
 export const delLeadSkillResource = (oppId, skillId, resId,) => {
     return axios
-        .delete(url + `/${oppId}/resources/${skillId}/allocations/${resId}`)
+        .delete(url + `/${oppId}/resources/${skillId}/allocations/${resId}`, {headers:headers})
         .then((res) => {
             const { success } = res.data;
             setToken(res.headers&& res.headers.authorization)
@@ -318,7 +320,7 @@ export const delLeadSkillResource = (oppId, skillId, resId,) => {
 export const selectLeadSkillResource = (oppId, skillId, resId) => {
     console.log(oppId, skillId, resId);
     return axios
-        .patch(url + `/${oppId}/resources/${skillId}/allocations/${resId}/mark-as-selected`)
+        .patch(url + `/${oppId}/resources/${skillId}/allocations/${resId}/mark-as-selected`, {headers:headers})
         .then((res) => {
             const { success } = res.data;
             setToken(res.headers&& res.headers.authorization)
@@ -335,7 +337,7 @@ export const selectLeadSkillResource = (oppId, skillId, resId) => {
 
 export const workIsLost = (oppId) => {
     return axios
-        .put(url + `/${oppId}/lost`)
+        .put(url + `/${oppId}/lost`, {headers:headers})
         .then((res) => {
             const { success } = res.data;
             setToken(res.headers&& res.headers.authorization)
@@ -351,17 +353,17 @@ export const workIsLost = (oppId) => {
 };
 
 export const workWon = (oppId, data) => {
-    message.loading({ content: 'Loading...', key: oppId })
+    messageAlert.loading({ content: 'Loading...', key: oppId })
     return axios
-        .put(url + `/${oppId}/win`, data)
+        .put(url + `/${oppId}/win`, data, {headers:headers})
         .then((res) => {
-            const { success } = res.data;
-            message.success({ content: 'Success!', key: oppId})
+            const { success, message } = res.data;
+            messageAlert.success({ content: message, key: oppId})
             setToken(res.headers&& res.headers.authorization)
             if (success) return {success};
         })
         .catch((err) => {
-            message.error({ content: 'Error!', key: oppId})
+            messageAlert.error({ content: err.message, key: oppId})
             return {
                 error: "Please login again!",
                 status: false,

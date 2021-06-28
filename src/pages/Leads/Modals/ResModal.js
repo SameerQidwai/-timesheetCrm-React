@@ -239,15 +239,13 @@ class ResModal extends Component {
   };
 
   fetchRes = () => {
-    const customeUrl = `helpers/contact-persons`
-    Promise.all([getOrgPersons(customeUrl)])
+    const customUrl = `helpers/contact-persons`
+    Promise.all([getOrgPersons(customUrl)])
       .then((res) => {
-        console.log(res[0]);
         const data = res[0].success ? res[0].data :[]
         const { ResourceFields } = this.state;
         const { editRex } = this.props;
         if (editRex) {
-          console.log(editRex);
           const obj = {
             contactPersonId: editRex.contactPersonId,
             billableHours: editRex.billableHours,
@@ -273,7 +271,6 @@ class ResModal extends Component {
       .then((res) => {
         const { SkillFields } = this.state;
         SkillFields.fields[2].data = res.success ? res.data : [];
-        console.log(panelId, res.data);
 
         if (editRex) {
           // repopulate the fields to edit them to resolve multiple api calling might be do this on every Modal Compenent
@@ -308,7 +305,6 @@ class ResModal extends Component {
     // this will work after I get the Object from the form
     const { editRex, skillId } = this.props;
     if (editRex) {
-      console.log("edit");
       if (skillId) {
         this.editResource(vake.obj);
       } else {
@@ -326,10 +322,8 @@ class ResModal extends Component {
   addSkill = (data) => {
     this.setState({ loading: true });
     const { leadId, callBack } = this.props;
-    console.log(leadId);
     addLeadSkill(leadId, data).then((res) => {
       if (res.success) {
-        console.log(res.data);
         callBack(res.data);
       }
     });

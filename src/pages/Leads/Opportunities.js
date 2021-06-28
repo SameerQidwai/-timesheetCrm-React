@@ -9,7 +9,7 @@ import { getList, delList } from "../../service/opportunities";
 
 import '../styles/table.css'
 import moment from "moment";
-import { formatCurrency } from '../../service/constant';
+import { formatCurrency, localStore } from '../../service/constant';
 const { Title } = Typography
 
 class Opportunities extends Component {
@@ -83,6 +83,7 @@ class Opportunities extends Component {
                                     openModal: true,
                                     editLead: record.id
                                 })}
+                                disabled={this.state&& !this.state.permissions['UPDATE']}
                             >Edit</Menu.Item>
                             <Menu.Item>
                                 <Link
@@ -113,6 +114,7 @@ class Opportunities extends Component {
             data : [],
             openModal: false,
             editLead:false,
+            permissions: {}
         }
     }
 
@@ -121,12 +123,13 @@ class Opportunities extends Component {
     }
 
     getList = () =>{
+        const { OPPORTUNITIES }= JSON.parse(localStore().permissions)
         getList().then(res=>{
-            // console.log(res.data);
             this.setState({
                 data: res.success ? res.data : [],
                 openModal: false,
-                editLead: false
+                editLead: false,
+                permissions: OPPORTUNITIES
             })
         })
     }
@@ -144,7 +147,6 @@ class Opportunities extends Component {
     }
 
     closeModal = () =>{
-        console.log("Colse called in lead");
         this.setState({
             openModal: false,
             editLead: false
@@ -152,7 +154,7 @@ class Opportunities extends Component {
     }
 
     render(){
-        const { data, openModal, editLead } = this.state
+        const { data, openModal, editLead, permissions } = this.state
         return(
             <>
                 <Row justify="space-between">
@@ -174,6 +176,7 @@ class Opportunities extends Component {
                                             editLead:false
                                         })
                                     }} 
+                                    disabled={!permissions['CREATE']}
                                     ><PlusSquareOutlined /> Opportunity</Button>
                             </Col>
                         </Row>

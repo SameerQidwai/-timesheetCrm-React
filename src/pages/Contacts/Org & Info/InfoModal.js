@@ -784,9 +784,9 @@ class InfoModal extends Component {
 
     fetchAll = () =>{
         const {editOrg}= this.props;
-        const customeUrl = `helpers/contact-persons?organizationId=${editOrg}`
+        const customUrl = `helpers/contact-persons?organizationId=${editOrg}&associated=1`
         // , getContactPersons() 
-        Promise.all([ getOrganizations(editOrg), getOrgPersons(customeUrl)])
+        Promise.all([ getOrganizations(editOrg), getOrgPersons(customUrl)])
         .then(res => {
             const { BasicFields } = this.state;
             BasicFields.fields[5].data = res[0].data;

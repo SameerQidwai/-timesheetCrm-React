@@ -10,10 +10,10 @@ const NavItem = [
     {
         text: "Contacts",
         items: [
-            { text: "Organisations", link: "/organisations" },
-            { text: "Contact", link: "/contact" },
+            { text: "Organisations", link: "/organisations", key: 'ORGANIZATIONS' },
+            { text: "Contact", link: "/contact", key: 'CONTACT_PERSONS' },
         ],
-        key: 'CONTACT_PERSONS'
+        key: 'CHILDRENS'
     },
     {
         text: "Opportunities",
@@ -23,10 +23,10 @@ const NavItem = [
     {
         text: "Resources",
         items: [
-            { text: "Employees", link: "/Employees" },
-            { text: "Sub Contractors", link: "/sub-contractors" },
+            { text: "Employees", link: "/Employees", key: "USERS"},
+            { text: "Sub Contractors", link: "/sub-contractors", key: "USERS"},
         ],
-        key: "USERS"
+        key: "CHILDRENS"
     },
     {
         text: "Projects",
@@ -51,8 +51,21 @@ class Navbar extends Component {
         let { allowedNavItem } = this.state
             // allowedNavItem[0] = pageLinks[0]
             NavItem.map(el=>{
-                if(permissions[el.key]&& permissions[el.key]['READ']){
-                    allowedNavItem.push(el)
+                if(el.key === 'CHILDRENS'){
+                    let elItems =[]
+                    el.items.map(cEl=>{
+                        if(permissions[cEl.key]&& permissions[cEl.key]['READ']){
+                            elItems.push(cEl)
+                        }
+                    })
+                    if(elItems.length >0){
+                        el.items = elItems
+                        allowedNavItem.push(el)
+                    }
+                }else{
+                    if(permissions[el.key]&& permissions[el.key]['READ']){
+                        allowedNavItem.push(el)
+                    }
                 }
             })
        this.setState({allowedNavItem})

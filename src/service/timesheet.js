@@ -1,4 +1,4 @@
-import { message } from "antd";
+import { message as messageAlert } from "antd";
 import axios from "axios";
 
 import { Api, headers, setToken } from "./constant";
@@ -7,7 +7,7 @@ const url = `${Api}/timesheets/`;
 
 export const getList = (keys) => {
     return axios
-        .get(url + `${keys.startDate}&${keys.endDate}&${keys.userId}`)
+        .get(url + `${keys.startDate}&${keys.endDate}&${keys.userId}`, {headers:headers})
         .then((res) => {
             const { success, data } = res.data;
             setToken(res.headers&& res.headers.authorization)
@@ -23,20 +23,21 @@ export const getList = (keys) => {
 };
 
 export const addTime = (keys ,data) => {
-    message.loading({ content: 'Loading...', key: 1 })
+    messageAlert.loading({ content: 'Loading...', key: 1 })
     return axios
         .post(url +`${keys.startDate}&${keys.endDate}&${keys.userId}`, data, {headers:headers})
         .then((res) => {
             const { success, data } = res.data;
             if (success) {
-                message.success({ content: 'Success!', key: 1})
+                messageAlert.success({ content: 'Success!', key: 1})
                 data.actualHours = data.hours
                 setToken(res.headers&& res.headers.authorization)
                 return {success, data}
             };
+            return { success }
         })
         .catch((err) => {
-            message.error({ content: 'Error!', key: 1})
+            messageAlert.error({ content: err.message, key: 1})
             return {
                 error: "Please login again!",
                 status: false,
@@ -46,20 +47,21 @@ export const addTime = (keys ,data) => {
 };
 
 export const editTime = (entryId ,data) => {
-    message.loading({ content: 'Loading...', key: 1 })
+    messageAlert.loading({ content: 'Loading...', key: 1 })
     return axios
         .put(url +`entries/${entryId}`, data, {headers:headers})
         .then((res) => {
             const { success, data } = res.data;
             if (success) {
-                message.success({ content: 'Success!', key: 1})
+                messageAlert.success({ content: 'Success!', key: 1})
                 data.actualHours = data.hours
                 setToken(res.headers&& res.headers.authorization)
                 return {success, data}
             };
+            return { success }
         })
         .catch((err) => {
-            message.error({ content: 'Error!', key: 1})
+            messageAlert.error({ content: err.message, key: 1})
             return {
                 error: "Please login again!",
                 status: false,
@@ -69,17 +71,17 @@ export const editTime = (entryId ,data) => {
 };
 
 export const deleteTime = (entryId ) => {
-    message.loading({ content: 'Loading...', key: 1 })
+    messageAlert.loading({ content: 'Loading...', key: 1 })
     return axios
         .delete(url +`entries/${entryId}`)
         .then((res) => {
             const { success, data } = res.data;
-            message.success({ content: 'Success!', key: 1})
-            setToken(res.headers&& res.headers.authorization)
-            if (success) return {success, data};
+            messageAlert.success({ content: 'Success!', key: 1})
+            if (success) setToken(res.headers&& res.headers.authorization)
+            return {success, data};
         })
         .catch((err) => {
-            message.error({ content: 'Error!', key: 1})
+            messageAlert.error({ content: err.message, key: 1})
             return {
                 error: "Please login again!",
                 status: false,
@@ -88,17 +90,18 @@ export const deleteTime = (entryId ) => {
         });
 };
 export const reviewTimeSheet = (keys, stage) => {
-    message.loading({ content: 'Loading...', key: 1 })
+    messageAlert.loading({ content: 'Loading...', key: 1 })
     return axios
         .post(url + `${keys.startDate}&${keys.endDate}&${keys.userId}/projectEntries/${keys.pEntryId}/${stage}`, {headers:headers})
         .then((res) => {
             const { success, data } = res.data;
-            message.success({ content: 'Success!', key: 1})
-            setToken(res.headers&& res.headers.authorization)
-            if (success) return {success, data};
+            messageAlert.success({ content: 'Success!', key: 1})
+            if (success)setToken(res.headers&& res.headers.authorization)
+            
+            return {success, data};
         })
         .catch((err) => {
-            message.error({ content: 'Error!', key: 1})
+            messageAlert.error({ content: err.message, key: 1})
             return {
                 error: "Please login again!",
                 status: false,
@@ -109,17 +112,17 @@ export const reviewTimeSheet = (keys, stage) => {
 
 
 export const editLabel = (data) => {
-    message.loading({ content: 'Loading...', key: data.id })
+    messageAlert.loading({ content: 'Loading...', key: data.id })
     return axios
         .put(url + `/${data.id}`, data, {headers:headers})
         .then((res) => {
             const { success } = res.data;
-            message.success({ content: 'Success!', key: data.id})
-            setToken(res.headers&& res.headers.authorization)
-            if (success) return {success};
+            messageAlert.success({ content: 'Success!', key: data.id})
+            if (success) setToken(res.headers&& res.headers.authorization)
+            return {success};
         })
         .catch((err) => {
-            message.error({ content: 'Error!', key: data.id})
+            messageAlert.error({ content: err.message, key: data.id})
             return {
                 error: "Please login again!",
                 status: false,
@@ -129,17 +132,18 @@ export const editLabel = (data) => {
 };
 
 export const addProjectNote = (id, data) => {
-    message.loading({ content: 'Loading...', key: id })
+    messageAlert.loading({ content: 'Loading...', key: id })
     return axios
         .patch(url + `/projectEntries/${id}`, data, {headers:headers})
         .then((res) => {
             const { success } = res.data;
-            message.success({ content: 'Success!', key: id})
-            setToken(res.headers&& res.headers.authorization)
-            if (success) return {success};
+            messageAlert.success({ content: 'Success!', key: id})
+            if (success) setToken(res.headers&& res.headers.authorization)
+            
+            return {success};
         })
         .catch((err) => {
-            message.error({ content: 'Error!', key: id})
+            messageAlert.error({ content: err.message, key: id})
             return {
                 error: "Please login again!",
                 status: false,

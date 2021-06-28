@@ -14,7 +14,7 @@ import InfoModal from "./Modals/InfoModal";
 import { getRecord, delList } from "../../service/projects";
 
 import moment from "moment"
-import { formatCurrency } from "../../service/constant";
+import { formatCurrency, localStore } from "../../service/constant";
 
 const { Item } = Descriptions;
 const { TabPane } = Tabs;
@@ -28,6 +28,7 @@ class ProjectInfo extends Component {
             data: { },
             billing: {},
             renderTabs: false,
+            permissions: {}
         };
     }
     componentDidMount = ()=>{
@@ -36,6 +37,7 @@ class ProjectInfo extends Component {
     }
 
     getRecord = (id) =>{
+        const { PROJECTS }= JSON.parse(localStore().permissions)
         getRecord(id).then(res=>{
             if(res.success){
                 this.setState({
@@ -44,6 +46,7 @@ class ProjectInfo extends Component {
                     leadId: id,
                     infoModal: false,
                     renderTabs: true,
+                    permissions: PROJECTS
                 })
             }
         })
@@ -67,7 +70,7 @@ class ProjectInfo extends Component {
     };
 
     render() {
-        const { data, infoModal, leadId, billing, renderTabs } = this.state;
+        const { data, infoModal, leadId, billing, renderTabs, permissions } = this.state;
         const DescTitle = (
             <Row justify="space-between">
                 <Col>Project Basic Information</Col>
@@ -75,9 +78,12 @@ class ProjectInfo extends Component {
                     <Dropdown
                         overlay={
                             <Menu>
-                                <Menu.Item onClick={() => { 
-                                    this.setState({ infoModal: true});
-                                    }} > Edit </Menu.Item>
+                                <Menu.Item 
+                                    onClick={() => { 
+                                        this.setState({ infoModal: true});
+                                    }}
+                                    disabled={!permissions['UPDATE']}
+                                    > Edit </Menu.Item>
                                 <Menu.Item>
                                     <Link
                                         to={{

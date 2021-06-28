@@ -78,9 +78,8 @@ class InfoModal extends Component {
             type: "Select",
             onChange: function func(value) {
               if (value) {
-                const customeUrl = `helpers/contact-persons?organizationId=${value}`
-                getOrgPersons(customeUrl).then((res) => {
-                  console.log(res.data);
+                const customUrl = `helpers/contact-persons?organizationId=${value}&associated=1`
+                getOrgPersons(customUrl).then((res) => {
                   if (res.success) {
                     const { BasicFields } = this.state;
                     BasicFields.fields[6].data = res.data;
@@ -327,7 +326,6 @@ class InfoModal extends Component {
               const {
                 obj,
               } = this.billingRef.current.refs.billing_form.getFieldsValue();
-              console.log(obj);
               obj.cm$ = obj.value ? (obj.value * value) / 100 : 0;
               this.billingRef.current.refs.billing_form.setFieldsValue({
                 obj: obj,
@@ -500,7 +498,6 @@ class InfoModal extends Component {
   };
 
   fetchAll = () => {
-    console.log("fetchAll");
     const { editPro } = this.props;
     const dates = { entryDate: moment(new Date()) };
     this.datesRef.current.refs.dates_form.setFieldsValue({ obj: dates });
@@ -509,7 +506,6 @@ class InfoModal extends Component {
         if (res[1].success) {
           res[1].data[0].readOnly = true;
         }
-        console.log(res);
         const { BasicFields, ManageFields } = this.state;
         BasicFields.fields[2].data = res[0].success ? res[0].data : [];
         BasicFields.fields[3].data = res[1].success ? res[1].data : [];
@@ -621,7 +617,6 @@ class InfoModal extends Component {
   ManageCall = (vake) => {
     // this will work after I get the Object from the form
     vake = vake.obj;
-    console.log(vake);
 
     this.setState(
       {
@@ -654,7 +649,6 @@ class InfoModal extends Component {
 
   addProject = (value) => {
     const { callBack } = this.props;
-    console.log(value);
     this.setState({
       basicSubmitted: false,
       tenderSubmitted: false,
@@ -672,13 +666,12 @@ class InfoModal extends Component {
 
   getRecord = (id) => {
     const { ManageFields } = this.state;
-    console.log(ManageFields.fields[4], ManageFields.fields[5]);
     return getRecord(id).then((res) => {
       if (res.success) {
         const { basic, tender, billing, dates, manage } = res;
 
-        const customeUrl = `helpers/contact-persons?organizationId=${basic.organizationId}` 
-        const contactPersons = getOrgPersons(customeUrl)
+        const customUrl = `helpers/contact-persons?organizationId=${basic.organizationId}&associated=1` 
+        const contactPersons = getOrgPersons(customUrl)
         this.basicRef.current.refs.basic_form.setFieldsValue({ obj: basic });
         this.tenderRef.current.refs.tender_form.setFieldsValue({ obj: tender });
         this.billingRef.current.refs.billing_form.setFieldsValue({ obj: billing, });

@@ -9,7 +9,7 @@ import { getList, delList } from "../../service/projects";
 
 import '../styles/table.css'
 import moment from "moment";
-import { formatCurrency } from '../../service/constant';
+import { formatCurrency, localStore } from '../../service/constant';
 const { Title } = Typography
 
 class Projects extends Component {
@@ -61,16 +61,17 @@ class Projects extends Component {
                 render: (record) => (
                     <Dropdown overlay={
                         <Menu>
-                            <Menu.Item danger>
+                            {/* <Menu.Item danger>
                                 <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete(record.id)} >
                                     Delete
                                 </Popconfirm>
-                            </Menu.Item >
+                            </Menu.Item > */}
                             <Menu.Item 
                                 onClick={()=>this.setState({
                                     openModal: true,
                                     editPro: record.id
                                 })}
+                                disabled={this.state&& !this.state.permissions['UPDATE']}
                             >Edit</Menu.Item>
                             <Menu.Item >
                                 <Link to={{ pathname: `/projects/${record.id}/info`}} className="nav-link">
@@ -105,6 +106,7 @@ class Projects extends Component {
             data : [ ],
             openModal: false,
             editPro:false,
+            permissions: {}
         }
     }
 
@@ -113,11 +115,13 @@ class Projects extends Component {
     }
 
     getList = () =>{
+        const { PROJECTS }= JSON.parse(localStore().permissions)
         getList().then(res=>{
             this.setState({
                 data: res.success ? res.data : [],
                 openModal: false,
-                editPro: false
+                editPro: false,
+                permissions: PROJECTS
             })
         })
     }
@@ -142,7 +146,7 @@ class Projects extends Component {
     }
 
     render(){
-        const { data, openModal, editPro } = this.state
+        const { data, openModal, editPro, permissions } = this.state
         return(
             <>
                 <Row justify="space-between">
@@ -163,7 +167,8 @@ class Projects extends Component {
                                             openModal: true,
                                             editPro:false
                                         })
-                                    }} 
+                                    }}
+                                    disabled={!permissions['CREATE']}
                                     ><PlusSquareOutlined />Add Project</Button>
                             </Col>
                         </Row>

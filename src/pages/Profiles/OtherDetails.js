@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Button, Col, Form } from 'antd'
 import FormItems from '../../components/Core/FormItems'
 import { upadteSettings } from '../../service/Login-Apis';
+import { localStore } from '../../service/constant';
 
 function OtherDetails(props) {
     const [form] = Form.useForm();
@@ -282,7 +283,7 @@ function OtherDetails(props) {
             itemStyle: { marginBottom: 20 },
         },
     ]);
-
+    const [permissions, setPermissions]= useState({})
     // const [trainField, setTrainFields] = useState([
     //     {
     //         Placeholder: "Training",
@@ -454,10 +455,9 @@ function OtherDetails(props) {
     }
 
     const setBankReq = () =>{
-        
+        const { PROFILE }= JSON.parse(localStore().permissions)
         const { bank } = form.getFieldsValue() // const
         const { bankAccountNo, bankBsb, bankName, tfn } = bank
-        console.log(bank);
         let newFields = bankFields
         if(bankAccountNo|| bankBsb|| bankName|| tfn) {
             newFields[1].rangeMin= true
@@ -482,13 +482,14 @@ function OtherDetails(props) {
             newFields[8].rules = [{required: false, message: ''}]
         }
         setBankFields([...newFields])
+        setPermissions(PROFILE)
     }
 
     const changeSetings = (values) =>{
         const obj = { ...values.detail, ...values.kin, ...values.bank }
         upadteSettings(obj).then(res=>{
             if(res.success){
-                console.log(res.data);
+                // console.log(res.data);
             }
         })
     }
@@ -508,7 +509,9 @@ function OtherDetails(props) {
             <FormItems FormFields={bankFields} />
             {/* <FormItems FormFields={trainField} /> */}
             <Col span={24} style={{padding: 20}}>
-                <Button htmlType={"submit"} type="primary" size="middle" style={{float: "right"}}> Save </Button>
+                <Button htmlType={"submit"} type="primary" size="middle" style={{float: "right"}}
+                    
+                > Save </Button>
             </Col>           
         </Form>
     )

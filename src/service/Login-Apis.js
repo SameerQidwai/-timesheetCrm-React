@@ -56,7 +56,7 @@ export const upadtePassword = (data) => {
             if (success) return {success, data};
         })
         .catch((err) => {
-                messageAlert.error({ content: 'Error!', key: 'logout'})
+                messageAlert.error({ content: err.message, key: 'logout'})
             return {
                 error: "Please login again!",
                 status: false,
@@ -151,7 +151,7 @@ export const upadteSettings = (data) => {
             if (success) return {success, data};
         })
         .catch((err) => {
-                messageAlert.error({ content: 'Error!', key: 'logout'})
+                messageAlert.error({ content: err.message, key: 'logout'})
             return {
                 error: "Please login again!",
                 status: false,

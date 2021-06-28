@@ -7,7 +7,7 @@ import OrderModal from "./Modals/OrderModal";
 import { getRecord, getOrders, delOrder } from "../../service/projects";
 
 import moment from "moment"
-import { formatCurrency } from "../../service/constant";
+import { formatCurrency, localStore } from "../../service/constant";
 
 const { Item } = Descriptions;
 
@@ -58,6 +58,7 @@ class PurchaseOrder extends Component {
                                 </Menu.Item>
                                 <Menu.Item
                                     onClick={() => { this.setState({ openModal: true, editRex: record.id, }); }}
+                                    disabled={this.state&& !this.state.permissions['UPDATE']}
                                 >
                                     Edit
                                 </Menu.Item>
@@ -82,20 +83,20 @@ class PurchaseOrder extends Component {
 
     componentDidMount = ()=>{
         const { id } = this.props.match.params
-        // console.log(this.props.match.params);
         this.fetchAll(id)
     }
 
     fetchAll = (id) =>{
+        const { PROJECTS }= JSON.parse(localStore().permissions)
         Promise.all([ getRecord(id), getOrders(id)])
         .then(res => {
-            console.log(res[1].data);
             this.setState({
                 desc: res[0].success? res[0].data : {},
                 editRex: false,
                 ProId: id,
                 openModal: false,
                 data: res[1].success? res[1].data : [],
+                permissions: PROJECTS
             })
         })
         .catch(e => {
@@ -134,7 +135,7 @@ class PurchaseOrder extends Component {
     };
 
     render() {
-        const { desc, data, openModal, editRex, ProId } = this.state;
+        const { desc, data, openModal, editRex, ProId, permissions } = this.state;
         return (
             <>
                 <Descriptions
@@ -152,7 +153,12 @@ class PurchaseOrder extends Component {
                     {/* <Item label="Gender">{data.gender}</Item> */}
                 </Descriptions>
                 <Row justify="end">
-                    <Col> <Button type="primary" size='small'  onClick={() => {  this.setState({ openModal: true, editRex: false, }) }}>Add New</Button> </Col>
+                    <Col> <Button 
+                        type="primary" 
+                        size='small' 
+                        onClick={() => {  this.setState({ openModal: true, editRex: false, }) }}
+                        disabled={!permissions['CREATE']}
+                    >Add New</Button> </Col>
                     {/* <Col> <Button type="danger" size='small'>Delete Resource</Button></Col> */}
                 </Row>
                 <Table

@@ -1,18 +1,19 @@
 import axios from "axios";
 
-import { Api, setToken } from "./constant";
+import { Api, headers, setToken } from "./constant";
 import moment from "moment";
-import { message } from "antd";
+import { message as messageAlert } from "antd";
 
 const url = `${Api}/employees/`;
 
 export const getList = (empId) => {
     return axios
-        .get(url+ `${empId}/leases`)
+        .get(url+ `${empId}/leases`, {headers:headers})
         .then((res) => {
             const { success, data } = res.data;
-            setToken(res.headers&& res.headers.authorization)
-            if (success) return { success: success, data: data };
+            if (success) setToken(res.headers&& res.headers.authorization)
+
+            return { success: success, data: data };
         })
         .catch((err) => {
             return {
@@ -24,18 +25,18 @@ export const getList = (empId) => {
 };
 
 export const addList = (empId, data) => {
-        message.loading({ content: 'Loading...', key: empId })
+    messageAlert.loading({ content: 'Loading...', key: empId })
     return axios
-        .post(url+ `${empId}/leases`, data)
+        .post(url+ `${empId}/leases`, data, {headers:headers})
         .then((res) => {
-            console.log(res);
-            const { success } = res.data;
-            message.success({ content: 'Success!', key: empId})
-            setToken(res.headers&& res.headers.authorization)
-            if (success) return {success};
+            const { success, message } = res.data;
+            messageAlert.success({ content: message, key: empId})
+            if (success) setToken(res.headers&& res.headers.authorization)
+            
+            return {success};
         })
         .catch((err) => {
-            message.error({ content: 'Error!', key: empId})
+            messageAlert.error({ content: err.message, key: empId})
             return {
                 error: "Please login again!",
                 status: false,
@@ -46,7 +47,7 @@ export const addList = (empId, data) => {
 
 export const getRecord = (empId, id) => {
     return axios
-        .get(url+ `${empId}/leases/${id}`)
+        .get(url+ `${empId}/leases/${id}`, {headers:headers})
         .then((res) => {
             const { success, data } = res.data;
             if (success){
@@ -54,8 +55,8 @@ export const getRecord = (empId, id) => {
                 data.endDate = data.endDate && moment(data.endDate) 
                 data.totalDeduction = (data.preTaxDeductionAmount ? data.preTaxDeductionAmount : 0) + (data.postTaxDeductionAmount ? data.postTaxDeductionAmount : 0)
                 setToken(res.headers&& res.headers.authorization)
-                return {success, data}
             }
+            return {success, data}
         })
         .catch((err) => {
             return {
@@ -68,11 +69,12 @@ export const getRecord = (empId, id) => {
 
 export const delList = (empId, id) => {
     return axios
-        .delete(url+ `${empId}/leases/${id}`)
+        .delete(url+ `${empId}/leases/${id}`, {headers:headers})
         .then((res) => {
             const { success } = res.data;
-            setToken(res.headers&& res.headers.authorization)
-            if (success) return {success};
+            if (success) setToken(res.headers&& res.headers.authorization)
+
+            return {success};
         })
         .catch((err) => {
             return {
@@ -84,17 +86,18 @@ export const delList = (empId, id) => {
 };
 
 export const editList = (empId, id, data) => {
-    message.loading({ content: 'Loading...', key: id })
+    messageAlert.loading({ content: 'Loading...', key: id })
     return axios
-        .put(url+ `${empId}/leases/${id}`, data)
+        .put(url+ `${empId}/leases/${id}`, data, {headers:headers})
         .then((res) => {
-            const { success } = res.data;
-            message.success({ content: 'Success!', key: id})
-            setToken(res.headers&& res.headers.authorization)
-            if (success) return {success};
+            const { success, message } = res.data;
+            messageAlert.success({ content: message, key: id})
+            if (success) setToken(res.headers&& res.headers.authorization)
+            
+            return {success};
         })
         .catch((err) => {
-            message.error({ content: 'Error!', key: id})
+            messageAlert.error({ content: err.message, key: id})
             return {
                 error: "Please login again!",
                 status: false,

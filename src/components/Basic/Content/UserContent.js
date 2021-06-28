@@ -7,8 +7,6 @@ import { Layout } from "antd";
 import Organizations from "../../../pages/Contacts/Org & Info/Organizations";
 import OrgInfo from "../../../pages/Contacts/Org & Info/OrgInfo";
 
-// import Clients from "../../pages/Clients & info/Clients";
-// import ClientsInfo from "../../pages/Clients & info/ClientInfo";
 import Contact from "../../../pages/Contacts/Contact Person/Contact";
 import TimeSheet from "../../../pages/Time Sheet/TimeSheet";
 import TimeOff from "../../../pages/Time/TimeOff";

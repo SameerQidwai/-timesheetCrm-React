@@ -12,6 +12,7 @@ import Bank from "../../components/Core/Bank";
 import InfoModal from "./Modals/InfoModal";
 
 import { getRecord, delList } from "../../service/contractors";
+import { localStore } from "../../service/constant";
 import  moment from "moment";
 
 const { Item } = Descriptions;
@@ -23,17 +24,8 @@ class ContInfo extends Component {
         this.state = {
             infoModal: false,
             editCont: false,
-            data: {
-                cpCode: '',
-                firstName: '',
-                lastName: '',
-                gender: '',
-                dateOfBirth:  '',
-                phoneNumber: '',
-                email: '',
-                address: '',
-                stateId: '',
-            },
+            data: { },
+            permissions: {}
         };
     }
 
@@ -43,11 +35,13 @@ class ContInfo extends Component {
     }
 
     getRecord = (id) =>{
+        const { USERS }= JSON.parse(localStore().permissions)
         getRecord(id).then(res=>{
             if(res.success){
                 this.setState({
                     data: res.basic,
-                    editCont: id
+                    editCont: id,
+                    permissions: USERS
                 })
             }
         })
@@ -72,7 +66,7 @@ class ContInfo extends Component {
 
 
     render() {
-        const { data, infoModal, editCont } = this.state;
+        const { data, infoModal, editCont, permissions } = this.state;
         const DescTitle = (
             <Row justify="space-between"> 
                  <Col>Basic Information</Col>
@@ -88,7 +82,10 @@ class ContInfo extends Component {
                                         Delete
                                     </Popconfirm>
                                 </Menu.Item> */}
-                                <Menu.Item onClick={() => { this.setState({ infoModal: true }); }} >
+                                <Menu.Item 
+                                    onClick={() => { this.setState({ infoModal: true }); }} 
+                                    disabled={permissions['UPDATE']}
+                                >
                                     Edit
                                 </Menu.Item>
                                 <Menu.Item>

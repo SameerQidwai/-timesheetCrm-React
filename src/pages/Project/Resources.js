@@ -7,7 +7,7 @@ import ResModal from "./Modals/ResModal";
 import { getRecord, getLeadSkills, delLeadSkill } from "../../service/projects";
 
 import moment from "moment"
-import { formatCurrency } from "../../service/constant";
+import { formatCurrency, localStore } from "../../service/constant";
 
 const { Item } = Descriptions;
 
@@ -92,19 +92,10 @@ class OrgInfo extends Component {
                                     onClick={() => {
                                         this.setState({ infoModal: true, editRex: record.id, });
                                     }}
+                                    disabled={this.state&& !this.state.permissions['UPDATE']}
                                 >
                                     Edit
                                 </Menu.Item>
-                                {/* <Menu.Item >
-                                    <Link
-                                        to={{
-                                            pathname: `/projects/${id}/resources/rates/${record.id}`,
-                                        }}
-                                        className="nav-link"
-                                    >
-                                        History
-                                    </Link>
-                                </Menu.Item> */}
                             </Menu>
                         }
                     >
@@ -120,21 +111,18 @@ class OrgInfo extends Component {
             infoModal: false,
             editRex: false,
             ProId: false,
-            // data: [
-            //     {panelSkillId: 'Developer', panelSkillStandardLevelId: 'Senior', userId: 'Faizan', billableHours: '8', buyingRate: '20', sellingRate: '23', startDate: '12 10 2020', endDate: '12 4 2021'},
-            //     {panelSkillId: 'Designer', panelSkillStandardLevelId: 'Senior', userId: 'Adam', billableHours: 8, buyingRate: 10, sellingRate: 15, startDate: '12 10 2020', endDate: '12 4 2021'},
-            // ],
             desc: {title: 'Service', organization: {name: 'PSO'}, value: '1000.00', startDate: '12 10 2020', endDate: '12 4 2021'},
+            permissions: {}
         };
     }
 
     componentDidMount = ()=>{
         const { id } = this.props.match.params
-        // console.log(this.props.match.params);
         this.fetchAll(id)
     }
 
     fetchAll = (id) =>{
+        const { PROJECTS }= JSON.parse(localStore().permissions)
         Promise.all([ getRecord(id), getLeadSkills(id)])
         .then(res => {
             this.setState({
@@ -143,6 +131,7 @@ class OrgInfo extends Component {
                 ProId: id,
                 infoModal: false,
                 data: res[1].success? res[1].data : [],
+                permissions: PROJECTS
             })
         })
         .catch(e => {
@@ -181,7 +170,7 @@ class OrgInfo extends Component {
     };
 
     render() {
-        const { desc, data, infoModal, editRex, ProId } = this.state;
+        const { desc, data, infoModal, editRex, ProId, permissions } = this.state;
         return (
             <>
                 <Descriptions
@@ -199,7 +188,14 @@ class OrgInfo extends Component {
                     {/* <Item label="Gender">{data.gender}</Item> */}
                 </Descriptions>
                 <Row justify="end">
-                    <Col> <Button type="primary" size='small'  onClick={() => {  this.setState({ infoModal: true, editRex: false, }) }}>Add New</Button> </Col>
+                    <Col> 
+                        <Button 
+                            type="primary" 
+                            size='small'  
+                            onClick={() => {  this.setState({ infoModal: true, editRex: false, }) }}
+                            disabled={!permissions['CREATE']}
+                        >Add New</Button> 
+                    </Col>
                     {/* <Col> <Button type="danger" size='small'>Delete Resource</Button></Col> */}
                 </Row>
                 <Table

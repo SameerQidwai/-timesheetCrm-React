@@ -6,7 +6,7 @@ import moment from "moment";
 
 import { addList, getRecord, editList } from "../../../service/contractors";
 import { getContactRecord } from "../../../service/conatct-person";
-import { getOrganizations, getOrgPersons, getStates } from "../../../service/constant-Apis";
+import { getOrganizations, getOrgPersons, getRoles, getStates } from "../../../service/constant-Apis";
 
 const { TabPane } = Tabs;
 
@@ -275,7 +275,7 @@ class InfoModal extends Component {
                     {
                         object: "basic",
                         fieldCol: 12,
-                        key: "role_id",
+                        key: "roleId",
                         size: "small",
                         // rules:[{ required: true }],
                         type: "Select",
@@ -616,7 +616,7 @@ class InfoModal extends Component {
     };
 
     fetchAll = (edit) =>{
-        Promise.all([ getStates(), getStates(), edit ? this.getRecord(edit) : getOrganizations()])
+        Promise.all([ getStates(), getRoles(), edit ? this.getRecord(edit) : getOrganizations()])
         .then(res => {
             const { BasicFields } = this.state
             BasicFields.fields[15].data = res[0].data;
@@ -793,8 +793,8 @@ class InfoModal extends Component {
     };
 
     onOrg = (value) => {
-        const customeUrl = `helpers/contact-persons?organizationId=${value}&active=0`
-        getOrgPersons(customeUrl).then(res=>{
+        const customUrl = `helpers/contact-persons?organizationId=${value}&active=0&associated=1`
+        getOrgPersons(customUrl).then(res=>{
             if(res.success){
                 this.setState({
                     sOrg: value,

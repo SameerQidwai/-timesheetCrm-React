@@ -78,8 +78,8 @@ class InfoModal extends Component {
                         type: "Select",
                         onChange: function func(value) {
                             if (value){
-                                const customeUrl = `helpers/contact-persons?organizationId=${value}`
-                                getOrgPersons(customeUrl).then(res=>{
+                                const customUrl = `helpers/contact-persons?organizationId=${value}&associated=1`
+                                getOrgPersons(customUrl).then(res=>{
                                     if(res.success){
                                         const { BasicFields } = this.state
                                         BasicFields.fields[6].data = res.data
@@ -665,8 +665,8 @@ class InfoModal extends Component {
             // this.setState ({ManageFields})
         }
         // either call this or call that
-        const customeUrl = `helpers/contact-persons?active=1&employee=1&associated=1`
-        Promise.all([ getPanels(), getOrganizations(), getStates(), getOrgPersons(customeUrl), editLead && this.getRecord(editLead)])
+        const customUrl = `helpers/contact-persons?active=1&employee=1&associated=1`
+        Promise.all([ getPanels(), getOrganizations(), getStates(), getOrgPersons(customUrl), editLead && this.getRecord(editLead)])
         .then(res => {
             console.log(res[3]);
             if (res[1].success) {res[1].data[0].disabled = true}
@@ -842,8 +842,8 @@ class InfoModal extends Component {
                 this.datesRef.current.refs.dates_form.setFieldsValue({ obj: dates, });
                 this.manageRef.current.refs.manage_form.setFieldsValue({ obj: manage, });
 
-                const customeUrl = `helpers/contact-persons?organizationId=${basic.organizationId}` 
-                return getOrgPersons(customeUrl).then(resp=>{
+                const customUrl = `helpers/contact-persons?organizationId=${basic.organizationId}&associated=1` 
+                return getOrgPersons(customUrl).then(resp=>{
                     console.log(resp);
                     return {success: resp.success, data: resp.data}
                 })

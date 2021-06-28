@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 import InfoModal from "./Modals/InfoModal";
 
 import { getList, delList } from "../../service/Employees";
-
+import { localStore } from "../../service/constant";
 import "../styles/table.css";
 
 const { Title } = Typography;
@@ -75,9 +75,9 @@ class Employees extends Component {
                                 </Menu.Item> */}
                                 <Menu.Item
                                     onClick={() => {
-                                        console.log(record.id);
                                         this.setState({ infoModal: true, editEmp: record.id, });
                                     }}
+                                    disabled={this.state&& !this.state.permissions['UPDATE']}
                                 >
                                     Edit
                                 </Menu.Item>
@@ -126,6 +126,7 @@ class Employees extends Component {
             infoModal: false,
             editEmp: false,
             data: [],
+            permissions: {}
         };
     }
 
@@ -134,13 +135,14 @@ class Employees extends Component {
     }
 
     getList = () =>{
+        const { USERS }= JSON.parse(localStore().permissions)
         getList().then(res=>{
             if (res.success){
-                console.log(res.data);
                 this.setState({
                     data: res.data,
                     infoModal: false,
                     editEmp: false,
+                    permissions: USERS
                 })
             }
         })
@@ -164,7 +166,7 @@ class Employees extends Component {
     };
 
     render() {
-        const { data, infoModal, editEmp } = this.state;
+        const { data, infoModal, editEmp, permissions } = this.state;
         const columns = this.columns;
         return (
             <>
@@ -180,10 +182,9 @@ class Employees extends Component {
                             <Col>
                                 <Button
                                     type="primary"
-                                    onClick={() => {
-                                        this.setState({ infoModal: true });
-                                    }}
+                                    onClick={() => { this.setState({ infoModal: true }); }}
                                     size="small"
+                                    disabled={!permissions['CREATE']}
                                 >
                                     <PlusSquareOutlined />
                                     Employees

@@ -1,13 +1,13 @@
-import { message } from "antd";
+import { message as messageAlert } from "antd";
 import axios from "axios";
 
-import { Api, setToken } from "./constant";
+import { Api, headers, setToken } from "./constant";
 
 const url = `${Api}/time-off-types`;
 
 export const getList = () => {
     return axios
-        .get(url)
+        .get(url, {headers:headers})
         .then((res) => {
             const { success, data } = res.data;
             setToken(res.headers&& res.headers.authorization)
@@ -23,17 +23,17 @@ export const getList = () => {
 };
 
 export const addList = (data) => {
-    message.loading({ content: 'Loading...', key: 1 })
+    messageAlert.loading({ content: 'Loading...', key: 1 })
     return axios
-        .post(url, data)
+        .post(url, data, {headers:headers})
         .then((res) => {
             const { success } = res.data;
-            message.success({ content: 'Success!', key: 1})
+            messageAlert.success({ content: 'Success!', key: 1})
             setToken(res.headers&& res.headers.authorization)
             if (success) return success;
         })
         .catch((err) => {
-            message.error({ content: 'Error!', key: 1})
+            messageAlert.error({ content: err.message, key: 1})
             return {
                 error: "Please login again!",
                 status: false,
@@ -44,7 +44,7 @@ export const addList = (data) => {
 
 export const delLabel = (id) => {
     return axios
-        .delete(url + `/${id}`)
+        .delete(url + `/${id}`, {headers:headers})
         .then((res) => {
             const { success } = res.data;
             setToken(res.headers&& res.headers.authorization)
@@ -60,17 +60,17 @@ export const delLabel = (id) => {
 };
 
 export const editLabel = (data) => {
-    message.loading({ content: 'Loading...', key: data.id })
+    messageAlert.loading({ content: 'Loading...', key: data.id })
     return axios
-        .put(url + `/${data.id}`, data)
+        .put(url + `/${data.id}`, data, {headers:headers})
         .then((res) => {
             const { success } = res.data;
-            message.success({ content: 'Success!', key: data.id})
+            messageAlert.success({ content: 'Success!', key: data.id})
             setToken(res.headers&& res.headers.authorization)
             if (success) return success;
         })
         .catch((err) => {
-            message.error({ content: 'Error!', key: data.id})
+            messageAlert.error({ content: err.message, key: data.id})
             return {
                 error: "Please login again!",
                 status: false,
