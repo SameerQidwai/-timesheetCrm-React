@@ -15,29 +15,21 @@ class ProfitLoss extends Component {
             columns: [
                 {
                     title: 'Month',
-                    width: 500,
-                    children: [
-                      {
-                        title: 'Working Days',
-                        // dataIndex: 'label',
-                        // key: 'label',
-                        render: (record) =>{
-                            if (record.key === 'R') {
-                                return record.label
-                            }else if (record.key === 'C'){
-                                return record.label
-                            }else if (record.key === '$'){
-                                return <b>{record.label}</b>
-                            }else if (record.key === '%'){
-                                return <b>{record.label}</b>
-                            }
+                    // width: ,
+                    dataIndex: 'label',
+                    key: 'label',
+                    render: (text, record) =>{
+                        if (record.key === 'R' || record.key === 'C') {
+                            return text
+                        }else if (record.key === '$' || record.key === '%' || record.key === 'W'){
+                            return <b>{text}</b>
                         }
-                      },
-                    ]
+                    }
                 },
                
             ],
             data:[
+                {key: 'W', label: 'Working Days'},
                 {key: 'R', label: 'Revenue'},
                 {key: 'C', label: '(-) Cos' },
                 {key: '$', label: 'CM $' },
@@ -64,7 +56,10 @@ class ProfitLoss extends Component {
         for (var i =1; i<=len; i++){
             startDate = i===1 ? billing.startDate : moment(startDate).set('date', 1); 
             endDate = i===len ? billing.endDate: moment(startDate).endOf('month');
-            noOfDays = noOfDays + this.getWeekdays(startDate, endDate)
+            const workDays = this.getWeekdays(startDate, endDate)
+            noOfDays = noOfDays + workDays
+            let key = moment(startDate).format('MMM YY')
+            data[0][key]= workDays
             startDate = moment(startDate).add(1, 'months')
         }
         let revenue = (billing.discount / noOfDays)
@@ -74,11 +69,13 @@ class ProfitLoss extends Component {
             console.log(i, len);
             startDate = i===1 ? billing.startDate  : moment(startDate).set('date', 1); 
             endDate = i===len ? billing.endDate: moment(startDate).endOf('month');
-            let workDays = this.getWeekdays(startDate, endDate)
-            data[0][i] = formatCurrency((revenue * workDays).toFixed(2))
-            data[1][i] = formatCurrency((cos * workDays).toFixed(2))
-            data[2][i] = formatCurrency((cm * workDays).toFixed(2))
-            data[3][i] = formatCurrency(billing.cmPercentage)
+            // let workDays = this.getWeekdays(startDate, endDate)
+            let key = moment(startDate).format('MMM YY')
+            let workDays = data[0][key]
+            data[1][key] = formatCurrency((revenue * workDays).toFixed(2))
+            data[2][key] = formatCurrency((cos * workDays).toFixed(2))
+            data[3][key] = formatCurrency((cm * workDays).toFixed(2))
+            data[4][key] = formatCurrency(billing.cmPercentage)
             startDate = moment(startDate).add(1, 'months')
         }
         console.log(data);
@@ -91,26 +88,22 @@ class ProfitLoss extends Component {
     Columns = () =>{
         const { columns } = this.state
         const { billing } = this.props
-        const len = billing.totalMonths>0 ? billing.totalMonths : 0
-        let month = billing.startDate
-        let startDate = ''
-        let endDate = ''
+        // const len = billing.totalMonths>0 ? billing.totalMonths : 0
+        const len = 12
+        let month = moment().set({'month': 6, date: 1});
         let array = []
         for (var i = 1; i <=len; i++){
-            startDate = i===1 ? billing.startDate : moment(startDate).set('date', 1); 
-            endDate = i===len ? billing.endDate : moment(startDate).endOf('month');
             array.push(
                 {
                     title: moment(month).format('MMM YY'),
-                    width:500,
-                    children: [
-                      {
-                        title: this.getWeekdays(startDate, endDate),
-                        dataIndex: i,
-                        key: i,
-                        render: (record, records) =>{
-                            // console.log(record,record[i], 'render record');
-                            if (records.key === 'R') {
+                    width:100,
+                    dataIndex: moment(month).format('MMM YY'),
+                    key: moment(month).format('MMM YY'),
+                    render: (record, records) =>{
+                        if (record){
+                            if (records.key === 'W') {
+                                return <b>{record} </b>
+                            }else if (records.key === 'R') {
                                 return `$ ${record}`
                             }else if (records.key === 'C'){
                                 return `$ ${record}`
@@ -120,12 +113,11 @@ class ProfitLoss extends Component {
                                 return <b>{` ${record} %`}</b>
                             }
                         }
-                      },
-                    ]
+                        return '-'
+                    }
                 },
             )
             
-            startDate = moment(startDate).add(1, 'months')
             month = moment(month).add(1, 'months')
         }
         this.setState({
