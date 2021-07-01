@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Row, Col, Table, Modal, Input, Button, Select, Typography, Popconfirm, DatePicker, Space, Tag, } from "antd";
+import { Row, Col, Table, Modal, Input, Button, Select, Typography, Popconfirm, DatePicker, Space, Tag, Tooltip} from "antd";
 import { CloseCircleOutlined, DownloadOutlined, SaveOutlined, LoadingOutlined } from "@ant-design/icons"; //Icons
 import moment from "moment";
 import TimeModal from "./Modals/TimeModal"
@@ -150,6 +150,14 @@ class TimeSheet extends Component {
                         </Row>
                     ),
                 },
+                {
+                    title: "Total",
+                    dataIndex: "totalHours",
+                    key: "totalHours",
+                    fixed: "left",
+                    width: 100,
+                    // record : (value) => 
+                }
             ]
         };
     }
@@ -221,7 +229,7 @@ class TimeSheet extends Component {
         let { columns, permissions }  = this.state
         let date = undefined
         let key = undefined
-        columns = [columns[0]]
+        columns = [columns[0],columns[1]]
         for (let i = startDate.format('D') ; i <= endDate.format('D'); i++) {
             date = date ?? moment(startDate.format())
             columns.push({
@@ -238,12 +246,12 @@ class TimeSheet extends Component {
                     if(value){
                     // let duration = moment.duration(value["actualHours"],'hours')
                     // <Col span={24}>Total: {`${duration.hours()}:${duration.minutes()}`}</Col>
-                    {return <Row style={{ border: "1px solid" }}>
+                    {return <Tooltip title={`Note: ${value['notes']}`}><Row style={{ border: "1px solid" }}>
                             <Col span={24}>Start Time: {value["startTime"]}</Col>
                             <Col span={24}>End Time: {value["endTime"]}</Col>
                             <Col span={24}>Break: {value["breakHours"]}</Col>
                             <Col span={24}>Total Hours: {value["actualHours"] && value["actualHours"].toFixed(2)}</Col>
-                        </Row>}
+                        </Row> </Tooltip>}
                     }
                 },
             })
@@ -425,9 +433,13 @@ class TimeSheet extends Component {
             <Table.Summary.Row>
                 {columns.map(({key})=>{
                     let value = 0
-                    data.map(rowData =>{
+                    data.map((rowData, index) =>{
                         if(key !== 'project' ){
-                            value += (rowData[key] ? rowData[key]['actualHours'] :0)
+                            if(key === 'totalHours'){
+                                value += data[index]['totalHours'] ?? 0
+                            }else{
+                                value += (rowData[key] ? rowData[key]['actualHours'] :0)
+                            }
                         }
                     })
                     if(key === 'project'){
