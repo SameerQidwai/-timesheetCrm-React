@@ -143,9 +143,9 @@ class ContInfo extends Component {
                         <TabPane targetType="CON" targetId={editCont} tab="Attachments" key="attachments">
                             <Attachments />
                         </TabPane>
-                        <TabPane tab="Bank Account" key="bank">
+                        {/* <TabPane tab="Bank Account" key="bank">
                             <Bank id={editCont} title={data.name} />
-                        </TabPane>
+                        </TabPane> */}
                     </Tabs>
                 )}
                 {infoModal && (

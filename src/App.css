@@ -46,6 +46,9 @@ input:disabled {
 span.ant-select-selection-item  { /* to disabled select field and show black color */
   color: #372f2f 
 }
+th.ant-descriptions-item-label {
+  font-weight: bolder;
+}
 /* (span.ant-select-selection-search > input:disabled) + span.ant-select-selection-item {
   color: red;
   opacity: 1;

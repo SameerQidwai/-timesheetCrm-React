@@ -8,8 +8,12 @@ class Bank extends Component {
             data: props.bank ?? {}
         };
     }
+    componentDidMount = ()=>{
+        console.log(this.props.bank);
+    }
     render() {
         const { data } = this.state;
+        const { targetType } = this.props
         // data.title = this.props.title;
         return (
             <Descriptions
@@ -23,6 +27,7 @@ class Bank extends Component {
                 <Item label="Bank Account Name">{data.bankName} </Item>
                 <Item label="Account Number">{data.bankAccountNo} </Item>
                 <Item label="BSB">{data.bankBsb}</Item>
+                {targetType=== "EMP" && <Item label="Tax File Number">{data.tfn}</Item>}
             </Descriptions>
         );
     }

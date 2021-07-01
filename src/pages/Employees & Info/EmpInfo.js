@@ -24,17 +24,8 @@ class OrgInfo extends Component {
         this.state = {
             infoModal: false,
             emp: false,
-            data: {
-                cpCode: '',
-                firstName: '',
-                lastName: '',
-                gender: '',
-                dateOfBirth:  '',
-                phoneNumber: '',
-                email: '',
-                address: '',
-                stateId: '',
-            },
+            data: { },
+            bank: {}
         };
     }
     componentDidMount = ()=>{
@@ -47,6 +38,7 @@ class OrgInfo extends Component {
             if(res.success){
                 this.setState({
                     data: res.basic,
+                    bank: res.bank,
                     emp: id
                 })
             }
@@ -71,7 +63,7 @@ class OrgInfo extends Component {
     };
 
     render() {
-        const { data, infoModal, emp } = this.state;
+        const { data, infoModal, emp, bank } = this.state;
         const DescTitle = (
             <Row justify="space-between">
                 <Col>Basic Information</Col>
@@ -146,7 +138,7 @@ class OrgInfo extends Component {
                             <Attachments targetType="EMP" targetId={emp}  />
                         </TabPane>
                         <TabPane tab="Bank Account" key="account">
-                            <Bank id={emp} title={data.name} />
+                            <Bank targetType="EMP" targetId={emp} title={data.name} bank={bank}/>
                         </TabPane>
                     </Tabs>
                 )}

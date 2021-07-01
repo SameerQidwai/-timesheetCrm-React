@@ -150,9 +150,9 @@ class ProjectInfo extends Component {
                         <TabPane tab="Attachments" key="attachments">
                             <Attachments targetId={leadId} targetType="WOR" />
                         </TabPane>
-                        <TabPane tab="Bank Account" key="account">
+                        {/* <TabPane tab="Bank Account" key="account">
                             <Bank id={leadId} title={data.name} />
-                        </TabPane>
+                        </TabPane> */}
                         <TabPane tab="Projected Profit & Loss" key="profitloss">
                             <ProfitLoss id={leadId} billing={billing} />
                         </TabPane>
