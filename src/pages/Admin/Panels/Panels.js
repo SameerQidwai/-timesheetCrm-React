@@ -7,6 +7,7 @@ import Form from "../../../components/Core/Form";
 import { getList, addList, delLabel, editLabel } from "../../../service/panel";
 
 import "../../styles/table.css";
+import { localStore } from "../../../service/constant";
 
 const { Title } = Typography;
 
@@ -222,6 +223,7 @@ class Panels extends Component {
                     </Col>
                     <Col span={24}>
                         <Table
+                            pagination={{pageSize: localStore().pageSize}}
                             rowKey= {data=> data.id}
                             columns={columns}
                             dataSource={data}

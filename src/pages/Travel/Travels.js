@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 
 import InfoModal from "./InfoModal";
 import "../styles/table.css";
+import { localStore } from "../../service/constant";
 
 const { Title } = Typography;
 
@@ -204,6 +205,7 @@ class Travels extends Component {
                     </Col>
                     <Col span={24}>
                         <Table
+                            pagination={{pageSize: localStore().pageSize}}
                             columns={columns}
                             dataSource={data}
                             size="small"

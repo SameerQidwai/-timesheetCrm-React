@@ -7,6 +7,7 @@ import Form from "../../../components/Core/Form";
 import { getlevels, getSkills, getList, editLabel, addList, delLabel, } from "../../../service/panelSkill";
 import { getSkillLevels as selectedSkill } from "../../../service/constant-Apis";
 import Operation from "antd/lib/transfer/operation";
+import { localStore } from "../../../service/constant";
 
 const { Title } = Typography;
 
@@ -570,6 +571,7 @@ class PanelInfo extends Component {
                     </Col>
                 </Row>
                 <Table
+                    pagination={{pageSize: localStore().pageSize}}
                     rowKey={(data) => data.id}
                     columns={this.columns}
                     dataSource={data}

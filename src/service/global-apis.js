@@ -1,7 +1,7 @@
 import { message as messageAlert } from "antd";
 import axios from "axios";
 
-import { Api, headers, setToken } from "./constant";
+import { Api, headers, jwtExpired, setToken } from "./constant";
 
 const url = `${Api}/global-setting`;
 
@@ -9,8 +9,8 @@ export const getSettings = () => {
     return axios
         .get(url, {headers:headers})
         .then((res) => {
-            const { success, data } = res.data;
-            console.log(res);
+            const { success, data, message } = res.data;
+            jwtExpired(message)
             if (success) setToken(res.headers&& res.headers.authorization)
             return { success, data };
         })
@@ -29,6 +29,7 @@ export const upadteSettings = (data) => {
         .post(url, data, {headers:headers})
         .then((res) => {
             const { success, message, data } = res.data;
+            jwtExpired(message)
             messageAlert.success({ content: message, key: 1},5)
             if (success) setToken(res.headers&& res.headers.authorization)
             

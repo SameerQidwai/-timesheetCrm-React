@@ -317,7 +317,6 @@ class InfoModal extends Component {
                         fieldStyle: { width: "100%" },
                         onChange: function name(value) {
                             const {obj} = this.billingRef.current.refs.billing_form.getFieldsValue();
-                            console.log(obj);
                             obj.cm$ =  obj.value? (obj.value * value) /100 : 0
                             this.billingRef.current.refs.billing_form.setFieldsValue({ obj: obj, });
                         }.bind(this)
@@ -665,10 +664,9 @@ class InfoModal extends Component {
             // this.setState ({ManageFields})
         }
         // either call this or call that
-        const customUrl = `helpers/contact-persons?active=1&employee=1&associated=1`
+        const customUrl = `helpers/contact-persons?active=1&employee=1&associated=1&label=1`
         Promise.all([ getPanels(), getOrganizations(), getStates(), getOrgPersons(customUrl), editLead && this.getRecord(editLead)])
         .then(res => {
-            console.log(res[3]);
             if (res[1].success) {res[1].data[0].disabled = true}
             const { BasicFields, ManageFields } = this.state;
             BasicFields.fields[2].data = res[0].success? res[0].data : [];
@@ -780,7 +778,6 @@ class InfoModal extends Component {
     ManageCall = (vake) => {
         // this will work after I get the Object from the form
         vake = vake.obj
-        console.log('these are managers', vake)
         this.setState(
             {
                 mergeObj: {
@@ -865,7 +862,6 @@ class InfoModal extends Component {
             loading: true
         })
         editList(mergeObj).then((res) => {
-            console.log(res);
             if(res.success){
                 callBack()
             }

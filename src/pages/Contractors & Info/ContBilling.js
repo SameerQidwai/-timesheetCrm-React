@@ -9,7 +9,7 @@ import { getList, delList } from "../../service/subContrators-contracts";
 
 import moment from "moment"
 import "../styles/table.css";
-import { formatCurrency } from "../../service/constant";
+import { formatCurrency, localStore } from "../../service/constant";
 
 
 const { Title } = Typography;
@@ -158,6 +158,7 @@ class EmpBilling extends Component {
                     </Item>
                 </Descriptions>
                 <Table
+                    pagination={{pageSize: localStore().pageSize}}
                     rowKey={(data) => data.id}
                     columns={this.columns}
                     dataSource={data}

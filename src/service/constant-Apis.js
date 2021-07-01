@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { Api, setToken } from "./constant";
+import { Api, headers, setToken } from "./constant";
 
 export const getStates = () => {
     return axios
@@ -218,66 +218,19 @@ export const getPanelSkills = (id) => {
         });
 };
 
-export const getProjects = () => {
+export const getProjects = (userId) => {
     return axios
-        .get(`${Api}/projects`)
+        .get(`${Api}/projects?userId=${userId}`, { headers: headers })
         .then((res) => {
             const { success, data } = res.data;
-            var pros = []
-            // console.log(data);
-            data.map((el) => {
-                pros.push({value: el.id, label: el.title})
-            });
-            setToken(res.headers&& res.headers.authorization)
-            if (success) return { success: success, data: pros };
-        })
-        .catch((err) => {
-            return {
-                error: "Please login again!",
-                success: false,
-                message: err.message,
-            };
-        });
-};
-
-export const getUsers = () => {
-    return axios
-        .get(`${Api}/users`)
-        .then((res) => {
-            const { success, data } = res.data;
-            var pros = []
-            console.log(data);
-            if (success){
+            const pros = []
+            if (success) {
                 data.map((el) => {
-                    const contact = el.contactPersonOrganization && el.contactPersonOrganization.contactPerson 
-                    pros.push({value: el.id, label: contact.firstName +' ' +contact.lastName})
+                    pros.push({ value: el.id, label: el.title })
                 });
                 setToken(res.headers&& res.headers.authorization)
-                return { success: success, data: pros};
             }
-        })
-        .catch((err) => {
-            return {
-                error: "Please login again!",
-                success: false,
-                message: err.message,
-            };
-        });
-};
-
-export const getCustomApi = (url) => {
-    return axios
-        .get(`${Api}/${url}`)
-        .then((res) => {
-            const { success, data } = res.data;
-            var pros = []
-            if (success){
-                data.map((el) => {
-                    pros.push({value: el.id, label: el.title})
-                });
-                setToken(res.headers&& res.headers.authorization)
-                return { success: success, data: pros };
-            }
+            return { success: success, data: pros };
         })
         .catch((err) => {
             return {

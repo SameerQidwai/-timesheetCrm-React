@@ -157,11 +157,12 @@ class PurchaseOrder extends Component {
                         type="primary" 
                         size='small' 
                         onClick={() => {  this.setState({ openModal: true, editRex: false, }) }}
-                        disabled={!permissions['CREATE']}
+                        disabled={!permissions['ADD']}
                     >Add New</Button> </Col>
                     {/* <Col> <Button type="danger" size='small'>Delete Resource</Button></Col> */}
                 </Row>
                 <Table
+                    pagination={{pageSize: localStore().pageSize}}
                     rowKey={(data) => data.id}
                     columns={this.columns}
                     dataSource={data}

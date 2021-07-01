@@ -185,7 +185,7 @@ class Contractors extends Component {
                                     type="primary"
                                     onClick={() => { this.setState({ infoModal: true }); }}
                                     size="small"
-                                    disabled={!permissions['CREATE']}
+                                    disabled={!permissions['ADD']}
                                 >
                                     <PlusSquareOutlined />
                                     Contactors

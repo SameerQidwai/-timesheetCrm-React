@@ -501,20 +501,21 @@ class InfoModal extends Component {
     const { editPro } = this.props;
     const dates = { entryDate: moment(new Date()) };
     this.datesRef.current.refs.dates_form.setFieldsValue({ obj: dates });
-    Promise.all([ getPanels(), getOrganizations(), getStates(), editPro && this.getRecord(editPro), ])
+    const customUrl = `helpers/contact-persons?active=1&employee=1&associated=1&label=1`
+    Promise.all([ getPanels(), getOrganizations(), getStates(), getOrgPersons(customUrl), editPro && this.getRecord(editPro), ])
       .then((res) => {
         if (res[1].success) {
-          res[1].data[0].readOnly = true;
+          res[1].data[0].disabled = true;
         }
         const { BasicFields, ManageFields } = this.state;
         BasicFields.fields[2].data = res[0].success ? res[0].data : [];
         BasicFields.fields[3].data = res[1].success ? res[1].data : [];
         BasicFields.fields[11].data = res[2].success ? res[2].data : [];
-        BasicFields.fields[6].data = res[3].success ? res[3].data : [];
-
-        ManageFields.fields[2].data = res[4].success ? res[4].data : [];
-        ManageFields.fields[3].data = res[4].success ? res[4].data : [];
-        ManageFields.fields[5].data = res[4].success ? res[4].data : [];
+        BasicFields.fields[6].data = res[4].success ? res[4].data : [];
+        
+        ManageFields.fields[2].data = res[3].success ? res[3].data : [];
+        ManageFields.fields[3].data = res[3].success ? res[3].data : [];
+        ManageFields.fields[5].data = res[3].success ? res[3].data : [];
         // ManageFields.fields[7].data = res[4].success ? res[4].data: [];
 
         this.setState({ BasicFields, ManageFields });

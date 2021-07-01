@@ -7,6 +7,7 @@ import moment from "moment";
 import "../../styles/table.css";
 
 import { holidayType, addList, getList, editLabel, delLabel, } from "../../../service/calendar-holidays";
+import { localStore } from "../../../service/constant";
 
 const { Title } = Typography;
 
@@ -77,7 +78,7 @@ class CalenerHolidays extends Component {
                     {
                         object: "obj",
                         fieldCol: 24,
-                        key: "label",
+                        key: "holidayTypeId",
                         label: "Title",
                         size: "small",
                         // rules:[{ required: true }],
@@ -117,6 +118,7 @@ class CalenerHolidays extends Component {
                     data: res.data,
                     openModal: false,
                     editTimeoff: false,
+                    loading: false
                 });
             }
         });
@@ -153,9 +155,10 @@ class CalenerHolidays extends Component {
         const { calendarId } = this.state;
         // this will work after I get the Object
         vake.obj.date = moment(vake.obj.date).valueOf();
+        console.log(vake);
         const obj = {
             calendarId: calendarId,
-            holidayTypeId: vake.obj.label,
+            holidayTypeId: vake.obj.holidayTypeId,
             date: vake.obj.date.valueOf(),
         };
         if (!this.state.editTimeoff) {
@@ -175,9 +178,10 @@ class CalenerHolidays extends Component {
     };
 
     getRecord = (data) => {
+        console.log(data);
         const vars = {
             id: data.id,
-            label: data.label,
+            holidayTypeId: data.holidayTypeId,
             date: moment(data.date),
         };
         this.setState(
@@ -240,6 +244,7 @@ class CalenerHolidays extends Component {
                     </Col>
                     <Col span={24}>
                         <Table
+                            pagination={{pageSize: localStore().pageSize}}
                             columns={columns}
                             dataSource={data}
                             size="small"

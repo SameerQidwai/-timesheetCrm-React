@@ -183,6 +183,7 @@ class InfoModal extends Component {
                 },
                 {
                     Placeholder: "Role",
+                    rangeMin: true,
                     fieldCol: 24,
                     size: "small",
                     type: "Text",
@@ -192,6 +193,7 @@ class InfoModal extends Component {
                     object: "basic",
                     fieldCol: 12,
                     key: "roleId",
+                    rules:[{ required: true, message: 'Role is required!!' }],
                     size: "small",
                     // rules:[{ required: true }],
                     type: "Select",
@@ -685,7 +687,7 @@ class InfoModal extends Component {
 
     fetchAll = (edit) =>{
         const { editEmp } = this.props
-        const customUrl = `helpers/contact-persons?organizationId=1&active=&associated=1`
+        const customUrl = `helpers/contact-persons?organizationId=1&active=0&associated=1`
         Promise.all([ getStates(), getRoles() , edit ? this.getRecord(editEmp) : getOrgPersons(customUrl) ])
         .then(res => {
             const { BasicFields } = this.state

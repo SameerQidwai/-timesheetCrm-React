@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Api, headers, setToken } from "./constant";
+import { Api, headers, jwtExpired, setToken } from "./constant";
 import moment from "moment";
 import { message as messageAlert } from "antd";
 
@@ -11,9 +11,11 @@ export const addList = (data) => {
         .post(url, data, {headers:headers})
         .then((res) => {
             const { success, message } = res.data;
+            jwtExpired(message)
             messageAlert.success({ content: message, key: 1})
-            setToken(res.headers&& res.headers.authorization)
-            if (success) return {success};
+            if (success) 
+                setToken(res.headers&& res.headers.authorization)
+            return {success};
         })
         .catch((err) => {
             messageAlert.error({ content: err.message, key: 1})
@@ -29,9 +31,11 @@ export const getList = () => {
     return axios
         .get(url, {headers:headers})
         .then((res) => {
-            const { success, data } = res.data;
-            setToken(res.headers&& res.headers.authorization)
-            if (success) return { success: success, data: data };
+            const { success, data, message } = res.data;
+            jwtExpired(message)
+            if (success) 
+                setToken(res.headers&& res.headers.authorization)
+            return { success: success, data: data };
         })
         .catch((err) => {
             return {
@@ -46,7 +50,8 @@ export const getRecord = (id) => {
     return axios
         .get(url + `/${id}`, {headers:headers})
         .then((res) => {
-            const { success, data } = res.data;
+            const { success, data, message } = res.data;
+            jwtExpired(message)
             if (success) {
                 const basic = {
                     id: data.id,
@@ -98,6 +103,7 @@ export const getRecord = (id) => {
                 setToken(res.headers&& res.headers.authorization)
                 return {success, data, basic, tender, billing, dates, manage};
             }
+            return { success }
         })
         .catch((err) => {
             return {
@@ -112,9 +118,11 @@ export const delList = (id) => {
     return axios
         .delete(url + `/${id}`, {headers:headers})
         .then((res) => {
-            const { success } = res.data;
-            setToken(res.headers&& res.headers.authorization)
-            if (success) return {success};
+            const { success, message } = res.data;
+            jwtExpired(message)
+            if (success) 
+                setToken(res.headers&& res.headers.authorization)
+            return {success};
         })
         .catch((err) => {
             return {
@@ -131,9 +139,11 @@ export const editList = (data) => {
         .put(url + `/${data.id}`, data, {headers:headers})
         .then((res) => {
             const { success, message} = res.data;
+            jwtExpired(message)
             messageAlert.success({ content: message, key: data.id})
-            setToken(res.headers&& res.headers.authorization)
-            if (success) return {success};
+            if (success) 
+                setToken(res.headers&& res.headers.authorization)
+            return {success};
         })
         .catch((err) => {
             messageAlert.error({ content: err.message, key: data.id})
@@ -151,9 +161,11 @@ export const addLeadSkill = (id, data) => {
         .post(url + `/${id}/resources`, data, {headers:headers})
         .then(res=>{
         const { success, message } = res.data
+        jwtExpired(message)
         messageAlert.success({ content: message, key: id})
-        setToken(res.headers&& res.headers.authorization)
-        if(success) return { success }
+        if(success) 
+            setToken(res.headers&& res.headers.authorization)
+        return { success }
     })
     .catch(err=>{
         messageAlert.error({ content: err.message, key: id})
@@ -170,11 +182,12 @@ export const getLeadSkills = (id)=>{
     return axios
         .get(url + `/${id}/resources`, {headers:headers})
         .then((res) => {
-            const { success, data } = res.data;
+            const { success, data, message } = res.data;
+            jwtExpired(message)
             if (success) {
                 setToken(res.headers&& res.headers.authorization)
-                return { success: success, data: data }
             };
+            return { success: success, data: data }
         })
         .catch((err) => {
             return {
@@ -189,7 +202,8 @@ export const getLeadSkill = (proId, resId) => {
     return axios
         .get(url + `/${proId}/resources/${resId}`, {headers:headers})
         .then((res) => {
-            const { success, data } = res.data;
+            const { success, data, message } = res.data;
+            jwtExpired(message)
             if (success){
                 let obj = {
                     panelSkillId:  data.panelSkillId,
@@ -206,6 +220,7 @@ export const getLeadSkill = (proId, resId) => {
                 setToken(res.headers&& res.headers.authorization)
                 return {success, data: obj}
             }
+            return { success }
         })
         .catch((err) => {
             return {
@@ -223,9 +238,11 @@ export const editLeadSkill = (proId, resId, data) => {
         .put(url + `/${proId}/resources/${resId}`, data, {headers:headers})
         .then((res) => {
             const { success, data, message } = res.data;
+            jwtExpired(message)
             messageAlert.success({ content: message, key: resId})
-            setToken(res.headers&& res.headers.authorization)
-            if (success) return {success, data: data[0]};
+            if (success) 
+                setToken(res.headers&& res.headers.authorization)
+            return {success, data: data[0]};
         })
         .catch((err) => {
             messageAlert.error({ content: err.message, key: resId})
@@ -241,9 +258,11 @@ export const delLeadSkill = (proId, resId) => {
     return axios
         .delete(url + `/${proId}/resources/${resId}`, {headers:headers})
         .then((res) => {
-            const { success } = res.data;
-            setToken(res.headers&& res.headers.authorization)
-            if (success) return {success};
+            const { success, message } = res.data;
+            jwtExpired(message)
+            if (success) 
+                setToken(res.headers&& res.headers.authorization)
+            return {success};
         })
         .catch((err) => {
             return {
@@ -260,9 +279,11 @@ export const addLeadSkillResource = (proId, skillId,  data) => {
         .post(url + `/${proId}/resources/${skillId}/allocations`, data, {headers:headers})
         .then((res) => {
             const { success, data , message} = res.data;
+            jwtExpired(message)
             messageAlert.success({ content: message, key: skillId})
-            setToken(res.headers&& res.headers.authorization)
-            if (success) return {success, data: data};
+            if (success) 
+                setToken(res.headers&& res.headers.authorization)
+            return {success, data: data};
         })
         .catch((err) => {
             messageAlert.error({ content: err.message, key: skillId})
@@ -278,7 +299,8 @@ export const getLeadSkillResource = (proId,skillId, resId) => {
     return axios
         .get(url + `/${proId}/resources/${skillId}/allocations/${resId}`, {headers:headers})
         .then((res) => {
-            const { success, data } = res.data;
+            const { success, data, message } = res.data;
+            jwtExpired(message)
             setToken(res.headers&& res.headers.authorization)
             return {success, data}
         })
@@ -295,9 +317,11 @@ export const editLeadSkillResource = (proId, skillId, resId, data) => {
     return axios
         .put(url + `/${proId}/resources/${skillId}/allocations/${resId}`, data, {headers:headers})
         .then((res) => {
-            const { success, data } = res.data;
-            setToken(res.headers&& res.headers.authorization)
-            if (success) return {success, data};
+            const { success, data, message } = res.data;
+            jwtExpired(message)
+            if (success) 
+                setToken(res.headers&& res.headers.authorization)
+            return {success, data};
         })
         .catch((err) => {
             return {
@@ -312,9 +336,11 @@ export const delLeadSkillResource = (proId, skillId, resId,) => {
     return axios
         .delete(url + `/${proId}/resources/${skillId}/allocations/${resId}`, {headers:headers})
         .then((res) => {
-            const { success } = res.data;
-            setToken(res.headers&& res.headers.authorization)
-            if (success) return {success};
+            const { success, message } = res.data;
+            jwtExpired(message)
+            if (success) 
+                setToken(res.headers&& res.headers.authorization)
+            return {success};
         })
         .catch((err) => {
             return {
@@ -329,9 +355,11 @@ export const selectLeadSkillResource = (proId, skillId, resId) => {
     return axios
         .patch(url + `/${proId}/resources/${skillId}/allocations/${resId}/mark-as-selected`, {headers:headers})
         .then((res) => {
-            const { success } = res.data;
-            setToken(res.headers&& res.headers.authorization)
-            if (success) return {success};
+            const { success, message } = res.data;
+            jwtExpired(message)
+            if (success) 
+                setToken(res.headers&& res.headers.authorization)
+            return {success};
         })
         .catch((err) => {
             return {
@@ -348,9 +376,11 @@ export const addOrder = (proId, data) => {
         .post(url + `/${proId}/purchaseOrders`, data, {headers:headers})
         .then((res) => {
             const { success , message} = res.data;
+            jwtExpired(message)
             messageAlert.success({ content: message, key: proId})
-            setToken(res.headers&& res.headers.authorization)
-            if (success) return {success};
+            if (success) 
+                setToken(res.headers&& res.headers.authorization)
+            return {success};
         })
         .catch((err) => {
             messageAlert.error({ content: err.message, key: proId})
@@ -366,9 +396,11 @@ export const getOrders = (proId) => {
     return axios
         .get(url + `/${proId}/purchaseOrders`, {headers:headers})
         .then((res) => {
-            const { success, data } = res.data;
-            setToken(res.headers&& res.headers.authorization)
-            if (success) return { success: success, data: data };
+            const { success, data, message } = res.data;
+            jwtExpired(message)
+            if (success) 
+                setToken(res.headers&& res.headers.authorization)
+            return { success: success, data: data };
         })
         .catch((err) => {
             return {
@@ -386,9 +418,11 @@ export const editOrder = (proId, id, data) => {
         .put(url + `/${proId}/purchaseOrders/${id}`, data, {headers:headers})
         .then((res) => {
             const { success , message} = res.data;
+            jwtExpired(message)
             messageAlert.success({ content: message, key: id})
-            setToken(res.headers&& res.headers.authorization)
-            if (success) return {success};
+            if (success) 
+                setToken(res.headers&& res.headers.authorization)
+            return {success};
         })
         .catch((err) => {
             messageAlert.error({ content: err.message, key: id})
@@ -404,7 +438,8 @@ export const getOrder = (proId,id) => {
     return axios
         .get(url + `/${proId}/purchaseOrders/${id}`, {headers:headers})
         .then((res) => {
-            const { success, data } = res.data;
+            const { success, data, message } = res.data;
+            jwtExpired(message)
             if (success) {
                const obj = {...data,
                     issueDate: data.issueDate ? moment(data.issueDate): null,
@@ -413,6 +448,7 @@ export const getOrder = (proId,id) => {
                 setToken(res.headers&& res.headers.authorization)
                 return {success, data: obj };
             }
+            return { success }
         })
         .catch((err) => {
             return {
@@ -427,9 +463,12 @@ export const delOrder = (proId,id) => {
     return axios
         .delete(url + `/${proId}/purchaseOrders/${id}`, {headers:headers})
         .then((res) => {
-            const { success } = res.data;
-            setToken(res.headers&& res.headers.authorization)
-            if (success) return {success};
+            const { success, message } = res.data;
+            jwtExpired(message)
+            if (success) 
+                setToken(res.headers&& res.headers.authorization)
+                
+            return {success};
         })
         .catch((err) => {
             return {

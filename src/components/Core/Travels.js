@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import {  Table } from "antd";
 import moment from "moment";
+import { localStore } from "../../service/constant";
 
 class Travels extends Component {
     constructor() {
@@ -90,6 +91,7 @@ class Travels extends Component {
         return (
             <>
                 <Table
+                    pagination={{pageSize: localStore().pageSize}}
                     columns={this.columns}
                     dataSource={flights}
                     size="small"

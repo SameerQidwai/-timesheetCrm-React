@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { Api, headers, setToken } from "./constant";
+import { Api, headers, jwtExpired, setToken } from "./constant";
 import moment from "moment";
 import { message as messageAlert } from "antd";
 
@@ -10,9 +10,10 @@ export const getList = () => {
     return axios
         .get(url, {headers:headers})
         .then((res) => {
-            const { success, data } = res.data;
-            setToken(res.headers&& res.headers.authorization)
-            if (success) return { success: success, data: data };
+            const { success, data, message } = res.data;
+            jwtExpired(message)
+            if (success) setToken(res.headers&& res.headers.authorization)
+            return { success: success, data: data };
         })
         .catch((err) => {
             return {
@@ -27,7 +28,8 @@ export const getOrgRecord = (id) => {
     return axios
         .get(url + `/${id}`, {headers:headers})
         .then((res) => {
-            const { success, data } = res.data;
+            const { success, data, message } = res.data;
+            jwtExpired(message)
             if (success) {
                 const vake = data
                 const basic = {
@@ -75,6 +77,7 @@ export const getOrgRecord = (id) => {
                 setToken(res.headers&& res.headers.authorization)
                 return {success,basic, billing, insured, bank, future, data}
             }
+            return { success }
         })
         .catch((err) => {
             return {
@@ -91,9 +94,10 @@ export const addList = (data) => {
         .post(url, data, {headers:headers})
         .then((res) => {
             const { success, message } = res.data;
+            jwtExpired(message)
             messageAlert.success({ content: message, key: 1})
-            setToken(res.headers&& res.headers.authorization)
-            if (success) return {success};
+            if (success) setToken(res.headers&& res.headers.authorization)
+            return {success};
         })
         .catch((err) => {
                         messageAlert.error({ content: err.message, key: 1})
@@ -109,9 +113,10 @@ export const delOrg = (id) => {
     return axios
         .delete(url + `/${id}`, {headers:headers})
         .then((res) => {
-            const { success } = res.data;
-            setToken(res.headers&& res.headers.authorization)
-            if (success) return {success};
+            const { success, message } = res.data;
+            jwtExpired(message)
+            if (success) setToken(res.headers&& res.headers.authorization)
+            return {success};
         })
         .catch((err) => {
             return {
@@ -128,9 +133,10 @@ export const editList = (data) => {
         .put(url + `/${data.id}`, data, {headers:headers})
         .then((res) => {
             const { success, message } = res.data;
+            jwtExpired(message)
             messageAlert.success({ content: message, key: data.id})
-            setToken(res.headers&& res.headers.authorization)
-            if (success) return {success};
+            if (success) setToken(res.headers&& res.headers.authorization)
+            return {success};
         })
         .catch((err) => {
                         messageAlert.error({ content: err.message, key: data.id})

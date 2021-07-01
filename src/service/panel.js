@@ -1,7 +1,7 @@
 import axios from "axios";
 import { message as messageAlert } from "antd";
 
-import { Api, headers, setToken } from "./constant";
+import { Api, headers, jwtExpired, setToken } from "./constant";
 
 const url = `${Api}/panels`;
 
@@ -28,9 +28,11 @@ export const addList = (data) => {
         .post(url, data, {headers:headers})
         .then((res) => {
             const { success, message } = res.data;
+            jwtExpired(message)
             messageAlert.success({ content: message, key: 1})
-            setToken(res.headers&& res.headers.authorization)
-            if (success) return success;
+            if (success) setToken(res.headers&& res.headers.authorization)
+
+            return success;
         })
         .catch((err) => {
             messageAlert.error({ content: err.message, key: 1})
@@ -46,9 +48,11 @@ export const delLabel = (id) => {
     return axios
         .delete(url + `/${id}`, {headers:headers})
         .then((res) => {
-            const { success } = res.data;
-            setToken(res.headers&& res.headers.authorization)
-            if (success) return success;
+            const { success, message } = res.data;
+            jwtExpired(message)
+            if (success) setToken(res.headers&& res.headers.authorization)
+            
+            return success;
         })
         .catch((err) => {
             return {
@@ -65,9 +69,11 @@ export const editLabel = (data) => {
         .put(url + `/${data.id}`, data, {headers:headers})
         .then((res) => {
             const { success, message } = res.data;
+            jwtExpired(message)
             messageAlert.success({ content: message, key: data.id})
-            setToken(res.headers&& res.headers.authorization)
-            if (success) return success;
+            if (success) setToken(res.headers&& res.headers.authorization)
+
+            return success;
         })
         .catch((err) => {
             messageAlert.error({ content: err.message, key: data.id})

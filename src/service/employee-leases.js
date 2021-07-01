@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { Api, headers, setToken } from "./constant";
+import { Api, headers, jwtExpired, setToken } from "./constant";
 import moment from "moment";
 import { message as messageAlert } from "antd";
 
@@ -10,7 +10,8 @@ export const getList = (empId) => {
     return axios
         .get(url+ `${empId}/leases`, {headers:headers})
         .then((res) => {
-            const { success, data } = res.data;
+            const { success, data, message } = res.data;
+            jwtExpired(message)
             if (success) setToken(res.headers&& res.headers.authorization)
 
             return { success: success, data: data };
@@ -30,6 +31,7 @@ export const addList = (empId, data) => {
         .post(url+ `${empId}/leases`, data, {headers:headers})
         .then((res) => {
             const { success, message } = res.data;
+            jwtExpired(message)
             messageAlert.success({ content: message, key: empId})
             if (success) setToken(res.headers&& res.headers.authorization)
             
@@ -49,7 +51,8 @@ export const getRecord = (empId, id) => {
     return axios
         .get(url+ `${empId}/leases/${id}`, {headers:headers})
         .then((res) => {
-            const { success, data } = res.data;
+            const { success, data, message } = res.data;
+            jwtExpired(message)
             if (success){
                 data.startDate = data.startDate && moment(data.startDate)
                 data.endDate = data.endDate && moment(data.endDate) 
@@ -71,7 +74,8 @@ export const delList = (empId, id) => {
     return axios
         .delete(url+ `${empId}/leases/${id}`, {headers:headers})
         .then((res) => {
-            const { success } = res.data;
+            const { success, message } = res.data;
+            jwtExpired(message)
             if (success) setToken(res.headers&& res.headers.authorization)
 
             return {success};
@@ -91,6 +95,7 @@ export const editList = (empId, id, data) => {
         .put(url+ `${empId}/leases/${id}`, data, {headers:headers})
         .then((res) => {
             const { success, message } = res.data;
+            jwtExpired(message)
             messageAlert.success({ content: message, key: id})
             if (success) setToken(res.headers&& res.headers.authorization)
             

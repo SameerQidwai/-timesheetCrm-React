@@ -168,13 +168,14 @@ class Projects extends Component {
                                             editPro:false
                                         })
                                     }}
-                                    disabled={!permissions['CREATE']}
+                                    disabled={!permissions['ADD']}
                                     ><PlusSquareOutlined />Add Project</Button>
                             </Col>
                         </Row>
                     </Col>
                     <Col span={24}>
                         <Table
+                            pagination={{pageSize: localStore().pageSize}}
                             rowKey={(data) => data.id} 
                             columns={this.columns}
                             dataSource={data}

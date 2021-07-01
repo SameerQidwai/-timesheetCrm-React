@@ -1,7 +1,7 @@
 import axios from "axios";
 import { message as messageAlert } from "antd";
 
-import { Api, headers, setToken } from "./constant";
+import { Api, headers, jwtExpired, setToken } from "./constant";
 
 const url = `${Api}/roles`;
 
@@ -9,9 +9,11 @@ export const getList = () => {
     return axios
         .get(url, {headers:headers})
         .then((res) => {
-            const { success, data } = res.data;
-            setToken(res.headers&& res.headers.authorization)            
-            if (success) return { success: success, data: data };
+            const { success, data, message } = res.data;
+            jwtExpired(message)
+            if (success) 
+                setToken(res.headers&& res.headers.authorization)            
+            return { success: success, data: data };
         })
         .catch((err) => {
             return {
@@ -28,9 +30,11 @@ export const addList = (data) => {
         .post(url, data, {headers:headers})
         .then((res) => {
             const { success, data, message } = res.data;
+            jwtExpired(message)
             messageAlert.success({ content: message, key: 1})
-            setToken(res.headers&& res.headers.authorization)
-            if (success) return { success, data };
+            if (success) 
+                setToken(res.headers&& res.headers.authorization)
+            return { success, data };
         })
         .catch((err) => {
             messageAlert.error({ content: err.message, key: 1})
@@ -46,9 +50,11 @@ export const delLabel = (id) => {
     return axios
         .delete(url + `/${id}`, {headers:headers})
         .then((res) => {
-            const { success } = res.data;
-            setToken(res.headers&& res.headers.authorization)
-            if (success) return success;
+            const { success, message } = res.data;
+            jwtExpired(message)
+            if (success) 
+                setToken(res.headers&& res.headers.authorization)
+            return success;
         })
         .catch((err) => {
             return {
@@ -65,9 +71,12 @@ export const editLabel = (id, data) => {
         .put(url + `/${id}`, data, {headers:headers})
         .then((res) => {
             const { success, data, message } = res.data;
+            jwtExpired(message)
             messageAlert.success({ content: message, key: id})
-            setToken(res.headers&& res.headers.authorization)
-            if (success) return { success, data };
+            if (success) 
+                setToken(res.headers&& res.headers.authorization)
+
+            return { success, data };
         })
         .catch((err) => {
             messageAlert.error({ content: err.message, key: id})
@@ -85,9 +94,11 @@ export const updatePermission = (id, data) => {
         .put(url + `/${id}/update-permissions`, data, {headers:headers})
         .then((res) => {
             const { success, data, message } = res.data;
+            jwtExpired(message)
             messageAlert.success({ content: message, key: id})
-            setToken(res.headers&& res.headers.authorization)
-            if (success) return { success, data };
+            if (success) 
+                setToken(res.headers&& res.headers.authorization)
+            return { success, data };
         })
         .catch((err) => {
             messageAlert.error({ content: err.message, key: id})

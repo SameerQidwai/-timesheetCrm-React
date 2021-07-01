@@ -173,10 +173,10 @@ class OpportunityInfo extends Component {
                         // defaultActiveKey="profitloss"   
                     >
                         <TabPane tab="Comments" key="comments">
-                            <Comments targetId={leadId} targetType="WOR" />
+                            <Comments targetId={leadId} targetType="OPR" />
                         </TabPane>
                         <TabPane tab="Attachments" key="attachments">
-                            <Attachments targetId={leadId} targetType="WOR"  />
+                            <Attachments targetId={leadId} targetType="OPR"  />
                         </TabPane>
                         {/* <TabPane tab="Travels" key="travels">
                             <Travels id={leadId} />

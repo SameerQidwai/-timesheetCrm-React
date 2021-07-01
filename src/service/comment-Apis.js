@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { Api, headers, setToken } from "./constant";
+import { Api, headers, jwtExpired, setToken } from "./constant";
 
 const url = `${Api}/comments/`;
 
@@ -12,7 +12,8 @@ export const addComment = (targetType, targetId, data) => {
         .then((res) => {
             const { status } = res;
             if (status === 200) {
-                const { success, data } = res.data;
+                const { success, data, message } = res.data;
+                jwtExpired(message)
                 setToken(res.headers && res.headers.authorization)
                 return { success, data };
             }
@@ -32,7 +33,8 @@ export const getComments = (targetType, targetId) => {
     return axios
         .get(`${url}${targetType}/${targetId}`, {headers:headers})
         .then((res) => {
-            const { success, data } = res.data;
+            const { success, data,message } = res.data;
+            jwtExpired(message)
             setToken(res.headers && res.headers.authorization)
             if (success) return { success, data  };
         })
@@ -49,7 +51,8 @@ export const delComments = (id,) => {
     return axios
         .delete(`${url}${id}`, {headers:headers})
         .then((res) => {
-            const { success } = res.data;
+            const { success, message } = res.data;
+            jwtExpired(message)
             setToken(res.headers && res.headers.authorization)
             if (success) return { success };
         })

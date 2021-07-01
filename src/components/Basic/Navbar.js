@@ -41,6 +41,7 @@ class Navbar extends Component {
         this.state ={
             logout: false,
             allowedNavItem: [],
+            permissions: {}
         }
     }
     componentDidMount = () =>{
@@ -68,7 +69,7 @@ class Navbar extends Component {
                     }
                 }
             })
-       this.setState({allowedNavItem})
+       this.setState({allowedNavItem, permissions})
     }
     
     getNavMenuItems = (menusData) => {
@@ -119,7 +120,7 @@ class Navbar extends Component {
     }
 
     render() {
-        const { logout, allowedNavItem } = this.state
+        const { logout, allowedNavItem, permissions } = this.state
         const options = (
             <Menu onClick={this.handleMenuClick}>
               <Menu.Item key="profile">
@@ -138,7 +139,7 @@ class Navbar extends Component {
                 >
                     <Row justify="space-between">
                         <Col>{this.getNavMenuItems(allowedNavItem)}</Col>
-                        <Col xs={{ span: 2 }} md={{ span: 2 }}>
+                        {permissions['ADMIN_OPTIONS'] && permissions['ADMIN_OPTIONS']['READ'] ? <Col xs={{ span: 2 }} md={{ span: 2 }}>
                             <Space size="large">
                                 <Link
                                     to="/admin/global-settings"
@@ -150,7 +151,13 @@ class Navbar extends Component {
                                     <Link><DownOutlined /></Link>
                                 </Dropdown>
                             </Space>
-                        </Col>
+                        </Col>: 
+                        <Col xs={{ span: 1 }} md={{ span: 1 }}>
+                            <Dropdown overlay={options} placement="bottomCenter" >
+                                <Link><DownOutlined /></Link>
+                            </Dropdown>
+                        </Col>}
+                        
                     </Row>
                 </div>
                 {logout && <Redirect to={{ pathname: '/'}} /> }

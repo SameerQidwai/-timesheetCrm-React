@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Button, Table, Dropdown, Menu } from "antd";
 import { SettingOutlined, DownOutlined } from "@ant-design/icons"; //Icons
 import moment from "moment";
+import { localStore } from "../../service/constant";
 
 class Projects extends Component {
     constructor() {
@@ -113,6 +114,7 @@ class Projects extends Component {
         return (
             <>
                 <Table
+                    pagination={{pageSize: localStore().pageSize}}
                     columns={this.columns}
                     dataSource={projects}
                     size="small"

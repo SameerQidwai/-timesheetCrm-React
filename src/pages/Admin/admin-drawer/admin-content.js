@@ -10,7 +10,7 @@ import Calenders from "../Calender/Calenders";
 import HolidayTypes from "../Calender/HolidayTypes";
 import LeaveCategories from "../LeaveCategories";
 import LeavePolicies from "../LeavePolicies";
-import Roles from "../../Role & Permission/Roles";
+import Roles from "../Role & Permission/Roles";
 import Panels from "../Panels/Panels";
 import PanelSkills from "../Panels/PanelSkills";
 import Levels from "../skill & level/Levels.js";

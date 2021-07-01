@@ -4,6 +4,7 @@ import { SettingOutlined, DownOutlined, PlusSquareOutlined, LoadingOutlined} fro
 import Forms from "../../../components/Core/Form";
 
 import { getList, addList, delLabel, editLabel, } from "../../../service/holiday-type";
+import { localStore } from "../../../service/constant";
 
 const { Title } = Typography;
 
@@ -171,6 +172,7 @@ class HolidayTypes extends Component {
                     </Col>
                 </Row>
                 <Table
+                    pagination={{pageSize: localStore().pageSize}}
                     columns={this.columns}
                     dataSource={data}
                     size="small"

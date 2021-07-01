@@ -1,7 +1,7 @@
 import { message as messageAlert } from "antd";
 import axios from "axios";
 
-import { Api, localStore, headers, setToken } from "./constant";
+import { Api, localStore, headers, setToken, jwtExpired } from "./constant";
 import moment from "moment";
 
 export const login = (data) => {
@@ -51,9 +51,11 @@ export const upadtePassword = (data) => {
         .patch(`${Api}/password`, data, {headers:headers})
         .then((res) => {
             const { success, data, message } = res.data;
-                    messageAlert.success({ content: message, key: 'logout'}, 5)
-                    setToken(res.headers&& res.headers.authorization)
-            if (success) return {success, data};
+            jwtExpired(message)
+            messageAlert.success({ content: message, key: 'logout'}, 5)
+            if (success) setToken(res.headers&& res.headers.authorization)
+            
+            return {success, data};
         })
         .catch((err) => {
                 messageAlert.error({ content: err.message, key: 'logout'})
@@ -70,6 +72,7 @@ export const getSettings = () => {
         .get(`${Api}/settings`, {headers: headers})
         .then((res) => {
             const { success, data, message } = res.data;
+            jwtExpired(message)
             if (success) {
                 const contactPerson = data.contactPersonOrganization ? data.contactPersonOrganization.contactPerson : {}
                 const basic = {
@@ -129,6 +132,7 @@ export const getSettings = () => {
                 setToken(res.headers&& res.headers.authorization)
                 return { success, data, basic, detail, kin, bank, billing }
             }
+            return { success }
         })
         .catch((err) => {
             console.log('err',err);
@@ -146,9 +150,10 @@ export const upadteSettings = (data) => {
         .patch(`${Api}/settings`, data, {headers: headers})
         .then((res) => {
             const { success, data, message } = res.data;
-                    messageAlert.success({ content: message, key: 'logout'})
-                    setToken(res.headers&& res.headers.authorization)
-            if (success) return {success, data};
+            jwtExpired(message)
+            messageAlert.success({ content: message, key: 'logout'})
+            if (success) setToken(res.headers&& res.headers.authorization)
+            return {success, data};
         })
         .catch((err) => {
                 messageAlert.error({ content: err.message, key: 'logout'})

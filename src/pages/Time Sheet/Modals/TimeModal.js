@@ -15,6 +15,7 @@ class TimeModal extends Component {
 
         this.state = {
             loading: false,
+            permissions: {},
             TimeFields:{
                 // Add new Time break and table in time-sheet
                 formId: "time_form",
@@ -78,10 +79,12 @@ class TimeModal extends Component {
 
     componentDidMount = () => {
         const { editTime, userId } = this.props
-        console.log(editTime);
-        if (editTime) {
-            this.getRecord(userId, editTime);
-        }
+        const { TIMESHEETS }= JSON.parse(localStore().permissions)
+        this.setState({ permissions: TIMESHEETS },()=>{
+            if (editTime && TIMESHEETS['UPDATE']) {
+                this.getRecord(userId, editTime);
+            }
+        })
     };
 
     submit = () => {
@@ -120,7 +123,6 @@ class TimeModal extends Component {
     editRecord = (entryId, data) =>{
         this.setState({loading: true})
         const { callBack } = this.props;
-        console.log(entryId);
         editTime(entryId, data).then(res=>{
             if(res.success){
                 callBack(res.data);
@@ -144,20 +146,21 @@ class TimeModal extends Component {
  
     render() {
         const { editTime, visible, close } = this.props;
-        const { TimeFields, loading } = this.state;
+        const { TimeFields, loading, permissions } = this.state;
+        const popup = editTime? permissions['UPDATE']&& visible: permissions['ADD']&& visible
         return (
             <Modal
                 title={editTime ? "Edit Time" : "Add Time"}
                 maskClosable={false}
                 centered
-                visible={visible}
+                visible={popup}
                 onOk={() => { this.submit(); }}
                 okButtonProps={{ disabled: loading }}
                 okText={loading ?<LoadingOutlined /> :"Save"}
                 onCancel={close}
                 width={540}
                 footer={[
-                    <Button type="primary"  danger disabled={!editTime} style={{float: "left"}} onClick={this.handleDelete}> Delete </Button>,
+                    <Button type="primary"  danger disabled={!editTime || !permissions['DELETE']} style={{float: "left"}} onClick={this.handleDelete}> Delete </Button>,
                     <Button key="cancel" onClick={close}> Cancel </Button>,
                     <Button key="ok" type="primary" loading={loading}  onClick={() => { this.submit(); }}>
                       {loading ?<LoadingOutlined /> :"Save"}

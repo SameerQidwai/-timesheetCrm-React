@@ -42,17 +42,17 @@ class Resource extends Component {
                     <Dropdown
                         overlay={
                             <Menu>
-                                <Menu.Item danger>
+                                {/* <Menu.Item danger>
                                     <Popconfirm
                                         title="Sure to delete?"
                                         onConfirm={() => this.handleDelete(record.id) }
                                     >
                                         Delete
                                     </Popconfirm>
-                                </Menu.Item>
+                                </Menu.Item> */}
                                 <Menu.Item
                                     onClick={() => {
-                                        this.setState({ infoModal: true, editRex: record, resource: false, skillId: false, tableIndex: index });
+                                        this.getSkilldEmployee(true,  false,  false, record,  index, record.panelSkillStandardLevelId)
                                     }}
                                     disabled={this.state&& !this.state.permissions['UPDATE']}
                                 >
@@ -60,11 +60,12 @@ class Resource extends Component {
                                 </Menu.Item>
                                 <Menu.Item 
                                     onClick={() => {
-                                        this.setState({ infoModal: true, skillId: record.id, resource: true, editRex:false, tableIndex: index });
+                                        console.log(record);
+                                        this.getSkilldEmployee(true,  record.id,  true, false,  index, record.panelSkillStandardLevelId)
                                     }}
+                                    disabled={this.state&& !this.state.permissions['ADD']}
                                 >
                                         Add
-                                        disabled={this.state&& !this.state.permissions['CREATE']}
                                 </Menu.Item>
                             </Menu>
                         }
@@ -83,8 +84,10 @@ class Resource extends Component {
             leadId: false,
             data: [],
             desc: {},
+            skillId: false,
+            levelId: false,
             resource: false,
-            permissons: {}
+            permissons: {ADD: true}
         };
     }
 
@@ -95,6 +98,7 @@ class Resource extends Component {
 
     fetchAll = (id) =>{
         const { OPPORTUNITIES }= JSON.parse(localStore().permissions)
+        console.log(OPPORTUNITIES);
         Promise.all([ getRecord(id), getLeadSkills(id)])
         .then(res => {
             this.setState({
@@ -119,9 +123,22 @@ class Resource extends Component {
                     editRex: false,
                     infoModal: false,
                     skillId: false,
+                    levelId: false,
                     tableIndex:false
                 })
             }
+        })
+    }
+
+    getSkilldEmployee = (infoModal, skillId, resource, editRex, tableIndex, levelId ) =>{
+        console.log({levelId});
+        this.setState({ 
+            infoModal:infoModal, 
+            skillId:skillId,
+            levelId: levelId,
+            resource:resource, 
+            editRex:editRex, 
+            tableIndex:tableIndex 
         })
     }
 
@@ -153,7 +170,8 @@ class Resource extends Component {
     };
 
     render() {
-        const { desc, data, infoModal, editRex, leadId, resource , skillId, permissions} = this.state;
+        const { desc, data, infoModal, editRex, leadId, resource , skillId, levelId, permissions} = this.state;
+        console.log(permissions);
         return (
             <>
                 <Descriptions
@@ -176,7 +194,7 @@ class Resource extends Component {
                             type="primary" 
                             size='small'  
                             onClick={() => { this.setState({ infoModal: true, editRex: false, resource: false }) }}
-                            disabled={permissions['CREATE']}
+                            disabled={permissions&& !permissions['ADD']}
                             >
                                 Add New
                         </Button>
@@ -184,6 +202,7 @@ class Resource extends Component {
                     {/* <Col> <Button type="danger" size='small'>Delete Resource</Button></Col> */}
                 </Row>
                 <Table
+                    pagination={{pageSize: localStore().pageSize}}
                     rowKey={(record) => record.id}
                     columns={this.columns}
                     dataSource={data}
@@ -192,7 +211,8 @@ class Resource extends Component {
                             return (
                             <NestedTable 
                                 data={record.opportunityResourceAllocations} 
-                                skill={record.id} 
+                                skill={record.id}
+                                levelId={record.panelSkillStandardLevelId}
                                 leadId={leadId} 
                                 panelId={desc.panelId}
                                 callBack={this.callBack}
@@ -208,6 +228,7 @@ class Resource extends Component {
                         visible={infoModal}
                         editRex={editRex}
                         skillId={skillId}
+                        levelId={levelId}
                         leadId={leadId}
                         panelId = {desc.panelId}
                         close={this.closeModal}
@@ -259,7 +280,7 @@ function NestedTable(props) {
                                     setEditRex({...text, tableIndex: index})
                                     setVisible(true)
                                 }}
-                                disabled={props.permissions['UPDATE']}
+                                disabled={props.permissions&& !props.permissions['UPDATE']}
                             >
                                 Edit
                             </Menu.Item>
@@ -321,6 +342,7 @@ function NestedTable(props) {
             editRex={editRex}
             skillId={props.skill}
             leadId = {props.leadId}
+            levelId = {props.levelId}
             panelId = {props.panelId}
             close={()=>{setVisible(false)}}
             callBack={callBack}

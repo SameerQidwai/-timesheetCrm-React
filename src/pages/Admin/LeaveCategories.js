@@ -6,6 +6,7 @@ import Form from "../../components/Core/Form";
 import "../styles/table.css";
 
 import { getList, addList, editLabel, delLabel } from "../../service/time-off";
+import { localStore } from "../../service/constant";
 
 const { Title } = Typography;
 
@@ -200,6 +201,7 @@ class LeaveCategories extends Component {
                     </Col>
                     <Col span={24}>
                         <Table
+                            pagination={{pageSize: localStore().pageSize}}
                             columns={columns}
                             dataSource={data}
                             size="small"

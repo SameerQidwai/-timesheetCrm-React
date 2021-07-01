@@ -2,7 +2,7 @@ import axios from "axios";
 import { message as messageAlert } from "antd";
 
 
-import { Api, headers, setToken } from "./constant";
+import { Api, headers, jwtExpired, setToken } from "./constant";
 
 const url = `${Api}/calendars`;
 
@@ -10,8 +10,10 @@ export const getList = () => {
     return axios
         .get(url, {headers:headers})
         .then((res) => {
-            const { success, data } = res.data;
+            const { success, data, message } = res.data;
+            jwtExpired(message)
             if (success) setToken(res.headers && res.headers.authorization)
+
             return { success: success, data: data };
         })
         .catch((err) => {
@@ -29,8 +31,10 @@ export const addList = (data) => {
         .post(url, data, {headers:headers})
         .then((res) => {
             const { success, message } = res.data;
+            jwtExpired(message)
             messageAlert.success({ content: message, key: 1})
             setToken(res.headers && res.headers.authorization)
+
             if (success) return success;
         })
         .catch((err) => {
@@ -50,8 +54,10 @@ export const editLabel = (data) => {
         .put(url + `/${data.id}`, data, {headers:headers})
         .then((res) => {
             const { success, message } = res.data;
+            jwtExpired(message)
             messageAlert.success({ content: message, key: data.id},5)
             if (success) setToken(res.headers && res.headers.authorization)
+
             return success;
         })
         .catch((err) => {

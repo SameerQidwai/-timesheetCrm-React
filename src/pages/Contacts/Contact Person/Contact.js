@@ -149,7 +149,7 @@ class Contact extends Component {
                                     type="primary"
                                     size="small"
                                     onClick={() => { this.setState({ openModal: true, }); }}
-                                    disabled={!permissions['CREATE']}
+                                    disabled={!permissions['ADD']}
                                 >
                                     <PlusSquareOutlined />
                                     Contact Person

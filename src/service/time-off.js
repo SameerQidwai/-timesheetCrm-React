@@ -1,7 +1,7 @@
 import { message as messageAlert } from "antd";
 import axios from "axios";
 
-import { Api, headers, setToken } from "./constant";
+import { Api, headers, jwtExpired, setToken } from "./constant";
 
 const url = `${Api}/time-off-types`;
 
@@ -9,9 +9,11 @@ export const getList = () => {
     return axios
         .get(url, {headers:headers})
         .then((res) => {
-            const { success, data } = res.data;
-            setToken(res.headers&& res.headers.authorization)
-            if (success) return { success: success, data: data };
+            const { success, data, message } = res.data;
+            jwtExpired(message)
+            if (success) 
+                setToken(res.headers&& res.headers.authorization)
+            return { success: success, data: data };
         })
         .catch((err) => {
             return {
@@ -27,10 +29,12 @@ export const addList = (data) => {
     return axios
         .post(url, data, {headers:headers})
         .then((res) => {
-            const { success } = res.data;
+            const { success, message } = res.data;
+            jwtExpired(message)
             messageAlert.success({ content: 'Success!', key: 1})
-            setToken(res.headers&& res.headers.authorization)
-            if (success) return success;
+            if (success) 
+                setToken(res.headers&& res.headers.authorization)
+            return success;
         })
         .catch((err) => {
             messageAlert.error({ content: err.message, key: 1})
@@ -46,9 +50,11 @@ export const delLabel = (id) => {
     return axios
         .delete(url + `/${id}`, {headers:headers})
         .then((res) => {
-            const { success } = res.data;
-            setToken(res.headers&& res.headers.authorization)
-            if (success) return success;
+            const { success, message } = res.data;
+            jwtExpired(message)
+            if (success) 
+                setToken(res.headers&& res.headers.authorization)
+            return success;
         })
         .catch((err) => {
             return {
@@ -64,10 +70,12 @@ export const editLabel = (data) => {
     return axios
         .put(url + `/${data.id}`, data, {headers:headers})
         .then((res) => {
-            const { success } = res.data;
+            const { success, message } = res.data;
+            jwtExpired(message)
             messageAlert.success({ content: 'Success!', key: data.id})
-            setToken(res.headers&& res.headers.authorization)
-            if (success) return success;
+            if (success) 
+                setToken(res.headers&& res.headers.authorization)
+            return success;
         })
         .catch((err) => {
             messageAlert.error({ content: err.message, key: data.id})

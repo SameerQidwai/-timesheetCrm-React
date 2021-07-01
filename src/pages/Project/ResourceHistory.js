@@ -7,6 +7,7 @@ import HistModal from "./Modals/HistModal";
 import { getRecord, getLeadSkills, delLeadSkill } from "../../service/opportunities";
 
 import moment from "moment"
+import { localStore } from "../../service/constant";
 
 const { Item } = Descriptions;
 
@@ -159,6 +160,7 @@ class ResourceHistory extends Component {
                     <Col> <Button type="primary" size='small'  onClick={() => {  this.setState({ infoModal: true, editRex: false, }) }}>Add New</Button> </Col>
                 </Row>
                 <Table
+                    pagination={{pageSize: localStore().pageSize}}
                     rowKey={(data) => data.id}
                     columns={this.columns}
                     dataSource={data}

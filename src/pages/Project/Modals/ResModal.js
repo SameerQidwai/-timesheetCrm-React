@@ -12,6 +12,7 @@ import {
   getPanelSkills,
   getStandardLevels,
   getContactPersons,
+  getOrgPersons,
 } from "../../../service/constant-Apis";
 
 const { TabPane } = Tabs;
@@ -68,7 +69,7 @@ class ResModal extends Component {
             rules:[{ required: true, message: 'Skill is Required' }],
             data: [],
             type: "Select",
-            onChange: function func(e, value) {
+            onChange: (e, value) =>{
               const { ResourceFields } = this.state;
               ResourceFields.fields[3].data = value ? value.levels : [];
               const {
@@ -80,7 +81,7 @@ class ResModal extends Component {
                 obj,
               });
               this.setState({ ResourceFields });
-            }.bind(this),
+            },
           },
           {
             object: "obj",
@@ -91,20 +92,17 @@ class ResModal extends Component {
             rules:[{ required: true, message: 'Level is Required' }],
             data: [],
             type: "Select",
-            onChange: function func(e, value) {
+            onChange: (e, value) =>{
               const { ResourceFields } = this.state;
-              getContactPersons().then((res) => {
+              const customUrl = `employees/get/by-skills?psslId=${value.value}`
+              getOrgPersons(customUrl).then((res) => {
                 ResourceFields.fields[7].data = res.success ? res.data : [];
-                const {
-                  obj,
-                } = this.resourceRef.current.refs.resource_form.getFieldsValue(); // const
+                const { obj, } = this.resourceRef.current.refs.resource_form.getFieldsValue(); // const
                 obj["userId"] = undefined;
-                this.resourceRef.current.refs.resource_form.setFieldsValue({
-                  obj,
-                });
+                this.resourceRef.current.refs.resource_form.setFieldsValue({ obj, });
                 this.setState({ ResourceFields });
               });
-            }.bind(this),
+            },
           },
           {
             Placeholder: "Work Hours",
@@ -242,9 +240,9 @@ class ResModal extends Component {
       },
     };
   }
+
   componentDidMount = () => {
     const { editRex, panelId } = this.props;
-    console.log({ editRex }, { panelId });
     this.openModal();
   };
 
@@ -289,7 +287,6 @@ class ResModal extends Component {
 
   addRecord = (data) => {
     const { ProId, callBack } = this.props;
-    console.log(ProId);
     addLeadSkill(ProId, data).then((res) => {
       if (res.success) {
         callBack();
@@ -299,7 +296,6 @@ class ResModal extends Component {
 
   getRecord = (skills) => {
     const { ProId, editRex } = this.props;
-    console.log(ProId, editRex);
     getLeadSkill(ProId, editRex).then((resR) => {
       // console.log(resR.data);
       if (resR.success) {
@@ -343,9 +339,7 @@ class ResModal extends Component {
         maskClosable={false}
         centered
         visible={visible}
-        onOk={() => {
-          this.submit();
-        }}
+        onOk={() => { this.submit(); }}
         okButtonProps={{ disabled: loading }}
         okText={loading ? <LoadingOutlined /> : "Save"}
         onCancel={close}

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Api, headers, setToken } from "./constant";
+import { Api, headers, jwtExpired, setToken } from "./constant";
 import { message as messageAlert } from "antd";
 
 const url = `${Api}/contactpersons`;
@@ -8,7 +8,8 @@ export const getList = () => {
     return axios
         .get(url, {headers:headers})
         .then((res) => {
-            const { success, data } = res.data;
+            const { success, data, message } = res.data;
+            jwtExpired(message)
             if (success) setToken(res.headers&& res.headers.authorization)
             
             return { success, data };
@@ -27,7 +28,8 @@ export const getContactRecord = (id) => {
     return axios
         .get(url + `/${id}`,{headers:headers})
         .then((res) => {
-            const { success, data } = res.data;
+            const { success, data, message } = res.data;
+            jwtExpired(message)
             setToken(res.headers&& res.headers.authorization)
             if (success) return {success, data};
         })
@@ -46,6 +48,7 @@ export const addList = (data) => {
         .post(url, data, {headers:headers})
         .then((res) => {
             const { success, message } = res.data;
+            jwtExpired(message)
             messageAlert.success({ content: message, key: 1})
             if (success) setToken(res.headers&& res.headers.authorization)
             return {success};
@@ -64,7 +67,9 @@ export const delList = (id) => {
     return axios
         .delete(url + `/${id}`, {headers:headers})
         .then((res) => {
-            const { success } = res.data;
+            const { success, message } = res.data;
+            jwtExpired(message)
+
             if (success)  setToken(res.headers&& res.headers.authorization)
 
             return {success};
@@ -84,6 +89,7 @@ export const editList = (data) => {
         .put(url + `/${data.id}`, data, {headers:headers})
         .then((res) => {
             const { success, message } = res.data;
+            jwtExpired(message)
             messageAlert.success({ content: message, key: data.id})
             if (success) setToken(res.headers&& res.headers.authorization)
             return {success};

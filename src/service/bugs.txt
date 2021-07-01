@@ -1,97 +1,7 @@
-lead skilldelete is not working right now
+PROJECT GET Employee By SKILL
+permissions bugs in Resource
 
-bring contact person as Panel skill and level requirment
-assoisiation status
-can't edit assoisiation of a contactperson it will be not be availabe as an employee
-opportuinty status L, O ajeeb sa lag raga ge
-
-Upload Files 
-
-today's meeting
-
-ek to kaam pata chal gaya k hr resource k lye 3 fields add krni han aur PO ki taraf start lena hai. baki baad me discuss krlenge
-
-
-Add required:
-    Contact person:
-        Basic 
-            names
-            gender 
-            staet
-
-        clearnce
-            if level is selected all
-
-    Organisation
-        Basic
-            Name:
-            Bussine Type
-
-        insuranace 
-             if insurer required remaning 
-
-    Employee
-        contract
-            all fields other than email and comments
-        personal
-            conact person Id
-            usermane
-        superanaution 
-            All fields if Account Type is selected
-
-        Bank 
-            if anyone required all only bacnks fields
-
-    opportuinty
-        Info
-            delete field opp id
-            Panel
-            Organi
-            Name
-            Type
-
-        resource
-            skill
-                all
-            resource
-                all
-
-    Project
-        DATE iNFO
-            Bid date field remove
-            start date 
-            daily hours
-        forecaste
-            go
-            get
-            go/get
-            dicounted value 
-            upside value
-
-        Resources
-            History hide
-            delete remove
-
-I did't put Requred on usernam/emails in Employee and contractor
-
-SubContractor required is not completed as well
-     Contractor
-        personal
-            contact person id
-            uersame
-        contract 
-            all fields other than comments
-
-Project Resources required not done yet 
-    Project
-        resource
-            skill
-            resource
-
-        Purcahse order
-            other than comments and descriptions
-
-        Novated Lease
+add, update and submit only user can do it
 
 
 MEETING  28- April -2021
@@ -117,3 +27,4 @@ comments are not getting attahment when added
 PURCHASE ORDER EDIT
 // this needs to be correct 
     in comments definging it agaia to meet the criteria with 
+

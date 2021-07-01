@@ -5,9 +5,10 @@ import moment from "moment";
 import TimeModal from "./Modals/TimeModal"
 import AttachModal from "./Modals/AttachModal";
 import ExportToExcel from '../../components/Core/ExportToExcel'
-import {  getList, reviewTimeSheet } from "../../service/timesheet"
-import { getCustomApi, getContactPersons, getUsers, getOrgPersons } from "../../service/constant-Apis";
+import {  getList, reviewTimeSheet, getUsers,  } from "../../service/timesheet"
+import { getProjects } from "../../service/constant-Apis";
 import "../styles/table.css";
+import { localStore } from "../../service/constant";
 
 const { Title } = Typography;
 //inTable insert
@@ -31,10 +32,11 @@ class TimeSheet extends Component {
             loading: false,
             eData: [],
             USERS:[],
-            sUser:{},
+            sUser: null,
             data: [ ],
             comments: null,
             sProject: {},
+            permissions: {},
             projects: [],
             FormFields: {
                 // Add new Time break and table in time-sheet
@@ -115,7 +117,7 @@ class TimeSheet extends Component {
                                     {/* } */}
                                 </Row>
                             </Col>
-                            {record.status === 'SV' || record.status === 'RJ' ?<Col sapn={12}>
+                            {this.state && this.state.sUser === parseInt(localStore().id) && (record.status === 'SV' || record.status === 'RJ') ?<Col sapn={12}>
                                 <Popconfirm
                                     title={`You want to submit ${value}'s timesheet?`}
                                     onConfirm={()=>{this.reviewTimeSheet(record.projectEntryId, 'submit', index, 'SB')}}
@@ -123,7 +125,7 @@ class TimeSheet extends Component {
                                     <Button style={{backgroundColor: "#4CAF50"}} size="small" type="primary"> Submit </Button>
                                 </Popconfirm>
                             </Col> : 
-                            record.status === 'SB' &&
+                            (record.status === 'SB' && record.isManaged) &&
                             <Col sapn={12}>
                                 <Space >
                                     <Popconfirm
@@ -157,14 +159,29 @@ class TimeSheet extends Component {
         // this.columns()
     };
 
-    fetchAll = (id) =>{
-        const customUrl = `helpers/contact-persons?active=1&associated=1`
-        Promise.all([ getCustomApi('projects'), getOrgPersons(customUrl)])
+    fetchAll = () =>{
+        Promise.all([ getUsers()])
         .then(res => {
+            let value = 0
+            if(res[0].success && res[0].data.length>0){
+                value = res[0].data[0].value
+                res[0].data.forEach(el=>{
+                    if(el.value ===parseInt(localStore().id)){
+                        value= el.value 
+                    }
+                }) 
+            }
+
             this.setState({
-                projects: res[0].success? res[0].data : {},
-                USERS: res[1].success? res[1].data : [],
-            },()=>this.columns())
+                USERS: res[0].success? res[0].data : [],
+                sUser: value
+                // USERS: res[1].success? res[1].data : [],
+            },()=>{
+                this.columns() 
+                if(this.state.sUser){
+                    this.getSheet()
+                }
+            })
             
         })
         .catch(e => {
@@ -173,7 +190,7 @@ class TimeSheet extends Component {
     }
 
     getProjects = (value) =>{
-        getCustomApi(`projects?userId=${value}`).then(res=>{
+        getProjects(value).then(res=>{
             if(res.success){
                 this.setState({
                     projects: res.data
@@ -186,8 +203,8 @@ class TimeSheet extends Component {
     getSheet = () =>{
         const { sUser, sheetDates } = this.state
         const { startDate, endDate } = sheetDates
-        if(sUser.value){
-            getList({userId: sUser.value, startDate: startDate.format('DD-MM-YYYY'), endDate: endDate.format('DD-MM-YYYY')}).then(res=>{
+        if(sUser){
+            getList({userId: sUser, startDate: startDate.format('DD-MM-YYYY'), endDate: endDate.format('DD-MM-YYYY')}).then(res=>{
                 if (res.success){
                     this.setState({
                         timesheet: res.success && res.data,
@@ -201,7 +218,7 @@ class TimeSheet extends Component {
 
     columns = () =>{
         const { startDate, endDate } = this.state.sheetDates
-        let { columns }  = this.state
+        let { columns, permissions }  = this.state
         let date = undefined
         let key = undefined
         columns = [columns[0]]
@@ -244,14 +261,16 @@ class TimeSheet extends Component {
                     // dataIndex: col.dataIndex,
                     onDoubleClick: (event) => {
                         // on Click Function
-                        if (record.status === 'SV' || record.status === 'RJ' || !record.status){
+                        const { sUser } = this.state
+                        const clickable = (record.status === 'SV' || record.status === 'RJ' || !record.status) && sUser === parseInt(localStore().id)
+                        if (clickable ){
                             this.getRecord(record,rowIndex, col.dataIndex); // call function to save data in
                         }
                     },
                   }),
                 };
             })
-            this.setState({columns})
+            this.setState({ columns })
         })
     }
 
@@ -322,7 +341,8 @@ class TimeSheet extends Component {
 
     reviewTimeSheet = (id, stage, index, key) => {
         const { startDate, endDate } = this.state.sheetDates
-        const query= {pEntryId: id, userId:1, startDate: startDate.format('DD-MM-YYYY'), endDate: endDate.format('DD-MM-YYYY')}
+        const { sUser } = this.state
+        const query= { pEntryId: id, userId: sUser, startDate: startDate.format('DD-MM-YYYY'), endDate: endDate.format('DD-MM-YYYY') }
         reviewTimeSheet(query, stage).then(res=>{
             const { data } = this.state
             data[index].status= key
@@ -434,7 +454,7 @@ class TimeSheet extends Component {
                             size="large"
                             placeholder="Select User"
                             options={USERS}
-                            value={sUser.value}           
+                            value={sUser}           
                             optionFilterProp={["label", "value"]}
                             style={{ width: 200 }}
                             filterOption={
@@ -446,10 +466,10 @@ class TimeSheet extends Component {
                             }
                             onSelect={(value, option)=>{
                                 this.setState({
-                                    sUser: option
+                                    sUser: value
                                 },()=>{
                                     this.getSheet()
-                                    this.getProjects(value)
+                                    // this.getProjects(value)
                                 })
                             }}
                         />
@@ -479,7 +499,10 @@ class TimeSheet extends Component {
                         <Button
                             size="small"
                             type="primary"
-                            onClick={() => { this.setState({proVisible: true}) }}
+                            onClick={() => {
+                                this.getProjects(sUser)
+                                this.setState({proVisible: true}) 
+                            }}
                         >
                             Add Project
                         </Button>
@@ -506,7 +529,7 @@ class TimeSheet extends Component {
                         timeObj={timeObj}
                         editTime={editTime}
                         sheetDates={sheetDates}
-                        user={sUser.value}
+                        user={sUser}
                         close={()=>this.setState({isVisible: false, editTime: false, timeObj: false})}
                         callBack={this.callBack}
                     />

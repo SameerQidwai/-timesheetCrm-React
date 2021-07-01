@@ -4,6 +4,7 @@ import { SettingOutlined, DownOutlined, CloseOutlined, PlusSquareOutlined, Loadi
 import Forms from "../../../components/Core/Form";
 
 import { levels, addList, getList, editLabel, delLabel, } from "../../../service/skills";
+import { localStore } from "../../../service/constant";
 
 const { Title } = Typography;
 
@@ -357,10 +358,12 @@ class Skills extends Component {
         const vars = [];
         let result = Object.keys(obj).length / 2;
         for (let i = 0; i < result; i++) {
-            vars.push({
-                standardLevelId: obj[`level${i}`],
-                priority: obj[`priority${i}`],
-            });
+            if(obj[`level${i}`]){
+                vars.push({
+                    standardLevelId: obj[`level${i}`],
+                    priority: obj[`priority${i}`],
+                });
+            }
         }
         this.setState(
             {
@@ -454,6 +457,7 @@ class Skills extends Component {
                     </Col>
                 </Row>
                 <Table
+                    pagination={{pageSize: localStore().pageSize}}
                     columns={this.columns}
                     dataSource={data_skill}
                     size="small"

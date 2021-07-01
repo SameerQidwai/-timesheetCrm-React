@@ -1,7 +1,7 @@
 import axios from "axios";
 import { message as messageAlert } from "antd";
 
-import { Api, headers, setToken } from "./constant";
+import { Api, headers, jwtExpired, setToken } from "./constant";
 
 const url = `${Api}/calendar-holidays`;
 
@@ -9,7 +9,8 @@ export const holidayType = () => {
     return axios
         .get(`${Api}/holiday-types`, {headers:headers})
         .then((res) => {
-            const { success, data } = res.data;
+            const { success, data, message } = res.data;
+            jwtExpired(message)
             if (success) {
                 data.map((el) => {
                     el.value = el.id;
@@ -35,7 +36,8 @@ export const getList = (id) => {
     return axios
         .get(url + `?calendarId=${id}`, {headers:headers})
         .then((res) => {
-            const { success, data } = res.data;
+            const { success, data, message } = res.data;
+            jwtExpired(message)
             if (success) {
                 data.map((el) => {
                     el.label = el.holidayType.label;
@@ -60,6 +62,7 @@ export const addList = (data) => {
         .post(url, data, {headers:headers})
         .then((res) => {
             const { success, message } = res.data;
+            jwtExpired(message)
             messageAlert.success({ content: message, key: 1})
             if (success) setToken(res.headers && res.headers.authorization)
             return success;
@@ -78,7 +81,8 @@ export const delLabel = (id) => {
     return axios
         .delete(url + `/${id}`, {headers:headers})
         .then((res) => {
-            const { success } = res.data;
+            const { success, message } = res.data;
+            jwtExpired(message)
             setToken(res.headers && res.headers.authorization)
             if (success) return success;
         })
@@ -97,6 +101,7 @@ export const editLabel = (data) => {
         .put(url + `/${data.id}`, data, {headers:headers})
         .then((res) => {
             const { success, message } = res.data;
+            jwtExpired(message)
             messageAlert.success({ content: message, key: data.id})
             if (success) setToken(res.headers && res.headers.authorization)
             return success;

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { Api, headers, localStore, setToken } from "./constant";
+import { Api, headers, jwtExpired, localStore, setToken } from "./constant";
 
 const url = `${Api}/attachments/`;
 
@@ -10,7 +10,8 @@ export const addFiles = (data, config) => {
         .then((res) => {
             const { status } = res;
             if (status === 200) {
-                const { success, data } = res.data;
+                const { success, data, message } = res.data;
+                jwtExpired(message)
                 const file = {
                     fileId: data[0].id,
                     uid: data[0]&&data[0].uniqueName,
@@ -41,8 +42,8 @@ export const addAttachments = (targetType, targetId, data) => {
         .then((res) => {
             const { status } = res;
             if (status === 200) {
-                let { success, data } = res.data;
-                console.log(data);
+                let { success, data, message } = res.data;
+                jwtExpired(message)
                 data = {
                     id: data[0].id,
                     createdAt: data[0].createdAt,
@@ -76,7 +77,8 @@ export const getAttachments = (targetType, targetId) => {
     return axios
         .get(`${url}${targetType}/${targetId}`)
         .then((res) => {
-            const { success, data } = res.data;
+            const { success, data, message } = res.data;
+            jwtExpired(message)
             if (success) {
                 var fileIds = []
                 var fileList = []
@@ -130,7 +132,8 @@ export const delAttachment = (id,) => {
     return axios
         .delete(`${url}${id}`)
         .then((res) => {
-            const { success } = res.data;
+            const { success, message } = res.data;
+            jwtExpired(message)
             setToken(res.headers && res.headers.authorization)
             return { success };
         })

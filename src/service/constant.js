@@ -32,5 +32,14 @@ export const localStore = () => {
     return archive;
 }
 
+export const jwtExpired = (message) => {
+  // Authentication Expired or Invalid
+  // Authorization Header is missing
+  if (message === 'Authentication Expired or Invalid'){
+      localStorage.clear()
+      window.location.href = '/login'
+  }
+}
+
 export const headers = { 'content-type': 'application/json','Authorization' : `${localStore().accessToken}`}
  

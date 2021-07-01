@@ -7,6 +7,7 @@ import Form from "../../../components/Core/Form";
 import "../../styles/table.css";
 
 import { getList, addList, editLabel } from "../../../service/calender";
+import { localStore } from "../../../service/constant";
 
 const { Title } = Typography;
 
@@ -137,6 +138,7 @@ class Calenders extends Component {
                     },
                     openModal: false,
                     editTimeoff: false,
+                    loading: false
                 });
             }
         });
@@ -224,6 +226,7 @@ class Calenders extends Component {
                     </Col>
                     <Col span={24}>
                         <Table
+                            pagination={{pageSize: localStore().pageSize}}
                             columns={columns}
                             dataSource={data}
                             size="small"

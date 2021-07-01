@@ -6,6 +6,7 @@ import Form from "../../components/Core/Form";
 import "../styles/table.css";
 
 import { timeOff, addList, getList, editLabel, delLabel, } from "../../service/time-off-policy";
+import { localStore } from "../../service/constant";
 
 const { Title } = Typography;
 
@@ -215,6 +216,7 @@ class LeavePolicies extends Component {
                         fields: [],
                     },
                     mergeObj: {},
+                    loading: false
                 });
             }
         });
@@ -408,14 +410,16 @@ class LeavePolicies extends Component {
         const vars = [];
         let result = Object.keys(obj).length / 6;
         for (let i = 0; i < result; i++) {
-            vars.push({
-                timeOffTypeId: obj[`category${i}`],
-                earnHours: obj[`earnHours${i}`],
-                earnEvery: obj[`earnEvery${i}`],
-                resetEvery: obj[`resetEvery${i}`],
-                resetHours: obj[`resetHours${i}`],
-                threshold: obj[`threshold${i}`],
-            });
+            if(obj[`category${i}`]){
+                vars.push({
+                    timeOffTypeId: obj[`category${i}`],
+                    earnHours: obj[`earnHours${i}`],
+                    earnEvery: obj[`earnEvery${i}`],
+                    resetEvery: obj[`resetEvery${i}`],
+                    resetHours: obj[`resetHours${i}`],
+                    threshold: obj[`threshold${i}`],
+                });
+            }
         }
         this.setState(
             {
@@ -515,6 +519,7 @@ class LeavePolicies extends Component {
                     </Col>
                     <Col span={24}>
                         <Table
+                            pagination={{pageSize: localStore().pageSize}}
                             rowKey={(data) => data.id}
                             columns={columns}
                             dataSource={data}
