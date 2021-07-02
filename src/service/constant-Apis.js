@@ -279,3 +279,20 @@ export const getRoles = () =>{
             };
         });
 }
+
+export const entityProjects = (url) =>{
+    return axios
+    .get(`${Api}/${url}`)
+    .then((res) => {
+        const { success, data } = res.data;
+        setToken(res.headers&& res.headers.authorization)
+        if (success) return { success: success, data: data };
+    })
+    .catch((err) => {
+        return {
+            error: "Please login again!",
+            success: false,
+            message: err.message,
+        };
+    });
+}

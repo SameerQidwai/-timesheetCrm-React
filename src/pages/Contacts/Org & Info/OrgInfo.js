@@ -24,7 +24,7 @@ class OrgInfo extends Component {
             editOrg: false,
             data: { },
             bank: {},
-            renderTabs: false,
+            organizationId: false,
         };
     }
     closeModal = () => {
@@ -51,7 +51,7 @@ class OrgInfo extends Component {
                 this.setState({
                     data: res.data,
                     bank: res.bank,
-                    renderTabs: id,
+                    organizationId: id,
                 })
             }
         })
@@ -65,7 +65,7 @@ class OrgInfo extends Component {
     };
 
     render() {
-        const { data, bank, infoModal, editOrg, renderTabs } = this.state;
+        const { data, bank, infoModal, editOrg, organizationId } = this.state;
         const DescTitle = (
             <Row justify="space-between">
                 <Col>{data.name}</Col>
@@ -116,30 +116,30 @@ class OrgInfo extends Component {
                     <Item label="Website">{data.website}</Item>
                     <Item label="EBA">{data.expectedBusinessAmount}</Item>
                 </Descriptions>
-                {renderTabs &&(
+                {organizationId &&(
                     <Tabs
                         type="card"
                         style={{ marginTop: "50px" }}
-                        defaultActiveKey="comments"
+                        // defaultActiveKey="comments"
                     >
                         <TabPane tab="Project" key="project">
-                            <Projects {...this.props.match.params} />
+                            <Projects targetId={organizationId} customUrl={`helpers/work?type=P&organization=${organizationId}`} />
                         </TabPane>
                         <TabPane tab="Opportunity" key="opportunity">
-                            <Opportunity {...this.props.match.params} />
+                            <Opportunity targetId={organizationId} customUrl={`helpers/work?type=O&organization=${organizationId}`}  />
                         </TabPane>
                         <TabPane tab="Sub-organization" key="sub">
                             <ChildOrg {...this.props.match.params} />
                         </TabPane>
                         <TabPane tab="Attachments" key="attachments">
-                            <Attachments targetId={renderTabs} targetType="ORG" />
+                            <Attachments targetId={organizationId} targetType="ORG" />
                         </TabPane>
                         <TabPane tab="Comments" key="comments">
-                            <Comments targetId={renderTabs} targetType="ORG" />
+                            <Comments targetId={organizationId} targetType="ORG" />
                         </TabPane>
                         
                         <TabPane tab="Bank Account" key="Bank">
-                            <Bank {...this.props.match.params} title={data.name} bank={bank} />
+                            <Bank targetId={organizationId} title={data.name} bank={bank} />
                         </TabPane>
                     </Tabs>
                 )}

@@ -123,10 +123,10 @@ class OrgInfo extends Component {
                     <Tabs
                         type="card"
                         style={{ marginTop: "50px" }}
-                        defaultActiveKey="5"
+                        // defaultActiveKey="5"
                     >
                         <TabPane tab="Project" key="project">
-                            <Projects id={emp} />
+                        <Projects targetId={emp} customUrl={`helpers/work?type=P&employee=${emp}`} />
                         </TabPane>
                         {/* <TabPane tab="Travels" key="travels">
                             <Travels id={emp} />

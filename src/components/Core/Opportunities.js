@@ -1,54 +1,81 @@
 import React, { Component } from 'react'
 import { Button, Table, Dropdown, Menu} from 'antd'
 import { SettingOutlined, DownOutlined} from '@ant-design/icons'; //Icons
+import { Link } from 'react-router-dom'
 import moment from 'moment'
-import { localStore } from '../../service/constant';
+import { formatCurrency, localStore } from '../../service/constant';
+import { entityProjects } from "../../service/constant-Apis";
 
 class Skills extends Component {
     constructor (){
         super()
         this.columns = [
             {
-                title: 'Name',
-                dataIndex: 'name',
-                key: 'name',
+                title: 'Code',
+                dataIndex: 'id',
+                key: 'id',
+                render:(record) =>(
+                    `00${record}`
+                ),
             },
             {
-                title: 'Estimated Value',
-                dataIndex: 'eValue',
-                key: 'eValue',
+                title: 'Title',
+                dataIndex: 'title',
+                key: 'title',
             },
             {
-                title: 'Entry Date',
-                dataIndex: 'eDate',
-                key: 'eDate',
+                title: 'Organisation Name',
+                dataIndex: 'organization',
+                key: 'organization',
+                render: (record) =>{return record && record.name}
+            },
+            {
+                title: 'Revenue',
+                dataIndex: 'value',
+                key: 'value',
+                render: (record)=>  `$ ${formatCurrency(record)}` 
             },
             {
                 title: 'Start Date',
-                dataIndex: 'sDate',
-                key: 'sDate',
+                dataIndex: 'startDate',
+                key: 'startDate',
+                render: (record) =>(record && moment(record).format('ddd DD MM yyyy'))
             },
             {
-                title: 'Finish Date',
-                dataIndex: 'fDate',
-                key: 'fDate',
+                title: 'End Date',
+                dataIndex: 'endDate',
+                key: 'endDtae',
+                render: (record) =>(record && moment(record).format('ddd DD MM yyyy'))
             },
             {
-                title: 'Project Manager',
-                dataIndex: 'pMan',
-                key: 'pMan',
+                title: 'Bid Date',
+                dataIndex: 'bidDate',
+                key: 'bidDate',
+                render: (record) =>(record && moment(record).format('ddd DD MM yyyy'))
             },
             {
-            title: 'Action',
-            key: 'action',
-            align: 'right',
-            render: (record, text) => (
+                title: 'Status',
+                dataIndex: 'status',
+                key: 'status',
+                render: (record) =>(record )
+            },
+            {
+                title: 'Action',
+                key: 'action',
+                align: 'right',
+                render: (record) => (
                     <Dropdown overlay={
                         <Menu>
-                            <Menu.Item >View</Menu.Item>
+                            <Menu.Item 
+                                disabled={this.state&& !this.state.permissions['READ']}
+                            >
+                                <Link to={{ pathname: `/opportunity/${record.id}/info`}} className="nav-link">
+                                    View
+                                </Link>
+                            </Menu.Item >
                         </Menu>
                     }>
-                        <Button size='small' >
+                        <Button size='small'>
                             <SettingOutlined/> Option <DownOutlined/>
                         </Button>
                     </Dropdown>  
@@ -57,49 +84,35 @@ class Skills extends Component {
         ]
 
         this.state = {
-            mergeObj: {}, // merge submit results into object
-            formSubmitted: false, //check if got data from skill submit
-            levelSubmitted: false, //check if got data from level submit
-            data_skill:[
-                // {
-                //     key:1,
-                //     name: 'Website Maintainance',
-                //     eValue: 50000,
-                //     eDate: moment().format('ddd MMM DD YYYY'),
-                //     sDate: moment('12-9-2020').format('ddd MMM DD YYYY'),
-                //     fDate: moment('11-1-2021').format('ddd MMM DD YYYY'),
-                //     pMan: 'Munashir'
-                // },
-                // {
-                //     key:2,
-                //     name: 'HR for Accountant Position',
-                //     eValue: 50000,
-                //     eDate: moment('11-11-2020').format('ddd MMM DD YYYY'),
-                //     sDate: moment('11-14-2020').format('ddd MMM DD YYYY'),
-                //     fDate: moment('12-1-2020').format('ddd MMM DD YYYY'),
-                //     pMan: 'Mustaqeem'
-                // },
-                // {
-                //     key:3,
-                //     name: 'Carpenter',
-                //     eValue: 50000,
-                //     eDate: moment('10-9-2020').format('ddd MMM DD YYYY'),
-                //     sDate: moment('12-9-2020').format('ddd MMM DD YYYY'),
-                //     fDate: moment('11-1-2021').format('ddd MMM DD YYYY'),
-                //     pMan: 'Noor'
-                // },
-            ]
+            data:[ ],
+            permissions: {}
         }
     }
 
+    componentDidMount = () =>{
+        this.getList()
+        
+    }
+
+    getList = () =>{
+        const { OPPORTUNITIES }= JSON.parse(localStore().permissions)
+        const { customUrl } = this.props
+        entityProjects(customUrl).then(res=>{
+            this.setState({
+                data: res.success ? res.data : [],
+                permissions: OPPORTUNITIES
+            })
+        })
+    }
+
     render(){
-        const { data_skill } = this.state
+        const { data } = this.state
         return (
             <>
                 <Table 
                     pagination={{pageSize: localStore().pageSize}}
                     columns={this.columns} 
-                    dataSource={data_skill} 
+                    dataSource={data} 
                     size="small"
                 />
             </>

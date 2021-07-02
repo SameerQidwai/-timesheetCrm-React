@@ -129,23 +129,17 @@ class ContInfo extends Component {
                     <Tabs
                         type="card"
                         style={{ marginTop: "50px" }}
-                        defaultActiveKey="1"
+                        // defaultActiveKey="1"
                     >
                         <TabPane tab="Projects" key="projects">
-                            <Projects id={editCont} />
+                            <Projects targetId={editCont} customUrl={`helpers/work?type=P&employee=${editCont}`} />
                         </TabPane>
-                        {/* <TabPane tab="Travels" key="travels">
-                            <Travels id={editCont} />
-                        </TabPane> */}
                         <TabPane tab="Comments" key="comments">
                             <Comments targetType="CON" targetId={editCont} />
                         </TabPane>
                         <TabPane targetType="CON" targetId={editCont} tab="Attachments" key="attachments">
                             <Attachments />
                         </TabPane>
-                        {/* <TabPane tab="Bank Account" key="bank">
-                            <Bank id={editCont} title={data.name} />
-                        </TabPane> */}
                     </Tabs>
                 )}
                 {infoModal && (
