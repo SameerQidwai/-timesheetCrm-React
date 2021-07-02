@@ -131,7 +131,6 @@ class Resource extends Component {
     }
 
     getSkilldEmployee = (infoModal, skillId, resource, editRex, tableIndex, levelId ) =>{
-        console.log({levelId});
         this.setState({ 
             infoModal:infoModal, 
             skillId:skillId,
@@ -193,7 +192,7 @@ class Resource extends Component {
                         <Button 
                             type="primary" 
                             size='small'  
-                            onClick={() => { this.setState({ infoModal: true, editRex: false, resource: false }) }}
+                            onClick={() => { this.setState({ infoModal: true, editRex: false, resource: false, skillId: false }) }}
                             disabled={permissions&& !permissions['ADD']}
                             >
                                 Add New

@@ -155,8 +155,9 @@ class TimeSheet extends Component {
                     dataIndex: "totalHours",
                     key: "totalHours",
                     fixed: "left",
+                    align: "center",
                     width: 100,
-                    // record : (value) => 
+                    render: (value) => (value.toFixed(2))
                 }
             ]
         };

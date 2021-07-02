@@ -128,9 +128,9 @@ class OrgInfo extends Component {
                         <TabPane tab="Opportunity" key="opportunity">
                             <Opportunity targetId={organizationId} customUrl={`helpers/work?type=O&organization=${organizationId}`}  />
                         </TabPane>
-                        <TabPane tab="Sub-organization" key="sub">
+                        {/* <TabPane tab="Sub-organization" key="sub">
                             <ChildOrg {...this.props.match.params} />
-                        </TabPane>
+                        </TabPane> */}
                         <TabPane tab="Attachments" key="attachments">
                             <Attachments targetId={organizationId} targetType="ORG" />
                         </TabPane>
