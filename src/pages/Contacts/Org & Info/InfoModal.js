@@ -849,7 +849,7 @@ class InfoModal extends Component {
                         title: vake.title ?? '',
                         parentOrganizationId: vake.parent? vake.parent : null,
                         phoneNumber: vake.phone? vake.phone : '',
-                        delegatecontactPersonOrganizationId: vake.delegate_cp? vake.delegate_cp: null,
+                        delegateContactPersonId: vake.delegate_cp? vake.delegate_cp: null,
                         email: vake.email? vake.email : '',
                         expectedBusinessAmount: vake.EBA? vake.EBA : 0,
                         address: vake.address? vake.address : '',

@@ -157,7 +157,7 @@ class TimeSheet extends Component {
                     fixed: "left",
                     align: "center",
                     width: 100,
-                    render: (value) => (value.toFixed(2))
+                    render: (value) => (value&& value.toFixed(2))
                 }
             ]
         };
@@ -260,7 +260,7 @@ class TimeSheet extends Component {
         }
         this.setState({columns},()=> {
             const columns = this.state.columns.map(col => { // when creating column onCell key is not render at that time and is async function so had to call it again 
-                if (col.dataIndex === 'project'){
+                if (col.dataIndex === 'project' || col.dataIndex === 'totalHours'){
                     return col
                 }
                 return {

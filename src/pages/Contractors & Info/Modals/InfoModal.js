@@ -267,6 +267,7 @@ class InfoModal extends Component {
                     },
                     {
                         Placeholder: "Role",
+                        rangeMin: true,
                         fieldCol: 24,
                         size: "small",
                         type: "Text",
@@ -277,7 +278,7 @@ class InfoModal extends Component {
                         fieldCol: 12,
                         key: "roleId",
                         size: "small",
-                        // rules:[{ required: true }],
+                        rules:[{ required: true, message: 'Role is required!!' }],
                         type: "Select",
                         data: [],
                         itemStyle: { marginBottom: 10 },

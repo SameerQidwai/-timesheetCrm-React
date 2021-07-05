@@ -37,7 +37,7 @@ export const getOrgRecord = (id) => {
                     title: vake.title,
                     parent: vake.parentOrganization && vake.parentOrganization.id,
                     phone: vake.phoneNumber,
-                    delegate_cp: vake.delegatecontactPersonOrganization && vake.delegatecontactPersonOrganization.id,
+                    delegate_cp: vake.delegateContactPersonId,
                     email: vake.email,
                     EBA: vake.expectedBusinessAmount,
                     address: vake.address,

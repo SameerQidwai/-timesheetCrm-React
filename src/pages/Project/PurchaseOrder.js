@@ -157,7 +157,7 @@ class PurchaseOrder extends Component {
                         type="primary" 
                         size='small' 
                         onClick={() => {  this.setState({ openModal: true, editRex: false, }) }}
-                        disabled={!permissions['ADD']}
+                        disabled={permissions && !permissions['ADD']}
                     >Add New</Button> </Col>
                     {/* <Col> <Button type="danger" size='small'>Delete Resource</Button></Col> */}
                 </Row>
