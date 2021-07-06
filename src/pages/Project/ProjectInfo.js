@@ -42,6 +42,7 @@ class ProjectInfo extends Component {
             if(res.success){
                 this.setState({
                     data: res.data,
+                    basic: res.basic,
                     billing: res.billing,
                     leadId: id,
                     infoModal: false,
@@ -70,7 +71,7 @@ class ProjectInfo extends Component {
     };
 
     render() {
-        const { data, infoModal, leadId, billing, renderTabs, permissions } = this.state;
+        const { data, infoModal, leadId, billing, renderTabs, permissions, basic } = this.state;
         const DescTitle = (
             <Row justify="space-between">
                 <Col>Project Basic Information</Col>
@@ -129,7 +130,7 @@ class ProjectInfo extends Component {
                             'No Organisation'
                         
                     }</Item>
-                    <Item label="Delegate Contact"> {data.ContactName}</Item>
+                    <Item label="Delegate Contact"> {basic ?basic.ContactName: null}</Item>
                     <Item label="Start date">{data.startDate ? moment(data.startDate).format('ddd DD MM YYYY'): null} </Item>
                     <Item label="End Date">{data.endDate ? moment(data.endDate).format('ddd DD MM YYYY'): null}</Item>
                     <Item label="Bid Date">{data.bidDate ? moment(data.bidDate).format('ddd DD MM YYYY'): null}</Item>

@@ -26,6 +26,7 @@ class OpportunityInfo extends Component {
             infoModal: false,
             leadId: false,
             data: { },
+            basic: {},
             billing: {},
             renderTabs: false,
             moveToProject: false,
@@ -43,6 +44,7 @@ class OpportunityInfo extends Component {
             if(res.success){
                 this.setState({
                     data: res.data,
+                    basic: res.basic,
                     billing: res.billing,
                     leadId: id,
                     infoModal: false,
@@ -76,7 +78,7 @@ class OpportunityInfo extends Component {
     };
 
     render() {
-        const { data, infoModal, leadId, billing, renderTabs, moveToProject, permissions } = this.state;
+        const { data, infoModal, leadId, billing, renderTabs, moveToProject, permissions, basic } = this.state;
         const DescTitle = (
             <Row justify="space-between">
                 <Col>Opportunity Basic Information</Col>
@@ -160,7 +162,7 @@ class OpportunityInfo extends Component {
                             'No Organisation'
                         
                     }</Item>
-                    <Item label="Delegate Contact"> {data.ContactName}</Item>
+                    <Item label="Delegate Contact"> {basic ?basic.ContactName: null}</Item>
                     <Item label="Start date">{data.startDate ? moment(data.startDate).format('ddd DD MM YYYY'): null} </Item>
                     <Item label="End Date">{data.endDate ? moment(data.endDate).format('ddd DD MM YYYY'): null}</Item>
                     <Item label="Bid Date">{data.bidDate ? moment(data.bidDate).format('ddd DD MM YYYY'): null}</Item>

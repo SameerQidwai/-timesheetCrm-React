@@ -24,6 +24,7 @@ class OrgInfo extends Component {
             editOrg: false,
             data: { },
             bank: {},
+            basic: {},
             organizationId: false,
         };
     }
@@ -50,6 +51,7 @@ class OrgInfo extends Component {
             if(res.success){
                 this.setState({
                     data: res.data,
+                    basic: res.basic,
                     bank: res.bank,
                     organizationId: id,
                 })
@@ -65,7 +67,7 @@ class OrgInfo extends Component {
     };
 
     render() {
-        const { data, bank, infoModal, editOrg, organizationId } = this.state;
+        const { data, bank, infoModal, editOrg, organizationId, basic } = this.state;
         const DescTitle = (
             <Row justify="space-between">
                 <Col>{data.name}</Col>
@@ -115,6 +117,7 @@ class OrgInfo extends Component {
                     <Item label="Address">{data.address}</Item>
                     <Item label="Website">{data.website}</Item>
                     <Item label="EBA">{data.expectedBusinessAmount}</Item>
+                    <Item label="Contact Person">{basic ?basic.delegate_contactPerson: null}</Item>
                 </Descriptions>
                 {organizationId &&(
                     <Tabs

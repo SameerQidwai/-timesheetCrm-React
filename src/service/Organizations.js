@@ -32,12 +32,14 @@ export const getOrgRecord = (id) => {
             jwtExpired(message)
             if (success) {
                 const vake = data
+                const { delegateContactPerson } = data
                 const basic = {
                     name: vake.name,
                     title: vake.title,
                     parent: vake.parentOrganization && vake.parentOrganization.id,
                     phone: vake.phoneNumber,
                     delegate_cp: vake.delegateContactPersonId,
+                    delegate_contactPerson: delegateContactPerson && `${delegateContactPerson.firstName} ${delegateContactPerson.lastName} - ${delegateContactPerson.phoneNumber ?? ''}`,
                     email: vake.email,
                     EBA: vake.expectedBusinessAmount,
                     address: vake.address,

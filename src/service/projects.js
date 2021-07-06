@@ -59,7 +59,7 @@ export const getRecord = (id) => {
                     organizationId: data.organizationId,
                     organizationName: data.organization && data.organization.name,
                     // organizationId: data.organizationId,
-                    ContactName: data.contactPerson && data.contactPerson.firstName +' '+ data.contactPerson.lastName ,
+                    ContactName: data.contactPerson && `${data.contactPerson.firstName}  ${data.contactPerson.lastName} - ${data.contactPerson.phoneNumber ?? ''}` ,
                     contactPersonId: data.contactPersonId,
                     qualifiedOps: data.qualifiedOps,
                     type: data.type,
