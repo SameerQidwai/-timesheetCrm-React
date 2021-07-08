@@ -156,15 +156,12 @@ class TimeModal extends Component {
                 visible={popup}
                 onOk={() => { this.submit(); }}
                 okButtonProps={{ disabled: loading }}
-                okText={loading ?<LoadingOutlined /> :"Save"}
                 onCancel={close}
                 width={540}
                 footer={[
                     <Button type="primary"  danger disabled={!editTime || !permissions['DELETE']} style={{float: "left"}} onClick={this.handleDelete}> Delete </Button>,
                     <Button key="cancel" onClick={close}> Cancel </Button>,
-                    <Button key="ok" type="primary" loading={loading}  onClick={() => { this.submit(); }}>
-                      {loading ?<LoadingOutlined /> :"Save"}
-                    </Button>,
+                    <Button key="ok" type="primary" loading={loading}  onClick={() => { this.submit(); }}> Save </Button>,
                     
                   ]}
             >

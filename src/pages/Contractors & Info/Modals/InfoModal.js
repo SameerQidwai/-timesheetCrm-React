@@ -638,7 +638,6 @@ class InfoModal extends Component {
 
     submit = () => {
         //submit button click
-        console.log('Refff', this.emailRef);
         this.emailRef.current.submit();
         this.basicRef.current && this.basicRef.current.refs.basic_form.submit();
         this.billingRef.current && this.billingRef.current.refs.billing_form.submit();
@@ -653,17 +652,14 @@ class InfoModal extends Component {
             if ( basicSubmitted && billingSubmitted && kinSubmitted && emailSubmitted) {
                 //check if both form is submittef
                 if (!editCont) {
-                    console.log("emes");
                     this.addContactor(mergeObj); //add skill
                 } else {
-                    console.log("edit");
                     this.editRecord(mergeObj); //edit skill
                 }
             }
     }
 
     EmailCall = (vake) => {
-        console.log('Email submit', vake);
         const { editCont } = this.props
         this.setState(
             {
@@ -712,7 +708,6 @@ class InfoModal extends Component {
 
     KinCall = (vake) => {
         // this will work after I get the Object from the form
-        // console.log(vake);
         const { editCont } = this.props 
         this.setState(
             {
@@ -767,7 +762,6 @@ class InfoModal extends Component {
         })
         editList(editCont, value).then((res) => {
             if(res.success){
-                console.log('editRecord');
                 callBack()
             }
         });
@@ -916,7 +910,6 @@ class InfoModal extends Component {
                             // type="email"
                             // prefix={<UserOutlined />} 
                             // onChange={(e, value)=>{
-                            //     console.log(e);
                             //     this.setState({
                             //         sUsername: e.target.value
                             //     })

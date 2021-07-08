@@ -80,7 +80,6 @@ class Menus extends Component {
     }
     getAllowedMenu = () =>{
         let permissions = localStore().permissions
-        console.log(permissions);
         permissions = permissions && JSON.parse(permissions)
         let { allowedMenu } = this.state
             // allowedMenu[0] = pageLinks[0]

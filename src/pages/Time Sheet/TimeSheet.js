@@ -214,12 +214,10 @@ class TimeSheet extends Component {
         const { startDate, endDate } = sheetDates
         if(sUser){
             getList({userId: sUser, startDate: startDate.format('DD-MM-YYYY'), endDate: endDate.format('DD-MM-YYYY')}).then(res=>{
-                if (res.success){
-                    this.setState({
-                        timesheet: res.success && res.data,
-                        data: res.data ? res.data.projects: []
-                    })
-                }
+                this.setState({
+                    timesheet: res.success ? res.data: {},
+                    data: (res.success && res.data) ? res.data.projects: []
+                })
             })
         }
         this.columns()
@@ -482,7 +480,6 @@ class TimeSheet extends Component {
                                     sUser: value
                                 },()=>{
                                     this.getSheet()
-                                    // this.getProjects(value)
                                 })
                             }}
                         />

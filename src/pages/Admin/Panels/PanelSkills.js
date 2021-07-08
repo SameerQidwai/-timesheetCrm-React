@@ -101,7 +101,7 @@ class PanelInfo extends Component {
                         rules: [
                             {
                                 required: true,
-                                message: "You are not good to go",
+                                message: "Panel Skill is Required",
                             },
                         ],
                         type: "Input",
@@ -118,7 +118,7 @@ class PanelInfo extends Component {
                         rules: [
                             {
                                 required: true,
-                                message: "You are not good to go",
+                                message: "Generic Skill is Required",
                             },
                         ],
                         type: "Select",

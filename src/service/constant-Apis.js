@@ -220,7 +220,7 @@ export const getPanelSkills = (id) => {
 
 export const getProjects = (userId) => {
     return axios
-        .get(`${Api}/projects?userId=${userId}`, { headers: headers })
+        .get(`${Api}/helpers/projects?userId=${userId}`, { headers: headers })
         .then((res) => {
             const { success, data } = res.data;
             const pros = []

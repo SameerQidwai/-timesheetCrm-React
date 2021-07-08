@@ -86,7 +86,7 @@ class LeavePolicies extends Component {
                         rules: [
                             {
                                 required: true,
-                                message: "You are not good to go",
+                                message: "Policy Title is Required",
                             },
                         ],
                         type: "input",
