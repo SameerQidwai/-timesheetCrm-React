@@ -223,14 +223,10 @@ export const getProjects = (userId) => {
         .get(`${Api}/helpers/projects?userId=${userId}`, { headers: headers })
         .then((res) => {
             const { success, data } = res.data;
-            const pros = []
             if (success) {
-                data.map((el) => {
-                    pros.push({ value: el.id, label: el.title })
-                });
                 setToken(res.headers&& res.headers.authorization)
             }
-            return { success: success, data: pros };
+            return { success: success, data: data };
         })
         .catch((err) => {
             return {

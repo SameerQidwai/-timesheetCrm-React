@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Row, Col, Table, Modal, Input, Button, Select, Typography, Popconfirm, DatePicker, Space, Tag, Tooltip} from "antd";
+import { Row, Col, Table, Modal, Input, Button, Select, Typography, Popconfirm, DatePicker, Space, Tag, Tooltip, message} from "antd";
 import { CloseCircleOutlined, DownloadOutlined, SaveOutlined, LoadingOutlined } from "@ant-design/icons"; //Icons
 import moment from "moment";
 import TimeModal from "./Modals/TimeModal"
@@ -33,6 +33,7 @@ class TimeSheet extends Component {
             eData: [],
             USERS:[],
             sUser: null,
+            loginId: null,
             data: [ ],
             comments: null,
             sProject: {},
@@ -117,7 +118,7 @@ class TimeSheet extends Component {
                                     {/* } */}
                                 </Row>
                             </Col>
-                            {this.state && this.state.sUser === parseInt(localStore().id) && (record.status === 'SV' || record.status === 'RJ') ?<Col sapn={12}>
+                            {this.state && this.state.sUser === this.state.loginId && (record.status === 'SV' || record.status === 'RJ') ?<Col sapn={12}>
                                 <Popconfirm
                                     title={`You want to submit ${value}'s timesheet?`}
                                     onConfirm={()=>{this.reviewTimeSheet(record.projectEntryId, 'submit', index, 'SB')}}
@@ -172,10 +173,11 @@ class TimeSheet extends Component {
         Promise.all([ getUsers()])
         .then(res => {
             let value = 0
+            const loginId = parseInt(localStore().id)
             if(res[0].success && res[0].data.length>0){
                 value = res[0].data[0].value
                 res[0].data.forEach(el=>{
-                    if(el.value ===parseInt(localStore().id)){
+                    if(el.value === loginId){
                         value= el.value 
                     }
                 }) 
@@ -183,7 +185,8 @@ class TimeSheet extends Component {
 
             this.setState({
                 USERS: res[0].success? res[0].data : [],
-                sUser: value
+                sUser: value,
+                loginId
                 // USERS: res[1].success? res[1].data : [],
             },()=>{
                 this.columns() 
@@ -268,8 +271,8 @@ class TimeSheet extends Component {
                     // dataIndex: col.dataIndex,
                     onDoubleClick: (event) => {
                         // on Click Function
-                        const { sUser } = this.state
-                        const clickable = (record.status === 'SV' || record.status === 'RJ' || !record.status) && sUser === parseInt(localStore().id)
+                        const { sUser, loginId } = this.state
+                        const clickable = (record.status === 'SV' || record.status === 'RJ' || !record.status) && sUser === loginId
                         if (clickable ){
                             this.getRecord(record,rowIndex, col.dataIndex); // call function to save data in
                         }
@@ -453,7 +456,7 @@ class TimeSheet extends Component {
     }
 
     render() {
-        const { loading, data, isVisible, proVisible, columns, editTime, timeObj, sheetDates, projects, sProject, isAttach, isDownload, eData, USERS, sUser } = this.state
+        const { loading, data, isVisible, proVisible, columns, editTime, timeObj, sheetDates, projects, sProject, isAttach, isDownload, eData, USERS, sUser, loginId } = this.state
         return (
             <>
                 <Row justify="space-between">
@@ -509,6 +512,7 @@ class TimeSheet extends Component {
                         <Button
                             size="small"
                             type="primary"
+                            disabled={sUser !== loginId}
                             onClick={() => {
                                 this.getProjects(sUser)
                                 this.setState({proVisible: true}) 
@@ -574,10 +578,15 @@ class TimeSheet extends Component {
                         }}
                         onOk={() => {
                             const { data, sProject } = this.state
-                            data.push({
-                                projectId: sProject.value,
-                                project: sProject.label,
-                            })
+                            const findProject = data.findIndex(el=>(el.projectId === sProject.value))
+                            if(findProject >=0){
+                                message.error({ content: 'Project TimeSheet is already created...!'}, 5)
+                            }else{
+                                data.push({
+                                    projectId: sProject.value,
+                                    project: sProject.label,
+                                })
+                            }
                             this.setState({ proVisible: false, data: [...data], sProject:{} });
                         }}
                     >
@@ -604,7 +613,6 @@ class TimeSheet extends Component {
                             </Col>
                         </Row>
                     </Modal>
-                    
                 )}
             </>
         );
