@@ -137,8 +137,8 @@ class ContInfo extends Component {
                         <TabPane tab="Comments" key="comments">
                             <Comments targetType="CON" targetId={editCont} />
                         </TabPane>
-                        <TabPane targetType="CON" targetId={editCont} tab="Attachments" key="attachments">
-                            <Attachments />
+                        <TabPane  tab="Attachments" key="attachments">
+                            <Attachments targetType="CON" targetId={editCont}/>
                         </TabPane>
                     </Tabs>
                 )}
