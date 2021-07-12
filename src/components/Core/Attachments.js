@@ -14,6 +14,7 @@ class Attachments extends Component {
         this.state = {
             fileList: [],
             fileIds: [],
+            loading: false
         };
     }
 
@@ -48,6 +49,7 @@ class Attachments extends Component {
               }
             }
             formData.append('files', file)
+            this.setState({loading: true})
             addFiles(formData, config).then((res,err)=>{
                 if (res.success){
                     onSuccess("Ok");
@@ -60,13 +62,15 @@ class Attachments extends Component {
                         if (attach.success){
                             this.setState({
                                 fileList: [...this.state.fileList, attach.data],
-                                fileIds: [...this.state.fileIds, res.file.fileId]
+                                fileIds: [...this.state.fileIds, res.file.fileId],
+                                loading: false
                             })
                         }
                     })
                 }else{
                     console.log("Eroor: ", err);
                     const error = new Error("Some error");
+                    this.setState({loading: false})
                     onError({ err });
                 }
             })
@@ -91,7 +95,7 @@ class Attachments extends Component {
     }
 
     render() {
-        const { fileList } = this.state;
+        const { fileList, loading } = this.state;
         return (
             <Row>
                 <Col span="24">
@@ -105,7 +109,7 @@ class Attachments extends Component {
                         // className="upload-list-inline"
                         style={{ backgroundColor: "rosybrown" }}
                     >
-                        <Button type="ghost" >
+                        <Button type="ghost" loading={loading}>
                             <UploadOutlined /> Upload new File
                         </Button>
                     </Upload>
