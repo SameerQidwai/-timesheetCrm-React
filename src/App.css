@@ -1,0 +1,81 @@
+
+.App {
+  text-align: center;
+  min-width: 768px;
+  overflow-x:scroll;
+  position: absolute;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+input[readOnly] {
+  color: #372f2f;
+  background-color: #f5f5f5;
+}
+textarea[readOnly] {
+  color: #372f2f;
+  background-color: #f5f5f5;
+}
+input:disabled {
+  color: #372f2f !important;
+  background-color: #f5f5f5 !important;
+}
+span.ant-select-selection-item  { /* to disabled select field and show black color */
+  color: #372f2f 
+}
+th.ant-descriptions-item-label {
+  font-weight: bolder;
+}
+/* (span.ant-select-selection-search > input:disabled) + span.ant-select-selection-item {
+  color: red;
+  opacity: 1;
+} */
+
+/* input[disabled] {
+  color: #372f2f;
+  background-color: #f5f5f5;
+} */
+/* input[type="text"][readOnly] {
+  color: #372f2f;
+  background-color: #f5f5f5;
+} */
+
+/* input[type="text"][disabled] {
+  color: #372f2f;
+} */
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+div.ant-row.ant-form-item.ant-form-item-with-help.ant-form-item-has-error{
+  row-gap: 0px;
+  margin-bottom: 0px;
+}

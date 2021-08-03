@@ -1,0 +1,13 @@
+.navItem{
+    font-size: 100%;
+    padding: 0 0 0 10px;
+    font-weight: bolder;
+}
+
+.nav-link{
+    color:black
+}
+
+.nav-drop:hover{
+    background-color: blue;
+}

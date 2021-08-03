@@ -1,0 +1,4 @@
+.ant-upload.ant-upload-select {
+    width: -webkit-fill-available !important;
+    text-align: right !important;
+}

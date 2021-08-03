@@ -1,0 +1,30 @@
+PROJECT GET Employee By SKILL
+permissions bugs in Resource
+
+add, update and submit only user can do it
+
+
+MEETING  28- April -2021
+contract end date Employee optional
+effort rate default 100 and put % sirgn 
+organization code will start from org now
+Money Format value
+Go/get will be delete from project
+skill and resource is disabled in Project Resource
+comments in purchase order is validating
+
+Pending and or in progress
+
+short title for organization
+
+
+For later future disscuss in meeting 28-April-2021
+add delegate Contact Person can be add while adding Organisation 
+
+
+NEW BUGS
+comments are not getting attahment when added
+PURCHASE ORDER EDIT
+// this needs to be correct 
+    in comments definging it agaia to meet the criteria with 
+

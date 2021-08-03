@@ -1,0 +1,12 @@
+@import "~antd/dist/antd.css";
+
+.admin-trigger {
+    /* font-size: 18px; */
+    padding: 0 5x;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.admin-trigger:hover {
+    color: #1890ff;
+}
