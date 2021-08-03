@@ -38,6 +38,7 @@ class TimeSheet extends Component {
             comments: null,
             sProject: {},
             permissions: {},
+            canApprove: false,
             projects: [],
             FormFields: {
                 // Add new Time break and table in time-sheet
@@ -126,7 +127,7 @@ class TimeSheet extends Component {
                                     <Button style={{backgroundColor: "#4CAF50"}} size="small" type="primary"> Submit </Button>
                                 </Popconfirm>
                             </Col> : 
-                            (record.status === 'SB' && record.isManaged) &&
+                            (record.status === 'SB' && (record.isManaged || this.state && this.state.canApprove)) &&
                             <Col sapn={12}>
                                 <Space >
                                     <Popconfirm
@@ -173,7 +174,10 @@ class TimeSheet extends Component {
         Promise.all([ getUsers()])
         .then(res => {
             let value = 0
-            const loginId = parseInt(localStore().id)
+            const { id, permissions } = localStore()
+            const loginId = parseInt(id)
+            const { TIMESHEETS } = JSON.parse(permissions)
+
             if(res[0].success && res[0].data.length>0){
                 value = res[0].data[0].value
                 res[0].data.forEach(el=>{
@@ -186,7 +190,8 @@ class TimeSheet extends Component {
             this.setState({
                 USERS: res[0].success? res[0].data : [],
                 sUser: value,
-                loginId
+                canApprove: TIMESHEETS['APPROVAL'] && TIMESHEETS['APPROVAL']['ANY'],
+                loginId,
                 // USERS: res[1].success? res[1].data : [],
             },()=>{
                 this.columns() 
@@ -217,6 +222,7 @@ class TimeSheet extends Component {
         const { startDate, endDate } = sheetDates
         if(sUser){
             getList({userId: sUser, startDate: startDate.format('DD-MM-YYYY'), endDate: endDate.format('DD-MM-YYYY')}).then(res=>{
+                console.log(res.data);
                 this.setState({
                     timesheet: res.success ? res.data: {},
                     data: (res.success && res.data) ? res.data.projects: []
