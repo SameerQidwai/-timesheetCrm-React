@@ -8,7 +8,7 @@ export const login = (data) => {
     return axios
         .post(`${Api}/login`, data)
         .then((res) => {
-            console.log(res);
+            localStorage.clear()
             const { success, data, message } = res.data;
             messageAlert.success({ content: message, key: 'logout'}, 5)
             if (success){
@@ -53,7 +53,7 @@ export const upadtePassword = (data) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
             messageAlert.success({ content: message, key: 'logout'}, 5)
-            if (success) setToken(res.headers&& res.headers.authorization)
+            if (success) setToken(res.headers && res.headers.authorization)
             
             return {success, data};
         })
@@ -129,7 +129,7 @@ export const getSettings = () => {
                     remunerationAmountPer: employmentContracts.remunerationAmountPer,  
                     comments: employmentContracts.comments
                 }
-                setToken(res.headers&& res.headers.authorization)
+                setToken(res.headers && res.headers.authorization)
                 return { success, data, basic, detail, kin, bank, billing }
             }
             return { success }
@@ -152,7 +152,7 @@ export const upadteSettings = (data) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
             messageAlert.success({ content: message, key: 'logout'})
-            if (success) setToken(res.headers&& res.headers.authorization)
+            if (success) setToken(res.headers && res.headers.authorization)
             return {success, data};
         })
         .catch((err) => {
@@ -166,7 +166,12 @@ export const upadteSettings = (data) => {
 };
 
 export const loggedIn = () =>{
-    if (localStore().accessToken){
+    const accessToken = localStorage.getItem('accessToken')
+    const jwtExpired = localStorage.getItem('jwtExpired')
+    if (accessToken && jwtExpired){
+        return 'jwtExpired'
+    }
+    else if (accessToken ){
         return true
     }else{
         return false

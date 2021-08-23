@@ -5,7 +5,7 @@ import moment from "moment";
 import Form from "../../../components/Core/Form";
 
 import { addList, getRecord, editList, workWon } from "../../../service/opportunities";
-import { getOrganizations, getStates, getOrgPersons, getPanels, getEmployees } from "../../../service/constant-Apis";
+import { getOrganizations, getStates, getOrgPersons, getPanels } from "../../../service/constant-Apis";
 
 const { TabPane } = Tabs;
 

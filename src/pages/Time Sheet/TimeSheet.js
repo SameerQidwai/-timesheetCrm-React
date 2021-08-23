@@ -40,65 +40,7 @@ class TimeSheet extends Component {
             permissions: {},
             canApprove: false,
             projects: [],
-            FormFields: {
-                // Add new Time break and table in time-sheet
-                formId: "time_form",
-                justify: "center",
-                FormCol: 24,
-                FieldSpace: { xs: 12, sm: 16, md: 122 },
-                // layout: { labelCol: { span: 8 } },
-                FormLayout: "inline",
-                size: "small",
-                fields: [
-                    {
-                        object: "obj",
-                        fieldCol: 8,
-                        // layout: { labelCol: { span: 4 }, wrapperCol: { span: 0 } },
-                        key: "start",
-                        label: "Strat",
-                        labelAlign: "right",
-                        type: "TimePicker",
-                        size: "small",
-                        showTime: "hh:mm a",
-                    },
-                    {
-                        object: "obj",
-                        fieldCol: 8,
-                        // layout: { labelCol: { span: 4 }, wrapperCol: { span: 0 } },
-                        key: "end",
-                        label: "End",
-                        labelAlign: "right",
-                        type: "TimePicker",
-                        size: "small",
-                        showTime: "hh:mm a",
-                    },
-                    {
-                        object: "obj",
-                        fieldCol: 6,
-                        // labelCol: { span: 4 },
-                        key: "break",
-                        label: "Break",
-                        labelAlign: "right",
-                        type: "InputNumber",
-                        size: "small",
-                    },
-                    {
-                        object: "obj",
-                        fieldCol: 24,
-                        // labelCol: { span: 4 },
-                        style: {
-                            marginTop: "2%",
-                        },
-                        mode: { minRows: 1, maxRows: 3 },
-                        key: "notes",
-                        label: "notes",
-                        labelAlign: "right",
-                        type: "Textarea",
-                        size: "small",
-                    },
-                ],
-            },
-
+       
             columns : [
                 {
                     title: "Project",
@@ -171,7 +113,7 @@ class TimeSheet extends Component {
     };
 
     fetchAll = () =>{
-        Promise.all([ getUsers()])
+        Promise.all([ getUsers() ])
         .then(res => {
             let value = 0
             const { id, permissions } = localStore()
@@ -182,7 +124,7 @@ class TimeSheet extends Component {
                 value = res[0].data[0].value
                 res[0].data.forEach(el=>{
                     if(el.value === loginId){
-                        value= el.value 
+                        value= el.value
                     }
                 }) 
             }
@@ -222,7 +164,6 @@ class TimeSheet extends Component {
         const { startDate, endDate } = sheetDates
         if(sUser){
             getList({userId: sUser, startDate: startDate.format('DD-MM-YYYY'), endDate: endDate.format('DD-MM-YYYY')}).then(res=>{
-                console.log(res.data);
                 this.setState({
                     timesheet: res.success ? res.data: {},
                     data: (res.success && res.data) ? res.data.projects: []
@@ -245,6 +186,7 @@ class TimeSheet extends Component {
                     <div>{date.format('ddd')}</div>
                     <div> {date.format('DD MMM')} </div>
                 </span>,
+                heading: <span>{date.format('dddd - DD MM YYYY')}</span>,
                 dataIndex: date.format('D/M'),
                 key: date.format('D/M'),
                 width: 200,
@@ -252,13 +194,15 @@ class TimeSheet extends Component {
                 align: "center",
                 render: (value, record, rowIndex) =>{
                     if(value){
-                    // let duration = moment.duration(value["actualHours"],'hours')
-                    // <Col span={24}>Total: {`${duration.hours()}:${duration.minutes()}`}</Col>
-                    {return <Tooltip title={`Note: ${value['notes']}`}><Row style={{ border: "1px solid" }}>
-                            <Col span={24}>Start Time: {value["startTime"]}</Col>
-                            <Col span={24}>End Time: {value["endTime"]}</Col>
-                            <Col span={24}>Break: {value["breakHours"]}</Col>
-                            <Col span={24}>Total Hours: {value["actualHours"] && value["actualHours"].toFixed(2)}</Col>
+                        let breakHours = moment.duration(value["breakHours"],'hours')
+                        breakHours = breakHours && moment(moment().hours(breakHours.hours()).minutes(breakHours.minutes())).format("HH:mm")
+                        
+                        
+                    {return <Tooltip title={`Note: ${value['notes'] ?? ''}`}><Row style={{ border: "1px solid" }}>
+                            <Col span={24}>Start Time: {value["startTime"]&& moment(value["startTime"], ["HH:mm"]).format("h:mm A")}</Col>
+                            <Col span={24}>End Time: {value["endTime"] && moment(value["endTime"], ["HH:mm"]).format("h:mm A")}</Col>
+                            <Col span={24}>Break: {breakHours && breakHours}</Col>
+                            <Col span={24}>Total Hours: {value["actualHours"] && value["actualHours"]}</Col>
                         </Row> </Tooltip>}
                     }
                 },
@@ -280,7 +224,7 @@ class TimeSheet extends Component {
                         const { sUser, loginId } = this.state
                         const clickable = (record.status === 'SV' || record.status === 'RJ' || !record.status) && sUser === loginId
                         if (clickable ){
-                            this.getRecord(record,rowIndex, col.dataIndex); // call function to save data in
+                            this.getRecord(record,rowIndex, col.dataIndex, col.heading); // call function to save data in
                         }
                     },
                   }),
@@ -290,17 +234,19 @@ class TimeSheet extends Component {
         })
     }
 
-    getRecord = (record, rowIndex, colKey) => {
+    getRecord = (record, rowIndex, colKey,colTitle) => {
         // get record in dialog box for edit
         const timeObj= {
             projectEntryId: record.projectEntryId,
             projectId: record.projectId,
             project: record.project,
             row: rowIndex,
-            col: colKey 
+            col: colKey ,
+            title: colTitle
         }
         if (record[colKey]) {
-            
+            let breakHours = record[colKey].breakHours
+            var duration = moment.duration(breakHours, 'hours');
             let obj = {
                 entryId: record[colKey].entryId,
                 startTime: moment(record[colKey].startTime, "HH:mm")._isValid
@@ -309,7 +255,7 @@ class TimeSheet extends Component {
                 endTime: moment(record[colKey].endTime, "HH:mm")._isValid
                     ? moment(record[colKey].endTime, "HH:mm")
                     : null,
-                breakHours: record[colKey].breakHours && record[colKey].breakHours,
+                breakHours: duration && moment().hours(duration.hours()).minutes(duration.minutes()),
                 notes: record[colKey].notes && record[colKey].notes,
             };
             this.setState({

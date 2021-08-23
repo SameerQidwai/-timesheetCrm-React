@@ -104,11 +104,11 @@ class ProfitLoss extends Component {
                             if (records.key === 'W') {
                                 return <b>{record} </b>
                             }else if (records.key === 'R') {
-                                return `$ ${record}`
+                                return ` ${record}`
                             }else if (records.key === 'C'){
-                                return `$ ${record}`
+                                return ` ${record}`
                             }else if (records.key === '$'){
-                                return <b>{`$ ${record}`}</b>
+                                return <b>{` ${record}`}</b>
                             }else if (records.key === '%'){
                                 return <b>{` ${record} %`}</b>
                             }
@@ -139,7 +139,7 @@ class ProfitLoss extends Component {
                     <Title level={5} >Rev - Discount Value</Title>
                 </Col>
                 <Col span={5}>
-                    <Text>$ {formatCurrency(billing.discount)} / {billing.totalMonths} Months  = $ {formatCurrency((billing.discount / billing.totalMonths).toFixed(2))}</Text>
+                    <Text>{formatCurrency(billing.discount)} / {billing.totalMonths} Months  = {formatCurrency((billing.discount / billing.totalMonths).toFixed(2))}</Text>
                 </Col>
                 <Col span={24}>
                     <Row >

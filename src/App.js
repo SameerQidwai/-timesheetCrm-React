@@ -4,13 +4,14 @@ import Layout from './components/Basic/Drawer/Sidebar'
 import Login from './pages/Login/Login'
 
 import './App.css';
+import { refreshToken } from './service/constant-Apis';
 function App() {
   return (
         <Router>
           <Switch>
-            <Route path="/" exact> 
+            {<Route path="/" exact> 
               <Login />
-            </Route>
+            </Route>}
             <Layout/>
           </Switch>
         </Router>

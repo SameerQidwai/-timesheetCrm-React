@@ -115,7 +115,7 @@ class ProjectInfo extends Component {
                     // extra={<Button type="primary">Edit</Button>}
                 >
                     <Item label="Project Name">{data.title}</Item>
-                    <Item label="Estimated Value">{'$ ' + formatCurrency(data.value)}</Item>
+                    <Item label="Estimated Value">{ formatCurrency(data.value)}</Item>
                     <Item label="Organisation">{
                         data.organizationName ? 
                             <Link

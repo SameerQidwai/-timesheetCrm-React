@@ -11,7 +11,7 @@ export const getSettings = () => {
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
-            if (success) setToken(res.headers&& res.headers.authorization)
+            if (success) setToken(res.headers && res.headers.authorization)
             return { success, data };
         })
         .catch((err) => {
@@ -31,7 +31,7 @@ export const upadteSettings = (data) => {
             const { success, message, data } = res.data;
             jwtExpired(message)
             messageAlert.success({ content: message, key: 1},5)
-            if (success) setToken(res.headers&& res.headers.authorization)
+            if (success) setToken(res.headers && res.headers.authorization)
             
             return {success, data};
         })

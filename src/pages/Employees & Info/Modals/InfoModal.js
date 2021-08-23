@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { Modal, Tabs, Row, Col, Button, Input, Select, Form  } from "antd";
-import { LoadingOutlined } from "@ant-design/icons"; //Icons
+import { Modal, Tabs, Row, Col, Button, Input, Select, Form, Upload  } from "antd";
+import { LoadingOutlined, UploadOutlined,PlusOutlined } from "@ant-design/icons"; //Icons
 
 import FormItems from "../../../components/Core/FormItems";
 import moment from "moment";
@@ -8,6 +8,7 @@ import moment from "moment";
 import { getEmpPersons, getOrgPersons, getRoles, getStates } from "../../../service/constant-Apis";
 import { getContactRecord } from "../../../service/conatct-person";
 import { addList, getRecord, editList } from "../../../service/Employees";
+import { addAttachments, addFiles } from "../../../service/Attachment-Apis";
 const { TabPane } = Tabs;
 
 class InfoModal extends Component {
@@ -20,6 +21,9 @@ class InfoModal extends Component {
             loading: false,
             CONTACT:[],
             data: {},
+            imgLoading: false,
+            fileList: [],
+            fileIds:[],
 
             BasicFields: [
                 {
@@ -745,8 +749,7 @@ class InfoModal extends Component {
         addList(data).then(res=>{
             console.log(res);
             if(res.success){
-                console.log(res.data, false);
-                callBack(res.data, false);
+                this.uploadAttachments(res.billing, res.data)
             }
         })
     };
@@ -763,12 +766,13 @@ class InfoModal extends Component {
 
     editRecord = (value) => {
         const { editEmp, callBack } = this.props;
+        const { fileIds } = this.state
         console.log(value);
         this.setState({ loading: true })
         editList(editEmp, value).then((res) => {
             if(res.success){
-                console.log('hereh');
-                callBack()
+                this.uploadAttachments(res.billing, res.data)
+                // callBack()
             }
         });
     };
@@ -957,7 +961,6 @@ class InfoModal extends Component {
     }
 
     onFinish = (formValues) =>{
-        console.log(formValues);
         this.setState({loading: true})
         if (formValues.billing.type ){
             formValues.billing.type === 1 ? formValues.billing.remunerationAmountPer = 1 : formValues.billing.remunerationAmountPer = 7
@@ -985,9 +988,91 @@ class InfoModal extends Component {
         }
     }
 
+    //file upload testing
+
+    getBase64= (img, callback) =>{
+        const reader = new FileReader();
+        reader.addEventListener('load', () => callback(reader.result));
+        reader.readAsDataURL(img);
+    }
+
+    handleUpload = async option=>{
+        const { onSuccess, onError, file, onProgress } = option;
+        const formData = new FormData();
+        const  config = {
+            headers: {"content-type": "multipart/form-data"},
+            onUploadProgress: event =>{
+                const percent = Math.floor((event.loaded / event.total) * 100);
+                this.setState({progress: percent});
+                if (percent === 100) {
+                  setTimeout(() => this.setState({progres: 0}), 1000);
+                }
+                onProgress({ percent: (event.loaded / event.total) * 100 });
+              }
+            }
+            formData.append('files', file)
+            addFiles(formData, config).then((res,err)=>{
+                if (res.success){
+                    onSuccess("Ok");
+                    this.setState({
+                        fileList: [res.file],
+                        fileIds: [res.file.fileId]
+                    })
+                }else{
+                    console.log("Eroor: ", err);
+                    const error = new Error("Some error");
+                    onError({ err });
+                }
+            })
+    }
+
+    handleChange = info => {
+        if (info.file.status === 'uploading') {
+          this.setState({ imgLoading: true });
+          return;
+        }
+        if (info.file.status === 'done') {
+          // Get this url from response in real world.
+          this.getBase64(info.file.originFileObj, imageUrl =>
+            this.setState({
+              imgLoading: false,
+            }),
+          );
+        }
+    };
+
+    onRemove = (file) => {
+        this.setState((state) => {
+            const index = state.fileList.indexOf(file);
+            const newFileList = state.fileList.slice();
+            const fileIds = state.fileIds
+            newFileList.splice(index, 1);
+            fileIds.splice(index, 1);
+            return {
+                fileIds,
+                fileList: newFileList,
+            };
+        });
+    }
+
+    uploadAttachments = (billing, data) =>{
+        const { callBack } = this.props
+        const { fileIds} = this.state
+        if(billing && billing.employmentContractId && fileIds.length===1){
+            addAttachments('ECon', billing.employmentContractId,fileIds).then(attach=>{
+                if (attach.success){
+                    callBack(data)
+                }
+            })
+        }
+        
+    }
+
+    //file upload testing
+
     render() {
         const { editEmp, visible, close } = this.props;
-        const { BasicFields, DetailFields, KinFields, BankFields, BillingFields, TrainFields,  CONTACT, loading } = this.state;
+        const { BasicFields, DetailFields, KinFields, BankFields, BillingFields, TrainFields,  CONTACT, loading, fileList } = this.state;
         return (
             <Modal
                 title={editEmp ? "Edit Employee" : "Add Employee"}
@@ -1047,6 +1132,23 @@ class InfoModal extends Component {
                         </TabPane>
                         <TabPane tab=" Employment Contracts" key="contract" forceRender className="ant-form ant-form-inline ant-form-small"  >
                             <FormItems FormFields={BillingFields}  />
+                            <Upload
+                                customRequest={this.handleUpload}
+                                // listType="picture"
+                                listType="picture-card"
+                                maxCount={1}
+                                fileList={fileList}
+                                onRemove= {this.onRemove}
+                                onChange={this.handleChange}
+                            >
+                                {fileList.length < 1 &&
+                                    <div style={{marginTop: 10}} >
+                                        <PlusOutlined />
+                                        <div style={{ marginTop: 8 }}>Upload</div>
+                                    </div>
+                                }
+                                {/* <Button icon={<UploadOutlined />} style={{marginTop: 10}} loading={imgLoading}>Upload Contract</Button> */}
+                            </Upload>
                         </TabPane>
                         <TabPane tab="Superannuation" key="superannuation" forceRender className="ant-form ant-form-inline ant-form-small">
                             <FormItems FormFields={DetailFields} />

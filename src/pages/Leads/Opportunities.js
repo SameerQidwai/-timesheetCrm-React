@@ -33,14 +33,21 @@ class Opportunities extends Component {
             {
                 title: 'Organisation Name',
                 dataIndex: 'organization',
+                width: 300,
                 key: 'organization',
-                render: (record) =>{return record && record.name}
+                render: (record) =>{
+                    return record && <Link 
+                        to={{ pathname: `/organisations/${record.id}/info`, }}
+                        className="nav-link"
+                    >
+                        {record.name}</Link> 
+                }
             },
             {
                 title: 'Revenue',
                 dataIndex: 'value',
                 key: 'value',
-                render: (record)=>  `$ ${formatCurrency(record)}` 
+                render: (record)=>  `${formatCurrency(record)}` 
             },
             {
                 title: 'Start Date',

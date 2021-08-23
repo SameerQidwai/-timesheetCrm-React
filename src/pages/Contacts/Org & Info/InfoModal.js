@@ -1060,10 +1060,8 @@ class InfoModal extends Component {
             loading: false
         })
         editList(value).then((res) => {
-            console.log(res);
             if(res.success){
-                console.log('hereh');
-                callBack()
+                callBack(res)
             }else{
                 this.setState({loading:false})
             }

@@ -11,7 +11,7 @@ export const getList = (id) => {
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
-            if (success)  setToken(res.headers&& res.headers.authorization)
+            if (success)  setToken(res.headers && res.headers.authorization)
             return { success, data };
         })
         .catch((err) => {
@@ -29,7 +29,7 @@ export const getRecord = (id) => {
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
-            if (success)  setToken(res.headers&& res.headers.authorization)
+            if (success)  setToken(res.headers && res.headers.authorization)
             return { success, data };
         })
         .catch((err) => {
@@ -49,7 +49,7 @@ export const addList = (data) => {
             const { success, message } = res.data;
             jwtExpired(message)
             messageAlert.success({ content: message, key: 1})
-            if (success) setToken(res.headers&& res.headers.authorization)
+            if (success) setToken(res.headers && res.headers.authorization)
             return {success};
         })
         .catch((err) => {
@@ -68,7 +68,7 @@ export const delList = (id) => {
         .then((res) => {
             const { success, message } = res.data;
             jwtExpired(message)
-            setToken(res.headers&& res.headers.authorization)
+            setToken(res.headers && res.headers.authorization)
             if (success) return {success};
         })
         .catch((err) => {
@@ -88,7 +88,7 @@ export const editList = (id, data) => {
             const { success, message } = res.data;
             jwtExpired(message)
             messageAlert.success({ content: message, key: id})
-            setToken(res.headers&& res.headers.authorization)
+            setToken(res.headers && res.headers.authorization)
             if (success) return {success};
         })
         .catch((err) => {

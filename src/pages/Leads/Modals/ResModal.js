@@ -4,8 +4,8 @@ import { LoadingOutlined } from "@ant-design/icons"; //Icons
 import moment from "moment";
 import Form from "../../../components/Core/Form";
 
-import { addLeadSkill, getLeadSkill, editLeadSkill, addLeadSkillResource, editLeadSkillResource, } from "../../../service/opportunities";
-import { getPanelSkills, getStandardLevels, getOrgPersons, } from "../../../service/constant-Apis";
+import { addLeadSkill, editLeadSkill, addLeadSkillResource, editLeadSkillResource, } from "../../../service/opportunities";
+import { getPanelSkills, getOrgPersons, } from "../../../service/constant-Apis";
 
 const { TabPane } = Tabs;
 
@@ -185,13 +185,9 @@ class ResModal extends Component {
             onChange: function func(e, value) {
               const { SkillFields } = this.state;
               SkillFields.fields[3].data = value ? value.levels : [];
-              const {
-                obj,
-              } = this.resourceRef.current.refs.resource_form.getFieldsValue(); // const
+              const { obj, } = this.resourceRef.current.refs.resource_form.getFieldsValue(); // const
               obj["panelSkillStandardLevelId"] = undefined;
-              this.resourceRef.current.refs.resource_form.setFieldsValue({
-                obj,
-              });
+              this.resourceRef.current.refs.resource_form.setFieldsValue({ obj, });
               this.setState({ SkillFields });
             }.bind(this),
           },
@@ -203,9 +199,9 @@ class ResModal extends Component {
             rules: [{ required: true, message: "Level is Required" }],
             data: [],
             type: "Select",
-            onChange: function func(e, value) {
+            onChange: (e, value) =>{
               this.fetchRes();
-            }.bind(this),
+            },
           },
           {
             Placeholder: "Work Hours",

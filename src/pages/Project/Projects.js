@@ -34,13 +34,14 @@ class Projects extends Component {
                 title: 'Organisation Name',
                 dataIndex: 'organization',
                 key: 'organization',
+                width: 300,
                 render: (record) =>{return record && record.name}
             },
             {
                 title: 'Revenue',
                 dataIndex: 'value',
                 key: 'value',
-                render: record =>   `$ ${formatCurrency(record)}`
+                render: record =>   `${formatCurrency(record)}`
             },
             {
                 title: 'Start Date',

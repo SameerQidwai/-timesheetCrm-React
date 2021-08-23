@@ -1,11 +1,12 @@
 import React, { Component } from "react";
-import { Modal } from "antd";
-import { LoadingOutlined } from "@ant-design/icons"; //Icons
+import { Modal, Upload } from "antd";
+import { LoadingOutlined, PlusOutlined } from "@ant-design/icons"; //Icons
 
 import Form from "../../../components/Core/Form";
 
 import moment from "moment";
 import { addList, editList, getRecord } from "../../../service/employee-contracts";
+import { addAttachments, addFiles } from "../../../service/Attachment-Apis";
 
 class BillModal extends Component {
     constructor() {
@@ -20,6 +21,10 @@ class BillModal extends Component {
             kinSubmitted: false,
             skillSubmitted: false,
             loading: false,
+            imgLoading: false,
+            fileList: [],
+            fileIds:[],
+
             data: {
                 pay_email: "Trigger.payme@oneLm.com",
                 h_rate: "90",
@@ -285,9 +290,91 @@ class BillModal extends Component {
         });
     };
 
+     //file upload testing
+
+     getBase64= (img, callback) =>{
+        const reader = new FileReader();
+        reader.addEventListener('load', () => callback(reader.result));
+        reader.readAsDataURL(img);
+    }
+
+    handleUpload = async option=>{
+        const { onSuccess, onError, file, onProgress } = option;
+        const formData = new FormData();
+        const  config = {
+            headers: {"content-type": "multipart/form-data"},
+            onUploadProgress: event =>{
+                const percent = Math.floor((event.loaded / event.total) * 100);
+                this.setState({progress: percent});
+                if (percent === 100) {
+                  setTimeout(() => this.setState({progres: 0}), 1000);
+                }
+                onProgress({ percent: (event.loaded / event.total) * 100 });
+              }
+            }
+            formData.append('files', file)
+            addFiles(formData, config).then((res,err)=>{
+                if (res.success){
+                    onSuccess("Ok");
+                    this.setState({
+                        fileList: [res.file],
+                        fileIds: [res.file.fileId]
+                    })
+                }else{
+                    console.log("Eroor: ", err);
+                    const error = new Error("Some error");
+                    onError({ err });
+                }
+            })
+    }
+
+    handleChange = info => {
+        if (info.file.status === 'uploading') {
+          this.setState({ imgLoading: true });
+          return;
+        }
+        if (info.file.status === 'done') {
+          // Get this url from response in real world.
+          this.getBase64(info.file.originFileObj, imageUrl =>
+            this.setState({
+              imgLoading: false,
+            }),
+          );
+        }
+    };
+
+    onRemove = (file) => {
+        this.setState((state) => {
+            const index = state.fileList.indexOf(file);
+            const newFileList = state.fileList.slice();
+            const fileIds = state.fileIds
+            newFileList.splice(index, 1);
+            fileIds.splice(index, 1);
+            return {
+                fileIds,
+                fileList: newFileList,
+            };
+        });
+    }
+
+    uploadAttachments = (billing, data) =>{
+        const { callBack } = this.props
+        const { fileIds} = this.state
+        if(billing && billing.employmentContractId && fileIds.length===1){
+            addAttachments('ECon', billing.employmentContractId,fileIds).then(attach=>{
+                if (attach.success){
+                    callBack(data)
+                }
+            })
+        }
+        
+    }
+
+    //file upload testing
+
     render() {
         const { editCntrct, visible, close } = this.props;
-        const { BillingFields, loading } = this.state;
+        const { BillingFields, loading, fileList } = this.state;
 
         return (
             <Modal
@@ -301,11 +388,24 @@ class BillModal extends Component {
                 onCancel={close}
                 width={900}
             >
-                <Form
-                    ref={this.billingRef}
-                    Callback={this.BillingCall}
-                    FormFields={BillingFields}
-                />
+                <Form ref={this.billingRef} Callback={this.BillingCall} FormFields={BillingFields} />
+                <Upload
+                    customRequest={this.handleUpload}
+                    // listType="picture"
+                    listType="picture-card"
+                    maxCount={1}
+                    fileList={fileList}
+                    onRemove= {this.onRemove}
+                    onChange={this.handleChange}
+                >
+                    {fileList.length < 1 &&
+                        <div style={{marginTop: 10}} >
+                            <PlusOutlined />
+                            <div style={{ marginTop: 8 }}>Upload</div>
+                        </div>
+                    }
+                    {/* <Button icon={<UploadOutlined />} style={{marginTop: 10}} loading={imgLoading}>Upload Contract</Button> */}
+                </Upload>
             </Modal>
         );
     }

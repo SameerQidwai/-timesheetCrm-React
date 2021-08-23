@@ -1,19 +1,66 @@
-import React, { Component } from "react";
-import { Redirect, useLocation } from "react-router-dom"; // Route Library
+import React, { useState } from "react";
+import { Redirect } from "react-router-dom"; // Route Library
 import { Layout } from "antd";
-
-import { localStore } from "../../../service/constant";
 import AdminContent from './AdminContent'
-import UserContent from './UserContent'
 import { loggedIn } from "../../../service/Login-Apis";
+import ActivityCounter from "./Modals/ActivityCounter";
+import ActivityLogin from "./Modals/ActivityLogin";
+import { refreshToken } from "../../../service/constant-Apis";
 
 const { Content } = Layout;
 
-
 // class PrivateRoute extends Component {
 function PrivateRoute () {
-    const location = useLocation();
-    const admin = true
+    let timer, elapsed = true
+    const [ lastActivity, setLastActivity ] = useState(false)
+    const [ stopTime, setStopTime ] = useState(false)
+
+    const restActivity = () =>{
+        console.log('stopTime', stopTime);
+        if (elapsed){    
+            clearTimeout(timer);
+            timer = null
+            elapsed = false
+        }
+        if (!stopTime){
+            elapsed = true
+            timer = setTimeout(() => {
+                console.log(timer)
+                setLastActivity(true)
+                // setStopTime(true)
+            //milli * sec * min
+            }, 1000 * 60 * 55)
+            // }, 10000)
+        }   
+    }
+
+    const refresh = () => {
+        refreshToken().then(res=>{
+            if(res.success){
+                setLastActivity(false)
+                setStopTime(false)
+                restActivity()
+            }
+        })
+    }
+    
+    const ActivityTimeOut = () =>{
+        setLastActivity(false)
+        setStopTime(true)
+    }
+
+    const stopTimeOut = () =>{
+        clearTimeout(timer)
+        // setLastActivity(false)
+        setStopTime(true)
+    }
+
+    const closeLogin = () =>{
+        setStopTime(false)
+        clearTimeout(timer)
+        setStopTime(true)
+    }
+
     return (
         <Content
             className="site-layout-background"
@@ -23,21 +70,27 @@ function PrivateRoute () {
                 minHeight: "88vh",
             }}
         >
-            { loggedIn()?
-                // admin ? <AdminContent />: <UserContent />
-                <AdminContent />                
-                :
-                <Redirect to={{ pathname: '/'}} /> 
+           {console.log('stopTime return', stopTime)}
+           {loggedIn() ==='jwtExpired' || loggedIn() === true ? 
+            <AdminContent /> 
+            :
+            <Redirect to={{ pathname: '/'}} /> }
+            {!stopTime&&restActivity()}
+            {lastActivity && 
+                <ActivityCounter 
+                    visible={lastActivity}
+                    refresh={()=>refresh()} 
+                    timeOut={()=>ActivityTimeOut()} 
+                /> 
+            }
+            {loggedIn() ==='jwtExpired'&&
+                <ActivityLogin 
+                    visible={loggedIn() ==='jwtExpired'} 
+                    stopTimer={()=>{stopTimeOut()}} 
+                    close={()=>{closeLogin()}}
+                /> 
             }
         </Content>
     );
 }
 export default PrivateRoute;
-
-/* 
-!{ loggedIn()?
-!    admin ? <AdminContent />: <UserContent />                
-!    :
-!    <Redirect to={{ pathname: '/'}} /> 
-!}
-*/

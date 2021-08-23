@@ -49,7 +49,7 @@ class EmpBilling extends Component {
                 title: "Rate",
                 dataIndex: "remunerationAmount",
                 key: "remunerationAmount",
-                render: (record)=> `$ ${formatCurrency(record)}`
+                render: (record)=> `${formatCurrency(record)}`
             },
             {
                 title: "Rate Duration",

@@ -12,7 +12,7 @@ export const getList = () => {
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
-            if (success) setToken(res.headers&& res.headers.authorization)
+            if (success) setToken(res.headers && res.headers.authorization)
             return { success: success, data: data };
         })
         .catch((err) => {
@@ -24,6 +24,55 @@ export const getList = () => {
         });
 };
 
+const reConstruct = (data) =>{
+    const vake = data
+        const { delegateContactPerson } = data
+        const basic = {
+            name: vake.name,
+            title: vake.title,
+            parent: vake.parentOrganization && vake.parentOrganization.id,
+            phone: vake.phoneNumber,
+            delegate_cp: vake.delegateContactPersonId,
+            delegate_contactPerson: delegateContactPerson && `${delegateContactPerson.firstName} ${delegateContactPerson.lastName} - ${delegateContactPerson.phoneNumber ?? ''}`,
+            email: vake.email,
+            EBA: vake.expectedBusinessAmount,
+            address: vake.address,
+            website: vake.website,
+            businessType: vake.businessType
+        }
+        const billing = {
+            ABN: vake.abn,
+            tax_Code: vake.taxCode,
+            invoice_email: vake.invoiceEmail,
+            invoice_number: vake.invoiceContactNumber,
+            CTI: vake.cti,
+        }
+        const insured = {
+            insurer_PI: vake.piInsurer,
+            insurer_PL: vake.plInsurer,
+            insurer_WC: vake.wcInsurer,
+            policy_PI: vake.piPolicyNumber,
+            policy_PL: vake.plPolicyNumber,
+            policy_WC: vake.wcPolicyNumber,
+            SumIns_PI: vake.piSumInsured,
+            SumIns_PL: vake.plSumInsured,
+            SumIns_WC: vake.wcSumInsured,
+            expiry_PI: vake.piInsuranceExpiry ? moment(vake.piInsuranceExpiry): null,
+            expiry_PL: vake.piInsuranceExpiry ? moment(vake.plInsuranceExpiry) : null,
+            expiry_WC: vake.piInsuranceExpiry ? moment(vake.wcInsuranceExpiry) : null,
+        }
+        const bank = {
+            bankName: vake.bankAccounts[0] && vake.bankAccounts[0].name,
+            bankAccountNo: vake.bankAccounts[0] && vake.bankAccounts[0].accountNo,
+            bankBsb: vake.bankAccounts[0] && vake.bankAccounts[0].bsb,
+        }
+        const future = {
+            currentForecast: vake.currentFinancialYearTotalForecast ,
+            nextForecast: vake.nextFinancialYearTotalForecast ,
+        }
+        return {basic, billing, insured, bank, future}
+}
+
 export const getOrgRecord = (id) => {
     return axios
         .get(url + `/${id}`, {headers:headers})
@@ -31,53 +80,9 @@ export const getOrgRecord = (id) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
             if (success) {
-                const vake = data
-                const { delegateContactPerson } = data
-                const basic = {
-                    name: vake.name,
-                    title: vake.title,
-                    parent: vake.parentOrganization && vake.parentOrganization.id,
-                    phone: vake.phoneNumber,
-                    delegate_cp: vake.delegateContactPersonId,
-                    delegate_contactPerson: delegateContactPerson && `${delegateContactPerson.firstName} ${delegateContactPerson.lastName} - ${delegateContactPerson.phoneNumber ?? ''}`,
-                    email: vake.email,
-                    EBA: vake.expectedBusinessAmount,
-                    address: vake.address,
-                    website: vake.website,
-                    businessType: vake.businessType
-                }
-                const billing = {
-                    ABN: vake.abn,
-                    tax_Code: vake.taxCode,
-                    invoice_email: vake.invoiceEmail,
-                    invoice_number: vake.invoiceContactNumber,
-                    CTI: vake.cti,
-                }
-                const insured = {
-                    insurer_PI: vake.piInsurer,
-                    insurer_PL: vake.plInsurer,
-                    insurer_WC: vake.wcInsurer,
-                    policy_PI: vake.piPolicyNumber,
-                    policy_PL: vake.plPolicyNumber,
-                    policy_WC: vake.wcPolicyNumber,
-                    SumIns_PI: vake.piSumInsured,
-                    SumIns_PL: vake.plSumInsured,
-                    SumIns_WC: vake.wcSumInsured,
-                    expiry_PI: vake.piInsuranceExpiry ? moment(vake.piInsuranceExpiry): null,
-                    expiry_PL: vake.piInsuranceExpiry ? moment(vake.plInsuranceExpiry) : null,
-                    expiry_WC: vake.piInsuranceExpiry ? moment(vake.wcInsuranceExpiry) : null,
-                }
-                const bank = {
-                    bankName: vake.bankAccounts[0] && vake.bankAccounts[0].name,
-                    bankAccountNo: vake.bankAccounts[0] && vake.bankAccounts[0].accountNo,
-                    bankBsb: vake.bankAccounts[0] && vake.bankAccounts[0].bsb,
-                }
-                const future = {
-                    currentForecast: vake.currentFinancialYearTotalForecast ,
-                    nextForecast: vake.nextFinancialYearTotalForecast ,
-                }
-                setToken(res.headers&& res.headers.authorization)
-                return {success,basic, billing, insured, bank, future, data}
+                const { basic, billing, insured, bank, future } = reConstruct(data)
+                setToken(res.headers && res.headers.authorization)
+                return {success ,basic, billing, insured, bank, future, data}
             }
             return { success }
         })
@@ -98,7 +103,7 @@ export const addList = (data) => {
             const { success, message } = res.data;
             jwtExpired(message)
             messageAlert.success({ content: message, key: 1})
-            if (success) setToken(res.headers&& res.headers.authorization)
+            if (success) setToken(res.headers && res.headers.authorization)
             return {success};
         })
         .catch((err) => {
@@ -117,7 +122,7 @@ export const delOrg = (id) => {
         .then((res) => {
             const { success, message } = res.data;
             jwtExpired(message)
-            if (success) setToken(res.headers&& res.headers.authorization)
+            if (success) setToken(res.headers && res.headers.authorization)
             return {success};
         })
         .catch((err) => {
@@ -134,11 +139,15 @@ export const editList = (data) => {
     return axios
         .put(url + `/${data.id}`, data, {headers:headers})
         .then((res) => {
-            const { success, message } = res.data;
+            const { success, message, data } = res.data;
             jwtExpired(message)
             messageAlert.success({ content: message, key: data.id})
-            if (success) setToken(res.headers&& res.headers.authorization)
-            return {success};
+            if (success) {
+                const { basic, billing, insured, bank, future } = reConstruct(data)
+                setToken(res.headers && res.headers.authorization)
+                return {success ,basic, billing, insured, bank, future, data}
+            }
+            return {success, data};
         })
         .catch((err) => {
                         messageAlert.error({ content: err.message, key: data.id})

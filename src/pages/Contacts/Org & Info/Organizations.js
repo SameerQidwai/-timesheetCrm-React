@@ -25,12 +25,20 @@ class Organizations extends Component {
                 title: "Name",
                 dataIndex: "name",
                 key: "name",
+                width: 500,
             },
             {
                 title: "Parent Organisation",
                 dataIndex: "parentOrganization",
                 key: "parentOrganization",
-                render: (record) => { if (record) {return record.name} }
+                width: 500,
+                render: (record) => {
+                    return record && <Link 
+                        to={{ pathname: `/organisations/${record.id}/info`, }}
+                        className="nav-link"
+                    >
+                        {record.name}</Link> 
+                }
             },
             {
                 title: "Action",

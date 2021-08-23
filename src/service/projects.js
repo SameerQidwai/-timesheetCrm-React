@@ -14,7 +14,7 @@ export const addList = (data) => {
             jwtExpired(message)
             messageAlert.success({ content: message, key: 1})
             if (success) 
-                setToken(res.headers&& res.headers.authorization)
+                setToken(res.headers && res.headers.authorization)
             return {success};
         })
         .catch((err) => {
@@ -34,7 +34,7 @@ export const getList = () => {
             const { success, data, message } = res.data;
             jwtExpired(message)
             if (success) 
-                setToken(res.headers&& res.headers.authorization)
+                setToken(res.headers && res.headers.authorization)
             return { success: success, data: data };
         })
         .catch((err) => {
@@ -100,7 +100,7 @@ export const getRecord = (id) => {
                 }
                 data.ContactName= data.contactPerson && data.contactPerson.firstName + ' ' + data.contactPerson.lastName
                 data.organizationName = data.organization && data.organization.name 
-                setToken(res.headers&& res.headers.authorization)
+                setToken(res.headers && res.headers.authorization)
                 return {success, data, basic, tender, billing, dates, manage};
             }
             return { success }
@@ -121,7 +121,7 @@ export const delList = (id) => {
             const { success, message } = res.data;
             jwtExpired(message)
             if (success) 
-                setToken(res.headers&& res.headers.authorization)
+                setToken(res.headers && res.headers.authorization)
             return {success};
         })
         .catch((err) => {
@@ -142,7 +142,7 @@ export const editList = (data) => {
             jwtExpired(message)
             messageAlert.success({ content: message, key: data.id})
             if (success) 
-                setToken(res.headers&& res.headers.authorization)
+                setToken(res.headers && res.headers.authorization)
             return {success};
         })
         .catch((err) => {
@@ -164,7 +164,7 @@ export const addLeadSkill = (id, data) => {
         jwtExpired(message)
         messageAlert.success({ content: message, key: id})
         if(success) 
-            setToken(res.headers&& res.headers.authorization)
+            setToken(res.headers && res.headers.authorization)
         return { success }
     })
     .catch(err=>{
@@ -185,7 +185,7 @@ export const getLeadSkills = (id)=>{
             const { success, data, message } = res.data;
             jwtExpired(message)
             if (success) {
-                setToken(res.headers&& res.headers.authorization)
+                setToken(res.headers && res.headers.authorization)
             };
             return { success: success, data: data }
         })
@@ -217,7 +217,7 @@ export const getLeadSkill = (proId, resId) => {
                     effortRate: data.opportunityResourceAllocations && data.opportunityResourceAllocations[0].effortRate,
                     allocationId: data.opportunityResourceAllocations && data.opportunityResourceAllocations[0].id
                 }
-                setToken(res.headers&& res.headers.authorization)
+                setToken(res.headers && res.headers.authorization)
                 return {success, data: obj}
             }
             return { success }
@@ -241,7 +241,7 @@ export const editLeadSkill = (proId, resId, data) => {
             jwtExpired(message)
             messageAlert.success({ content: message, key: resId})
             if (success) 
-                setToken(res.headers&& res.headers.authorization)
+                setToken(res.headers && res.headers.authorization)
             return {success, data: data[0]};
         })
         .catch((err) => {
@@ -261,7 +261,7 @@ export const delLeadSkill = (proId, resId) => {
             const { success, message } = res.data;
             jwtExpired(message)
             if (success) 
-                setToken(res.headers&& res.headers.authorization)
+                setToken(res.headers && res.headers.authorization)
             return {success};
         })
         .catch((err) => {
@@ -282,7 +282,7 @@ export const addLeadSkillResource = (proId, skillId,  data) => {
             jwtExpired(message)
             messageAlert.success({ content: message, key: skillId})
             if (success) 
-                setToken(res.headers&& res.headers.authorization)
+                setToken(res.headers && res.headers.authorization)
             return {success, data: data};
         })
         .catch((err) => {
@@ -301,7 +301,7 @@ export const getLeadSkillResource = (proId,skillId, resId) => {
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
-            setToken(res.headers&& res.headers.authorization)
+            setToken(res.headers && res.headers.authorization)
             return {success, data}
         })
         .catch((err) => {
@@ -320,7 +320,7 @@ export const editLeadSkillResource = (proId, skillId, resId, data) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
             if (success) 
-                setToken(res.headers&& res.headers.authorization)
+                setToken(res.headers && res.headers.authorization)
             return {success, data};
         })
         .catch((err) => {
@@ -339,7 +339,7 @@ export const delLeadSkillResource = (proId, skillId, resId,) => {
             const { success, message } = res.data;
             jwtExpired(message)
             if (success) 
-                setToken(res.headers&& res.headers.authorization)
+                setToken(res.headers && res.headers.authorization)
             return {success};
         })
         .catch((err) => {
@@ -358,7 +358,7 @@ export const selectLeadSkillResource = (proId, skillId, resId) => {
             const { success, message } = res.data;
             jwtExpired(message)
             if (success) 
-                setToken(res.headers&& res.headers.authorization)
+                setToken(res.headers && res.headers.authorization)
             return {success};
         })
         .catch((err) => {
@@ -379,7 +379,7 @@ export const addOrder = (proId, data) => {
             jwtExpired(message)
             messageAlert.success({ content: message, key: proId})
             if (success) 
-                setToken(res.headers&& res.headers.authorization)
+                setToken(res.headers && res.headers.authorization)
             return {success};
         })
         .catch((err) => {
@@ -399,7 +399,7 @@ export const getOrders = (proId) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
             if (success) 
-                setToken(res.headers&& res.headers.authorization)
+                setToken(res.headers && res.headers.authorization)
             return { success: success, data: data };
         })
         .catch((err) => {
@@ -421,7 +421,7 @@ export const editOrder = (proId, id, data) => {
             jwtExpired(message)
             messageAlert.success({ content: message, key: id})
             if (success) 
-                setToken(res.headers&& res.headers.authorization)
+                setToken(res.headers && res.headers.authorization)
             return {success};
         })
         .catch((err) => {
@@ -445,7 +445,7 @@ export const getOrder = (proId,id) => {
                     issueDate: data.issueDate ? moment(data.issueDate): null,
                     expiryDate: data.expiryDate ? moment(data.expiryDate): null
                 }
-                setToken(res.headers&& res.headers.authorization)
+                setToken(res.headers && res.headers.authorization)
                 return {success, data: obj };
             }
             return { success }
@@ -466,7 +466,7 @@ export const delOrder = (proId,id) => {
             const { success, message } = res.data;
             jwtExpired(message)
             if (success) 
-                setToken(res.headers&& res.headers.authorization)
+                setToken(res.headers && res.headers.authorization)
                 
             return {success};
         })

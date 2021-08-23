@@ -12,7 +12,7 @@ export const getSkills = () => {
             const { success, data, message } = res.data;
             jwtExpired(message)
             if (success) {
-                setToken(res.headers&& res.headers.authorization)
+                setToken(res.headers && res.headers.authorization)
                 data.map((el) => {
                     el.value = el.id;
                     delete el.id;
@@ -40,7 +40,7 @@ export const getlevels = () => {
             const { success, data, message } = res.data;
             jwtExpired(message)
             if (success){ 
-                setToken(res.headers&& res.headers.authorization)
+                setToken(res.headers && res.headers.authorization)
                 data.map((el) => {
                     el.value = el.id;
                     delete el.id;
@@ -67,7 +67,7 @@ export const getList = (id) => {
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
-            if (success) setToken(res.headers&& res.headers.authorization)
+            if (success) setToken(res.headers && res.headers.authorization)
             
             return { success: success, data: data };
         })
@@ -88,7 +88,7 @@ export const addList = (data) => {
             const { success, message } = res.data;
             jwtExpired(message)
             messageAlert.success({ content: message, key: 1})
-            if (success) setToken(res.headers&& res.headers.authorization)
+            if (success) setToken(res.headers && res.headers.authorization)
             return success;
         })
         .catch((err) => {
@@ -107,7 +107,7 @@ export const delLabel = (id) => {
         .then((res) => {
             const { success, message } = res.data;
             jwtExpired(message)
-            if (success) setToken(res.headers&& res.headers.authorization)
+            if (success) setToken(res.headers && res.headers.authorization)
             
             return success;
         })
@@ -128,7 +128,7 @@ export const editLabel = (data) => {
             const { success, message } = res.data;
             jwtExpired(message)
             messageAlert.success({ content: message, key: data.id})
-            if (success) setToken(res.headers&& res.headers.authorization)
+            if (success) setToken(res.headers && res.headers.authorization)
             
             return success;
         })

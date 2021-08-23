@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Modal, Tabs, Row, Col, Button, Input } from "antd";
+import { Modal, Tabs, Row, Col, Button, Input, Typography } from "antd";
 import { LoadingOutlined } from "@ant-design/icons"; //Icons
 
 import Form from "../../../components/Core/Form";
@@ -34,6 +34,9 @@ class TimeModal extends Component {
                         label: "Start",
                         labelAlign: "right",
                         type: "TimePicker",
+                        mode: "use12Hours",
+                        // rangeMax: false,
+                        rangeMin: 15,
                         size: "small",
                         showTime: "hh:mm a",
                     },
@@ -45,18 +48,24 @@ class TimeModal extends Component {
                         label: "End",
                         labelAlign: "right",
                         type: "TimePicker",
+                        mode: "use12Hours",
+                        // rangeMax: false,
+                        rangeMin: 15,
                         size: "small",
                         showTime: "hh:mm a",
                     },
                     {
                         object: "obj",
-                        fieldCol: 6,
+                        fieldCol: 8,
                         // labelCol: { span: 4 },
                         key: "breakHours",
                         label: "Break",
                         labelAlign: "right",
-                        type: "InputNumber",
+                        rangeMin: 15,
+                        // rangeMax: false,
+                        type: "TimePicker",
                         size: "small",
+                        showTime: "HH:mm",
                     },
                     {
                         object: "obj",
@@ -81,8 +90,8 @@ class TimeModal extends Component {
         const { editTime, userId } = this.props
         const { TIMESHEETS }= JSON.parse(localStore().permissions)
         this.setState({ permissions: TIMESHEETS },()=>{
-            if (editTime && TIMESHEETS['UPDATE']) {
-                this.getRecord(userId, editTime);
+            if (TIMESHEETS['UPDATE']) {
+                this.getRecord(userId, editTime ? editTime :{startTime: moment('9:00', ["HH:mm"]), endTime: moment('18:00', ["HH:mm"])} );
             }
         })
     };
@@ -101,6 +110,7 @@ class TimeModal extends Component {
         obj.date = moment(timeObj.col, 'D/M').format('DD-MM-YYYY')
         obj.startTime = obj.startTime.format('HH:mm')
         obj.endTime = obj.endTime.format('HH:mm')
+        obj.breakHours = obj.breakHours ? moment.duration(obj.breakHours.format('HH:mm')).asHours(): 0
         if (editTime) {
             this.editRecord(editTime.entryId,obj); //edit Time
         } else {
@@ -145,12 +155,15 @@ class TimeModal extends Component {
 
  
     render() {
-        const { editTime, visible, close } = this.props;
+        const { editTime, visible, close, timeObj } = this.props;
         const { TimeFields, loading, permissions } = this.state;
         const popup = editTime? permissions['UPDATE']&& visible: permissions['ADD']&& visible
         return (
             <Modal
-                title={editTime ? "Edit Time" : "Add Time"}
+                title={<Row>
+                        <Col flex={2}> {editTime ? "Edit Time" : "Add Time"} </Col>
+                        <Col flex={3} ><b> {timeObj.title} </b></Col>
+                    </Row>}
                 maskClosable={false}
                 centered
                 visible={popup}

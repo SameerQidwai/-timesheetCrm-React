@@ -3,17 +3,8 @@ import { Modal, Tabs } from "antd";
 import { LoadingOutlined } from "@ant-design/icons"; //Icons
 import Form from "../../../components/Core/Form";
 
-import {
-  addLeadSkill,
-  getLeadSkill,
-  editLeadSkill,
-} from "../../../service/projects";
-import {
-  getPanelSkills,
-  getStandardLevels,
-  getContactPersons,
-  getOrgPersons,
-} from "../../../service/constant-Apis";
+import { addLeadSkill, getLeadSkill, editLeadSkill, } from "../../../service/projects";
+import { getPanelSkills, getOrgPersons, } from "../../../service/constant-Apis";
 
 const { TabPane } = Tabs;
 
@@ -76,7 +67,7 @@ class ResModal extends Component {
                 obj,
               } = this.resourceRef.current.refs.resource_form.getFieldsValue(); // const
               obj["panelSkillStandardLevelId"] = undefined;
-              obj["userId"] = undefined;
+              obj["contactPersonId"] = undefined;
               this.resourceRef.current.refs.resource_form.setFieldsValue({
                 obj,
               });
@@ -94,11 +85,11 @@ class ResModal extends Component {
             type: "Select",
             onChange: (e, value) =>{
               const { ResourceFields } = this.state;
-              const customUrl = `employees/get/by-skills?psslId=${value.value}`
+              const customUrl = `employees/get/by-skills?psslId=${value&&value.value}`
               getOrgPersons(customUrl).then((res) => {
                 ResourceFields.fields[7].data = res.success ? res.data : [];
                 const { obj, } = this.resourceRef.current.refs.resource_form.getFieldsValue(); // const
-                obj["userId"] = undefined;
+                obj["contactPersonId"] = undefined;
                 this.resourceRef.current.refs.resource_form.setFieldsValue({ obj, });
                 this.setState({ ResourceFields });
               });
@@ -243,6 +234,7 @@ class ResModal extends Component {
 
   componentDidMount = () => {
     const { editRex, panelId } = this.props;
+    console.log(editRex);
     this.openModal();
   };
 
@@ -302,12 +294,13 @@ class ResModal extends Component {
         const skillIndex = skills.findIndex(
           (skill) => skill.value === resR.data.panelSkillId
         );
-        getContactPersons().then((resP) => {
+          const customUrl = `employees/get/by-skills?psslId=${resR.data && resR.data.panelSkillStandardLevelId}`
+          getOrgPersons(customUrl).then((resP) => {
           const { ResourceFields } = this.state;
           ResourceFields.fields[3].data = skills[skillIndex]
             ? skills[skillIndex].levels
             : [];
-          ResourceFields.fields[6].data = resP.success ? resP.data : [];
+          ResourceFields.fields[7].data = resP.success ? resP.data : [];
           this.resourceRef.current.refs.resource_form.setFieldsValue({
             obj: resR.data,
           });

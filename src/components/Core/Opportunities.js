@@ -27,13 +27,14 @@ class Skills extends Component {
                 title: 'Organisation Name',
                 dataIndex: 'organization',
                 key: 'organization',
+                width: 300,
                 render: (record) =>{return record && record.name}
             },
             {
                 title: 'Revenue',
                 dataIndex: 'value',
                 key: 'value',
-                render: (record)=>  `$ ${formatCurrency(record)}` 
+                render: (record)=>  `${formatCurrency(record)}` 
             },
             {
                 title: 'Start Date',
@@ -85,6 +86,7 @@ class Skills extends Component {
 
         this.state = {
             data:[ ],
+            columns:[],
             permissions: {}
         }
     }
@@ -96,22 +98,24 @@ class Skills extends Component {
 
     getList = () =>{
         const { OPPORTUNITIES }= JSON.parse(localStore().permissions)
-        const { customUrl } = this.props
+        const { customUrl, showColumn } = this.props
+        const { data } = this.state
         entityProjects(customUrl).then(res=>{
             this.setState({
                 data: res.success ? res.data : [],
-                permissions: OPPORTUNITIES
+                permissions: OPPORTUNITIES,
+                columns: showColumn ? this.columns.filter(el=> el.dataIndex !== 'organization') : this.columns
             })
         })
     }
 
     render(){
-        const { data } = this.state
+        const { data, columns } = this.state
         return (
             <>
                 <Table 
                     pagination={{pageSize: localStore().pageSize}}
-                    columns={this.columns} 
+                    columns={columns} 
                     dataSource={data} 
                     size="small"
                 />

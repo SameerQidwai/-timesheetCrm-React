@@ -10,7 +10,7 @@ export const getList = () => {
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
-            if (success) setToken(res.headers&& res.headers.authorization)
+            if (success) setToken(res.headers && res.headers.authorization)
             
             return { success, data };
         })
@@ -30,7 +30,7 @@ export const getContactRecord = (id) => {
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
-            setToken(res.headers&& res.headers.authorization)
+            setToken(res.headers && res.headers.authorization)
             if (success) return {success, data};
         })
         .catch((err) => {
@@ -50,7 +50,7 @@ export const addList = (data) => {
             const { success, message } = res.data;
             jwtExpired(message)
             messageAlert.success({ content: message, key: 1})
-            if (success) setToken(res.headers&& res.headers.authorization)
+            if (success) setToken(res.headers && res.headers.authorization)
             return {success};
         })
         .catch((err) => {
@@ -70,7 +70,7 @@ export const delList = (id) => {
             const { success, message } = res.data;
             jwtExpired(message)
 
-            if (success)  setToken(res.headers&& res.headers.authorization)
+            if (success)  setToken(res.headers && res.headers.authorization)
 
             return {success};
         })
@@ -91,7 +91,7 @@ export const editList = (data) => {
             const { success, message } = res.data;
             jwtExpired(message)
             messageAlert.success({ content: message, key: data.id})
-            if (success) setToken(res.headers&& res.headers.authorization)
+            if (success) setToken(res.headers && res.headers.authorization)
             return {success};
         })
         .catch((err) => {

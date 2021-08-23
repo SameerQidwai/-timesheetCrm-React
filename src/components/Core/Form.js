@@ -305,6 +305,8 @@ class Forms extends Component {
                         format={showTime}
                         use12Hours={mode === "use12Hours"}
                         size={size}
+                        minuteStep={min}
+                        showNow={max}
                         style={style}
                     />
                 );
@@ -314,7 +316,9 @@ class Forms extends Component {
                     <TimeRange
                         format={showTime}
                         use12Hours={mode === "use12Hours"}
+                        minuteStep={min}
                         size={size}
+                        showNow={max}
                         style={style}
                     />
                 );
@@ -396,3 +400,11 @@ class Forms extends Component {
 }
 
 export default Forms;
+
+const classes = {
+    timepicker: {
+        "& .ant-picker-footer": {
+            display: "none",
+        },
+    }
+}

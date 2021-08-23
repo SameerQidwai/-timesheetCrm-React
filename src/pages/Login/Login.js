@@ -18,11 +18,9 @@ function Login(props) {
 
     const loginFunc = (value) => {
         
-        console.log(value);
         login(value).then(res=>{
             if(res&& res.success){
                 //set local storage
-                console.log(JSON.parse(localStore().permissions))
                 getSettings().then(res=>{
                     if(res.success){
                         localStorage.setItem('pageSize', res.data.recordsPerPage)
@@ -35,7 +33,7 @@ function Login(props) {
     };
 
     const checkLogin = () =>{
-        if(loggedIn()){
+        if(loggedIn() === true){
             setRedirectToReferrer(true)
         }
     }

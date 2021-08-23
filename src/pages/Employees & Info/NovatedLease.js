@@ -31,7 +31,7 @@ class NovatedLease extends Component {
                 title: "Finance Amount",
                 dataIndex: "financedAmount",
                 key: "financedAmount",
-                render: record => `$ ${formatCurrency(record)}` 
+                render: record => `${formatCurrency(record)}` 
             },
             {
                 title: "Start Date",

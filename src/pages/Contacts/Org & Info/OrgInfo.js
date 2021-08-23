@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import { Row, Col, Menu, Tabs, Button, Dropdown, Popconfirm, Descriptions, } from "antd";
 import { SettingOutlined, DownOutlined } from "@ant-design/icons"; //Icons
 
@@ -35,11 +36,16 @@ class OrgInfo extends Component {
         });
     };
 
-    callBack = (value, key) => {
-        console.log(value);
-        this.setState({
-            data: value,
-        });
+    callBack = (res) => {
+        if(res.success){
+            this.setState({
+                data: res.data,
+                basic: res.basic,
+                bank: res.bank,
+                infoModal: false,
+                editOrg: false,
+            })
+        }
     };
     componentDidMount = () => {
         const {id} = this.props.match.params;
@@ -50,9 +56,9 @@ class OrgInfo extends Component {
         getOrgRecord(id).then((res) => {
             if(res.success){
                 this.setState({
-                    data: res.data,
-                    basic: res.basic,
-                    bank: res.bank,
+                    data: res.data ?? {},
+                    basic: res.basic ?? {},
+                    bank: res.bank ?? {},
                     organizationId: id,
                 })
             }
@@ -70,7 +76,7 @@ class OrgInfo extends Component {
         const { data, bank, infoModal, editOrg, organizationId, basic } = this.state;
         const DescTitle = (
             <Row justify="space-between">
-                <Col>{data.name}</Col>
+                <Col>{data && data.name}</Col>
                 <Col>
                     <Dropdown
                         overlay={
@@ -115,7 +121,7 @@ class OrgInfo extends Component {
                     <Item label="Contact">{data.phoneNumber}</Item>
                     <Item label="Email">{data.email}</Item>
                     <Item label="Address">{data.address}</Item>
-                    <Item label="Website">{data.website}</Item>
+                    <Item label="Website">{<Link to={{ pathname: `https://${data.website}` }} target="_blank" >{data.website}</Link>}</Item>
                     <Item label="EBA">{data.expectedBusinessAmount}</Item>
                     <Item label="Contact Person">{basic ?basic.delegate_contactPerson: null}</Item>
                 </Descriptions>
@@ -126,10 +132,10 @@ class OrgInfo extends Component {
                         // defaultActiveKey="comments"
                     >
                         <TabPane tab="Project" key="project">
-                            <Projects targetId={organizationId} customUrl={`helpers/work?type=P&organization=${organizationId}`} />
+                            <Projects targetId={organizationId} showColumn={true} customUrl={`helpers/work?type=P&organization=${organizationId}`} />
                         </TabPane>
                         <TabPane tab="Opportunity" key="opportunity">
-                            <Opportunity targetId={organizationId} customUrl={`helpers/work?type=O&organization=${organizationId}`}  />
+                            <Opportunity targetId={organizationId} showColumn={true} customUrl={`helpers/work?type=O&organization=${organizationId}`}  />
                         </TabPane>
                         {/* <TabPane tab="Sub-organization" key="sub">
                             <ChildOrg {...this.props.match.params} />
