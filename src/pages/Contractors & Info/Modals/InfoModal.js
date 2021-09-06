@@ -1,12 +1,13 @@
 import React, { Component } from "react";
-import { Modal, Tabs, Row, Col, Select, Input, Form as AntForm } from "antd";
-import { LoadingOutlined } from "@ant-design/icons"; //Icons
+import { Modal, Tabs, Row, Col, Select, Input, Form as AntForm, Upload } from "antd";
+import { LoadingOutlined, PlusOutlined } from "@ant-design/icons"; //Icons
 import Form from "../../../components/Core/Form";
 import moment from "moment";
 
 import { addList, getRecord, editList } from "../../../service/contractors";
 import { getContactRecord } from "../../../service/conatct-person";
 import { getOrganizations, getOrgPersons, getRoles, getStates } from "../../../service/constant-Apis";
+import { addFiles } from "../../../service/Attachment-Apis";
 
 const { TabPane } = Tabs;
 
@@ -29,6 +30,10 @@ class InfoModal extends Component {
             sOrg: null,
             sUsername: null,
             loading: false,
+
+            fileIds: null,
+            fileList: [],
+
             data: {
                 code: 1,
                 cpCode: "004",
@@ -693,6 +698,8 @@ class InfoModal extends Component {
     BillingCall = (vake) => {
         // this will work after  getting the Object from level form
         const { editCont } = this.props
+        const { fileIds } = this.state
+        vake.billing.fileId = fileIds
         // vake.billing.noOfHoursPer = 1; 
         this.setState(
             {
@@ -746,6 +753,10 @@ class InfoModal extends Component {
                 this.kinRef.current.refs.kin_form.setFieldsValue({ kin: res.kin, });
                 this.billingRef.current.refs.billing_form.setFieldsValue({ billing: res.billing, })
                 this.emailRef.current.setFieldsValue({ username: res.basic.username })
+                this.setState({
+                    fileIds: res.billing.fileId,
+                    fileList: res.billing.file
+                })
                 return {username: res.basic.username}
             }
         })
@@ -831,9 +842,51 @@ class InfoModal extends Component {
         })
     };
 
+    //file upload testing
+
+    handleUpload = async option=>{
+        const { onSuccess, onError, file, onProgress } = option;
+        const formData = new FormData();
+        const  config = {
+            headers: {"content-type": "multipart/form-data"},
+            onUploadProgress: event =>{
+                const percent = Math.floor((event.loaded / event.total) * 100);
+                this.setState({progress: percent});
+                if (percent === 100) {
+                  setTimeout(() => this.setState({progres: 0}), 1000);
+                }
+                onProgress({ percent: (event.loaded / event.total) * 100 });
+              }
+            }
+            formData.append('files', file)
+            addFiles(formData, config).then((res,err)=>{
+                if (res.success){
+                    onSuccess("Ok");
+                    this.setState({
+                        fileList: [res.file],
+                        fileIds: res.file.fileId
+                    })
+                }else{
+                    console.log("Eroor: ", err);
+                    const error = new Error("Some error");
+                    onError({ err });
+                }
+            })
+    }
+
+    onRemove = (file) => {
+        this.setState({
+            fileIds: null,
+            fileList: []
+        })  
+    }
+
+
+    //file upload testing
+
     render() {
         const { editCont, visible } = this.props;
-        const { BasicFields, BillingFields, KinFields, sContact, CONTACTS, ORGS, sOrg, sUsername, loading } = this.state;
+        const { BasicFields, BillingFields, KinFields, sContact, CONTACTS, ORGS, sOrg, fileIds, loading, fileList } = this.state;
 
         return (
             <Modal
@@ -929,11 +982,24 @@ class InfoModal extends Component {
                         />
                     </TabPane>
                     <TabPane tab="Subcontractor Contracts" key="Subcontractor Contracts" forceRender>
-                        <Form
-                            ref={this.billingRef}
-                            Callback={this.BillingCall}
-                            FormFields={BillingFields}
-                        />
+                        <Form ref={this.billingRef} Callback={this.BillingCall} FormFields={BillingFields} />
+                        <p style={{marginTop: 10, marginBottom: 2}}>Signed Contract</p>
+                        <Upload
+                            customRequest={this.handleUpload}
+                            // listType="picture"
+                            listType="picture-card"
+                            maxCount={1}
+                            fileList={fileList}
+                            onRemove= {this.onRemove}
+                        >
+                            {!fileIds &&
+                                <div style={{marginTop: 10}} >
+                                    <PlusOutlined />
+                                    <div style={{ marginTop: 8 }}>Upload</div>
+                                </div>
+                            }
+                            {/* <Button icon={<UploadOutlined />} style={{marginTop: 10}} loading={imgLoading}>Upload Contract</Button> */}
+                        </Upload>
                     </TabPane>
                     <TabPane tab="Next of Kin" key="Next of Kin" forceRender>
                         <Form

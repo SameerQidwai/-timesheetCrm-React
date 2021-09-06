@@ -1,7 +1,7 @@
 import axios from "axios";
 import { message as messageAlert} from "antd";
 
-import { Api, headers, jwtExpired, setToken } from "./constant";
+import { Api, headers, jwtExpired, setToken, thumbUrl } from "./constant";
 
 const url = `${Api}/employment-contracts`;
 
@@ -29,7 +29,19 @@ export const getRecord = (id) => {
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
-            if (success)  setToken(res.headers && res.headers.authorization)
+            if (success)  {
+                setToken(res.headers && res.headers.authorization)
+                data.file= data.fileId ? [{
+                    id: data.file.id,
+                    createdAt: data.file.createdAt,
+                    fileId: data.file.id,
+                    uid: data.file.uniqueName,
+                    name: data.file.originalName,
+                    type: data.file.type,
+                    url: `${Api}/files/${data.file.uniqueName}`,
+                    thumbUrl: thumbUrl(data.file.type)
+                }] : []
+            }
             return { success, data };
         })
         .catch((err) => {
@@ -68,8 +80,10 @@ export const delList = (id) => {
         .then((res) => {
             const { success, message } = res.data;
             jwtExpired(message)
-            setToken(res.headers && res.headers.authorization)
-            if (success) return {success};
+            if (success) {
+                setToken(res.headers && res.headers.authorization)
+            }
+            return {success};
         })
         .catch((err) => {
             return {
@@ -88,8 +102,10 @@ export const editList = (id, data) => {
             const { success, message } = res.data;
             jwtExpired(message)
             messageAlert.success({ content: message, key: id})
-            setToken(res.headers && res.headers.authorization)
-            if (success) return {success};
+            if (success) {
+                setToken(res.headers && res.headers.authorization)
+            }
+            return {success};
         })
         .catch((err) => {
             messageAlert.error({ content: err.message, key: id})

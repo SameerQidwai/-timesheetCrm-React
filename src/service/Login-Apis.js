@@ -14,8 +14,7 @@ export const login = (data) => {
             if (success){
                 let permissions = {}
                 let role = data.role
-                console.log(data.role);
-                data.role = role.roleId
+                // data.role = role.roleId
                 role.permissions.map(el=>{
                     if(!permissions[el.resource]){
                         permissions[el.resource] = {}
@@ -26,6 +25,8 @@ export const login = (data) => {
                     permissions[el.resource][el.action][el.grant] = true
                 })
                 data.permissions = JSON.stringify(permissions)
+                delete data.role.permissions
+                data.role = JSON.stringify(data.role)
                 const keys = Object.keys(data)
                 let len = keys.length -1
                 for( len; len>=0; len-- ) {

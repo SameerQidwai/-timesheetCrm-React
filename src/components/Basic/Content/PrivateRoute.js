@@ -16,7 +16,6 @@ function PrivateRoute () {
     const [ stopTime, setStopTime ] = useState(false)
 
     const restActivity = () =>{
-        console.log('stopTime', stopTime);
         if (elapsed){    
             clearTimeout(timer);
             timer = null
@@ -70,7 +69,6 @@ function PrivateRoute () {
                 minHeight: "88vh",
             }}
         >
-           {console.log('stopTime return', stopTime)}
            {loggedIn() ==='jwtExpired' || loggedIn() === true ? 
             <AdminContent /> 
             :

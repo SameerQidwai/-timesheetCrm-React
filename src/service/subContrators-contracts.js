@@ -1,7 +1,7 @@
 import { message as messageAlert } from "antd";
 import axios from "axios";
 
-import { Api, headers, jwtExpired, setToken } from "./constant";
+import { Api, headers, jwtExpired, setToken, thumbUrl } from "./constant";
 
 const url = `${Api}/sub-contractors-contracts`;
 
@@ -27,8 +27,20 @@ export const getRecord = (id) => {
         .get(url + `/${id}`, {headers:headers})
         .then((res) => {
             const { success, data } = res.data;
-            setToken(res.headers && res.headers.authorization)
-            if (success) return {success, data};
+            if (success) {
+                setToken(res.headers && res.headers.authorization)
+                data.file= data.fileId ? [{
+                    id: data.file.id,
+                    createdAt: data.file.createdAt,
+                    fileId: data.file.id,
+                    uid: data.file.uniqueName,
+                    name: data.file.originalName,
+                    type: data.file.type,
+                    url: `${Api}/files/${data.file.uniqueName}`,
+                    thumbUrl: thumbUrl(data.file.type)
+                }] : []
+            }
+            return {success, data};
         })
         .catch((err) => {
             return {

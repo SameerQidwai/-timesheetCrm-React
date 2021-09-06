@@ -1,10 +1,10 @@
-export const Api = "http://localhost:3301/api/v1";
+// export const Api = "http://localhost:3301/api/v1";
 
 // export const Api = "http://onelmcrm.gaamatech.com:8000/api/v1";
 // export const Api = "http://192.168.0.243:3000/api/v1"; // Shahzaib/   
 // export const Api = "http://192.168.0.191:3301/api/v1"; // Me
 
-// export const Api = "http://54.91.49.138:8000/api/v1"; //Test api
+export const Api = "http://54.91.49.138:8000/api/v1"; //Test api
 
 
 // export const Api = "http://3.239.21.153:8000/api/v1"; //live api  
@@ -52,4 +52,22 @@ export const jwtExpired = (message) => {
 }
 
 export const headers = { 'content-type': 'application/json','Authorization' : `${localStore().accessToken}`}
+
+export const thumbUrl = (type) =>{
+  if (type === 'pdf') {
+      return "/icons/pdf.png";
+  }else if ( type === 'doc' || type === 'docx'){
+      return "/icons/doc.png";
+  }else if ( type === 'xls' || type === 'xlsx'){
+      return "/icons/xls.png";
+  }else if ( type === 'ppt' || type === 'pptx'){
+      return "/icons/ppt.png";
+  }else if (type === 'csv'){
+      return "/icons/csv.png";
+  }else if (/(webp|svg|png|gif|jpg|jpeg|jfif|bmp|dpg|ico)$/i.test(type)){
+      return "/icons/img.png"
+  }else{
+      return "/icons/default.png"
+  }
+}
  

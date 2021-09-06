@@ -1,14 +1,17 @@
 import React, { Component } from "react";
-import { Row, Col, Table, Modal, Input, Button, Select, Typography, Popconfirm, DatePicker, Space, Tag, Tooltip, message} from "antd";
-import { CloseCircleOutlined, DownloadOutlined, SaveOutlined, LoadingOutlined } from "@ant-design/icons"; //Icons
+import { Row, Col, Table, Modal, Button, Select, Typography, Popconfirm, DatePicker, Space, Tag, Tooltip, message} from "antd";
+import { Link } from "react-router-dom";
+import { DownloadOutlined, SaveOutlined, LoadingOutlined } from "@ant-design/icons"; //Icons
 import moment from "moment";
 import TimeModal from "./Modals/TimeModal"
 import AttachModal from "./Modals/AttachModal";
 import ExportToExcel from '../../components/Core/ExportToExcel'
 import {  getList, reviewTimeSheet, getUsers,  } from "../../service/timesheet"
 import { getProjects } from "../../service/constant-Apis";
-import "../styles/table.css";
 import { localStore } from "../../service/constant";
+
+import "../styles/table.css";
+import TimeSheetPDF from "./Modals/TimeSheetPDF";
 
 const { Title } = Typography;
 //inTable insert
@@ -55,7 +58,8 @@ class TimeSheet extends Component {
                                     <Col> {value} </Col>
                                     {/* {(record.status === 'SV' || record.status === 'RJ') && */}
                                      <Col> 
-                                        <DownloadOutlined onClick={()=>{this.exportData(record, index)}}/>
+                                        {/* <DownloadOutlined onClick={()=>{this.exportData(record, index)}}/> */}
+                                        <DownloadOutlined onClick={()=>{this.exporPDF(record.projectEntryId, index)}}/>
                                         <SaveOutlined onClick={()=>{this.openAttachModal(record, index)} } style={{color: '#1890ff', marginLeft:10}}/>
                                     </Col>
                                     {/* } */}
@@ -328,6 +332,13 @@ class TimeSheet extends Component {
         this.setState({ timeObj, isAttach: true })
     }
 
+    exporPDF = (entryId) =>{
+        this.setState({
+            eData: entryId,
+            isDownload: true
+        })   
+    }
+
     exportData = (record) =>{
         const { startDate, endDate } = this.state.sheetDates
       
@@ -508,11 +519,17 @@ class TimeSheet extends Component {
                         // callBack={this.callBack}
                     />
                 )}
-                {isDownload && (
+                {/* {isDownload && (
                     <ExportToExcel
                         download={isDownload}
                         close={()=>this.setState({isDownload: false, editTime: false, timeObj: false})}
                         data={eData}
+                    />
+                )} */}
+                {isDownload && (
+                    <TimeSheetPDF
+                        projectEntryId={eData}
+                        close={()=>this.setState({isDownload: false})}
                     />
                 )}
                 {proVisible && (

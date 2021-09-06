@@ -23,7 +23,7 @@ class BillModal extends Component {
             loading: false,
             imgLoading: false,
             fileList: [],
-            fileIds:[],
+            fileIds:null,
 
             data: {
                 pay_email: "Trigger.payme@oneLm.com",
@@ -242,12 +242,15 @@ class BillModal extends Component {
     BillingCall = (vake) => {
         // this will work after  getting the Object from level form
         const {editCntrct, editEmp} = this.props
+        const { fileIds } = this.state
         const { billing } = vake;
         billing.noOfHoursPer = 1; 
         billing.type === 1 ? billing.remunerationAmountPer = 1 : billing.remunerationAmountPer = 7
         billing.startDate = billing.startDate ? moment(billing.startDate).valueOf(): null
         billing.endDate = billing.endDate ? moment(billing.endDate).valueOf(): null
         billing.employeeId = editEmp;
+        billing.fileId = fileIds
+
         if (!editCntrct) {
             console.log("emes");
             this.addContract(billing); //add skill
@@ -276,6 +279,10 @@ class BillModal extends Component {
                 data.startDate = data.startDate && moment(data.startDate)
                 data.endDate = data.endDate && moment(data.endDate)
                 this.billingRef.current.refs.billing_form.setFieldsValue({ billing: data, });
+                this.setState({
+                    fileIds: data.fileId,
+                    fileList: data.file
+                })
             }
         })        
     };
@@ -292,13 +299,7 @@ class BillModal extends Component {
 
      //file upload testing
 
-     getBase64= (img, callback) =>{
-        const reader = new FileReader();
-        reader.addEventListener('load', () => callback(reader.result));
-        reader.readAsDataURL(img);
-    }
-
-    handleUpload = async option=>{
+     handleUpload = async option=>{
         const { onSuccess, onError, file, onProgress } = option;
         const formData = new FormData();
         const  config = {
@@ -318,7 +319,7 @@ class BillModal extends Component {
                     onSuccess("Ok");
                     this.setState({
                         fileList: [res.file],
-                        fileIds: [res.file.fileId]
+                        fileIds: res.file.fileId
                     })
                 }else{
                     console.log("Eroor: ", err);
@@ -328,46 +329,11 @@ class BillModal extends Component {
             })
     }
 
-    handleChange = info => {
-        if (info.file.status === 'uploading') {
-          this.setState({ imgLoading: true });
-          return;
-        }
-        if (info.file.status === 'done') {
-          // Get this url from response in real world.
-          this.getBase64(info.file.originFileObj, imageUrl =>
-            this.setState({
-              imgLoading: false,
-            }),
-          );
-        }
-    };
-
     onRemove = (file) => {
-        this.setState((state) => {
-            const index = state.fileList.indexOf(file);
-            const newFileList = state.fileList.slice();
-            const fileIds = state.fileIds
-            newFileList.splice(index, 1);
-            fileIds.splice(index, 1);
-            return {
-                fileIds,
-                fileList: newFileList,
-            };
-        });
-    }
-
-    uploadAttachments = (billing, data) =>{
-        const { callBack } = this.props
-        const { fileIds} = this.state
-        if(billing && billing.employmentContractId && fileIds.length===1){
-            addAttachments('ECon', billing.employmentContractId,fileIds).then(attach=>{
-                if (attach.success){
-                    callBack(data)
-                }
-            })
-        }
-        
+        this.setState({
+            fileIds: null,
+            fileList: []
+        })  
     }
 
     //file upload testing
@@ -389,6 +355,7 @@ class BillModal extends Component {
                 width={900}
             >
                 <Form ref={this.billingRef} Callback={this.BillingCall} FormFields={BillingFields} />
+                <p style={{marginTop: 10, marginBottom: 2}}>Signed Contract</p>
                 <Upload
                     customRequest={this.handleUpload}
                     // listType="picture"
@@ -396,7 +363,6 @@ class BillModal extends Component {
                     maxCount={1}
                     fileList={fileList}
                     onRemove= {this.onRemove}
-                    onChange={this.handleChange}
                 >
                     {fileList.length < 1 &&
                         <div style={{marginTop: 10}} >

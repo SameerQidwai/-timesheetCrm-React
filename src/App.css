@@ -79,3 +79,31 @@ div.ant-row.ant-form-item.ant-form-item-with-help.ant-form-item-has-error{
   row-gap: 0px;
   margin-bottom: 0px;
 }
+
+@media all {
+  .page-break {
+    display: none;
+  }
+}
+
+@media print {
+  html, body {
+    height: initial !important;
+    overflow: initial !important;
+    -webkit-print-color-adjust: exact;
+  }
+}
+
+@media print {
+  .page-break {
+    margin-top: 1rem;
+    display: block;
+    page-break-before: auto;
+  }
+}
+
+@page {
+  size: auto;
+  margin: 20mm;
+}
+

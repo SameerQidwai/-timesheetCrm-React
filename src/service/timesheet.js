@@ -181,3 +181,36 @@ export const getUsers = () => {
         });
 };
 
+export const getPdf = (entryId) => {
+    return axios
+        .get(`${url}print/${entryId}`, { headers: headers })
+        .then((res) => {
+            const { success, data, message } = res.data;
+            jwtExpired(message)
+            if (success) {
+                setToken(res.headers && res.headers.authorization)
+                let projectInfo = {
+                    company: data.company,
+                    employee: data.employee,
+                    period: data.period,
+                    project:  data.project.name,
+                    client: data.project.client,
+                    contact: data.project.contact,
+                    totalHours: data.project.totalHours,
+                    invoicedDays: data.project.invoicedDays
+                }
+                let entries = data.project.entries
+                return { success, data, projectInfo, entries}
+            }
+            
+            return { success, data };
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                success: false,
+                message: err.message,
+            };
+        });
+};
+

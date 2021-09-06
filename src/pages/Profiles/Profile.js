@@ -5,12 +5,15 @@ import PersonalContract from './Contract'
 import PasswordUpdate from './PasswordUpdate'
 import { getSettings } from '../../service/Login-Apis'
 import OtherDetails from './OtherDetails'
+import Attachments from '../../components/Core/Attachments'
+import { localStore } from '../../service/constant'
 
 const { TabPane } = Tabs
 const Profile = ()=>{
     const [basic, setBasic] = useState(false)
     const [contract, setContract] = useState(false)
     const [details, setDetails] = useState(false)
+    const loginType = JSON.parse(localStore().role).type
 
     useEffect(() => {
         getData()
@@ -34,11 +37,12 @@ const Profile = ()=>{
             <TabPane tab="Personal Details" key="personal">
                 {basic&& <PersonalDetails data={basic}/>}
             </TabPane>
-            <TabPane tab="Contract" key="contract"> 
+            {loginType ==='Employee' &&<TabPane tab="Contract" key="contract"> 
                 {contract &&<PersonalContract data={contract} />} 
-            </TabPane>
+            </TabPane>}
             <TabPane tab="Other Details" key="others"> {details && <OtherDetails  data={details}/>} </TabPane>
             <TabPane tab="Password" key="password "> <PasswordUpdate password={basic.password}/> </TabPane>
+            <TabPane tab="Attachments" key="attachments"> <Attachments targetType="emp" targetId={localStore().id}  /> </TabPane>
         </Tabs>
     )
 }

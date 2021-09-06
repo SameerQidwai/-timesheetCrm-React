@@ -1,10 +1,11 @@
 import React, { Component } from "react";
-import { Modal } from "antd";
-import { LoadingOutlined } from "@ant-design/icons"; //Icons
+import { Modal, Upload } from "antd";
+import { LoadingOutlined, PlusOutlined } from "@ant-design/icons"; //Icons
 import Form from "../../../components/Core/Form";
 
 import moment from "moment";
 import { addList, editList, getRecord } from "../../../service/subContrators-contracts";
+import { addFiles } from "../../../service/Attachment-Apis";
 
 class BillModal extends Component {
     constructor() {
@@ -19,6 +20,10 @@ class BillModal extends Component {
             kinSubmitted: false,
             skillSubmitted: false,
             loading: false,
+
+            fileList: [],
+            fileIds:null,
+
             data: {
                 pay_email: "Trigger.payme@oneLm.com",
                 h_rate: "90",   
@@ -148,12 +153,15 @@ class BillModal extends Component {
 
     BillingCall = (vake) => {
         // this will work after  getting the Object from level form
+        const { fileIds } = this.state
         const {editCntrct, editEmp} = this.props
         const { billing } = vake;
         billing.noOfHoursPer = 1; 
         billing.startDate = billing.startDate ? moment(billing.startDate).valueOf(): null
         billing.endDate = billing.endDate ? moment(billing.endDate).valueOf(): null
         billing.subContractorId = editEmp;
+        billing.fileId = fileIds
+
         if (!editCntrct) {
             console.log("emes");
             this.addContract(billing); //add skill
@@ -182,6 +190,10 @@ class BillModal extends Component {
                 data.startDate = data.startDate && moment(data.startDate)
                 data.endDate = data.endDate && moment(data.endDate)
                 this.billingRef.current.refs.billing_form.setFieldsValue({ billing: data, });
+                this.setState({
+                    fileIds: data.fileId,
+                    fileList: data.file
+                })
             }
         })        
     };
@@ -196,9 +208,50 @@ class BillModal extends Component {
         });
     };
 
+     //file upload testing
+
+     handleUpload = async option=>{
+        const { onSuccess, onError, file, onProgress } = option;
+        const formData = new FormData();
+        const  config = {
+            headers: {"content-type": "multipart/form-data"},
+            onUploadProgress: event =>{
+                const percent = Math.floor((event.loaded / event.total) * 100);
+                this.setState({progress: percent});
+                if (percent === 100) {
+                  setTimeout(() => this.setState({progres: 0}), 1000);
+                }
+                onProgress({ percent: (event.loaded / event.total) * 100 });
+              }
+            }
+            formData.append('files', file)
+            addFiles(formData, config).then((res,err)=>{
+                if (res.success){
+                    onSuccess("Ok");
+                    this.setState({
+                        fileList: [res.file],
+                        fileIds: res.file.fileId
+                    })
+                }else{
+                    console.log("Eroor: ", err);
+                    const error = new Error("Some error");
+                    onError({ err });
+                }
+            })
+    }
+
+    onRemove = (file) => {
+        this.setState({
+            fileIds: null,
+            fileList: []
+        })  
+    }
+
+    //file upload testing
+
     render() {
         const { editCntrct, visible, close } = this.props;
-        const { BillingFields, loading } = this.state;
+        const { BillingFields, loading, fileIds, fileList } = this.state;
 
         return (
             <Modal
@@ -212,11 +265,24 @@ class BillModal extends Component {
                 onCancel={close}
                 width={900}
             >
-                <Form
-                    ref={this.billingRef}
-                    Callback={this.BillingCall}
-                    FormFields={BillingFields}
-                />
+                <Form ref={this.billingRef} Callback={this.BillingCall} FormFields={BillingFields} />
+                <p style={{marginTop: 10, marginBottom: 2}}>Signed Contract</p>
+                <Upload
+                    customRequest={this.handleUpload}
+                    // listType="picture"
+                    listType="picture-card"
+                    maxCount={1}
+                    fileList={fileList}
+                    onRemove= {this.onRemove}
+                >
+                    {!fileIds &&
+                        <div style={{marginTop: 10}} >
+                            <PlusOutlined />
+                            <div style={{ marginTop: 8 }}>Upload</div>
+                        </div>
+                    }
+                    {/* <Button icon={<UploadOutlined />} style={{marginTop: 10}} loading={imgLoading}>Upload Contract</Button> */}
+                </Upload>
             </Modal>
         );
     }

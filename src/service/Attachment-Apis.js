@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { Api, headers, jwtExpired, localStore, setToken } from "./constant";
+import { Api, headers, jwtExpired, localStore, setToken, thumbUrl } from "./constant";
 
 const url = `${Api}/attachments/`;
 
@@ -111,23 +111,7 @@ export const getAttachments = (targetType, targetId) => {
             };
         });
 };
-const thumbUrl = (type) =>{
-    if (type === 'pdf') {
-        return "/icons/pdf.png";
-    }else if ( type === 'doc' || type === 'docx'){
-        return "/icons/doc.png";
-    }else if ( type === 'xls' || type === 'xlsx'){
-        return "/icons/xls.png";
-    }else if ( type === 'ppt' || type === 'pptx'){
-        return "/icons/ppt.png";
-    }else if (type === 'csv'){
-        return "/icons/csv.png";
-    }else if (/(webp|svg|png|gif|jpg|jpeg|jfif|bmp|dpg|ico)$/i.test(type)){
-        return "/icons/img.png"
-    }else{
-        return "/icons/default.png"
-    }
-}
+
 export const delAttachment = (id,) => {
     return axios
         .delete(`${url}${id}`)

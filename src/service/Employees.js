@@ -1,7 +1,7 @@
 import axios from "axios";
 import { message as messageAlert } from "antd";
 
-import { Api, headers, jwtExpired, setToken } from "./constant";
+import { Api, headers, jwtExpired, setToken, thumbUrl } from "./constant";
 import moment from "moment";
 
 const url = `${Api}/employees`;
@@ -156,6 +156,7 @@ function reStructure(data) {
             helpHECS: data.helpHECS,
     }
     const employmentContracts = data.employmentContracts.length >0 ? data.employmentContracts[0] : {}
+
     const billing ={
         employmentContractId: employmentContracts.id,
         employeeId: employmentContracts.employeeId,
@@ -169,7 +170,18 @@ function reStructure(data) {
         noOfHoursPer: employmentContracts.noOfHoursPer, 
         remunerationAmount:employmentContracts.remunerationAmount,
         remunerationAmountPer: employmentContracts.remunerationAmountPer,  
-        comments: employmentContracts.comments
+        comments: employmentContracts.comments,
+        fileId: employmentContracts.fileId,
+        file: employmentContracts.fileId ? [{
+            id: employmentContracts.file.id,
+            createdAt: employmentContracts.file.createdAt,
+            fileId: employmentContracts.file.id,
+            uid: employmentContracts.file.uniqueName,
+            name: employmentContracts.file.originalName,
+            type: employmentContracts.file.type,
+            url: `${Api}/files/${employmentContracts.file.uniqueName}`,
+            thumbUrl: thumbUrl(employmentContracts.file.type)
+        }]: []
     }
     const train = {
         training: data.training,
