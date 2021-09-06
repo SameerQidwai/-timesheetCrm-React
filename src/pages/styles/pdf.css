@@ -1,0 +1,25 @@
+.bodyMargin{ 
+    margin: 10 
+}
+.sensitive{ 
+    color: '#ff0000' 
+}
+.textCenter{ 
+    text-align:'center' 
+}
+.imgDiv{ 
+    width: 60%; 
+    text-align: 'right' 
+}
+.marg20{ 
+    margin-bottom: 20 
+}
+.signDiv { 
+    border: 'solid black 1px'; 
+    min-height:35
+}
+.fSensitive {
+    text-align:'center';
+    margin-top: 100
+}
+
