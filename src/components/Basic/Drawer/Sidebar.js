@@ -13,9 +13,13 @@ import PrivateRoute from "../Content/PrivateRoute";
 const { Header, Sider } = Layout;
 
 class Drawers extends Component {
-    state = {
-        collapsed: false,
-    };
+    constructor(){
+        super()
+        this.state = {
+            collapsed: true,
+        };
+    }
+    
     toggle = () => {
         this.setState({
             collapsed: !this.state.collapsed,
@@ -31,7 +35,7 @@ class Drawers extends Component {
                     trigger={null}
                     collapsible
                     collapsed={collapsed}
-                    onBreakpoint={this.toggle}
+                    // onBreakpoint={()=>this.toggle()}
                     breakpoint="lg"
                 >
                     <div className="logo">
@@ -76,7 +80,7 @@ class Drawers extends Component {
                     >
                         {/**Have to set this header here to trigger toggle sidebar */}
                         <Row justify="start">
-                            <span className="trigger" onClick={this.toggle}>
+                            <span className="trigger" onClick={()=>{this.toggle()}}>
                                 {collapsed ? (
                                     <MenuUnfoldOutlined />
                                 ) : (

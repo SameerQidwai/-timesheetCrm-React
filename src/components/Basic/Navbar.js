@@ -149,13 +149,13 @@ class Navbar extends Component {
                                     <SettingOutlined />
                                 </Link>
                                 <Dropdown overlay={options} placement="bottomCenter" >
-                                    <Link><DownOutlined /></Link>
+                                    <DownOutlined style={{color: '#1890ff', cursor:'pointer'}}/>
                                 </Dropdown>
                             </Space>
                         </Col>: 
                         <Col xs={{ span: 1 }} md={{ span: 1 }}>
                             <Dropdown overlay={options} placement="bottomCenter" >
-                                <Link><DownOutlined /></Link>
+                                <DownOutlined style={{color: '#1890ff', cursor:'pointer'}} />
                             </Dropdown>
                         </Col>}
                         

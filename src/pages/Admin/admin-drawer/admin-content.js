@@ -5,6 +5,7 @@ import { Route, Link } from "react-router-dom"; // Route Library
 import { Breadcrumb, Col } from "antd";
 
 import Global from "../Global";
+import GlobalVars from "../GlobalVars";
 import CalenderHoldays from "../Calender/CalenerHolidays";
 import Calenders from "../Calender/Calenders";
 import HolidayTypes from "../Calender/HolidayTypes";
@@ -23,6 +24,10 @@ const pageLinks = [
     {
         component: Global,
         link: "/admin/global-settings",
+    },
+    {
+        component: GlobalVars,
+        link: "/admin/tax-rates",
     },
     {
         component: HolidayTypes,

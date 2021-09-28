@@ -19,6 +19,10 @@
     padding: 0;
 } */
 
+div.timeSheet-table{
+    max-height: 70vh;
+}
+
 div.timeSheet-table div.ant-table-content {
     overflow-x: hidden !important;
 }
@@ -29,6 +33,9 @@ div.timeSheet-table div.ant-table-content:hover {
 
 div.timeSheet-table div.ant-table-content::-webkit-scrollbar-track-piece {
     margin-left: 300px;
+}
+div.timeSheet-table .ant-table-summary {
+    display: table-header-group;
 }
 
 /* width */

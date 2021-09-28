@@ -92,6 +92,14 @@ class Projects extends Component {
                                     Resources
                                 </Link>
                             </Menu.Item>
+                             <Menu.Item>
+                                <Link
+                                    to={{ pathname: `/projects/${record.id}/milestones`, }}
+                                    className="nav-link"
+                                >
+                                    Milestones
+                                </Link>
+                            </Menu.Item>
                             
                         </Menu>
                     }>

@@ -22,4 +22,39 @@
     text-align:'center';
     margin-top: 100
 }
+.weekendClass{
+    background-color: #fafafa;
+}
 
+.cellSize table  {
+    font-size: 10px !important;
+    padding: 2px !important
+}
+.cellSize table > thead {
+    font-size: 10px !important;
+    padding: 2px !important
+}
+.cellSize table > tbody > tr  {
+    font-size: 10px !important;
+    padding: 2px !important
+}
+.cellSize table > thead > tr th {
+    font-size: 10px !important;
+    padding: 2px !important
+}
+.cellSize table > tbody > tr td {
+    font-size: 10px !important;
+    padding: 2px !important
+}
+.describe table  {
+    padding: 2px 18px !important
+}
+.describe table tbody tr  {
+    padding: 2px 18px !important
+}
+.describe table tbody tr th {
+    padding: 2px 18px !important
+}
+.describe table tbody tr td {
+    padding: 2px 18px !important
+}

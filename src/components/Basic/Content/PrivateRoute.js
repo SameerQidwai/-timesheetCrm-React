@@ -29,7 +29,7 @@ function PrivateRoute () {
                 // setStopTime(true)
             //milli * sec * min
             }, 1000 * 60 * 55)
-            // }, 10000)
+            // }, 1000)
         }   
     }
 

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Menu } from "antd";
 import { Link, withRouter } from "react-router-dom";
 
-import { FieldTimeOutlined, UserOutlined, CalendarOutlined, GlobalOutlined, AppstoreOutlined, ApartmentOutlined, GoldOutlined, } from "@ant-design/icons"; //Icons
+import { FieldTimeOutlined, UserOutlined, CalendarOutlined, GlobalOutlined, AppstoreOutlined, ApartmentOutlined, GoldOutlined, CalculatorOutlined } from "@ant-design/icons"; //Icons
 
 // import './Menus.css'
 
@@ -62,6 +62,12 @@ const listData = [
         icon: <AppstoreOutlined />,
         link: "/admin/panels",
         key: "/admin/panels",
+    },
+    {
+        text: "Tax Rates",
+        icon: <CalculatorOutlined />,
+        link: "/admin/tax-rates",
+        key: "/admin/tax-rates",
     },
 ];
 

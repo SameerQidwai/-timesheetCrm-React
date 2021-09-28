@@ -8,7 +8,8 @@ let states = ['ACT','NSW','VIC','QLD','SA','WA','NT','TSA']
 
 function GlobalVars(props) {
     const [form] = useForm();
-    const [rateFields, setRateFields] = useState([
+    const column = []
+    const [fields, setFields] = useState([
     {
         fieldCol: 6,
         Placeholder: "Rate",
@@ -113,93 +114,7 @@ function GlobalVars(props) {
         type: "Text",
         itemStyle:{paddingLeft: '5%'}, 
     }, 
-    ])
-
-    const otherFields = [
-        {
-            // object:'global',
-            fieldCol: 24,
-            Placeholder: "General Settings",
-            type: "Title",
-            mode: 4,
-            style: { textDecoration: "underline" },
-        },
-        {
-            fieldCol: 4, // this is only label 1
-            size: "small",
-            Placeholder: "Records Per Page",
-            type: "Text",
-            labelAlign: "right",
-        },
-        {
-            object: "global",
-            fieldCol: 20,
-            key: "recordsPerPage",
-            size: "small",
-            // rules:[{ required: true, message: 'Insert your Password Please' }],
-            type: "InputNumber",
-            labelCol: { span: 4 },
-            labelAlign: "right",
-            itemStyle: { marginBottom: 20 },
-            // hidden: false
-        },
-        {
-            fieldCol: 4, // this is only label 1
-            size: "small",
-            Placeholder: "Display Email",
-            rangeMin: true,
-            type: "Text",
-            labelAlign: "left",
-        },
-        {
-            object: "global",
-            fieldCol: 20,
-            key: "displayEmail",
-            Placeholder: "Display Name In Email",
-            size: "small",
-            // rules:[{ required: true, message: 'Insert your Password Please' }],
-            type: "input",
-            labelCol: { span: 3 },
-            labelAlign: "right",
-            itemStyle: { marginBottom: 20 },
-            // hidden: false
-        },
-        {
-            fieldCol: 4, // this is only label 1
-            size: "small",
-            Placeholder: "From Email",
-            rangeMin: true,
-            type: "Text",
-            labelAlign: "left",
-        },
-        {
-            object: "global",
-            fieldCol: 20,
-            key: "fromEmail",
-            Placeholder: "From Email Address",
-            size: "small",
-            // rules:[{ required: true, message: 'Insert your Password Please' }],
-            type: "input",
-            labelCol: { span: 3 },
-            labelAlign: "right",
-            itemStyle: { marginBottom: 20 },
-            // hidden: false
-        },
-        {
-            fieldCol: 20,
-            mode: "horizontal",
-            type: "Divider",
-            itemStyle: { padding: "0px", margin: "0px" },
-            itemStyle: { marginBottom: 20 },
-            // hidden: false
-        },
-    ]
-
-    useEffect(() => {
-        getApi()
-        addStateFields() 
-    }, [])
-
+   ])
     const stateFileds = (key) =>{
         return [{
             fieldCol: 4,
@@ -233,13 +148,9 @@ function GlobalVars(props) {
         },]
     }
 
-    const getApi = () =>{
-        getSettings().then(res=>{
-            if(res.success){
-                form.setFieldsValue({global: res.data});
-            }
-        })
-    }
+    useEffect(() => {
+        addStateFields()
+    }, [])
 
     const addStateFields = () =>{
         let newFields = []
@@ -248,7 +159,7 @@ function GlobalVars(props) {
         }
 
         if (states.length>0){
-            setRateFields(prevFields => {
+            setFields(prevFields => {
                 return [
                     ...prevFields,
                     ...newFields,
@@ -264,37 +175,24 @@ function GlobalVars(props) {
         }
     }
 
-    const onFinish = (childData) =>{
-        delete childData['undefined']
-        console.log(childData);
-        const value = childData.global
-        upadteSettings(value).then(res=>{
-            if(res.success){
-                // localStorage.setItem('pageSize', res.data.recordsPerPage)
-            }
-        })
-    }
-
     return (
         <>
         <Form
             id={'my-form'}
             form={form}
             scrollToFirstError={true}
-            onFinish={onFinish}
             size="small"
             layout="inline"
-            style={{padding: '20px 50px 20px 50px'}}
+            style={{padding: 50, paddingTop:20}}
         >
-            <FormItems FormFields={rateFields} />
-            <FormItems FormFields={otherFields} />
+            <FormItems FormFields={fields} />
         </Form>
         <Row justify="end">
             <Space size="large">
                 <Popconfirm
                     placement="bottom"
                     title="Are you sure want to save new Settings?"
-                    onConfirm={()=>form.submit()}
+                    onConfirm={() => this.submit()}
                     okText="Yes"
                     cancelText="No"
                 >
@@ -302,7 +200,7 @@ function GlobalVars(props) {
                         Save
                     </Button>
                 </Popconfirm>
-                <Button size="small" onClick={()=>form.resetFields()}>
+                <Button size="small" onClick={() => this.reset()}>
                     Cancel
                 </Button>
             </Space>

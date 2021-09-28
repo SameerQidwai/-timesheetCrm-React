@@ -17,7 +17,8 @@ import ContInfo from "../../../pages/Contractors & Info/ContInfo";
 import ContBilling from "../../../pages/Contractors & Info/ContBilling";
 
 import Contact from "../../../pages/Contacts/Contact Person/Contact";
-import TimeSheet from "../../../pages/Time Sheet/TimeSheet";
+import TimeSheetProject from "../../../pages/Time Sheet/TimeSheetProject";
+import TimeSheetContact from "../../../pages/Time Sheet/TimeSheetContact";
 import TimeOff from "../../../pages/Time/TimeOff";
 // import Travels from "../../../pages/Travel/Travels";
 
@@ -30,11 +31,12 @@ import ProjectInfo from "../../../pages/Project/ProjectInfo";
 import ProjectResources from "../../../pages/Project/Resources";
 import ResourceHistory from "../../../pages/Project/ResourceHistory";
 import PurchaseOrder from "../../../pages/Project/PurchaseOrder";
+import Milestone from "../../..//pages/Project/Milestone";
+
 import Calender from "../../Calender/Calender";
 
 import Profile from "../../../pages/Profiles/Profile"
 
-import TimeSheetPDF from "../../../pages/Time Sheet/Modals/TimeSheetPDF" 
 // import TimeSheetHTML from "../../Core/TimeSheetHTML" 
 import { localStore } from "../../../service/constant";
 
@@ -54,6 +56,11 @@ const pageLinks = [
     {
         component: Admin,
         link: "/admin/global-settings",
+        key: 'ADMIN_OPTIONS',
+    },
+    {
+        component: Admin,
+        link: "/admin/tax-rates",
         key: 'ADMIN_OPTIONS',
     },
     {
@@ -202,7 +209,12 @@ const pageLinks = [
         key: "PROJECTS"
     },
     {
-        component: TimeSheet,
+        component: Milestone,
+        link: "/projects/:id/milestones",
+        key: "PROJECTS"
+    },
+    {
+        component: TimeSheetContact,
         link: "/time-sheet",
         key: "TIMESHEETS"
     },

@@ -272,7 +272,7 @@ class FormItems extends Component {
                 );
                 break;
             case "Divider":
-                item = <Divider type={mode} style={style}></Divider>;
+                item = <Divider type={mode} style={style} />;
                 break;
             case "Button":
                 item = (

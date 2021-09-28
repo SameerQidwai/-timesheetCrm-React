@@ -12,7 +12,7 @@ const { Sider, Content } = Layout;
 
 class AdminSidebar extends Component {
     state = {
-        collapsed: false,
+        collapsed: true,
     };
 
     toggle = () => {

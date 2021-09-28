@@ -31,7 +31,7 @@ fields={
             itemStyle: 'put style on from item for the field',
             fieldStyle = 'put style directly to the field ',
             valuePropName:'"checked" for the field name as checkbox and switch and fileList for Dragger',
-            rangeMin: 'To set min number to a input field ||  to put reqired staric in front of Labels',
+            rangeMin: 'To set min number to a input field ||  to put reqired staric in front of Labels || hide Now Button in TimePicker',
             rangeMax: 'To set max number to a input field and if multiple allowed',
             // default: 'might work n something... form initial value is working at the time',
             showTime: 'boolean for datePicker to show Time as well and string for TimePicker for format...',
