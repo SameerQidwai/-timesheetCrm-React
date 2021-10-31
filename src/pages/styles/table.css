@@ -28,7 +28,7 @@ div.timeSheet-table div.ant-table-content {
 }
 
 div.timeSheet-table div.ant-table-content:hover {
-    overflow-x: scroll !important;
+    overflow-x: scroll !important;     
 }
 
 div.timeSheet-table div.ant-table-content::-webkit-scrollbar-track-piece {
