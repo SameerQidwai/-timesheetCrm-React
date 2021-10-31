@@ -38,6 +38,35 @@ div.timeSheet-table .ant-table-summary {
     display: table-header-group;
 }
 
+div.timeSheet-table div.ant-table-has-fix-left  tr.submitClass td.ant-table-cell-fix-left{
+    background: unset;
+}
+div.timeSheet-table div.ant-table-has-fix-left  tr.rejectClass td.ant-table-cell-fix-left{
+    background: unset;
+}
+div.timeSheet-table div.ant-table-has-fix-left  tr.approveClass td.ant-table-cell-fix-left{
+    background: unset;
+}
+
+div.timeSheet-table .ant-table-tbody > tr.submitClass.ant-table-row:hover > td {
+    background: unset;
+}
+div.timeSheet-table .ant-table-tbody > tr.rejectClass.ant-table-row:hover > td {
+    background: unset;
+}
+div.timeSheet-table .ant-table-tbody > tr.approveClass.ant-table-row:hover > td {
+    background: unset;
+}
+
+.submitClass{   
+    background: #f0f0f0 !important;
+}
+.rejectClass{
+    background: #ffdaf9 !important;
+}
+.approveClass{
+    background: #caffe4 !important;
+}
 /* width */
 ::-webkit-scrollbar {
     width: 8px;

@@ -456,6 +456,16 @@ class TimeSheetContact extends Component {
         })
     }
 
+    highlightRow(record) {
+        const { status } = record
+        if (status === 'SB'){
+            return 'submitClass'
+        }else if(status === 'AP'){
+            return 'approveClass'
+        }else if(status === 'RJ'){
+            return 'rejectClass'        }
+    }
+
     render() {
         const { loading, data, isVisible, proVisible, columns, editTime, timeObj, sheetDates, projects, sProject, isAttach, isDownload, eData, USERS, sUser, loginId, selectedProjects } = this.state
         return (
@@ -540,8 +550,9 @@ class TimeSheetContact extends Component {
                     bordered
                     pagination={false}
                     rowKey={data=>data.projectEntryId}
+                    rowClassName={(record) => this.highlightRow(record)}
                     columns={columns}
-                    dataSource={data}
+                    dataSource={[...data]}
                     summary={ columnData => this.summaryFooter(columnData)}
                 />
                 <Row justify="end" style={{marginTop: 10}}>
