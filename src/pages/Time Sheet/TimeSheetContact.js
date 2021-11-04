@@ -62,7 +62,7 @@ class TimeSheetContact extends Component {
                             {this.state && this.state.sUser === this.state.loginId && (record.status === 'SV' || record.status === 'RJ') ?<Col sapn={12}>
                                 <Popconfirm
                                     title={`You want to submit ${value}'s timesheet?`}
-                                    onConfirm={()=>{this.reviewTimeSheet([record.projectEntryId], 'submit', index, 'SB')}}
+                                    onConfirm={()=>{this.reviewTimeSheet(record.projectEntryId, 'submit', index, 'SB')}}
                                 >
                                     <Button style={{backgroundColor: "#4CAF50"}} size="small" type="primary"> Submit </Button>
                                 </Popconfirm>
@@ -72,13 +72,13 @@ class TimeSheetContact extends Component {
                                 <Space >
                                     <Popconfirm
                                         title={`You want to Approve ${value}'s timesheet?`}
-                                        onConfirm={()=>{this.reviewTimeSheet([record.projectEntryId], 'approve', index, 'AP')}}
+                                        onConfirm={()=>{this.reviewTimeSheet(record.projectEntryId, 'approve', index, 'AP')}}
                                     >
                                         <Button style={{backgroundColor: "#4CAF50"}} size="small" type="primary"> Approve </Button>
                                     </Popconfirm>
                                     <Popconfirm
                                         title={`You want to Reject ${value}'s timesheet?`}
-                                        onConfirm={()=>{this.reviewTimeSheet([record.projectEntryId], 'reject', index, 'RJ')}}
+                                        onConfirm={()=>{this.reviewTimeSheet(record.projectEntryId, 'reject', index, 'RJ')}}
                                     >
                                         <Button danger  size="small" type="primary"> Reject </Button>
                                     </Popconfirm>
