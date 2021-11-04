@@ -75,7 +75,7 @@ export const addAttachments = (targetType, targetId, data) => {
 
 export const getAttachments = (targetType, targetId) => {
     return axios
-        .get(`${url}${targetType}/${targetId}`)
+        .get(`${url}${targetType}/${targetId}`, {headers: headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -114,7 +114,7 @@ export const getAttachments = (targetType, targetId) => {
 
 export const delAttachment = (id,) => {
     return axios
-        .delete(`${url}${id}`)
+        .delete(`${url}${id}`, {headers: headers()})
         .then((res) => {
             const { success, message } = res.data;
             jwtExpired(message)

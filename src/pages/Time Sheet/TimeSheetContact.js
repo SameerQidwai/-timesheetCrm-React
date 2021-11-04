@@ -230,7 +230,7 @@ class TimeSheetContact extends Component {
                                         </Menu.Item>                        
                                         <Menu.Item 
                                             key="delete"
-                                            disabled={permissions['DELETE']}
+                                            disabled={!permissions['DELETE']}
                                             onClick = {()=>{
                                                 this.deleteRecord(value.entryId)
                                             }}     

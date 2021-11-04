@@ -5,7 +5,7 @@ import { Api, headers, jwtExpired, setToken } from "./constant";
 
 export const getStates = () => {
     return axios
-        .get(`${Api}/states`)
+        .get(`${Api}/states`,{headers:headers()})
         .then((res) => {
             const { success, data } = res.data;
             var states = []
@@ -26,7 +26,7 @@ export const getStates = () => {
 
 export const getStandardLevels = () => {
     return axios
-        .get(`${Api}/standard-skills`)
+        .get(`${Api}/standard-skills`, {headers:headers()})
         .then((res) => {
             const { success, data } = res.data;
             var standlevel = []
@@ -47,7 +47,7 @@ export const getStandardLevels = () => {
 
 export const getContactPersons = () =>{
     return axios
-    .get(`${Api}/contactpersons`)
+    .get(`${Api}/contactpersons`, {headers:headers()})
     .then((res) => {
         const { success, data } = res.data;
         var cps = []
@@ -68,7 +68,7 @@ export const getContactPersons = () =>{
 
 export const getEmployees = () => {
     return axios
-        .get(`${Api}/employees`)
+        .get(`${Api}/employees`, {headers:headers()})
         .then((res) => {
             const { success, data } = res.data;
             var cps = []          
@@ -91,7 +91,7 @@ export const getEmployees = () => {
 
 export const getSubContractors = () => {
     return axios
-        .get(`${Api}/sub-contractors`)
+        .get(`${Api}/sub-contractors`, {headers:headers()})
         .then((res) => {
             const { success, data } = res.data;
             var cps = []    
@@ -114,7 +114,7 @@ export const getSubContractors = () => {
 
 export const getOrgPersons = (url) =>{
     return axios
-    .get(`${Api}/${url}`)
+    .get(`${Api}/${url}`, {headers:headers()})
     .then((res) => {
         const { success, data } = res.data;
         var cps = []
@@ -136,7 +136,7 @@ export const getOrgPersons = (url) =>{
 export const getEmpPersons = (id) =>{
     console.log(id);
     return axios
-    .get(`${Api}/employees/get/contact-persons`)
+    .get(`${Api}/employees/get/contact-persons`, {headers:headers()})
     .then((res) => {
         const { success, data } = res.data;
         var cps = []
@@ -157,7 +157,7 @@ export const getEmpPersons = (id) =>{
 
 export const getOrganizations = (id) => {
     return axios
-        .get(`${Api}/Organizations`)
+        .get(`${Api}/Organizations`, {headers:headers()})
         .then((res) => {
             const { success, data } = res.data;
             var orgs = []
@@ -179,7 +179,7 @@ export const getOrganizations = (id) => {
 
 export const getPanels = () => {
     return axios
-        .get(`${Api}/panels`)
+        .get(`${Api}/panels`, {headers:headers()})
         .then((res) => {
             const { success, data } = res.data;
             var panels = []
@@ -200,7 +200,7 @@ export const getPanels = () => {
 
 export const getPanelSkills = (id) => {
     return axios
-        .get(`${Api}/panel-skills?panelId=${id}`)
+        .get(`${Api}/panel-skills?panelId=${id}`, {headers:headers()})
         .then((res) => {
             const { success, data } = res.data;
             var panelskill = []
@@ -240,7 +240,7 @@ export const getProjects = (userId) => {
 
 export const getSkillLevels = (skill) =>{
     return axios
-        .get(`${Api}/helpers/levels-by-skill?${skill}`)
+        .get(`${Api}/helpers/levels-by-skill?${skill}`, {headers:headers()})
         .then((res) => {
             const { success, data } = res.data;
             var pros = []
@@ -260,7 +260,7 @@ export const getSkillLevels = (skill) =>{
 
 export const getRoles = () =>{
     return axios
-        .get(`${Api}/helpers/roles`)
+        .get(`${Api}/helpers/roles`, {headers:headers()})
         .then((res) => {
             const { success, data } = res.data;
             if (success){
@@ -300,7 +300,7 @@ export const refreshToken = () =>{
 
 export const entityProjects = (url) =>{
     return axios
-    .get(`${Api}/${url}`)
+    .get(`${Api}/${url}`, {headers:headers()})
     .then((res) => {
         const { success, data } = res.data;
         setToken(res.headers && res.headers.authorization)
