@@ -92,14 +92,14 @@ class Projects extends Component {
                                     Resources
                                 </Link>
                             </Menu.Item>
-                             <Menu.Item>
+                             {/* <Menu.Item> Milestone button commented
                                 <Link
                                     to={{ pathname: `/projects/${record.id}/milestones`, }}
                                     className="nav-link"
                                 >
                                     Milestones
                                 </Link>
-                            </Menu.Item>
+                            </Menu.Item> */}
                             
                         </Menu>
                     }>

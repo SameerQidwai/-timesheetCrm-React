@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Redirect } from "react-router-dom"; // Route Library
 import { Layout } from "antd";
 import AdminContent from './AdminContent'
@@ -10,54 +10,36 @@ import { refreshToken } from "../../../service/constant-Apis";
 const { Content } = Layout;
 
 // class PrivateRoute extends Component {
-function PrivateRoute () {
-    let timer, elapsed = true
+function PrivateRoute (props) {
     const [ lastActivity, setLastActivity ] = useState(false)
-    const [ stopTime, setStopTime ] = useState(false)
+    const [login, setLogin ] =useState(false)
 
-    const restActivity = () =>{
-        if (elapsed){    
-            clearTimeout(timer);
-            timer = null
-            elapsed = false
-        }
-        if (!stopTime){
-            elapsed = true
-            timer = setTimeout(() => {
-                console.log(timer)
-                setLastActivity(true)
-                // setStopTime(true)
-            //milli * sec * min
-            }, 1000 * 60 * 55)
-            // }, 1000)
-        }   
-    }
+    useEffect(() => {
+            setInterval(() => {
+                const lastApiCalledAt = localStorage.getItem('jwtTimer')
+                if (new Date().getTime() - parseInt(lastApiCalledAt) > 55*60*1000 && loggedIn() !=='jwtExpired'){
+                    setLastActivity(true)
+                }
+            }, 60 * 1000)
+    }, [])
+
 
     const refresh = () => {
         refreshToken().then(res=>{
             if(res.success){
                 setLastActivity(false)
-                setStopTime(false)
-                restActivity()
             }
         })
     }
     
     const ActivityTimeOut = () =>{
+        setLogin(true)
         setLastActivity(false)
-        setStopTime(true)
     }
 
-    const stopTimeOut = () =>{
-        clearTimeout(timer)
-        // setLastActivity(false)
-        setStopTime(true)
-    }
 
     const closeLogin = () =>{
-        setStopTime(false)
-        clearTimeout(timer)
-        setStopTime(true)
+        setLogin(false)
     }
 
     return (
@@ -73,18 +55,20 @@ function PrivateRoute () {
             <AdminContent /> 
             :
             <Redirect to={{ pathname: '/'}} /> }
-            {!stopTime&&restActivity()}
+            {/* {!stopTime&&restActivity()} */}
+
+
             {lastActivity && 
                 <ActivityCounter 
                     visible={lastActivity}
                     refresh={()=>refresh()} 
-                    timeOut={()=>ActivityTimeOut()} 
+                    timeOut={()=>ActivityTimeOut()}
                 /> 
             }
+
             {loggedIn() ==='jwtExpired'&&
                 <ActivityLogin 
                     visible={loggedIn() ==='jwtExpired'} 
-                    stopTimer={()=>{stopTimeOut()}} 
                     close={()=>{closeLogin()}}
                 /> 
             }

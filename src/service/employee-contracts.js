@@ -7,7 +7,7 @@ const url = `${Api}/employment-contracts`;
 
 export const getList = (id) => {
     return axios
-        .get(url+ `?employeeId=${id}`, {headers:headers})
+        .get(url+ `?employeeId=${id}`, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -25,7 +25,7 @@ export const getList = (id) => {
 
 export const getRecord = (id) => {
     return axios
-        .get(url + `/${id}`, {headers:headers})
+        .get(url + `/${id}`, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -56,7 +56,7 @@ export const getRecord = (id) => {
 export const addList = (data) => {
     messageAlert.loading({ content: 'Loading...', key: 1 })
     return axios
-        .post(url, data, {headers:headers})
+        .post(url, data, {headers:headers()})
         .then((res) => {
             const { success, message } = res.data;
             jwtExpired(message)
@@ -76,7 +76,7 @@ export const addList = (data) => {
 
 export const delList = (id) => {
     return axios
-        .delete(url + `/${id}`, {headers:headers})
+        .delete(url + `/${id}`, {headers:headers()})
         .then((res) => {
             const { success, message } = res.data;
             jwtExpired(message)
@@ -97,7 +97,7 @@ export const delList = (id) => {
 export const editList = (id, data) => {
     messageAlert.loading({ content: 'Loading...', key: id })
     return axios
-        .put(url + `/${id}`, data, {headers:headers})
+        .put(url + `/${id}`, data, {headers:headers()})
         .then((res) => {
             const { success, message } = res.data;
             jwtExpired(message)

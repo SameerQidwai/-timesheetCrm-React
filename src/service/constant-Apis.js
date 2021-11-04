@@ -221,7 +221,7 @@ export const getPanelSkills = (id) => {
 
 export const getProjects = (userId) => {
     return axios
-        .get(`${Api}/helpers/projects?userId=${userId}`, { headers: headers })
+        .get(`${Api}/helpers/projects?userId=${userId}`, { headers: headers() })
         .then((res) => {
             const { success, data } = res.data;
             if (success) {
@@ -279,7 +279,7 @@ export const getRoles = () =>{
 
 export const refreshToken = () =>{
     return axios
-    .get(`${Api}/helpers/refresh-token`,{headers:headers})
+    .get(`${Api}/helpers/refresh-token`,{headers:headers()})
     .then((res) => {
         const { success, message } = res.data;
         jwtExpired(message)

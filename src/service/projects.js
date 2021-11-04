@@ -8,7 +8,7 @@ const url = `${Api}/projects`;
 export const addList = (data) => {
     messageAlert.loading({ content: 'Loading...', key: 1 })
     return axios
-        .post(url, data, {headers:headers})
+        .post(url, data, {headers:headers()})
         .then((res) => {
             const { success, message } = res.data;
             jwtExpired(message)
@@ -29,7 +29,7 @@ export const addList = (data) => {
 
 export const getList = () => {
     return axios
-        .get(url, {headers:headers})
+        .get(url, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -48,7 +48,7 @@ export const getList = () => {
 
 export const getRecord = (id) => {
     return axios
-        .get(url + `/${id}`, {headers:headers})
+        .get(url + `/${id}`, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -116,7 +116,7 @@ export const getRecord = (id) => {
 
 export const delList = (id) => {
     return axios
-        .delete(url + `/${id}`, {headers:headers})
+        .delete(url + `/${id}`, {headers:headers()})
         .then((res) => {
             const { success, message } = res.data;
             jwtExpired(message)
@@ -136,7 +136,7 @@ export const delList = (id) => {
 export const editList = (data) => {
     messageAlert.loading({ content: 'Loading...', key: data.id })
     return axios
-        .put(url + `/${data.id}`, data, {headers:headers})
+        .put(url + `/${data.id}`, data, {headers:headers()})
         .then((res) => {
             const { success, message} = res.data;
             jwtExpired(message)
@@ -158,7 +158,7 @@ export const editList = (data) => {
 export const addLeadSkill = (id, data) => {
     messageAlert.loading({ content: 'Loading...', key: id })
     return axios
-        .post(url + `/${id}/resources`, data, {headers:headers})
+        .post(url + `/${id}/resources`, data, {headers:headers()})
         .then(res=>{
         const { success, message } = res.data
         jwtExpired(message)
@@ -180,7 +180,7 @@ export const addLeadSkill = (id, data) => {
 
 export const getLeadSkills = (id)=>{
     return axios
-        .get(url + `/${id}/resources`, {headers:headers})
+        .get(url + `/${id}/resources`, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -200,7 +200,7 @@ export const getLeadSkills = (id)=>{
 
 export const getLeadSkill = (proId, resId) => {
     return axios
-        .get(url + `/${proId}/resources/${resId}`, {headers:headers})
+        .get(url + `/${proId}/resources/${resId}`, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -235,7 +235,7 @@ export const editLeadSkill = (proId, resId, data) => {
     messageAlert.loading({ content: 'Loading...', key: resId })
     // return { success: false }
     return axios
-        .put(url + `/${proId}/resources/${resId}`, data, {headers:headers})
+        .put(url + `/${proId}/resources/${resId}`, data, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -256,7 +256,7 @@ export const editLeadSkill = (proId, resId, data) => {
 
 export const delLeadSkill = (proId, resId) => {
     return axios
-        .delete(url + `/${proId}/resources/${resId}`, {headers:headers})
+        .delete(url + `/${proId}/resources/${resId}`, {headers:headers()})
         .then((res) => {
             const { success, message } = res.data;
             jwtExpired(message)
@@ -276,7 +276,7 @@ export const delLeadSkill = (proId, resId) => {
 export const addLeadSkillResource = (proId, skillId,  data) => {
     messageAlert.loading({ content: 'Loading...', key: skillId })
     return axios
-        .post(url + `/${proId}/resources/${skillId}/allocations`, data, {headers:headers})
+        .post(url + `/${proId}/resources/${skillId}/allocations`, data, {headers:headers()})
         .then((res) => {
             const { success, data , message} = res.data;
             jwtExpired(message)
@@ -297,7 +297,7 @@ export const addLeadSkillResource = (proId, skillId,  data) => {
 
 export const getLeadSkillResource = (proId,skillId, resId) => {
     return axios
-        .get(url + `/${proId}/resources/${skillId}/allocations/${resId}`, {headers:headers})
+        .get(url + `/${proId}/resources/${skillId}/allocations/${resId}`, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -315,7 +315,7 @@ export const getLeadSkillResource = (proId,skillId, resId) => {
 
 export const editLeadSkillResource = (proId, skillId, resId, data) => {
     return axios
-        .put(url + `/${proId}/resources/${skillId}/allocations/${resId}`, data, {headers:headers})
+        .put(url + `/${proId}/resources/${skillId}/allocations/${resId}`, data, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -334,7 +334,7 @@ export const editLeadSkillResource = (proId, skillId, resId, data) => {
 
 export const delLeadSkillResource = (proId, skillId, resId,) => {
     return axios
-        .delete(url + `/${proId}/resources/${skillId}/allocations/${resId}`, {headers:headers})
+        .delete(url + `/${proId}/resources/${skillId}/allocations/${resId}`, {headers:headers()})
         .then((res) => {
             const { success, message } = res.data;
             jwtExpired(message)
@@ -353,7 +353,7 @@ export const delLeadSkillResource = (proId, skillId, resId,) => {
 
 export const selectLeadSkillResource = (proId, skillId, resId) => {
     return axios
-        .patch(url + `/${proId}/resources/${skillId}/allocations/${resId}/mark-as-selected`, {headers:headers})
+        .patch(url + `/${proId}/resources/${skillId}/allocations/${resId}/mark-as-selected`, {headers:headers()})
         .then((res) => {
             const { success, message } = res.data;
             jwtExpired(message)
@@ -373,7 +373,7 @@ export const selectLeadSkillResource = (proId, skillId, resId) => {
 export const addOrder = (proId, data) => {
     messageAlert.loading({ content: 'Loading...', key: proId })
     return axios
-        .post(url + `/${proId}/purchaseOrders`, data, {headers:headers})
+        .post(url + `/${proId}/purchaseOrders`, data, {headers:headers()})
         .then((res) => {
             const { success , message} = res.data;
             jwtExpired(message)
@@ -394,7 +394,7 @@ export const addOrder = (proId, data) => {
 
 export const getOrders = (proId) => {
     return axios
-        .get(url + `/${proId}/purchaseOrders`, {headers:headers})
+        .get(url + `/${proId}/purchaseOrders`, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -415,7 +415,7 @@ export const editOrder = (proId, id, data) => {
     
     messageAlert.loading({ content: 'Loading...', key: id })
     return axios
-        .put(url + `/${proId}/purchaseOrders/${id}`, data, {headers:headers})
+        .put(url + `/${proId}/purchaseOrders/${id}`, data, {headers:headers()})
         .then((res) => {
             const { success , message} = res.data;
             jwtExpired(message)
@@ -436,7 +436,7 @@ export const editOrder = (proId, id, data) => {
 
 export const getOrder = (proId,id) => {
     return axios
-        .get(url + `/${proId}/purchaseOrders/${id}`, {headers:headers})
+        .get(url + `/${proId}/purchaseOrders/${id}`, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -461,7 +461,7 @@ export const getOrder = (proId,id) => {
 
 export const delOrder = (proId,id) => {
     return axios
-        .delete(url + `/${proId}/purchaseOrders/${id}`, {headers:headers})
+        .delete(url + `/${proId}/purchaseOrders/${id}`, {headers:headers()})
         .then((res) => {
             const { success, message } = res.data;
             jwtExpired(message)

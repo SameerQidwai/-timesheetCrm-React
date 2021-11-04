@@ -38,7 +38,7 @@ export const addFiles = (data, config) => {
 
 export const addAttachments = (targetType, targetId, data) => {
     return axios
-        .post(`${url}${targetType}/${targetId}`, data, {headers:headers})
+        .post(`${url}${targetType}/${targetId}`, data, {headers:headers()})
         .then((res) => {
             const { status } = res;
             if (status === 200) {

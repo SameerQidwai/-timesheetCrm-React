@@ -6,8 +6,9 @@ import { Api, headers, jwtExpired, setToken } from "./constant";
 const url = `${Api}/timesheets/`;
 
 export const getList = (keys) => {
+    console.log({headers:headers()})
     return axios
-        .get(url + `${keys.startDate}&${keys.endDate}&${keys.userId}`, {headers:headers})
+        .get(url + `${keys.startDate}&${keys.endDate}&${keys.userId}`, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -27,7 +28,7 @@ export const getList = (keys) => {
 export const addTime = (keys ,data) => {
     messageAlert.loading({ content: 'Loading...', key: 1 })
     return axios
-        .post(url +`${keys.startDate}&${keys.endDate}&${keys.userId}`, data, {headers:headers})
+        .post(url +`${keys.startDate}&${keys.endDate}&${keys.userId}`, data, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -52,7 +53,7 @@ export const addTime = (keys ,data) => {
 export const editTime = (entryId ,data) => {
     messageAlert.loading({ content: 'Loading...', key: 1 })
     return axios
-        .put(url +`entries/${entryId}`, data, {headers:headers})
+        .put(url +`entries/${entryId}`, data, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -97,15 +98,14 @@ export const deleteTime = (entryId ) => {
 
 export const reviewTimeSheet = (keys, stage) => {
     messageAlert.loading({ content: 'Loading...', key: 1 })
-    console.log({headers:headers});
     return axios
-        .post(url + `${keys.startDate}&${keys.endDate}&${keys.userId}/projectEntries/${keys.pEntryId}/${stage}`, {}, {headers:headers})
+        .post(url + `${keys.startDate}&${keys.endDate}&${keys.userId}/projectEntries/${keys.pEntryId}/${stage}`, {}, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
             messageAlert.success({ content: message, key: 1})
             if (success) setToken(res.headers && res.headers.authorization)
-            
+            console.log({success, data});
             return {success, data};
         })
         .catch((err) => {
@@ -121,7 +121,7 @@ export const reviewTimeSheet = (keys, stage) => {
 export const editLabel = (data) => {
     messageAlert.loading({ content: 'Loading...', key: data.id })
     return axios
-        .put(url + `${data.id}`, data, {headers:headers})
+        .put(url + `${data.id}`, data, {headers:headers()})
         .then((res) => {
             const { success, message } = res.data;
             jwtExpired(message)
@@ -142,7 +142,7 @@ export const editLabel = (data) => {
 export const addProjectNote = (id, data) => {
     messageAlert.loading({ content: 'Loading...', key: id })
     return axios
-        .patch(url + `projectEntries/${id}`, data, {headers:headers})
+        .patch(url + `projectEntries/${id}`, data, {headers:headers()})
         .then((res) => {
             const { success, message } = res.data;
             jwtExpired(message)
@@ -163,7 +163,7 @@ export const addProjectNote = (id, data) => {
 
 export const getUsers = () => {
     return axios
-        .get(`${url}users`, { headers: headers })
+        .get(`${url}users`, { headers: headers() })
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -183,7 +183,7 @@ export const getUsers = () => {
 
 export const getPdf = (entryId) => {
     return axios
-        .get(`${url}print/${entryId}`, { headers: headers })
+        .get(`${url}print/${entryId}`, { headers: headers() })
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)

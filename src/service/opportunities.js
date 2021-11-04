@@ -8,7 +8,7 @@ const url = `${Api}/opportunities`;
 export const addList = (data) => {
     messageAlert.loading({ content: 'Loading...', key: 1 },5)
     return axios
-        .post(url, data, {headers:headers})
+        .post(url, data, {headers:headers()})
         .then((res) => {
             const { success, message } = res.data;
             jwtExpired(message)
@@ -28,7 +28,7 @@ export const addList = (data) => {
 
 export const getList = () => {
     return axios
-        .get(url, {headers:headers})
+        .get(url, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -47,7 +47,7 @@ export const getList = () => {
 
 export const getRecord = (id) => {
     return axios
-        .get(url + `/${id}`, {headers:headers})
+        .get(url + `/${id}`, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -114,7 +114,7 @@ export const getRecord = (id) => {
 
 export const delList = (id) => {
     return axios
-        .delete(url + `/${id}`, {headers:headers})
+        .delete(url + `/${id}`, {headers:headers()})
         .then((res) => {
             const { success, message } = res.data;
             jwtExpired(message)
@@ -133,7 +133,7 @@ export const delList = (id) => {
 export const editList = (data) => {
     messageAlert.loading({ content: 'Loading...', key: data.id })
     return axios
-        .put(url + `/${data.id}`, data, {headers:headers })
+        .put(url + `/${data.id}`, data, {headers:headers() })
         .then((res) => {
             const { success, message } = res.data;
             jwtExpired(message)
@@ -155,7 +155,7 @@ export const editList = (data) => {
 export const addLeadSkill = (id, data) => {
     messageAlert.loading({ content: 'Loading...', key: id })
     return axios
-        .post(url + `/${id}/resources`, data, {headers:headers})
+        .post(url + `/${id}/resources`, data, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -176,7 +176,7 @@ export const addLeadSkill = (id, data) => {
 
 export const getLeadSkills = (id)=>{
     return axios
-        .get(url + `/${id}/resources`, {headers:headers})
+        .get(url + `/${id}/resources`, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -198,7 +198,7 @@ export const getLeadSkills = (id)=>{
 
 export const getLeadSkill = (oppId, resId) => {
     return axios
-        .get(url + `/${oppId}/resources/${resId}`, {headers:headers})
+        .get(url + `/${oppId}/resources/${resId}`, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -217,7 +217,7 @@ export const getLeadSkill = (oppId, resId) => {
 export const editLeadSkill = (oppId, resId, data) => {
     messageAlert.loading({ content: 'Loading...', key:  resId})
     return axios
-        .put(url + `/${oppId}/resources/${resId}`, data, {headers:headers})
+        .put(url + `/${oppId}/resources/${resId}`, data, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -238,7 +238,7 @@ export const editLeadSkill = (oppId, resId, data) => {
 export const delLeadSkill = (oppId, resId) => {
     console.log(oppId, resId);
     return axios
-        .delete(url + `/${oppId}/resources/${resId}`, {headers:headers})
+        .delete(url + `/${oppId}/resources/${resId}`, {headers:headers()})
         .then((res) => {
             const { success, message } = res.data;
             jwtExpired(message)
@@ -258,7 +258,7 @@ export const delLeadSkill = (oppId, resId) => {
 export const addLeadSkillResource = (oppId, skillId,  data) => {
     messageAlert.loading({ content: 'Loading...', key:  skillId})
     return axios
-        .post(url + `/${oppId}/resources/${skillId}/allocations`, data, {headers:headers})
+        .post(url + `/${oppId}/resources/${skillId}/allocations`, data, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -279,7 +279,7 @@ export const addLeadSkillResource = (oppId, skillId,  data) => {
 
 export const getLeadSkillResource = (oppId,skillId, resId) => {
     return axios
-        .get(url + `/${oppId}/resources/${skillId}/allocations/${resId}`, {headers:headers})
+        .get(url + `/${oppId}/resources/${skillId}/allocations/${resId}`, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -299,7 +299,7 @@ export const editLeadSkillResource = (oppId, skillId, resId, data) => {
     messageAlert.loading({ content: 'Loading...', key: resId })
     console.log({oppId, skillId, resId, data});
     return axios
-        .put(url + `/${oppId}/resources/${skillId}/allocations/${resId}`, data, {headers:headers})
+        .put(url + `/${oppId}/resources/${skillId}/allocations/${resId}`, data, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -320,7 +320,7 @@ export const editLeadSkillResource = (oppId, skillId, resId, data) => {
 
 export const delLeadSkillResource = (oppId, skillId, resId,) => {
     return axios
-        .delete(url + `/${oppId}/resources/${skillId}/allocations/${resId}`, {headers:headers})
+        .delete(url + `/${oppId}/resources/${skillId}/allocations/${resId}`, {headers:headers()})
         .then((res) => {
             const { success, message } = res.data;
             jwtExpired(message)
@@ -340,7 +340,7 @@ export const delLeadSkillResource = (oppId, skillId, resId,) => {
 export const selectLeadSkillResource = (oppId, skillId, resId) => {
     console.log(oppId, skillId, resId);
     return axios
-        .patch(url + `/${oppId}/resources/${skillId}/allocations/${resId}/mark-as-selected`, {headers:headers})
+        .patch(url + `/${oppId}/resources/${skillId}/allocations/${resId}/mark-as-selected`, {headers:headers()})
         .then((res) => {
             const { success, message } = res.data;
             jwtExpired(message)
@@ -358,7 +358,7 @@ export const selectLeadSkillResource = (oppId, skillId, resId) => {
 
 export const workIsLost = (oppId) => {
     return axios
-        .put(url + `/${oppId}/lost`, {headers:headers})
+        .put(url + `/${oppId}/lost`, {headers:headers()})
         .then((res) => {
             const { success, message } = res.data;
             jwtExpired(message)
@@ -378,7 +378,7 @@ export const workIsLost = (oppId) => {
 export const workWon = (oppId, data) => {
     messageAlert.loading({ content: 'Loading...', key: oppId })
     return axios
-        .put(url + `/${oppId}/win`, data, {headers:headers})
+        .put(url + `/${oppId}/win`, data, {headers:headers()})
         .then((res) => {
             const { success, message } = res.data;
             jwtExpired(message)

@@ -8,7 +8,7 @@ const url = `${Api}/employees/`;
 
 export const getList = (empId) => {
     return axios
-        .get(url+ `${empId}/leases`, {headers:headers})
+        .get(url+ `${empId}/leases`, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -28,7 +28,7 @@ export const getList = (empId) => {
 export const addList = (empId, data) => {
     messageAlert.loading({ content: 'Loading...', key: empId })
     return axios
-        .post(url+ `${empId}/leases`, data, {headers:headers})
+        .post(url+ `${empId}/leases`, data, {headers:headers()})
         .then((res) => {
             const { success, message } = res.data;
             jwtExpired(message)
@@ -49,7 +49,7 @@ export const addList = (empId, data) => {
 
 export const getRecord = (empId, id) => {
     return axios
-        .get(url+ `${empId}/leases/${id}`, {headers:headers})
+        .get(url+ `${empId}/leases/${id}`, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -72,7 +72,7 @@ export const getRecord = (empId, id) => {
 
 export const delList = (empId, id) => {
     return axios
-        .delete(url+ `${empId}/leases/${id}`, {headers:headers})
+        .delete(url+ `${empId}/leases/${id}`, {headers:headers()})
         .then((res) => {
             const { success, message } = res.data;
             jwtExpired(message)
@@ -92,7 +92,7 @@ export const delList = (empId, id) => {
 export const editList = (empId, id, data) => {
     messageAlert.loading({ content: 'Loading...', key: id })
     return axios
-        .put(url+ `${empId}/leases/${id}`, data, {headers:headers})
+        .put(url+ `${empId}/leases/${id}`, data, {headers:headers()})
         .then((res) => {
             const { success, message } = res.data;
             jwtExpired(message)

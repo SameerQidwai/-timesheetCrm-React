@@ -49,7 +49,7 @@ export const login = (data) => {
 
 export const upadtePassword = (data) => {
     return axios
-        .patch(`${Api}/password`, data, {headers:headers})
+        .patch(`${Api}/password`, data, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -70,7 +70,7 @@ export const upadtePassword = (data) => {
 
 export const getSettings = () => {
     return axios
-        .get(`${Api}/settings`, {headers: headers})
+        .get(`${Api}/settings`, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -148,7 +148,7 @@ export const getSettings = () => {
 
 export const upadteSettings = (data) => {
     return axios
-        .patch(`${Api}/settings`, data, {headers: headers})
+        .patch(`${Api}/settings`, data, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)

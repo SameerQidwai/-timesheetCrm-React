@@ -111,8 +111,10 @@ class TimeSheetContact extends Component {
     };
 
     fetchAll = () =>{
+        console.log('getUsers');
         Promise.all([ getUsers() ])
         .then(res => {
+            console.log(res);
             let value = 0
             const { id, permissions } = localStore()
             const loginId = parseInt(id)
@@ -122,7 +124,7 @@ class TimeSheetContact extends Component {
                 value = res[0].data[0].value
                 res[0].data.forEach(el=>{
                     if(el.value === loginId){
-                        value= el.value
+                        value= el.value //selecting the login user from users array
                     }
                 }) 
             }
@@ -131,6 +133,7 @@ class TimeSheetContact extends Component {
                 USERS: res[0].success? res[0].data : [],
                 sUser: value,
                 canApprove: TIMESHEETS['APPROVAL'] && TIMESHEETS['APPROVAL']['ANY'],
+                permissions: TIMESHEETS,
                 loginId,
                 // USERS: res[1].success? res[1].data : [],
             },()=>{
@@ -173,11 +176,11 @@ class TimeSheetContact extends Component {
 
     columns = () =>{ // create table column and add date as colmumn name for selected month
         const { startDate, endDate } = this.state.sheetDates
-        let { columns, permissions }  = this.state
+        let { columns, sUser, loginId, permissions }  = this.state
         let date = undefined
         let key = undefined
         columns = [columns[0],columns[1]]
-        for (let i = startDate.format('D') ; i <= endDate.format('D'); i++) {
+        for (let i = startDate.format('D') ; i <= endDate.format('D'); i++) { //creating Empty Columns for calenders
             date = date ?? moment(startDate.format())
             columns.push({
                 title: <span>
@@ -190,29 +193,47 @@ class TimeSheetContact extends Component {
                 width: 200,
                 editable: true,
                 align: "center",
-                render: (value, record, rowIndex) =>{
-                    if(value){
-                        let breakHours = moment.duration(value["breakHours"],'hours')
-                        breakHours = breakHours && moment(moment().hours(breakHours.hours()).minutes(breakHours.minutes())).format("HH:mm")
-                        
-                        
-                    {return <Tooltip title={`Note: ${value['notes'] ?? ''}`}><Row style={{ border: "1px solid" }}>
+                
+            })
+            date = date.add(1, 'days')
+        }
+
+        this.setState({columns},()=> { //insert data with conditional clickable Items => it weren't working 
+            const columns = this.state.columns.map(col => { // when creating column onCell key is not render at that time and is async function so have to call it again 
+                if (col.dataIndex === 'project' || col.dataIndex === 'totalHours'){
+                    return col
+                }
+                return {
+                  ...col,
+                    render: (value, record, rowIndex) =>{
+                        const clickable = (record.status === 'SV' || record.status === 'RJ' || !record.status) && sUser === loginId
+                        if(value){
+                            let breakHours = moment.duration(value["breakHours"],'hours')
+                            breakHours = breakHours && moment(moment().hours(breakHours.hours()).minutes(breakHours.minutes())).format("HH:mm")
+                            
+                                            //if note is null hide the tooltip condistion
+                        {return <Tooltip title={value['notes'] && `Note: ${value['notes'] }`} >
+                            <Row style={{ border: "1px solid" }}>
                             <Col span={22}>Start Time: {value["startTime"]&& moment(value["startTime"], ["HH:mm"]).format("h:mm A")}</Col>
                             <Col span={2} >
-                            <Dropdown
+                            {clickable &&<Dropdown
                                 placement="bottomCenter" 
                                 overlay={
                                     <Menu onClick={this.handleMenuClick}>
                                         <Menu.Item 
                                             key="Edit" 
                                             onClick={()=>{     //data //index    //col key      //Col heading to show on Modal
-                                                this.getRecord(record,rowIndex, date.format('D/M'), date.format('dddd - DD MM YYYY'))
+                                                this.getRecord(record,rowIndex, col.dataIndex, col.heading); // call function to save data in
                                             }}
                                         >
                                             <EditOutlined />
                                         </Menu.Item>                        
                                         <Menu.Item 
-                                            key="delete"                
+                                            key="delete"
+                                            disabled={permissions['DELETE']}
+                                            onClick = {()=>{
+                                                this.deleteRecord(value.entryId)
+                                            }}     
                                         > 
                                             <DeleteOutlined />
                                         </Menu.Item>
@@ -220,47 +241,34 @@ class TimeSheetContact extends Component {
                                 }  
                             >
                                 <MoreOutlined  style={{ cursor:'pointer' }} />
-                            </Dropdown>
-                                </Col>
+                            </Dropdown>}
+                            </Col>
                             <Col span={24}>End Time: {value["endTime"] && moment(value["endTime"], ["HH:mm"]).format("h:mm A")}</Col>
                             <Col span={24}>Break: {breakHours && breakHours}</Col>
                             <Col span={24}>Total Hours: {value["actualHours"] && value["actualHours"]}</Col>
-                        </Row> </Tooltip>}
-                    }else{
-                        return <PlusCircleOutlined 
+                            </Row>
+                        </Tooltip>}
+                        }else{
+                            return clickable && <PlusCircleOutlined 
                                 style={{fontSize: 24, color: '#1890ff'}} 
                                 onClick={()=>{     //data //index    //col key      //Col heading to show on Modal
-                                    this.getRecord(record,rowIndex, date.format('D/M'), date.format('dddd - DD MM YYYY'))
+                                    this.getRecord(record,rowIndex, col.dataIndex, col.heading); // call function to save data in
                                 }}
                             />
-                    }
-                },
-            })
-            date = date.add(1, 'days')
-        }
-        this.setState({columns},()=> {
-            const columns = this.state.columns.map(col => { // when creating column onCell key is not render at that time and is async function so had to call it again 
-                if (col.dataIndex === 'project' || col.dataIndex === 'totalHours'){
-                    return col
-                }
-                return {
-                  ...col,
-                  onCell: (record: DataType, rowIndex) => ({
-                    record,
-                    // dataIndex: col.dataIndex,
-                    onDoubleClick: (event) => {
-                        // on Click Function
-                        const { sUser, loginId } = this.state
-                        const clickable = (record.status === 'SV' || record.status === 'RJ' || !record.status) && sUser === loginId
-                        if (clickable ){
-                            this.getRecord(record,rowIndex, col.dataIndex, col.heading); // call function to save data in
                         }
                     },
-                  }),
                 };
             })
             this.setState({ columns })
         })
+    }
+
+    deleteRecord = (entryId) =>{
+        deleteTime(entryId).then (res =>{
+            if(res.success){
+                this.callBack({})
+            }
+        }) 
     }
 
     getRecord = (record, rowIndex, colKey,colTitle) => {
@@ -338,13 +346,16 @@ class TimeSheetContact extends Component {
     };
 
     reviewTimeSheet = (ids, stage, index, key) => {
+        console.log(ids, stage, index, key);
         const { startDate, endDate } = this.state.sheetDates
         const { sUser } = this.state
         const query= { pEntryId: ids, userId: sUser, startDate: startDate.format('DD-MM-YYYY'), endDate: endDate.format('DD-MM-YYYY') }
         reviewTimeSheet(query, stage).then(res=>{
+            console.log(res);
             const { data } = this.state
-            if(res.success && index){
+            if(res.success && index>=0){
                 data[index].status= key
+                console.log(data[index])
                 this.setState({
                     data,
                 })
@@ -427,8 +438,9 @@ class TimeSheetContact extends Component {
         const { columns } = this.state
         if(data.length>0)
         return (
+            
             <Table.Summary.Row >
-                <Table.Summary.Cell style={{position: 'sticky', left: 0, zIndex: 2}} > </Table.Summary.Cell>
+                {/* <Table.Summary.Cell className="ant-table-cell-fix-left" > </Table.Summary.Cell> //multiple select commented*/} 
                 {columns.map(({key})=>{
                     let value = 0
                     data.map((rowData, index) =>{
@@ -441,7 +453,7 @@ class TimeSheetContact extends Component {
                         }
                     })
                     if(key === 'project'){  
-                        return <Table.Summary.Cell style={{position: 'sticky', left: 0, zIndex: 2}} >Total Work In A day </Table.Summary.Cell>
+                        return <Table.Summary.Cell  fixed colSpan={2}  >Total Work In A day </Table.Summary.Cell>
                     }else{
                         return <Table.Summary.Cell align="center">{value && value.toFixed(2)}</Table.Summary.Cell>
                     }
@@ -537,12 +549,12 @@ class TimeSheetContact extends Component {
                     sticky
                     size="small"
                     className="timeSheet-table"
-                    rowSelection={{
-                        onChange:(selectedRowKeys, selectedRows)=>{this.projectSelect(selectedRowKeys, selectedRows )},
-                        getCheckboxProps: (record) => ({
-                            disabled: record.status === 'SB', // Column configuration not to be checked
-                          })
-                    }}
+                    // rowSelection={{ //multiple select commented
+                    //     onChange:(selectedRowKeys, selectedRows)=>{this.projectSelect(selectedRowKeys, selectedRows )},
+                    //     getCheckboxProps: (record) => ({
+                    //         disabled: record.status === 'SB', // Column configuration not to be checked
+                    //       })
+                    // }}
                     scroll={{
                         // x: "calc(700px + 100%)",
                         x: "'max-content'",
@@ -555,7 +567,7 @@ class TimeSheetContact extends Component {
                     dataSource={[...data]}
                     summary={ columnData => this.summaryFooter(columnData)}
                 />
-                <Row justify="end" style={{marginTop: 10}}>
+                {/* <Row justify="end" style={{marginTop: 10}}> //multiple select commented 
                     <Col>
                         <Button
                         // size="small" 
@@ -567,7 +579,7 @@ class TimeSheetContact extends Component {
                             Submit css
                         </Button>
                     </Col>
-                </Row>
+                </Row> */}
                 {isVisible && (
                     <TimeModal
                         visible={isVisible}

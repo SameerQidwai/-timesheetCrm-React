@@ -8,7 +8,7 @@ const url = `${Api}/comments/`;
 export const addComment = (targetType, targetId, data) => {
     // const header ={ 'content-type': 'multipart/form-data',  'Accept': 'application/json'}
     return axios
-        .post(`${url}${targetType}/${targetId}`, data, {headers:headers})
+        .post(`${url}${targetType}/${targetId}`, data, {headers:headers()})
         .then((res) => {
             const { status } = res;
             if (status === 200) {
@@ -31,7 +31,7 @@ export const addComment = (targetType, targetId, data) => {
 
 export const getComments = (targetType, targetId) => {
     return axios
-        .get(`${url}${targetType}/${targetId}`, {headers:headers})
+        .get(`${url}${targetType}/${targetId}`, {headers:headers()})
         .then((res) => {
             const { success, data,message } = res.data;
             jwtExpired(message)
@@ -49,7 +49,7 @@ export const getComments = (targetType, targetId) => {
 
 export const delComments = (id,) => {
     return axios
-        .delete(`${url}${id}`, {headers:headers})
+        .delete(`${url}${id}`, {headers:headers()})
         .then((res) => {
             const { success, message } = res.data;
             jwtExpired(message)

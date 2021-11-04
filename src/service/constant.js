@@ -1,8 +1,8 @@
-// export const Api = "http://localhost:3301/api/v1";
+export const Api = "http://localhost:3301/api/v1";
 
 // export const Api = "http://onelmcrm.gaamatech.com:8000/api/v1";
 // export const Api = "http://192.168.0.243:3000/api/v1"; // Shahzaib/   
-export const Api = "http://192.168.0.191:3301/api/v1"; // Me
+// export const Api = "http://192.168.0.191:3301/api/v1"; // Me
 
 // export const Api = "http://54.91.49.138:8000/api/v1"; //Test 
 
@@ -19,8 +19,9 @@ export const formatCurrency = (amount) => {
 }; //end
 
 
-export const setToken = (token) =>{
+export const setToken = (token) => {
   localStorage.setItem('accessToken', token?? localStore().accessToken)
+  localStorage.setItem('jwtTimer', new Date().getTime())
 }
 
 export const localStore = () => {
@@ -51,7 +52,15 @@ export const jwtExpired = (message) => {
   }
 }
 
-export const headers = { 'content-type': 'application/json','Authorization' : `${localStore().accessToken}`}
+
+
+// export let headers = { 'content-type': 'application/json','Authorization' : `${localStorage.getItem('accessToken')}`}
+
+export const  headers=()=>{
+  return { 'content-type': 'application/json',
+    'Authorization' : `${localStore().accessToken}`
+  }
+}
 
 export const thumbUrl = (type) =>{
   if (type === 'pdf') {

@@ -8,7 +8,7 @@ const url = `${Api}/organizations`;
 
 export const getList = () => {
     return axios
-        .get(url, {headers:headers})
+        .get(url, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -75,7 +75,7 @@ const reConstruct = (data) =>{
 
 export const getOrgRecord = (id) => {
     return axios
-        .get(url + `/${id}`, {headers:headers})
+        .get(url + `/${id}`, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -98,7 +98,7 @@ export const getOrgRecord = (id) => {
 export const addList = (data) => {
             messageAlert.loading({ content: 'Loading...', key: 1 })
     return axios
-        .post(url, data, {headers:headers})
+        .post(url, data, {headers:headers()})
         .then((res) => {
             const { success, message } = res.data;
             jwtExpired(message)
@@ -118,7 +118,7 @@ export const addList = (data) => {
 
 export const delOrg = (id) => {
     return axios
-        .delete(url + `/${id}`, {headers:headers})
+        .delete(url + `/${id}`, {headers:headers()})
         .then((res) => {
             const { success, message } = res.data;
             jwtExpired(message)
@@ -137,7 +137,7 @@ export const delOrg = (id) => {
 export const editList = (data) => {
             messageAlert.loading({ content: 'Loading...', key: data.id })
     return axios
-        .put(url + `/${data.id}`, data, {headers:headers})
+        .put(url + `/${data.id}`, data, {headers:headers()})
         .then((res) => {
             const { success, message, data } = res.data;
             jwtExpired(message)

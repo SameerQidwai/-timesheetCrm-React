@@ -266,7 +266,6 @@ function GlobalVars(props) {
 
     const onFinish = (childData) =>{
         delete childData['undefined']
-        console.log(childData);
         const value = childData.global
         upadteSettings(value).then(res=>{
             if(res.success){
@@ -286,7 +285,7 @@ function GlobalVars(props) {
             layout="inline"
             style={{padding: '20px 50px 20px 50px'}}
         >
-            <FormItems FormFields={rateFields} />
+            {/* <FormItems FormFields={rateFields} /> Globa; Rate and Variables commented */}
             <FormItems FormFields={otherFields} />
         </Form>
         <Row justify="end">

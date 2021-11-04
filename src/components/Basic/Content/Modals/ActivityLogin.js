@@ -12,13 +12,10 @@ function ActivityLogin(props) {
     const [ cancel, setCancel ] = useState(false)
     const [form] = Form.useForm();
 
-    useEffect(() => {
-        console.log('ran');
-        props.stopTimer()
-    },[])
     const loginFunc = (value) => {
         login(value).then(res=>{
             if(res&& res.success){
+                setLogout(true)
                 form.resetFields();
                 props.close()
             }
@@ -55,7 +52,6 @@ function ActivityLogin(props) {
                         >
                             <Input />
                         </Form.Item>
-
                         <Form.Item
                             label="Password"
                             name="password"

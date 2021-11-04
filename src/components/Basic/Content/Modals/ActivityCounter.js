@@ -7,13 +7,14 @@ const { Countdown } = Statistic
 
 function ActivityCounter(props) {
     const [ logout, setLogout ] = useState(false)
+    const timeRemain = 60*60*1000 - (new Date().getTime() - parseInt(localStorage.getItem('jwtTimer'))) 
 
     const loggingOut = () =>{
         message.loading({ content: 'Loading...', key: 'logout' })
         localStorage.clear();
         message.info({ content: 'Logout successfully!', key: 'logout' })
         setLogout(true)
-        props.close()
+
     }
 
     const countDownFinish = () =>{
@@ -38,13 +39,13 @@ function ActivityCounter(props) {
                 <ExclamationCircleOutlined/> Logging out in 
                 <Countdown
                     onFinish={countDownFinish} 
-                    value={Date.now() + 1000 * 60 * 5} 
+                    value={Date.now() + timeRemain}
                     // value={Date.now() + 10000 } 
                     format="mm:ss" 
                     style={{textAlign: "center"}} valueStyle={{color: "red"}} 
                     />
             </Modal>
-            {/* {logout && <Redirect to={{ pathname: '/'}} /> } */}
+            {logout && <Redirect to={{ pathname: '/'}} /> }
         </div>
     )
 }

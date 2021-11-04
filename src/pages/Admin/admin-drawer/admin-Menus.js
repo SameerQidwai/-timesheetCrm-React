@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Menu } from "antd";
 import { Link, withRouter } from "react-router-dom";
 
-import { FieldTimeOutlined, UserOutlined, CalendarOutlined, GlobalOutlined, AppstoreOutlined, ApartmentOutlined, GoldOutlined, CalculatorOutlined } from "@ant-design/icons"; //Icons
+import { FieldTimeOutlined, UserOutlined, CalendarOutlined, GlobalOutlined, AppstoreOutlined, FileProtectOutlined, ApartmentOutlined, GoldOutlined, CalculatorOutlined } from "@ant-design/icons"; //Icons
 
 // import './Menus.css'
 
@@ -35,7 +35,7 @@ const listData = [
     },
     {
         text: "Leave Policies",
-        icon: <FieldTimeOutlined spin />,
+        icon: <FileProtectOutlined />,
         link: "/admin/leave-policies",
         key: "/admin/leave-policies",
     },
@@ -63,12 +63,12 @@ const listData = [
         link: "/admin/panels",
         key: "/admin/panels",
     },
-    {
-        text: "Tax Rates",
-        icon: <CalculatorOutlined />,
-        link: "/admin/tax-rates",
-        key: "/admin/tax-rates",
-    },
+    // { global Variable commented
+    //     text: "Tax Rates",
+    //     icon: <CalculatorOutlined />,
+    //     link: "/admin/tax-rates",
+    //     key: "/admin/tax-rates",
+    // },
 ];
 
 class AdminMenus extends Component {

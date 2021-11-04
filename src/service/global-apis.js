@@ -7,7 +7,7 @@ const url = `${Api}/global-setting`;
 
 export const getSettings = () => {
     return axios
-        .get(url, {headers:headers})
+        .get(url, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -26,7 +26,7 @@ export const getSettings = () => {
 export const upadteSettings = (data) => {
     messageAlert.loading({ content: 'Loading...', key: 1 },5)
     return axios
-        .post(url, data, {headers:headers})
+        .post(url, data, {headers:headers()})
         .then((res) => {
             const { success, message, data } = res.data;
             jwtExpired(message)

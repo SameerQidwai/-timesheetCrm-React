@@ -7,7 +7,7 @@ const url = `${Api}/panels`;
 
 export const getList = () => {
     return axios
-        .get(url, {headers:headers})
+        .get(url, {headers:headers()})
         .then((res) => {
             const { success, data } = res.data;
             setToken(res.headers && res.headers.authorization)
@@ -25,7 +25,7 @@ export const getList = () => {
 export const addList = (data) => {
     messageAlert.loading({ content: 'Loading...', key: 1 })
     return axios
-        .post(url, data, {headers:headers})
+        .post(url, data, {headers:headers()})
         .then((res) => {
             const { success, message } = res.data;
             jwtExpired(message)
@@ -46,7 +46,7 @@ export const addList = (data) => {
 
 export const delLabel = (id) => {
     return axios
-        .delete(url + `/${id}`, {headers:headers})
+        .delete(url + `/${id}`, {headers:headers()})
         .then((res) => {
             const { success, message } = res.data;
             jwtExpired(message)
@@ -66,7 +66,7 @@ export const delLabel = (id) => {
 export const editLabel = (data) => {
     messageAlert.loading({ content: 'Loading...', key: data.id })
     return axios
-        .put(url + `/${data.id}`, data, {headers:headers})
+        .put(url + `/${data.id}`, data, {headers:headers()})
         .then((res) => {
             const { success, message } = res.data;
             jwtExpired(message)

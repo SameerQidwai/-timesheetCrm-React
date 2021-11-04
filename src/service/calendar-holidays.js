@@ -7,7 +7,7 @@ const url = `${Api}/calendar-holidays`;
 
 export const holidayType = () => {
     return axios
-        .get(`${Api}/holiday-types`, {headers:headers})
+        .get(`${Api}/holiday-types`, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -34,7 +34,7 @@ export const holidayType = () => {
 
 export const getList = (id) => {
     return axios
-        .get(url + `?calendarId=${id}`, {headers:headers})
+        .get(url + `?calendarId=${id}`, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -59,7 +59,7 @@ export const addList = (data) => {
         messageAlert.loading({ content: 'Loading...', key: 1 })
 
     return axios
-        .post(url, data, {headers:headers})
+        .post(url, data, {headers:headers()})
         .then((res) => {
             const { success, message } = res.data;
             jwtExpired(message)
@@ -79,7 +79,7 @@ export const addList = (data) => {
 
 export const delLabel = (id) => {
     return axios
-        .delete(url + `/${id}`, {headers:headers})
+        .delete(url + `/${id}`, {headers:headers()})
         .then((res) => {
             const { success, message } = res.data;
             jwtExpired(message)
@@ -98,7 +98,7 @@ export const delLabel = (id) => {
 export const editLabel = (data) => {
     messageAlert.loading({ content: 'Loading...', key: data.id })
     return axios
-        .put(url + `/${data.id}`, data, {headers:headers})
+        .put(url + `/${data.id}`, data, {headers:headers()})
         .then((res) => {
             const { success, message } = res.data;
             jwtExpired(message)
