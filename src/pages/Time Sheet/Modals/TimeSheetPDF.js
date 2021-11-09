@@ -50,14 +50,14 @@ const TimeSheetPDF = (props) => {
             ]
         },
         {
-            title: 'Breaks',
+            title: <span>Breaks <br/> <span style={{fontSize: 9}}>minutes</span></span>,
             dataIndex: 'breakMinutes',
             key: 'breakMinutes',
             align: 'center',
             width: 40
         },
         {
-            title: <span>Daily <br/> Total</span>,
+            title: <span>Daily <br/> Total <span style={{fontSize: 9}}>hours</span></span>,
             dataIndex: 'actualHours',
             key: 'actualHours',
             align: 'center',
@@ -81,7 +81,6 @@ const TimeSheetPDF = (props) => {
         content: () => componentRef.current,
         documentTitle: `timesheet`,
         removeAfterPrint: true,
-        onBeforePrint: () => console.log('before printing print this')
     })
 
     const getProjectEntry = () =>{
@@ -105,7 +104,7 @@ const TimeSheetPDF = (props) => {
             <div ref={componentRef}  style={{margin:'0mm 10mm' }}>
                 <div style={{textAlign:'center'}}><p style={{color: '#ff0000'}}>Sensitive: Personal (after first entry)</p></div>
                 <Row justify="space-between" align="middle" >
-                    <Col ><Typography.Title  >Timesheet </Typography.Title></Col>
+                    <Col ><Typography.Title > Timesheet </Typography.Title></Col>
                     <Col style={{width: '60%', textAlign: 'right'}}><img src={'/onelm.png'} width="35%" /></Col>
                 </Row>
                 <Row>
@@ -121,6 +120,7 @@ const TimeSheetPDF = (props) => {
                 <Table 
                     rowClassName={(record) => (record.day==='Sunday' ||record.day==='Saturday')? 'weekendClass' :'weekClass'}
                     className='cellSize'
+                    rowKey={(data) => data.id}
                     bordered 
                     size="small"
                     pagination={false} 
@@ -129,7 +129,7 @@ const TimeSheetPDF = (props) => {
                     style={{fontSize: '10px'}}
                 />
                 <Descriptions column={3} bordered  style={{marginBottom:20, marginTop:35}}>
-                    <Item label="Hours in Day "> 8 </Item>
+                    <Item label="Hours in Day "> 8.00 </Item>
                     <Item label="Total Hours ">{details.totalHours} </Item>
                     <Item label="Invoiced Days ">{details.invoicedDays}</Item>
                 </Descriptions>

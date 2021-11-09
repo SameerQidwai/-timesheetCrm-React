@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Modal, Upload } from "antd";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons"; //Icons
 import Form from "../../../components/Core/Form";
+import { headers } from "../../../service/constant";
 
 import moment from "moment";
 import { addList, editList, getRecord } from "../../../service/subContrators-contracts";
@@ -186,6 +187,7 @@ class BillModal extends Component {
     getRecord = (data) => {
         getRecord(data).then(res=>{
             const {success, data} = res
+            console.log(res);
             if (success){
                 data.startDate = data.startDate && moment(data.startDate)
                 data.endDate = data.endDate && moment(data.endDate)

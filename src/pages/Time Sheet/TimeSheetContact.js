@@ -452,10 +452,18 @@ class TimeSheetContact extends Component {
                             }
                         }
                     })
-                    if(key === 'project'){  
-                        return <Table.Summary.Cell  fixed colSpan={2}  >Total Work In A day </Table.Summary.Cell>
+                    if(key === 'project'){  //Title of the projct 
+                        return <Table.Summary.Cell  
+                            fixed 
+                        >
+                            Total Work In A day 
+                        </Table.Summary.Cell>
                     }else{
-                        return <Table.Summary.Cell align="center">{value && value.toFixed(2)}</Table.Summary.Cell>
+                        return <Table.Summary.Cell 
+                            align="center" 
+                        >
+                            {value && value.toFixed(2)}
+                        </Table.Summary.Cell>
                     }
                 })}
             </Table.Summary.Row>

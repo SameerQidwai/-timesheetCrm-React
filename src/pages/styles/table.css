@@ -67,6 +67,15 @@ div.timeSheet-table .ant-table-tbody > tr.approveClass.ant-table-row:hover > td 
 .approveClass{
     background: #caffe4 !important;
 }
+.project-TMcell {
+    position: 'sticky'; 
+    left: 0
+}
+.total-TMcell {
+    text-align: 'center'; 
+    position: 'sticky'; 
+    left: 300
+}
 /* width */
 ::-webkit-scrollbar {
     width: 8px;

@@ -187,6 +187,7 @@ export const getPdf = (entryId) => {
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
+            console.log(data);
             if (success) {
                 setToken(res.headers && res.headers.authorization)
                 let projectInfo = {
@@ -196,8 +197,8 @@ export const getPdf = (entryId) => {
                     project:  data.project.name,
                     client: data.project.client,
                     contact: data.project.contact,
-                    totalHours: data.project.totalHours,
-                    invoicedDays: data.project.invoicedDays
+                    totalHours: parseFloat(data.project.totalHours).toFixed( 2 ),
+                    invoicedDays:  parseFloat(data.project.invoicedDays).toFixed( 2 )
                 }
                 let entries = data.project.entries
                 return { success, data, projectInfo, entries}
