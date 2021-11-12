@@ -78,7 +78,7 @@ export const editTime = (entryId ,data) => {
 export const deleteTime = (entryId ) => {
     messageAlert.loading({ content: 'Loading...', key: 1 })
     return axios
-        .delete(url +`entries/${entryId}`)
+        .delete(url +`entries/${entryId}`, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)

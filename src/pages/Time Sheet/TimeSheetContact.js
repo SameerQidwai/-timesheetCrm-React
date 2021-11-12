@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { Row, Col, Table, Modal, Button, Select, Typography, Popconfirm, DatePicker, Space, Tag, Tooltip, message, Dropdown, Menu} from "antd";
-import { DownloadOutlined, SaveOutlined, LoadingOutlined, PlusCircleOutlined, MoreOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons"; //Icons
+import { Row, Col, Table, Modal, Button, Select, Typography, Popconfirm, DatePicker, Space, Tag, Tooltip, message, Dropdown, Menu, } from "antd";
+import { DownloadOutlined, SaveOutlined, LoadingOutlined, PlusCircleOutlined, MoreOutlined, DeleteOutlined, EditOutlined, 
+    LeftOutlined, RightOutlined,ExclamationCircleOutlined } from "@ant-design/icons"; //Icons
 import moment from "moment";
 import TimeModal from "./Modals/TimeModal"
 import AttachModal from "./Modals/AttachModal";
@@ -25,7 +26,8 @@ class TimeSheetContact extends Component {
             sheetDates: {
                 startDate: moment().startOf("month"), 
                 endDate: moment().endOf("month"),
-                cMonth: moment().format('MM-YYYY')
+                cMonth: moment(),
+                sWeek: moment().startOf("month"),
             },
             timeObj: false,
             editTime: false,
@@ -40,7 +42,10 @@ class TimeSheetContact extends Component {
             permissions: {},
             canApprove: false,
             projects: [],
-            selectedProjects: [],
+            sTProjects: {
+                projects: [],
+                keys: []
+            },
             columns : [
                 {
                     title: "Project",
@@ -53,6 +58,7 @@ class TimeSheetContact extends Component {
                             <Col span={24}>
                                 <Row justify="space-between">
                                     <Col> {value} </Col>
+                                    {/* File_name and paperclip to show under project is in comment section line 156*/}
                                      <Col> 
                                         <DownloadOutlined onClick={()=>{this.exporPDF(record.projectEntryId, index)}}/>
                                         <SaveOutlined onClick={()=>{this.openAttachModal(record, index)} } style={{color: '#1890ff', marginLeft:10}}/>
@@ -165,6 +171,7 @@ class TimeSheetContact extends Component {
         const { startDate, endDate } = sheetDates
         if(sUser){
             getList({userId: sUser, startDate: startDate.format('DD-MM-YYYY'), endDate: endDate.format('DD-MM-YYYY')}).then(res=>{
+                console.log(res.data);
                 this.setState({
                     timesheet: res.success ? res.data: {},
                     data: (res.success && res.data) ? res.data.projects: []
@@ -175,21 +182,27 @@ class TimeSheetContact extends Component {
     }
 
     columns = () =>{ // create table column and add date as colmumn name for selected month
-        const { startDate, endDate } = this.state.sheetDates
+        const { sWeek, startDate, endDate } = this.state.sheetDates
         let { columns, sUser, loginId, permissions }  = this.state
         let date = undefined
         let key = undefined
         columns = [columns[0],columns[1]]
-        for (let i = startDate.format('D') ; i <= endDate.format('D'); i++) { //creating Empty Columns for calenders
-            date = date ?? moment(startDate.format())
+        const startWeek = moment(sWeek.format("YYYY-MM-DDTHH:mm:ss")).startOf('isoWeek')
+        const endWeek = moment(sWeek.format("YYYY-MM-DDTHH:mm:ss")).endOf('isoWeek')
+        let week = endWeek.diff(startWeek, 'days')
+
+        for (let i = 0 ; i <= week; i++)  {
+            date = date ?? moment(startWeek.format())
             columns.push({
                 title: <span>
                     <div>{date.format('ddd')}</div>
                     <div> {date.format('DD MMM')} </div>
                 </span>,
                 heading: <span>{date.format('dddd - DD MM YYYY')}</span>,
+                dateObj: moment(date.format()),
                 dataIndex: date.format('D/M'),
                 key: date.format('D/M'),
+                className: (date.isBefore(startDate) || date.isAfter(endDate))&& 'prevDates-TMcell',
                 width: 200,
                 editable: true,
                 align: "center",
@@ -207,11 +220,11 @@ class TimeSheetContact extends Component {
                   ...col,
                     render: (value, record, rowIndex) =>{
                         const clickable = (record.status === 'SV' || record.status === 'RJ' || !record.status) && sUser === loginId
-                        if(value){
+                        if(value){ // I didn't put the conditon for column previos or next month because this column won't have any value for now
                             let breakHours = moment.duration(value["breakHours"],'hours')
                             breakHours = breakHours && moment(moment().hours(breakHours.hours()).minutes(breakHours.minutes())).format("HH:mm")
-                            
-                                            //if note is null hide the tooltip condistion
+
+                            //if note is null hide the tooltip condistion
                         {return <Tooltip title={value['notes'] && `Note: ${value['notes'] }`} >
                             <Row style={{ border: "1px solid" }}>
                             <Col span={22}>Start Time: {value["startTime"]&& moment(value["startTime"], ["HH:mm"]).format("h:mm A")}</Col>
@@ -227,16 +240,16 @@ class TimeSheetContact extends Component {
                                             }}
                                         >
                                             <EditOutlined />
-                                        </Menu.Item>                        
-                                        <Menu.Item 
-                                            key="delete"
-                                            disabled={!permissions['DELETE']}
-                                            onClick = {()=>{
-                                                this.deleteRecord(value.entryId)
-                                            }}     
-                                        > 
-                                            <DeleteOutlined />
                                         </Menu.Item>
+                                            <Menu.Item 
+                                                key="delete"
+                                                disabled={!permissions['DELETE']}
+                                                onClick={()=>{
+                                                    this.deleteRecord(value, rowIndex, col.dataIndex)
+                                                }} 
+                                            > 
+                                                <DeleteOutlined />
+                                            </Menu.Item>
                                     </Menu>
                                 }  
                             >
@@ -248,8 +261,9 @@ class TimeSheetContact extends Component {
                             <Col span={24}>Total Hours: {value["actualHours"] && value["actualHours"]}</Col>
                             </Row>
                         </Tooltip>}
-                        }else{
-                            return clickable && <PlusCircleOutlined 
+                        }else { // to not show add button if column month doesn't match with  selected month
+                            return clickable && col.dateObj.isSameOrAfter(startDate)  && col.dateObj.isSameOrBefore(endDate) &&
+                                <PlusCircleOutlined 
                                 style={{fontSize: 24, color: '#1890ff'}} 
                                 onClick={()=>{     //data //index    //col key      //Col heading to show on Modal
                                     this.getRecord(record,rowIndex, col.dataIndex, col.heading); // call function to save data in
@@ -263,10 +277,16 @@ class TimeSheetContact extends Component {
         })
     }
 
-    deleteRecord = (entryId) =>{
-        deleteTime(entryId).then (res =>{
+
+    deleteRecord = (value, row, col) =>{
+        deleteTime(value.entryId).then (res =>{
             if(res.success){
-                this.callBack({})
+                const { data }= this.state
+                delete data[row][col]
+                data[row]['totalHours'] = data[row]['totalHours'] - value.actualHours
+                this.setState({
+                    data: data,
+                });
             }
         }) 
     }
@@ -317,32 +337,19 @@ class TimeSheetContact extends Component {
         this.setState({ data: data });
     }
 
-    deletcolumn = (entryId) =>{
-        deleteTime(entryId).then (res =>{
-            if(res.success){
-            }
-        }) 
-    }
-
     callBack = (value) => {
         // value = value.obj;
         const { data, timeObj }= this.state
         const { row, col } = timeObj
         value.entryId = value.id
         data[row][col] = value
-
+        data[row]['totalHours'] = data[row]['totalHours'] + value.actualHours
         this.setState({
             data: data,
             timeObj: false,
             isVisible: false,
             editTime: false
         });
-    };
-
-    saveTime = () => {
-        const { comments, data } = this.state;
-
-        console.log(comments, data);
     };
 
     reviewTimeSheet = (ids, stage, index, key) => {
@@ -381,69 +388,18 @@ class TimeSheetContact extends Component {
             isDownload: true
         })   
     }
-
-    exportData = (record) =>{
-        const { startDate, endDate } = this.state.sheetDates
-      
-        let columns= [
-            { title: "Project Name:"},//pixels width 
-            { title: record.project},//pixels width 
-        ]
-        let data= [
-            [
-                {value: 'Date:'},
-                {value: moment().format('DD-MMM-YYYY')}
-            ],
-            [{xSteps: 1},],
-            [
-                {value: "Date", style: {font: {bold: true}}},
-                {value: "Start Time ", style: {font: {bold: true}}},
-                {value: "end Time", style: {font: {bold: true}}},
-                {value: "Break", style: {font: {bold: true}}},
-                {value: "Total Hours", style: {font: {bold: true}}},
-            ],
-        ]
-        let date = undefined
-        let key = undefined
-        for (let i = startDate.format('D') ; i <= endDate.format('D'); i++) {
-            date = date ?? moment(startDate.format())
-            key = date.format('D/M')
-            data.push(
-                record[key] ? [
-                    {value: date.format('DD-MMM-YYYY')},
-                    {value: record[key].startTime},
-                    {value: record[key].endTime},
-                    {value: record[key].breakHours},
-                    {value: record[key].actualHours},
-                ]: 
-                [
-                    {value: date.format('DD-MMM-YYYY')},
-                ]
-            )
-            date = date.add(1, 'days')
-        }
-        this.setState({
-            eData: [{columns, data}],
-            isDownload: true
-        })        
-    }
-
-    commentSec = (e) => {
-        this.setState({
-            comments: e.target.value,
-        });
-    };
     
     summaryFooter = (data) =>{
         const { columns } = this.state
+        const { startDate, endDate } = this.state.sheetDates
         if(data.length>0)
         return (
-            
             <Table.Summary.Row >
-                {/* <Table.Summary.Cell className="ant-table-cell-fix-left" > </Table.Summary.Cell> //multiple select commented*/} 
-                {columns.map(({key})=>{
+                {/* //multiple select commented */}
+                <Table.Summary.Cell className="ant-table-cell-fix-left" index={0}> </Table.Summary.Cell>  
+                {columns.map(({key, dateObj}, kIndex)=>{
                     let value = 0
-                    data.map((rowData, index) =>{
+                    data.map((rowData, index) =>{ //calculation for total hours and actual hours for footer to show
                         if(key !== 'project' ){
                             if(key === 'totalHours'){
                                 value += data[index]['totalHours'] ?? 0
@@ -452,19 +408,24 @@ class TimeSheetContact extends Component {
                             }
                         }
                     })
-                    if(key === 'project'){  //Title of the projct 
-                        return <Table.Summary.Cell  
-                            fixed 
-                        >
-                            Total Work In A day 
-                        </Table.Summary.Cell>
-                    }else{
-                        return <Table.Summary.Cell 
-                            align="center" 
-                        >
-                            {value && value.toFixed(2)}
-                        </Table.Summary.Cell>
-                    }
+                          //Title of the projct show column for title 
+                            return key === 'project' ? <Table.Summary.Cell fixed index={kIndex+1}>
+                                Total Work In A day  
+                            </Table.Summary.Cell > 
+                            : // show total and normal background if the column month is same as selected month or the key is totalHours of the month
+                                (key === 'totalHours'|| (dateObj && dateObj.isSameOrAfter(startDate)  && dateObj.isSameOrBefore(endDate))) ? 
+                                <Table.Summary.Cell 
+                                    index={kIndex+1}
+                                    align="center" 
+                                >
+                                    {value && value.toFixed(2)}
+                                </Table.Summary.Cell>
+                                : // show background grey if the column month is NOT same as selected month
+                                    <Table.Summary.Cell 
+                                        index={kIndex+1} 
+                                        align='center'
+                                        className="prevDates-TMcell" 
+                                    >0</Table.Summary.Cell>
                 })}
             </Table.Summary.Row>
         )
@@ -472,7 +433,10 @@ class TimeSheetContact extends Component {
 
     projectSelect = (selectedRowKeys, selectedRows)=>{
         this.setState({
-            selectedProjects: selectedRowKeys
+            sTProjects: {
+                projects: selectedRows,
+                keys: selectedRowKeys
+            }
         })
     }
 
@@ -483,11 +447,33 @@ class TimeSheetContact extends Component {
         }else if(status === 'AP'){
             return 'approveClass'
         }else if(status === 'RJ'){
-            return 'rejectClass'        }
+            return 'rejectClass'        
+        }
     }
 
+    multiDelete = ()=> {
+        const {projects, keys } = this.state.sTProjects
+        const { cMonth } = this.state.sheetDates
+        let content = ''
+        projects.forEach(({project}) => {
+            content += `${project}, ` 
+        })
+        const modal = Modal.warning({
+          title: `Delete Timesheet For the month of ${cMonth.format('MMM YYYY')}`,
+          icon: <ExclamationCircleOutlined />,
+          content: content,
+          okButtonProps: {danger: true},
+          okText: 'Okay',
+          cancelText: 'Cancel',
+          onOk:()=>{
+              console.log(projects, keys)
+              modal.destroy();
+          }
+        });
+      }
+
     render() {
-        const { loading, data, isVisible, proVisible, columns, editTime, timeObj, sheetDates, projects, sProject, isAttach, isDownload, eData, USERS, sUser, loginId, selectedProjects } = this.state
+        const { loading, data, isVisible, proVisible, columns, editTime, timeObj, sheetDates, projects, sProject, isAttach, isDownload, eData, USERS, sUser, loginId, sTProjects } = this.state
         return (
             <>
                 <Row >
@@ -529,6 +515,7 @@ class TimeSheetContact extends Component {
                                     sheetDates : {
                                         cMonth: value ?? moment(),
                                         startDate: moment(value ?? moment()).startOf("month"),
+                                        sWeek: moment(value ?? moment()).startOf("month"),
                                         endDate: moment(value ?? moment()).endOf("month")
                                     }
                                 },()=>{
@@ -553,16 +540,50 @@ class TimeSheetContact extends Component {
                         </Button>
                     </Col>
                 </Row>
+                <Row justify="end">
+                        <Col>
+                            <Button 
+                                onClick={()=>{
+                                    const { sheetDates } = this.state
+                                    const { sWeek, startDate } = this.state.sheetDates
+                                    let pWeek = moment(sWeek.format())
+                                    pWeek = moment(pWeek.subtract(7, 'days'))
+                                    if (pWeek.isSameOrAfter(startDate)){
+                                        sheetDates.sWeek = pWeek
+                                        this.setState({
+                                            sheetDates
+                                        },()=> this.columns())
+                                    }
+                                }}
+                            > <LeftOutlined />
+                            </Button>
+                            <Button 
+                                onClick={()=>{
+                                    const { sheetDates } = this.state
+                                    const { sWeek, endDate } = this.state.sheetDates
+                                    let nWeek = moment(sWeek.format())
+                                    nWeek = moment(nWeek.add(7, 'days'))
+                                    if (nWeek.isSameOrBefore(endDate)){
+                                        sheetDates.sWeek = nWeek
+                                        this.setState({
+                                            sheetDates
+                                        },()=> this.columns())
+                                    }
+                                }}
+                            >  <RightOutlined />
+                            </Button>
+                        </Col>
+                </Row>
                 <Table
                     sticky
                     size="small"
                     className="timeSheet-table"
-                    // rowSelection={{ //multiple select commented
-                    //     onChange:(selectedRowKeys, selectedRows)=>{this.projectSelect(selectedRowKeys, selectedRows )},
-                    //     getCheckboxProps: (record) => ({
-                    //         disabled: record.status === 'SB', // Column configuration not to be checked
-                    //       })
-                    // }}
+                    rowSelection={{ //multiple select commented
+                        onChange:(selectedRowKeys, selectedRows)=>{this.projectSelect(selectedRowKeys, selectedRows )},
+                        getCheckboxProps: (record) => ({
+                            disabled: record.status === 'SB', // Column configuration not to be checked
+                          })
+                    }}
                     scroll={{
                         // x: "calc(700px + 100%)",
                         x: "'max-content'",
@@ -575,19 +596,29 @@ class TimeSheetContact extends Component {
                     dataSource={[...data]}
                     summary={ columnData => this.summaryFooter(columnData)}
                 />
-                {/* <Row justify="end" style={{marginTop: 10}}> //multiple select commented 
+                <Row justify="end" gutter={[20,200]}>
                     <Col>
-                        <Button
-                        // size="small" 
-                        type="primary"
-                        disabled={selectedProjects.length < 1}
-                        style={{backgroundColor: "#4CAF50"}} 
-                        onClick={() => { this.reviewTimeSheet(selectedProjects,'submit')}}
+                        <Button 
+                            style={{backgroundColor: '#4caf50', color:"#fff"}} 
+                            onClick={()=>{
+                                const { keys, projects } = this.state.sTProjects
+                                console.log(keys, projects)
+                            }}
                         >
-                            Submit css
+                            Submit
                         </Button>
                     </Col>
-                </Row> */}
+                    <Col>
+                    
+                        <Button 
+                            type="primary" 
+                            danger
+                            onClick={this.multiDelete}
+                        > 
+                            Delete
+                        </Button>
+                    </Col>
+                </Row>
                 {isVisible && (
                     <TimeModal
                         visible={isVisible}

@@ -117,7 +117,8 @@ class AttachModal extends Component{
                         <div>
                             <Dragger 
                                 name= "file"
-                                multiple={true}
+                                multiple={false}
+                                maxCount={1}
                                 listType= "picture"
                                 className="upload-list-inline"
                                 disabled={disabled}
@@ -125,10 +126,12 @@ class AttachModal extends Component{
                                 onRemove= {this.onRemove}
                                 fileList={fileList}
                             >
-                                <p className="ant-upload-drag-icon">
-                                    <InboxOutlined />
-                                </p>
-                                <p className="ant-upload-text">Click or drag file to this area to upload</p>
+                                {fileList.length < 1 &&<>
+                                    <p className="ant-upload-drag-icon">
+                                        <InboxOutlined />
+                                    </p>
+                                    <p className="ant-upload-text">Click or drag file to this area to upload</p>
+                                </>}
                             </Dragger>
                         </div>
                     </Col>
