@@ -232,7 +232,7 @@ class TimeSheetContact extends Component {
                                             key="delete"
                                             disabled={!permissions['DELETE']}
                                             onClick = {()=>{
-                                                this.deleteRecord(value.entryId)
+                                                this.deleteRecord(value, rowIndex, col.dataIndex)
                                             }}     
                                         > 
                                             <DeleteOutlined />
@@ -263,13 +263,19 @@ class TimeSheetContact extends Component {
         })
     }
 
-    deleteRecord = (entryId) =>{
-        deleteTime(entryId).then (res =>{
+    deleteRecord = (value, row, col) =>{
+        deleteTime(value.entryId).then (res =>{
             if(res.success){
-                this.callBack({})
+                const { data }= this.state
+                delete data[row][col]
+                data[row]['totalHours'] = data[row]['totalHours'] - value.actualHours
+                this.setState({
+                    data: data,
+                });
             }
         }) 
     }
+
 
     getRecord = (record, rowIndex, colKey,colTitle) => {
         // get record in dialog box for edit
@@ -317,19 +323,21 @@ class TimeSheetContact extends Component {
         this.setState({ data: data });
     }
 
-    deletcolumn = (entryId) =>{
-        deleteTime(entryId).then (res =>{
-            if(res.success){
-            }
-        }) 
-    }
+    // deletcolumn = (entryId) =>{
+    //     deleteTime(entryId).then (res =>{
+    //         if(res.success){
+    //         }
+    //     }) 
+    // }
 
     callBack = (value) => {
         // value = value.obj;
         const { data, timeObj }= this.state
         const { row, col } = timeObj
+
         value.entryId = value.id
         data[row][col] = value
+        data[row]['totalHours'] = data[row]['totalHours'] + value.actualHours
 
         this.setState({
             data: data,
@@ -337,6 +345,7 @@ class TimeSheetContact extends Component {
             isVisible: false,
             editTime: false
         });
+
     };
 
     saveTime = () => {
@@ -441,7 +450,7 @@ class TimeSheetContact extends Component {
             
             <Table.Summary.Row >
                 {/* <Table.Summary.Cell className="ant-table-cell-fix-left" > </Table.Summary.Cell> //multiple select commented*/} 
-                {columns.map(({key})=>{
+                {columns.map(({key}, kIndex)=>{
                     let value = 0
                     data.map((rowData, index) =>{
                         if(key !== 'project' ){
@@ -454,13 +463,15 @@ class TimeSheetContact extends Component {
                     })
                     if(key === 'project'){  //Title of the projct 
                         return <Table.Summary.Cell  
-                            fixed 
+                            fixed
+                            index={kIndex}
                         >
                             Total Work In A day 
                         </Table.Summary.Cell>
                     }else{
                         return <Table.Summary.Cell 
-                            align="center" 
+                            align="center"
+                            index={kIndex}
                         >
                             {value && value.toFixed(2)}
                         </Table.Summary.Cell>
