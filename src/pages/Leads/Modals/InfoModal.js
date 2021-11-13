@@ -76,7 +76,7 @@ class InfoModal extends Component {
                         rules:[{ required: true, message: 'Organisation is Required' }],
                         data: [],
                         type: "Select",
-                        onChange: function func(value) {
+                        onChange: (value)=> {
                             if (value){
                                 const customUrl = `helpers/contact-persons?organizationId=${value}&associated=1`
                                 getOrgPersons(customUrl).then(res=>{
@@ -94,7 +94,7 @@ class InfoModal extends Component {
                                 this.basicRef.current.refs.basic_form.setFieldsValue({ obj: obj, });
                                 this.setState({ BasicFields })
                             }
-                        }.bind(this)
+                        }
                     },
                     {
                         Placeholder: "Delegate Contact Person",

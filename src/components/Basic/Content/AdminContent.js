@@ -31,7 +31,8 @@ import ProjectInfo from "../../../pages/Project/ProjectInfo";
 import ProjectResources from "../../../pages/Project/Resources";
 import ResourceHistory from "../../../pages/Project/ResourceHistory";
 import PurchaseOrder from "../../../pages/Project/PurchaseOrder";
-import Milestone from "../../..//pages/Project/Milestone";
+
+import Milestone from "../../../pages/Milestones/Milestone";
 
 import Calender from "../../Calender/Calender";
 
@@ -181,6 +182,11 @@ const pageLinks = [
     {
         component: OpportunityResources,
         link: "/opportunity/:id/resources",
+        key: "OPPORTUNITIES"
+    },
+    {
+        component: Milestone,
+        link: "/opportunity/:id/milestones",
         key: "OPPORTUNITIES"
     },
     {

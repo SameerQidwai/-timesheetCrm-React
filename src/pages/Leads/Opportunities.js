@@ -92,16 +92,27 @@ class Opportunities extends Component {
                                 })}
                                 disabled={this.state&& !this.state.permissions['UPDATE']}
                             >Edit</Menu.Item>
-                            <Menu.Item>
-                                <Link
-                                    to={{
-                                        pathname: `/opportunity/${record.id}/resources`,
-                                    }}
-                                    className="nav-link"
-                                >
-                                    Resources
-                                </Link>
-                            </Menu.Item>
+                            {record.type === 1 ?  //if condition
+                                <Menu.Item> 
+                                    <Link
+                                        to={{ pathname: `/opportunity/${record.id}/milestones`, }}
+                                        className="nav-link"
+                                    >
+                                        Milestones
+                                    </Link>
+                                </Menu.Item>
+                                 : //else condition
+                                <Menu.Item>
+                                    <Link
+                                        to={{
+                                            pathname: `/opportunity/${record.id}/resources`,
+                                        }}
+                                        className="nav-link"
+                                    >
+                                        Resources
+                                    </Link>
+                                </Menu.Item>
+                            }
                             <Menu.Item >
                                 <Link to={{ pathname: `/opportunity/${record.id}/info`}} className="nav-link">
                                     View
@@ -127,6 +138,13 @@ class Opportunities extends Component {
 
     componentDidMount = () =>{
         this.getList()
+    }
+    resRoute = ()=>{
+        console.log(this.props.match.url)
+        let splitted = this.props.match.url
+        splitted = splitted.split('/', 2)
+        console.log(splitted);
+        return splitted[1]
     }
 
     getList = () =>{

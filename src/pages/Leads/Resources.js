@@ -1,7 +1,6 @@
-import React, { Component, useState, useReducer } from "react";
-import { Row, Col, Menu, Button, Dropdown, Descriptions, Table, Popconfirm } from "antd";
+import React, { Component, useState } from "react";
+import { Row, Col, Menu, Button, Dropdown, Descriptions, Table } from "antd";
 import { SettingOutlined, DownOutlined } from "@ant-design/icons"; //Icons
-import { Link } from "react-router-dom"; 
 
 import ResModal from "./Modals/ResModal";
 import { getRecord, getLeadSkills, delLeadSkill, delLeadSkillResource, selectLeadSkillResource } from "../../service/opportunities";
@@ -11,7 +10,7 @@ import { formatCurrency, localStore } from "../../service/constant";
 
 const { Item } = Descriptions;
 
-class Resource extends Component {
+class OpportunityMilestones extends Component {
     constructor() {
         super();
         this.columns = [
@@ -42,14 +41,6 @@ class Resource extends Component {
                     <Dropdown
                         overlay={
                             <Menu>
-                                {/* <Menu.Item danger>
-                                    <Popconfirm
-                                        title="Sure to delete?"
-                                        onConfirm={() => this.handleDelete(record.id) }
-                                    >
-                                        Delete
-                                    </Popconfirm>
-                                </Menu.Item> */}
                                 <Menu.Item
                                     onClick={() => {
                                         this.getSkilldEmployee(true,  false,  false, record,  index, record.panelSkillStandardLevelId)
@@ -95,6 +86,7 @@ class Resource extends Component {
         const { id } = this.props.match.params
         this.fetchAll(id)
     }
+    
 
     fetchAll = (id) =>{
         const { OPPORTUNITIES }= JSON.parse(localStore().permissions)
@@ -350,4 +342,4 @@ function NestedTable(props) {
 };
 
 
-export default Resource;
+export default OpportunityMilestones;
