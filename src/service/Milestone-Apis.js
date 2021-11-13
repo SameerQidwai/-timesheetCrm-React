@@ -7,7 +7,8 @@ const url = `${Api}/milestones`;
 
 export const getMilestones = (id) => {
     return axios
-        .get(`${url}/${id}`, {headers:headers()})
+    // /${id}
+        .get(`${url}`, {headers:headers()})
         .then((res) => {
             const { success, data } = res.data;
             setToken(res.headers && res.headers.authorization)
@@ -44,12 +45,12 @@ export const addMilestone = (data) => {
     return axios
         .post(url, data, {headers:headers()})
         .then((res) => {
-            const { success, message } = res.data;
+            const { success, message, data } = res.data;
             jwtExpired(message)
             messageAlert.success({ content: message, key: 1})
             if (success) setToken(res.headers && res.headers.authorization)
 
-            return success;
+            return {success, data};
         })
         .catch((err) => {
             messageAlert.error({ content: err.message, key: 1})
@@ -65,11 +66,11 @@ export const delMilestones = (id) => {
     return axios
         .delete(url + `/${id}`, {headers:headers()})
         .then((res) => {
-            const { success, message } = res.data;
+            const { success, message, data } = res.data;
             jwtExpired(message)
             if (success) setToken(res.headers && res.headers.authorization)
             
-            return success;
+            return {success, data};
         })
         .catch((err) => {
             return {

@@ -3,11 +3,12 @@ import { Row, Col, Menu, Button, Dropdown, Descriptions, Table } from "antd";
 import { SettingOutlined, DownOutlined } from "@ant-design/icons"; //Icons
 import { Link } from 'react-router-dom'
 
-import MileModal from "./MileModal";
-
 import moment from "moment"
+
+import MileModal from "./MileModal";
 import { formatCurrency, localStore } from "../../service/constant";
 import { getMilestones } from "../../service/Milestone-Apis";
+import { getRecord } from "../../service/opportunities";
 
 const { Item } = Descriptions;
 
@@ -56,7 +57,7 @@ class Milestone extends Component {
                     title: "Action",
                     key: "action",
                     align: "right",
-                    render: (record) => (
+                    render: (record, key) => (
                         <Dropdown
                             overlay={
                                 <Menu>
@@ -93,7 +94,7 @@ class Milestone extends Component {
 
     componentDidMount = ()=>{
         const { id } = this.props.match.params
-        // this.fetchAll(id)
+        this.fetchAll(id)
     }
 
     resRoute = ()=>{
@@ -104,14 +105,17 @@ class Milestone extends Component {
 
     fetchAll = (id) =>{
         const { PROJECTS }= JSON.parse(localStore().permissions)
-        getMilestones(id).then(res=>{
-            if( res.success ){
-                this.setState({
-                    data: res.data,
-                    proId: id,
-                    permissions: PROJECTS
-                },()=>console.log(this.state.permissions) )
-            }
+        Promise.all([ getRecord(id), getMilestones(id) ])
+        .then(res => {
+            this.setState({
+                desc: res[0].success && res[0].data,
+                data: res[1].success && res[1].data,
+                proId: id,
+                permissions: PROJECTS
+            })
+        })
+        .catch(e => {
+            console.log(e);
         })
     }
 
@@ -140,11 +144,11 @@ class Milestone extends Component {
                     layout="horizontal"
                     // extra={<Button type="primary">Edit</Button>}
                 >
-                    <Item label="Project Name">{desc.title}</Item>
-                    <Item label="Estimated Value">{ formatCurrency(desc.value)}</Item>
-                    <Item label="Organisation">{desc.organizationName ? desc.organization.name :' No Organisation'}</Item>
-                    <Item label="Start date">{desc.startDate ? moment(desc.startDate).format('ddd DD MM YYYY'): null} </Item>
+                    <Item label="Title">{desc.title}</Item>
+                    <Item label="Value">{ formatCurrency(desc.value)}</Item>
+                    <Item label="Start Date">{desc.startDate ? moment(desc.startDate).format('ddd DD MM YYYY'): null} </Item>
                     <Item label="End Date">{desc.endDate ? moment(desc.endDate).format('ddd DD MM YYYY'): null}</Item>
+                    <Item label="Bid Date">{desc.bidDate ? moment(desc.bidDate).format('ddd DD MM YYYY'): null}</Item>
                     {/* <Item label="Gender">{data.gender}</Item> */}
                 </Descriptions>
                 <Row justify="end">

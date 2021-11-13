@@ -151,7 +151,7 @@ class MileModal extends Component {
             size: "small",
             type: "Textarea",
         },
-        ],
+      ],
     };
   }
 
@@ -183,7 +183,7 @@ class MileModal extends Component {
     data.projectId = proId
     addMilestone(data).then(res=>{
       if(res.success){
-        // callBack()
+        callBack(res.data)
       }
     })
   };
@@ -205,7 +205,7 @@ class MileModal extends Component {
     data.id = editMile;
     editMilestone(data).then(res=>{
       if(res.success){
-        // callBack()
+        callBack(res.data)
       }
     })
   };
