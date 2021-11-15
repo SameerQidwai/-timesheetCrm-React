@@ -337,7 +337,10 @@ class TimeSheetContact extends Component {
 
         value.entryId = value.id
         data[row][col] = value
-        data[row]['totalHours'] = data[row]['totalHours'] + value.actualHours
+        let totalHours = data[row]['totalHours'] ?? 0
+        let actualHours = value.actualHours ?? 0
+        
+        data[row]['totalHours'] = totalHours + actualHours
 
         this.setState({
             data: data,
