@@ -105,7 +105,8 @@ class Milestone extends Component {
 
     fetchAll = (id) =>{
         const { PROJECTS }= JSON.parse(localStore().permissions)
-        Promise.all([ getRecord(id), getMilestones(id) ])
+        const curd = this.resRoute()
+        Promise.all([ getRecord(id), getMilestones(curd,id) ])
         .then(res => {
             this.setState({
                 desc: res[0].success && res[0].data,

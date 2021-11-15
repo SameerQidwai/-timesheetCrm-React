@@ -5,10 +5,10 @@ import { Api, headers, jwtExpired, setToken } from "./constant";
 
 const url = `${Api}/milestones`;
 
-export const getMilestones = (id) => {
+export const getMilestones = (curd, id) => {
     return axios
     // /${id}
-        .get(`${url}`, {headers:headers()})
+        .get(`${Api}/${curd}/${id}/milestones`, {headers:headers()})
         .then((res) => {
             const { success, data } = res.data;
             setToken(res.headers && res.headers.authorization)
