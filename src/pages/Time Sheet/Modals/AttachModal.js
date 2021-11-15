@@ -82,7 +82,7 @@ class AttachModal extends Component{
     }
 
     addNotes = () =>{
-        const { timeObj, close } = this.props
+        const { timeObj, callBack } = this.props
         const { notes, fileIds } = this.state
         const obj = {
             note: notes,
@@ -90,7 +90,7 @@ class AttachModal extends Component{
         }
         addProjectNote(timeObj.projectEntryId, obj).then(res=>{
             if(res.success){
-                close()
+                callBack(res.data)
             }
         })
     }

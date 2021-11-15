@@ -144,12 +144,12 @@ export const addProjectNote = (id, data) => {
     return axios
         .patch(url + `projectEntries/${id}`, data, {headers:headers()})
         .then((res) => {
-            const { success, message } = res.data;
+            const { success, message, data } = res.data;
             jwtExpired(message)
             messageAlert.success({ content: message, key: id})
             if (success) setToken(res.headers && res.headers.authorization)
             
-            return {success};
+            return {success, data};
         })
         .catch((err) => {
             messageAlert.error({ content: err.message, key: id})

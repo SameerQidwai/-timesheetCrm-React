@@ -443,6 +443,17 @@ class TimeSheetContact extends Component {
         });
     };
     
+    notesCallBack = (response) =>{
+        const {timeObj, data} = this.state
+        data[timeObj.rowIndex].notes = response.notes
+        this.setState({
+            data: data,
+            timeObj: false,
+            isAttach: false,
+            editTime: false
+        })
+    }
+    
     summaryFooter = (data) =>{
         const { columns } = this.state
         if(data.length>0)
@@ -615,7 +626,7 @@ class TimeSheetContact extends Component {
                         visible={isAttach}
                         timeObj={timeObj}
                         close={()=>this.setState({isAttach: false, editTime: false, timeObj: false})}
-                        // callBack={this.callBack}
+                        callBack={this.notesCallBack}
                     />
                 )}
                 {isDownload && (
