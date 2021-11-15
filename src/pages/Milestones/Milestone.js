@@ -22,6 +22,7 @@ class Milestone extends Component {
             proId: false,
             desc: {title: '', organization: {name: ''}, value: '', startDate: '', endDate: ''},
             permissions: {},
+            customUrl: null,
             columns: [
                 {
                     title: "Title",
@@ -37,11 +38,13 @@ class Milestone extends Component {
                     title: "Start Date",
                     dataIndex: "startDate",
                     key: "startDate",
+                    render: (record) =>(record && moment(record).format('ddd DD MM yyyy'))
                 },
                 {
                     title: "End Date",
                     dataIndex: "endDate",
                     key: "endDate",
+                    render: (record) =>(record && moment(record).format('ddd DD MM yyyy'))
                 },
                 {
                     title: "Progress",
@@ -52,18 +55,20 @@ class Milestone extends Component {
                     title: "Approved",
                     dataIndex: "isApproved",
                     key: "isApproved",
+                    render: (record) => record? 'Approved': 'Not Approved'
                 },
                 {
                     title: "Action",
                     key: "action",
                     align: "right",
-                    render: (record, key) => (
+                    render: (value, record, index) => (
+                        
                         <Dropdown
                             overlay={
                                 <Menu>
                                     <Menu.Item
                                         onClick={() => {
-                                            this.setState({ infoModal: true, editMile: record.id, });
+                                            this.setState({ infoModal: true, editMile: {...record, rowIndex: index}, });
                                         }}
                                         disabled={this.state && !this.state.permissions['UPDATE']}
                                     >
@@ -105,13 +110,14 @@ class Milestone extends Component {
 
     fetchAll = (id) =>{
         const { PROJECTS }= JSON.parse(localStore().permissions)
-        const curd = this.resRoute()
-        Promise.all([ getRecord(id), getMilestones(curd,id) ])
+        const customUrl = this.resRoute() === 'opportunity' ? 'opportunities' : 'projects'
+        Promise.all([ getRecord(id), getMilestones(customUrl,id) ])
         .then(res => {
             this.setState({
                 desc: res[0].success && res[0].data,
                 data: res[1].success && res[1].data,
                 proId: id,
+                customUrl, // for temporary bases
                 permissions: PROJECTS
             })
         })
@@ -129,13 +135,23 @@ class Milestone extends Component {
         const { id } = this.props.match.params //opputunityId
     };
 
-    callBack = () => {
-        const { proId } = this.state
-        
+    callBack = (milestone) => {
+        console.log(milestone);
+        const { proId, editMile, data } = this.state
+        if (editMile){
+            data[editMile.rowIndex]= milestone
+        }else{
+            data.push(milestone)
+        }
+
+        this.setState({
+            data: [...data],
+            infoModal: false
+        })
     };
 
     render() {
-        const { desc, data, infoModal, editMile, proId, permissions, columns } = this.state;
+        const { desc, data, infoModal, editMile, proId, permissions, columns, customUrl } = this.state;
         return (
             <>
                 <Descriptions

@@ -1,14 +1,17 @@
-import React, { Component } from "react";
+import React, { Component, createRef } from "react";
 import { Modal, Tabs, Form } from "antd";
 import { LoadingOutlined } from "@ant-design/icons"; //Icons
 import FormItems from "../../components/Core/FormItems";
 import { addMilestone, editMilestone, getMilestone } from "../../service/Milestone-Apis";
 
+import moment from "moment";
 
 
 class MileModal extends Component {
   constructor() {
     super();
+    this.formRef = React.createRef();
+
     this.state = {
       editMile: false,
       resourceSubmitted: false,
@@ -89,7 +92,7 @@ class MileModal extends Component {
           {
             object: "obj",
             fieldCol: 12,
-            key: "dueDate",
+            key: "endDate",
             size: "small",
             rules:[{ required: true, message: 'End Date is Required' }],
             type: "DatePicker",
@@ -190,20 +193,18 @@ class MileModal extends Component {
 
   getRecord = () => {
     const { editMile } = this.props;
-    getMilestone(editMile).then(res=>{
-      if( res.success ){
-          this.setState({
-              data: res.data,
-              proId: editMile,
-          })
-      }
-    })
+    editMile.startDate = moment(editMile.startDate)
+    editMile.endDate = moment(editMile.endDate)
+    this.formRef.current.setFieldsValue({ obj: editMile});
+    // getMilestone(editMile.id).then(res=>{
+    //   if( res.success ){
+    //   }
+    // })
   };
 
   editRecord = (data) => {
     const { editMile, callBack } = this.props;
-    data.id = editMile;
-    editMilestone(data).then(res=>{
+    editMilestone(editMile.id, data).then(res=>{
       if(res.success){
         callBack(res.data)
       }
@@ -226,6 +227,7 @@ class MileModal extends Component {
       >
         <Form 
             id={'my-form'}
+            ref={this.formRef}
             onFinish={this.onFinish}
             scrollToFirstError={true}
             size="small"

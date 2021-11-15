@@ -2,6 +2,7 @@ import axios from "axios";
 import { message as messageAlert } from "antd";
 
 import { Api, headers, jwtExpired, setToken } from "./constant";
+import moment from "moment";
 
 const url = `${Api}/milestones`;
 
@@ -29,7 +30,11 @@ export const getMilestone = (id) => {
         .then((res) => {
             const { success, data } = res.data;
             setToken(res.headers && res.headers.authorization)
-            if (success) return { success: success, data: data };
+            if (success){
+                data.startDate = moment(data.startDate)
+                data.endDate = moment(data.endDate)
+                return { success: success, data: data }
+            };
         })
         .catch((err) => {
             return {
@@ -81,17 +86,17 @@ export const delMilestones = (id) => {
         });
 };
 
-export const editMilestone = (data) => {
-    messageAlert.loading({ content: 'Loading...', key: data.id })
+export const editMilestone = (id, data) => {
+    messageAlert.loading({ content: 'Loading...', key: id })
     return axios
-        .put(url + `/${data.id}`, data, {headers:headers()})
+        .patch(url + `/${id}`, data, {headers:headers()})
         .then((res) => {
-            const { success, message } = res.data;
+            const { success, message, data } = res.data;
             jwtExpired(message)
-            messageAlert.success({ content: message, key: data.id})
+            messageAlert.success({ content: message, key: id})
             if (success) setToken(res.headers && res.headers.authorization)
 
-            return success;
+            return {success, data};
         })
         .catch((err) => {
             messageAlert.error({ content: err.message, key: data.id})
