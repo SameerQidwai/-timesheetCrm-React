@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { Table, Menu, Dropdown, Button, Popconfirm, Row, Col,Typography, Modal } from 'antd'
+import { Table, Menu, Dropdown, Button, Popconfirm, Row, Col,Typography } from 'antd'
 import { DownOutlined, SettingOutlined, PlusSquareOutlined, FilterOutlined} from '@ant-design/icons'; //Icons
 import { Link } from 'react-router-dom'
 
@@ -82,7 +82,7 @@ class Projects extends Component {
                             {record.type === 1 ?  //if condition
                                 <Menu.Item> 
                                     <Link
-                                        to={{ pathname: `/opportunity/${record.id}/milestones`, }}
+                                        to={{ pathname: `/projects/${record.id}/milestones`, }}
                                         className="nav-link"
                                     >
                                         Milestones
@@ -92,7 +92,8 @@ class Projects extends Component {
                                 <Menu.Item>
                                     <Link
                                         to={{
-                                            pathname: `/opportunity/${record.id}/resources`,
+                                            // pathname: `/projects/${record.id}/milestone/${record.id}/resources`,
+                                            pathname: `/projects/${record.id}/resources`,
                                         }}
                                         className="nav-link"
                                     >

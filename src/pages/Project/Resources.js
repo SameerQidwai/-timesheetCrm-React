@@ -11,7 +11,7 @@ import { formatCurrency, localStore } from "../../service/constant";
 
 const { Item } = Descriptions;
 
-class OrgInfo extends Component {
+class Resources extends Component {
     constructor(props) {
         super(props);
         const { id } = props.match.params
@@ -210,4 +210,4 @@ class OrgInfo extends Component {
     }
 }
 
-export default OrgInfo;
+export default Resources;

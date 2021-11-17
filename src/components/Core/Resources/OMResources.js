@@ -3,14 +3,14 @@ import { Row, Col, Menu, Button, Dropdown, Descriptions, Table } from "antd";
 import { SettingOutlined, DownOutlined } from "@ant-design/icons"; //Icons
 
 import ResModal from "./Modals/ResModal";
-import { getRecord, getLeadSkills, delLeadSkill, delLeadSkillResource, selectLeadSkillResource } from "../../service/opportunities";
+import { getLeadSkills, delLeadSkill, delLeadSkillResource, selectLeadSkillResource } from "../../../service/opportunities";
 
 import moment from "moment"
-import { formatCurrency, localStore } from "../../service/constant";
+import { formatCurrency, localStore } from "../../../service/constant";
 
 const { Item } = Descriptions;
 
-class Resources extends Component {
+class OMResource extends Component {
     constructor() {
         super();
         this.columns = [
@@ -342,4 +342,4 @@ function NestedTable(props) {
 };
 
 
-export default Resources;
+export default OMResource;

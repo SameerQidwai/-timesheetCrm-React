@@ -13,7 +13,7 @@ import TimeSheetPDF from "./Modals/TimeSheetPDF";
 const { Title } = Typography;
 //inTable insert
 
-class TimeSheetContact extends Component {
+class TimeSheetProject extends Component {
     constructor() {
         super();
         this.state = {
@@ -319,4 +319,4 @@ class TimeSheetContact extends Component {
     }
 }
 
-export default TimeSheetContact;
+export default TimeSheetProject;
