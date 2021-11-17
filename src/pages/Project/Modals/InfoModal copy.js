@@ -175,20 +175,12 @@ class InfoModal extends Component {
           },
           {
             Placeholder: "Qualified Ops",
-            fieldCol: 12,
+            fieldCol: 24,
             size: "small",
             type: "Text",
             labelAlign: "right",
             // itemStyle:{marginBottom:'10px'},
           },
-          {
-            Placeholder: "Linked Project",
-            fieldCol: 12,
-            size: "small",
-            type: "Text",
-            labelAlign: "right",
-            // itemStyle:{marginBottom:'10px'},
-        },
           {
             object: "obj",
             fieldCol: 12,
@@ -209,22 +201,6 @@ class InfoModal extends Component {
             // rules:[{ required: true }],
             type: "Select",
           },
-        {
-            object: "basic",
-            fieldCol: 12,
-            key: "linked_project",
-            // label: "Qualified Ops",
-            size: "small",
-            data: [ ],
-            // rules: [
-            //     {
-            //         required: true,
-            //         message: "Gender is Obviously required",
-            //     },
-            // ],
-            itemStyle: { marginBottom: 1 },
-            type: "Select",
-        },     
         ],
       },
 

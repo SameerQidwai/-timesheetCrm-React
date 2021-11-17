@@ -4,7 +4,7 @@ import { DownloadOutlined, SaveOutlined } from "@ant-design/icons"; //Icons
 import moment from "moment";
 import AttachModal from "./Modals/AttachModal";
 import {  getList, reviewTimeSheet  } from "../../service/timesheet"
-import { getProjects } from "../../service/constant-Apis";
+import { getUserProjects } from "../../service/constant-Apis";
 import { localStore } from "../../service/constant";
 
 import "../styles/table.css";
@@ -94,7 +94,7 @@ class TimeSheetProject extends Component {
     };
 
     fetchAll = () =>{
-        Promise.all([ getProjects() ])
+        Promise.all([ getUserProjects() ])
         .then(res => {
             let value = 0
             const { id, permissions } = localStore()

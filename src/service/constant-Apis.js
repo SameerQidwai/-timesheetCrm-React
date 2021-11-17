@@ -219,7 +219,7 @@ export const getPanelSkills = (id) => {
         });
 };
 
-export const getProjects = (userId) => {
+export const getUserProjects = (userId) => {
     return axios
         .get(`${Api}/helpers/projects?userId=${userId}`, { headers: headers() })
         .then((res) => {

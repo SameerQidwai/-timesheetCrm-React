@@ -6,7 +6,7 @@ import moment from "moment";
 import TimeModal from "./Modals/TimeModal"
 import AttachModal from "./Modals/AttachModal";
 import {  getList, reviewTimeSheet, getUsers, deleteTime,  } from "../../service/timesheet"
-import { getProjects } from "../../service/constant-Apis";
+import { getUserProjects } from "../../service/constant-Apis";
 import { localStore } from "../../service/constant";
 
 import "../styles/table.css";
@@ -156,7 +156,7 @@ class TimeSheetContact extends Component {
     }
 
     getProjects = (value) =>{
-        getProjects(value).then(res=>{
+        getUserProjects(value).then(res=>{
             if(res.success){
                 this.setState({
                     projects: res.data
