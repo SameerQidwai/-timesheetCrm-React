@@ -15,6 +15,7 @@ import { getRecord, delList, workIsLost } from "../../service/opportunities";
 
 import moment from "moment"
 import { formatCurrency, localStore } from "../../service/constant";
+import LostModal from "./Modals/LostModal";
 
 const { Item } = Descriptions;
 const { TabPane } = Tabs;
@@ -24,12 +25,13 @@ class OpportunityInfo extends Component {
         super();
         this.status = [ //status of the oportunity 
             {title: "Won", msg: "Opportunity Won!?" , api: 'won'},
-            {title: "Lost", msg: "Opportunity Lost!?" , api: 'lost'},
-            {title: "Not Bid", msg: "Not Bid On Opportunity!?" , api: 'not-bid'},
-            {title: "Did Not Proceed", msg: "Did Not Proceed?", api: 'proceed'},
+            {title: "Lost", msg: "Opportunity Lost!?" , api: 'Lost'},
+            {title: "Not Bid", msg: "Not Bid On Opportunity!?" , api: 'NotBid'},
+            {title: "Did Not Proceed", msg: "Did Not Proceed?", api: 'NotProceed'},
         ]
         this.state = {
             infoModal: false,
+            lostModal: false,
             leadId: false,
             data: { },
             basic: {},
@@ -54,6 +56,7 @@ class OpportunityInfo extends Component {
                     billing: res.billing,
                     leadId: id,
                     infoModal: false,
+                    lostModal: false,
                     renderTabs: true,
                     moveToProject: false,
                     permissions: OPPORTUNITIES
@@ -63,7 +66,7 @@ class OpportunityInfo extends Component {
     }
 
     closeModal = () => {
-        this.setState({ infoModal: false, moveToProject: false, });
+        this.setState({ infoModal: false, moveToProject: false, lostModal: false});
     };
 
     handleDelete = (id) => {
@@ -84,7 +87,7 @@ class OpportunityInfo extends Component {
     };
 
     render() {
-        const { data, infoModal, leadId, billing, renderTabs, moveToProject, permissions, basic } = this.state;
+        const { data, infoModal,lostModal, leadId, billing, renderTabs, moveToProject, permissions, basic } = this.state;
         const DescTitle = (
             <Row justify="space-between">
                 <Col>Opportunity Basic Information</Col>
@@ -99,7 +102,11 @@ class OpportunityInfo extends Component {
                                     <Popconfirm 
                                         title={el.msg} 
                                         onConfirm={() => {
-                                            this.setState({ infoModal: true, moveToProject: true});
+                                            if (el.title === "Won"){
+                                                this.setState({ infoModal: true, moveToProject: true});
+                                            }else{
+                                                this.setState({lostModal: true, moveToProject: el})
+                                            }
                                             //new function (...el)
                                         }}
                                         okText="Yes"
@@ -168,7 +175,6 @@ class OpportunityInfo extends Component {
                     <Tabs
                         type="card"
                         style={{ marginTop: "50px" }}
-                        // defaultActiveKey="profitloss"   
                     >
                         <TabPane tab="Comments" key="comments">
                             <Comments targetId={leadId} targetType="WOR" />
@@ -195,6 +201,14 @@ class OpportunityInfo extends Component {
                         project={moveToProject}
                         close={this.closeModal}
                         callBack={this.callBack}
+                    />
+                )}
+                {lostModal && (
+                    <LostModal
+                        visible={lostModal}
+                        reason={moveToProject}
+                        close={this.closeModal}
+                        // callBack={this.callBack}
                     />
                 )}
             </>

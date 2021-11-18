@@ -4,12 +4,12 @@ import { LoadingOutlined } from "@ant-design/icons"; //Icons
 import moment from "moment";
 import FormItems from "../../../components/Core/FormItems";
 
-import { addList, getRecord, editList, workWon } from "../../../service/opportunities";
-import { getOrganizations, getStates, getOrgPersons, getPanels, getProjects } from "../../../service/constant-Apis";
+import { workWon } from "../../../service/opportunities";
+import { getOrganizations } from "../../../service/constant-Apis";
 
 const { TabPane } = Tabs;
 
-class InfoModal extends Component {
+class LostModal extends Component {
     constructor() {
         super();
         this.formRef = React.createRef(); 
@@ -19,19 +19,139 @@ class InfoModal extends Component {
             check: false,
             leadValue: 0,
             loading: false,
+            Fields: [],
 
             Lost: [
+                {
+                    Placeholder: "Successful Tenderder",
+                    fieldCol: 12,
+                    size: "small",
+                    type: "Text",
+                    labelAlign: "right",
+                    // itemStyle:{marginBottom:'10px'},
+                },
+                {
+                    Placeholder: "Wining Price",
+                    fieldCol: 12,
+                    size: "small",
+                    type: "Text",
+                    labelAlign: "right",
+                    // itemStyle:{marginBottom:'10px'},
+                },
+                {
+                    object: "lost",
+                    fieldCol: 12,
+                    key: "type",
+                    size: "small",
+                    // mode: 'multiple',
+                    data: [],
+                    type: "Select",
+                },
+                {
+                    object: "lost",
+                    fieldCol: 12,
+                    key: "wining",
+                    size: "small",
+                    disabled: true,
+                    shape: '$',
+                    // rules:[{ required: true }],
+                    type: "InputNumber",
+                    fieldStyle: { width: "100%" },
+                },
+                {
+                    Placeholder: "Reason",
+                    fieldCol: 24,
+                    size: "small",
+                    type: "Text",
+                    labelAlign: "right",
+                    // itemStyle:{marginBottom:'10px'},
+                },
+                {
+                    object: "lost",
+                    fieldCol: 12,
+                    key: "reason",
+                    size: "small",
+                    mode: 'tags',
+                    data: [
+                        {label: 'Price', value: 'Price'},
+                        {label: 'Resources', value: 'Resources'},
+                        {label: 'Approach', value: 'Approach'},
+                    ],
+                    type: "Select",
+                },
+                
+                {
+                    Placeholder: "Customer Feedback",
+                    fieldCol: 24,
+                    size: "small",
+                    type: "Text",
+                    labelAlign: "right",
+                    // itemStyle:{marginBottom:'10px'},
+                },
+                {
+                    object: "lost",
+                    fieldCol: 24,
+                    key: "feedback",
+                    size: "small",
+                    mode:{ minRows: 2, maxRows:12},
+                    // rules:[{ required: true }],
+                    type: "Textarea",
+                },
             ],
 
             NotBid: [
+                {
+                    Placeholder: "Reason",
+                    fieldCol: 24,
+                    size: "small",
+                    type: "Text",
+                    labelAlign: "right",
+                    // itemStyle:{marginBottom:'10px'},
+                },
+                {
+                    object: "lost",
+                    fieldCol: 24,
+                    key: "type",
+                    size: "small",
+                    mode: 'tags',
+                    data: [
+                        {label: 'Insufficient ', value: 'Insufficient '},
+                        {label: 'Resources', value: 'Resources'},
+                        {label: 'Not Competitive', value: 'Not Competitive'},
+                        {label: 'Not Financially viable', value: 'Not Financially viable'},
+                        {label: 'Outside Scope of Services', value: 'Outside Scope of Services'},
+                    ],
+                    type: "Select",
+                },
             ],
 
             NotProceed: [
+                {
+                    Placeholder: "Reason",
+                    fieldCol: 24,
+                    size: "small",
+                    type: "Text",
+                    labelAlign: "right",
+                    // itemStyle:{marginBottom:'10px'},
+                },
+                {
+                    object: "lost",
+                    fieldCol: 24,
+                    key: "feedback",
+                    size: "small",
+                    mode:{ minRows: 5, maxRows:12},
+                    // rules:[{ required: true }],
+                    type: "Textarea",
+                },
             ],
 
         };
     }
     componentDidMount = () =>{
+        const { api } = this.props.reason
+        this.setState((pre)=>({
+            Fields: pre[api]
+        }))
     }
 
 
@@ -43,11 +163,11 @@ class InfoModal extends Component {
     }
 
     render() {
-        const { editLead, visible, close } = this.props;
-        const { BasicFields, tenderFields, DatesFields, BillingFields, ManageFields, loading } = this.state
+        const { visible, reason, close } = this.props;
+        const { Fields, loading } = this.state
         return (
             <Modal
-                title={editLead? "Edit opportunity" : "Add New opportunity"}
+                title={reason.msg}
                 maskClosable={false}
                 centered
                 visible={visible}
@@ -64,11 +184,11 @@ class InfoModal extends Component {
                     size="small"
                     layout="inline"
                 >
-                    <FormItems FormFields={BasicFields} />
+                    <FormItems FormFields={Fields} />
                 </Form>
             </Modal>
         );
     }
 }
 
-export default InfoModal;
+export default LostModal;
