@@ -5,7 +5,7 @@ import moment from "moment";
 import FormItems from "../../../components/Core/FormItems";
 
 import { addList, getRecord, editList, workWon } from "../../../service/opportunities";
-import { getOrganizations, getStates, getOrgPersons, getPanels } from "../../../service/constant-Apis";
+import { getOrganizations, getStates, getOrgPersons, getPanels, getProjects } from "../../../service/constant-Apis";
 
 const { TabPane } = Tabs;
 
@@ -630,7 +630,7 @@ class InfoModal extends Component {
         }
         // either call this or call that
         const customUrl = `helpers/contact-persons?active=1&employee=1&associated=1&label=1`
-        Promise.all([ getPanels(), getOrganizations(), getStates(), getOrgPersons(customUrl), editLead && this.getRecord(editLead)])
+        Promise.all([ getPanels(), getOrganizations(), getStates(), getOrgPersons(customUrl), editLead && this.getRecord(editLead), getProjects()])
         .then(res => {
             const { BasicFields, ManageFields } = this.state;
             if (res[1].success) {res[1].data[0].disabled = true}
@@ -639,7 +639,7 @@ class InfoModal extends Component {
             BasicFields[3].data = res[1].success? res[1].data : [];
             BasicFields[11].data = res[2].success? res[2].data : [];
             BasicFields[6].data = res[4].success? res[4].data : [];
-            // BasicFields[17].data = res[5].success? res[5].data : [];
+            BasicFields[17].data = res[5].success? res[5].data : [];
     
             ManageFields[2].data = res[3].success ? res[3].data: [];
             ManageFields[3].data = res[3].success ? res[3].data: [];
@@ -666,6 +666,8 @@ class InfoModal extends Component {
             type: basic.type ?? '',
             stateId: basic.stateId ?? null,
             qualifiedOps: basic.qualifiedOps ?? false,
+            stage: basic.stage?? null,
+            linked_project: basic.linked_project?? null,
 
             tender: tender.tender ?? '',
             tenderNumber: tender.tenderNumber ?? '',
@@ -728,9 +730,7 @@ class InfoModal extends Component {
     editRecord = (values) => {
         const { editLead, callBack } = this.props;
         values.id = editLead
-        this.setState({
-            loading: true
-        })
+        this.setState({ loading: true })
         editList(values).then((res) => {
             if(res.success){
                 callBack()

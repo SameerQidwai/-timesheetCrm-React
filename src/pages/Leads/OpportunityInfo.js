@@ -22,6 +22,12 @@ const { TabPane } = Tabs;
 class OpportunityInfo extends Component {
     constructor() {
         super();
+        this.status = [ //status of the oportunity 
+            {title: "Won", msg: "Opportunity Won!?" , api: 'won'},
+            {title: "Lost", msg: "Opportunity Lost!?" , api: 'lost'},
+            {title: "Not Bid", msg: "Not Bid On Opportunity!?" , api: 'not-bid'},
+            {title: "Did Not Proceed", msg: "Did Not Proceed?", api: 'proceed'},
+        ]
         this.state = {
             infoModal: false,
             leadId: false,
@@ -86,32 +92,22 @@ class OpportunityInfo extends Component {
                     <Dropdown
                         overlay={
                             <Menu>
-                                <Menu.Item 
+                                {this.status.map(el => <Menu.Item 
+                                    key={el.title}
                                     disabled={!permissions['UPDATE']}
                                 >
                                     <Popconfirm 
-                                        title="Opportunity is Done!?" 
+                                        title={el.msg} 
                                         onConfirm={() => {
                                             this.setState({ infoModal: true, moveToProject: true});
+                                            //new function (...el)
                                         }}
                                         okText="Yes"
                                         cancelText="No" 
                                     >
-                                        Won
+                                        {el.title}
                                     </Popconfirm>
-                                </Menu.Item>
-                                <Menu.Item 
-                                    disabled={!permissions['UPDATE']}
-                                >
-                                    <Popconfirm 
-                                        title="Opportunity Lost!?" 
-                                        onConfirm={() => { workIsLost(leadId) }}
-                                        okText="Yes"
-                                        cancelText="No"  
-                                    >
-                                        Lost
-                                    </Popconfirm>
-                                </Menu.Item>
+                                </Menu.Item>)}
                                 <Menu.Item onClick={() => { 
                                         this.setState({ infoModal: true});
                                     }} 

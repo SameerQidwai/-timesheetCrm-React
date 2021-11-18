@@ -5,7 +5,7 @@ import moment from "moment";
 import Form from "../../../components/Core/Form";
 
 import { addList, getRecord, editList } from "../../../service/projects";
-import { getOrganizations, getStates, getOrgPersons, getPanels, getEmployees, } from "../../../service/constant-Apis";
+import { getOrganizations, getStates, getOrgPersons, getPanels, getEmployees, getProjects, } from "../../../service/constant-Apis";
 
 const { TabPane } = Tabs;
 
@@ -175,12 +175,20 @@ class InfoModal extends Component {
           },
           {
             Placeholder: "Qualified Ops",
-            fieldCol: 24,
+            fieldCol: 12,
             size: "small",
             type: "Text",
             labelAlign: "right",
             // itemStyle:{marginBottom:'10px'},
           },
+          {
+            Placeholder: "Linked Project",
+            fieldCol: 12,
+            size: "small",
+            type: "Text",
+            labelAlign: "right",
+            // itemStyle:{marginBottom:'10px'},
+        },
           {
             object: "obj",
             fieldCol: 12,
@@ -201,6 +209,22 @@ class InfoModal extends Component {
             // rules:[{ required: true }],
             type: "Select",
           },
+        {
+            object: "basic",
+            fieldCol: 12,
+            key: "linked_project",
+            // label: "Qualified Ops",
+            size: "small",
+            data: [ ],
+            // rules: [
+            //     {
+            //         required: true,
+            //         message: "Gender is Obviously required",
+            //     },
+            // ],
+            itemStyle: { marginBottom: 1 },
+            type: "Select",
+        },     
         ],
       },
 
@@ -502,7 +526,7 @@ class InfoModal extends Component {
     const dates = { entryDate: moment(new Date()) };
     this.datesRef.current.refs.dates_form.setFieldsValue({ obj: dates });
     const customUrl = `helpers/contact-persons?active=1&employee=1&associated=1&label=1`
-    Promise.all([ getPanels(), getOrganizations(), getStates(), getOrgPersons(customUrl), editPro && this.getRecord(editPro), ])
+    Promise.all([ getPanels(), getOrganizations(), getStates(), getOrgPersons(customUrl), editPro && this.getRecord(editPro), getProjects()])
       .then((res) => {
         if (res[1].success) {
           res[1].data[0].disabled = true;
@@ -512,6 +536,7 @@ class InfoModal extends Component {
         BasicFields.fields[3].data = res[1].success ? res[1].data : [];
         BasicFields.fields[11].data = res[2].success ? res[2].data : [];
         BasicFields.fields[6].data = res[4].success ? res[4].data : [];
+        BasicFields.fields[15].data = res[5].success ? res[5].data : [];
         
         ManageFields.fields[2].data = res[3].success ? res[3].data : [];
         ManageFields.fields[3].data = res[3].success ? res[3].data : [];

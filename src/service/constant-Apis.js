@@ -219,6 +219,27 @@ export const getPanelSkills = (id) => {
         });
 };
 
+export const getProjects = () => {
+    return axios
+        .get(`${Api}/projects`, { headers: headers() })
+        .then((res) => {
+            const { success, data } = res.data;
+            let work = []
+            if (success) {
+                data.map((el) => {work.push({ value: el.id, label: el.title}) });
+                setToken(res.headers && res.headers.authorization)
+            }
+            return { success: success, data: work };
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                success: false,
+                message: err.message,
+            };
+        });
+};
+
 export const getUserProjects = (userId) => {
     return axios
         .get(`${Api}/helpers/projects?userId=${userId}`, { headers: headers() })
