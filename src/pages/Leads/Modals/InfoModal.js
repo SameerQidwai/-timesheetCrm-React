@@ -774,7 +774,7 @@ class InfoModal extends Component {
                     layout="inline"
                     initialValues={ { dates:{ entryDate: moment(new Date()) } } }
                 >
-                    <Tabs type="card">
+                    <Tabs type="card" >
                         <TabPane tab="Opportunity Info" key="basic" forceRender className="ant-form ant-form-inline ant-form-small" >
                             <FormItems FormFields={BasicFields} />
                         </TabPane>

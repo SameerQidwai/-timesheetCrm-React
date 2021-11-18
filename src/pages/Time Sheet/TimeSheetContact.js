@@ -117,7 +117,6 @@ class TimeSheetContact extends Component {
     };
 
     fetchAll = () =>{
-        console.log('getUsers');
         Promise.all([ getUsers() ])
         .then(res => {
             console.log(res);
