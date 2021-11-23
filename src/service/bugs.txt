@@ -1,5 +1,5 @@
-I am not getting milestone Id when creating timebase 
-so this means the milestone is not creating by default
+I am not getting milestones Id when creating timebase 
+so this means the milestones is not creating by default
 
 //timeSheet.js file deleted will be in commit   17-11 before 5
 // userContent.js file is deleted will be in commit 17-11 before 5

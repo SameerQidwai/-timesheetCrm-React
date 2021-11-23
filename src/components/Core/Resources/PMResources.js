@@ -60,7 +60,7 @@ class PMResources extends Component {
                                     <Menu.Item>
                                         <Link
                                             to={{
-                                                // pathname:  `/projects/${this.state&& this.state.proId}/milestone/${record.id}/resources`,
+                                                // pathname:  `/projects/${this.state&& this.state.proId}/milestones/${record.id}/resources`,
                                                 pathname:  `/projects/${record.id}/resources`,
                                             }}
                                             className="nav-link"

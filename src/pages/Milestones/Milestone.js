@@ -78,8 +78,8 @@ class Milestone extends Component {
                                     <Menu.Item>
                                     <Link
                                         to={{
-                                            // pathname:  `/${this.resRoute()}/${this.state&& this.state.proId}/milestone/${record.id}/resources`,
-                                            pathname:  `/${this.state.customUrl}/milestones${record.id}/resources`,
+                                            // pathname:  `/${this.resRoute()}/${this.state&& this.state.proId}/milestones/${record.id}/resources`,
+                                            pathname:  `milestones/${record.id}/resources`,
                                         }}
                                         className="nav-link"
                                     >
@@ -104,18 +104,15 @@ class Milestone extends Component {
         this.fetchAll(id)
     }
 
-    resRoute = ()=>{
+    resRoute = (mileId)=>{
         let splitted = this.props.match.url
-        console.log(splitted);
-        splitted = splitted.split('/', 2)
-        this.setState({customUrl: this.props.match.url})
-        return splitted[1]
+        splitted = splitted.split('/')
+        return `/${splitted[1]}/${splitted[2]}/${splitted[3]}/${mileId}/resources`
     }
 
     fetchAll = (id) =>{
         const { PROJECTS }= JSON.parse(localStore().permissions)
         const customUrl = this.props.match.url
-        console.log(customUrl);
         Promise.all([ getRecord(id), getMilestones(customUrl,id) ])
         .then(res => {
             this.setState({

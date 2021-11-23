@@ -108,7 +108,7 @@ class Resources extends Component {
 
     componentDidMount = ()=>{
         const { id } = this.props.match.params
-        this.fetchAll(id)
+        // this.fetchAll(id)
     }
 
     fetchAll = (id) =>{

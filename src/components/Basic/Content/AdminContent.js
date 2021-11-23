@@ -186,7 +186,7 @@ const pageLinks = [
     },
     {
         component: OpportunityResources,
-        link: "/opportunities/:id/milestone/:mileId/resources",
+        link: "/opportunities/:id/milestones/:mileId/resources",
         // link: "/opportunities/:id/resources",
         key: "OPPORTUNITIES"
     },
@@ -212,7 +212,7 @@ const pageLinks = [
     },
     {
         component: ProjectResources,
-        link: "/projects/:id/milestone/:mileId/resources",
+        link: "/projects/:id/milestones/:mileId/resources",
         // link: "/projects/:id/resources",
         key: "PROJECTS"
     },

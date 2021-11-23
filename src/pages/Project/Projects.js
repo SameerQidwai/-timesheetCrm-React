@@ -92,8 +92,8 @@ class Projects extends Component {
                                 <Menu.Item>
                                     <Link
                                         to={{
-                                            // pathname: `/projects/${record.id}/milestone/${record.id}/resources`,
-                                            pathname: `/projects/${record.id}/resources`,
+                                            pathname: `/projects/${record.id}/milestones/${record.id}/resources`,
+                                            // pathname: `/projects/${record.id}/resources`,
                                         }}
                                         className="nav-link"
                                     >
