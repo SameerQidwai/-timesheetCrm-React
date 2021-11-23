@@ -6,10 +6,10 @@ import moment from "moment";
 
 const url = `${Api}/milestones`;
 
-export const getMilestones = (curd, id) => {
+export const getMilestones = (crud, id) => {
     return axios
     // /${id}
-        .get(`${Api}/${curd}/${id}/milestones`, {headers:headers()})
+        .get(`${Api}${crud}`, {headers:headers()})
         .then((res) => {
             const { success, data } = res.data;
             setToken(res.headers && res.headers.authorization)
@@ -45,10 +45,11 @@ export const getMilestone = (id) => {
         });
 };
 
-export const addMilestone = (data) => {
+export const addMilestone = (crud, data) => {
     messageAlert.loading({ content: 'Loading...', key: 1 })
+    console.log(crud);
     return axios
-        .post(url, data, {headers:headers()})
+        .post(`${Api}${crud}`, data, {headers:headers()})
         .then((res) => {
             const { success, message, data } = res.data;
             jwtExpired(message)
@@ -86,17 +87,17 @@ export const delMilestones = (id) => {
         });
 };
 
-export const editMilestone = (id, data) => {
+export const editMilestone = (crud, id, data) => {
     messageAlert.loading({ content: 'Loading...', key: id })
     return axios
-        .patch(url + `/${id}`, data, {headers:headers()})
+        .put(`${Api}${crud}/${id}`, data, {headers:headers()})
         .then((res) => {
             const { success, message, data } = res.data;
             jwtExpired(message)
             messageAlert.success({ content: message, key: id})
             if (success) setToken(res.headers && res.headers.authorization)
 
-            return {success, data};
+            return {success, data: data[0]};
         })
         .catch((err) => {
             messageAlert.error({ content: err.message, key: data.id})

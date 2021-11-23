@@ -6,7 +6,6 @@ import { Api, headers, jwtExpired, setToken } from "./constant";
 const url = `${Api}/timesheets/`;
 
 export const getList = (keys) => {
-    console.log({headers:headers()})
     return axios
         .get(url + `${keys.startDate}&${keys.endDate}&${keys.userId}`, {headers:headers()})
         .then((res) => {
@@ -105,7 +104,6 @@ export const reviewTimeSheet = (keys, stage) => {
             jwtExpired(message)
             messageAlert.success({ content: message, key: 1})
             if (success) setToken(res.headers && res.headers.authorization)
-            console.log({success, data});
             return {success, data};
         })
         .catch((err) => {
@@ -187,7 +185,6 @@ export const getPdf = (entryId) => {
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
-            console.log(data);
             if (success) {
                 setToken(res.headers && res.headers.authorization)
                 let projectInfo = {

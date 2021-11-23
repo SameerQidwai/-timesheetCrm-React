@@ -33,10 +33,10 @@ class MileModal extends Component {
             // itemStyle:{marginBottom:'10px'},
           },
           {
-            Placeholder: "Amount",
+            Placeholder: "Progress",
             fieldCol: 12,
             size: "small",
-            rangeMin: true,
+            // rangeMin: true,
             type: "Text",
             labelAlign: "right",
             // itemStyle:{marginBottom:'10px'},
@@ -54,13 +54,14 @@ class MileModal extends Component {
           {
             object: "obj",
             fieldCol: 12,
-            key: "amount",
-            shape: '$',
-            // disabled: true,
+            key: "progress",
+            // rules:[{ required: true, message: 'Effort Rate is Required' }],
+            shape: "%",
             size: "small",
-            rules:[{ required: true, message: 'amount is Required' }],
             type: "InputNumber",
             fieldStyle: { width: "100%" },
+            rangeMin: 0,
+            rangeMax: 100,
           },
           {
             Placeholder: "Start Date",
@@ -99,34 +100,13 @@ class MileModal extends Component {
             fieldStyle: { width: "100%" },
           },
           {
-            Placeholder: "Progress",
-            fieldCol: 12,
-            size: "small",
-            // rangeMin: true,
-            type: "Text",
-            labelAlign: "right",
-            // itemStyle:{marginBottom:'10px'},
-          },
-          {
             Placeholder: "Approved",
-            fieldCol: 12,
+            fieldCol: 24,
             size: "small",
             // rangeMin: true,
             type: "Text",
             labelAlign: "right",
             // itemStyle:{marginBottom:'10px'},
-          },
-          {
-            object: "obj",
-            fieldCol: 12,
-            key: "progress",
-            // rules:[{ required: true, message: 'Effort Rate is Required' }],
-            shape: "%",
-            size: "small",
-            type: "InputNumber",
-            fieldStyle: { width: "100%" },
-            rangeMin: 0,
-            rangeMax: 100,
           },
           {
             object: "obj",
@@ -140,7 +120,7 @@ class MileModal extends Component {
           },
           {
             Placeholder: "Description",
-            fieldCol: 12,
+            fieldCol: 24,
             size: "small",
             // rangeMin: true,
             type: "Text",
@@ -159,6 +139,7 @@ class MileModal extends Component {
   }
 
   componentDidMount = () => {
+    console.log(this.props.crud);
     this.openModal();
   };
 
@@ -182,9 +163,9 @@ class MileModal extends Component {
   };
 
   addRecord = (data) => {
-    const { proId, callBack } = this.props;
+    const { proId, callBack, crud } = this.props;
     data.projectId = proId
-    addMilestone(data).then(res=>{
+    addMilestone(crud, data).then(res=>{
       if(res.success){
         callBack(res.data)
       }
@@ -203,8 +184,8 @@ class MileModal extends Component {
   };
 
   editRecord = (data) => {
-    const { editMile, callBack } = this.props;
-    editMilestone(editMile.id, data).then(res=>{
+    const { editMile, callBack, crud } = this.props;
+    editMilestone(crud, editMile.id, data).then(res=>{
       if(res.success){
         callBack(res.data)
       }

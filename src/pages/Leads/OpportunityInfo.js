@@ -123,7 +123,7 @@ class OpportunityInfo extends Component {
                                 <Menu.Item>
                                     <Link
                                         to={{
-                                            pathname: `/opportunity/${leadId}/resources`,
+                                            pathname: `/opportunities/${leadId}/resources`,
                                         }}
                                         className="nav-link"
                                     >

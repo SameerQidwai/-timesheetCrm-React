@@ -95,7 +95,7 @@ class Opportunities extends Component {
                             {record.type === 1 ?  //if condition
                                 <Menu.Item> 
                                     <Link
-                                        to={{ pathname: `/opportunity/${record.id}/milestones`, }}
+                                        to={{ pathname: `/opportunities/${record.id}/milestones`, }}
                                         className="nav-link"
                                     >
                                         Milestones
@@ -105,8 +105,8 @@ class Opportunities extends Component {
                                 <Menu.Item>
                                     <Link
                                         to={{
-                                            // pathname: `/opportunity/${record.id}/milestone/${record.id}/resources`,
-                                            pathname: `/opportunity/${record.id}/resources`,
+                                            // pathname: `/opportunities/${record.id}/milestone/${record.id}/resources`,
+                                            pathname: `/opportunities/${record.id}/milestone/${record.milestones[0] && record.milestones[0].id}/resources`,
                                         }}
                                         className="nav-link"
                                     >
@@ -115,7 +115,7 @@ class Opportunities extends Component {
                                 </Menu.Item>
                             }
                             <Menu.Item >
-                                <Link to={{ pathname: `/opportunity/${record.id}/info`}} className="nav-link">
+                                <Link to={{ pathname: `/opportunities/${record.id}/info`}} className="nav-link">
                                     View
                                 </Link>
                             </Menu.Item >

@@ -176,18 +176,18 @@ const pageLinks = [
     },
     {
         component: OpportunityInfo,
-        link: "/opportunity/:id/info",
-        key: "OPPORTUNITIES"
-    },
-    {
-        component: OpportunityResources,
-        // link: "/opportunity/:id/milestone/:mileId/resources",
-        link: "/opportunity/:id/resources",
+        link: "/opportunities/:id/info",
         key: "OPPORTUNITIES"
     },
     {
         component: Milestone,
-        link: "/opportunity/:id/milestones",
+        link: "/opportunities/:id/milestones",
+        key: "OPPORTUNITIES"
+    },
+    {
+        component: OpportunityResources,
+        link: "/opportunities/:id/milestone/:mileId/resources",
+        // link: "/opportunities/:id/resources",
         key: "OPPORTUNITIES"
     },
     {
@@ -206,19 +206,19 @@ const pageLinks = [
         key: "PROJECTS"
     },
     {
+        component: Milestone,
+        link: "/projects/:id/milestones",
+        key: "PROJECTS"
+    },
+    {
         component: ProjectResources,
-        // link: "/projects/:id/milestone/:mileId/resources",
-        link: "/projects/:id/resources",
+        link: "/projects/:id/milestone/:mileId/resources",
+        // link: "/projects/:id/resources",
         key: "PROJECTS"
     },
     {
         component: ResourceHistory,
         link: "/projects/:proId/resources/rates/:id",
-        key: "PROJECTS"
-    },
-    {
-        component: Milestone,
-        link: "/projects/:id/milestones",
         key: "PROJECTS"
     },
     {

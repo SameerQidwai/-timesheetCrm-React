@@ -27,7 +27,7 @@ class TimeSheetContact extends Component {
                 startDate: moment().startOf("month"), 
                 endDate: moment().endOf("month"),
                 cMonth: moment(),
-                sWeek: moment().startOf("month"),
+                sWeek: moment(),
             },
             timeObj: false,
             editTime: false,
@@ -119,7 +119,6 @@ class TimeSheetContact extends Component {
     fetchAll = () =>{
         Promise.all([ getUsers() ])
         .then(res => {
-            console.log(res);
             let value = 0
             const { id, permissions } = localStore()
             const loginId = parseInt(id)
@@ -170,7 +169,6 @@ class TimeSheetContact extends Component {
         const { startDate, endDate } = sheetDates
         if(sUser){
             getList({userId: sUser, startDate: startDate.format('DD-MM-YYYY'), endDate: endDate.format('DD-MM-YYYY')}).then(res=>{
-                console.log(res.data);
                 this.setState({
                     timesheet: res.success ? res.data: {},
                     data: (res.success && res.data) ? res.data.projects: []
@@ -352,16 +350,13 @@ class TimeSheetContact extends Component {
     };
 
     reviewTimeSheet = (ids, stage, index, key) => {
-        console.log(ids, stage, index, key);
         const { startDate, endDate } = this.state.sheetDates
         const { sUser } = this.state
         const query= { pEntryId: ids, userId: sUser, startDate: startDate.format('DD-MM-YYYY'), endDate: endDate.format('DD-MM-YYYY') }
         reviewTimeSheet(query, stage).then(res=>{
-            console.log(res);
             const { data } = this.state
             if(res.success && index>=0){
                 data[index].status= key
-                console.log(data[index])
                 this.setState({
                     data,
                 })
@@ -408,13 +403,14 @@ class TimeSheetContact extends Component {
                         }
                     })
                           //Title of the projct show column for title 
-                            return key === 'project' ? <Table.Summary.Cell fixed index={kIndex+1}>
+                            return key === 'project' ? <Table.Summary.Cell fixed index={kIndex+1} key={kIndex+1}>
                                 Total Work In A day  
                             </Table.Summary.Cell > 
                             : // show total and normal background if the column month is same as selected month or the key is totalHours of the month
                                 (key === 'totalHours'|| (dateObj && dateObj.isSameOrAfter(startDate)  && dateObj.isSameOrBefore(endDate))) ? 
                                 <Table.Summary.Cell 
                                     index={kIndex+1}
+                                    key={kIndex+1}
                                     align="center" 
                                 >
                                     {value && value.toFixed(2)}
@@ -422,6 +418,7 @@ class TimeSheetContact extends Component {
                                 : // show background grey if the column month is NOT same as selected month
                                     <Table.Summary.Cell 
                                         index={kIndex+1} 
+                                        key={kIndex+1}
                                         align='center'
                                         className="prevDates-TMcell" 
                                     >0</Table.Summary.Cell>
@@ -465,7 +462,6 @@ class TimeSheetContact extends Component {
           okText: 'Okay',
           cancelText: 'Cancel',
           onOk:()=>{
-              console.log(projects, keys)
               modal.destroy();
           }
         });
@@ -601,7 +597,6 @@ class TimeSheetContact extends Component {
                             style={{backgroundColor: '#4caf50', color:"#fff"}} 
                             onClick={()=>{
                                 const { keys, projects } = this.state.sTProjects
-                                console.log(keys, projects)
                             }}
                         >
                             Submit

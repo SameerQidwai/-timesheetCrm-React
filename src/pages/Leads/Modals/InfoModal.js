@@ -66,13 +66,13 @@ class InfoModal extends Component {
                             getOrgPersons(customUrl).then(res=>{
                                 if(res.success){
                                     const { BasicFields } = this.state
-                                    BasicFields.fields[6].data = res.data
+                                    BasicFields[6].data = res.data
                                     this.setState({ BasicFields })
                                 }
                             })
                         }else{
                             const { BasicFields } = this.state
-                            BasicFields.fields[6].data = []
+                            BasicFields[6].data = []
                             const { basic } = this.formRef.current.getFieldsValue();
                             basic.contactPersonId = undefined
                             this.formRef.current.setFieldsValue({ basic: basic, });

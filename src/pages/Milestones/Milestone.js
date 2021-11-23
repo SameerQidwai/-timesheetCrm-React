@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Row, Col, Menu, Button, Dropdown, Descriptions, Table } from "antd";
+import { Row, Col, Menu, Button, Dropdown, Descriptions, Table, Tag, Progress } from "antd";
 import { SettingOutlined, DownOutlined } from "@ant-design/icons"; //Icons
 import { Link } from 'react-router-dom'
 
@@ -22,17 +22,12 @@ class Milestone extends Component {
             proId: false,
             desc: {title: '', organization: {name: ''}, value: '', startDate: '', endDate: ''},
             permissions: {},
-            customUrl: null,
+            customUrl: 'opportunity',
             columns: [
                 {
                     title: "Title",
                     dataIndex: "title",
                     key: "title",
-                },
-                {
-                    title: "Amount",
-                    dataIndex: "amount",
-                    key: "amount",
                 },
                 {
                     title: "Start Date",
@@ -50,12 +45,18 @@ class Milestone extends Component {
                     title: "Progress",
                     dataIndex: "progress",
                     key: "progress",
+                    align: "center",
+                    render: (record) => <Progress percent={record} size="small" />
                 },
                 {
                     title: "Approved",
                     dataIndex: "isApproved",
                     key: "isApproved",
-                    render: (record) => record? 'Approved': 'Not Approved'
+                    align: "right",
+                    render: (record) =>  <Tag color={record? 'green': 'volcano'} key={record}>
+                        {record? 'TRUE': 'FALSE'}
+                    </Tag>
+                    
                 },
                 {
                     title: "Action",
@@ -78,7 +79,7 @@ class Milestone extends Component {
                                     <Link
                                         to={{
                                             // pathname:  `/${this.resRoute()}/${this.state&& this.state.proId}/milestone/${record.id}/resources`,
-                                            pathname:  `/${this.resRoute()}/${record.id}/resources`,
+                                            pathname:  `/${this.state.customUrl}/milestones${record.id}/resources`,
                                         }}
                                         className="nav-link"
                                     >
@@ -105,13 +106,16 @@ class Milestone extends Component {
 
     resRoute = ()=>{
         let splitted = this.props.match.url
+        console.log(splitted);
         splitted = splitted.split('/', 2)
+        this.setState({customUrl: this.props.match.url})
         return splitted[1]
     }
 
     fetchAll = (id) =>{
         const { PROJECTS }= JSON.parse(localStore().permissions)
-        const customUrl = this.resRoute() === 'opportunity' ? 'opportunities' : 'projects'
+        const customUrl = this.props.match.url
+        console.log(customUrl);
         Promise.all([ getRecord(id), getMilestones(customUrl,id) ])
         .then(res => {
             this.setState({
@@ -192,6 +196,7 @@ class Milestone extends Component {
                         visible={infoModal}
                         editMile={editMile}
                         proId={proId}
+                        crud={customUrl}
                         close={this.closeModal}
                         callBack={this.callBack}
                     />
