@@ -7,7 +7,7 @@ import moment from "moment"
 
 import MileModal from "./MileModal";
 import { formatCurrency, localStore } from "../../service/constant";
-import { getMilestones } from "../../service/Milestone-Apis";
+import { getMilestones, getProjectDetail } from "../../service/Milestone-Apis";
 import { getRecord } from "../../service/opportunities";
 
 const { Item } = Descriptions;
@@ -100,8 +100,8 @@ class Milestone extends Component {
     }
 
     componentDidMount = ()=>{
-        const { id } = this.props.match.params
-        this.fetchAll(id)
+        const { proId } = this.props.match.params
+        this.fetchAll(proId)
     }
 
     resRoute = (mileId)=>{
@@ -113,7 +113,10 @@ class Milestone extends Component {
     fetchAll = (id) =>{
         const { PROJECTS }= JSON.parse(localStore().permissions)
         const customUrl = this.props.match.url
-        Promise.all([ getRecord(id), getMilestones(customUrl,id) ])
+        let crud = this.props.match.url
+        crud = crud.split('/')
+        crud = `${crud[1]}/${crud[2]}`
+        Promise.all([ getProjectDetail( crud ), getMilestones( customUrl) ])
         .then(res => {
             this.setState({
                 desc: res[0].success && res[0].data,
@@ -134,7 +137,7 @@ class Milestone extends Component {
     };
 
     handleDelete = (rId) => {
-        const { id } = this.props.match.params //opputunityId
+        const { proId } = this.props.match.params //opputunityId
     };
 
     callBack = (milestone) => {

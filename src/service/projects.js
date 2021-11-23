@@ -178,15 +178,16 @@ export const addLeadSkill = (id, data) => {
     })
 };
 
-export const getLeadSkills = (id)=>{
+export const getLeadSkills = (crud, id)=>{
     return axios
-        .get(url + `/${id}/resources`, {headers:headers()})
+        .get(`${Api}${crud}`, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
             if (success) {
                 setToken(res.headers && res.headers.authorization)
             };
+            console.log(res);
             return { success: success, data: data }
         })
         .catch((err) => {

@@ -83,14 +83,13 @@ class Resources extends Component {
     }
 
     componentDidMount = ()=>{
-        const { id } = this.props.match.params
-        this.fetchAll(id)
+        const { proId } = this.props.match.params
+        this.fetchAll(proId)
     }
     
 
     fetchAll = (id) =>{
         const { OPPORTUNITIES }= JSON.parse(localStore().permissions)
-        console.log(OPPORTUNITIES);
         Promise.all([ getRecord(id), getLeadSkills(id)])
         .then(res => {
             this.setState({

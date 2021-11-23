@@ -14,7 +14,7 @@ const { Item } = Descriptions;
 class Resources extends Component {
     constructor(props) {
         super(props);
-        const { id } = props.match.params
+
         this.columns = [
             {
                 title: "Skill",
@@ -107,13 +107,14 @@ class Resources extends Component {
     }
 
     componentDidMount = ()=>{
-        const { id } = this.props.match.params
-        // this.fetchAll(id)
+        this.fetchAll()
     }
 
     fetchAll = (id) =>{
         const { PROJECTS }= JSON.parse(localStore().permissions)
-        Promise.all([ getRecord(id), getLeadSkills(id)])
+        const { url } = this.props.match
+        const { proId } = this.props.match.params
+        Promise.all([ getRecord(proId), getLeadSkills(url, id)])
         .then(res => {
             this.setState({
                 desc: res[0].success? res[0].data : {},
@@ -146,8 +147,8 @@ class Resources extends Component {
     };
 
     handleDelete = (rId) => {
-        const { id } = this.props.match.params //opputunityId
-        delLeadSkill(id,rId).then((res) => {
+        const { proId } = this.props.match.params //opputunityId
+        delLeadSkill(proId,rId).then((res) => {
             if (res.success) {
                 this.props.history.push('/Employees')
             }
@@ -171,7 +172,7 @@ class Resources extends Component {
                     // extra={<Button type="primary">Edit</Button>}
                 >
                     <Item label="Project Name">{desc.title}</Item>
-                    <Item label="Estimated Value">{ formatCurrency(desc.value)}</Item>
+                    <Item label="Estimated Value">{ formatCurrency(desc.value ?? 0)}</Item>
                     <Item label="Organisation">{desc.organizationName ? desc.organization.name :' No Organisation'}</Item>
                     <Item label="Start date">{desc.startDate ? moment(desc.startDate).format('ddd DD MM YYYY'): null} </Item>
                     <Item label="End Date">{desc.endDate ? moment(desc.endDate).format('ddd DD MM YYYY'): null}</Item>

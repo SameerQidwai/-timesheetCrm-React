@@ -176,17 +176,17 @@ const pageLinks = [
     },
     {
         component: OpportunityInfo,
-        link: "/opportunities/:id/info",
+        link: "/opportunities/:proId/info",
         key: "OPPORTUNITIES"
     },
     {
         component: Milestone,
-        link: "/opportunities/:id/milestones",
+        link: "/opportunities/:proId/milestones",
         key: "OPPORTUNITIES"
     },
     {
         component: OpportunityResources,
-        link: "/opportunities/:id/milestones/:mileId/resources",
+        link: "/opportunities/:proId/milestones/:mileId/resources",
         // link: "/opportunities/:id/resources",
         key: "OPPORTUNITIES"
     },
@@ -197,22 +197,22 @@ const pageLinks = [
     },
     {
         component: ProjectInfo,
-        link: "/projects/:id/info",
+        link: "/projects/:proId/info",
         key: "PROJECTS"
     },
     {
         component: PurchaseOrder,
-        link: "/projects/:id/purchase-order",
+        link: "/projects/:proId/purchase-order",
         key: "PROJECTS"
     },
     {
         component: Milestone,
-        link: "/projects/:id/milestones",
+        link: "/projects/:proId/milestones",
         key: "PROJECTS"
     },
     {
         component: ProjectResources,
-        link: "/projects/:id/milestones/:mileId/resources",
+        link: "/projects/:proId/milestones/:mileId/resources",
         // link: "/projects/:id/resources",
         key: "PROJECTS"
     },

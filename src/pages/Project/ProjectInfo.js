@@ -32,8 +32,8 @@ class ProjectInfo extends Component {
         };
     }
     componentDidMount = ()=>{
-        const { id } = this.props.match.params
-        this.getRecord(id)
+        const { proId } = this.props.match.params
+        this.getRecord(proId)
     }
 
     getRecord = (id) =>{
