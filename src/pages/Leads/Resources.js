@@ -77,26 +77,32 @@ class Resources extends Component {
             desc: {},
             skillId: false,
             levelId: false,
+            crud: false,
+            mileId: false,
             resource: false,
             permissons: {ADD: true}
         };
     }
 
     componentDidMount = ()=>{
-        const { proId } = this.props.match.params
-        this.fetchAll(proId)
+        
+        this.fetchAll()
     }
     
 
-    fetchAll = (id) =>{
+    fetchAll = () =>{
+        const { proId, mileId } = this.props.match.params
+        const { url } = this.props.match
         const { OPPORTUNITIES }= JSON.parse(localStore().permissions)
-        Promise.all([ getRecord(id), getLeadSkills(id)])
+        Promise.all([ getRecord(proId), getLeadSkills(url)])
         .then(res => {
             this.setState({
                 desc: res[0].success? res[0].data : {},
                 editRex: false,
                 infoModal: false,
-                leadId: id,
+                leadId: proId,
+                mileId: mileId,
+                crud: url,
                 data: res[1].success? res[1].data : [],
                 permissions: OPPORTUNITIES
             })
@@ -106,8 +112,9 @@ class Resources extends Component {
         })
     }
 
-    getLeadSkills = (id) =>{
-        getLeadSkills(id).then(res=>{
+    getLeadSkills = () =>{
+        const { crud }= this.state
+        getLeadSkills(crud).then(res=>{
             if(res.success){
                 this.setState({
                     data: res.data,
@@ -160,7 +167,7 @@ class Resources extends Component {
     };
 
     render() {
-        const { desc, data, infoModal, editRex, leadId, resource , skillId, levelId, permissions} = this.state;
+        const { desc, data, infoModal, editRex, leadId, resource , skillId, levelId, permissions, mileId, crud} = this.state;
         console.log(permissions);
         return (
             <>
@@ -204,6 +211,8 @@ class Resources extends Component {
                                 skill={record.id}
                                 levelId={record.panelSkillStandardLevelId}
                                 leadId={leadId} 
+                                mileId={mileId}
+                                crud={crud}
                                 panelId={desc.panelId}
                                 callBack={this.callBack}
                                 permissions={permissions}
@@ -220,6 +229,8 @@ class Resources extends Component {
                         skillId={skillId}
                         levelId={levelId}
                         leadId={leadId}
+                        mileId={mileId}
+                        crud={crud}
                         panelId = {desc.panelId}
                         close={this.closeModal}
                         callBack={this.callBack}
@@ -296,9 +307,9 @@ function NestedTable(props) {
     };
 
     const onSelectChange = (selected, Rows) =>  {
-        const { leadId, skill } = props
+        const { leadId, skill, crud } = props
         setSelectedRowKeys(selected)
-        selectLeadSkillResource(leadId, skill, Rows[0].id).then(res=>{
+        selectLeadSkillResource(crud, skill, Rows[0].id).then(res=>{
             console.log(res);
         })
         // [data.findIndex(el => el.isMarkedAsSelected === true)]
@@ -334,6 +345,8 @@ function NestedTable(props) {
             leadId = {props.leadId}
             levelId = {props.levelId}
             panelId = {props.panelId}
+            mileId={props.mileId}
+            crud={props.crud}
             close={()=>{setVisible(false)}}
             callBack={callBack}
         />}

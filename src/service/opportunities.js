@@ -152,20 +152,20 @@ export const editList = (data) => {
         });
 };
 
-export const addLeadSkill = (id, data) => {
-    messageAlert.loading({ content: 'Loading...', key: id })
+export const addLeadSkill = (crud, data, mileId) => {
+    messageAlert.loading({ content: 'Loading...', key: mileId })
     return axios
-        .post(url + `/${id}/resources`, data, {headers:headers()})
+        .post(`${Api}${crud}`, data, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
-            messageAlert.success({ content: message, key: id})
+            messageAlert.success({ content: message, key: mileId})
             if (success) setToken(res.headers && res.headers.authorization)
 
             return {success, data: data[0]};
         })
         .catch((err) => {
-            messageAlert.error({ content: err.message, key: id})
+            messageAlert.error({ content: err.message, key: mileId})
             return {
                 error: "Please login again!",
                 status: false,
@@ -174,9 +174,9 @@ export const addLeadSkill = (id, data) => {
         });
 };
 
-export const getLeadSkills = (id)=>{
+export const getLeadSkills = (crud)=>{
     return axios
-        .get(url + `/${id}/resources`, {headers:headers()})
+        .get( `${Api}${crud}`, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -214,10 +214,10 @@ export const getLeadSkill = (oppId, resId) => {
         });
 };
 
-export const editLeadSkill = (oppId, resId, data) => {
+export const editLeadSkill = (crud, resId, data) => {
     messageAlert.loading({ content: 'Loading...', key:  resId})
     return axios
-        .put(url + `/${oppId}/resources/${resId}`, data, {headers:headers()})
+        .put(`${Api}${crud}/${resId}`, data, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -255,10 +255,10 @@ export const delLeadSkill = (oppId, resId) => {
         });
 };
 
-export const addLeadSkillResource = (oppId, skillId,  data) => {
+export const addLeadSkillResource = (crud, skillId,  data) => {
     messageAlert.loading({ content: 'Loading...', key:  skillId})
     return axios
-        .post(url + `/${oppId}/resources/${skillId}/allocations`, data, {headers:headers()})
+        .post(`${Api}${crud}/${skillId}/allocations`, data, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -295,11 +295,11 @@ export const getLeadSkillResource = (oppId,skillId, resId) => {
         });
 };
 
-export const editLeadSkillResource = (oppId, skillId, resId, data) => {
+export const editLeadSkillResource = (crud, skillId, resId, data) => {
     messageAlert.loading({ content: 'Loading...', key: resId })
-    console.log({oppId, skillId, resId, data});
+    console.log(crud);
     return axios
-        .put(url + `/${oppId}/resources/${skillId}/allocations/${resId}`, data, {headers:headers()})
+        .put(`${Api}${crud}/${skillId}/allocations/${resId}`, data, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -337,17 +337,18 @@ export const delLeadSkillResource = (oppId, skillId, resId,) => {
         });
 };
 
-export const selectLeadSkillResource = (oppId, skillId, resId) => {
-    console.log(oppId, skillId, resId);
+export const selectLeadSkillResource = (crud, skillId, resId) => {
     return axios
-        .patch(url + `/${oppId}/resources/${skillId}/allocations/${resId}/mark-as-selected`, {headers:headers()})
+        .patch(`${Api}${crud}/${skillId}/allocations/${resId}/mark-as-selected`, {},  {headers:headers()})
         .then((res) => {
             const { success, message } = res.data;
             jwtExpired(message)
             setToken(res.headers && res.headers.authorization)
+            messageAlert.success({ content: message, key: resId})
             if (success) return {success};
         })
         .catch((err) => {
+            messageAlert.error({ content: err.message, key: resId})
             return {
                 error: "Please login again!",
                 status: false,
@@ -367,6 +368,7 @@ export const workIsLost = (oppId) => {
             return {success};
         })
         .catch((err) => {
+            
             return {
                 error: "Please login again!",
                 status: false,
