@@ -1,19 +1,19 @@
-import { message as messageAlert } from "antd";
 import axios from "axios";
+import { message as messageAlert } from "antd";
 
 import { Api, headers, jwtExpired, setToken } from "./constant";
 
-const url = `${Api}/timesheets/`;
-
-export const getList = (keys) => {
+export const getStates = () => {
     return axios
-        .get(url + `${keys.startDate}&${keys.endDate}&${keys.userId}`, {headers:headers()})
+        .get(`${Api}/states`,{headers:headers()})
         .then((res) => {
-            const { success, data, message } = res.data;
-            jwtExpired(message)
-            if (success)  setToken(res.headers && res.headers.authorization)
-            
-            return { success: success, data: data }
+            const { success, data } = res.data;
+            var states = []
+            data.map((el) => {
+                states.push({value: el.id, label: el.label})
+            });
+            setToken(res.headers && res.headers.authorization)
+            if (success) return { success: success, data: states };
         })
         .catch((err) => {
             return {
@@ -24,151 +24,17 @@ export const getList = (keys) => {
         });
 };
 
-export const addTime = (keys ,data) => {
-    messageAlert.loading({ content: 'Loading...', key: 1 })
+export const getStandardLevels = () => {
     return axios
-        .post(url +`${keys.startDate}&${keys.endDate}&${keys.userId}`, data, {headers:headers()})
+        .get(`${Api}/standard-skills`, {headers:headers()})
         .then((res) => {
-            const { success, data, message } = res.data;
-            jwtExpired(message)
-            if (success) {
-                messageAlert.success({ content: message, key: 1})
-                data.actualHours = data.hours
-                setToken(res.headers && res.headers.authorization)
-                return {success, data}
-            };
-            return { success }
-        })
-        .catch((err) => {
-            messageAlert.error({ content: err.message, key: 1})
-            return {
-                error: "Please login again!",
-                status: false,
-                message: err.message,
-            };
-        });
-};
-
-export const editTime = (entryId ,data) => {
-    messageAlert.loading({ content: 'Loading...', key: 1 })
-    return axios
-        .put(url +`entries/${entryId}`, data, {headers:headers()})
-        .then((res) => {
-            const { success, data, message } = res.data;
-            jwtExpired(message)
-            if (success) {
-                messageAlert.success({ content: message, key: 1})
-                data.actualHours = data.hours
-                setToken(res.headers && res.headers.authorization)
-                return {success, data}
-            };
-            return { success }
-        })
-        .catch((err) => {
-            messageAlert.error({ content: err.message, key: 1})
-            return {
-                error: "Please login again!",
-                status: false,
-                message: err.message,
-            };
-        });
-};
-
-export const deleteTime = (entryId ) => {
-    messageAlert.loading({ content: 'Loading...', key: 1 })
-    return axios
-        .delete(url +`entries/${entryId}`, {headers:headers()})
-        .then((res) => {
-            const { success, data, message } = res.data;
-            jwtExpired(message)
-            messageAlert.success({ content: message, key: 1})
-            if (success) setToken(res.headers && res.headers.authorization)
-            return {success, data};
-        })
-        .catch((err) => {
-            messageAlert.error({ content: err.message, key: 1})
-            return {
-                error: "Please login again!",
-                status: false,
-                message: err.message,
-            };
-        });
-};
-
-export const reviewTimeSheet = (keys, stage) => {
-    messageAlert.loading({ content: 'Loading...', key: 1 })
-    return axios
-        .post(url + `${keys.startDate}&${keys.endDate}&${keys.userId}/projectEntries/${keys.pEntryId}/${stage}`, {}, {headers:headers()})
-        .then((res) => {
-            const { success, data, message } = res.data;
-            jwtExpired(message)
-            messageAlert.success({ content: message, key: 1})
-            if (success) setToken(res.headers && res.headers.authorization)
-            return {success, data};
-        })
-        .catch((err) => {
-            messageAlert.error({ content: err.message, key: 1})
-            return {
-                error: "Please login again!",
-                status: false,
-                message: err.message,
-            };
-        });
-};
-
-export const editLabel = (data) => {
-    messageAlert.loading({ content: 'Loading...', key: data.id })
-    return axios
-        .put(url + `${data.id}`, data, {headers:headers()})
-        .then((res) => {
-            const { success, message } = res.data;
-            jwtExpired(message)
-            messageAlert.success({ content: message, key: data.id})
-            if (success) setToken(res.headers && res.headers.authorization)
-            return {success};
-        })
-        .catch((err) => {
-            messageAlert.error({ content: err.message, key: data.id})
-            return {
-                error: "Please login again!",
-                status: false,
-                message: err.message,
-            };
-        });
-};
-
-export const addProjectNote = (id, data) => {
-    messageAlert.loading({ content: 'Loading...', key: id })
-    return axios
-        .patch(url + `projectEntries/${id}`, data, {headers:headers()})
-        .then((res) => {
-            const { success, message } = res.data;
-            jwtExpired(message)
-            messageAlert.success({ content: message, key: id})
-            if (success) setToken(res.headers && res.headers.authorization)
-            
-            return {success};
-        })
-        .catch((err) => {
-            messageAlert.error({ content: err.message, key: id})
-            return {
-                error: "Please login again!",
-                status: false,
-                message: err.message,
-            };
-        });
-};
-
-export const getUsers = () => {
-    return axios
-        .get(`${url}users`, { headers: headers() })
-        .then((res) => {
-            const { success, data, message } = res.data;
-            jwtExpired(message)
-            var pros = []
-            if (success) setToken(res.headers && res.headers.authorization)
-            
-            return { success, data };
+            const { success, data } = res.data;
+            var standlevel = []
+            data.map((el) => {
+                standlevel.push({value: el.id, label: el.label,  levels: el.standardSkillStandardLevels.map(lvlEl=>{ return { value:lvlEl.id, label: lvlEl.standardLevel.label}})})
+            });
+            setToken(res.headers && res.headers.authorization)
+            if (success) return { success: success, data: standlevel };
         })
         .catch((err) => {
             return {
@@ -179,29 +45,40 @@ export const getUsers = () => {
         });
 };
 
-export const getPdf = (entryId) => {
+export const getContactPersons = () =>{
     return axios
-        .get(`${url}print/${entryId}`, { headers: headers() })
+    .get(`${Api}/contactpersons`, {headers:headers()})
+    .then((res) => {
+        const { success, data } = res.data;
+        var cps = []
+        data.map((el) => {
+            cps.push({value: el.id, label: el.firstName +' ' +el.lastName})
+        });
+        setToken(res.headers && res.headers.authorization)
+        if (success) return { success: success, data: cps };
+    })
+    .catch((err) => {
+        return {
+            error: "Please login again!",
+            success: false,
+            message: err.message,
+        };
+    });
+}
+
+export const getEmployees = () => {
+    return axios
+        .get(`${Api}/employees`, {headers:headers()})
         .then((res) => {
-            const { success, data, message } = res.data;
-            jwtExpired(message)
+            const { success, data } = res.data;
+            var cps = []          
             if (success) {
+                data.map((el) => {
+                    cps.push({value: el.contactPersonOrganization.contactPerson.id, label: el.contactPersonOrganization.contactPerson.firstName +' ' +el.contactPersonOrganization.contactPerson.lastName + '   '+'(Employee)', status: '(Employee)'})
+                });
                 setToken(res.headers && res.headers.authorization)
-                let projectInfo = {
-                    company: data.company,
-                    employee: data.employee,
-                    period: data.period,
-                    project:  data.project.name,
-                    client: data.project.client,
-                    contact: data.project.contact,
-                    totalHours: parseFloat(data.project.totalHours).toFixed( 2 ),
-                    invoicedDays:  parseFloat(data.project.invoicedDays).toFixed( 2 )
-                }
-                let entries = data.project.entries
-                return { success, data, projectInfo, entries}
+                return { success: success, data: cps }
             }
-            
-            return { success, data };
         })
         .catch((err) => {
             return {
@@ -212,3 +89,269 @@ export const getPdf = (entryId) => {
         });
 };
 
+export const getSubContractors = () => {
+    return axios
+        .get(`${Api}/sub-contractors`, {headers:headers()})
+        .then((res) => {
+            const { success, data } = res.data;
+            var cps = []    
+            if (success) {
+                data.map((el) => {
+                    cps.push({value: el.contactPersonOrganization.contactPerson.id, label: el.contactPersonOrganization.contactPerson.firstName +' ' +el.contactPersonOrganization.contactPerson.lastName + '   '+ '(Sub-Contractor)', status: '(Sub-Contractor)'})
+                });
+                setToken(res.headers && res.headers.authorization)
+                return { success: success, data: cps };
+            }
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                success: false,
+                message: err.message,
+            };
+        });
+};
+
+export const getOrgPersons = (url) =>{
+    return axios
+    .get(`${Api}/${url}`, {headers:headers()})
+    .then((res) => {
+        const { success, data } = res.data;
+        var cps = []
+        // data.map((el) => {
+        //     cps.push({value: el.id, label: el.firstName +' ' +el.lastName, status: 'Employee'})
+        // });
+        setToken(res.headers && res.headers.authorization)
+        if (success) return { success: success, data: data };
+    })
+    .catch((err) => {
+        return {
+            error: "Please login again!",
+            success: false,
+            message: err.message,
+        };
+    });
+}
+
+export const getEmpPersons = (id) =>{
+    console.log(id);
+    return axios
+    .get(`${Api}/employees/get/contact-persons`, {headers:headers()})
+    .then((res) => {
+        const { success, data } = res.data;
+        var cps = []
+        data.map((el) => {
+            cps.push({value: el.id, label: el.firstName +' ' +el.lastName})
+        });
+        setToken(res.headers && res.headers.authorization)
+        if (success) return { success: success, data: cps };
+    })
+    .catch((err) => {
+        return {
+            error: "Please login again!",
+            success: false,
+            message: err.message,
+        };
+    });
+}
+
+export const getOrganizations = (id) => {
+    return axios
+        .get(`${Api}/Organizations`, {headers:headers()})
+        .then((res) => {
+            const { success, data } = res.data;
+            var orgs = []
+            // console.log(data);
+            data.map((el) => {
+                orgs.push({value: el.id, label: el.name, disabled: el.id === id && true})
+            });
+            setToken(res.headers && res.headers.authorization)
+            if (success) return { success: success, data: orgs };
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                success: false,
+                message: err.message,
+            };
+        });
+};
+
+export const getPanels = () => {
+    return axios
+        .get(`${Api}/panels`, {headers:headers()})
+        .then((res) => {
+            const { success, data } = res.data;
+            var panels = []
+            data.map((el) => {
+                panels.push({ value: el.id, label: el.label })
+            });
+            setToken(res.headers && res.headers.authorization)
+            if (success) return { success: success, data: panels };
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                success: false,
+                message: err.message,
+            };
+        });
+};
+
+export const getPanelSkills = (id) => {
+    return axios
+        .get(`${Api}/panel-skills?panelId=${id}`, {headers:headers()})
+        .then((res) => {
+            const { success, data } = res.data;
+            var panelskill = []
+            data.map((el) => {
+                panelskill.push({value: el.id, label: el.label,  levels: el.panelSkillStandardLevels.map(lvlEl=>{ return { value:lvlEl.id, label: lvlEl.levelLabel}})})
+            });
+            setToken(res.headers && res.headers.authorization)
+            if (success) return { success: success, data: panelskill };
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                success: false,
+                message: err.message,
+            };
+        });
+};
+
+export const getProjects = () => {
+    return axios
+        .get(`${Api}/projects`, { headers: headers() })
+        .then((res) => {
+            const { success, data } = res.data;
+            let work = []
+            if (success) {
+                data.map((el) => {work.push({ value: el.id, label: el.title}) });
+                setToken(res.headers && res.headers.authorization)
+            }
+            return { success: success, data: work };
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                success: false,
+                message: err.message,
+            };
+        });
+};
+
+export const getUserProjects = (userId) => {
+    return axios
+        .get(`${Api}/helpers/projects?userId=${userId}`, { headers: headers() })
+        .then((res) => {
+            const { success, data } = res.data;
+            if (success) {
+                setToken(res.headers && res.headers.authorization)
+            }
+            return { success: success, data: data };
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                success: false,
+                message: err.message,
+            };
+        });
+};
+
+export const getUserMilestones = (userId) => {
+    return axios
+        .get(`${Api}/helpers/milestones?userId=${userId}`, { headers: headers() })
+        .then((res) => {
+            const { success, data } = res.data;
+            if (success) {
+                setToken(res.headers && res.headers.authorization)
+            }
+            return { success: success, data: data };
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                success: false,
+                message: err.message,
+            };
+        });
+};
+
+export const getSkillLevels = (skill) =>{
+    return axios
+        .get(`${Api}/helpers/levels-by-skill?${skill}`, {headers:headers()})
+        .then((res) => {
+            const { success, data } = res.data;
+            var pros = []
+            if (success){
+                setToken(res.headers && res.headers.authorization)
+                return { success: success, data: data };
+            }
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                success: false,
+                message: err.message,
+            };
+        });
+}
+
+export const getRoles = () =>{
+    return axios
+        .get(`${Api}/helpers/roles`, {headers:headers()})
+        .then((res) => {
+            const { success, data } = res.data;
+            if (success){
+                setToken(res.headers && res.headers.authorization)
+                return { success: success, data: data };
+            }
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                success: false,
+                message: err.message,
+            };
+        });
+}
+
+export const refreshToken = () =>{
+    return axios
+    .get(`${Api}/helpers/refresh-token`,{headers:headers()})
+    .then((res) => {
+        const { success, message } = res.data;
+        jwtExpired(message)
+        if (success){
+            messageAlert.success({content: message}, 5)
+            setToken(res.headers && res.headers.authorization)
+        }
+        return { success: success };
+    })
+    .catch((err) => {
+        return {
+            error: "Please login again!",
+            success: false,
+            message: err.message,
+        };
+    });
+}
+
+export const entityProjects = (url) =>{
+    return axios
+    .get(`${Api}/${url}`, {headers:headers()})
+    .then((res) => {
+        const { success, data } = res.data;
+        setToken(res.headers && res.headers.authorization)
+        console.log(data);
+        if (success) return { success: success, data: data };
+    })
+    .catch((err) => {
+        return {
+            error: "Please login again!",
+            success: false,
+            message: err.message,
+        };
+    });
+}

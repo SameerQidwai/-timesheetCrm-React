@@ -6,7 +6,7 @@ import moment from "moment";
 import TimeModal from "./Modals/TimeModal"
 import AttachModal from "./Modals/AttachModal";
 import {  getList, reviewTimeSheet, getUsers, deleteTime,  } from "../../service/timesheet"
-import { getUserProjects } from "../../service/constant-Apis";
+import { getUserMilestones } from "../../service/constant-Apis";
 import { localStore } from "../../service/constant";
 
 import "../styles/table.css";
@@ -38,12 +38,12 @@ class TimeSheetContact extends Component {
             loginId: null,
             data: [ ],
             comments: null,
-            sProject: {},
+            sMilestone: {},
             permissions: {},
             canApprove: false,
-            projects: [],
-            sTProjects: {
-                projects: [],
+            milestones: [],
+            sTMilestones: {
+                milestones: [],
                 keys: []
             },
             columns : [
@@ -60,7 +60,7 @@ class TimeSheetContact extends Component {
                                     <Col> {value} </Col>
                                     {/* File_name and paperclip to show under project is in comment section line 156*/}
                                      <Col> 
-                                        <DownloadOutlined onClick={()=>{this.exporPDF(record.projectEntryId, index)}}/>
+                                        <DownloadOutlined onClick={()=>{this.exporPDF(record.milestoneEntryId, index)}}/>
                                         <SaveOutlined onClick={()=>{this.openAttachModal(record, index)} } style={{color: '#1890ff', marginLeft:10}}/>
                                     </Col>
                                 </Row>
@@ -68,7 +68,7 @@ class TimeSheetContact extends Component {
                             {this.state && this.state.sUser === this.state.loginId && (record.status === 'SV' || record.status === 'RJ') ?<Col sapn={12}>
                                 <Popconfirm
                                     title={`You want to submit ${value}'s timesheet?`}
-                                    onConfirm={()=>{this.reviewTimeSheet(record.projectEntryId, 'submit', index, 'SB')}}
+                                    onConfirm={()=>{this.reviewTimeSheet(record.milestoneEntryId, 'submit', index, 'SB')}}
                                 >
                                     <Button style={{backgroundColor: "#4CAF50"}} size="small" type="primary"> Submit </Button>
                                 </Popconfirm>
@@ -78,13 +78,13 @@ class TimeSheetContact extends Component {
                                 <Space >
                                     <Popconfirm
                                         title={`You want to Approve ${value}'s timesheet?`}
-                                        onConfirm={()=>{this.reviewTimeSheet(record.projectEntryId, 'approve', index, 'AP')}}
+                                        onConfirm={()=>{this.reviewTimeSheet(record.milestoneEntryId, 'approve', index, 'AP')}}
                                     >
                                         <Button style={{backgroundColor: "#4CAF50"}} size="small" type="primary"> Approve </Button>
                                     </Popconfirm>
                                     <Popconfirm
                                         title={`You want to Reject ${value}'s timesheet?`}
-                                        onConfirm={()=>{this.reviewTimeSheet(record.projectEntryId, 'reject', index, 'RJ')}}
+                                        onConfirm={()=>{this.reviewTimeSheet(record.milestoneEntryId, 'reject', index, 'RJ')}}
                                     >
                                         <Button danger  size="small" type="primary"> Reject </Button>
                                     </Popconfirm>
@@ -117,31 +117,30 @@ class TimeSheetContact extends Component {
     };
 
     fetchAll = () =>{
-        Promise.all([ getUsers() ])
-        .then(res => {
+        getUsers().then(res => {
             let value = 0
             const { id, permissions } = localStore()
             const loginId = parseInt(id)
             const { TIMESHEETS } = JSON.parse(permissions)
-
-            if(res[0].success && res[0].data.length>0){
-                value = res[0].data[0].value
-                res[0].data.forEach(el=>{
+        
+            if(res.success && res.data.length>0){
+                value = res.data.value
+                res.data.forEach(el=>{
                     if(el.value === loginId){
                         value= el.value //selecting the login user from users array
                     }
                 }) 
             }
-
+        
             this.setState({
-                USERS: res[0].success? res[0].data : [],
+                USERS: res.success? res.data : [],
                 sUser: value,
                 canApprove: TIMESHEETS['APPROVAL'] && TIMESHEETS['APPROVAL']['ANY'],
                 permissions: TIMESHEETS,
                 loginId,
                 // USERS: res[1].success? res[1].data : [],
             },()=>{
-                this.columns() 
+                this.columns()
                 if(this.state.sUser){
                     this.getSheet()
                 }
@@ -154,10 +153,10 @@ class TimeSheetContact extends Component {
     }
 
     getProjects = (value) =>{
-        getUserProjects(value).then(res=>{
+        getUserMilestones(value).then(res=>{
             if(res.success){
                 this.setState({
-                    projects: res.data
+                    milestones: res.data
                 })
             }
         })
@@ -169,10 +168,12 @@ class TimeSheetContact extends Component {
         const { startDate, endDate } = sheetDates
         if(sUser){
             getList({userId: sUser, startDate: startDate.format('DD-MM-YYYY'), endDate: endDate.format('DD-MM-YYYY')}).then(res=>{
-                this.setState({
-                    timesheet: res.success ? res.data: {},
-                    data: (res.success && res.data) ? res.data.projects?? [] : []
-                })
+                if (res.success){
+                    this.setState({
+                        timesheet: res.data?? {},
+                        data: res.data ? res.data.milestones: []
+                    })
+                }
             })
         }
         this.columns()
@@ -291,9 +292,9 @@ class TimeSheetContact extends Component {
     getRecord = (record, rowIndex, colKey,colTitle) => {
         // get record in dialog box for edit
         const timeObj= {
-            projectEntryId: record.projectEntryId,
-            projectId: record.projectId,
-            project: record.project,
+            milestoneEntryId: record.milestoneEntryId,
+            milestoneId: record.milestoneId,
+            milestone: record.milestone,
             row: rowIndex,
             col: colKey ,
             title: colTitle
@@ -366,10 +367,10 @@ class TimeSheetContact extends Component {
 
     openAttachModal = (record, index) =>{
         const timeObj= {
-            projectEntryId: record.projectEntryId,
-            projectId: record.projectId,
+            milestoneEntryId: record.milestoneEntryId,
+            milestoneId: record.milestoneId,
             notes: record.notes,
-            project: record.project,
+            milestone: record.milestone,
             status: record.status,
             rowIndex: index
         }
@@ -427,10 +428,10 @@ class TimeSheetContact extends Component {
         )
     }
 
-    projectSelect = (selectedRowKeys, selectedRows)=>{
+    milestoneSelect = (selectedRowKeys, selectedRows)=>{
         this.setState({
-            sTProjects: {
-                projects: selectedRows,
+            sTMilestones: {
+                milestones: selectedRows,
                 keys: selectedRowKeys
             }
         })
@@ -448,10 +449,10 @@ class TimeSheetContact extends Component {
     }
 
     multiDelete = ()=> {
-        const {projects, keys } = this.state.sTProjects
+        const {milestones, keys } = this.state.sTMilestones
         const { cMonth } = this.state.sheetDates
         let content = ''
-        projects.forEach(({project}) => {
+        milestones.forEach(({project}) => {
             content += `${project}, ` 
         })
         const modal = Modal.warning({
@@ -468,7 +469,7 @@ class TimeSheetContact extends Component {
       }
 
     render() {
-        const { loading, data, isVisible, proVisible, columns, editTime, timeObj, sheetDates, projects, sProject, isAttach, isDownload, eData, USERS, sUser, loginId, sTProjects } = this.state
+        const { loading, data, isVisible, proVisible, columns, editTime, timeObj, sheetDates, milestones, sMilestone, isAttach, isDownload, eData, USERS, sUser, loginId, sTMilestones } = this.state
         return (
             <>
                 <Row >
@@ -574,7 +575,7 @@ class TimeSheetContact extends Component {
                     size="small"
                     className="timeSheet-table"
                     rowSelection={{ //multiple select commented
-                        onChange:(selectedRowKeys, selectedRows)=>{this.projectSelect(selectedRowKeys, selectedRows )},
+                        onChange:(selectedRowKeys, selectedRows)=>{this.milestoneSelect(selectedRowKeys, selectedRows )},
                         getCheckboxProps: (record) => ({
                             disabled: record.status === 'SB', // Column configuration not to be checked
                           })
@@ -585,7 +586,7 @@ class TimeSheetContact extends Component {
                     }}
                     bordered
                     pagination={false}
-                    rowKey={data=>data.projectEntryId}
+                    rowKey={data=>data.milestoneEntryId}
                     rowClassName={(record) => this.highlightRow(record)}
                     columns={columns}
                     dataSource={[...data]}
@@ -596,7 +597,7 @@ class TimeSheetContact extends Component {
                         <Button 
                             style={{backgroundColor: '#4caf50', color:"#fff"}} 
                             onClick={()=>{
-                                const { keys, projects } = this.state.sTProjects
+                                const { keys, milestones } = this.state.sTMilestones
                             }}
                         >
                             Submit
@@ -634,7 +635,7 @@ class TimeSheetContact extends Component {
                 )}
                 {isDownload && (
                     <TimeSheetPDF
-                        projectEntryId={eData}
+                        milestoneEntryId={eData}
                         close={()=>this.setState({isDownload: false})}
                     />
                 )}
@@ -648,20 +649,20 @@ class TimeSheetContact extends Component {
                         okText={loading ?<LoadingOutlined /> :"Add"}
                         width={500}
                         onCancel={() => {
-                            this.setState({ proVisible: false, sProject:{} });
+                            this.setState({ proVisible: false, sMilestone:{} });
                         }}
                         onOk={() => {
-                            const { data, sProject } = this.state
-                            const findProject = data.findIndex(el=>(el.projectId === sProject.value))
-                            if(findProject >=0){
+                            const { data, sMilestone } = this.state
+                            const findMilestone = data.findIndex(el=>(el.milestoneId === sMilestone.value))
+                            if(findMilestone >=0){
                                 message.error({ content: 'Project TimeSheet is already created...!'}, 5)
                             }else{
                                 data.push({
-                                    projectId: sProject.value,
-                                    project: sProject.label,
+                                    milestoneId: sMilestone.value,
+                                    milestone: sMilestone.label,
                                 })
                             }
-                            this.setState({ proVisible: false, data: [...data], sProject:{} });
+                            this.setState({ proVisible: false, data: [...data], sMilestone:{} });
                         }}
                     >
                         <Row justify="space-around">
@@ -669,8 +670,8 @@ class TimeSheetContact extends Component {
                                 <Select
                                     placeholder="Select Project"
                                     style={{ width: 200 }}
-                                    options={projects}
-                                    value={sProject.value}           
+                                    options={milestones}
+                                    value={sMilestone.value}           
                                     optionFilterProp="label"
                                     filterOption={
                                         (input, option) =>
@@ -680,7 +681,7 @@ class TimeSheetContact extends Component {
                                     }
                                     onSelect={(value, option)=>{
                                         this.setState({
-                                            sProject: option
+                                            sMilestone: option
                                         })
                                     }}
                                 />
