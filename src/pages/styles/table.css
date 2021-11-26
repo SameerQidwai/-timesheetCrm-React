@@ -5,6 +5,10 @@
 .ant-table-summary {
     background-color: #fafafa;
 }
+.ant-table-summary
+    .ant-table-cell.ant-table-cell-fix-left{
+        background-color: #fafafa;
+    }
 
 /* .ant-table-wrapper.TimeSheetTable {
     height: 75vh;
@@ -48,15 +52,31 @@ div.timeSheet-table div.ant-table-has-fix-left  tr.approveClass td.ant-table-cel
     background: #caffe4 ;
 }
 
-div.timeSheet-table .ant-table-tbody > tr.submitClass.ant-table-row:hover > td {
+div.timeSheet-table .ant-table-tbody > tr.submitClass.ant-table-row > td {
     background: #f0f0f0 ;
 }
-div.timeSheet-table .ant-table-tbody > tr.rejectClass.ant-table-row:hover > td {
+div.timeSheet-table .ant-table-tbody > tr.rejectClass.ant-table-row > td {
     background-color:  #ffdaf9; 
 }
-div.timeSheet-table .ant-table-tbody > tr.approveClass.ant-table-row:hover > td {
+div.timeSheet-table .ant-table-tbody > tr.rejectClass.ant-table-row > td {
+    background-color:  #ffdaf9; 
+}
+div.timeSheet-table .ant-table-tbody > tr.approveClass.ant-table-row > td {
     background: #caffe4 ;
 }
+
+/* div.timeSheet-table .ant-table-tbody > tr.submitClass.ant-table-row-selected.ant-table-row > td {
+    background: #f0f0f0 ;
+}
+div.timeSheet-table .ant-table-tbody > tr.rejectClass.ant-table-row-selected.ant-table-row > td {
+    background-color:  #ffdaf9; 
+}
+div.timeSheet-table .ant-table-tbody > tr.rejectClass.ant-table-row-selected.ant-table-row > td {
+    background-color:  #ffdaf9; 
+}
+div.timeSheet-table .ant-table-tbody > tr.approveClass.ant-table-row-selected.ant-table-row > td {
+    background: #caffe4 ;
+} */
 
 .submitClass{   
     background: #f0f0f0 !important;
@@ -70,6 +90,8 @@ div.timeSheet-table .ant-table-tbody > tr.approveClass.ant-table-row:hover > td 
 .prevDates-TMcell {
     background: #e7e7e7b7 !important;
 }
+
+
 
 /* width */
 ::-webkit-scrollbar {

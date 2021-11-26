@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Row, Col, Table, Modal, Button, Select, Typography, Popconfirm, DatePicker, Space, Tag, Tooltip, message, Dropdown, Menu, } from "antd";
 import { DownloadOutlined, SaveOutlined, LoadingOutlined, PlusCircleOutlined, MoreOutlined, DeleteOutlined, EditOutlined, 
-    LeftOutlined, RightOutlined,ExclamationCircleOutlined } from "@ant-design/icons"; //Icons
+    LeftOutlined, RightOutlined,ExclamationCircleOutlined, CheckCircleOutlined } from "@ant-design/icons"; //Icons
 import moment from "moment";
 import TimeModal from "./Modals/TimeModal"
 import AttachModal from "./Modals/AttachModal";
@@ -10,6 +10,7 @@ import { getUserMilestones } from "../../service/constant-Apis";
 import { localStore } from "../../service/constant";
 
 import "../styles/table.css";
+import "../styles/button.css";
 import TimeSheetPDF from "./Modals/TimeSheetPDF";
 
 const { Title } = Typography;
@@ -57,15 +58,15 @@ class TimeSheetContact extends Component {
                         <Row gutter={[0, 10]}>
                             <Col span={24}>
                                 <Row justify="space-between">
-                                    <Col> {value} </Col>
+                                    <Col> {record.type ===1 ? `${record.milestone} (${value})` : `${value}`} </Col>
                                     {/* File_name and paperclip to show under project is in comment section line 156*/}
-                                     <Col> 
+                                     <Col style={{marginLeft: 'auto'}}> 
                                         <DownloadOutlined onClick={()=>{this.exporPDF(record.milestoneEntryId, index)}}/>
                                         <SaveOutlined onClick={()=>{this.openAttachModal(record, index)} } style={{color: '#1890ff', marginLeft:10}}/>
                                     </Col>
                                 </Row>
                             </Col>
-                            {this.state && this.state.sUser === this.state.loginId && (record.status === 'SV' || record.status === 'RJ') ?<Col sapn={12}>
+                            {/* {this.state && this.state.sUser === this.state.loginId && (record.status === 'SV' || record.status === 'RJ') ?<Col sapn={12}>
                                 <Popconfirm
                                     title={`You want to submit ${value}'s timesheet?`}
                                     onConfirm={()=>{this.reviewTimeSheet(record.milestoneEntryId, 'submit', index, 'SB')}}
@@ -89,7 +90,7 @@ class TimeSheetContact extends Component {
                                         <Button danger  size="small" type="primary"> Reject </Button>
                                     </Popconfirm>
                                 </Space>
-                            </Col>}
+                            </Col>} */}
                             <Col span={4} style={{marginLeft:'auto', marginRight: 20}}>
                                 {record.status === 'SB' &&<Tag color="cyan"> Submitted </Tag>}
                                 {record.status === 'AP' &&<Tag color="green"> Approved </Tag>}
@@ -171,7 +172,11 @@ class TimeSheetContact extends Component {
                 if (res.success){
                     this.setState({
                         timesheet: res.data?? {},
-                        data: res.data ? res.data.milestones: []
+                        data: res.data ? res.data.milestones ?? []: [],
+                        sTMilestones: {
+                            milestones: [],
+                            keys: []
+                        },
                     })
                 }
             })
@@ -341,7 +346,8 @@ class TimeSheetContact extends Component {
         const { row, col } = timeObj
         value.entryId = value.id
         data[row][col] = value
-        data[row]['totalHours'] = data[row]['totalHours'] + value.actualHours
+        data[row]['milestoneEntryId'] =value.milestoneEntryId
+        data[row]['totalHours'] = (data[row]['totalHours']??0) + (value.actualHours ?? 0)
         this.setState({
             data: data,
             timeObj: false,
@@ -362,6 +368,18 @@ class TimeSheetContact extends Component {
                     data,
                 })
             }
+        })
+    };
+
+    actionTimeSheet = (stage) => {
+        const { startDate, endDate } = this.state.sheetDates
+        const { keys } = this.state.sTMilestones
+        const { sUser } = this.state
+        const query= { userId: sUser, startDate: startDate.format('DD-MM-YYYY'), endDate: endDate.format('DD-MM-YYYY') }
+        const data = {milestoneEntries: keys}
+        reviewTimeSheet(query, stage, data).then(res=>{
+            const { data } = this.state
+            this.getSheet()
         })
     };
 
@@ -391,20 +409,20 @@ class TimeSheetContact extends Component {
         return (
             <Table.Summary.Row >
                 {/* //multiple select commented */}
-                <Table.Summary.Cell className="ant-table-cell-fix-left" index={0}> </Table.Summary.Cell>  
+                <Table.Summary.Cell  index={0}> </Table.Summary.Cell>  
                 {columns.map(({key, dateObj}, kIndex)=>{
                     let value = 0
                     data.map((rowData, index) =>{ //calculation for total hours and actual hours for footer to show
                         if(key !== 'project' ){
                             if(key === 'totalHours'){
-                                value += data[index]['totalHours'] ?? 0
+                                value += data[index]['totalHours'] ?? 0 
                             }else{
-                                value += (rowData[key] ? rowData[key]['actualHours'] :0)
+                                value += (rowData[key] ? rowData[key]['actualHours'] : 0)
                             }
                         }
                     })
                           //Title of the projct show column for title 
-                            return key === 'project' ? <Table.Summary.Cell fixed index={kIndex+1} key={kIndex+1}>
+                            return key === 'project' ? <Table.Summary.Cell index={kIndex+1} key={kIndex+1}>
                                 Total Work In A day  
                             </Table.Summary.Cell > 
                             : // show total and normal background if the column month is same as selected month or the key is totalHours of the month
@@ -429,6 +447,7 @@ class TimeSheetContact extends Component {
     }
 
     milestoneSelect = (selectedRowKeys, selectedRows)=>{
+        console.log({selectedRowKeys, selectedRows});
         this.setState({
             sTMilestones: {
                 milestones: selectedRows,
@@ -448,25 +467,26 @@ class TimeSheetContact extends Component {
         }
     }
 
-    multiDelete = ()=> {
+    multiAction = (stage)=> {
         const {milestones, keys } = this.state.sTMilestones
         const { cMonth } = this.state.sheetDates
         let content = ''
         milestones.forEach(({project}) => {
             content += `${project}, ` 
         })
-        const modal = Modal.warning({
-          title: `Delete Timesheet For the month of ${cMonth.format('MMM YYYY')}`,
-          icon: <ExclamationCircleOutlined />,
+        const modal = Modal.confirm({
+          title: `${stage} Timesheet For the month of ${cMonth.format('MMM YYYY')}`,
+          icon: stage=== 'Delete' ? <ExclamationCircleOutlined /> : <CheckCircleOutlined />,
           content: content,
-          okButtonProps: {danger: true},
+          okButtonProps: {danger: stage === 'Delete'??true},
           okText: 'Okay',
           cancelText: 'Cancel',
           onOk:()=>{
+              this.actionTimeSheet(stage) 
               modal.destroy();
           }
         });
-      }
+    }
 
     render() {
         const { loading, data, isVisible, proVisible, columns, editTime, timeObj, sheetDates, milestones, sMilestone, isAttach, isDownload, eData, USERS, sUser, loginId, sTMilestones } = this.state
@@ -595,10 +615,9 @@ class TimeSheetContact extends Component {
                 <Row justify="end" gutter={[20,200]}>
                     <Col>
                         <Button 
-                            style={{backgroundColor: '#4caf50', color:"#fff"}} 
-                            onClick={()=>{
-                                const { keys, milestones } = this.state.sTMilestones
-                            }}
+                            className={'success'}
+                            disabled={ sUser !== loginId || sTMilestones.keys.length<1}
+                            onClick={()=> this.multiAction('Submit') }
                         >
                             Submit
                         </Button>
@@ -608,7 +627,8 @@ class TimeSheetContact extends Component {
                         <Button 
                             type="primary" 
                             danger
-                            onClick={this.multiDelete}
+                            disabled={ sUser !== loginId || sTMilestones.keys.length<1}
+                            onClick={()=>this.multiAction('Delete')}
                         > 
                             Delete
                         </Button>
@@ -659,7 +679,7 @@ class TimeSheetContact extends Component {
                             }else{
                                 data.push({
                                     milestoneId: sMilestone.value,
-                                    milestone: sMilestone.label,
+                                    project: sMilestone.label,
                                 })
                             }
                             this.setState({ proVisible: false, data: [...data], sMilestone:{} });

@@ -259,6 +259,25 @@ export const getUserProjects = (userId) => {
         });
 };
 
+export const getUserMilestones = (userId) => {
+    return axios
+        .get(`${Api}/helpers/milestones?userId=${userId}`, { headers: headers() })
+        .then((res) => {
+            const { success, data } = res.data;
+            if (success) {
+                setToken(res.headers && res.headers.authorization)
+            }
+            return { success: success, data: data };
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                success: false,
+                message: err.message,
+            };
+        });
+};
+
 export const getSkillLevels = (skill) =>{
     return axios
         .get(`${Api}/helpers/levels-by-skill?${skill}`, {headers:headers()})
