@@ -100,7 +100,9 @@ class Resources extends Component {
         this.state = {
             infoModal: false,
             editRex: false,
-            ProId: false,
+            proId: false,
+            mileId: false,
+            crud: false,
             desc: {title: '', organization: {name: ''}, value: '', startDate: '', endDate: ''},
             permissions: {}
         };
@@ -113,13 +115,15 @@ class Resources extends Component {
     fetchAll = (id) =>{
         const { PROJECTS }= JSON.parse(localStore().permissions)
         const { url } = this.props.match
-        const { proId } = this.props.match.params
+        const { proId, mileId } = this.props.match.params
         Promise.all([ getRecord(proId), getLeadSkills(url, id)])
         .then(res => {
             this.setState({
                 desc: res[0].success? res[0].data : {},
                 editRex: false,
-                ProId: id,
+                proId: proId,
+                crud: url,
+                mileId: mileId,
                 infoModal: false,
                 data: res[1].success? res[1].data : [],
                 permissions: PROJECTS
@@ -156,12 +160,12 @@ class Resources extends Component {
     };
 
     callBack = () => {
-        const { ProId } = this.state
-        this.getLeadSkills(ProId)
+        const { proId } = this.state
+        this.getLeadSkills(proId)
     };
 
     render() {
-        const { desc, data, infoModal, editRex, ProId, permissions } = this.state;
+        const { desc, data, infoModal, editRex, proId, permissions, crud, mileId } = this.state;
         return (
             <>
                 <Descriptions
@@ -200,7 +204,9 @@ class Resources extends Component {
                     <ResModal
                         visible={infoModal}
                         editRex={editRex}
-                        ProId = {ProId}
+                        proId = {proId}
+                        crud={crud}
+                        mileId={mileId}
                         panelId = {desc.panelId}
                         close={this.closeModal}
                         callBack={this.callBack}

@@ -117,31 +117,30 @@ class TimeSheetContact extends Component {
     };
 
     fetchAll = () =>{
-        Promise.all([ getUsers() ])
-        .then(res => {
+        getUsers().then(res => {
             let value = 0
             const { id, permissions } = localStore()
             const loginId = parseInt(id)
             const { TIMESHEETS } = JSON.parse(permissions)
-
-            if(res[0].success && res[0].data.length>0){
-                value = res[0].data[0].value
-                res[0].data.forEach(el=>{
+        
+            if(res.success && res.data.length>0){
+                value = res.data.value
+                res.data.forEach(el=>{
                     if(el.value === loginId){
                         value= el.value //selecting the login user from users array
                     }
                 }) 
             }
-
+        
             this.setState({
-                USERS: res[0].success? res[0].data : [],
+                USERS: res.success? res.data : [],
                 sUser: value,
                 canApprove: TIMESHEETS['APPROVAL'] && TIMESHEETS['APPROVAL']['ANY'],
                 permissions: TIMESHEETS,
                 loginId,
                 // USERS: res[1].success? res[1].data : [],
             },()=>{
-                this.columns() 
+                this.columns()
                 if(this.state.sUser){
                     this.getSheet()
                 }
@@ -169,10 +168,13 @@ class TimeSheetContact extends Component {
         const { startDate, endDate } = sheetDates
         if(sUser){
             getList({userId: sUser, startDate: startDate.format('DD-MM-YYYY'), endDate: endDate.format('DD-MM-YYYY')}).then(res=>{
-                this.setState({
-                    timesheet: res.success ? res.data: {},
-                    data: (res.success && res.data) ? res.data.projects?? [] : []
-                })
+                console.log(res);
+                if (res.success){
+                    this.setState({
+                        timesheet: res.data?? {},
+                        data: res.data ? res.data.projects: []
+                    })
+                }
             })
         }
         this.columns()
