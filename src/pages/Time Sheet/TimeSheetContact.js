@@ -421,33 +421,32 @@ class TimeSheetContact extends Component {
                             }
                         }
                     })
-                          //Title of the projct show column for title 
-                            return key === 'project' ? <Table.Summary.Cell index={kIndex+1} key={kIndex+1}>
-                                Total Work In A day  
-                            </Table.Summary.Cell > 
-                            : // show total and normal background if the column month is same as selected month or the key is totalHours of the month
-                                (key === 'totalHours'|| (dateObj && dateObj.isSameOrAfter(startDate)  && dateObj.isSameOrBefore(endDate))) ? 
-                                <Table.Summary.Cell 
-                                    index={kIndex+1}
-                                    key={kIndex+1}
-                                    align="center" 
-                                >
-                                    {value && value.toFixed(2)}
-                                </Table.Summary.Cell>
-                                : // show background grey if the column month is NOT same as selected month
-                                    <Table.Summary.Cell 
-                                        index={kIndex+1} 
-                                        key={kIndex+1}
-                                        align='center'
-                                        className="prevDates-TMcell" 
-                                    >0</Table.Summary.Cell>
+                    //Title of the projct show column for title 
+                    return key === 'project' ? <Table.Summary.Cell index={kIndex+1} key={kIndex+1}>
+                        Total Work In A day  
+                    </Table.Summary.Cell > 
+                    : // show total and normal background if the column month is same as selected month or the key is totalHours of the month
+                        (key === 'totalHours'|| (dateObj && dateObj.isSameOrAfter(startDate)  && dateObj.isSameOrBefore(endDate))) ? 
+                        <Table.Summary.Cell 
+                            index={kIndex+1}
+                            key={kIndex+1}
+                            align="center" 
+                        >
+                            {value && value.toFixed(2)}
+                        </Table.Summary.Cell>
+                        : // show background grey if the column month is NOT same as selected month
+                            <Table.Summary.Cell 
+                                index={kIndex+1} 
+                                key={kIndex+1}
+                                align='center'
+                                className="prevDates-TMcell" 
+                            >0</Table.Summary.Cell>
                 })}
             </Table.Summary.Row>
         )
     }
 
     milestoneSelect = (selectedRowKeys, selectedRows)=>{
-        console.log({selectedRowKeys, selectedRows});
         this.setState({
             sTMilestones: {
                 milestones: selectedRows,
@@ -457,14 +456,14 @@ class TimeSheetContact extends Component {
     }
 
     highlightRow(record) {
-        const { status } = record
-        if (status === 'SB'){
-            return 'submitClass'
-        }else if(status === 'AP'){
-            return 'approveClass'
-        }else if(status === 'RJ'){
-            return 'rejectClass'        
-        }
+        // const { status } = record
+        // if (status === 'SB'){
+        //     return 'submitClass'
+        // }else if(status === 'AP'){
+        //     return 'approveClass'
+        // }else if(status === 'RJ'){
+        //     return 'rejectClass'        
+        // }
     }
 
     multiAction = (stage)=> {

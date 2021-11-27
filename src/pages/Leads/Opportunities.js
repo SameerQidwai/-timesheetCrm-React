@@ -68,6 +68,11 @@ class Opportunities extends Component {
                 render: (record) =>(record && moment(record).format('ddd DD MM yyyy'))
             },
             {
+                title: 'Stage',
+                dataIndex: 'stage',
+                key: 'stage',
+            },
+            {
                 title: 'Status',
                 dataIndex: 'status',
                 key: 'status',

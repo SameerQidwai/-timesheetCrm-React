@@ -4,7 +4,7 @@ import { LoadingOutlined } from "@ant-design/icons"; //Icons
 import moment from "moment";
 import FormItems from "../../../components/Core/FormItems";
 
-import { workWon } from "../../../service/opportunities";
+import { workIsLost } from "../../../service/opportunities";
 import { getOrganizations } from "../../../service/constant-Apis";
 
 const { TabPane } = Tabs;
@@ -41,7 +41,7 @@ class LostModal extends Component {
                 {
                     object: "lost",
                     fieldCol: 12,
-                    key: "type",
+                    key: "wonById",
                     size: "small",
                     // mode: 'multiple',
                     data: [],
@@ -50,9 +50,8 @@ class LostModal extends Component {
                 {
                     object: "lost",
                     fieldCol: 12,
-                    key: "wining",
+                    key: "winingPrice",
                     size: "small",
-                    disabled: true,
                     shape: '$',
                     // rules:[{ required: true }],
                     type: "InputNumber",
@@ -79,7 +78,6 @@ class LostModal extends Component {
                     ],
                     type: "Select",
                 },
-                
                 {
                     Placeholder: "Customer Feedback",
                     fieldCol: 24,
@@ -111,7 +109,7 @@ class LostModal extends Component {
                 {
                     object: "lost",
                     fieldCol: 24,
-                    key: "type",
+                    key: "reason",
                     size: "small",
                     mode: 'tags',
                     data: [
@@ -137,7 +135,7 @@ class LostModal extends Component {
                 {
                     object: "lost",
                     fieldCol: 24,
-                    key: "feedback",
+                    key: "reason",
                     size: "small",
                     mode:{ minRows: 5, maxRows:12},
                     // rules:[{ required: true }],
@@ -148,15 +146,40 @@ class LostModal extends Component {
         };
     }
     componentDidMount = () =>{
+        this.fetchAll()
+    }
+    setFields = () =>{
         const { api } = this.props.reason
         this.setState((pre)=>({
             Fields: pre[api]
         }))
+        return true
     }
 
+    fetchAll = (id) =>{
+        Promise.all([getOrganizations(), this.setFields()])
+        .then(res => {
+            const { Fields } = this.state
+            if(res[0].success){
+                Fields[2].data = res[0].data
+                this.setState({ Fields })
+            }
+        })
+        .catch(e => {
+            console.log(e);
+        })
+    }
 
     onFinish = (vake) => { 
-        // this will work after  got  Object from the skill from
+        let { lost } = vake
+        let { editLead, close } = this.props
+        let { key } = this.props.reason
+        lost.status = key
+        workIsLost(editLead, lost).then(res=>{
+            if(res.success){
+                close()
+            }
+        })
     };
 
     workWon = (values) =>{

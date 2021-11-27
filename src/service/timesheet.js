@@ -212,3 +212,48 @@ export const getPdf = (entryId) => {
             };
         });
 };
+
+export const getMilestones = () => {
+    return axios
+        .get(`${url}milestones`, { headers: headers() })
+        .then((res) => {
+            const { success, data } = res.data;
+            if (success) {
+                setToken(res.headers && res.headers.authorization)
+            }
+            return { success: success, data: data };
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                success: false,
+                message: err.message,
+            };
+        });
+};
+
+export const getUsersTimesheet = (keys) => {
+    return axios
+        .get(`${url}milestone` +`/${keys.startDate}&${keys.endDate}&${keys.mileId}`, { headers: headers() })
+        .then((res) => {
+            const { success, data } = res.data;
+            let newData = []
+            if (success) {
+                    data.timesheets.forEach(el => {
+                        let obj = {...el, ...el.milestones[0]}
+                        delete obj.milestones
+                        newData.push(obj)
+                    });      
+                setToken(res.headers && res.headers.authorization)
+            }
+            console.log(newData);
+            return { success: success, data: newData };
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                success: false,
+                message: err.message,
+            };
+        });
+};

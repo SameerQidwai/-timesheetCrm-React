@@ -1,10 +1,9 @@
 import React, { Component } from "react";
-import { Row, Col, Table, Button, Select, Typography, Popconfirm, DatePicker, Space, Tag, Tooltip} from "antd";
-import { DownloadOutlined, SaveOutlined } from "@ant-design/icons"; //Icons
+import { Row, Col, Table, Button, Select, Typography, Modal, DatePicker, Space, Tag, Tooltip} from "antd";
+import { DownloadOutlined, SaveOutlined, ExclamationCircleOutlined, CheckCircleOutlined } from "@ant-design/icons"; //Icons
 import moment from "moment";
 import AttachModal from "./Modals/AttachModal";
-import {  getList, reviewTimeSheet  } from "../../service/timesheet"
-import { getUserProjects } from "../../service/constant-Apis";
+import {  getList, reviewTimeSheet, getMilestones, getUsersTimesheet  } from "../../service/timesheet"
 import { localStore } from "../../service/constant";
 
 import "../styles/table.css";
@@ -21,53 +20,40 @@ class TimeSheetProject extends Component {
             sheetDates: {
                 startDate: moment().startOf("month"), 
                 endDate: moment().endOf("month"),
-                cMonth: moment().format('MM-YYYY')
+                cMonth: moment()
             },
             timeObj: false,
             eData: [],
-            sUser: null,
+            sMilestone: null,
             loginId: null,
             data: [ ],
-            sProject: {},
             permissions: {},
             canApprove: false,
-            projects: [],
-       
+            milestones: [], // users Time Sheet
+            sTimesheet: { // selected timesheet 
+                timesheet: [], //  Timesheet Object 
+                keys: [] // TimeSheet keys
+            },
+
             columns : [
                 {
                     title: "Employee",
-                    dataIndex: "employee",
-                    key: "employee",
+                    dataIndex: "user",
+                    key: "user",
                     fixed: "left",
                     width: 300,
+                    style:{height: 110},
                     render: (value, record, index) => (
                         <Row gutter={[0, 10]}>
                             <Col span={24}>
                                 <Row justify="space-between">
-                                    <Col> {value} </Col>
-                                     <Col> 
+                                    <Col> {`${value}`} </Col>
+                                     <Col style={{marginLeft: 'auto'}}> 
                                         <DownloadOutlined onClick={()=>{this.exporPDF(record.projectEntryId, index)}}/>
                                         <SaveOutlined onClick={()=>{this.openAttachModal(record, index)} } style={{color: '#1890ff', marginLeft:10}}/>
                                     </Col>
                                 </Row>
                             </Col>
-                            {(record.status === 'SB' && (record.isManaged || this.state && this.state.canApprove)) &&
-                            <Col sapn={12}>
-                                <Space >
-                                    <Popconfirm
-                                        title={`You want to Approve ${value}'s timesheet?`}
-                                        onConfirm={()=>{this.reviewTimeSheet(record.projectEntryId, 'approve', index, 'AP')}}
-                                    >
-                                        <Button style={{backgroundColor: "#4CAF50"}} size="small" type="primary"> Approve </Button>
-                                    </Popconfirm>
-                                    <Popconfirm
-                                        title={`You want to Reject ${value}'s timesheet?`}
-                                        onConfirm={()=>{this.reviewTimeSheet(record.projectEntryId, 'reject', index, 'RJ')}}
-                                    >
-                                        <Button danger  size="small" type="primary"> Reject </Button>
-                                    </Popconfirm>
-                                </Space>
-                            </Col>}
                             <Col span={4} style={{marginLeft:'auto', marginRight: 20}}>
                                 {record.status === 'SB' &&<Tag color="cyan"> Submitted </Tag>}
                                 {record.status === 'AP' &&<Tag color="green"> Approved </Tag>}
@@ -94,7 +80,7 @@ class TimeSheetProject extends Component {
     };
 
     fetchAll = () =>{
-        Promise.all([ getUserProjects() ])
+        Promise.all([ getMilestones() ])
         .then(res => {
             let value = 0
             const { id, permissions } = localStore()
@@ -111,12 +97,12 @@ class TimeSheetProject extends Component {
             }
 
             this.setState({
-                projects: res[0].success? res[0].data : [],
+                milestones: res[0].success? res[0].data : [],
                 canApprove: TIMESHEETS['APPROVAL'] && TIMESHEETS['APPROVAL']['ANY'],
                 loginId,
             },()=>{
                 this.columns() 
-                if(this.state.sUser){
+                if(this.state.sMilestone){
                     this.getSheet()
                 }
             })
@@ -128,13 +114,17 @@ class TimeSheetProject extends Component {
     }
 
     getSheet = () =>{
-        const { sUser, sheetDates } = this.state
-        const { startDate, endDate } = sheetDates
-        if(sUser){
-            getList({userId: sUser, startDate: startDate.format('DD-MM-YYYY'), endDate: endDate.format('DD-MM-YYYY')}).then(res=>{
+        const { sMilestone } = this.state
+        const { startDate, endDate } = this.state.sheetDates
+        if(sMilestone){
+            getUsersTimesheet({mileId: sMilestone, startDate: startDate.format('DD-MM-YYYY'), endDate: endDate.format('DD-MM-YYYY')}).then(res=>{
                 this.setState({
-                    timesheet: res.success ? res.data: {},
-                    data: (res.success && res.data) ? res.data.projects: []
+                    // timesheet: res.success ? res.data: {},
+                    data: (res.success && res.data) ? res.data?? []: [],
+                    sTimesheet: { // selected timesheet 
+                        timesheet: [], //  Timesheet Object 
+                        keys: [] // TimeSheet keys
+                    },
                 })
             })
         }
@@ -143,7 +133,7 @@ class TimeSheetProject extends Component {
 
     columns = () =>{
         const { startDate, endDate } = this.state.sheetDates
-        let { columns, permissions }  = this.state
+        let { columns }  = this.state
         let date = undefined
         columns = [columns[0],columns[1]]
         for (let i = startDate.format('D') ; i <= endDate.format('D'); i++) {
@@ -180,8 +170,8 @@ class TimeSheetProject extends Component {
   
     reviewTimeSheet = (id, stage, index, key) => {
         const { startDate, endDate } = this.state.sheetDates
-        const { sUser } = this.state
-        const query= { pEntryId: id, userId: sUser, startDate: startDate.format('DD-MM-YYYY'), endDate: endDate.format('DD-MM-YYYY') }
+        const { sMilestone } = this.state
+        const query= { pEntryId: id, userId: sMilestone, startDate: startDate.format('DD-MM-YYYY'), endDate: endDate.format('DD-MM-YYYY') }
         reviewTimeSheet(query, stage).then(res=>{
             const { data } = this.state
             data[index].status= key
@@ -190,6 +180,17 @@ class TimeSheetProject extends Component {
                     data,
                 })
             }
+        })
+    };
+
+    actionTimeSheet = (stage) => {
+        const { startDate, endDate } = this.state.sheetDates
+        const { keys } = this.state.sTimesheet
+        const { sMilestone } = this.state
+        const query= { userId: sMilestone, startDate: startDate.format('DD-MM-YYYY'), endDate: endDate.format('DD-MM-YYYY') }
+        const data = {milestoneEntries: keys}
+        reviewTimeSheet(query, stage, data).then(res=>{
+            this.getSheet()
         })
     };
 
@@ -217,10 +218,12 @@ class TimeSheetProject extends Component {
         if(data.length>0)
         return (
             <Table.Summary.Row>
-                {columns.map(({key})=>{
+                {/* //multiple select commented */}
+                <Table.Summary.Cell  index={0}> </Table.Summary.Cell> 
+                {columns.map(({key, dateObj}, kIndex)=>{
                     let value = 0
                     data.map((rowData, index) =>{
-                        if(key !== 'project' ){
+                        if(key !== 'user' ){
                             if(key === 'totalHours'){
                                 value += data[index]['totalHours'] ?? 0
                             }else{
@@ -228,29 +231,84 @@ class TimeSheetProject extends Component {
                             }
                         }
                     })
-                    if(key === 'project'){
-                        return <Table.Summary.Cell>Total Work In A day </Table.Summary.Cell>
-                    }else{
-                        return <Table.Summary.Cell align="center">{value && value.toFixed(2)}</Table.Summary.Cell>
-                    }
+                    return key === 'user' ? <Table.Summary.Cell index={kIndex+1} key={kIndex+1}>
+                        Total Work In A day  
+                    </Table.Summary.Cell > 
+                    : // show total and normal background if the column month is same as selected month or the key is totalHours of the month
+                        (key === 'totalHours') ? 
+                        <Table.Summary.Cell 
+                            index={kIndex+1}
+                            key={kIndex+1}
+                            align="center" 
+                        >
+                            {value && value.toFixed(2)}
+                        </Table.Summary.Cell>
+                        : // show background grey if the column month is NOT same as selected month
+                            <Table.Summary.Cell 
+                                index={kIndex+1} 
+                                key={kIndex+1}
+                                align='center'
+                                className="prevDates-TMcell" 
+                            >0</Table.Summary.Cell>
                 })}
         </Table.Summary.Row>)
     }
+    
+    highlightRow(record) {
+        // const { status } = record
+        // if (status === 'SB'){
+        //     return 'submitClass'
+        // }else if(status === 'AP'){
+        //     return 'approveClass'
+        // }else if(status === 'RJ'){
+        //     return 'rejectClass'        
+        // }
+    }
+
+    milestoneSelect = (selectedRowKeys, selectedRows)=>{
+        this.setState({
+            sTimesheet: {
+                timesheet: selectedRows,
+                keys: selectedRowKeys
+            }
+        })
+    }
+
+    multiAction = (stage)=> {
+        const { timesheet, keys } = this.state.sTimesheet
+        const { cMonth } = this.state.sheetDates
+        let content = ''
+        // timesheet.forEach(({project}) => {
+        //     content += `${project}, ` 
+        // })
+        const modal = Modal.confirm({
+          title: `${stage} Timesheet For the month of ${cMonth.format('MMM YYYY')}`,
+          icon: stage=== 'Reject' ? <ExclamationCircleOutlined /> : <CheckCircleOutlined />,
+          content: content,
+          okButtonProps: {danger: stage === 'Delete'??true},
+          okText: 'Okay',
+          cancelText: 'Cancel',
+          onOk:()=>{
+              this.actionTimeSheet(stage) 
+              modal.destroy();
+          }
+        });
+    }
 
     render() {
-        const {  data,   columns,  timeObj,  projects, sProject, isAttach, isDownload, eData } = this.state
+        const {  data,   columns,  timeObj,  milestones, sMilestone, isAttach, isDownload, eData, sTimesheet } = this.state
         return (
             <>
                 <Row >
                     <Col span={8}>
-                        <Title>Timesheet</Title>
+                        <Title>Approval</Title>
                     </Col>
                     <Col span={5} >
                         <Select
                             placeholder="Select Project"
-                            style={{ width: 200 }}
-                            options={projects}
-                            value={sProject.value}           
+                            style={{ width: '100%' }}
+                            options={milestones}
+                            value={sMilestone}           
                             optionFilterProp="label"
                             filterOption={
                                 (input, option) =>
@@ -260,7 +318,10 @@ class TimeSheetProject extends Component {
                             }
                             onSelect={(value, option)=>{
                                 this.setState({
-                                    sProject: option
+                                    sMilestone: value
+                                },()=>{
+
+                                    this.getSheet()
                                 })
                             }}
                         />
@@ -290,17 +351,54 @@ class TimeSheetProject extends Component {
                 <Table
                     size="small"
                     className="timeSheet-table"
+                    rowSelection={{ //multiple select commented
+                        onChange:(selectedRowKeys, selectedRows)=>{this.milestoneSelect(selectedRowKeys, selectedRows )},
+                        getCheckboxProps: (record) => ({
+                            disabled: record.timesheetStatus === 'SV' || record.timesheetStatus === 'AP', // Column configuration not to be checked
+                          })
+                    }}
                     scroll={{
                         // x: "calc(700px + 100%)",
                         x: "'max-content'",
                     }}
                     bordered
                     pagination={false}
-                    rowKey={data=>data.projectId}
+                    rowKey={data=>data.milestoneEntryId}
+                    rowClassName={(record) => this.highlightRow(record)}
                     columns={columns}
-                    dataSource={data}
+                    dataSource={[...data]}
                     summary={ columnData => this.summaryFooter(columnData)}
                 />
+                <Row justify="end" gutter={[20,200]}>
+                    <Col>
+                        <Button 
+                            disabled={ sTimesheet.keys.length<1}
+                        >
+                            Export
+                        </Button>
+                    </Col>
+                   
+                    <Col>
+                    
+                        <Button 
+                            type="primary" 
+                            danger
+                            disabled={ sTimesheet.keys.length<1}
+                            onClick={()=>this.multiAction('Reject')}
+                        > 
+                            Delete
+                        </Button>
+                    </Col>
+                    <Col>
+                        <Button
+                            className={'success'}
+                            disabled={ sTimesheet.keys.length<1}
+                            onClick={()=> this.multiAction('Approve') }
+                        >
+                            Approval
+                        </Button>
+                    </Col>
+                </Row>
                 {isAttach && (
                     <AttachModal
                         visible={isAttach}

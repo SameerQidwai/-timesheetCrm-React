@@ -1,5 +1,28 @@
-I am not getting milestones Id when creating timebase 
-so this means the milestones is not creating by default
+update
+    work can't surpass dates milestone dates
+        milestone can't surpass dates resouces dates
+            resource can't surpass dats of timesheet entry
+
+Tagrget
+    Timesheet:
+        timesheet will come with resoect start date and end date
+        can't delete approved or Submitted timesheet
+
+    Opportunity
+        Stage and linked_Project
+        status
+
+    Allocation
+        Title in resouces position 
+        Dates in resource position
+
+        add postion 
+        add Resource button
+
+    Approval View
+        can be under process
+
+
 
 //timeSheet.js file deleted will be in commit   17-11 before 5
 // userContent.js file is deleted will be in commit 17-11 before 5

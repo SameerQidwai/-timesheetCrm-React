@@ -64,7 +64,9 @@ export const getRecord = (id) => {
                     type: data.type,
                     // value: data.value? data.value: 0,
                     title: data.title,
-                    stateId: data.stateId
+                    stateId: data.stateId,
+                    stage: data.stage,
+                    workLinkedId: data.workLinkedId
                 }
                 const tender = {
                     tender: data.tender,
@@ -357,9 +359,9 @@ export const selectLeadSkillResource = (crud, skillId, resId) => {
         });
 };
 
-export const workIsLost = (oppId) => {
+export const workIsLost = (oppId, data) => {
     return axios
-        .put(url + `/${oppId}/lost`, {headers:headers()})
+        .put(url + `/${oppId}/lost`, data ,{headers:headers()})
         .then((res) => {
             const { success, message } = res.data;
             jwtExpired(message)

@@ -25,9 +25,9 @@ class OpportunityInfo extends Component {
         super();
         this.status = [ //status of the oportunity 
             {title: "Won", msg: "Opportunity Won!?" , api: 'won'},
-            {title: "Lost", msg: "Opportunity Lost!?" , api: 'Lost'},
-            {title: "Not Bid", msg: "Not Bid On Opportunity!?" , api: 'NotBid'},
-            {title: "Did Not Proceed", msg: "Did Not Proceed?", api: 'NotProceed'},
+            {title: "Lost", msg: "Opportunity Lost!?" , api: 'Lost', key: 'L'},
+            {title: "Not Bid", msg: "Not Bid On Opportunity!?" , api: 'NotBid', key: 'NB'},
+            {title: "Did Not Proceed", msg: "Did Not Proceed?", api: 'NotProceed', key: 'NP'},
         ]
         this.state = {
             infoModal: false,
@@ -206,6 +206,7 @@ class OpportunityInfo extends Component {
                 {lostModal && (
                     <LostModal
                         visible={lostModal}
+                        editLead={leadId}
                         reason={moveToProject}
                         close={this.closeModal}
                         // callBack={this.callBack}

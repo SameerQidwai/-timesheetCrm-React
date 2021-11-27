@@ -227,6 +227,11 @@ const pageLinks = [
         key: "TIMESHEETS"
     },
     {
+        component: TimeSheetProject,
+        link: "/time-sheet-approval",
+        key: "TIMESHEETS"
+    },
+    {
         component: TimeOff,
         link: "/time-off",
     },

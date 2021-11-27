@@ -65,7 +65,8 @@ export const getRecord = (id) => {
                     type: data.type,
                     // value: data.value? data.value: 0,
                     title: data.title,
-                    stateId: data.stateId
+                    stateId: data.stateId,
+                    workLinkedId: data.workLinkedId
                 }
                 const tender = {
                     tender: data.tender,
