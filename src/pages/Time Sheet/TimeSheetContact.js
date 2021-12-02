@@ -1,19 +1,19 @@
 import React, { Component } from "react";
 import { Row, Col, Table, Modal, Button, Select, Typography, Popconfirm, DatePicker, Space, Tag, Tooltip, message, Dropdown, Menu, } from "antd";
 import { DownloadOutlined, SaveOutlined, LoadingOutlined, PlusCircleOutlined, MoreOutlined, DeleteOutlined, EditOutlined, 
-    LeftOutlined, RightOutlined,ExclamationCircleOutlined, CheckCircleOutlined } from "@ant-design/icons"; //Icons
+    LeftOutlined, RightOutlined,ExclamationCircleOutlined, CheckCircleOutlined, PaperClipOutlined } from "@ant-design/icons"; //Icons
 import moment from "moment";
 import TimeModal from "./Modals/TimeModal"
 import AttachModal from "./Modals/AttachModal";
 import {  getList, reviewTimeSheet, getUsers, deleteTime,  } from "../../service/timesheet"
 import { getUserMilestones } from "../../service/constant-Apis";
-import { localStore } from "../../service/constant";
+import { localStore, Api, thumbUrl } from "../../service/constant";
 
 import "../styles/table.css";
 import "../styles/button.css";
 import TimeSheetPDF from "./Modals/TimeSheetPDF";
 
-const { Title } = Typography;
+const { Title, Link } = Typography;
 //inTable insert
 
 class TimeSheetContact extends Component {
@@ -64,6 +64,23 @@ class TimeSheetContact extends Component {
                                         <DownloadOutlined onClick={()=>{this.exporPDF(record.milestoneEntryId, index)}}/>
                                         <SaveOutlined onClick={()=>{this.openAttachModal(record, index)} } style={{color: '#1890ff', marginLeft:10}}/>
                                     </Col>
+                                    {record.attachment &&<Col span={24} >
+                                    <Link
+                                        href={`${Api}/files/${record.attachment.uid}`}
+                                        download={record.attachment.name}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <PaperClipOutlined /> {" "}
+                                            <Tooltip 
+                                                placement="top" 
+                                                title={record.attachment.name}
+                                                destroyTooltipOnHide
+                                            >
+                                                {record.attachment.name.substr(0,27)}
+                                            </Tooltip>
+                                    </Link>
+                                    </Col>}
                                 </Row>
                             </Col>
                             {/* {this.state && this.state.sUser === this.state.loginId && (record.status === 'SV' || record.status === 'RJ') ?<Col sapn={12}>
@@ -691,12 +708,13 @@ class TimeSheetContact extends Component {
                                     style={{ width: 200 }}
                                     options={milestones}
                                     value={sMilestone.value}           
-                                    optionFilterProp="label"
+                                    optionFilterProp={["label", "value"]}
                                     filterOption={
-                                        (input, option) =>
-                                            option.label
-                                                .toLowerCase()
-                                                .indexOf(input.toLowerCase()) >= 0
+                                        (input, option) =>{
+                                            const label = option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                            const value = option.value.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                                return label || value
+                                        }
                                     }
                                     onSelect={(value, option)=>{
                                         this.setState({

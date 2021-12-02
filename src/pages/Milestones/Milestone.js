@@ -73,7 +73,7 @@ class Milestone extends Component {
                                         }}
                                         disabled={this.state && !this.state.permissions['UPDATE']}
                                     >
-                                        Edit
+                                        Edit Milestone
                                     </Menu.Item>
                                     <Menu.Item>
                                     <Link
@@ -83,7 +83,7 @@ class Milestone extends Component {
                                         }}
                                         className="nav-link"
                                     >
-                                        Resources
+                                        Positions
                                     </Link>
                                 </Menu.Item>
                                 </Menu>
@@ -180,7 +180,7 @@ class Milestone extends Component {
                             size='small'  
                             onClick={() => {  this.setState({ infoModal: true, editMile: false, }) }}
                             // disabled={!permissions['ADD']}
-                        >Add New</Button> 
+                        >Add Milestone</Button> 
                     </Col>
                     {/* <Col> <Button type="danger" size='small'>Delete Resource</Button></Col> */}
                 </Row>

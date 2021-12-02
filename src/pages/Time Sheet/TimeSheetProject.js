@@ -300,21 +300,23 @@ class TimeSheetProject extends Component {
         return (
             <>
                 <Row >
-                    <Col span={8}>
+                    <Col>
                         <Title>Approval</Title>
                     </Col>
-                    <Col span={5} >
+                    <Col md={{span: 5, offset: 4}} >
                         <Select
                             placeholder="Select Project"
                             style={{ width: '100%' }}
+                            size="large"
                             options={milestones}
                             value={sMilestone}           
-                            optionFilterProp="label"
+                            optionFilterProp={["label", "value"]}
                             filterOption={
-                                (input, option) =>
-                                    option.label
-                                        .toLowerCase()
-                                        .indexOf(input.toLowerCase()) >= 0
+                                (input, option) =>{
+                                    const label = option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                    const value = option.value.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                        return label || value
+                                }
                             }
                             onSelect={(value, option)=>{
                                 this.setState({
@@ -326,7 +328,7 @@ class TimeSheetProject extends Component {
                             }}
                         />
                     </Col>
-                    <Col span={5}>
+                    <Col md={{span: 5, offset: 1}}>
                         <DatePicker
                             size="large"
                             mode="month"
@@ -374,19 +376,24 @@ class TimeSheetProject extends Component {
                         <Button 
                             disabled={ sTimesheet.keys.length<1}
                         >
+                            Upload
+                        </Button>
+                    </Col>
+                    <Col>
+                        <Button 
+                            disabled={ sTimesheet.keys.length<1}
+                        >
                             Export
                         </Button>
                     </Col>
-                   
                     <Col>
-                    
                         <Button 
                             type="primary" 
                             danger
                             disabled={ sTimesheet.keys.length<1}
                             onClick={()=>this.multiAction('Reject')}
                         > 
-                            Delete
+                            Reject
                         </Button>
                     </Col>
                     <Col>

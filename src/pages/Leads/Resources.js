@@ -47,7 +47,7 @@ class Resources extends Component {
                                     }}
                                     disabled={this.state&& !this.state.permissions['UPDATE']}
                                 >
-                                    Edit
+                                    Edit Position
                                 </Menu.Item>
                                 <Menu.Item 
                                     onClick={() => {
@@ -56,7 +56,7 @@ class Resources extends Component {
                                     }}
                                     disabled={this.state&& !this.state.permissions['ADD']}
                                 >
-                                        Add
+                                        Add Resouce
                                 </Menu.Item>
                             </Menu>
                         }
@@ -193,7 +193,7 @@ class Resources extends Component {
                             onClick={() => { this.setState({ infoModal: true, editRex: false, resource: false, skillId: false }) }}
                             disabled={permissions&& !permissions['ADD']}
                             >
-                                Add New
+                                Add Position
                         </Button>
                     </Col>
                     {/* <Col> <Button type="danger" size='small'>Delete Resource</Button></Col> */}
@@ -283,7 +283,7 @@ function NestedTable(props) {
                                 }}
                                 disabled={props.permissions&& !props.permissions['UPDATE']}
                             >
-                                Edit
+                                Edit Resource
                             </Menu.Item>
                         </Menu>
                     }

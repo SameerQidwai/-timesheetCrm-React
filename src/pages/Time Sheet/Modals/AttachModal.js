@@ -6,7 +6,7 @@ import TextArea from 'antd/lib/input/TextArea';
 import Dragger from 'antd/lib/upload/Dragger';
 import { Api, localStore } from "../../../service/constant";
 import { addFiles, getAttachments } from "../../../service/Attachment-Apis";
-import { addProjectNote } from "../../../service/timesheet";
+import { addMilestoneTimesheetNote } from "../../../service/timesheet";
 class AttachModal extends Component{
     constructor(){
         super()
@@ -19,9 +19,8 @@ class AttachModal extends Component{
     }
     
     componentDidMount=()=>{
-        console.log(`object`, this.props)
-        const { projectEntryId } = this.props.timeObj
-        this.getRecord('PEN', projectEntryId)
+        const { milestoneEntryId } = this.props.timeObj
+        this.getRecord('PEN', milestoneEntryId)
     }
 
     getRecord = (targetType, targetId) =>{
@@ -88,7 +87,7 @@ class AttachModal extends Component{
             note: notes,
             attachments: fileIds
         }
-        addProjectNote(timeObj.projectEntryId, obj).then(res=>{
+        addMilestoneTimesheetNote(timeObj.milestoneEntryId, obj).then(res=>{
             if(res.success){
                 close()
             }

@@ -64,42 +64,6 @@ class ResModal extends Component {
           rangeMax: 100,
         },
         {
-          Placeholder: "Start Date",
-          rangeMin: true,
-          fieldCol: 12,
-          size: "small",
-          type: "Text",
-          labelAlign: "right",
-          // itemStyle:{marginBottom:'10px'},
-        },
-        {
-          Placeholder: "End Date",
-          rangeMin: true,
-          fieldCol: 12,
-          size: "small",
-          type: "Text",
-          labelAlign: "right",
-          // itemStyle:{marginBottom:'10px'},
-        },
-        {
-          object: "obj",
-          fieldCol: 12,
-          key: "startDate",
-          rules: [{ required: true, message: "Start Date is Required" }],
-          size: "small",
-          type: "DatePicker",
-          fieldStyle: { width: "100%" },
-        },
-        {
-          object: "obj",
-          fieldCol: 12,
-          key: "endDate",
-          size: "small",
-          rules: [{ required: true, message: "End Date is Required" }],
-          type: "DatePicker",
-          fieldStyle: { width: "100%" },
-        },
-        {
           Placeholder: "Buy Cost",
           rangeMin: true,
           fieldCol: 12,
@@ -141,6 +105,15 @@ class ResModal extends Component {
   
       SkillFields: [
         {
+          Placeholder: "Title",
+          rangeMin: true,
+          fieldCol: 12,
+          size: "small",
+          type: "Text",
+          labelAlign: "right",
+          // itemStyle:{marginBottom:'10px'},
+        },
+        {
           Placeholder: "Skill",
           rangeMin: true,
           fieldCol: 12,
@@ -150,13 +123,12 @@ class ResModal extends Component {
           // itemStyle:{marginBottom:'10px'},
         },
         {
-          Placeholder: "Level",
-          rangeMin: true,
+          object: "obj",
           fieldCol: 12,
+          key: "title",
           size: "small",
-          type: "Text",
-          labelAlign: "right",
-          // itemStyle:{marginBottom:'10px'},
+          rules: [{ required: true, message: "Skill is Required" }],
+          type: "Input",
         },
         {
           object: "obj",
@@ -168,12 +140,31 @@ class ResModal extends Component {
           type: "Select",
           onChange: (e, value) =>{
             const { SkillFields } = this.state;
-            SkillFields[3].data = value ? value.levels : [];
+            SkillFields[6].data = value ? value.levels : [];
             const { obj, } = this.formRef.current.getFieldsValue(); // const
             obj["panelSkillStandardLevelId"] = undefined;
             this.formRef.current.setFieldsValue({ obj, });
             this.setState({ SkillFields });
           },
+        },
+        
+        {
+          Placeholder: "Level",
+          rangeMin: true,
+          fieldCol: 12,
+          size: "small",
+          type: "Text",
+          labelAlign: "right",
+          // itemStyle:{marginBottom:'10px'},
+        },
+        {
+          Placeholder: "Work Hours",
+          rangeMin: true,
+          fieldCol: 12,
+          size: "small",
+          type: "Text",
+          labelAlign: "right",
+          // itemStyle:{marginBottom:'10px'},
         },
         {
           object: "obj",
@@ -188,9 +179,27 @@ class ResModal extends Component {
           },
         },
         {
-          Placeholder: "Work Hours",
+          object: "obj",
+          fieldCol: 12,
+          key: "billableHours",
+          size: "small",
+          rules: [{ required: true, message: "Nillable Hours is Required" }],
+          type: "InputNumber",
+          fieldStyle: { width: "100%" },
+        },
+        {
+          Placeholder: "Start Date",
           rangeMin: true,
-          fieldCol: 24,
+          fieldCol: 12,
+          size: "small",
+          type: "Text",
+          labelAlign: "right",
+          // itemStyle:{marginBottom:'10px'},
+        },
+        {
+          Placeholder: "End Date",
+          rangeMin: true,
+          fieldCol: 12,
           size: "small",
           type: "Text",
           labelAlign: "right",
@@ -199,10 +208,19 @@ class ResModal extends Component {
         {
           object: "obj",
           fieldCol: 12,
-          key: "billableHours",
+          key: "startDate",
+          rules: [{ required: true, message: "Start Date is Required" }],
           size: "small",
-          rules: [{ required: true, message: "Nillable Hours is Required" }],
-          type: "InputNumber",
+          type: "DatePicker",
+          fieldStyle: { width: "100%" },
+        },
+        {
+          object: "obj",
+          fieldCol: 12,
+          key: "endDate",
+          size: "small",
+          rules: [{ required: true, message: "End Date is Required" }],
+          type: "DatePicker",
           fieldStyle: { width: "100%" },
         },
       ],
@@ -250,15 +268,15 @@ class ResModal extends Component {
     getPanelSkills(panelId)
       .then((res) => {
         const { SkillFields } = this.state;
-        SkillFields[2].data = res.success ? res.data : [];
+        SkillFields[3].data = res.success ? res.data : [];
 
         if (editRex) {
           // repopulate the fields to edit them to resolve multiple api calling might be do this on every Modal Compenent
-          const skillIndex = SkillFields[2].data.findIndex(
+          const skillIndex = SkillFields[3].data.findIndex(
             (skill) => skill.value === editRex.panelSkillId
           );
-          SkillFields[3].data = SkillFields[2].data
-            ? SkillFields[2].data[skillIndex].levels
+          SkillFields[6].data = SkillFields[3].data
+            ? SkillFields[3].data[skillIndex].levels
             : [];
           const obj = {
             panelSkillId: editRex.panelSkillId,

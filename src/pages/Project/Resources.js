@@ -84,7 +84,7 @@ class Resources extends Component {
                                     }}
                                     disabled={this.state&& !this.state.permissions['UPDATE']}
                                 >
-                                    Edit
+                                    Edit Resource
                                 </Menu.Item>
                             </Menu>
                         }
@@ -189,7 +189,7 @@ class Resources extends Component {
                             size='small'  
                             onClick={() => {  this.setState({ infoModal: true, editRex: false, }) }}
                             disabled={!permissions['ADD']}
-                        >Add New</Button> 
+                        >Add Resource</Button> 
                     </Col>
                     {/* <Col> <Button type="danger" size='small'>Delete Resource</Button></Col> */}
                 </Row>

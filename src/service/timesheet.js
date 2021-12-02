@@ -138,10 +138,10 @@ export const editLabel = (data) => {
         });
 };
 
-export const addProjectNote = (id, data) => {
+export const addMilestoneTimesheetNote = (id, data) => {
     messageAlert.loading({ content: 'Loading...', key: id })
     return axios
-        .patch(url + `projectEntries/${id}`, data, {headers:headers()})
+        .patch(url + `milestoneEntries/${id}`, data, {headers:headers()})
         .then((res) => {
             const { success, message } = res.data;
             jwtExpired(message)
