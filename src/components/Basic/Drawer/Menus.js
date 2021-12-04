@@ -28,14 +28,14 @@ const listData = [
         icon: <CalendarOutlined />,
         link: "/time-sheet",
         key: "TIMESHEETS",
-        permissions: "TIMESHEETS"
+        permissions: {module: "TIMESHEETS", key: 'READ'}
     },
     {
         text: "Timesheets Approval",
         icon: <ScheduleOutlined />,
         link: "/time-sheet-approval",
         key: "TIMESHEETS APPROVAl",
-        permissions: "TIMESHEETS"
+        permissions: {module: "TIMESHEETS", key: 'APPROVAL'}
     },
     {
         text: "Time Offs",
@@ -85,7 +85,6 @@ class Menus extends Component {
     }
     componentDidMount = () =>{
         this.getAllowedMenu()
-        console.log(this.props.location.pathname)
     }
     getAllowedMenu = () =>{
         let permissions = localStore().permissions
@@ -93,7 +92,7 @@ class Menus extends Component {
         let { allowedMenu } = this.state
             // allowedMenu[0] = pageLinks[0]
             listData.map(el=>{
-                if(permissions[el.permissions]&& permissions[el.permissions]['READ']){
+                if((el.permissions && permissions[el.permissions.module]) && permissions[el.permissions.module][el.permissions.key]){
                     allowedMenu.push(el)
                 }
             })
@@ -102,7 +101,6 @@ class Menus extends Component {
 
     highlightRow(link) {
         const { pathname } = this.props.location
-        console.log(pathname === link ,{pathname },{link });
         if (pathname === link ){
             return 'ant-menu-item-selected'
         }

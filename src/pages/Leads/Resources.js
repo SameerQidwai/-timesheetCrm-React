@@ -15,6 +15,11 @@ class Resources extends Component {
         super();
         this.columns = [
             {
+                title: "Title",
+                dataIndex: "title",
+                key: "title",
+            },
+            {
                 title: "Skill",
                 dataIndex: "panelSkill",
                 key: "panelSkill",
@@ -26,7 +31,18 @@ class Resources extends Component {
                 key: "panelSkillStandardLevel",
                 render: (record)=> {return record && record.levelLabel}
             },
-          
+            {
+                title: "Start Date",
+                dataIndex: "startDate",
+                key: "startDate",
+                render: (record)=> {return record && moment(record).format('ddd DD MM YYYY')}
+            },
+            {
+                title: "End Date",
+                dataIndex: "endDate",
+                key: "endDate",
+                render: (record)=> {return record && moment(record).format('ddd DD MM YYYY')}
+            },
             {
                 title: "Total Hours",
                 dataIndex: "billableHours",

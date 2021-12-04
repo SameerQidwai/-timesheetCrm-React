@@ -227,7 +227,8 @@ class ResModal extends Component {
     };
   }
   componentDidMount = () => {
-    const { skillId } = this.props;
+    const { skillId, editRex } = this.props;
+    console.log(editRex);
     if (skillId) {
       this.fetchRes();
     } else {
@@ -250,10 +251,9 @@ class ResModal extends Component {
             sellingRate: editRex.sellingRate, 
             effortRate: editRex.effortRate,
             buyingRate: editRex.buyingRate,
-            endDate: editRex.endDate ? moment(editRex.endDate) : null,
-            startDate: editRex.startDate ? moment(editRex.startDate) : null,
           };
-          this.formRef.current.setFieldsValue({ obj });
+          console.log(obj);
+          this.formRef.current.setFieldsValue({ obj:obj });
         }
         ResourceFields[2].data = data;
         this.setState({ ResourceFields });
@@ -282,6 +282,10 @@ class ResModal extends Component {
             panelSkillId: editRex.panelSkillId,
             panelSkillStandardLevelId: editRex.panelSkillStandardLevelId,
             billableHours: editRex.billableHours,
+            title: editRex.title,
+            endDate: editRex.endDate ? moment(editRex.endDate) : null,
+            startDate: editRex.startDate ? moment(editRex.startDate) : null,
+
           };
           this.formRef.current.setFieldsValue({ obj });
         }
@@ -335,6 +339,7 @@ class ResModal extends Component {
     this.setState({ loading: true });
     const { editRex, leadId, callBack, crud } = this.props;
     data.id = editRex.id;
+    console.log(data);
     editLeadSkill(crud, editRex.id, data).then((res) => {
       if (res.success) {
         callBack(res.data);
@@ -346,7 +351,7 @@ class ResModal extends Component {
     this.setState({ loading: true });
     const { editRex, callBack, leadId, skillId, crud } = this.props;
     data.id = editRex;
-    console.log(crud);
+    console.log(data);
     editLeadSkillResource(crud, skillId, editRex.id, data).then((res) => {
       if (res.success) {
         callBack(res.data);
@@ -359,7 +364,7 @@ class ResModal extends Component {
     const { ResourceFields, SkillFields, loading } = this.state;
     return (
       <Modal
-        title={editRex ? "Edit opportunity" : "Add Resource"}
+        title={skillId ? ((editRex) ?"Edit Resource" : "Add Resource") : ((editRex) ?"Edit Position" : "Add Position") }
         maskClosable={false}
         centered
         visible={visible}

@@ -143,12 +143,19 @@ export const addMilestoneTimesheetNote = (id, data) => {
     return axios
         .patch(url + `milestoneEntries/${id}`, data, {headers:headers()})
         .then((res) => {
-            const { success, message } = res.data;
+            const { success, message, data } = res.data;
             jwtExpired(message)
             messageAlert.success({ content: message, key: id})
-            if (success) setToken(res.headers && res.headers.authorization)
-            
+            if (success) {
+                let obj = {
+                    notes: data.notes,
+                    attachment: data.attachment
+                }
+                setToken(res.headers && res.headers.authorization)
+                return {success, data};
+            }
             return {success};
+            
         })
         .catch((err) => {
             messageAlert.error({ content: err.message, key: id})
@@ -188,18 +195,18 @@ export const getPdf = (entryId) => {
             jwtExpired(message)
             if (success) {
                 setToken(res.headers && res.headers.authorization)
-                let projectInfo = {
+                let milestoneInfo = {
                     company: data.company,
                     employee: data.employee,
                     period: data.period,
-                    project:  data.project.name,
-                    client: data.project.client,
-                    contact: data.project.contact,
-                    totalHours: parseFloat(data.project.totalHours).toFixed( 2 ),
-                    invoicedDays:  parseFloat(data.project.invoicedDays).toFixed( 2 )
+                    project:  data.milestone.name,
+                    client: data.milestone.client,
+                    contact: data.milestone.contact,
+                    totalHours: parseFloat(data.milestone.totalHours).toFixed( 2 ),
+                    invoicedDays:  parseFloat(data.milestone.invoicedDays).toFixed( 2 )
                 }
-                let entries = data.project.entries
-                return { success, data, projectInfo, entries}
+                let entries = data.milestone.entries
+                return { success, data, milestoneInfo, entries}
             }
             
             return { success, data };

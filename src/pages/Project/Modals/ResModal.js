@@ -11,7 +11,7 @@ const { TabPane } = Tabs;
 class ResModal extends Component {
   constructor() {
     super();
-    this.resourceRef = React.createRef();
+    this.formRef = React.createRef();
     this.state = {
       editRex: false,
       resourceSubmitted: false,
@@ -263,8 +263,8 @@ class ResModal extends Component {
   };
 
   addRecord = (data) => {
-    const { proId, callBack, curd } = this.props;
-    addLeadSkill(curd, data, proId).then((res) => {
+    const { proId, callBack, crud } = this.props;
+    addLeadSkill(crud, data, proId).then((res) => {
       if (res.success) {
         callBack();
       }
@@ -274,7 +274,7 @@ class ResModal extends Component {
   getRecord = (skills) => {
     const { crud, editRex } = this.props;
     getLeadSkill(crud, editRex).then((resR) => {
-      // console.log(resR.data);
+      console.log(resR.data);
       if (resR.success) {
         const skillIndex = skills.findIndex(
           (skill) => skill.value === resR.data.panelSkillId
@@ -286,7 +286,7 @@ class ResModal extends Component {
             ? skills[skillIndex].levels
             : [];
           ResourceFields[7].data = resP.success ? resP.data : [];
-          this.resourceRef.current.refs.resource_form.setFieldsValue({
+          this.formRef.current.setFieldsValue({
             obj: resR.data,
           });
           this.setState({
@@ -317,7 +317,6 @@ class ResModal extends Component {
         maskClosable={false}
         centered
         visible={visible}
-        onOk={() => { this.submit(); }}
         okButtonProps={{ disabled: loading, htmlType: 'submit', form: 'my-form' }}
         okText={loading ? <LoadingOutlined /> : "Save"}
         onCancel={close}

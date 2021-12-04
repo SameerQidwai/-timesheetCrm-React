@@ -58,15 +58,17 @@ export const getRecord = (id) => {
                     organizationId: data.organizationId,
                     organizationName: data.organization && data.organization.name,
                     // organizationId: data.organizationId,
-                    ContactName: data.contactPerson && `${data.contactPerson.firstName}  ${data.contactPerson.lastName} - ${data.contactPerson.phoneNumber }` ,
+                    ContactName: data.contactPerson && `${data.contactPerson.firstName?? ''}  ${data.contactPerson.lastName?? ''} - ${data.contactPerson.phoneNumber ?? '' }` ,
                     contactPersonId: data.contactPersonId,
                     qualifiedOps: data.qualifiedOps,
                     type: data.type,
+                    status: data.status,
                     // value: data.value? data.value: 0,
                     title: data.title,
                     stateId: data.stateId,
                     stage: data.stage,
-                    workLinkedId: data.workLinkedId
+                    linkedWorkId: data.linkedWorkId,
+                    mileId: (data.milestones &&data.milestones.length >0) ? data.milestones[0].id : false
                 }
                 const tender = {
                     tender: data.tender,
@@ -99,9 +101,10 @@ export const getRecord = (id) => {
                     accountManagerId: data.accountManagerId,
                     opportunityManagerId: data.opportunityManagerId,
                 }
+                const milestones = data.milestones ?? []
                 data.ContactName= data.contactPerson && data.contactPerson.firstName + ' ' + data.contactPerson.lastName
                 setToken(res.headers && res.headers.authorization)
-                return {success, data, basic, tender, billing, dates, manage};
+                return {success, data, basic, tender, billing, dates, manage, milestones};
             }
             return { success }
         })
@@ -366,7 +369,7 @@ export const workIsLost = (oppId, data) => {
             const { success, message } = res.data;
             jwtExpired(message)
             if (success) setToken(res.headers && res.headers.authorization)
-
+            messageAlert.success({ content: message, key: oppId})
             return {success};
         })
         .catch((err) => {

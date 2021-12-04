@@ -61,8 +61,20 @@ class TimeSheetContact extends Component {
                                     <Col> {record.type ===1 ? `${record.milestone} (${value})` : `${value}`} </Col>
                                     {/* File_name and paperclip to show under project is in comment section line 156*/}
                                      <Col style={{marginLeft: 'auto'}}> 
-                                        <DownloadOutlined onClick={()=>{this.exporPDF(record.milestoneEntryId, index)}}/>
-                                        <SaveOutlined onClick={()=>{this.openAttachModal(record, index)} } style={{color: '#1890ff', marginLeft:10}}/>
+                                        <Tooltip 
+                                            placement="top"
+                                            title="Export"
+                                            destroyTooltipOnHide
+                                        >
+                                            <DownloadOutlined onClick={()=>{this.exporPDF(record.milestoneEntryId, index)}}/>
+                                        </Tooltip>
+                                        <Tooltip 
+                                            placement="top"
+                                            title="Upload"
+                                            destroyTooltipOnHide
+                                        >
+                                            <SaveOutlined onClick={()=>{this.openAttachModal(record, index)} } style={{color: '#1890ff', marginLeft:10}}/>
+                                        </Tooltip>
                                     </Col>
                                     {record.attachment &&<Col span={24} >
                                     <Link
@@ -357,14 +369,20 @@ class TimeSheetContact extends Component {
         this.setState({ data: data });
     }
 
-    callBack = (value) => {
+    callBack = (value, sum) => {
         // value = value.obj;
         const { data, timeObj }= this.state
         const { row, col } = timeObj
         value.entryId = value.id
-        data[row][col] = value
         data[row]['milestoneEntryId'] =value.milestoneEntryId
-        data[row]['totalHours'] = (data[row]['totalHours']??0) + (value.actualHours ?? 0)
+        if (sum){
+            data[row][col] = value // put here so the code don't bust if cell is not created
+            data[row]['totalHours'] = (data[row]['totalHours']??0) + (value.actualHours ?? 0)
+        }else{
+            let oldHours = data[row][col].actualHours
+            data[row][col] = value // put here so the code don't bust if cell is not created while adding
+            data[row]['totalHours'] = (data[row]['totalHours']??0) + (value.actualHours ?? 0) - (oldHours?? oldHours)
+        }
         this.setState({
             data: data,
             timeObj: false,
@@ -410,6 +428,14 @@ class TimeSheetContact extends Component {
             rowIndex: index
         }
         this.setState({ timeObj, isAttach: true })
+    }
+
+    attachCallBack = (res) =>{
+        const {data, timeObj } = this.state
+        const {rowIndex} = timeObj
+        data[rowIndex].notes = res.notes
+        data[rowIndex].attachment = res.attachment
+        this.setState({data, isAttach: false, editTime: false, timeObj: false})
     }
 
     exporPDF = (entryId) =>{
@@ -666,7 +692,7 @@ class TimeSheetContact extends Component {
                         visible={isAttach}
                         timeObj={timeObj}
                         close={()=>this.setState({isAttach: false, editTime: false, timeObj: false})}
-                        // callBack={this.callBack}
+                        callBack={this.attachCallBack}
                     />
                 )}
                 {isDownload && (

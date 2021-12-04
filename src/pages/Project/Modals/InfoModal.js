@@ -193,7 +193,7 @@ class InfoModal extends Component {
       {
           object: "basic",
           fieldCol: 12,
-          key: "workLinkedId",
+          key: "linkedWorkId",
           // label: "Qualified Ops",
           size: "small",
           data: [ ],
@@ -483,7 +483,7 @@ class InfoModal extends Component {
         type: basic.type ?? '',
         stateId: basic.stateId ?? null,
         qualifiedOps: basic.qualifiedOps ?? false,
-        workLinkedId: basic.workLinkedId?? null,
+        linkedWorkId: basic.linkedWorkId?? null,
 
         tender: tender.tender ?? '',
         tenderNumber: tender.tenderNumber ?? '',

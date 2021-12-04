@@ -5,28 +5,50 @@ update
 
 Tagrget
     Timesheet:
-        timesheet will come with resoect start date and end date
-        can't delete approved or Submitted timesheet
+        timesheet will come with respect start date and end date ???
+        Row Height Same ----X----
+        
+        Refresh on notes save
+        background after Submitt
+
+        Export Timesheet error
+
 
     Opportunity
-        Stage and linked_Project
-        status
+        Stage and linked_Project .....
+        status .....
 
     Allocation
-        Title in resouces position 
-        Dates in resource position
+        Title in resouces position ....
+        Dates in resource position ......
 
-        add postion 
-        add Resource button
+    milestone
+        Default milestone
+        Description should not be required field
+    
+    Opportunity and Project
+        Status all view
+        if I change delegate_contact_person on won.. gives error 500
+        I am not getting MilstoneId if type is (2 or Tm)
+    
+    Project 
+        Not getting Contact person Id
 
     Approval View
-        can be under process
+        can be under process ???
+
+New Things
+    Resource Allocation
+        Suggestion of buycost and sale cost
+
+
+Changes not allowing
+    Oppotunity and Project changes panel should not be allowed if resource added
+    Resource
+        Skill won't be change when allocation is added
 
 
 
-//timeSheet.js file deleted will be in commit   17-11 before 5
-// userContent.js file is deleted will be in commit 17-11 before 5
-//TimeSheetHTMLs  file is deleted will be in commit 17-11 before 5
 
 shortcut 
     class component

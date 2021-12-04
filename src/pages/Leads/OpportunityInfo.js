@@ -14,7 +14,7 @@ import InfoModal from "./Modals/InfoModal";
 import { getRecord, delList, workIsLost } from "../../service/opportunities";
 
 import moment from "moment"
-import { formatCurrency, localStore } from "../../service/constant";
+import { formatCurrency, localStore, O_STATUS } from "../../service/constant";
 import LostModal from "./Modals/LostModal";
 
 const { Item } = Descriptions;
@@ -27,7 +27,7 @@ class OpportunityInfo extends Component {
             {title: "Won", msg: "Opportunity Won!?" , api: 'won'},
             {title: "Lost", msg: "Opportunity Lost!?" , api: 'Lost', key: 'L'},
             {title: "Not Bid", msg: "Not Bid On Opportunity!?" , api: 'NotBid', key: 'NB'},
-            {title: "Did Not Proceed", msg: "Did Not Proceed?", api: 'NotProceed', key: 'NP'},
+            {title: "Did Not Proceed", msg: "Did Not Proceed?", api: 'NotProceed', key: 'DNP'},
         ]
         this.state = {
             infoModal: false,
@@ -120,16 +120,27 @@ class OpportunityInfo extends Component {
                                     }} 
                                     disabled={!permissions['UPDATE']}
                                     > Edit </Menu.Item>
+                                {(basic &&basic.type) === 1 ?  //if condition
+                                <Menu.Item> 
+                                    <Link
+                                        to={{ pathname: `/opportunities/${leadId}/milestones` }}
+                                        className="nav-link"
+                                    >
+                                        Milestones
+                                    </Link>
+                                </Menu.Item>
+                                 : //else condition
                                 <Menu.Item>
                                     <Link
                                         to={{
-                                            pathname: `/opportunities/${leadId}/resources`,
+                                            pathname: `/opportunities/${leadId}/milestones/${basic.mileId}/resources`
                                         }}
                                         className="nav-link"
                                     >
                                         Resources
                                     </Link>
                                 </Menu.Item>
+                            }
                             </Menu>
                         }
                     >
@@ -165,10 +176,11 @@ class OpportunityInfo extends Component {
                             'No Organisation'
                         
                     }</Item>
-                    <Item label="Delegate Contact"> {basic ?basic.ContactName: null}</Item>
+                    <Item label="Delegate Contact"> {basic ?basic.ContactName: ''}</Item>
                     <Item label="Start date">{data.startDate ? moment(data.startDate).format('ddd DD MM YYYY'): null} </Item>
                     <Item label="End Date">{data.endDate ? moment(data.endDate).format('ddd DD MM YYYY'): null}</Item>
                     <Item label="Bid Date">{data.bidDate ? moment(data.bidDate).format('ddd DD MM YYYY'): null}</Item>
+                    <Item label="Status">{basic.status ? O_STATUS[basic.status]: ''}</Item>
                     {/* <Item label="Gender">{data.gender}</Item> */}
                 </Descriptions>
                 {renderTabs &&(

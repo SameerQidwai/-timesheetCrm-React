@@ -125,7 +125,7 @@ class TimeModal extends Component {
         const query = {userId: user, startDate: startDate.format('DD-MM-YYYY'), endDate: endDate.endOf("month").format('DD-MM-YYYY')}
         addTime(query, data).then(res=>{
             if(res.success){
-                callBack(res.data);
+                callBack(res.data, true);
             }
         });
     };
@@ -135,7 +135,7 @@ class TimeModal extends Component {
         const { callBack } = this.props;
         editTime(entryId, data).then(res=>{
             if(res.success){
-                callBack(res.data);
+                callBack(res.data, false);
             }
         });
     }
@@ -144,7 +144,7 @@ class TimeModal extends Component {
         const { editTime, callBack} = this.props
         deleteTime(editTime.entryId).then (res =>{
             if(res.success){
-                callBack({})
+                callBack({}, true)
             }
         }) 
     }

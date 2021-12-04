@@ -14,7 +14,7 @@ import InfoModal from "./Modals/InfoModal";
 import { getRecord, delList } from "../../service/projects";
 
 import moment from "moment"
-import { formatCurrency, localStore } from "../../service/constant";
+import { formatCurrency, localStore, O_STATUS } from "../../service/constant";
 
 const { Item } = Descriptions;
 const { TabPane } = Tabs;
@@ -26,6 +26,7 @@ class ProjectInfo extends Component {
             infoModal: false,
             leadId: false,
             data: { },
+            basic: {},
             billing: {},
             renderTabs: false,
             permissions: {}
@@ -40,6 +41,7 @@ class ProjectInfo extends Component {
         const { PROJECTS }= JSON.parse(localStore().permissions)
         getRecord(id).then(res=>{
             if(res.success){
+                console.log(res.basic);
                 this.setState({
                     data: res.data,
                     basic: res.basic,
@@ -85,16 +87,28 @@ class ProjectInfo extends Component {
                                     }}
                                     disabled={!permissions['UPDATE']}
                                     > Edit </Menu.Item>
+                                {(basic && basic.type) === 1 ?  //if condition
+                                <Menu.Item> 
+                                    <Link
+                                        to={{ pathname: `/projects/${leadId}/milestones`, }}
+                                        className="nav-link"
+                                    >
+                                        Milestones
+                                    </Link>
+                                </Menu.Item>
+                                 : //else condition
                                 <Menu.Item>
                                     <Link
                                         to={{
-                                            pathname: `/projects/${leadId}/resources`,
+                                            pathname: `/projects/${leadId}/milestones/${leadId}/resources`,
+                                            // pathname: `/projects/${record.id}/resources`,
                                         }}
                                         className="nav-link"
                                     >
                                         Resources
                                     </Link>
                                 </Menu.Item>
+                            }
                             </Menu>
                         }
                     >
@@ -134,6 +148,7 @@ class ProjectInfo extends Component {
                     <Item label="Start date">{data.startDate ? moment(data.startDate).format('ddd DD MM YYYY'): null} </Item>
                     <Item label="End Date">{data.endDate ? moment(data.endDate).format('ddd DD MM YYYY'): null}</Item>
                     <Item label="Bid Date">{data.bidDate ? moment(data.bidDate).format('ddd DD MM YYYY'): null}</Item>
+                    <Item label="Status">{basic.status ? O_STATUS[basic.status]: ''}</Item>
                     {/* <Item label="Gender">{data.gender}</Item> */}
                 </Descriptions>
                 {renderTabs &&(

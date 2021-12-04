@@ -9,7 +9,7 @@ import { getList, delList } from "../../service/opportunities";
 
 import '../styles/table.css'
 import moment from "moment";
-import { formatCurrency, localStore } from '../../service/constant';
+import { formatCurrency, localStore, O_STAGE, O_STATUS } from '../../service/constant';
 const { Title } = Typography
 
 class Opportunities extends Component {
@@ -33,7 +33,7 @@ class Opportunities extends Component {
             {
                 title: 'Organisation Name',
                 dataIndex: 'organization',
-                width: 300,
+                width: 200,
                 key: 'organization',
                 render: (record) =>{
                     return record && <Link 
@@ -71,12 +71,13 @@ class Opportunities extends Component {
                 title: 'Stage',
                 dataIndex: 'stage',
                 key: 'stage',
+                render: (record) =>  O_STAGE[record]
             },
             {
                 title: 'Status',
                 dataIndex: 'status',
                 key: 'status',
-                render: (record) =>(record )
+                render: (record) => O_STATUS[record] 
             },
             {
                 title: 'Action',

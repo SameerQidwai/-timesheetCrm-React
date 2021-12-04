@@ -81,15 +81,16 @@ class AttachModal extends Component{
     }
 
     addNotes = () =>{
-        const { timeObj, close } = this.props
-        const { notes, fileIds } = this.state
+        this.setState({loading: true})
+        const { timeObj, callBack } = this.props
+        const { notes, fileIds, fileList } = this.state
         const obj = {
             note: notes,
-            attachments: fileIds
+            attachments: fileList.length>0 ? [fileList[0].fileId]: []
         }
         addMilestoneTimesheetNote(timeObj.milestoneEntryId, obj).then(res=>{
             if(res.success){
-                close()
+                callBack(res.data)
             }
         })
     }

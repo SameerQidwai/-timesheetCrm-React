@@ -135,7 +135,8 @@ class Resources extends Component {
     }
 
     getLeadSkills = (id) =>{
-        getLeadSkills(id).then(res=>{
+        const {crud} = this.state
+        getLeadSkills(crud).then(res=>{
             if(res.success){
                 this.setState({
                     data: res.success? res.data : [],

@@ -174,8 +174,8 @@ class MileModal extends Component {
 
   getRecord = () => {
     const { editMile } = this.props;
-    editMile.startDate = moment(editMile.startDate)
-    editMile.endDate = moment(editMile.endDate)
+    editMile.startDate = editMile.startDate && moment(editMile.startDate)
+    editMile.endDate = editMile.endDate&& moment(editMile.endDate)
     this.formRef.current.setFieldsValue({ obj: editMile});
     // getMilestone(editMile.id).then(res=>{
     //   if( res.success ){
