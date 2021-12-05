@@ -5,7 +5,7 @@ import { Link, withRouter } from "react-router-dom";
 import {
     FieldTimeOutlined,
     CalendarOutlined,
-    DingdingOutlined,
+    ScheduleOutlined,
     HomeOutlined,
     FileOutlined,
     FileTextOutlined,
@@ -28,6 +28,14 @@ const listData = [
         icon: <CalendarOutlined />,
         link: "/time-sheet",
         key: "TIMESHEETS",
+        permissions: {module: "TIMESHEETS", key: 'READ'}
+    },
+    {
+        text: "Timesheets Approval",
+        icon: <ScheduleOutlined />,
+        link: "/time-sheet-approval",
+        key: "TIMESHEETS APPROVAl",
+        permissions: {module: "TIMESHEETS", key: 'APPROVAL'}
     },
     {
         text: "Time Offs",
@@ -84,11 +92,18 @@ class Menus extends Component {
         let { allowedMenu } = this.state
             // allowedMenu[0] = pageLinks[0]
             listData.map(el=>{
-                if(permissions[el.key]&& permissions[el.key]['READ']){
+                if((el.permissions && permissions[el.permissions.module]) && permissions[el.permissions.module][el.permissions.key]){
                     allowedMenu.push(el)
                 }
             })
        this.setState({allowedMenu})
+    }
+
+    highlightRow(link) {
+        const { pathname } = this.props.location
+        if (pathname === link ){
+            return 'ant-menu-item-selected'
+        }
     }
 
     MenuRender = () => {
@@ -97,7 +112,7 @@ class Menus extends Component {
             item.subMenu ? (
                 <SubMenu key={item.key} icon={item.icon} title={item.text}>
                     {item.subMenu.map((sub, j) => (
-                        <Menu.Item key={sub.key} icon={sub.icon}>
+                        <Menu.Item key={sub.key} icon={sub.icon} className={this.highlightRow(sub.link)}>
                             <Link to={sub.link} className="nav-link">
                                 {sub.text}
                             </Link>
@@ -105,8 +120,8 @@ class Menus extends Component {
                     ))}
                 </SubMenu>
             ) : (
-                <Menu.Item key={item.key} icon={item.icon}>
-                    <Link to={item.link} className="nav-link">
+                <Menu.Item key={item.key} icon={item.icon} className={this.highlightRow(item.link)}>
+                    <Link to={item.link} className="nav-link" >
                         {item.text}
                     </Link>
                 </Menu.Item>

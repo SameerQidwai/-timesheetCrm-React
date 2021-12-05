@@ -1,7 +1,6 @@
-import React, { Component, useState, useReducer } from "react";
-import { Row, Col, Menu, Button, Dropdown, Descriptions, Table, Popconfirm } from "antd";
+import React, { Component, useState } from "react";
+import { Row, Col, Menu, Button, Dropdown, Descriptions, Table } from "antd";
 import { SettingOutlined, DownOutlined } from "@ant-design/icons"; //Icons
-import { Link } from "react-router-dom"; 
 
 import ResModal from "./Modals/ResModal";
 import { getRecord, getLeadSkills, delLeadSkill, delLeadSkillResource, selectLeadSkillResource } from "../../service/opportunities";
@@ -11,10 +10,15 @@ import { formatCurrency, localStore } from "../../service/constant";
 
 const { Item } = Descriptions;
 
-class Resource extends Component {
+class Resources extends Component {
     constructor() {
         super();
         this.columns = [
+            {
+                title: "Title",
+                dataIndex: "title",
+                key: "title",
+            },
             {
                 title: "Skill",
                 dataIndex: "panelSkill",
@@ -27,7 +31,18 @@ class Resource extends Component {
                 key: "panelSkillStandardLevel",
                 render: (record)=> {return record && record.levelLabel}
             },
-          
+            {
+                title: "Start Date",
+                dataIndex: "startDate",
+                key: "startDate",
+                render: (record)=> {return record && moment(record).format('ddd DD MM YYYY')}
+            },
+            {
+                title: "End Date",
+                dataIndex: "endDate",
+                key: "endDate",
+                render: (record)=> {return record && moment(record).format('ddd DD MM YYYY')}
+            },
             {
                 title: "Total Hours",
                 dataIndex: "billableHours",
@@ -42,21 +57,13 @@ class Resource extends Component {
                     <Dropdown
                         overlay={
                             <Menu>
-                                {/* <Menu.Item danger>
-                                    <Popconfirm
-                                        title="Sure to delete?"
-                                        onConfirm={() => this.handleDelete(record.id) }
-                                    >
-                                        Delete
-                                    </Popconfirm>
-                                </Menu.Item> */}
                                 <Menu.Item
                                     onClick={() => {
                                         this.getSkilldEmployee(true,  false,  false, record,  index, record.panelSkillStandardLevelId)
                                     }}
                                     disabled={this.state&& !this.state.permissions['UPDATE']}
                                 >
-                                    Edit
+                                    Edit Position
                                 </Menu.Item>
                                 <Menu.Item 
                                     onClick={() => {
@@ -65,7 +72,7 @@ class Resource extends Component {
                                     }}
                                     disabled={this.state&& !this.state.permissions['ADD']}
                                 >
-                                        Add
+                                        Add Resouce
                                 </Menu.Item>
                             </Menu>
                         }
@@ -86,26 +93,32 @@ class Resource extends Component {
             desc: {},
             skillId: false,
             levelId: false,
+            crud: false,
+            mileId: false,
             resource: false,
             permissons: {ADD: true}
         };
     }
 
     componentDidMount = ()=>{
-        const { id } = this.props.match.params
-        this.fetchAll(id)
+        
+        this.fetchAll()
     }
+    
 
-    fetchAll = (id) =>{
+    fetchAll = () =>{
+        const { proId, mileId } = this.props.match.params
+        const { url } = this.props.match
         const { OPPORTUNITIES }= JSON.parse(localStore().permissions)
-        console.log(OPPORTUNITIES);
-        Promise.all([ getRecord(id), getLeadSkills(id)])
+        Promise.all([ getRecord(proId), getLeadSkills(url)])
         .then(res => {
             this.setState({
                 desc: res[0].success? res[0].data : {},
                 editRex: false,
                 infoModal: false,
-                leadId: id,
+                leadId: proId,
+                mileId: mileId,
+                crud: url,
                 data: res[1].success? res[1].data : [],
                 permissions: OPPORTUNITIES
             })
@@ -115,8 +128,9 @@ class Resource extends Component {
         })
     }
 
-    getLeadSkills = (id) =>{
-        getLeadSkills(id).then(res=>{
+    getLeadSkills = () =>{
+        const { crud }= this.state
+        getLeadSkills(crud).then(res=>{
             if(res.success){
                 this.setState({
                     data: res.data,
@@ -169,7 +183,7 @@ class Resource extends Component {
     };
 
     render() {
-        const { desc, data, infoModal, editRex, leadId, resource , skillId, levelId, permissions} = this.state;
+        const { desc, data, infoModal, editRex, leadId, resource , skillId, levelId, permissions, mileId, crud} = this.state;
         console.log(permissions);
         return (
             <>
@@ -195,7 +209,7 @@ class Resource extends Component {
                             onClick={() => { this.setState({ infoModal: true, editRex: false, resource: false, skillId: false }) }}
                             disabled={permissions&& !permissions['ADD']}
                             >
-                                Add New
+                                Add Position
                         </Button>
                     </Col>
                     {/* <Col> <Button type="danger" size='small'>Delete Resource</Button></Col> */}
@@ -213,6 +227,8 @@ class Resource extends Component {
                                 skill={record.id}
                                 levelId={record.panelSkillStandardLevelId}
                                 leadId={leadId} 
+                                mileId={mileId}
+                                crud={crud}
                                 panelId={desc.panelId}
                                 callBack={this.callBack}
                                 permissions={permissions}
@@ -229,6 +245,8 @@ class Resource extends Component {
                         skillId={skillId}
                         levelId={levelId}
                         leadId={leadId}
+                        mileId={mileId}
+                        crud={crud}
                         panelId = {desc.panelId}
                         close={this.closeModal}
                         callBack={this.callBack}
@@ -281,7 +299,7 @@ function NestedTable(props) {
                                 }}
                                 disabled={props.permissions&& !props.permissions['UPDATE']}
                             >
-                                Edit
+                                Edit Resource
                             </Menu.Item>
                         </Menu>
                     }
@@ -305,9 +323,9 @@ function NestedTable(props) {
     };
 
     const onSelectChange = (selected, Rows) =>  {
-        const { leadId, skill } = props
+        const { leadId, skill, crud } = props
         setSelectedRowKeys(selected)
-        selectLeadSkillResource(leadId, skill, Rows[0].id).then(res=>{
+        selectLeadSkillResource(crud, skill, Rows[0].id).then(res=>{
             console.log(res);
         })
         // [data.findIndex(el => el.isMarkedAsSelected === true)]
@@ -343,6 +361,8 @@ function NestedTable(props) {
             leadId = {props.leadId}
             levelId = {props.levelId}
             panelId = {props.panelId}
+            mileId={props.mileId}
+            crud={props.crud}
             close={()=>{setVisible(false)}}
             callBack={callBack}
         />}
@@ -350,4 +370,4 @@ function NestedTable(props) {
 };
 
 
-export default Resource;
+export default Resources;

@@ -11,10 +11,10 @@ import { formatCurrency, localStore } from "../../service/constant";
 
 const { Item } = Descriptions;
 
-class OrgInfo extends Component {
+class Resources extends Component {
     constructor(props) {
         super(props);
-        const { id } = props.match.params
+
         this.columns = [
             {
                 title: "Skill",
@@ -84,7 +84,7 @@ class OrgInfo extends Component {
                                     }}
                                     disabled={this.state&& !this.state.permissions['UPDATE']}
                                 >
-                                    Edit
+                                    Edit Resource
                                 </Menu.Item>
                             </Menu>
                         }
@@ -100,25 +100,30 @@ class OrgInfo extends Component {
         this.state = {
             infoModal: false,
             editRex: false,
-            ProId: false,
+            proId: false,
+            mileId: false,
+            crud: false,
             desc: {title: '', organization: {name: ''}, value: '', startDate: '', endDate: ''},
             permissions: {}
         };
     }
 
     componentDidMount = ()=>{
-        const { id } = this.props.match.params
-        this.fetchAll(id)
+        this.fetchAll()
     }
 
     fetchAll = (id) =>{
         const { PROJECTS }= JSON.parse(localStore().permissions)
-        Promise.all([ getRecord(id), getLeadSkills(id)])
+        const { url } = this.props.match
+        const { proId, mileId } = this.props.match.params
+        Promise.all([ getRecord(proId), getLeadSkills(url, id)])
         .then(res => {
             this.setState({
                 desc: res[0].success? res[0].data : {},
                 editRex: false,
-                ProId: id,
+                proId: proId,
+                crud: url,
+                mileId: mileId,
                 infoModal: false,
                 data: res[1].success? res[1].data : [],
                 permissions: PROJECTS
@@ -130,7 +135,8 @@ class OrgInfo extends Component {
     }
 
     getLeadSkills = (id) =>{
-        getLeadSkills(id).then(res=>{
+        const {crud} = this.state
+        getLeadSkills(crud).then(res=>{
             if(res.success){
                 this.setState({
                     data: res.success? res.data : [],
@@ -146,8 +152,8 @@ class OrgInfo extends Component {
     };
 
     handleDelete = (rId) => {
-        const { id } = this.props.match.params //opputunityId
-        delLeadSkill(id,rId).then((res) => {
+        const { proId } = this.props.match.params //opputunityId
+        delLeadSkill(proId,rId).then((res) => {
             if (res.success) {
                 this.props.history.push('/Employees')
             }
@@ -155,12 +161,12 @@ class OrgInfo extends Component {
     };
 
     callBack = () => {
-        const { ProId } = this.state
-        this.getLeadSkills(ProId)
+        const { proId } = this.state
+        this.getLeadSkills(proId)
     };
 
     render() {
-        const { desc, data, infoModal, editRex, ProId, permissions } = this.state;
+        const { desc, data, infoModal, editRex, proId, permissions, crud, mileId } = this.state;
         return (
             <>
                 <Descriptions
@@ -171,7 +177,7 @@ class OrgInfo extends Component {
                     // extra={<Button type="primary">Edit</Button>}
                 >
                     <Item label="Project Name">{desc.title}</Item>
-                    <Item label="Estimated Value">{ formatCurrency(desc.value)}</Item>
+                    <Item label="Estimated Value">{ formatCurrency(desc.value ?? 0)}</Item>
                     <Item label="Organisation">{desc.organizationName ? desc.organization.name :' No Organisation'}</Item>
                     <Item label="Start date">{desc.startDate ? moment(desc.startDate).format('ddd DD MM YYYY'): null} </Item>
                     <Item label="End Date">{desc.endDate ? moment(desc.endDate).format('ddd DD MM YYYY'): null}</Item>
@@ -184,7 +190,7 @@ class OrgInfo extends Component {
                             size='small'  
                             onClick={() => {  this.setState({ infoModal: true, editRex: false, }) }}
                             disabled={!permissions['ADD']}
-                        >Add New</Button> 
+                        >Add Resource</Button> 
                     </Col>
                     {/* <Col> <Button type="danger" size='small'>Delete Resource</Button></Col> */}
                 </Row>
@@ -199,7 +205,9 @@ class OrgInfo extends Component {
                     <ResModal
                         visible={infoModal}
                         editRex={editRex}
-                        ProId = {ProId}
+                        proId = {proId}
+                        crud={crud}
+                        mileId={mileId}
                         panelId = {desc.panelId}
                         close={this.closeModal}
                         callBack={this.callBack}
@@ -210,4 +218,4 @@ class OrgInfo extends Component {
     }
 }
 
-export default OrgInfo;
+export default Resources;

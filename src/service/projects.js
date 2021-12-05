@@ -63,9 +63,11 @@ export const getRecord = (id) => {
                     contactPersonId: data.contactPersonId,
                     qualifiedOps: data.qualifiedOps,
                     type: data.type,
+                    status: data.status,
                     // value: data.value? data.value: 0,
                     title: data.title,
-                    stateId: data.stateId
+                    stateId: data.stateId,
+                    linkedWorkId: data.linkedWorkId
                 }
                 const tender = {
                     tender: data.tender,
@@ -155,10 +157,10 @@ export const editList = (data) => {
         });
 };
 
-export const addLeadSkill = (id, data) => {
+export const addLeadSkill = (crud, data, id) => {
     messageAlert.loading({ content: 'Loading...', key: id })
     return axios
-        .post(url + `/${id}/resources`, data, {headers:headers()})
+        .post(`${Api}${crud}`, data, {headers:headers()})
         .then(res=>{
         const { success, message } = res.data
         jwtExpired(message)
@@ -178,15 +180,16 @@ export const addLeadSkill = (id, data) => {
     })
 };
 
-export const getLeadSkills = (id)=>{
+export const getLeadSkills = (crud, id)=>{
     return axios
-        .get(url + `/${id}/resources`, {headers:headers()})
+        .get(`${Api}${crud}`, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
             if (success) {
                 setToken(res.headers && res.headers.authorization)
             };
+            console.log(res);
             return { success: success, data: data }
         })
         .catch((err) => {
@@ -198,9 +201,9 @@ export const getLeadSkills = (id)=>{
         });
 };
 
-export const getLeadSkill = (proId, resId) => {
+export const getLeadSkill = (crud, resId) => {
     return axios
-        .get(url + `/${proId}/resources/${resId}`, {headers:headers()})
+        .get(`${Api}${crud}/${resId}`, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -209,11 +212,11 @@ export const getLeadSkill = (proId, resId) => {
                     panelSkillId:  data.panelSkillId,
                     panelSkillStandardLevelId:  data.panelSkillStandardLevelId,
                     billableHours: data.billableHours,
+                    startDate: data.startDate && moment(data.startDate),
+                    endDate: data.endDate && moment(data.endDate),
                     contactPersonId:  data.opportunityResourceAllocations[0] && data.opportunityResourceAllocations[0].contactPersonId,
                     buyingRate:  data.opportunityResourceAllocations && data.opportunityResourceAllocations[0].buyingRate,
                     sellingRate:  data.opportunityResourceAllocations && data.opportunityResourceAllocations[0].sellingRate,
-                    startDate: data.opportunityResourceAllocations && data.opportunityResourceAllocations[0].startDate && moment(data.opportunityResourceAllocations[0].startDate),
-                    endDate: data.opportunityResourceAllocations && data.opportunityResourceAllocations[0].endDate && moment(data.opportunityResourceAllocations[0].endDate),
                     effortRate: data.opportunityResourceAllocations && data.opportunityResourceAllocations[0].effortRate,
                     allocationId: data.opportunityResourceAllocations && data.opportunityResourceAllocations[0].id
                 }
@@ -231,11 +234,11 @@ export const getLeadSkill = (proId, resId) => {
         });
 };
 
-export const editLeadSkill = (proId, resId, data) => {
+export const editLeadSkill = (crud, resId, data) => {
     messageAlert.loading({ content: 'Loading...', key: resId })
     // return { success: false }
     return axios
-        .put(url + `/${proId}/resources/${resId}`, data, {headers:headers()})
+        .put(`${Api}${crud}/${resId}`, data, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)

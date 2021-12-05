@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import { Modal, Tabs } from "antd";
+import { Modal, Tabs, Form  } from "antd";
 import { LoadingOutlined } from "@ant-design/icons"; //Icons
 import moment from "moment";
-import Form from "../../../components/Core/Form";
+import FormItems from "../../../components/Core/FormItems";
 
 import { addLeadSkill, editLeadSkill, addLeadSkillResource, editLeadSkillResource, } from "../../../service/opportunities";
 import { getPanelSkills, getOrgPersons, } from "../../../service/constant-Apis";
@@ -12,7 +12,7 @@ const { TabPane } = Tabs;
 class ResModal extends Component {
   constructor() {
     super();
-    this.resourceRef = React.createRef();
+    this.formRef = React.createRef();
     this.state = {
       editRex: false,
       resourceSubmitted: false,
@@ -23,210 +23,212 @@ class ResModal extends Component {
       STATES: [],
       ORGS: [],
 
-      ResourceFields: {
-        formId: "resource_form",
-        FormCol: 24,
-        FieldSpace: 24,
-        justifyField: "center",
-        FormLayout: "inline",
-        size: "middle",
-        initialValues: { obj: { effortRate: 100 } },
-        fields: [
-          {
-            Placeholder: "Resource",
-            rangeMin: true,
-            fieldCol: 12,
-            size: "small",
-            type: "Text",
-            labelAlign: "right",
-            // itemStyle:{marginBottom:'10px'},
+      ResourceFields: [
+        {
+          Placeholder: "Resource",
+          rangeMin: true,
+          fieldCol: 12,
+          size: "small",
+          type: "Text",
+          labelAlign: "right",
+          // itemStyle:{marginBottom:'10px'},
+        },
+        {
+          Placeholder: "Effort Rate",
+          rangeMin: true,
+          fieldCol: 12,
+          size: "small",
+          type: "Text",
+          labelAlign: "right",
+          // itemStyle:{marginBottom:'10px'},
+        },
+        {
+          object: "obj",
+          fieldCol: 12,
+          key: "contactPersonId",
+          size: "small",
+          rules: [{ required: true, message: "Resource is Required" }],
+          data: [],
+          type: "Select",
+        },
+        {
+          object: "obj",
+          fieldCol: 12,
+          key: "effortRate",
+          rules: [{ required: true, message: "Effort Rate is Required" }],
+          size: "small",
+          shape: "%",
+          type: "InputNumber",
+          fieldStyle: { width: "100%" },
+          rangeMin: 0,
+          rangeMax: 100,
+        },
+        {
+          Placeholder: "Buy Cost",
+          rangeMin: true,
+          fieldCol: 12,
+          size: "small",
+          type: "Text",
+          labelAlign: "right",
+          // itemStyle:{marginBottom:'10px'},
+        },
+        {
+          Placeholder: "Sale Cost",
+          rangeMin: true,
+          fieldCol: 12,
+          size: "small",
+          type: "Text",
+          labelAlign: "right",
+          // itemStyle:{marginBottom:'10px'},
+        },
+        {
+          object: "obj",
+          fieldCol: 12,
+          key: "buyingRate",
+          shape: '$',
+          size: "small",
+          rules: [{ required: true, message: "Buying Rate is Required" }],
+          type: "InputNumber",
+          fieldStyle: { width: "100%" },
+        },
+        {
+          object: "obj",
+          fieldCol: 12,
+          key: "sellingRate",
+          shape: '$',
+          size: "small",
+          rules: [{ required: true, message: "Selling Rate is Required" }],
+          type: "InputNumber",
+          fieldStyle: { width: "100%" },
+        },
+      ],
+  
+      SkillFields: [
+        {
+          Placeholder: "Title",
+          rangeMin: true,
+          fieldCol: 12,
+          size: "small",
+          type: "Text",
+          labelAlign: "right",
+          // itemStyle:{marginBottom:'10px'},
+        },
+        {
+          Placeholder: "Skill",
+          rangeMin: true,
+          fieldCol: 12,
+          size: "small",
+          type: "Text",
+          labelAlign: "right",
+          // itemStyle:{marginBottom:'10px'},
+        },
+        {
+          object: "obj",
+          fieldCol: 12,
+          key: "title",
+          size: "small",
+          rules: [{ required: true, message: "Skill is Required" }],
+          type: "Input",
+        },
+        {
+          object: "obj",
+          fieldCol: 12,
+          key: "panelSkillId",
+          size: "small",
+          rules: [{ required: true, message: "Skill is Required" }],
+          data: [],
+          type: "Select",
+          onChange: (e, value) =>{
+            const { SkillFields } = this.state;
+            SkillFields[6].data = value ? value.levels : [];
+            const { obj, } = this.formRef.current.getFieldsValue(); // const
+            obj["panelSkillStandardLevelId"] = undefined;
+            this.formRef.current.setFieldsValue({ obj, });
+            this.setState({ SkillFields });
           },
-          {
-            Placeholder: "Effort Rate",
-            rangeMin: true,
-            fieldCol: 12,
-            size: "small",
-            type: "Text",
-            labelAlign: "right",
-            // itemStyle:{marginBottom:'10px'},
+        },
+        
+        {
+          Placeholder: "Level",
+          rangeMin: true,
+          fieldCol: 12,
+          size: "small",
+          type: "Text",
+          labelAlign: "right",
+          // itemStyle:{marginBottom:'10px'},
+        },
+        {
+          Placeholder: "Work Hours",
+          rangeMin: true,
+          fieldCol: 12,
+          size: "small",
+          type: "Text",
+          labelAlign: "right",
+          // itemStyle:{marginBottom:'10px'},
+        },
+        {
+          object: "obj",
+          fieldCol: 12,
+          key: "panelSkillStandardLevelId",
+          size: "small",
+          rules: [{ required: true, message: "Level is Required" }],
+          data: [],
+          type: "Select",
+          onChange: (e, value) =>{
+            this.fetchRes();
           },
-          {
-            object: "obj",
-            fieldCol: 12,
-            key: "contactPersonId",
-            size: "small",
-            rules: [{ required: true, message: "Resource is Required" }],
-            data: [],
-            type: "Select",
-          },
-          {
-            object: "obj",
-            fieldCol: 12,
-            key: "effortRate",
-            rules: [{ required: true, message: "Effort Rate is Required" }],
-            size: "small",
-            shape: "%",
-            type: "InputNumber",
-            fieldStyle: { width: "100%" },
-            rangeMin: 0,
-            rangeMax: 100,
-          },
-          {
-            Placeholder: "Start Date",
-            rangeMin: true,
-            fieldCol: 12,
-            size: "small",
-            type: "Text",
-            labelAlign: "right",
-            // itemStyle:{marginBottom:'10px'},
-          },
-          {
-            Placeholder: "End Date",
-            rangeMin: true,
-            fieldCol: 12,
-            size: "small",
-            type: "Text",
-            labelAlign: "right",
-            // itemStyle:{marginBottom:'10px'},
-          },
-          {
-            object: "obj",
-            fieldCol: 12,
-            key: "startDate",
-            rules: [{ required: true, message: "Start Date is Required" }],
-            size: "small",
-            type: "DatePicker",
-            fieldStyle: { width: "100%" },
-          },
-          {
-            object: "obj",
-            fieldCol: 12,
-            key: "endDate",
-            size: "small",
-            rules: [{ required: true, message: "End Date is Required" }],
-            type: "DatePicker",
-            fieldStyle: { width: "100%" },
-          },
-          {
-            Placeholder: "Buy Cost",
-            rangeMin: true,
-            fieldCol: 12,
-            size: "small",
-            type: "Text",
-            labelAlign: "right",
-            // itemStyle:{marginBottom:'10px'},
-          },
-          {
-            Placeholder: "Sale Cost",
-            rangeMin: true,
-            fieldCol: 12,
-            size: "small",
-            type: "Text",
-            labelAlign: "right",
-            // itemStyle:{marginBottom:'10px'},
-          },
-          {
-            object: "obj",
-            fieldCol: 12,
-            key: "buyingRate",
-            shape: '$',
-            size: "small",
-            rules: [{ required: true, message: "Buying Rate is Required" }],
-            type: "InputNumber",
-            fieldStyle: { width: "100%" },
-          },
-          {
-            object: "obj",
-            fieldCol: 12,
-            key: "sellingRate",
-            shape: '$',
-            size: "small",
-            rules: [{ required: true, message: "Selling Rate is Required" }],
-            type: "InputNumber",
-            fieldStyle: { width: "100%" },
-          },
-        ],
-      },
-
-      SkillFields: {
-        formId: "resource_form",
-        FormCol: 24,
-        FieldSpace: 24,
-        justifyField: "center",
-        FormLayout: "inline",
-        size: "middle",
-        fields: [
-          {
-            Placeholder: "Skill",
-            rangeMin: true,
-            fieldCol: 12,
-            size: "small",
-            type: "Text",
-            labelAlign: "right",
-            // itemStyle:{marginBottom:'10px'},
-          },
-          {
-            Placeholder: "Level",
-            rangeMin: true,
-            fieldCol: 12,
-            size: "small",
-            type: "Text",
-            labelAlign: "right",
-            // itemStyle:{marginBottom:'10px'},
-          },
-          {
-            object: "obj",
-            fieldCol: 12,
-            key: "panelSkillId",
-            size: "small",
-            rules: [{ required: true, message: "Skill is Required" }],
-            data: [],
-            type: "Select",
-            onChange: function func(e, value) {
-              const { SkillFields } = this.state;
-              SkillFields.fields[3].data = value ? value.levels : [];
-              const { obj, } = this.resourceRef.current.refs.resource_form.getFieldsValue(); // const
-              obj["panelSkillStandardLevelId"] = undefined;
-              this.resourceRef.current.refs.resource_form.setFieldsValue({ obj, });
-              this.setState({ SkillFields });
-            }.bind(this),
-          },
-          {
-            object: "obj",
-            fieldCol: 12,
-            key: "panelSkillStandardLevelId",
-            size: "small",
-            rules: [{ required: true, message: "Level is Required" }],
-            data: [],
-            type: "Select",
-            onChange: (e, value) =>{
-              this.fetchRes();
-            },
-          },
-          {
-            Placeholder: "Work Hours",
-            rangeMin: true,
-            fieldCol: 24,
-            size: "small",
-            type: "Text",
-            labelAlign: "right",
-            // itemStyle:{marginBottom:'10px'},
-          },
-          {
-            object: "obj",
-            fieldCol: 12,
-            key: "billableHours",
-            size: "small",
-            rules: [{ required: true, message: "Nillable Hours is Required" }],
-            type: "InputNumber",
-            fieldStyle: { width: "100%" },
-          },
-        ],
-      },
+        },
+        {
+          object: "obj",
+          fieldCol: 12,
+          key: "billableHours",
+          size: "small",
+          rules: [{ required: true, message: "Nillable Hours is Required" }],
+          type: "InputNumber",
+          fieldStyle: { width: "100%" },
+        },
+        {
+          Placeholder: "Start Date",
+          rangeMin: true,
+          fieldCol: 12,
+          size: "small",
+          type: "Text",
+          labelAlign: "right",
+          // itemStyle:{marginBottom:'10px'},
+        },
+        {
+          Placeholder: "End Date",
+          rangeMin: true,
+          fieldCol: 12,
+          size: "small",
+          type: "Text",
+          labelAlign: "right",
+          // itemStyle:{marginBottom:'10px'},
+        },
+        {
+          object: "obj",
+          fieldCol: 12,
+          key: "startDate",
+          rules: [{ required: true, message: "Start Date is Required" }],
+          size: "small",
+          type: "DatePicker",
+          fieldStyle: { width: "100%" },
+        },
+        {
+          object: "obj",
+          fieldCol: 12,
+          key: "endDate",
+          size: "small",
+          rules: [{ required: true, message: "End Date is Required" }],
+          type: "DatePicker",
+          fieldStyle: { width: "100%" },
+        },
+      ],
     };
   }
   componentDidMount = () => {
-    const { skillId } = this.props;
+    const { skillId, editRex } = this.props;
+    console.log(editRex);
     if (skillId) {
       this.fetchRes();
     } else {
@@ -249,12 +251,11 @@ class ResModal extends Component {
             sellingRate: editRex.sellingRate, 
             effortRate: editRex.effortRate,
             buyingRate: editRex.buyingRate,
-            endDate: editRex.endDate ? moment(editRex.endDate) : null,
-            startDate: editRex.startDate ? moment(editRex.startDate) : null,
           };
-          this.resourceRef.current.refs.resource_form.setFieldsValue({ obj });
+          console.log(obj);
+          this.formRef.current.setFieldsValue({ obj:obj });
         }
-        ResourceFields.fields[2].data = data;
+        ResourceFields[2].data = data;
         this.setState({ ResourceFields });
       })
       .catch((e) => {
@@ -267,22 +268,26 @@ class ResModal extends Component {
     getPanelSkills(panelId)
       .then((res) => {
         const { SkillFields } = this.state;
-        SkillFields.fields[2].data = res.success ? res.data : [];
+        SkillFields[3].data = res.success ? res.data : [];
 
         if (editRex) {
           // repopulate the fields to edit them to resolve multiple api calling might be do this on every Modal Compenent
-          const skillIndex = SkillFields.fields[2].data.findIndex(
+          const skillIndex = SkillFields[3].data.findIndex(
             (skill) => skill.value === editRex.panelSkillId
           );
-          SkillFields.fields[3].data = SkillFields.fields[2].data
-            ? SkillFields.fields[2].data[skillIndex].levels
+          SkillFields[6].data = SkillFields[3].data
+            ? SkillFields[3].data[skillIndex].levels
             : [];
           const obj = {
             panelSkillId: editRex.panelSkillId,
             panelSkillStandardLevelId: editRex.panelSkillStandardLevelId,
             billableHours: editRex.billableHours,
+            title: editRex.title,
+            endDate: editRex.endDate ? moment(editRex.endDate) : null,
+            startDate: editRex.startDate ? moment(editRex.startDate) : null,
+
           };
-          this.resourceRef.current.refs.resource_form.setFieldsValue({ obj });
+          this.formRef.current.setFieldsValue({ obj });
         }
 
         this.setState({ SkillFields });
@@ -292,13 +297,7 @@ class ResModal extends Component {
       });
   };
 
-  submit = () => {
-    //submit button click
-    this.resourceRef.current &&
-      this.resourceRef.current.refs.resource_form.submit();
-  };
-
-  ResourceCall = (vake) => {
+  onFinish = (vake) => {
     // this will work after I get the Object from the form
     const { editRex, skillId } = this.props;
     if (editRex) {
@@ -318,8 +317,8 @@ class ResModal extends Component {
 
   addSkill = (data) => {
     this.setState({ loading: true });
-    const { leadId, callBack } = this.props;
-    addLeadSkill(leadId, data).then((res) => {
+    const { leadId, callBack, crud } = this.props;
+    addLeadSkill(crud, data, leadId).then((res) => {
       if (res.success) {
         callBack(res.data);
       }
@@ -328,8 +327,8 @@ class ResModal extends Component {
 
   addResourse = (data) => {
     this.setState({ loading: true });
-    const { callBack, leadId, skillId } = this.props;
-    addLeadSkillResource(leadId, skillId, data).then((res) => {
+    const { callBack, leadId, skillId, crud } = this.props;
+    addLeadSkillResource(crud, skillId, data).then((res) => {
       if (res.success) {
         callBack(res.data);
       }
@@ -338,9 +337,10 @@ class ResModal extends Component {
 
   editSkill = (data) => {
     this.setState({ loading: true });
-    const { editRex, leadId, callBack } = this.props;
+    const { editRex, leadId, callBack, crud } = this.props;
     data.id = editRex.id;
-    editLeadSkill(leadId, editRex.id, data).then((res) => {
+    console.log(data);
+    editLeadSkill(crud, editRex.id, data).then((res) => {
       if (res.success) {
         callBack(res.data);
       }
@@ -349,9 +349,10 @@ class ResModal extends Component {
 
   editResource = (data) => {
     this.setState({ loading: true });
-    const { editRex, leadId, skillId, callBack } = this.props;
+    const { editRex, callBack, leadId, skillId, crud } = this.props;
     data.id = editRex;
-    editLeadSkillResource(leadId, skillId, editRex.id, data).then((res) => {
+    console.log(data);
+    editLeadSkillResource(crud, skillId, editRex.id, data).then((res) => {
       if (res.success) {
         callBack(res.data);
       }
@@ -363,23 +364,26 @@ class ResModal extends Component {
     const { ResourceFields, SkillFields, loading } = this.state;
     return (
       <Modal
-        title={editRex ? "Edit opportunity" : "Add Resource"}
+        title={skillId ? ((editRex) ?"Edit Resource" : "Add Resource") : ((editRex) ?"Edit Position" : "Add Position") }
         maskClosable={false}
         centered
         visible={visible}
-        onOk={() => {
-          this.submit();
-        }}
-        okButtonProps={{ disabled: loading }}
+        okButtonProps={{ disabled: loading, htmlType: 'submit', form: 'my-form' }}
         okText={loading ? <LoadingOutlined /> : "Save"}
         onCancel={close}
         width={750}
       >
-        <Form
-          ref={this.resourceRef}
-          Callback={this.ResourceCall}
-          FormFields={skillId ? ResourceFields : SkillFields}
-        />
+         <Form 
+            id={'my-form'}
+            ref={this.formRef}
+            onFinish={this.onFinish}
+            scrollToFirstError={true}
+            size="small"
+            layout="inline"
+            initialValues={skillId&& { obj:{effortRate: 100}}}
+        >
+        <FormItems FormFields={skillId ? ResourceFields : SkillFields} />
+        </Form>
       </Modal>
     );
   }

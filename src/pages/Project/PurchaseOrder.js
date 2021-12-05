@@ -14,7 +14,7 @@ const { Item } = Descriptions;
 class PurchaseOrder extends Component {
     constructor(props) {
         super(props);
-        const { id } = props.match.params
+        const { proId } = props.match.params
         this.columns = [
             {
                 title: "Issue Date",
@@ -82,8 +82,8 @@ class PurchaseOrder extends Component {
     }
 
     componentDidMount = ()=>{
-        const { id } = this.props.match.params
-        this.fetchAll(id)
+        const { proId } = this.props.match.params
+        this.fetchAll(proId)
     }
 
     fetchAll = (id) =>{

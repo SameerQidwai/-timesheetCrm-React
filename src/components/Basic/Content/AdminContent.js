@@ -31,7 +31,8 @@ import ProjectInfo from "../../../pages/Project/ProjectInfo";
 import ProjectResources from "../../../pages/Project/Resources";
 import ResourceHistory from "../../../pages/Project/ResourceHistory";
 import PurchaseOrder from "../../../pages/Project/PurchaseOrder";
-import Milestone from "../../..//pages/Project/Milestone";
+
+import Milestone from "../../../pages/Milestones/Milestone";
 
 import Calender from "../../Calender/Calender";
 
@@ -175,12 +176,18 @@ const pageLinks = [
     },
     {
         component: OpportunityInfo,
-        link: "/opportunity/:id/info",
+        link: "/opportunities/:proId/info",
+        key: "OPPORTUNITIES"
+    },
+    {
+        component: Milestone,
+        link: "/opportunities/:proId/milestones",
         key: "OPPORTUNITIES"
     },
     {
         component: OpportunityResources,
-        link: "/opportunity/:id/resources",
+        link: "/opportunities/:proId/milestones/:mileId/resources",
+        // link: "/opportunities/:id/resources",
         key: "OPPORTUNITIES"
     },
     {
@@ -190,17 +197,23 @@ const pageLinks = [
     },
     {
         component: ProjectInfo,
-        link: "/projects/:id/info",
+        link: "/projects/:proId/info",
         key: "PROJECTS"
     },
     {
         component: PurchaseOrder,
-        link: "/projects/:id/purchase-order",
+        link: "/projects/:proId/purchase-order",
+        key: "PROJECTS"
+    },
+    {
+        component: Milestone,
+        link: "/projects/:proId/milestones",
         key: "PROJECTS"
     },
     {
         component: ProjectResources,
-        link: "/projects/:id/resources",
+        link: "/projects/:proId/milestones/:mileId/resources",
+        // link: "/projects/:id/resources",
         key: "PROJECTS"
     },
     {
@@ -209,13 +222,13 @@ const pageLinks = [
         key: "PROJECTS"
     },
     {
-        component: Milestone,
-        link: "/projects/:id/milestones",
-        key: "PROJECTS"
-    },
-    {
         component: TimeSheetContact,
         link: "/time-sheet",
+        key: "TIMESHEETS"
+    },
+    {
+        component: TimeSheetProject,
+        link: "/time-sheet-approval",
         key: "TIMESHEETS"
     },
     {

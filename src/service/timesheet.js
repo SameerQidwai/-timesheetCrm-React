@@ -6,7 +6,6 @@ import { Api, headers, jwtExpired, setToken } from "./constant";
 const url = `${Api}/timesheets/`;
 
 export const getList = (keys) => {
-    console.log({headers:headers()})
     return axios
         .get(url + `${keys.startDate}&${keys.endDate}&${keys.userId}`, {headers:headers()})
         .then((res) => {
@@ -19,8 +18,9 @@ export const getList = (keys) => {
         .catch((err) => {
             return {
                 error: "Please login again!",
-                success: false,
+                success: true,
                 message: err.message,
+                data: [],
             };
         });
 };
@@ -96,16 +96,15 @@ export const deleteTime = (entryId ) => {
         });
 };
 
-export const reviewTimeSheet = (keys, stage) => {
+export const reviewTimeSheet = (keys, stage, data) => {
     messageAlert.loading({ content: 'Loading...', key: 1 })
     return axios
-        .post(url + `${keys.startDate}&${keys.endDate}&${keys.userId}/projectEntries/${keys.pEntryId}/${stage}`, {}, {headers:headers()})
+        .post(url + `${keys.startDate}&${keys.endDate}&${keys.userId}/milestoneEntries${stage}`, data, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
             messageAlert.success({ content: message, key: 1})
             if (success) setToken(res.headers && res.headers.authorization)
-            console.log({success, data});
             return {success, data};
         })
         .catch((err) => {
@@ -139,17 +138,24 @@ export const editLabel = (data) => {
         });
 };
 
-export const addProjectNote = (id, data) => {
+export const addMilestoneTimesheetNote = (id, data) => {
     messageAlert.loading({ content: 'Loading...', key: id })
     return axios
-        .patch(url + `projectEntries/${id}`, data, {headers:headers()})
+        .patch(url + `milestoneEntries/${id}`, data, {headers:headers()})
         .then((res) => {
             const { success, message, data } = res.data;
             jwtExpired(message)
             messageAlert.success({ content: message, key: id})
-            if (success) setToken(res.headers && res.headers.authorization)
+            if (success) {
+                let obj = {
+                    notes: data.notes,
+                    attachment: data.attachment
+                }
+                setToken(res.headers && res.headers.authorization)
+                return {success, data};
+            }
+            return {success};
             
-            return {success, data};
         })
         .catch((err) => {
             messageAlert.error({ content: err.message, key: id})
@@ -187,21 +193,20 @@ export const getPdf = (entryId) => {
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
-            console.log(data);
             if (success) {
                 setToken(res.headers && res.headers.authorization)
-                let projectInfo = {
+                let milestoneInfo = {
                     company: data.company,
                     employee: data.employee,
                     period: data.period,
-                    project:  data.project.name,
-                    client: data.project.client,
-                    contact: data.project.contact,
-                    totalHours: parseFloat(data.project.totalHours).toFixed( 2 ),
-                    invoicedDays:  parseFloat(data.project.invoicedDays).toFixed( 2 )
+                    project:  data.milestone.name,
+                    client: data.milestone.client,
+                    contact: data.milestone.contact,
+                    totalHours: parseFloat(data.milestone.totalHours).toFixed( 2 ),
+                    invoicedDays:  parseFloat(data.milestone.invoicedDays).toFixed( 2 )
                 }
-                let entries = data.project.entries
-                return { success, data, projectInfo, entries}
+                let entries = data.milestone.entries
+                return { success, data, milestoneInfo, entries}
             }
             
             return { success, data };
@@ -215,3 +220,47 @@ export const getPdf = (entryId) => {
         });
 };
 
+export const getMilestones = () => {
+    return axios
+        .get(`${url}milestones`, { headers: headers() })
+        .then((res) => {
+            const { success, data } = res.data;
+            if (success) {
+                setToken(res.headers && res.headers.authorization)
+            }
+            return { success: success, data: data };
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                success: false,
+                message: err.message,
+            };
+        });
+};
+
+export const getUsersTimesheet = (keys) => {
+    return axios
+        .get(`${url}milestone` +`/${keys.startDate}&${keys.endDate}&${keys.mileId}`, { headers: headers() })
+        .then((res) => {
+            const { success, data } = res.data;
+            let newData = []
+            if (success) {
+                    data.timesheets.forEach(el => {
+                        let obj = {...el, ...el.milestones[0]}
+                        delete obj.milestones
+                        newData.push(obj)
+                    });      
+                setToken(res.headers && res.headers.authorization)
+            }
+            console.log(newData);
+            return { success: success, data: newData };
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                success: false,
+                message: err.message,
+            };
+        });
+};

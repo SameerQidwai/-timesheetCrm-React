@@ -239,9 +239,7 @@ class Comments extends Component {
                 datetime={
                     <>
                         <Tooltip
-                            title={moment(item.createdAt).format(
-                                "YYYY-MM-DD HH:mm:ss"
-                            )}
+                            title={moment(item.createdAt).format( "YYYY-MM-DD HH:mm:ss" )}
                         >
                             <span>{moment(item.createdAt).fromNow()}</span>
                         </Tooltip>

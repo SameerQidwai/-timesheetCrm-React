@@ -1,0 +1,14 @@
+
+button.ant-btn.success{
+    background-color: #4caf50;
+    color: #fff 
+}
+
+button.ant-btn.success[disabled], .ant-btn[disabled]:hover, .ant-btn[disabled]:focus, .ant-btn[disabled]:active {
+    color: rgba(0, 0, 0, 0.25);
+    background: #f5f5f5;
+        background-color: rgb(245, 245, 245);
+    border-color: #d9d9d9;
+    text-shadow: none;
+    box-shadow: none;
+}

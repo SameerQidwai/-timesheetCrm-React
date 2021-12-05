@@ -70,7 +70,7 @@ class Skills extends Component {
                             <Menu.Item 
                                 disabled={this.state&& !this.state.permissions['READ']}
                             >
-                                <Link to={{ pathname: `/opportunity/${record.id}/info`}} className="nav-link">
+                                <Link to={{ pathname: `/opportunities/${record.id}/info`}} className="nav-link">
                                     View
                                 </Link>
                             </Menu.Item >

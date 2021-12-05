@@ -14,7 +14,8 @@ import InfoModal from "./Modals/InfoModal";
 import { getRecord, delList, workIsLost } from "../../service/opportunities";
 
 import moment from "moment"
-import { formatCurrency, localStore } from "../../service/constant";
+import { formatCurrency, localStore, O_STATUS } from "../../service/constant";
+import LostModal from "./Modals/LostModal";
 
 const { Item } = Descriptions;
 const { TabPane } = Tabs;
@@ -22,8 +23,15 @@ const { TabPane } = Tabs;
 class OpportunityInfo extends Component {
     constructor() {
         super();
+        this.status = [ //status of the oportunity 
+            {title: "Won", msg: "Opportunity Won!?" , api: 'won'},
+            {title: "Lost", msg: "Opportunity Lost!?" , api: 'Lost', key: 'L'},
+            {title: "Not Bid", msg: "Not Bid On Opportunity!?" , api: 'NotBid', key: 'NB'},
+            {title: "Did Not Proceed", msg: "Did Not Proceed?", api: 'NotProceed', key: 'DNP'},
+        ]
         this.state = {
             infoModal: false,
+            lostModal: false,
             leadId: false,
             data: { },
             basic: {},
@@ -34,8 +42,8 @@ class OpportunityInfo extends Component {
         };
     }
     componentDidMount = ()=>{
-        const { id } = this.props.match.params
-        this.getRecord(id)
+        const { proId } = this.props.match.params
+        this.getRecord(proId)
     }
 
     getRecord = (id) =>{
@@ -48,6 +56,7 @@ class OpportunityInfo extends Component {
                     billing: res.billing,
                     leadId: id,
                     infoModal: false,
+                    lostModal: false,
                     renderTabs: true,
                     moveToProject: false,
                     permissions: OPPORTUNITIES
@@ -57,7 +66,7 @@ class OpportunityInfo extends Component {
     }
 
     closeModal = () => {
-        this.setState({ infoModal: false, moveToProject: false, });
+        this.setState({ infoModal: false, moveToProject: false, lostModal: false});
     };
 
     handleDelete = (id) => {
@@ -78,7 +87,7 @@ class OpportunityInfo extends Component {
     };
 
     render() {
-        const { data, infoModal, leadId, billing, renderTabs, moveToProject, permissions, basic } = this.state;
+        const { data, infoModal,lostModal, leadId, billing, renderTabs, moveToProject, permissions, basic } = this.state;
         const DescTitle = (
             <Row justify="space-between">
                 <Col>Opportunity Basic Information</Col>
@@ -86,47 +95,52 @@ class OpportunityInfo extends Component {
                     <Dropdown
                         overlay={
                             <Menu>
-                                <Menu.Item 
+                                {this.status.map(el => <Menu.Item 
+                                    key={el.title}
                                     disabled={!permissions['UPDATE']}
                                 >
                                     <Popconfirm 
-                                        title="Opportunity is Done!?" 
+                                        title={el.msg} 
                                         onConfirm={() => {
-                                            this.setState({ infoModal: true, moveToProject: true});
+                                            if (el.title === "Won"){
+                                                this.setState({ infoModal: true, moveToProject: true});
+                                            }else{
+                                                this.setState({lostModal: true, moveToProject: el})
+                                            }
+                                            //new function (...el)
                                         }}
                                         okText="Yes"
                                         cancelText="No" 
                                     >
-                                        Won
+                                        {el.title}
                                     </Popconfirm>
-                                </Menu.Item>
-                                <Menu.Item 
-                                    disabled={!permissions['UPDATE']}
-                                >
-                                    <Popconfirm 
-                                        title="Opportunity Lost!?" 
-                                        onConfirm={() => { workIsLost(leadId) }}
-                                        okText="Yes"
-                                        cancelText="No"  
-                                    >
-                                        Lost
-                                    </Popconfirm>
-                                </Menu.Item>
+                                </Menu.Item>)}
                                 <Menu.Item onClick={() => { 
                                         this.setState({ infoModal: true});
                                     }} 
                                     disabled={!permissions['UPDATE']}
                                     > Edit </Menu.Item>
+                                {(basic &&basic.type) === 1 ?  //if condition
+                                <Menu.Item> 
+                                    <Link
+                                        to={{ pathname: `/opportunities/${leadId}/milestones` }}
+                                        className="nav-link"
+                                    >
+                                        Milestones
+                                    </Link>
+                                </Menu.Item>
+                                 : //else condition
                                 <Menu.Item>
                                     <Link
                                         to={{
-                                            pathname: `/opportunity/${leadId}/resources`,
+                                            pathname: `/opportunities/${leadId}/milestones/${basic.mileId}/resources`
                                         }}
                                         className="nav-link"
                                     >
                                         Resources
                                     </Link>
                                 </Menu.Item>
+                            }
                             </Menu>
                         }
                     >
@@ -162,17 +176,17 @@ class OpportunityInfo extends Component {
                             'No Organisation'
                         
                     }</Item>
-                    <Item label="Delegate Contact"> {basic ?basic.ContactName: null}</Item>
+                    <Item label="Delegate Contact"> {basic ?basic.ContactName: ''}</Item>
                     <Item label="Start date">{data.startDate ? moment(data.startDate).format('ddd DD MM YYYY'): null} </Item>
                     <Item label="End Date">{data.endDate ? moment(data.endDate).format('ddd DD MM YYYY'): null}</Item>
                     <Item label="Bid Date">{data.bidDate ? moment(data.bidDate).format('ddd DD MM YYYY'): null}</Item>
+                    <Item label="Status">{basic.status ? O_STATUS[basic.status]: ''}</Item>
                     {/* <Item label="Gender">{data.gender}</Item> */}
                 </Descriptions>
                 {renderTabs &&(
                     <Tabs
                         type="card"
                         style={{ marginTop: "50px" }}
-                        // defaultActiveKey="profitloss"   
                     >
                         <TabPane tab="Comments" key="comments">
                             <Comments targetId={leadId} targetType="WOR" />
@@ -199,6 +213,15 @@ class OpportunityInfo extends Component {
                         project={moveToProject}
                         close={this.closeModal}
                         callBack={this.callBack}
+                    />
+                )}
+                {lostModal && (
+                    <LostModal
+                        visible={lostModal}
+                        editLead={leadId}
+                        reason={moveToProject}
+                        close={this.closeModal}
+                        // callBack={this.callBack}
                     />
                 )}
             </>

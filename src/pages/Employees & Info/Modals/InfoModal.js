@@ -24,6 +24,7 @@ class InfoModal extends Component {
             imgLoading: false,
             fileList: [],
             fileIds:null,
+            activeKey: 'basic',
 
             BasicFields: [
                 {
@@ -1028,6 +1029,12 @@ class InfoModal extends Component {
             })
     }
 
+    onFinishFailed = ({ values, errorFields, outOfDate })=>{ // open the tab with error field
+        this.setState({
+            activeKey: errorFields[0].name[0]
+        })
+    }
+
     onRemove = (file) => {
         this.setState({
             fileIds: null,
@@ -1040,7 +1047,7 @@ class InfoModal extends Component {
 
     render() {
         const { editEmp, visible, close } = this.props;
-        const { BasicFields, DetailFields, KinFields, BankFields, BillingFields, TrainFields,  CONTACT, loading, fileList } = this.state;
+        const { BasicFields, DetailFields, KinFields, BankFields, BillingFields, TrainFields,  CONTACT, loading, fileList, activeKey } = this.state;
         return (
             <Modal
                 title={editEmp ? "Edit Employee" : "Add Employee"}
@@ -1056,6 +1063,7 @@ class InfoModal extends Component {
                     id={'my-form'}
                     ref={this.formRef}
                     onFinish={this.onFinish}
+                    onFinishFailed={this.onFinishFailed}
                     scrollToFirstError={true}
                     size="small"
                     layout="inline"
@@ -1094,11 +1102,11 @@ class InfoModal extends Component {
                                 /> 
                             </Form.Item>
                         </Col>
-                    <Tabs type="card">
-                        <TabPane tab="Personal Details" key="details" forceRender className="ant-form ant-form-inline ant-form-small" >
+                    <Tabs type="card" activeKey={activeKey} onChange={(activeKey)=>{this.setState({activeKey})}} >
+                        <TabPane tab="Personal Details" key="basic" forceRender className="ant-form ant-form-inline ant-form-small" >
                             <FormItems FormFields={BasicFields} />
                         </TabPane>
-                        <TabPane tab=" Employment Contracts" key="contract" forceRender className="ant-form ant-form-inline ant-form-small"  >
+                        <TabPane tab=" Employment Contracts" key="billing" forceRender className="ant-form ant-form-inline ant-form-small"  >
                             <FormItems FormFields={BillingFields}  />
                             <p style={{marginTop: 10, marginBottom: 2}}>Signed Contract</p>
                                 <Upload
@@ -1118,7 +1126,7 @@ class InfoModal extends Component {
                                     {/* <Button icon={<UploadOutlined />} style={{marginTop: 10}} loading={imgLoading}>Upload Contract</Button> */}
                                 </Upload>
                         </TabPane>
-                        <TabPane tab="Superannuation" key="superannuation" forceRender className="ant-form ant-form-inline ant-form-small">
+                        <TabPane tab="Superannuation" key="detail" forceRender className="ant-form ant-form-inline ant-form-small">
                             <FormItems FormFields={DetailFields} />
                         </TabPane>
                         <TabPane tab="Next of Kin" key="kin" forceRender className="ant-form ant-form-inline ant-form-small">

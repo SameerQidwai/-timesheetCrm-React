@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { Table, Menu, Dropdown, Button, Popconfirm, Row, Col,Typography, Modal } from 'antd'
+import { Table, Menu, Dropdown, Button, Popconfirm, Row, Col,Typography } from 'antd'
 import { DownOutlined, SettingOutlined, PlusSquareOutlined, FilterOutlined} from '@ant-design/icons'; //Icons
 import { Link } from 'react-router-dom'
 
@@ -75,32 +75,37 @@ class Projects extends Component {
                                 disabled={this.state&& !this.state.permissions['UPDATE']}
                             >Edit</Menu.Item>
                             <Menu.Item >
-                                <Link to={{ pathname: `/projects/${record.id}/info`}} className="nav-link">
-                                    View
-                                </Link>
-                            </Menu.Item >
-                            <Menu.Item >
                                 <Link to={{ pathname: `/projects/${record.id}/purchase-order`}} className="nav-link">
                                     Purchase Order
                                 </Link>
                             </Menu.Item >
-                             <Menu.Item>
-                                <Link
-                                    to={{ pathname: `/projects/${record.id}/resources`, }}
-                                    className="nav-link"
-                                >
-                                    Resources
+                            {record.type === 1 ?  //if condition
+                                <Menu.Item> 
+                                    <Link
+                                        to={{ pathname: `/projects/${record.id}/milestones`, }}
+                                        className="nav-link"
+                                    >
+                                        Milestones
+                                    </Link>
+                                </Menu.Item>
+                                 : //else condition
+                                <Menu.Item>
+                                    <Link
+                                        to={{
+                                            pathname: `/projects/${record.id}/milestones/${record.id}/resources`,
+                                            // pathname: `/projects/${record.id}/resources`,
+                                        }}
+                                        className="nav-link"
+                                    >
+                                        Resources
+                                    </Link>
+                                </Menu.Item>
+                            }
+                            <Menu.Item >
+                                <Link to={{ pathname: `/projects/${record.id}/info`}} className="nav-link">
+                                    View
                                 </Link>
-                            </Menu.Item>
-                             {/* <Menu.Item> Milestone button commented
-                                <Link
-                                    to={{ pathname: `/projects/${record.id}/milestones`, }}
-                                    className="nav-link"
-                                >
-                                    Milestones
-                                </Link>
-                            </Menu.Item> */}
-                            
+                            </Menu.Item >
                         </Menu>
                     }>
                         <Button size='small'>

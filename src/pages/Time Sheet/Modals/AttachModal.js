@@ -6,7 +6,7 @@ import TextArea from 'antd/lib/input/TextArea';
 import Dragger from 'antd/lib/upload/Dragger';
 import { Api, localStore } from "../../../service/constant";
 import { addFiles, getAttachments } from "../../../service/Attachment-Apis";
-import { addProjectNote } from "../../../service/timesheet";
+import { addMilestoneTimesheetNote } from "../../../service/timesheet";
 class AttachModal extends Component{
     constructor(){
         super()
@@ -19,9 +19,8 @@ class AttachModal extends Component{
     }
     
     componentDidMount=()=>{
-        console.log(`object`, this.props)
-        const { projectEntryId } = this.props.timeObj
-        this.getRecord('PEN', projectEntryId)
+        const { milestoneEntryId } = this.props.timeObj
+        this.getRecord('PEN', milestoneEntryId)
     }
 
     getRecord = (targetType, targetId) =>{
@@ -82,13 +81,14 @@ class AttachModal extends Component{
     }
 
     addNotes = () =>{
+        this.setState({loading: true})
         const { timeObj, callBack } = this.props
-        const { notes, fileIds } = this.state
+        const { notes, fileIds, fileList } = this.state
         const obj = {
             note: notes,
-            attachments: fileIds
+            attachments: fileList.length>0 ? [fileList[0].fileId]: []
         }
-        addProjectNote(timeObj.projectEntryId, obj).then(res=>{
+        addMilestoneTimesheetNote(timeObj.milestoneEntryId, obj).then(res=>{
             if(res.success){
                 callBack(res.data)
             }
@@ -117,7 +117,8 @@ class AttachModal extends Component{
                         <div>
                             <Dragger 
                                 name= "file"
-                                multiple={true}
+                                multiple={false}
+                                maxCount={1}
                                 listType= "picture"
                                 className="upload-list-inline"
                                 disabled={disabled}
@@ -125,10 +126,12 @@ class AttachModal extends Component{
                                 onRemove= {this.onRemove}
                                 fileList={fileList}
                             >
-                                <p className="ant-upload-drag-icon">
-                                    <InboxOutlined />
-                                </p>
-                                <p className="ant-upload-text">Click or drag file to this area to upload</p>
+                                {fileList.length < 1 &&<>
+                                    <p className="ant-upload-drag-icon">
+                                        <InboxOutlined />
+                                    </p>
+                                    <p className="ant-upload-text">Click or drag file to this area to upload</p>
+                                </>}
                             </Dragger>
                         </div>
                     </Col>

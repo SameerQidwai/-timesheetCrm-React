@@ -104,9 +104,9 @@ class TimeModal extends Component {
         // this will work after  getting the Object from level form
         const {editTime, timeObj } = this.props
         const { obj } = vake;
-        obj.projectEntryId = timeObj.projectEntryId;
+        obj.milestoneEntryId = timeObj.milestoneEntryId;
         obj.entryId = timeObj.entryId;
-        obj.projectId = timeObj.projectId
+        obj.milestoneId = timeObj.milestoneId
         obj.date = moment(timeObj.col, 'D/M').format('DD-MM-YYYY')
         obj.startTime = obj.startTime.format('HH:mm')
         obj.endTime = obj.endTime.format('HH:mm')
@@ -125,7 +125,7 @@ class TimeModal extends Component {
         const query = {userId: user, startDate: startDate.format('DD-MM-YYYY'), endDate: endDate.endOf("month").format('DD-MM-YYYY')}
         addTime(query, data).then(res=>{
             if(res.success){
-                callBack(res.data);
+                callBack(res.data, true);
             }
         });
     };
@@ -135,16 +135,16 @@ class TimeModal extends Component {
         const { callBack } = this.props;
         editTime(entryId, data).then(res=>{
             if(res.success){
-                callBack(res.data);
+                callBack(res.data, false);
             }
         });
     }
 
-    handleDelete = () =>{
+    handleDelete =  () =>{
         const { editTime, callBack} = this.props
         deleteTime(editTime.entryId).then (res =>{
             if(res.success){
-                callBack({})
+                callBack({}, true)
             }
         }) 
     }

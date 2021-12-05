@@ -1,3 +1,55 @@
+update
+    work can't surpass dates milestone dates
+        milestone can't surpass dates resouces dates
+            resource can't surpass dats of timesheet entry
+
+Tagrget
+    Timesheet:
+        timesheet will come with respect start date and end date ???
+        Row Height Same ----X----
+        
+        Refresh on notes save
+        background after Submitt
+
+        Export Timesheet error
+
+
+    Opportunity
+        Stage and linked_Project .....
+        status .....
+
+    Allocation
+        Title in resouces position ....
+        Dates in resource position ......
+
+    milestone
+        Default milestone
+        Description should not be required field
+    
+    Opportunity and Project
+        Status all view
+        if I change delegate_contact_person on won.. gives error 500
+        I am not getting MilstoneId if type is (2 or Tm)
+    
+    Project 
+        Not getting Contact person Id
+
+    Approval View
+        can be under process ???
+
+New Things
+    Resource Allocation
+        Suggestion of buycost and sale cost
+
+
+Changes not allowing
+    Oppotunity and Project changes panel should not be allowed if resource added
+    Resource
+        Skill won't be change when allocation is added
+
+
+
+
 shortcut 
     class component
         rce

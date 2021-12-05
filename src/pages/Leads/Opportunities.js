@@ -9,7 +9,7 @@ import { getList, delList } from "../../service/opportunities";
 
 import '../styles/table.css'
 import moment from "moment";
-import { formatCurrency, localStore } from '../../service/constant';
+import { formatCurrency, localStore, O_STAGE, O_STATUS } from '../../service/constant';
 const { Title } = Typography
 
 class Opportunities extends Component {
@@ -33,7 +33,7 @@ class Opportunities extends Component {
             {
                 title: 'Organisation Name',
                 dataIndex: 'organization',
-                width: 300,
+                width: 200,
                 key: 'organization',
                 render: (record) =>{
                     return record && <Link 
@@ -68,10 +68,16 @@ class Opportunities extends Component {
                 render: (record) =>(record && moment(record).format('ddd DD MM yyyy'))
             },
             {
+                title: 'Stage',
+                dataIndex: 'stage',
+                key: 'stage',
+                render: (record) =>  O_STAGE[record]
+            },
+            {
                 title: 'Status',
                 dataIndex: 'status',
                 key: 'status',
-                render: (record) =>(record )
+                render: (record) => O_STATUS[record] 
             },
             {
                 title: 'Action',
@@ -92,18 +98,30 @@ class Opportunities extends Component {
                                 })}
                                 disabled={this.state&& !this.state.permissions['UPDATE']}
                             >Edit</Menu.Item>
-                            <Menu.Item>
-                                <Link
-                                    to={{
-                                        pathname: `/opportunity/${record.id}/resources`,
-                                    }}
-                                    className="nav-link"
-                                >
-                                    Resources
-                                </Link>
-                            </Menu.Item>
+                            {record.type === 1 ?  //if condition
+                                <Menu.Item> 
+                                    <Link
+                                        to={{ pathname: `/opportunities/${record.id}/milestones`, }}
+                                        className="nav-link"
+                                    >
+                                        Milestones
+                                    </Link>
+                                </Menu.Item>
+                                 : //else condition
+                                <Menu.Item>
+                                    <Link
+                                        to={{
+                                            // pathname: `/opportunities/${record.id}/milestones/${record.id}/resources`,
+                                            pathname: `/opportunities/${record.id}/milestones/${record.milestones[0] && record.milestones[0].id}/resources`,
+                                        }}
+                                        className="nav-link"
+                                    >
+                                        Resources
+                                    </Link>
+                                </Menu.Item>
+                            }
                             <Menu.Item >
-                                <Link to={{ pathname: `/opportunity/${record.id}/info`}} className="nav-link">
+                                <Link to={{ pathname: `/opportunities/${record.id}/info`}} className="nav-link">
                                     View
                                 </Link>
                             </Menu.Item >
@@ -127,6 +145,13 @@ class Opportunities extends Component {
 
     componentDidMount = () =>{
         this.getList()
+    }
+    resRoute = ()=>{
+        console.log(this.props.match.url)
+        let splitted = this.props.match.url
+        splitted = splitted.split('/', 2)
+        console.log(splitted);
+        return splitted[1]
     }
 
     getList = () =>{
