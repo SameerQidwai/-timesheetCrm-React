@@ -9,7 +9,7 @@ import { getList, delList } from "../../service/opportunities";
 
 import '../styles/table.css'
 import moment from "moment";
-import { formatCurrency, localStore, O_STAGE, O_STATUS } from '../../service/constant';
+import { formatCurrency, localStore, O_STAGE, O_STATUS, O_TYPE } from '../../service/constant';
 const { Title } = Typography
 
 class Opportunities extends Component {
@@ -80,6 +80,12 @@ class Opportunities extends Component {
                 render: (record) => O_STATUS[record] 
             },
             {
+                title: 'Type',
+                dataIndex: 'type',
+                key: 'type',
+                render: (record) => O_TYPE[record] 
+            },
+            {
                 title: 'Action',
                 key: 'action',
                 align: 'right',
@@ -116,7 +122,7 @@ class Opportunities extends Component {
                                         }}
                                         className="nav-link"
                                     >
-                                        Resources
+                                        Postions
                                     </Link>
                                 </Menu.Item>
                             }

@@ -213,6 +213,10 @@ class ResModal extends Component {
           size: "small",
           type: "DatePicker",
           fieldStyle: { width: "100%" },
+          rangeMin: (current)=>{
+              const { obj } = this.formRef.current.getFieldValue();
+              return   obj.endDate && current > obj.endDate
+          }
         },
         {
           object: "obj",
@@ -222,6 +226,10 @@ class ResModal extends Component {
           rules: [{ required: true, message: "End Date is Required" }],
           type: "DatePicker",
           fieldStyle: { width: "100%" },
+          rangeMax: (current)=>{
+              const { obj } = this.formRef.current.getFieldValue();
+              return  obj.startDate && current < obj.startDate
+          }
         },
       ],
     };
@@ -380,7 +388,7 @@ class ResModal extends Component {
             scrollToFirstError={true}
             size="small"
             layout="inline"
-            initialValues={skillId&& { obj:{effortRate: 100}}}
+            initialValues={skillId? { obj:{effortRate: 100}}: { obj:{startDate: null}}}
         >
         <FormItems FormFields={skillId ? ResourceFields : SkillFields} />
         </Form>

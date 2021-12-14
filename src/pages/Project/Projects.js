@@ -9,7 +9,7 @@ import { getList, delList } from "../../service/projects";
 
 import '../styles/table.css'
 import moment from "moment";
-import { formatCurrency, localStore } from '../../service/constant';
+import { formatCurrency, localStore, O_TYPE } from '../../service/constant';
 const { Title } = Typography
 
 class Projects extends Component {
@@ -56,6 +56,12 @@ class Projects extends Component {
                 render: (record) =>(record &&  moment(record).format('ddd DD MM yyyy'))
             },
             {
+                title: 'Type',
+                dataIndex: 'type',
+                key: 'type',
+                render: (record) => O_TYPE[record] 
+            },
+            {
                 title: 'Action',
                 key: 'action',
                 align: 'right',
@@ -97,7 +103,7 @@ class Projects extends Component {
                                         }}
                                         className="nav-link"
                                     >
-                                        Resources
+                                        Postions
                                     </Link>
                                 </Menu.Item>
                             }

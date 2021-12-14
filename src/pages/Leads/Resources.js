@@ -264,7 +264,15 @@ function NestedTable(props) {
     const [visible, setVisible ] = useState(false)
     const [editRex, setEditRex] = useState(false)
     // const [selectedRowKeys, setSelectedRowKeys] = useState(props.data ? [props.data.findIndex(el => el.isMarkedAsSelected === true)]: [])
-    const [selectedRowKeys, setSelectedRowKeys] = useState((props.data && props.data.findIndex(el => el.isMarkedAsSelected === true)!==-1)? [props.data[props.data.findIndex(el => el.isMarkedAsSelected === true)].id]: [])
+    const [selectedRowKeys, setSelectedRowKeys] = useState(
+        (props.data && 
+            props.data.length ===1 ?
+                props.data[0].id
+            : props.data.findIndex(el => el.isMarkedAsSelected === true)!==-1) ? 
+                [props.data[props.data.findIndex(el => el.isMarkedAsSelected === true)].id]
+            :
+                []
+        )
     const columns = [
         { 
             

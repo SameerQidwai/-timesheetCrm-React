@@ -343,6 +343,10 @@ class InfoModal extends Component {
           type: "DatePicker",
           rules: [{ required: true, message: "Start Date is Required" }],
           fieldStyle: { width: "100%" },
+          rangeMin: (current)=>{
+              const { dates } = this.formRef.current.getFieldValue();
+              return  dates.endDate && current > dates.endDate
+          }
         },
         {
           object: "dates",
@@ -351,6 +355,10 @@ class InfoModal extends Component {
           size: "small",
           type: "DatePicker",
           fieldStyle: { width: "100%" },
+          rangeMax: (current)=>{
+              const { dates } = this.formRef.current.getFieldValue();
+              return  dates.startDate && current < dates.startDate
+          }
         },
   
         {
