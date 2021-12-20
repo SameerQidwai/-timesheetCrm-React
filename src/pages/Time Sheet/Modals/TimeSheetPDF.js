@@ -136,7 +136,7 @@ const TimeSheetPDF = (props) => {
                                 style={{fontSize: '10px'}}
                             />
                             <Descriptions column={3} bordered  style={{marginBottom:20, marginTop:35}}>
-                                <Item label="Hours in Day "> 8.00 </Item>
+                                <Item label="Hours in Day ">{details.milestone && parseFloat(details.milestone.hoursPerDay).toFixed( 2 ) }</Item>
                                 <Item label="Total Hours "> {details.milestone && parseFloat(details.milestone.totalHours).toFixed( 2 )} </Item>
                                 <Item label="Invoiced Days ">{details.milestone && parseFloat(details.milestone.invoicedDays).toFixed( 2 )}</Item>
                             </Descriptions>

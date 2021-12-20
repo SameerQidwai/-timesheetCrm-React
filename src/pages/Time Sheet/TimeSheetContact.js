@@ -642,6 +642,7 @@ class TimeSheetContact extends Component {
                 <Table
                     sticky
                     size="small"
+                    style={{maxHeight: 'fit-content'}}
                     className="timeSheet-table"
                     rowSelection={{ //multiple select commented
                         onChange:(selectedRowKeys, selectedRows)=>{this.milestoneSelect(selectedRowKeys, selectedRows )},

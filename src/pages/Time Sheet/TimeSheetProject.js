@@ -1,15 +1,15 @@
 import React, { Component } from "react";
 import { Row, Col, Table, Button, Select, Typography, Modal, DatePicker, Space, Tag, Tooltip} from "antd";
-import { DownloadOutlined, SaveOutlined, ExclamationCircleOutlined, CheckCircleOutlined } from "@ant-design/icons"; //Icons
+import { DownloadOutlined, SaveOutlined, ExclamationCircleOutlined, PaperClipOutlined, CheckCircleOutlined } from "@ant-design/icons"; //Icons
 import moment from "moment";
 import AttachModal from "./Modals/AttachModal";
 import {  getList, reviewTimeSheet, getMilestones, getUsersTimesheet  } from "../../service/timesheet"
-import { localStore } from "../../service/constant";
+import { Api, localStore } from "../../service/constant";
 
 import "../styles/table.css";
 import TimeSheetPDF from "./Modals/TimeSheetPDF";
 
-const { Title } = Typography;
+const { Title, Link } = Typography;
 //inTable insert
 
 class TimeSheetProject extends Component {
@@ -49,11 +49,28 @@ class TimeSheetProject extends Component {
                                 <Row justify="space-between">
                                     <Col> {`${value}`} </Col>
                                      <Col style={{marginLeft: 'auto'}}> 
-                                        <DownloadOutlined onClick={()=>{this.exporPDF([record.projectEntryId], index)}}/>
+                                        <DownloadOutlined onClick={()=>{this.exporPDF([record.milestoneEntryId], index)}}/>
                                         <SaveOutlined onClick={()=>{this.openAttachModal(record, index)} } style={{color: '#1890ff', marginLeft:10}}/>
                                     </Col>
                                 </Row>
                             </Col>
+                            {record.attachment &&<Col span={24} >
+                                    <Link
+                                        href={`${Api}/files/${record.attachment.uid}`}
+                                        download={record.attachment.name}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <PaperClipOutlined /> {" "}
+                                            <Tooltip 
+                                                placement="top" 
+                                                title={record.attachment.name}
+                                                destroyTooltipOnHide
+                                            >
+                                                {record.attachment.name.substr(0,27)}
+                                            </Tooltip>
+                                    </Link>
+                                    </Col>}
                             <Col span={4} style={{marginLeft:'auto', marginRight: 20}}>
                                 {record.status === 'SB' &&<Tag color="cyan"> Submitted </Tag>}
                                 {record.status === 'AP' &&<Tag color="green"> Approved </Tag>}
@@ -194,15 +211,28 @@ class TimeSheetProject extends Component {
     };
 
     openAttachModal = (record, index) =>{
-        const timeObj= {
-            projectEntryId: record.projectEntryId,
-            projectId: record.projectId,
-            notes: record.notes,
-            project: record.project,
-            status: record.status,
-            rowIndex: index
+        console.log(record, index);
+        let timeObj = {}
+        if(index <= 0){
+            timeObj = {
+                milestoneEntryId: [record.milestoneEntryId],
+                milestoneId: record.milestoneId,
+                notes: record.notes,
+                milestone: record.milestone,
+                status: record.status,
+                rowIndex: index
+            }
+        }else{
+            const {keys, timesheet} = this.state.sTimesheet
+            timeObj = {
+                milestoneEntryId: keys,
+                milestoneId: timesheet[0].milestoneId,
+                notes: timesheet[0].notes,
+                milestone: timesheet[0].milestone,
+                status: false,
+            }
         }
-        this.setState({ timeObj, isAttach: true })
+        this.setState({ timeObj, isAttach: true})
     }
 
     exporPDF = (entryIds) =>{
@@ -352,11 +382,12 @@ class TimeSheetProject extends Component {
                 </Row>
                 <Table
                     size="small"
+                    style={{maxHeight: 'fit-content'}}
                     className="timeSheet-table"
                     rowSelection={{ //multiple select commented
                         onChange:(selectedRowKeys, selectedRows)=>{this.milestoneSelect(selectedRowKeys, selectedRows )},
                         getCheckboxProps: (record) => ({
-                            // disabled: record.timesheetStatus === 'SV' || record.timesheetStatus === 'AP', // Column configuration not to be checked
+                            disabled: record.timesheetStatus === 'SV' || record.timesheetStatus === 'AP', // Column configuration not to be checked
                           })
                     }}
                     scroll={{
@@ -375,12 +406,14 @@ class TimeSheetProject extends Component {
                     <Col>
                         <Button 
                             disabled={ sTimesheet.keys.length<1}
+                            onClick={()=>this.openAttachModal()}
                         >
-                            Upload
+                            Import
                         </Button>
                     </Col>
                     <Col>
                         <Button 
+                            type="primary" 
                             disabled={ sTimesheet.keys.length<1}
                             onClick={()=>{this.exporPDF(sTimesheet.keys)}}
                         >
