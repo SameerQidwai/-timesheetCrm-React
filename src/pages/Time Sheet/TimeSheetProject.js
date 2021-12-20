@@ -7,6 +7,7 @@ import {  getList, reviewTimeSheet, getMilestones, getUsersTimesheet  } from "..
 import { Api, localStore } from "../../service/constant";
 
 import "../styles/table.css";
+import "../styles/button.css";
 import TimeSheetPDF from "./Modals/TimeSheetPDF";
 
 const { Title, Link } = Typography;
@@ -254,13 +255,16 @@ class TimeSheetProject extends Component {
                     let value = 0
                     data.map((rowData, index) =>{
                         if(key !== 'user' ){
+                            console.log(key);
                             if(key === 'totalHours'){
                                 value += data[index]['totalHours'] ?? 0
+                                console.log( value);
                             }else{
                                 value += (rowData[key] ? rowData[key]['actualHours'] :0)
                             }
                         }
                     })
+                    console.log(value)
                     return key === 'user' ? <Table.Summary.Cell index={kIndex+1} key={kIndex+1}>
                         Total Work In A day  
                     </Table.Summary.Cell > 
@@ -393,6 +397,7 @@ class TimeSheetProject extends Component {
                     </Col>
                 </Row>
                 <Table
+                    sticky
                     size="small"
                     style={{maxHeight: 'fit-content'}}
                     className="timeSheet-table"
@@ -409,7 +414,7 @@ class TimeSheetProject extends Component {
                     bordered
                     pagination={false}
                     rowKey={data=>data.milestoneEntryId}
-                    rowClassName={(record) => this.highlightRow(record)}
+                    // rowClassName={(record) => this.highlightRow(record)}
                     columns={columns}
                     dataSource={[...data]}
                     summary={ columnData => this.summaryFooter(columnData)}
