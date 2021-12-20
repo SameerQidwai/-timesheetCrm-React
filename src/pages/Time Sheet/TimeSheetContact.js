@@ -551,7 +551,7 @@ class TimeSheetContact extends Component {
         const { loading, data, isVisible, proVisible, columns, editTime, timeObj, sheetDates, milestones, sMilestone, isAttach, isDownload, eData, USERS, sUser, loginId, sTMilestones, permissions } = this.state
         // delete button disable condition
         const canDelete = sTMilestones.keys.length<1 && (sUser !== loginId  ||  permissions && permissions['DELETE'] && permissions['DELETE']['ANY'])
-        
+        const {sWeek, startDate } = this.state.sheetDates
         return (
             <>
                 <Row >
@@ -621,11 +621,17 @@ class TimeSheetContact extends Component {
                 <Row justify="end">
                         <Col>
                             <Button 
+                                disabled={!sWeek.isSameOrAfter(startDate)}
                                 onClick={()=>{
                                     const { sheetDates } = this.state
                                     const { sWeek, startDate } = this.state.sheetDates
                                     let pWeek = moment(sWeek.format())
+                                    console.log(sWeek.format());
                                     pWeek = moment(pWeek.subtract(7, 'days'))
+                                    console.log('pWeek', pWeek.format());
+                                    console.log('startDate', startDate.format());
+                                    console.log('pWeek', pWeek.isSameOrAfter(startDate));
+                                    
                                     if (pWeek.isSameOrAfter(startDate)){
                                         sheetDates.sWeek = pWeek
                                         this.setState({
@@ -670,7 +676,7 @@ class TimeSheetContact extends Component {
                     bordered
                     pagination={false}
                     rowKey={data=>data.milestoneEntryId}
-                    rowClassName={(record) => this.highlightRow(record)}
+                    // rowClassName={(record) => this.highlightRow(record)}
                     columns={columns}
                     dataSource={[...data]}
                     summary={ columnData => this.summaryFooter(columnData)}
@@ -747,11 +753,11 @@ class TimeSheetContact extends Component {
                             this.setState({ proVisible: false, data: [...data], sMilestone:{} });
                         }}
                     >
-                        <Row justify="space-around">
-                            <Col span="12">
+                        <Row justify="center">
+                            <Col span={16}>
                                 <Select
                                     placeholder="Select Project"
-                                    style={{ width: 200 }}
+                                    style={{ width: '100%' }}
                                     options={milestones}
                                     value={sMilestone.value}           
                                     optionFilterProp={["label", "value"]}
