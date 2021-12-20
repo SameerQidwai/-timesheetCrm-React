@@ -334,6 +334,10 @@ class InfoModal extends Component {
                         },
                     ],
                     itemStyle: { marginBottom: 1 },
+                    rangeMin: (current)=>{
+                        const { billing } = this.formRef.current.getFieldValue();
+                        return  billing.endDate && current < billing.endDate
+                    }
                 },
                 {
                     object: "billing",
@@ -349,6 +353,10 @@ class InfoModal extends Component {
                         },
                     ],
                     itemStyle: { marginBottom: 1 },
+                    rangeMax: (current)=>{
+                        const { billing } = this.formRef.current.getFieldValue();
+                        return  billing.startDate && current < billing.startDate
+                    }
                 },
             
                 {
@@ -678,6 +686,7 @@ class InfoModal extends Component {
                 scrollToFirstError={true}
                 size="small"
                 layout="inline"
+                initialValues={{billing: {startDate: null}}}
             > 
             {/* <Row style={{marginBottom:"1em"}} justify="space-between"> */}
                 {!editCont &&<Col span={7} style={{marginBottom: '1em'}}>

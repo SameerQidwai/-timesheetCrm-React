@@ -291,6 +291,7 @@ class Forms extends Component {
                     <DatePicker
                         picker={mode}
                         showTime={showTime}
+                        disabledDate={min ?? max}
                         size={size}
                         style={style}
                         onBlur={onBlur}

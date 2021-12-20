@@ -583,6 +583,10 @@ class InfoModal extends Component {
                     fieldStyle: { width: "100%" },
                     rules: [ { required: true, message: "Start Date is Required", }, ],
                     itemStyle: { marginBottom: 10 },
+                    rangeMin: (current)=>{
+                        const { billing } = this.formRef.current.getFieldValue();
+                        return  billing.endDate && current > billing.endDate
+                    }
                 },
                 {
                     Placeholder: "Contract End Date",
@@ -609,6 +613,11 @@ class InfoModal extends Component {
                     type: "DatePicker",
                     fieldStyle: { width: "100%" },
                     itemStyle: { marginBottom: 1 },
+                    rangeMax: (current)=>{
+                        const { billing } = this.formRef.current.getFieldValue();
+                        return  billing.startDate && current < billing.startDate
+                        // return  null
+                    }
                 },
                 {
                     object: "billing",
@@ -1067,6 +1076,7 @@ class InfoModal extends Component {
                     scrollToFirstError={true}
                     size="small"
                     layout="inline"
+                    initialValues={{billing: {startDate: null}}}
                 >
                         {!editEmp && <Col span={8} style={{marginBottom: 10}}>
                             <Form.Item

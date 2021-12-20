@@ -81,16 +81,19 @@ const TimeSheetPDF = (props) => {
         content: () => componentRef.current,
         documentTitle: `timesheet`,
         removeAfterPrint: true,
+        // onAfterPrint: props.close()
     })
 
     const getProjectEntry = () =>{
-        
-        getPdf(props.milestoneEntryId).then(res=>{
+        console.log(props);
+        const data = {milestoneEntryIds: props.milestoneEntryId}
+        console.log(data);
+        getPdf(data).then(res=>{
             if(res.success){
-                setData(res.entries)
-                setDetail(res.milestoneInfo)
+                setData(res.data)
+                // setDetail(res.milestoneInfo)
                 handlePrint()
-                // props.close()
+                props.close()
             }
         })
         return true
@@ -99,58 +102,64 @@ const TimeSheetPDF = (props) => {
     return (
         // style={{display: 'none'}}
         <div style={{display: 'none'}}>
+        {/* <div> */}
+            {/* {console.log('I was here')} */}
             {/* {handlePrint()} */}
             {/* style={{marginLeft:10,marginRight:10}} */}
             <div ref={componentRef}  style={{margin:'0mm 10mm' }}>
-                <div style={{textAlign:'center'}}><p style={{color: '#ff0000'}}>Sensitive: Personal (after first entry)</p></div>
-                <Row justify="space-between" align="middle" >
-                    <Col ><Typography.Title > Timesheet </Typography.Title></Col>
-                    <Col style={{width: '60%', textAlign: 'right'}}><img src={'/onelm.png'} width="35%" /></Col>
-                </Row>
-                <Row>
-                    {details &&<Descriptions column={1} bordered size={"small"} style={{marginBottom:35}} className="describe">
-                        <Item label="Company" > {details.company}</Item>
-                        <Item label="Employee" >{details.employee}</Item>
-                        <Item label="Client"> {details.client}</Item>
-                        <Item label="Project" >{details.project}</Item>
-                        <Item label="Client Contact" >{details.contact}</Item>
-                        <Item label="Timesheet Period " >{details.period}</Item>
-                    </Descriptions>}
-                </Row>
-                <Table 
-                    rowClassName={(record) => (record.day==='Sunday' ||record.day==='Saturday')? 'weekendClass' :'weekClass'}
-                    className='cellSize'
-                    rowKey={(data) => data.id}
-                    bordered 
-                    size="small"
-                    pagination={false} 
-                    columns={column} 
-                    dataSource={data}
-                    style={{fontSize: '10px'}}
-                />
-                <Descriptions column={3} bordered  style={{marginBottom:20, marginTop:35}}>
-                    <Item label="Hours in Day "> 8.00 </Item>
-                    <Item label="Total Hours ">{details.totalHours} </Item>
-                    <Item label="Invoiced Days ">{details.invoicedDays}</Item>
-                </Descriptions>
-                <Row justify="space-between">
-                    <Col span={11}>Employee Declaration</Col>
-                    <Col span={11}>Manager Approval</Col>
-                </Row>
-                <Row justify="space-between" >
-                    {/* <Col span={8} style={{border: 'solid black 1px', minHeight:35}}></Col> */}
-                    <Col span={11} style={{backgroundColor:'#deeaf6', minHeight:35}}></Col>
-                    <Col span={11} style={{backgroundColor:'#deeaf6', minHeight:35}}></Col>
-                </Row>
-                <Row justify="space-between">
-                    <Col span={6}>Signature</Col>
-                    <Col span={5}>Date</Col>
-                    <Col span={2}></Col>
-                    <Col span={6}>Signature</Col>
-                    <Col span={5}>Date</Col>
-                </Row>
-                <div style={{textAlign:'center', marginTop: 60 }}><p style={{color: '#ff0000'}}>Sensitive: Personal (after first entry)</p></div>
-            </div>
+                {data.map((details, index) => {
+                    return <div>
+                        <div style={{textAlign:'center'}}><p style={{color: '#ff0000'}}>Sensitive: Personal (after first entry)</p></div>
+                            <Row justify="space-between" align="middle" >
+                                <Col ><Typography.Title > Timesheet </Typography.Title></Col>
+                                <Col style={{width: '60%', textAlign: 'right'}}><img src={'/onelm.png'} width="35%" /></Col>
+                            </Row>
+                            <Row>
+                                {details &&<Descriptions column={1} bordered size={"small"} style={{marginBottom:35}} className="describe">
+                                    <Item label="Company" > {details.company}</Item>
+                                    <Item label="Employee" >{details.employee}</Item>
+                                    <Item label="Client"> {details.milestone  && details.milestone.client}</Item>
+                                    <Item label="Project" >{details.milestone  && details.milestone.name}</Item>
+                                    <Item label="Client Contact" >{details.milestone  && details.milestone.contact}</Item>
+                                    <Item label="Timesheet Period " >{details.period}</Item>
+                                </Descriptions>}
+                            </Row>
+                            <Table 
+                                rowClassName={(record) => (record.day==='Sunday' ||record.day==='Saturday')? 'weekendClass' :'weekClass'}
+                                className='cellSize'
+                                rowKey={(data) => data.id}
+                                bordered 
+                                size="small"
+                                pagination={false} 
+                                columns={column} 
+                                dataSource={details.milestone && details.milestone.entries}
+                                style={{fontSize: '10px'}}
+                            />
+                            <Descriptions column={3} bordered  style={{marginBottom:20, marginTop:35}}>
+                                <Item label="Hours in Day ">{details.milestone && parseFloat(details.milestone.hoursPerDay).toFixed( 2 ) }</Item>
+                                <Item label="Total Hours "> {details.milestone && parseFloat(details.milestone.totalHours).toFixed( 2 )} </Item>
+                                <Item label="Invoiced Days ">{details.milestone && parseFloat(details.milestone.invoicedDays).toFixed( 2 )}</Item>
+                            </Descriptions>
+                            <Row justify="space-between">
+                                <Col span={11}>Employee Declaration</Col>
+                                <Col span={11}>Manager Approval</Col>
+                            </Row>
+                            <Row justify="space-between" >
+                                {/* <Col span={8} style={{border: 'solid black 1px', minHeight:35}}></Col> */}
+                                <Col span={11} style={{backgroundColor:'#deeaf6', minHeight:35}}></Col>
+                                <Col span={11} style={{backgroundColor:'#deeaf6', minHeight:35}}></Col>
+                            </Row>
+                            <Row justify="space-between">
+                                <Col span={6}>Signature</Col>
+                                <Col span={5}>Date</Col>
+                                <Col span={2}></Col>
+                                <Col span={6}>Signature</Col>
+                                <Col span={5}>Date</Col>
+                            </Row>
+                            <div style={{textAlign:'center', marginTop: 60 }}><p style={{color: '#ff0000'}}>Sensitive: Personal (after first entry)</p></div>
+                    </div>
+                })}
+                </div>
         </div>
     )
 }

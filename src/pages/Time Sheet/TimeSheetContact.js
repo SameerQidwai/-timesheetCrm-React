@@ -68,13 +68,13 @@ class TimeSheetContact extends Component {
                                         >
                                             <DownloadOutlined onClick={()=>{this.exporPDF(record.milestoneEntryId, index)}}/>
                                         </Tooltip>
-                                        <Tooltip 
+                                        {/* <Tooltip Commit
                                             placement="top"
                                             title="Upload"
                                             destroyTooltipOnHide
                                         >
                                             <SaveOutlined onClick={()=>{this.openAttachModal(record, index)} } style={{color: '#1890ff', marginLeft:10}}/>
-                                        </Tooltip>
+                                        </Tooltip> */}
                                     </Col>
                                     {record.attachment &&<Col span={24} >
                                     <Link
@@ -251,7 +251,9 @@ class TimeSheetContact extends Component {
                 return {
                   ...col,
                     render: (value, record, rowIndex) =>{
-                        const clickable = (record.status === 'SV' || record.status === 'RJ' || !record.status) && sUser === loginId
+                        //checking delete permission   // only admin and loggedin user will see the menu icon
+                        const canDelete = permissions && permissions['DELETE'] && permissions['DELETE']['ANY'] || sUser === loginId
+                        const clickable = ((record.status === 'SV' || record.status === 'RJ' || !record.status)) && canDelete
                         if(value){ // I didn't put the conditon for column previos or next month because this column won't have any value for now
                             let breakHours = moment.duration(value["breakHours"],'hours')
                             breakHours = breakHours && moment(moment().hours(breakHours.hours()).minutes(breakHours.minutes())).format("HH:mm")
@@ -265,7 +267,8 @@ class TimeSheetContact extends Component {
                                 placement="bottomCenter" 
                                 overlay={
                                     <Menu onClick={this.handleMenuClick}>
-                                        <Menu.Item 
+                                        <Menu.Item
+                                            disabled={sUser !== loginId}
                                             key="Edit" 
                                             onClick={()=>{     //data //index    //col key      //Col heading to show on Modal
                                                 this.getRecord(record,rowIndex, col.dataIndex, col.heading); // call function to save data in
@@ -432,31 +435,32 @@ class TimeSheetContact extends Component {
         this.setState({ timeObj, isAttach: true })
     }
 
-    attachCallBack = (res) =>{
-        const {data, timeObj } = this.state
-        const {rowIndex} = timeObj
-        data[rowIndex].notes = res.notes
-        data[rowIndex].attachment = res.attachment
-        this.setState({data, isAttach: false, editTime: false, timeObj: false})
-    }
+    // attachCallBack = (res) =>{ Commit
+    //     const {data, timeObj } = this.state
+    //     const {rowIndex} = timeObj
+    //     data[rowIndex].notes = res.notes
+    //     data[rowIndex].attachment = res.attachment
+    //     this.setState({data, isAttach: false, editTime: false, timeObj: false})
+    // }
 
     exporPDF = (entryId) =>{
+        const keys = entryId ? [entryId] :this.state.sTimesheet.keys
         this.setState({
-            eData: entryId,
+            eData: keys,
             isDownload: true
         })   
     }
     
-    notesCallBack = (response) =>{
-        const {timeObj, data} = this.state
-        data[timeObj.rowIndex].notes = response.notes
-        this.setState({
-            data: data,
-            timeObj: false,
-            isAttach: false,
-            editTime: false
-        })
-    }
+    // notesCallBack = (response) =>{ COmmit
+    //     const {timeObj, data} = this.state
+    //     data[timeObj.rowIndex].notes = response.notes
+    //     this.setState({
+    //         data: data,
+    //         timeObj: false,
+    //         isAttach: false,
+    //         editTime: false
+    //     })
+    // }
     
     summaryFooter = (data) =>{
         const { columns } = this.state
@@ -544,7 +548,10 @@ class TimeSheetContact extends Component {
     }
 
     render() {
-        const { loading, data, isVisible, proVisible, columns, editTime, timeObj, sheetDates, milestones, sMilestone, isAttach, isDownload, eData, USERS, sUser, loginId, sTMilestones } = this.state
+        const { loading, data, isVisible, proVisible, columns, editTime, timeObj, sheetDates, milestones, sMilestone, isAttach, isDownload, eData, USERS, sUser, loginId, sTMilestones, permissions } = this.state
+        // delete button disable condition
+        const canDelete = sTMilestones.keys.length<1 && (sUser !== loginId  ||  permissions && permissions['DELETE'] && permissions['DELETE']['ANY'])
+        
         return (
             <>
                 <Row >
@@ -648,11 +655,12 @@ class TimeSheetContact extends Component {
                 <Table
                     sticky
                     size="small"
+                    style={{maxHeight: 'fit-content'}}
                     className="timeSheet-table"
                     rowSelection={{ //multiple select commented
                         onChange:(selectedRowKeys, selectedRows)=>{this.milestoneSelect(selectedRowKeys, selectedRows )},
                         getCheckboxProps: (record) => ({
-                            disabled: record.status === 'SB', // Column configuration not to be checked
+                            disabled: record.status === 'SB' || record.status === 'AP' , // Column configuration not to be checked
                           })
                     }}
                     scroll={{
@@ -678,11 +686,10 @@ class TimeSheetContact extends Component {
                         </Button>
                     </Col>
                     <Col>
-                    
                         <Button 
                             type="primary" 
                             danger
-                            disabled={ sUser !== loginId || sTMilestones.keys.length<1}
+                            disabled={canDelete}
                             onClick={()=>this.multiAction('Delete')}
                         > 
                             Delete
@@ -700,14 +707,14 @@ class TimeSheetContact extends Component {
                         callBack={this.callBack}
                     />
                 )}
-                {isAttach && (
+                {/* {isAttach && ( Commit
                     <AttachModal
                         visible={isAttach}
                         timeObj={timeObj}
                         close={()=>this.setState({isAttach: false, editTime: false, timeObj: false})}
                         callBack={this.attachCallBack}
                     />
-                )}
+                )} */}
                 {isDownload && (
                     <TimeSheetPDF
                         milestoneEntryId={eData}

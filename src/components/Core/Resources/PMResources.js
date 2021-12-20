@@ -65,7 +65,7 @@ class PMResources extends Component {
                                             }}
                                             className="nav-link"
                                         >
-                                            Resources
+                                            Positions
                                         </Link>
                                     </Menu.Item>
                                 </Menu>

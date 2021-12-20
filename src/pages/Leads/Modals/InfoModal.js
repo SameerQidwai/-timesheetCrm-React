@@ -476,6 +476,10 @@ class InfoModal extends Component {
                     size: "small",
                     type: "DatePicker",
                     fieldStyle: { width: "100%" },
+                    rangeMin: (current)=>{
+                        const { dates } = this.formRef.current.getFieldValue();
+                        return  dates.endDate  && current > dates.endDate 
+                    }
                     // rules: [
                     //     {
                     //         required: true,
@@ -490,6 +494,10 @@ class InfoModal extends Component {
                     size: "small",
                     type: "DatePicker",
                     fieldStyle: { width: "100%" },
+                    rangeMax: (current)=>{
+                        const { dates } = this.formRef.current.getFieldValue();
+                        return  dates.startDate && current < dates.startDate
+                    }
                     // rules: [
                     //     {
                     //         required: true,

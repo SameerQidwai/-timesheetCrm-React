@@ -66,6 +66,10 @@ class LeaseModal extends Component {
                         //     },
                         // ],
                         itemStyle: { marginBottom: 10 },
+                        rangeMin: (current)=>{
+                        const { obj } = this.leaseRef.current.refs.lease_form.getFieldValue();
+                        return  obj.endDate && current > obj.endDate
+                    }
                     },
                     {
                         Placeholder: "Lease End Date",
@@ -98,6 +102,10 @@ class LeaseModal extends Component {
                         //     },
                         // ],
                         itemStyle: { marginBottom: 10 },
+                        rangeMax: (current)=>{
+                        const { obj } = this.leaseRef.current.refs.lease_form.getFieldValue();
+                        return  obj.startDate && current < obj.startDate
+                    }
                     },
                     {
                         object: "obj", //this is field 3
@@ -224,11 +232,11 @@ class LeaseModal extends Component {
                         labelAlign: "left",
                         fieldStyle: {width: '100%'},
                         itemStyle: { marginBottom: 10 },
-                        onChange: function total() {
+                        onChange: ()=> {
                             const { obj } =  this.leaseRef.current.refs.lease_form.getFieldsValue();
                             obj.totalDeduction = (obj.preTaxDeductionAmount ? obj.preTaxDeductionAmount : 0) + (obj.postTaxDeductionAmount ? obj.postTaxDeductionAmount : 0)
                             this.leaseRef.current.refs.lease_form.setFieldsValue({ obj: obj, });                            
-                        }.bind(this)
+                        }
                     },
                     {
                         object: "obj", //this is field 3
@@ -241,11 +249,11 @@ class LeaseModal extends Component {
                         labelAlign: "left",
                         fieldStyle: {width: '100%'},
                         itemStyle: { marginBottom: 10 },
-                        onChange: function total() {
+                        onChange: ()=> {
                             const { obj } =  this.leaseRef.current.refs.lease_form.getFieldsValue();
                             obj.totalDeduction = (obj.preTaxDeductionAmount ? obj.preTaxDeductionAmount : 0) + (obj.postTaxDeductionAmount ? obj.postTaxDeductionAmount : 0)
                             this.leaseRef.current.refs.lease_form.setFieldsValue({ obj: obj, });
-                        }.bind(this)
+                        }
                     },
                     {
                         Placeholder: "Total Deduction",
