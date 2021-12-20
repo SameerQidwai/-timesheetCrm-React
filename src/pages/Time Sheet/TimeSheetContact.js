@@ -251,7 +251,9 @@ class TimeSheetContact extends Component {
                 return {
                   ...col,
                     render: (value, record, rowIndex) =>{
-                        const clickable = (record.status === 'SV' || record.status === 'RJ' || !record.status) && sUser === loginId
+                        //checking delete permission   // only admin and loggedin user will see the menu icon
+                        const canDelete = permissions && permissions['DELETE'] && permissions['DELETE']['ANY'] || sUser === loginId
+                        const clickable = ((record.status === 'SV' || record.status === 'RJ' || !record.status)) && canDelete
                         if(value){ // I didn't put the conditon for column previos or next month because this column won't have any value for now
                             let breakHours = moment.duration(value["breakHours"],'hours')
                             breakHours = breakHours && moment(moment().hours(breakHours.hours()).minutes(breakHours.minutes())).format("HH:mm")
@@ -265,7 +267,8 @@ class TimeSheetContact extends Component {
                                 placement="bottomCenter" 
                                 overlay={
                                     <Menu onClick={this.handleMenuClick}>
-                                        <Menu.Item 
+                                        <Menu.Item
+                                            disabled={sUser !== loginId}
                                             key="Edit" 
                                             onClick={()=>{     //data //index    //col key      //Col heading to show on Modal
                                                 this.getRecord(record,rowIndex, col.dataIndex, col.heading); // call function to save data in
@@ -531,7 +534,10 @@ class TimeSheetContact extends Component {
     }
 
     render() {
-        const { loading, data, isVisible, proVisible, columns, editTime, timeObj, sheetDates, milestones, sMilestone, isAttach, isDownload, eData, USERS, sUser, loginId, sTMilestones } = this.state
+        const { loading, data, isVisible, proVisible, columns, editTime, timeObj, sheetDates, milestones, sMilestone, isAttach, isDownload, eData, USERS, sUser, loginId, sTMilestones, permissions } = this.state
+        // delete button disable condition
+        const canDelete = sTMilestones.keys.length<1 && (sUser !== loginId  ||  permissions && permissions['DELETE'] && permissions['DELETE']['ANY'])
+        
         return (
             <>
                 <Row >
@@ -639,7 +645,7 @@ class TimeSheetContact extends Component {
                     rowSelection={{ //multiple select commented
                         onChange:(selectedRowKeys, selectedRows)=>{this.milestoneSelect(selectedRowKeys, selectedRows )},
                         getCheckboxProps: (record) => ({
-                            disabled: record.status === 'SB', // Column configuration not to be checked
+                            disabled: record.status === 'SB' || record.status === 'AP' , // Column configuration not to be checked
                           })
                     }}
                     scroll={{
@@ -665,11 +671,10 @@ class TimeSheetContact extends Component {
                         </Button>
                     </Col>
                     <Col>
-                    
                         <Button 
                             type="primary" 
                             danger
-                            disabled={ sUser !== loginId || sTMilestones.keys.length<1}
+                            disabled={canDelete}
                             onClick={()=>this.multiAction('Delete')}
                         > 
                             Delete

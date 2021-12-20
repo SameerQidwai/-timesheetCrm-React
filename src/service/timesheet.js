@@ -189,7 +189,7 @@ export const getUsers = () => {
 
 export const getPdf = (entryId) => {
     return axios
-        .get(`${url}print/${entryId}`, { headers: headers() })
+        .post(`${url}print/milestoneEntries` ,{ headers: headers() })
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)

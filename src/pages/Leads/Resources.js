@@ -265,11 +265,11 @@ function NestedTable(props) {
     const [editRex, setEditRex] = useState(false)
     // const [selectedRowKeys, setSelectedRowKeys] = useState(props.data ? [props.data.findIndex(el => el.isMarkedAsSelected === true)]: [])
     const [selectedRowKeys, setSelectedRowKeys] = useState(
-        (props.data && 
-            props.data.length ===1 ?
-                props.data[0].id
-            : props.data.findIndex(el => el.isMarkedAsSelected === true)!==-1) ? 
-                [props.data[props.data.findIndex(el => el.isMarkedAsSelected === true)].id]
+        (props.data && //checking data
+            props.data.length ===1 ? //checking if data length is one
+                props.data[0].id // this must be selected
+            : props.data.findIndex(el => el.isMarkedAsSelected === true)!==-1) ? // otherwise check if anyone is selected
+                [props.data[props.data.findIndex(el => el.isMarkedAsSelected === true)].id] // get the selected resource
             :
                 []
         )

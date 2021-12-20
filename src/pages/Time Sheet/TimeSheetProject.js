@@ -30,9 +30,9 @@ class TimeSheetProject extends Component {
             permissions: {},
             canApprove: false,
             milestones: [], // users Time Sheet
-            sTimesheet: { // selected timesheet 
-                timesheet: [], //  Timesheet Object 
-                keys: [] // TimeSheet keys
+            sTimesheet: { // selected timesheets 
+                timesheet: [], //  Timesheets Object 
+                keys: [] // TimeSheets key
             },
 
             columns : [
@@ -153,7 +153,7 @@ class TimeSheetProject extends Component {
                     if(value){
                         let breakHours = moment.duration(value["breakHours"],'hours')
                         breakHours = breakHours && moment(moment().hours(breakHours.hours()).minutes(breakHours.minutes())).format("HH:mm")
-                    {return <Tooltip title={`Note: ${value['notes'] ?? ''}`}><Row style={{ border: "1px solid" }}>
+                    {return <Tooltip title={value['notes'] && `Note: ${value['notes'] }`} ><Row style={{ border: "1px solid" }}>
                             <Col span={24}>Start Time: {value["startTime"]&& moment(value["startTime"], ["HH:mm"]).format("h:mm A")}</Col>
                             <Col span={24}>End Time: {value["endTime"] && moment(value["endTime"], ["HH:mm"]).format("h:mm A")}</Col>
                             <Col span={24}>Break: {breakHours && breakHours}</Col>
@@ -166,7 +166,6 @@ class TimeSheetProject extends Component {
         }
         this.setState({columns})
     }
-
   
     reviewTimeSheet = (id, stage, index, key) => {
         const { startDate, endDate } = this.state.sheetDates
@@ -207,8 +206,9 @@ class TimeSheetProject extends Component {
     }
 
     exporPDF = (entryId) =>{
+        const {keys} = this.state.sTimesheet 
         this.setState({
-            eData: entryId,
+            eData: keys,
             isDownload: true
         })   
     }
@@ -382,6 +382,7 @@ class TimeSheetProject extends Component {
                     <Col>
                         <Button 
                             disabled={ sTimesheet.keys.length<1}
+                            onClick={this.exporPDF}
                         >
                             Export
                         </Button>
