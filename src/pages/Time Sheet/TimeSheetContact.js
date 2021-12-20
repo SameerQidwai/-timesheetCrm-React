@@ -442,8 +442,9 @@ class TimeSheetContact extends Component {
     }
 
     exporPDF = (entryId) =>{
+        const keys = entryId ? [entryId] :this.state.sTimesheet.keys
         this.setState({
-            eData: entryId,
+            eData: keys,
             isDownload: true
         })   
     }

@@ -49,7 +49,7 @@ class TimeSheetProject extends Component {
                                 <Row justify="space-between">
                                     <Col> {`${value}`} </Col>
                                      <Col style={{marginLeft: 'auto'}}> 
-                                        <DownloadOutlined onClick={()=>{this.exporPDF(record.projectEntryId, index)}}/>
+                                        <DownloadOutlined onClick={()=>{this.exporPDF([record.projectEntryId], index)}}/>
                                         <SaveOutlined onClick={()=>{this.openAttachModal(record, index)} } style={{color: '#1890ff', marginLeft:10}}/>
                                     </Col>
                                 </Row>
@@ -205,10 +205,10 @@ class TimeSheetProject extends Component {
         this.setState({ timeObj, isAttach: true })
     }
 
-    exporPDF = (entryId) =>{
-        const {keys} = this.state.sTimesheet 
+    exporPDF = (entryIds) =>{
+        console.log(entryIds);
         this.setState({
-            eData: keys,
+            eData:  entryIds,
             isDownload: true
         })   
     }
@@ -356,7 +356,7 @@ class TimeSheetProject extends Component {
                     rowSelection={{ //multiple select commented
                         onChange:(selectedRowKeys, selectedRows)=>{this.milestoneSelect(selectedRowKeys, selectedRows )},
                         getCheckboxProps: (record) => ({
-                            disabled: record.timesheetStatus === 'SV' || record.timesheetStatus === 'AP', // Column configuration not to be checked
+                            // disabled: record.timesheetStatus === 'SV' || record.timesheetStatus === 'AP', // Column configuration not to be checked
                           })
                     }}
                     scroll={{
@@ -382,7 +382,7 @@ class TimeSheetProject extends Component {
                     <Col>
                         <Button 
                             disabled={ sTimesheet.keys.length<1}
-                            onClick={this.exporPDF}
+                            onClick={()=>{this.exporPDF(sTimesheet.keys)}}
                         >
                             Export
                         </Button>
@@ -416,7 +416,7 @@ class TimeSheetProject extends Component {
                 )}
                 {isDownload && (
                     <TimeSheetPDF
-                        projectEntryId={eData}
+                        milestoneEntryId={eData}
                         close={()=>this.setState({isDownload: false})}
                     />
                 )}

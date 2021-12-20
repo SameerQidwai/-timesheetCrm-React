@@ -187,26 +187,26 @@ export const getUsers = () => {
         });
 };
 
-export const getPdf = (entryId) => {
+export const getPdf = (entryIds) => {
     return axios
-        .post(`${url}print/milestoneEntries` ,{ headers: headers() })
+        .post(`${url}print/milestoneEntries`,entryIds,{ headers: headers() })
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
             if (success) {
                 setToken(res.headers && res.headers.authorization)
-                let milestoneInfo = {
-                    company: data.company,
-                    employee: data.employee,
-                    period: data.period,
-                    project:  data.milestone.name,
-                    client: data.milestone.client,
-                    contact: data.milestone.contact,
-                    totalHours: parseFloat(data.milestone.totalHours).toFixed( 2 ),
-                    invoicedDays:  parseFloat(data.milestone.invoicedDays).toFixed( 2 )
-                }
-                let entries = data.milestone.entries
-                return { success, data, milestoneInfo, entries}
+                // let milestoneInfo = {
+                //     company: data.company,
+                //     employee: data.employee,
+                //     period: data.period,
+                //     project:  data.milestone.name,
+                //     client: data.milestone.client,
+                //     contact: data.milestone.contact,
+                //     totalHours: parseFloat(data.milestone.totalHours).toFixed( 2 ),
+                //     invoicedDays:  parseFloat(data.milestone.invoicedDays).toFixed( 2 )
+                // }
+                // let entries = data.milestone.entries
+                return { success, data}
             }
             
             return { success, data };
