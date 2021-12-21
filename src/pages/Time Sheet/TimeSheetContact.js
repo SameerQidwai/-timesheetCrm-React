@@ -28,7 +28,7 @@ class TimeSheetContact extends Component {
                 startDate: moment().startOf("month"), 
                 endDate: moment().endOf("month"),
                 cMonth: moment(),
-                sWeek: moment(),
+                sWeek: moment()
             },
             timeObj: false,
             editTime: false,
@@ -142,6 +142,10 @@ class TimeSheetContact extends Component {
     }
 
     componentDidMount = () => {
+        const { sWeek, startDate } = this.state.sheetDates
+        console.log('%cpWeek','color:red;', sWeek.format());
+        console.log( '%cstartDate','color:blue;', startDate.format());
+        console.log('%cpWeek','color:green;', sWeek.isSameOrAfter(startDate))
         this.fetchAll()
         // this.columns()
     };
@@ -551,7 +555,7 @@ class TimeSheetContact extends Component {
         const { loading, data, isVisible, proVisible, columns, editTime, timeObj, sheetDates, milestones, sMilestone, isAttach, isDownload, eData, USERS, sUser, loginId, sTMilestones, permissions } = this.state
         // delete button disable condition
         const canDelete = sTMilestones.keys.length<1 && (sUser !== loginId  ||  permissions && permissions['DELETE'] && permissions['DELETE']['ANY'])
-        const {sWeek, startDate } = this.state.sheetDates
+        const {sWeek, startDate, endDate } = this.state.sheetDates
         return (
             <>
                 <Row >
@@ -564,8 +568,9 @@ class TimeSheetContact extends Component {
                             placeholder="Select User"
                             options={USERS}
                             value={sUser}           
-                            optionFilterProp={["label", "value"]}
                             style={{ width: 200 }}
+                            showSearch
+                            optionFilterProp={["label", "value"]}
                             filterOption={
                                 (input, option) =>{
                                     const label = option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
@@ -590,7 +595,7 @@ class TimeSheetContact extends Component {
                             format="MMM-YYYY"
                             onChange={(value)=>{
                                 this.setState({
-                                    sheetDates : {
+                                    sheetDates : { //set Date here
                                         cMonth: value ?? moment(),
                                         startDate: moment(value ?? moment()).startOf("month"),
                                         sWeek: moment(value ?? moment()).startOf("month"),
@@ -621,36 +626,36 @@ class TimeSheetContact extends Component {
                 <Row justify="end">
                         <Col>
                             <Button 
-                                disabled={!sWeek.isSameOrAfter(startDate)}
+                                disabled={sWeek.isSame(startDate)}
                                 onClick={()=>{
                                     const { sheetDates } = this.state
                                     const { sWeek, startDate } = this.state.sheetDates
                                     let pWeek = moment(sWeek.format())
-                                    console.log(sWeek.format());
                                     pWeek = moment(pWeek.subtract(7, 'days'))
-                                    console.log('pWeek', pWeek.format());
-                                    console.log('startDate', startDate.format());
-                                    console.log('pWeek', pWeek.isSameOrAfter(startDate));
-                                    
-                                    if (pWeek.isSameOrAfter(startDate)){
-                                        sheetDates.sWeek = pWeek
+                                    if(!sWeek.isSame(startDate)){ // will not run hook if sWeek and startDate is same
                                         this.setState({
-                                            sheetDates
+                                            sheetDates:{
+                                                ...sheetDates,  
+                                                sWeek: pWeek.isSameOrAfter(startDate) ? pWeek : moment().startOf("month")
+                                            }          //check if the date is right    //select calcyalte week   //else 1st of month
                                         },()=> this.columns())
                                     }
                                 }}
                             > <LeftOutlined />
                             </Button>
                             <Button 
+                                disabled={sWeek.isSame(endDate)}
                                 onClick={()=>{
                                     const { sheetDates } = this.state
                                     const { sWeek, endDate } = this.state.sheetDates
                                     let nWeek = moment(sWeek.format())
                                     nWeek = moment(nWeek.add(7, 'days'))
-                                    if (nWeek.isSameOrBefore(endDate)){
-                                        sheetDates.sWeek = nWeek
+                                    if(!sWeek.isSame(endDate)){ // will not run the hook if sWeek is same as endDate
                                         this.setState({
-                                            sheetDates
+                                            sheetDates:{
+                                                ...sheetDates,  
+                                                sWeek: nWeek.isSameOrBefore(endDate) ? nWeek : moment().endOf("month")
+                                            }         //check if the date is right    //select calcyalte week   //else 1st of month
                                         },()=> this.columns())
                                     }
                                 }}
@@ -759,7 +764,8 @@ class TimeSheetContact extends Component {
                                     placeholder="Select Project"
                                     style={{ width: '100%' }}
                                     options={milestones}
-                                    value={sMilestone.value}           
+                                    value={sMilestone.value}
+                                    showSearch     
                                     optionFilterProp={["label", "value"]}
                                     filterOption={
                                         (input, option) =>{

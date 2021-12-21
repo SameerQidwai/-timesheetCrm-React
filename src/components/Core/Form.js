@@ -235,18 +235,19 @@ class Forms extends Component {
                         options={data}
                         mode={mode}
                         showArrow
-                        showSearch
                         size={size}
                         allowClear
                         onChange={onChange}
                         onClear={onClear}
                         style={style}
-                        optionFilterProp="label"
+                        showSearch
+                        optionFilterProp={["label", "value"]}
                         filterOption={
-                            (input, option) =>
-                                option.label
-                                    .toLowerCase()
-                                    .indexOf(input.toLowerCase()) >= 0
+                            (input, option) =>{
+                                const label = option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                const value = option.value.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                    return label || value
+                            }
                         }
                         disabled={disabled}
                     />
