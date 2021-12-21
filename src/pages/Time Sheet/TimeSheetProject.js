@@ -255,35 +255,24 @@ class TimeSheetProject extends Component {
                     let value = 0
                     data.map((rowData, index) =>{
                         if(key !== 'user' ){
-                            console.log(key);
                             if(key === 'totalHours'){
                                 value += data[index]['totalHours'] ?? 0
-                                console.log( value);
                             }else{
                                 value += (rowData[key] ? rowData[key]['actualHours'] :0)
                             }
                         }
                     })
-                    console.log(value)
                     return key === 'user' ? <Table.Summary.Cell index={kIndex+1} key={kIndex+1}>
                         Total Work In A day  
                     </Table.Summary.Cell > 
                     : // show total and normal background if the column month is same as selected month or the key is totalHours of the month
-                        (key === 'totalHours') ? 
-                        <Table.Summary.Cell 
-                            index={kIndex+1}
-                            key={kIndex+1}
-                            align="center" 
-                        >
-                            {value && value.toFixed(2)}
-                        </Table.Summary.Cell>
-                        : // show background grey if the column month is NOT same as selected month
-                            <Table.Summary.Cell 
-                                index={kIndex+1} 
-                                key={kIndex+1}
-                                align='center'
-                                className="prevDates-TMcell" 
-                            >0</Table.Summary.Cell>
+                    <Table.Summary.Cell 
+                        index={kIndex+1}
+                        key={kIndex+1}
+                        align="center" 
+                    >
+                        {value && value.toFixed(2)}
+                    </Table.Summary.Cell>
                 })}
         </Table.Summary.Row>)
     }
