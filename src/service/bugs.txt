@@ -1,3 +1,6 @@
+SORTING
+    Only contactperson and Organizaion got sorted
+
 update
     work can't surpass dates milestone dates
         milestone can't surpass dates resouces dates

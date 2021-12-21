@@ -20,12 +20,15 @@ class Organizations extends Component {
                 dataIndex: "id",
                 key: "id",
                 render: (record) => `ORG-00${record}`,
+                sorter: (a, b) => a.id - b.id,
+                defaultSortOrder: 'ascend'
             },
             {
                 title: "Name",
                 dataIndex: "name",
                 key: "name",
                 width: 500,
+                sorter: (a, b) => a.name.localeCompare(b.name),
             },
             {
                 title: "Parent Organisation",
@@ -38,7 +41,8 @@ class Organizations extends Component {
                         className="nav-link"
                     >
                         {record.name}</Link> 
-                }
+                },
+                sorter: (a, b) => a.name.localeCompare(b.name)
             },
             {
                 title: "Action",

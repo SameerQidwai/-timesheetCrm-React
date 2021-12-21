@@ -21,16 +21,20 @@ class Contact extends Component {
                 dataIndex: "id",
                 key: "id",
                 render: (record) => `00${record}`,
+                sorter: (a, b) => a.id - b.id,
+                defaultSortOrder: 'ascend'
             },
             {
                 title: "First Name",
                 dataIndex: "firstName",
                 key: "firstName",
+                sorter: (a, b) => a.firstName.localeCompare(b.firstName),
             },
             {
                 title: "Last Name",
                 dataIndex: "lastName",
                 key: "lastName",
+                sorter: (a, b) => a.lastName.localeCompare(b.lastName),
             },
             {
                 title: "Email",

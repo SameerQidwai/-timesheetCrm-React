@@ -23,6 +23,8 @@ class Contractors extends Component {
                 render: (record) => {
                     return record && record.contactPerson && `Sub-00${ record.contactPerson.id}`
                 },
+                sorter: (a, b) => a.contactPerson.id - b.contactPerson.id,
+                defaultSortOrder: 'ascend'
             },
             {
                 title: "First Name",
