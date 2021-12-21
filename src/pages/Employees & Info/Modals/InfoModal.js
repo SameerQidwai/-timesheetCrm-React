@@ -1086,11 +1086,11 @@ class InfoModal extends Component {
                                     placeholder="Contact Person"
                                     options={CONTACT}
                                     showArrow
-                                    showSearch
                                     size="small"
                                     allowClear
                                     onClear={this.onContact}
                                     onChange={this.onContact}
+                                    showSearch
                                     optionFilterProp="label"
                                     filterOption={
                                         (input, option) =>

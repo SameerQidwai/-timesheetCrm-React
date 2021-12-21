@@ -915,11 +915,11 @@ class InfoModal extends Component {
                             placeholder="Organization"
                             options={ORGS}
                             showArrow
-                            showSearch
                             size="small"
                             allowClear
                             onChange={this.onOrg}
                             onClear={()=>this.onClear(null, null)}
+                            showSearch
                             optionFilterProp="label"
                             filterOption={
                                 (input, option) =>
@@ -936,12 +936,12 @@ class InfoModal extends Component {
                             placeholder="Contact Person"
                             options={CONTACTS}
                             showArrow
-                            showSearch
                             disabled={!sOrg}
                             size="small"
                             allowClear
                             onChange={this.onPerson}
                             onClear={()=>this.onClear(sOrg, null)}
+                            showSearch
                             optionFilterProp="label"
                             filterOption={
                                 (input, option) =>

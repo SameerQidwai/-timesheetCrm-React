@@ -172,12 +172,12 @@ class FormItems extends Component {
                         options={data}
                         mode={mode}
                         showArrow
-                        showSearch
                         size={size}
                         allowClear
                         onChange={onChange}
                         onClear={onClear}
                         style={style}
+                        showSearch
                         optionFilterProp={["label", "value"]}
                         filterOption={
                             (input, option) =>{

@@ -568,8 +568,9 @@ class TimeSheetContact extends Component {
                             placeholder="Select User"
                             options={USERS}
                             value={sUser}           
-                            optionFilterProp={["label", "value"]}
                             style={{ width: 200 }}
+                            showSearch
+                            optionFilterProp={["label", "value"]}
                             filterOption={
                                 (input, option) =>{
                                     const label = option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
@@ -763,7 +764,8 @@ class TimeSheetContact extends Component {
                                     placeholder="Select Project"
                                     style={{ width: '100%' }}
                                     options={milestones}
-                                    value={sMilestone.value}           
+                                    value={sMilestone.value}
+                                    showSearch     
                                     optionFilterProp={["label", "value"]}
                                     filterOption={
                                         (input, option) =>{

@@ -345,6 +345,7 @@ class TimeSheetProject extends Component {
                             size="large"
                             options={milestones}
                             value={sMilestone}           
+                            showSearch
                             optionFilterProp={["label", "value"]}
                             filterOption={
                                 (input, option) =>{
