@@ -148,7 +148,6 @@ class Contractors extends Component {
         this.getList()
     };
 
-
     handleDelete = (code) => {
         const dataSource = [...this.state.data];
         this.setState({
