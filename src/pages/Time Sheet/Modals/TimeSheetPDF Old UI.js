@@ -106,16 +106,16 @@ const TimeSheetPDF = (props) => {
             {/* {console.log('I was here')} */}
             {/* {handlePrint()} */}
             {/* style={{marginLeft:10,marginRight:10}} */}
-            <div ref={componentRef}  style={{margin:'0mm 10mm', size: 'auto'   }}>
+            <div ref={componentRef}  style={{margin:'0mm 10mm' }}>
                 {data.map((details, index) => {
-                    return <div >
-                        {/* <div style={{textAlign:'center'}}><p style={{color: '#ff0000'}}>Sensitive: Personal (after first entry)</p></div> */}
+                    return <div>
+                        <div style={{textAlign:'center'}}><p style={{color: '#ff0000'}}>Sensitive: Personal (after first entry)</p></div>
                             <Row justify="space-between" align="middle" >
                                 <Col ><Typography.Title > Timesheet </Typography.Title></Col>
                                 <Col style={{width: '60%', textAlign: 'right'}}><img src={'/onelm.png'} width="35%" /></Col>
                             </Row>
                             <Row>
-                                {details &&<Descriptions column={2} bordered size={"small"} style={{margin:'35px 0px'}} className="describe">
+                                {details &&<Descriptions column={1} bordered size={"small"} style={{marginBottom:35}} className="describe">
                                     <Item label="Company" > {details.company}</Item>
                                     <Item label="Employee" >{details.employee}</Item>
                                     <Item label="Client"> {details.milestone  && details.milestone.client}</Item>
@@ -135,7 +135,7 @@ const TimeSheetPDF = (props) => {
                                 dataSource={details.milestone && details.milestone.entries}
                                 style={{fontSize: '10px'}}
                             />
-                            <Descriptions column={3} bordered  style={{marginBottom:20, marginTop:35}} labelStyle={{padding: 5}} >
+                            <Descriptions column={3} bordered  style={{marginBottom:20, marginTop:35}}>
                                 <Item label="Hours in Day ">{details.milestone && parseFloat(details.milestone.hoursPerDay).toFixed( 2 ) }</Item>
                                 <Item label="Total Hours "> {details.milestone && parseFloat(details.milestone.totalHours).toFixed( 2 )} </Item>
                                 <Item label="Invoiced Days ">{details.milestone && parseFloat(details.milestone.invoicedDays).toFixed( 2 )}</Item>
@@ -156,7 +156,7 @@ const TimeSheetPDF = (props) => {
                                 <Col span={6}>Signature</Col>
                                 <Col span={5}>Date</Col>
                             </Row>
-                            {/* <div style={{textAlign:'center', marginTop: 60 }}><p style={{color: '#ff0000'}}>Sensitive: Personal (after first entry)</p></div> */}
+                            <div style={{textAlign:'center', marginTop: 60 }}><p style={{color: '#ff0000'}}>Sensitive: Personal (after first entry)</p></div>
                     </div>
                 })}
                 </div>

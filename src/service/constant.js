@@ -1,4 +1,4 @@
-// export const Api = "http://localhost:3301/api/v1";
+export const Api = "http://localhost:3301/api/v1";
 
 // export const Api = "http://onelmcrm.gaamatech.com:8000/api/v1";
 // export const Api = "http://192.168.0.243:3000/api/v1"; // Shahzaib/   
@@ -6,7 +6,7 @@
 // export const Api = "https://fa11-42-201-227-159.ngrok.io/api/v1"; // Shahzaib/ tunnel   
 // export const Api = "http://192.168.0.191:3301/api/v1"; // Me
 
-export const Api = "http://54.91.49.138:8000/api/v1"; //Test 
+// export const Api = "http://54.91.49.138:8000/api/v1"; //Test 
 
 
 // export const Api = "http://3.239.21.153:8000/api/v1"; //live api  

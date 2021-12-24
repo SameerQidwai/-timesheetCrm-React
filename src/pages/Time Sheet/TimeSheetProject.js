@@ -45,37 +45,41 @@ class TimeSheetProject extends Component {
                     width: 300,
                     style:{height: 110},
                     render: (value, record, index) => (
-                        <Row gutter={[0, 10]}>
+                        <Row gutter={[0, 10]} style={{height: 90}}>
                             <Col span={24}>
                                 <Row justify="space-between">
-                                    <Col> {`${value}`} </Col>
+                                    <Col span={20}> {`${value}`} </Col>
                                      <Col style={{marginLeft: 'auto'}}> 
                                         <DownloadOutlined onClick={()=>{this.exporPDF([record.milestoneEntryId], index)}}/>
                                         <SaveOutlined onClick={()=>{this.openAttachModal(record, index)} } style={{color: '#1890ff', marginLeft:10}}/>
                                     </Col>
                                 </Row>
                             </Col>
-                            {record.attachment &&<Col span={24} >
-                                    <Link
-                                        href={`${Api}/files/${record.attachment.uid}`}
-                                        download={record.attachment.name}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                    >
-                                        <PaperClipOutlined /> {" "}
-                                            <Tooltip 
-                                                placement="top" 
-                                                title={record.attachment.name}
-                                                destroyTooltipOnHide
+                            <Col span={24}>
+                                <Row justify="space-between">
+                                    {record.attachment &&<Col span={18}>
+                                            <Link
+                                                href={`${Api}/files/${record.attachment.uid}`}
+                                                download={record.attachment.name}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
                                             >
-                                                {record.attachment.name.substr(0,27)}
-                                            </Tooltip>
-                                    </Link>
-                                    </Col>}
-                            <Col span={4} style={{marginLeft:'auto', marginRight: 20}}>
-                                {record.status === 'SB' &&<Tag color="cyan"> Submitted </Tag>}
-                                {record.status === 'AP' &&<Tag color="green"> Approved </Tag>}
-                                {record.status === 'RJ' &&<Tag color="red"> Rejected </Tag>}
+                                                <PaperClipOutlined /> {" "}
+                                                    <Tooltip 
+                                                        placement="top" 
+                                                        title={record.attachment.name}
+                                                        destroyTooltipOnHide
+                                                    >
+                                                        {`${record.attachment.name.substr(0,23)}${record.attachment.name.length>22 ?'\u2026':''}`}
+                                                    </Tooltip>
+                                            </Link>
+                                            </Col>}
+                                    <Col span={5} style={{marginLeft:'auto', marginRight: 5}}>
+                                        {record.status === 'SB' &&<Tag color="cyan"> Submitted </Tag>}
+                                        {record.status === 'AP' &&<Tag color="green"> Approved </Tag>}
+                                        {record.status === 'RJ' &&<Tag color="red"> Rejected </Tag>}
+                                    </Col>
+                                </Row>
                             </Col>
                         </Row>
                     ),

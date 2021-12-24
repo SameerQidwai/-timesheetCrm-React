@@ -55,10 +55,10 @@ class TimeSheetContact extends Component {
                     fixed: "left",
                     width: 300,
                     render: (value, record, index) => (
-                        <Row gutter={[0, 10]}>
+                        <Row gutter={[0, 10]} style={{height: 90}}>
                             <Col span={24}>
                                 <Row justify="space-between">
-                                    <Col> {record.type ===1 ? `${record.milestone} (${value})` : `${value}`} </Col>
+                                    <Col span={21}> {record.projectType ===1 ? `${value} \n(${record.milestone})` : `${value}`} </Col>
                                     {/* File_name and paperclip to show under project is in comment section line 156*/}
                                      <Col style={{marginLeft: 'auto'}}> 
                                         <Tooltip 
@@ -76,23 +76,32 @@ class TimeSheetContact extends Component {
                                             <SaveOutlined onClick={()=>{this.openAttachModal(record, index)} } style={{color: '#1890ff', marginLeft:10}}/>
                                         </Tooltip> */}
                                     </Col>
-                                    {record.attachment &&<Col span={24} >
-                                    <Link
-                                        href={`${Api}/files/${record.attachment.uid}`}
-                                        download={record.attachment.name}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                    >
-                                        <PaperClipOutlined /> {" "}
-                                            <Tooltip 
-                                                placement="top" 
-                                                title={record.attachment.name}
-                                                destroyTooltipOnHide
-                                            >
-                                                {record.attachment.name.substr(0,27)}
-                                            </Tooltip>
-                                    </Link>
+                                </Row>
+                            </Col>
+                            <Col span={24}>
+                                <Row justify="space-between">
+                                    {record.attachment &&<Col span={18} >
+                                        <Link
+                                            href={`${Api}/files/${record.attachment.uid}`}
+                                            download={record.attachment.name}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            <PaperClipOutlined /> {" "}
+                                                <Tooltip 
+                                                    placement="top" 
+                                                    title={record.attachment.name}
+                                                    destroyTooltipOnHide
+                                                >
+                                                    {`${record.attachment.name.substr(0,23)}${record.attachment.name.length>22 ?'\u2026':''}`}
+                                                </Tooltip>
+                                        </Link>
                                     </Col>}
+                                    <Col  span={5} style={{marginLeft:'auto', marginRight:5}} >
+                                        {record.status === 'SB' &&<Tag color="cyan"> Submitted </Tag>}
+                                        {record.status === 'AP' &&<Tag color="green"> Approved </Tag>}
+                                        {record.status === 'RJ' &&<Tag color="red"> Rejected </Tag>}
+                                    </Col>
                                 </Row>
                             </Col>
                             {/* {this.state && this.state.sUser === this.state.loginId && (record.status === 'SV' || record.status === 'RJ') ?<Col sapn={12}>
@@ -120,11 +129,6 @@ class TimeSheetContact extends Component {
                                     </Popconfirm>
                                 </Space>
                             </Col>} */}
-                            <Col span={4} style={{marginLeft:'auto', marginRight: 20}}>
-                                {record.status === 'SB' &&<Tag color="cyan"> Submitted </Tag>}
-                                {record.status === 'AP' &&<Tag color="green"> Approved </Tag>}
-                                {record.status === 'RJ' &&<Tag color="red"> Rejected </Tag>}
-                            </Col>
                         </Row>
                     ),
                 },
@@ -740,7 +744,7 @@ class TimeSheetContact extends Component {
                         visible={proVisible}
                         okButtonProps={{ disabled: loading }}
                         okText={loading ?<LoadingOutlined /> :"Add"}
-                        width={500}
+                        width={550}
                         onCancel={() => {
                             this.setState({ proVisible: false, sMilestone:{} });
                         }}
@@ -759,7 +763,7 @@ class TimeSheetContact extends Component {
                         }}
                     >
                         <Row justify="center">
-                            <Col span={16}>
+                            <Col span={22}>
                                 <Select
                                     placeholder="Select Project"
                                     style={{ width: '100%' }}
