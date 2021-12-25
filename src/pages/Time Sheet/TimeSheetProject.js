@@ -296,7 +296,7 @@ class TimeSheetProject extends Component {
         this.setState({
             sTimesheet: {
                 timesheet: selectedRows,
-                keys: selectedRowKeys
+                keys: selectedRowKeys,
             }
         })
     }
@@ -396,10 +396,12 @@ class TimeSheetProject extends Component {
                     style={{maxHeight: 'fit-content'}}
                     className="timeSheet-table"
                     rowSelection={{ //multiple select commented
+                        preserveSelectedRowKeys: false,
+                        fixed:true,
                         onChange:(selectedRowKeys, selectedRows)=>{this.milestoneSelect(selectedRowKeys, selectedRows )},
                         getCheckboxProps: (record) => ({
-                            disabled: record.timesheetStatus === 'SV' || record.timesheetStatus === 'AP', // Column configuration not to be checked
-                          })
+                            disabled: record.timesheetStatus === 'SV' || record.timesheetStatus === 'AP' ||record.timesheetStatus === 'NC', // Column configuration not to be checked
+                          }),
                     }}
                     scroll={{
                         // x: "calc(700px + 100%)",
@@ -407,7 +409,7 @@ class TimeSheetProject extends Component {
                     }}
                     bordered
                     pagination={false}
-                    rowKey={data=>data.milestoneEntryId}
+                    rowKey={'milestoneEntryId'}
                     // rowClassName={(record) => this.highlightRow(record)}
                     columns={columns}
                     dataSource={[...data]}
@@ -416,7 +418,7 @@ class TimeSheetProject extends Component {
                 <Row justify="end" gutter={[20,200]}>
                     <Col>
                         <Button 
-                            disabled={ sTimesheet.keys.length<1}
+                            disabled={ sTimesheet.keys.length<1 || sTimesheet.approved|| sTimesheet.rejected}
                             onClick={()=>this.openAttachModal()}
                         >
                             Import
@@ -435,7 +437,7 @@ class TimeSheetProject extends Component {
                         <Button 
                             type="primary" 
                             danger
-                            disabled={ sTimesheet.keys.length<1}
+                            disabled={ sTimesheet.keys.length<1 || sTimesheet.rejected}
                             onClick={()=>this.multiAction('Reject')}
                         > 
                             Reject
@@ -444,7 +446,7 @@ class TimeSheetProject extends Component {
                     <Col>
                         <Button
                             className={'success'}
-                            disabled={ sTimesheet.keys.length<1}
+                            disabled={ sTimesheet.keys.length<1 || sTimesheet.approved}
                             onClick={()=> this.multiAction('Approve') }
                         >
                             Approval
