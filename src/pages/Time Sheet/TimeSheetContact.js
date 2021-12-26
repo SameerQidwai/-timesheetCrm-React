@@ -68,13 +68,13 @@ class TimeSheetContact extends Component {
                                         >
                                             <DownloadOutlined onClick={()=>{this.exporPDF(record.milestoneEntryId, index)}}/>
                                         </Tooltip>
-                                        {/* <Tooltip Commit
+                                        <Tooltip Commit
                                             placement="top"
                                             title="Upload"
                                             destroyTooltipOnHide
                                         >
-                                            <SaveOutlined onClick={()=>{this.openAttachModal(record, index)} } style={{color: '#1890ff', marginLeft:10}}/>
-                                        </Tooltip> */}
+                                            <SaveOutlined disabled={record.status === 'AP' } onClick={()=>{this.openAttachModal(record, index)} } style={{color: '#1890ff', marginLeft:10}}/>
+                                        </Tooltip>
                                     </Col>
                                 </Row>
                             </Col>
