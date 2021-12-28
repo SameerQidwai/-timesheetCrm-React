@@ -1,7 +1,3 @@
-upload button will be in disabled in
-
-victoria timesheet: {"success":false,"message":"Cannot read property 'accountDirectorId' of undefined"}
-
 update
     work can't surpass dates milestone dates
         milestone can't surpass dates resouces dates

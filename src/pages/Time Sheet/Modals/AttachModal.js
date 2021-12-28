@@ -7,6 +7,7 @@ import Dragger from 'antd/lib/upload/Dragger';
 import { Api, localStore } from "../../../service/constant";
 import { addFiles, getAttachments } from "../../../service/Attachment-Apis";
 import { addMilestoneTimesheetNote } from "../../../service/timesheet";
+
 class AttachModal extends Component{
     constructor(){
         super()
@@ -91,6 +92,7 @@ class AttachModal extends Component{
         }
         addMilestoneTimesheetNote(timeObj.milestoneEntryId[0], obj).then(res=>{
             if(res.success){
+                res.data.notes = notes
                 callBack(res.data)
             }
         })

@@ -153,10 +153,6 @@ class TimeSheetContact extends Component {
     }
 
     componentDidMount = () => {
-        const { sWeek, startDate } = this.state.sheetDates
-        console.log('%cpWeek','color:red;', sWeek.format());
-        console.log( '%cstartDate','color:blue;', startDate.format());
-        console.log('%cpWeek','color:green;', sWeek.isSameOrAfter(startDate))
         this.fetchAll()
         // this.columns()
     };
