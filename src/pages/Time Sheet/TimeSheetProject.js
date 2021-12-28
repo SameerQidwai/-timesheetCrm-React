@@ -45,37 +45,58 @@ class TimeSheetProject extends Component {
                     width: 300,
                     style:{height: 110},
                     render: (value, record, index) => (
-                        <Row gutter={[0, 10]}>
+                        <Row gutter={[0, 10]} style={{height: 90}}>
                             <Col span={24}>
                                 <Row justify="space-between">
-                                    <Col> {`${value}`} </Col>
+                                    <Col span={20}> {`${value}`} </Col>
                                      <Col style={{marginLeft: 'auto'}}> 
-                                        <DownloadOutlined onClick={()=>{this.exporPDF([record.milestoneEntryId], index)}}/>
-                                        <SaveOutlined onClick={()=>{this.openAttachModal(record, index)} } style={{color: '#1890ff', marginLeft:10}}/>
+                                     <Tooltip 
+                                            placement="top"
+                                            title="Export"
+                                            destroyTooltipOnHide
+                                        >
+                                            <DownloadOutlined onClick={()=>{this.exporPDF([record.milestoneEntryId], index)}}/>
+                                        </Tooltip>
+                                        <span className={record.status === 'AP' ? 'disabledanticon' : 'anticon'}>  
+                                            <Tooltip 
+                                                placement="top"
+                                                title="Upload"
+                                                destroyTooltipOnHide
+                                            >
+                                                <SaveOutlined disabled={record.status === 'AP'}  
+                                                    onClick={()=>{this.openAttachModal(record, index)} }
+                                                    style={{color: '#1890ff', marginLeft:10}}
+                                                />
+                                            </Tooltip>
+                                        </span>
                                     </Col>
                                 </Row>
                             </Col>
-                            {record.attachment &&<Col span={24} >
-                                    <Link
-                                        href={`${Api}/files/${record.attachment.uid}`}
-                                        download={record.attachment.name}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                    >
-                                        <PaperClipOutlined /> {" "}
-                                            <Tooltip 
-                                                placement="top" 
-                                                title={record.attachment.name}
-                                                destroyTooltipOnHide
+                            <Col span={24}>
+                                <Row justify="space-between">
+                                    {record.attachment &&<Col span={18}>
+                                            <Link
+                                                href={`${Api}/files/${record.attachment.uid}`}
+                                                download={record.attachment.name}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
                                             >
-                                                {record.attachment.name.substr(0,27)}
-                                            </Tooltip>
-                                    </Link>
-                                    </Col>}
-                            <Col span={4} style={{marginLeft:'auto', marginRight: 20}}>
-                                {record.status === 'SB' &&<Tag color="cyan"> Submitted </Tag>}
-                                {record.status === 'AP' &&<Tag color="green"> Approved </Tag>}
-                                {record.status === 'RJ' &&<Tag color="red"> Rejected </Tag>}
+                                                <PaperClipOutlined /> {" "}
+                                                    <Tooltip 
+                                                        placement="top" 
+                                                        title={record.attachment.name}
+                                                        destroyTooltipOnHide
+                                                    >
+                                                        {`${record.attachment.name.substr(0,23)}${record.attachment.name.length>22 ?'\u2026':''}`}
+                                                    </Tooltip>
+                                            </Link>
+                                            </Col>}
+                                    <Col span={5} style={{marginLeft:'auto', marginRight: 5}}>
+                                        {record.status === 'SB' &&<Tag color="cyan"> Submitted </Tag>}
+                                        {record.status === 'AP' &&<Tag color="green"> Approved </Tag>}
+                                        {record.status === 'RJ' &&<Tag color="red"> Rejected </Tag>}
+                                    </Col>
+                                </Row>
                             </Col>
                         </Row>
                     ),
@@ -292,7 +313,7 @@ class TimeSheetProject extends Component {
         this.setState({
             sTimesheet: {
                 timesheet: selectedRows,
-                keys: selectedRowKeys
+                keys: selectedRowKeys,
             }
         })
     }
@@ -392,10 +413,12 @@ class TimeSheetProject extends Component {
                     style={{maxHeight: 'fit-content'}}
                     className="timeSheet-table"
                     rowSelection={{ //multiple select commented
+                        preserveSelectedRowKeys: false,
+                        fixed:true,
                         onChange:(selectedRowKeys, selectedRows)=>{this.milestoneSelect(selectedRowKeys, selectedRows )},
                         getCheckboxProps: (record) => ({
-                            disabled: record.timesheetStatus === 'SV' || record.timesheetStatus === 'AP', // Column configuration not to be checked
-                          })
+                            disabled: record.timesheetStatus === 'SV' || record.timesheetStatus === 'AP' ||record.timesheetStatus === 'NC', // Column configuration not to be checked
+                          }),
                     }}
                     scroll={{
                         // x: "calc(700px + 100%)",
@@ -403,7 +426,7 @@ class TimeSheetProject extends Component {
                     }}
                     bordered
                     pagination={false}
-                    rowKey={data=>data.milestoneEntryId}
+                    rowKey={'milestoneEntryId'}
                     // rowClassName={(record) => this.highlightRow(record)}
                     columns={columns}
                     dataSource={[...data]}
@@ -412,7 +435,7 @@ class TimeSheetProject extends Component {
                 <Row justify="end" gutter={[20,200]}>
                     <Col>
                         <Button 
-                            disabled={ sTimesheet.keys.length<1}
+                            disabled={ sTimesheet.keys.length<1 || sTimesheet.approved|| sTimesheet.rejected}
                             onClick={()=>this.openAttachModal()}
                         >
                             Import
@@ -431,7 +454,7 @@ class TimeSheetProject extends Component {
                         <Button 
                             type="primary" 
                             danger
-                            disabled={ sTimesheet.keys.length<1}
+                            disabled={ sTimesheet.keys.length<1 || sTimesheet.rejected}
                             onClick={()=>this.multiAction('Reject')}
                         > 
                             Reject
@@ -440,7 +463,7 @@ class TimeSheetProject extends Component {
                     <Col>
                         <Button
                             className={'success'}
-                            disabled={ sTimesheet.keys.length<1}
+                            disabled={ sTimesheet.keys.length<1 || sTimesheet.approved}
                             onClick={()=> this.multiAction('Approve') }
                         >
                             Approval

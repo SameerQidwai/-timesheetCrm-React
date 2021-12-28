@@ -106,10 +106,10 @@ const TimeSheetPDF = (props) => {
             {/* {console.log('I was here')} */}
             {/* {handlePrint()} */}
             {/* style={{marginLeft:10,marginRight:10}} */}
-            <div ref={componentRef}  style={{margin:'2mm 10mm 0mm 10mm', size: 'A4'   }}>
+            <div ref={componentRef}  style={{margin:'0mm 10mm', size: 'auto'   }}>
                 {data.map((details, index) => {
                     return <div >
-                        <div className='sensitive'><p >Sensitive: Personal (after first entry)</p></div>
+                        <div style={{textAlign:'center'}}><p style={{color: '#ff0000'}}>Sensitive: Personal (after first entry)</p></div>
                             <Row justify="space-between" align="middle" >
                                 <Col ><Typography.Title > Timesheet </Typography.Title></Col>
                                 <Col style={{width: '60%', textAlign: 'right'}}><img src={'/onelm.png'} width="35%" /></Col>
@@ -135,7 +135,7 @@ const TimeSheetPDF = (props) => {
                                 dataSource={details.milestone && details.milestone.entries}
                                 style={{fontSize: '10px'}}
                             />
-                            <Descriptions column={3} bordered  style={{marginBottom:20, marginTop:20}} labelStyle={{padding: 5}} >
+                            <Descriptions column={3} bordered  style={{marginBottom:20, marginTop:35}} labelStyle={{padding: 5}} >
                                 <Item label="Hours in Day ">{details.milestone && parseFloat(details.milestone.hoursPerDay).toFixed( 2 ) }</Item>
                                 <Item label="Total Hours "> {details.milestone && parseFloat(details.milestone.totalHours).toFixed( 2 )} </Item>
                                 <Item label="Invoiced Days ">{details.milestone && parseFloat(details.milestone.invoicedDays).toFixed( 2 )}</Item>
@@ -156,10 +156,9 @@ const TimeSheetPDF = (props) => {
                                 <Col span={6}>Signature</Col>
                                 <Col span={5}>Date</Col>
                             </Row>
-                            <div  className='sensitive b-sensitive' >
-                                <p >Sensitive: Personal (after first entry)</p></div>
-                        </div>
-                    })}
+                            <div style={{textAlign:'center', marginTop: 10 }}><p style={{color: '#ff0000'}}>Sensitive: Personal (after first entry)</p></div>
+                    </div>
+                })}
                 </div>
         </div>
     )

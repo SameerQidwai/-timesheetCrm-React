@@ -49,6 +49,8 @@ span.ant-select-selection-item  { /* to disabled select field and show black col
 th.ant-descriptions-item-label {
   font-weight: bolder;
 }
+
+
 /* (span.ant-select-selection-search > input:disabled) + span.ant-select-selection-item {
   color: red;
   opacity: 1;
@@ -96,14 +98,14 @@ div.ant-row.ant-form-item.ant-form-item-with-help.ant-form-item-has-error{
 
 @media print {
   .page-break {
-    margin-top: 1rem;
+    /* margin-top: 1rem; */
     display: block;
-    page-break-before: auto;
+    page-break-after: auto;
   }
 }
 
 @page {
   size: auto;
-  margin: 20mm;
+  /* margin:'2mm 10mm 0mm 10mm' */
 }
 
