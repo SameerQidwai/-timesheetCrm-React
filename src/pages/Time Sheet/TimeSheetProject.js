@@ -50,8 +50,25 @@ class TimeSheetProject extends Component {
                                 <Row justify="space-between">
                                     <Col span={20}> {`${value}`} </Col>
                                      <Col style={{marginLeft: 'auto'}}> 
-                                        <DownloadOutlined onClick={()=>{this.exporPDF([record.milestoneEntryId], index)}}/>
-                                        <SaveOutlined onClick={()=>{this.openAttachModal(record, index)} } style={{color: '#1890ff', marginLeft:10}}/>
+                                     <Tooltip 
+                                            placement="top"
+                                            title="Export"
+                                            destroyTooltipOnHide
+                                        >
+                                            <DownloadOutlined onClick={()=>{this.exporPDF([record.milestoneEntryId], index)}}/>
+                                        </Tooltip>
+                                        <span className={record.status === 'AP' ? 'disabledanticon' : 'anticon'}>  
+                                            <Tooltip 
+                                                placement="top"
+                                                title="Upload"
+                                                destroyTooltipOnHide
+                                            >
+                                                <SaveOutlined disabled={record.status === 'AP'}  
+                                                    onClick={()=>{this.openAttachModal(record, index)} }
+                                                    style={{color: '#1890ff', marginLeft:10}}
+                                                />
+                                            </Tooltip>
+                                        </span>
                                     </Col>
                                 </Row>
                             </Col>

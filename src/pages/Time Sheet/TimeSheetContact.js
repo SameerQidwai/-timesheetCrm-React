@@ -58,7 +58,7 @@ class TimeSheetContact extends Component {
                         <Row gutter={[0, 10]} style={{height: 90}}>
                             <Col span={24}>
                                 <Row justify="space-between">
-                                    <Col span={21}> {record.projectType ===1 ? `${value} \n(${record.milestone})` : `${value}`} </Col>
+                                    <Col span={20}> {record.projectType ===1 ? `${value} \n(${record.milestone})` : `${value}`} </Col>
                                     {/* File_name and paperclip to show under project is in comment section line 156*/}
                                      <Col style={{marginLeft: 'auto'}}> 
                                         <Tooltip 
@@ -68,13 +68,20 @@ class TimeSheetContact extends Component {
                                         >
                                             <DownloadOutlined onClick={()=>{this.exporPDF(record.milestoneEntryId, index)}}/>
                                         </Tooltip>
-                                        <Tooltip Commit
-                                            placement="top"
-                                            title="Upload"
-                                            destroyTooltipOnHide
-                                        >
-                                            <SaveOutlined disabled={record.status === 'AP' } onClick={()=>{this.openAttachModal(record, index)} } style={{color: '#1890ff', marginLeft:10}}/>
-                                        </Tooltip>
+                                        {/* this need to be done because Tool tip can't  disabanble and  */}
+                                        <span className={record.status === 'AP' ? 'disabledanticon' : 'anticon'}>  
+                                            <Tooltip 
+                                                placement="top"
+                                                title="Upload"
+                                                destroyTooltipOnHide
+                                            >
+                                                    <SaveOutlined 
+                                                        disabled={record.status === 'AP'} 
+                                                        onClick={()=>{this.openAttachModal(record, index)} }
+                                                        style={{color: '#1890ff', marginLeft:10}}
+                                                    />
+                                            </Tooltip>
+                                        </span>
                                     </Col>
                                 </Row>
                             </Col>
@@ -432,24 +439,41 @@ class TimeSheetContact extends Component {
     };
 
     openAttachModal = (record, index) =>{
-        const timeObj= {
-            milestoneEntryId: record.milestoneEntryId,
-            milestoneId: record.milestoneId,
-            notes: record.notes,
-            milestone: record.milestone,
-            status: record.status,
-            rowIndex: index
+        let timeObj = {}
+        if(index >= 0){
+            timeObj = {
+                milestoneEntryId: [record.milestoneEntryId],
+                milestoneId: record.milestoneId,
+                notes: record.notes,
+                milestone: record.milestone,
+                status: record.status,
+                rowIndex: index
+            }
+        }else{
+            const {keys, timesheet} = this.state.sTimesheet
+            timeObj = {
+                milestoneEntryId: keys,
+                milestoneId: timesheet[0].milestoneId,
+                notes: timesheet[0].notes,
+                milestone: timesheet[0].milestone,
+                status: false,
+            }
         }
-        this.setState({ timeObj, isAttach: true })
+        this.setState({ timeObj, isAttach: true})
     }
 
-    // attachCallBack = (res) =>{ Commit
-    //     const {data, timeObj } = this.state
-    //     const {rowIndex} = timeObj
-    //     data[rowIndex].notes = res.notes
-    //     data[rowIndex].attachment = res.attachment
-    //     this.setState({data, isAttach: false, editTime: false, timeObj: false})
-    // }
+   attachCallBack = (res) =>{ 
+        const {data, timeObj } = this.state
+        const {rowIndex} = timeObj
+        if(rowIndex >= 0 ){
+            data[rowIndex].notes = res.notes
+            data[rowIndex].attachment = res.attachment
+            this.setState({data, isAttach: false, editTime: false, timeObj: false})
+        }else{
+            this.getSheet()
+        }
+    }
+
 
     exporPDF = (entryId) =>{
         const keys = entryId ? [entryId] :this.state.sTimesheet.keys
@@ -458,18 +482,7 @@ class TimeSheetContact extends Component {
             isDownload: true
         })   
     }
-    
-    // notesCallBack = (response) =>{ COmmit
-    //     const {timeObj, data} = this.state
-    //     data[timeObj.rowIndex].notes = response.notes
-    //     this.setState({
-    //         data: data,
-    //         timeObj: false,
-    //         isAttach: false,
-    //         editTime: false
-    //     })
-    // }
-    
+        
     summaryFooter = (data) =>{
         const { columns } = this.state
         const { startDate, endDate } = this.state.sheetDates
@@ -722,14 +735,14 @@ class TimeSheetContact extends Component {
                         callBack={this.callBack}
                     />
                 )}
-                {/* {isAttach && ( Commit
+                {isAttach && ( 
                     <AttachModal
                         visible={isAttach}
                         timeObj={timeObj}
                         close={()=>this.setState({isAttach: false, editTime: false, timeObj: false})}
                         callBack={this.attachCallBack}
                     />
-                )} */}
+                )}
                 {isDownload && (
                     <TimeSheetPDF
                         milestoneEntryId={eData}
