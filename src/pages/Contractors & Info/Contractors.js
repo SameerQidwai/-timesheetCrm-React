@@ -18,53 +18,65 @@ class Contractors extends Component {
         this.columns = [
             {
                 title: "Code",
-                dataIndex: "contactPersonOrganization",
-                key: "contactPersonOrganization",
+                dataIndex: ["contactPersonOrganization", "contactPersonId"],
+                key: "contactPersonId",
                 render: (record) => {
-                    return record && record.contactPerson && `Sub-00${ record.contactPerson.id}`
+                    return `Sub-00${ record}`
                 },
-                sorter: (a, b) => a.contactPerson.id - b.contactPerson.id,
+                sorter: (a, b) => {
+                    if (a.contactPersonOrganization){
+                        const { contactPersonId } = a.contactPersonOrganization
+                        const contactPersonIdB   = b.contactPersonOrganization.contactPersonId
+                        return contactPersonId - contactPersonIdB
+                    }
+                },
                 defaultSortOrder: 'ascend'
             },
             {
                 title: "First Name",
-                dataIndex: "contactPersonOrganization",
-                key: "contactPersonOrganization",
-                render: (record) =>{
-                    return record && record.contactPerson && record.contactPerson.firstName
-                }
+                dataIndex: ["contactPersonOrganization", "contactPerson", "firstName"],
+                key: "firstName",
+                sorter: (a, b) => {
+                    if (a.contactPersonOrganization && a.contactPersonOrganization.contactPerson){
+                        const { firstName } = a.contactPersonOrganization.contactPerson
+                        const firstNameB   = b.contactPersonOrganization.contactPerson.firstName
+                        return firstName.localeCompare(firstNameB)
+                    }
+                },
             },
             {
                 title: "Last Name",
-                dataIndex: "contactPersonOrganization",
-                key: "contactPersonOrganization",
-                render: (record) =>{
-                    return record && record.contactPerson && record.contactPerson.lastName
-                }
+                dataIndex: ["contactPersonOrganization", "contactPerson", "lastName"],
+                key: "lastName",
+                sorter: (a, b) => {
+                    if (a.contactPersonOrganization && a.contactPersonOrganization.contactPerson){
+                        const { lastName } = a.contactPersonOrganization.contactPerson
+                        const lastNameB   = b.contactPersonOrganization.contactPerson.lastName
+                        return lastName.localeCompare(lastNameB)
+                    }
+                },
             },
             {
                 title: "Organisation",
-                dataIndex: "contactPersonOrganization",
-                key: "contactPersonOrganization",
-                render: (record) =>{
-                    return record && record.organization && record.organization.name
-                }
+                dataIndex: ["contactPersonOrganization", "organization", "name"],
+                key: "organization",
+                sorter: (a, b) => {
+                    if (a.contactPersonOrganization && a.contactPersonOrganization.organization){
+                        const { name } = a.contactPersonOrganization.organization
+                        const nameB   = b.contactPersonOrganization.organization.name
+                        return name.localeCompare(nameB)
+                    }
+                },
             },
             {
                 title: "Phone",
-                dataIndex: "contactPersonOrganization",
-                key: "contactPersonOrganization",
-                render: (record) =>{
-                    return record && record.contactPerson && record.contactPerson.phoneNumber
-                }
+                dataIndex: ["contactPersonOrganization", "contactPerson", "phoneNumber"],
+                key: "phoneNumber",
             },
             {
                 title: "Email",
-                dataIndex: "contactPersonOrganization",
-                key: "contactPersonOrganization",
-                render: (record) =>{
-                    return record && record.contactPerson && record.contactPerson.email
-                }
+                dataIndex: ["contactPersonOrganization", "contactPerson", "email"],
+                key: "email",
             },
             {
                 title: "Action",

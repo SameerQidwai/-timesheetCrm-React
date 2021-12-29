@@ -14,6 +14,8 @@ export const Api = "http://54.91.49.138:8000/api/v1"; //Test
 export const O_STAGE = {L: 'Lead', TR: 'Tender Released', BS: 'Bid Submitted'}
 export const O_STATUS = {O: 'Open', L: 'Lost', P: 'Open', NB: 'Not Bid', DNP: 'Did Not Proceed', C: 'Completed'}
 export const O_TYPE = {1: 'Milestone', 2: 'Time'}
+export const JOB_TYPE = { 1:"Casual", 2:"Part Time" , 3: "Full Time" }
+export const DURATION = {1: "Hourly" , 2: "Daily" , 3: "Weekly" , 4: "Fortnightly" , 5: "Monthly" }
 
 export const formatCurrency = (amount) => {
     //console.log('=== === === formatCurrency === === ===');

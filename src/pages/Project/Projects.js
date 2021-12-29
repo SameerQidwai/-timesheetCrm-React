@@ -21,39 +21,51 @@ class Projects extends Component {
                 title: 'Code',
                 dataIndex: 'id',
                 key: 'id',
-                render:(record) =>(
-                    `00${record}`
-                ),
+                render:(record) =>( `00${record}` ),
+                sorter: (a, b) => a.id - b.id,
+                defaultSortOrder: 'ascend'
             },
             {
                 title: 'Title',
                 dataIndex: 'title',
                 key: 'title',
+                width: 400,
+                sorter: (a, b) => a.title.localeCompare(b.title)
             },
             {
                 title: 'Organisation Name',
                 dataIndex: 'organization',
                 key: 'organization',
-                width: 300,
-                render: (record) =>{return record && record.name}
+                width: 200,
+                render: (record) =>{
+                    return record && <Link 
+                        to={{ pathname: `/organisations/${record.id}/info`, }}
+                        className="nav-link"
+                    >
+                        {record.name}</Link> 
+                },
+                sorter: (a, b) => a.organization.name.localeCompare(b.organization.name)
             },
             {
                 title: 'Revenue',
                 dataIndex: 'value',
                 key: 'value',
-                render: record =>   `${formatCurrency(record)}`
+                render: record =>   `${formatCurrency(record)}`,
+                sorter: (a, b) => a.value - b.value,
             },
             {
                 title: 'Start Date',
                 dataIndex: 'startDate',
                 key: 'startDate',
-                render: (record) =>(record && moment(record).format('ddd DD MM yyyy'))
+                render: (record) =>(record && moment(record).format('ddd DD MM yyyy')),
+                sorter: (a, b) => moment(a.startDate).unix() - moment(b.startDate).unix()
             },
             {
                 title: 'End Date',
                 dataIndex: 'endDate',
                 key: 'endDtae',
-                render: (record) =>(record &&  moment(record).format('ddd DD MM yyyy'))
+                render: (record) =>(record &&  moment(record).format('ddd DD MM yyyy')),
+                sorter: (a, b) => moment(a.endDate).unix() - moment(b.endDate).unix()
             },
             {
                 title: 'Type',

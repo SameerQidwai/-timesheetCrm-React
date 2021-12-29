@@ -20,25 +20,29 @@ class PurchaseOrder extends Component {
                 title: "Issue Date",
                 dataIndex: "issueDate",
                 key: "issueDate",
-                render:(record)=> record && moment(record).format(`ddd MMM DD YYYY`)
+                render:(record)=> record && moment(record).format(`ddd MMM DD YYYY`),
+                sorter: (a, b) => moment(a.issueDate).unix() - moment(b.issueDate).unix()
             },
             {
                 title: "Expiry Date",
                 dataIndex: "expiryDate",
                 key: "expiryDate",
-                render:(record)=> record && moment(record).format(`ddd MMM DD YYYY`)
+                render:(record)=> record && moment(record).format(`ddd MMM DD YYYY`),
+                sorter: (a, b) => moment(a.expiryDate).unix() - moment(b.expiryDate).unix()
             },
             {
                 title: "Value",
                 dataIndex: "value",
                 key: "value",
-                render: record => `${formatCurrency(record)}`
+                render: record => `${formatCurrency(record)}`,
+                sorter: (a, b) => a.value - b.value,
             },
             {
                 title: "Expense",
                 dataIndex: "expense",
                 key: "expense",
-                render: record => `${formatCurrency(record)}`
+                render: record => `${formatCurrency(record)}`,
+                sorter: (a, b) => a.expense - b.expense,
             },
             {
                 title: "Action",

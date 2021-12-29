@@ -18,26 +18,21 @@ class Resources extends Component {
         this.columns = [
             {
                 title: "Skill",
-                dataIndex: "panelSkill",
+                dataIndex: ["panelSkill", "label"],
                 key: "panelSkill",
-                render: (record) =>(
-                    record && record.label
-                )
             },
             {
                 title: "Level",
-                dataIndex: "panelSkillStandardLevel",
+                dataIndex: ["panelSkillStandardLevel", "levelLabel"],
                 key: "panelSkillStandardLevel",
-                render: (record)=>(
-                    record && record.levelLabel
-                )
             },
             {
                 title: "Employee Name",
-                dataIndex: "opportunityResourceAllocations",
-                key: "opportunityResourceAllocations",
+                dataIndex: ["opportunityResourceAllocations", "0", "contactPerson"],
+                key: "contactPerson",
                 render: (record)=>(
-                    record && record[0] && record[0].contactPerson && `${record[0].contactPerson.firstName	} ${record[0].contactPerson.lastName	}`
+                    // record && record[0] && record[0].contactPerson && `${record[0].contactPerson.firstName	} ${record[0].contactPerson.lastName	}`
+                    `${record.firstName	} ${record.lastName	}`
                 )
             },
             {
@@ -47,19 +42,18 @@ class Resources extends Component {
             },
             {
                 title: "Buy Cost",
-                dataIndex: "opportunityResourceAllocations",
+                dataIndex: ["opportunityResourceAllocations", "0", "buyingRate"],
                 key: "opportunityResourceAllocations",
                 render:(record)=>(
-                    // console.log(record)
-                    record && record[0] && formatCurrency(record[0].buyingRate)
+                    record &&formatCurrency(record)
                 )
             },
             {
                 title: "Sale Cost",
-                dataIndex: "opportunityResourceAllocations",
+                dataIndex: ["opportunityResourceAllocations", "0", "sellingRate"],
                 key: "opportunityResourceAllocations",
                 render:(record)=>(
-                    record && record[0] &&  formatCurrency(record[0].sellingRate)
+                    record && formatCurrency(record)
                 )
             },
             {

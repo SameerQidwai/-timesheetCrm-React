@@ -21,29 +21,34 @@ class NovatedLease extends Component {
                 title: "Company Name",
                 dataIndex: "companyName",
                 key: "companyName",
+                sorter: (a, b) => a.companyName.localeCompare(b.companyName)
             },
             {
                 title: "Financer Name",
                 dataIndex: "financerName",
                 key: "financerName",
+                sorter: (a, b) => a.financerName.localeCompare(b.financerName)
             },
             {
                 title: "Finance Amount",
                 dataIndex: "financedAmount",
                 key: "financedAmount",
-                render: record => `${formatCurrency(record)}` 
+                render: record => `${formatCurrency(record)}` ,
+                sorter: (a, b) => a.financedAmount - b.financedAmount
             },
             {
                 title: "Start Date",
                 dataIndex: "startDate",
                 key: "startDate",
-                render: (record) =>( record && moment(record).format('ddd DD MM YYYY') )
+                render: (record) =>( record && moment(record).format('ddd DD MM YYYY') ),
+                sorter: (a, b) => moment(a.startDate).unix() - moment(b.startDate).unix()
             },
             {
                 title: "End Date",
                 dataIndex: "endDate",
                 key: "endDate",
-                render: (record) =>( record && moment(record).format('ddd DD MM YYYY') )
+                render: (record) =>( record && moment(record).format('ddd DD MM YYYY') ),
+                sorter: (a, b) => moment(a.endDate).unix() - moment(b.endDate).unix()
             },
             {
                 title: "Action",

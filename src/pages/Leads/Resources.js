@@ -18,18 +18,17 @@ class Resources extends Component {
                 title: "Title",
                 dataIndex: "title",
                 key: "title",
+                sorter: (a, b) => a.title - b.title,
             },
             {
                 title: "Skill",
-                dataIndex: "panelSkill",
+                dataIndex: ["panelSkill", "label"],
                 key: "panelSkill",
-                render: (record)=> {return record  && record.label}
             },
             {
                 title: "Level",
-                dataIndex: "panelSkillStandardLevel",
+                dataIndex: ["panelSkillStandardLevel", "levelLabel"],
                 key: "panelSkillStandardLevel",
-                render: (record)=> {return record && record.levelLabel}
             },
             {
                 title: "Start Date",

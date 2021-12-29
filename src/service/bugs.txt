@@ -1,5 +1,6 @@
 SORTING
-    Only contactperson and Organizaion got sorted
+    Opportunity and Project Resource sort not donw yet
+    Organizaion ParentOrganization column sort is not yet complete
 
 update
     work can't surpass dates milestone dates

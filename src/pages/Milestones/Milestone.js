@@ -28,18 +28,21 @@ class Milestone extends Component {
                     title: "Title",
                     dataIndex: "title",
                     key: "title",
+                    sorter: (a, b) => a.title - b.title,
                 },
                 {
                     title: "Start Date",
                     dataIndex: "startDate",
                     key: "startDate",
-                    render: (record) =>(record && moment(record).format('ddd DD MM yyyy'))
+                    render: (record) =>(record && moment(record).format('ddd DD MM yyyy')),
+                    sorter: (a, b) => moment(a.startDate).unix() - moment(b.startDate).unix()
                 },
                 {
                     title: "End Date",
                     dataIndex: "endDate",
                     key: "endDate",
-                    render: (record) =>(record && moment(record).format('ddd DD MM yyyy'))
+                    render: (record) =>(record && moment(record).format('ddd DD MM yyyy')),
+                    sorter: (a, b) => moment(a.endDate).unix() - moment(b.endDate).unix()
                 },
                 {
                     title: "Progress",

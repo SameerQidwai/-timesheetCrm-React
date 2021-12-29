@@ -9,13 +9,12 @@ import { getList, delList } from "../../service/employee-contracts";
 
 import moment from "moment"
 import "../styles/table.css";
-import { formatCurrency, localStore } from "../../service/constant";
+import { formatCurrency, localStore, JOB_TYPE, DURATION } from "../../service/constant";
 
 
 const { Title } = Typography;
 const { Item } = Descriptions;
-const JOB_TYPE = { 1:"Casual", 2:"Part Time" , 3: "Full Time" }
-const DURATION = {1: "Hourly" , 2: "Daily" , 3: "Weekly" , 4: "Fortnightly" , 5: "Monthly" }
+
 
 class EmpBilling extends Component {
     constructor () {
@@ -26,18 +25,22 @@ class EmpBilling extends Component {
                 dataIndex: "id",
                 key: "id",
                 render: (record) => `00${record}`,
+                sorter: (a, b) => a.id - b.id,
+                defaultSortOrder: 'ascend'
             },
             {
                 title: "Start Date",
                 dataIndex: "startDate",
                 key: "startDate",
-                render:(record)=> record && moment(record).format(`ddd MMM DD YYYY`)
+                render:(record)=> record && moment(record).format(`ddd MMM DD YYYY`),
+                sorter: (a, b) => moment(a.startDate).unix() - moment(b.startDate).unix()
             },
             {
                 title: "End Date",
                 dataIndex: "endDate",
                 key: "endDate",
-                render:(record)=> record && moment(record).format(`ddd MMM DD YYYY`)
+                render:(record)=> record && moment(record).format(`ddd MMM DD YYYY`),
+                sorter: (a, b) => moment(a.endDate).unix() - moment(b.endDate).unix()
             },
             {
                 title: "Job Type",
@@ -49,7 +52,8 @@ class EmpBilling extends Component {
                 title: "Rate",
                 dataIndex: "remunerationAmount",
                 key: "remunerationAmount",
-                render: (record)=> `${formatCurrency(record)}`
+                render: (record)=> `${formatCurrency(record)}`,
+                sorter: (a, b) => a.remunerationAmount - b.remunerationAmount
             },
             {
                 title: "Rate Duration",

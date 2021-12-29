@@ -42,7 +42,7 @@ class Organizations extends Component {
                     >
                         {record.name}</Link> 
                 },
-                sorter: (a, b) => a.name.localeCompare(b.name)
+                //sorter
             },
             {
                 title: "Action",
