@@ -20,6 +20,11 @@ class Roles extends Component {
                 title: "Title",
                 dataIndex: "label",
                 key: "label",
+                sorter: (a, b)=>{
+                    if (a.label && b.label){
+                        return a.label.localeCompare(b.label)
+                    }
+                }
             },
             {
                 title: "Action",

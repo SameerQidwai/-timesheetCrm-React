@@ -20,6 +20,10 @@ class Resources extends Component {
                 title: "Skill",
                 dataIndex: ["panelSkill", "label"],
                 key: "panelSkill",
+                sorter: (a, b) => {
+                    if(a.panelSkill && b.panelSkill )
+                        return a.panelSkill.label.localeCompare(b.panelSkill.label)
+                },
             },
             {
                 title: "Level",
@@ -33,12 +37,20 @@ class Resources extends Component {
                 render: (record)=>(
                     // record && record[0] && record[0].contactPerson && `${record[0].contactPerson.firstName	} ${record[0].contactPerson.lastName	}`
                     `${record.firstName	} ${record.lastName	}`
-                )
+                ),
+                sorter: (a, b) => {
+                    if(a["opportunityResourceAllocations"][0]["contactPerson"]){
+                        const {firstName, lastName } = a["opportunityResourceAllocations"][0]["contactPerson"]
+                        const {firstName: firstNameB, lastName: lastNameB} = b["opportunityResourceAllocations"][0]["contactPerson"]
+                        return `${firstName} ${lastName}`.localeCompare(`${firstNameB} ${lastNameB}`)
+                    }
+                }
             },
             {
                 title: "Billable Hours",
                 dataIndex: "billableHours",
                 key: "billableHours",
+                sorter: (a, b) => a.billableHours - b.billableHours,
             },
             {
                 title: "Buy Cost",
@@ -46,7 +58,14 @@ class Resources extends Component {
                 key: "opportunityResourceAllocations",
                 render:(record)=>(
                     record &&formatCurrency(record)
-                )
+                ),
+                sorter: (a, b) => {
+                    if(a["opportunityResourceAllocations"][0]){
+                        const {buyingRate} = a["opportunityResourceAllocations"][0]
+                        const {buyingRate: buyingRateB } = b["opportunityResourceAllocations"][0]
+                        return buyingRate - buyingRateB
+                    }
+                }
             },
             {
                 title: "Sale Cost",
@@ -54,7 +73,14 @@ class Resources extends Component {
                 key: "opportunityResourceAllocations",
                 render:(record)=>(
                     record && formatCurrency(record)
-                )
+                ),
+                sorter: (a, b) => {
+                    if(a["opportunityResourceAllocations"][0]){
+                        const {sellingRate} = a["opportunityResourceAllocations"][0]
+                        const {sellingRate: sellingRateB } = b["opportunityResourceAllocations"][0]
+                        return sellingRate - sellingRateB
+                    }
+                }
             },
             {
                 title: "Action",

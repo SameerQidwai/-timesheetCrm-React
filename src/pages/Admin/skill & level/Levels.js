@@ -16,6 +16,11 @@ class Levels extends Component {
                 title: "Level Name",
                 dataIndex: "label",
                 key: "label",
+                sorter: (a, b)=>{
+                    if (a.label && b.label){
+                        return a.label.localeCompare(b.label)
+                    }
+                }
             },
             {
                 title: "Action",

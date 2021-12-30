@@ -18,34 +18,59 @@ class Resources extends Component {
                 title: "Title",
                 dataIndex: "title",
                 key: "title",
-                sorter: (a, b) => a.title - b.title,
+                sorter: (a, b) => {
+                    if (a.title && b.title){
+                        return a.title.localeCompare(b.title)
+                    }
+                },
             },
             {
                 title: "Skill",
                 dataIndex: ["panelSkill", "label"],
                 key: "panelSkill",
+                sorter: (a, b) => {
+                    if (a.panelSkill && b.panelSkill){
+                        const { label } = a.panelSkill
+                        const { label:labelB } = b.panelSkill
+                        return label.localeCompare(labelB)
+                    }
+                },
             },
             {
                 title: "Level",
                 dataIndex: ["panelSkillStandardLevel", "levelLabel"],
                 key: "panelSkillStandardLevel",
+                sorter: (a, b) => {
+                    if (a.panelSkillStandardLevel && b.panelSkillStandardLevel){
+                        const { levelLabel } = a.panelSkillStandardLevel
+                        const { levelLabel:levelLabelB } = b.panelSkillStandardLevel
+                        return levelLabel.localeCompare(levelLabelB)
+                    }
+                },
             },
             {
                 title: "Start Date",
                 dataIndex: "startDate",
                 key: "startDate",
-                render: (record)=> {return record && moment(record).format('ddd DD MM YYYY')}
+                render: (record)=> {return record && moment(record).format('ddd DD MM YYYY')},
+                sorter: (a, b) => moment(a.startDate).unix() - moment(b.startDate).unix()
             },
             {
                 title: "End Date",
                 dataIndex: "endDate",
                 key: "endDate",
-                render: (record)=> {return record && moment(record).format('ddd DD MM YYYY')}
+                render: (record)=> {return record && moment(record).format('ddd DD MM YYYY')},
+                sorter: (a, b) => moment(a.endDate).unix() - moment(b.endDate).unix()
             },
             {
                 title: "Total Hours",
                 dataIndex: "billableHours",
                 key: "billableHours",
+                sorter: (a,b) =>{
+                    if (a.billableHours && b.billableHours){
+                        return a.billableHours - b.billableHours
+                    }
+                }
             },
            
             {
@@ -100,7 +125,6 @@ class Resources extends Component {
     }
 
     componentDidMount = ()=>{
-        
         this.fetchAll()
     }
     

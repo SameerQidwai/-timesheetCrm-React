@@ -20,6 +20,11 @@ class CalenerHolidays extends Component {
                 title: "Title",
                 dataIndex: "label",
                 key: "label",
+                sorter: (a, b)=>{
+                    if (a.label && b.label){
+                        return a.label.localeCompare(b.label)
+                    }
+                }
             },
             {
                 title: "Date",
@@ -27,6 +32,7 @@ class CalenerHolidays extends Component {
                 key: "date",
                 align: "right",
                 render: (text, record) => moment(text).format("DD-MMM-YYYY"),
+                sorter: (a, b) => moment(a.date).unix() - moment(b.date).unix()
             },
             {
                 title: "Action",

@@ -1,12 +1,13 @@
 import React, { Component } from "react";
-import { Row, Col, Menu, Table, Modal, Button, Dropdown, Popconfirm, Typography, } from "antd";
-import { DownOutlined, SettingOutlined, PlusSquareOutlined, FilterOutlined, UploadOutlined, } from "@ant-design/icons"; //Icons
+import { Row, Col, Menu, Table, Modal, Button, Dropdown, Popconfirm, Typography, Input, Space, } from "antd";
+import { DownOutlined, SettingOutlined, PlusSquareOutlined, FilterOutlined, UploadOutlined,  SearchOutlined} from "@ant-design/icons"; //Icons
 // import { Link } from 'react-router-dom'
 
 import InfoModal from "./InfoModal";
 import { getList, delList } from "../../../service/conatct-person";
 import { localStore } from "../../../service/constant";
 import "../../styles/table.css";
+import { tableFilter } from "../../../components/Core/Table/TableFilter";
 
 const { Title } = Typography;
 
@@ -22,29 +23,34 @@ class Contact extends Component {
                 key: "id",
                 render: (record) => `00${record}`,
                 sorter: (a, b) => a.id - b.id,
-                defaultSortOrder: 'ascend'
+                defaultSortOrder: 'ascend',
+                ...tableFilter('id', 'startsWith')
             },
             {
                 title: "First Name",
                 dataIndex: "firstName",
                 key: "firstName",
                 sorter: (a, b) => a.firstName.localeCompare(b.firstName),
+                ...tableFilter('firstName', 'includes')
             },
             {
                 title: "Last Name",
                 dataIndex: "lastName",
                 key: "lastName",
                 sorter: (a, b) => a.lastName.localeCompare(b.lastName),
+                ...tableFilter('firstName', 'includes')
             },
             {
                 title: "Email",
                 dataIndex: "email",
                 key: "email",
+                ...tableFilter('firstName', 'includes')
             },
             {
                 title: "Contact",
                 dataIndex: "phoneNumber",
                 key: "phoneNumber",
+                ...tableFilter('firstName', 'startsWith')
             },
             {
                 title: "Action",
@@ -88,7 +94,9 @@ class Contact extends Component {
             data: [],
             openModal: false,
             editCP: false,
-            permissions: {}
+            permissions: {},
+            searchText: '',
+            searchedColumn: '',
         };
     }
 

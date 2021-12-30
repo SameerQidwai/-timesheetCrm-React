@@ -17,6 +17,11 @@ class HolidayTypes extends Component {
                 title: "Types",
                 dataIndex: "label",
                 key: "label",
+                sorter: (a, b)=>{
+                    if (a.label && b.label){
+                        return a.label.localeCompare(b.label)
+                    }
+                }
             },
             {
                 title: "Action",
