@@ -41,3 +41,14 @@ export const tableFilter = (dataIndex, searchFunction) => ({
     },
 })
 
+export const tableSorter = (dataIndex, type) => ({
+    sorter: (a, b) => {
+        if(a[dataIndex] && b[dataIndex]){
+            if(type=== 'number'){
+                return a[dataIndex] - b[dataIndex]
+            }else if(type === 'string'){
+                return a[dataIndex].localeCompare(b[dataIndex])
+            }
+        }
+    }
+})

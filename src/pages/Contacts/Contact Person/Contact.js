@@ -7,7 +7,7 @@ import InfoModal from "./InfoModal";
 import { getList, delList } from "../../../service/conatct-person";
 import { localStore } from "../../../service/constant";
 import "../../styles/table.css";
-import { tableFilter } from "../../../components/Core/Table/TableFilter";
+import { tableFilter, tableSorter } from "../../../components/Core/Table/TableFilter";
 
 const { Title } = Typography;
 
@@ -22,7 +22,8 @@ class Contact extends Component {
                 dataIndex: "id",
                 key: "id",
                 render: (record) => `00${record}`,
-                sorter: (a, b) => a.id - b.id,
+                // sorter: (a, b) => a.id - b.id,
+                ...tableSorter('id', 'number'),
                 defaultSortOrder: 'ascend',
                 ...tableFilter('id', 'startsWith')
             },
@@ -30,6 +31,7 @@ class Contact extends Component {
                 title: "First Name",
                 dataIndex: "firstName",
                 key: "firstName",
+                ...tableSorter('firstName', 'string'),
                 sorter: (a, b) => a.firstName.localeCompare(b.firstName),
                 ...tableFilter('firstName', 'includes')
             },
@@ -37,6 +39,7 @@ class Contact extends Component {
                 title: "Last Name",
                 dataIndex: "lastName",
                 key: "lastName",
+                ...tableSorter('lastName', 'string'),
                 sorter: (a, b) => a.lastName.localeCompare(b.lastName),
                 ...tableFilter('firstName', 'includes')
             },

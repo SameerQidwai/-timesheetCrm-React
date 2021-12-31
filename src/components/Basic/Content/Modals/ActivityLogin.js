@@ -15,7 +15,7 @@ function ActivityLogin(props) {
     const loginFunc = (value) => {
         login(value).then(res=>{
             if(res&& res.success){
-                setLogout(true)
+                // setLogout(true) // if login Modal will do anyharm uncomment this
                 form.resetFields();
                 props.close()
             }
@@ -25,18 +25,18 @@ function ActivityLogin(props) {
     return (
         <div>
             <Modal
-            destroyOnClose
-            closable={false}
-            keyboard={false}
-            maskClosable={false}
-            centered
-            visible={props.visible}
-            okText={"Login"}
-            onOk={()=>{form.submit()}}
-            // okButtonProps={{ htmlType: 'submit', form: 'my-form' }}
-            cancelText={"Cancel"}
-            onCancel={()=> {setLogout(true) 
-                localStorage.clear()}}
+                destroyOnClose
+                closable={false}
+                keyboard={false}
+                maskClosable={false}
+                centered
+                visible={props.visible}
+                okText={"Login"}
+                onOk={()=>{form.submit()}}
+                // okButtonProps={{ htmlType: 'submit', form: 'my-form' }}
+                cancelText={"Cancel"}
+                onCancel={()=> {setLogout(true) 
+                    localStorage.clear()}}
             >
                 <Title level={4} style={{textAlign: 'center'}}>Login</Title>
                     <Form

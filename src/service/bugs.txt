@@ -47,3 +47,9 @@ shortcut
 
     fof→	for(let itemName of objectName { }
     fin→	for(let itemName in objectName { }
+
+updating 
+    "antd": "^4.15.6",
+xampp
+    service mysql stop
+    sudo /opt/lampp/lampp start
