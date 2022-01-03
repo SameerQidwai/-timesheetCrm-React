@@ -23,37 +23,34 @@ class Contact extends Component {
                 key: "id",
                 render: (record) => `00${record}`,
                 // sorter: (a, b) => a.id - b.id,
-                ...tableSorter('id', 'number'),
-                defaultSortOrder: 'ascend',
-                ...tableFilter('id', 'startsWith')
+                ...tableSorter('id', 'number', true),
+                // ...tableFilter('id', 'startsWith')
             },
             {
                 title: "First Name",
                 dataIndex: "firstName",
                 key: "firstName",
                 ...tableSorter('firstName', 'string'),
-                sorter: (a, b) => a.firstName.localeCompare(b.firstName),
-                ...tableFilter('firstName', 'includes')
+                // ...tableFilter('firstName', 'includes')
             },
             {
                 title: "Last Name",
                 dataIndex: "lastName",
                 key: "lastName",
                 ...tableSorter('lastName', 'string'),
-                sorter: (a, b) => a.lastName.localeCompare(b.lastName),
-                ...tableFilter('firstName', 'includes')
+                // ...tableFilter('firstName', 'includes')
             },
             {
                 title: "Email",
                 dataIndex: "email",
                 key: "email",
-                ...tableFilter('firstName', 'includes')
+                // ...tableFilter('firstName', 'includes')
             },
             {
                 title: "Contact",
                 dataIndex: "phoneNumber",
                 key: "phoneNumber",
-                ...tableFilter('firstName', 'startsWith')
+                // ...tableFilter('firstName', 'startsWith')
             },
             {
                 title: "Action",

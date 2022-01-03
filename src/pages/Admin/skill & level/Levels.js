@@ -4,6 +4,7 @@ import { SettingOutlined, DownOutlined, PlusSquareOutlined, LoadingOutlined} fro
 import Forms from "../../../components/Core/Form";
 
 import { getList, addList, delLabel, editLabel } from "../../../service/level";
+import { tableSorter } from "../../../components/Core/Table/TableFilter";
 
 const { Title } = Typography;
 
@@ -16,11 +17,12 @@ class Levels extends Component {
                 title: "Level Name",
                 dataIndex: "label",
                 key: "label",
-                sorter: (a, b)=>{
-                    if (a.label && b.label){
-                        return a.label.localeCompare(b.label)
-                    }
-                }
+                // sorter: (a, b)=>{
+                //     if (a.label && b.label){
+                //         return a.label.localeCompare(b.label)
+                //     }
+                // }
+                ...tableSorter('label', 'string')
             },
             {
                 title: "Action",

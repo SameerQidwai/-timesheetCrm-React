@@ -8,6 +8,7 @@ import "../../styles/table.css";
 
 import { getList, addList, editLabel } from "../../../service/calender";
 import { localStore } from "../../../service/constant";
+import { tableSorter } from "../../../components/Core/Table/TableFilter";
 
 const { Title } = Typography;
 
@@ -22,11 +23,7 @@ class Calenders extends Component {
                 title: "Title",
                 dataIndex: "label",
                 key: "label",
-                sorter: (a, b)=>{
-                    if (a.label && b.label){
-                        return a.label.localeCompare(b.label)
-                    }
-                }
+                ...tableSorter('label', 'string')
             },
             {
                 title: "Status",

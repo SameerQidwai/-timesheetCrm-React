@@ -8,6 +8,7 @@ import "../../styles/table.css";
 
 import { holidayType, addList, getList, editLabel, delLabel, } from "../../../service/calendar-holidays";
 import { localStore } from "../../../service/constant";
+import { tableSorter } from "../../../components/Core/Table/TableFilter";
 
 const { Title } = Typography;
 
@@ -20,11 +21,12 @@ class CalenerHolidays extends Component {
                 title: "Title",
                 dataIndex: "label",
                 key: "label",
-                sorter: (a, b)=>{
-                    if (a.label && b.label){
-                        return a.label.localeCompare(b.label)
-                    }
-                }
+                // sorter: (a, b)=>{
+                //     if (a.label && b.label){
+                //         return a.label.localeCompare(b.label)
+                //     }
+                // }
+                ...tableSorter('label', 'string')
             },
             {
                 title: "Date",
@@ -32,7 +34,8 @@ class CalenerHolidays extends Component {
                 key: "date",
                 align: "right",
                 render: (text, record) => moment(text).format("DD-MMM-YYYY"),
-                sorter: (a, b) => moment(a.date).unix() - moment(b.date).unix()
+                // sorter: (a, b) => moment(a.date).unix() - moment(b.date).unix()
+                ...tableSorter('date', 'date')
             },
             {
                 title: "Action",

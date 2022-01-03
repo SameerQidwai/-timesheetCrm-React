@@ -7,6 +7,7 @@ import "../styles/table.css";
 
 import { timeOff, addList, getList, editLabel, delLabel, } from "../../service/time-off-policy";
 import { localStore } from "../../service/constant";
+import { tableSorter } from "../../components/Core/Table/TableFilter";
 
 const { Title } = Typography;
 
@@ -21,11 +22,12 @@ class LeavePolicies extends Component {
                 title: "Title",
                 dataIndex: "label",
                 key: "label",
-                sorter: (a, b)=>{
-                    if (a.label && b.label){
-                        return a.label.localeCompare(b.label)
-                    }
-                }
+                // sorter: (a, b)=>{
+                //     if (a.label && b.label){
+                //         return a.label.localeCompare(b.label)
+                //     }
+                // }
+                ...tableSorter('label', 'string')
             },
             {
                 title: "Action",

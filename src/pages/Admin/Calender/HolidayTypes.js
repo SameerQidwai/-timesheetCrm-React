@@ -5,6 +5,7 @@ import Forms from "../../../components/Core/Form";
 
 import { getList, addList, delLabel, editLabel, } from "../../../service/holiday-type";
 import { localStore } from "../../../service/constant";
+import { tableSorter } from "../../../components/Core/Table/TableFilter";
 
 const { Title } = Typography;
 
@@ -17,11 +18,12 @@ class HolidayTypes extends Component {
                 title: "Types",
                 dataIndex: "label",
                 key: "label",
-                sorter: (a, b)=>{
-                    if (a.label && b.label){
-                        return a.label.localeCompare(b.label)
-                    }
-                }
+                // sorter: (a, b)=>{
+                //     if (a.label && b.label){
+                //         return a.label.localeCompare(b.label)
+                //     }
+                // }
+                ...tableSorter('label', 'string')
             },
             {
                 title: "Action",

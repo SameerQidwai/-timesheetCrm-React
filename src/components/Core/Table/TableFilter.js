@@ -1,7 +1,8 @@
 import React from 'react'
 import { Button, Input, Space } from 'antd';
 import { SearchOutlined } from "@ant-design/icons";
-
+import moment from "moment";
+                        //keys          //serachFunction
 export const tableFilter = (dataIndex, searchFunction) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => ( 
         <div style={{ padding: 8 }}>
@@ -40,15 +41,22 @@ export const tableFilter = (dataIndex, searchFunction) => ({
             : searchFunction === 'includes' && record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
     },
 })
-
-export const tableSorter = (dataIndex, type) => ({
-    sorter: (a, b) => {
-        if(a[dataIndex] && b[dataIndex]){
+                        // Keys      //dataType  //defaultSortOrder
+export const tableSorter = (dataIndex, type, sortOrder) => ({
+    sorter: (a, b) => { 
+        let valueA = leaf(a, dataIndex)
+        let valueB = leaf(b, dataIndex) 
+        if(valueA && valueB){
             if(type=== 'number'){
-                return a[dataIndex] - b[dataIndex]
+                return valueA -  valueB 
             }else if(type === 'string'){
-                return a[dataIndex].localeCompare(b[dataIndex])
+                return valueA.localeCompare(valueB)
+            }else if (type === 'date'){
+                return moment(valueA).unix() - moment(valueB).unix()
             }
         }
-    }
+    },
+    defaultSortOrder: sortOrder && 'ascend' 
 })
+
+const leaf = (obj, path) => (path.split('.').reduce((value, el) => value[el], obj))

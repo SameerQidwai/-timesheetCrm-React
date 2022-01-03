@@ -8,6 +8,7 @@ import "../../styles/table.css";
 import Permission from "./Permission";
 import { addList, delLabel, editLabel, getList } from "../../../service/Roles-Apis";
 import { localStore } from "../../../service/constant";
+import { tableSorter } from "../../../components/Core/Table/TableFilter";
 
 const { Title } = Typography;
 
@@ -20,11 +21,12 @@ class Roles extends Component {
                 title: "Title",
                 dataIndex: "label",
                 key: "label",
-                sorter: (a, b)=>{
-                    if (a.label && b.label){
-                        return a.label.localeCompare(b.label)
-                    }
-                }
+                // sorter: (a, b)=>{
+                //     if (a.label && b.label){
+                //         return a.label.localeCompare(b.label)
+                //     }
+                // }
+                ...tableSorter('label', 'string')
             },
             {
                 title: "Action",

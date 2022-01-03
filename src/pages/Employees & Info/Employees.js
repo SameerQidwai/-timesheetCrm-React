@@ -10,6 +10,7 @@ import InfoModal from "./Modals/InfoModal";
 import { getList, delList } from "../../service/Employees";
 import { localStore } from "../../service/constant";
 import "../styles/table.css";
+import { tableSorter } from "../../components/Core/Table/TableFilter";
 
 const { Title } = Typography;
 
@@ -24,38 +25,19 @@ class Employees extends Component {
                 render: (record) => {
                     return `Emp-00${ record }`
                 },
-                defaultSortOrder: 'ascend',
-                sorter: (a, b) => {
-                    if (a.contactPersonOrganization){
-                        const { contactPersonId } = a.contactPersonOrganization
-                        const contactPersonIdB   = b.contactPersonOrganization.contactPersonId
-                        return contactPersonId - contactPersonIdB
-                    }
-                },
+                ...tableSorter('contactPersonOrganization.contactPersonId', 'number', true)
             },
             {
                 title: "First Name",
                 dataIndex: ["contactPersonOrganization", "contactPerson", "firstName"],
                 key: "firstName",
-                sorter: (a, b) => {
-                    if (a.contactPersonOrganization && a.contactPersonOrganization.contactPerson){
-                        const { firstName } = a.contactPersonOrganization.contactPerson
-                        const firstNameB   = b.contactPersonOrganization.contactPerson.firstName
-                        return firstName.localeCompare(firstNameB)
-                    }
-                },
+                ...tableSorter('contactPersonOrganization.contactPerson.firstName', 'string')
             },
             {
                 title: "Last Name",
                 dataIndex: ["contactPersonOrganization", "contactPerson", "lastName"],
                 key: "lastName",
-                sorter: (a, b) => {
-                    if (a.contactPersonOrganization && a.contactPersonOrganization.contactPerson){
-                        const { lastName } = a.contactPersonOrganization.contactPerson
-                        const lastNameB   = b.contactPersonOrganization.contactPerson.lastName
-                        return lastName.localeCompare(lastNameB)
-                    }
-                },
+                ...tableSorter('contactPersonOrganization.contactPerson.lastName', 'string')
             },
             {
                 title: "Phone",

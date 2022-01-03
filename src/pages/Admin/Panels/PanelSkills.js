@@ -8,6 +8,7 @@ import { getlevels, getSkills, getList, editLabel, addList, delLabel, } from "..
 import { getSkillLevels as selectedSkill } from "../../../service/constant-Apis";
 import Operation from "antd/lib/transfer/operation";
 import { localStore } from "../../../service/constant";
+import { tableSorter } from "../../../components/Core/Table/TableFilter";
 
 const { Title } = Typography;
 
@@ -22,11 +23,12 @@ class PanelInfo extends Component {
                 title: "Skill",
                 dataIndex: "label",
                 key: "label",
-                sorter: (a, b)=>{
-                    if (a.label && b.label){
-                        return a.label.localeCompare(b.label)
-                    }
-                }
+                // sorter: (a, b)=>{
+                //     if (a.label && b.label){
+                //         return a.label.localeCompare(b.label)
+                //     }
+                // }
+                ...tableSorter('label', 'string')
             },
             {
                 title: "Action",

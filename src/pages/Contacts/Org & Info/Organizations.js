@@ -8,6 +8,7 @@ import { getList, delOrg } from "../../../service/Organizations";
 
 import "../../styles/table.css";
 import { localStore } from "../../../service/constant";
+import { tableSorter } from "../../../components/Core/Table/TableFilter";
 
 const { Title } = Typography;
 
@@ -20,15 +21,14 @@ class Organizations extends Component {
                 dataIndex: "id",
                 key: "id",
                 render: (record) => `ORG-00${record}`,
-                sorter: (a, b) => a.id - b.id,
-                defaultSortOrder: 'ascend'
+                ...tableSorter('id', 'number', true),
             },
             {
                 title: "Name",
                 dataIndex: "name",
                 key: "name",
                 width: 500,
-                sorter: (a, b) => a.name.localeCompare(b.name),
+                ...tableSorter('name', 'string', true),
             },
             {
                 title: "Parent Organisation",

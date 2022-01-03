@@ -8,6 +8,7 @@ import { getList, addList, delLabel, editLabel } from "../../../service/panel";
 
 import "../../styles/table.css";
 import { localStore } from "../../../service/constant";
+import { tableSorter } from "../../../components/Core/Table/TableFilter";
 
 const { Title } = Typography;
 
@@ -21,11 +22,12 @@ class Panels extends Component {
                 title: "Name",
                 dataIndex: "label",
                 key: "label",
-                sorter: (a, b)=>{
-                    if (a.label && b.label){
-                        return a.label.localeCompare(b.label)
-                    }
-                }
+                // sorter: (a, b)=>{
+                //     if (a.label && b.label){
+                //         return a.label.localeCompare(b.label)
+                //     }
+                // }
+                ...tableSorter('label', 'string')
             },
             // {
             //     title: "Contact",
