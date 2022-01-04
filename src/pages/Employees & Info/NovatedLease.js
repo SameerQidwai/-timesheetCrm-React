@@ -55,6 +55,7 @@ class NovatedLease extends Component {
                 key: "id",
                 dataIndex: "id",
                 align: "right",
+                width: 115,
                 render: (record) => (
                     <Dropdown
                         overlay={

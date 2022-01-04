@@ -40,6 +40,7 @@ class Skills extends Component {
                 title: 'Start Date',
                 dataIndex: 'startDate',
                 key: 'startDate',
+                width: 'fit-content',
                 render: (record) =>(record && moment(record).format('ddd DD MM yyyy'))
             },
             {
@@ -64,6 +65,7 @@ class Skills extends Component {
                 title: 'Action',
                 key: 'action',
                 align: 'right',
+                width: 115,
                 render: (record) => (
                     <Dropdown overlay={
                         <Menu>

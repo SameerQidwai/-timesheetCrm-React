@@ -56,6 +56,7 @@ class Contact extends Component {
                 title: "Action",
                 key: "action",
                 align: "right",
+                width: 115,
                 render: (record) => (
                     <Dropdown
                         overlay={
@@ -91,6 +92,7 @@ class Contact extends Component {
         ];
 
         this.state = {
+            filterData:[],
             data: [],
             openModal: false,
             editCP: false,
@@ -111,6 +113,7 @@ class Contact extends Component {
             if (res.success) {
                 this.setState({
                     data: res.data,
+                    filterData: res.data,
                     openModal: false,
                     editCP: false,
                     permissions: CONTACT_PERSONS
@@ -140,7 +143,7 @@ class Contact extends Component {
     };
 
     render() {
-        const {data, openModal, editCP, permissions} = this.state;
+        const {data, filterData, openModal, editCP, permissions} = this.state;
         const columns = this.columns;
         return (
             <>
@@ -171,11 +174,34 @@ class Contact extends Component {
                     </Col>
                     <Col span={24}>
                         <Table
+                            title={(dataSource)=> <Input.Search
+                                enterButton
+                                size="small"
+                                onChange={(e)=>{
+                                    const { value } = e.target
+                                    if (value){
+                                        this.setState({
+                                            filterData: data.filter(el => {
+                                                return el.firstName.toLowerCase().includes(value.toLowerCase()) || 
+                                                el.lastName.toLowerCase().includes(value.toLowerCase()) ||
+                                                el.email && el.email.toLowerCase().startsWith(value.toLowerCase()) ||
+                                                el.phoneNumber && el.phoneNumber.startsWith(value)
+                                            })
+                                        })
+                                    }else{
+                                        this.setState({
+                                            filterData: data
+                                        })
+                                    }
+                                    
+                                }}
+                                allowClear
+                            />}
                             bordered
                             pagination={{pageSize: localStore().pageSize}}
                             rowKey={(data) => data.id}
                             columns={columns}
-                            dataSource={data}
+                            dataSource={filterData}
                             size="small"
                         />
                     </Col>

@@ -10,6 +10,10 @@
         background-color: #fafafa;
     }
 
+/* div.timeSheet-table .ant-table-summary { // using table summary tag now as I have updated the packeg
+    display: table-header-group;
+} */
+
 /* .ant-table-wrapper.TimeSheetTable {
     height: 75vh;
 } */
@@ -37,9 +41,6 @@ div.timeSheet-table div.ant-table-content:hover {
 
 div.timeSheet-table div.ant-table-content::-webkit-scrollbar-track-piece {
     margin-left: 300px;
-}
-div.timeSheet-table .ant-table-summary {
-    display: table-header-group;
 }
 
 div.timeSheet-table div.ant-table-has-fix-left  tr.submitClass td.ant-table-cell-fix-left{

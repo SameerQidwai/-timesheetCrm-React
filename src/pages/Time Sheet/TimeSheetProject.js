@@ -248,33 +248,36 @@ class TimeSheetProject extends Component {
         const { columns } = this.state
         if(data.length>0)
         return (
-            <Table.Summary.Row>
-                {/* //multiple select commented */}
-                <Table.Summary.Cell  index={0}> </Table.Summary.Cell> 
-                {columns.map(({key, dateObj}, kIndex)=>{
-                    let value = 0
-                    data.map((rowData, index) =>{
-                        if(key !== 'user' ){
-                            if(key === 'totalHours'){
-                                value += data[index]['totalHours'] ?? 0
-                            }else{
-                                value += (rowData[key] ? rowData[key]['actualHours'] :0)
+            <Table.Summary fixed="top">
+                <Table.Summary.Row>
+                    {/* //multiple select commented */}
+                    <Table.Summary.Cell  index={0}> </Table.Summary.Cell> 
+                    {columns.map(({key, dateObj}, kIndex)=>{
+                        let value = 0
+                        data.map((rowData, index) =>{
+                            if(key !== 'user' ){
+                                if(key === 'totalHours'){
+                                    value += data[index]['totalHours'] ?? 0
+                                }else{
+                                    value += (rowData[key] ? rowData[key]['actualHours'] :0)
+                                }
                             }
-                        }
-                    })
-                    return key === 'user' ? <Table.Summary.Cell index={kIndex+1} key={kIndex+1}>
-                        Total Work In A day  
-                    </Table.Summary.Cell > 
-                    : // show total and normal background if the column month is same as selected month or the key is totalHours of the month
-                    <Table.Summary.Cell 
-                        index={kIndex+1}
-                        key={kIndex+1}
-                        align="center" 
-                    >
-                        {value && value.toFixed(2)}
-                    </Table.Summary.Cell>
-                })}
-        </Table.Summary.Row>)
+                        })
+                        return key === 'user' ? <Table.Summary.Cell index={kIndex+1} key={kIndex+1}>
+                            Total Work In A day  
+                        </Table.Summary.Cell > 
+                        : // show total and normal background if the column month is same as selected month or the key is totalHours of the month
+                        <Table.Summary.Cell 
+                            index={kIndex+1}
+                            key={kIndex+1}
+                            align="center" 
+                        >
+                            {value && value.toFixed(2)}
+                        </Table.Summary.Cell>
+                    })}
+                </Table.Summary.Row>
+            </Table.Summary>
+        )
     }
     
     highlightRow(record) {

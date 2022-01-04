@@ -32,6 +32,7 @@ class Roles extends Component {
                 title: "Action",
                 key: "action",
                 align: "right",
+                width: 115,
                 render: (record, obj , index) => (
                     <Dropdown
                         overlay={

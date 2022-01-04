@@ -471,42 +471,44 @@ class TimeSheetContact extends Component {
         const { startDate, endDate } = this.state.sheetDates
         if(data.length>0)
         return (
-            <Table.Summary.Row >
-                {/* //multiple select commented */}
-                <Table.Summary.Cell  index={0}> </Table.Summary.Cell>  
-                {columns.map(({key, dateObj}, kIndex)=>{
-                    let value = 0
-                    data.map((rowData, index) =>{ //calculation for total hours and actual hours for footer to show
-                        if(key !== 'project' ){
-                            if(key === 'totalHours'){
-                                value += data[index]['totalHours'] ?? 0 
-                            }else{
-                                value += (rowData[key] ? rowData[key]['actualHours'] : 0)
+            <Table.Summary fixed="top">
+                <Table.Summary.Row >
+                    {/* //multiple select commented */}
+                    <Table.Summary.Cell  index={0}> </Table.Summary.Cell>  
+                    {columns.map(({key, dateObj}, kIndex)=>{
+                        let value = 0
+                        data.map((rowData, index) =>{ //calculation for total hours and actual hours for footer to show
+                            if(key !== 'project' ){
+                                if(key === 'totalHours'){
+                                    value += data[index]['totalHours'] ?? 0 
+                                }else{
+                                    value += (rowData[key] ? rowData[key]['actualHours'] : 0)
+                                }
                             }
-                        }
-                    })
-                    //Title of the projct show column for title 
-                    return key === 'project' ? <Table.Summary.Cell index={kIndex+1} key={kIndex+1}>
-                        Total Work In A day  
-                    </Table.Summary.Cell > 
-                    : // show total and normal background if the column month is same as selected month or the key is totalHours of the month
-                        (key === 'totalHours'|| (dateObj && dateObj.isSameOrAfter(startDate)  && dateObj.isSameOrBefore(endDate))) ? 
-                        <Table.Summary.Cell 
-                            index={kIndex+1}
-                            key={kIndex+1}
-                            align="center" 
-                        >
-                            {value && value.toFixed(2)}
-                        </Table.Summary.Cell>
-                        : // show background grey if the column month is NOT same as selected month
+                        })
+                        //Title of the projct show column for title 
+                        return key === 'project' ? <Table.Summary.Cell index={kIndex+1} key={kIndex+1}>
+                            Total Work In A day  
+                        </Table.Summary.Cell > 
+                        : // show total and normal background if the column month is same as selected month or the key is totalHours of the month
+                            (key === 'totalHours'|| (dateObj && dateObj.isSameOrAfter(startDate)  && dateObj.isSameOrBefore(endDate))) ? 
                             <Table.Summary.Cell 
-                                index={kIndex+1} 
+                                index={kIndex+1}
                                 key={kIndex+1}
-                                align='center'
-                                className="prevDates-TMcell" 
-                            >0</Table.Summary.Cell>
-                })}
-            </Table.Summary.Row>
+                                align="center" 
+                            >
+                                {value && value.toFixed(2)}
+                            </Table.Summary.Cell>
+                            : // show background grey if the column month is NOT same as selected month
+                                <Table.Summary.Cell 
+                                    index={kIndex+1} 
+                                    key={kIndex+1}
+                                    align='center'
+                                    className="prevDates-TMcell" 
+                                >0</Table.Summary.Cell>
+                    })}
+                </Table.Summary.Row>
+            </Table.Summary>
         )
     }
 

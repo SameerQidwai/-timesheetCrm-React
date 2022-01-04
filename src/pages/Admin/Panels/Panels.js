@@ -38,6 +38,7 @@ class Panels extends Component {
                 title: "Action",
                 key: "action",
                 align: "right",
+                width: 115,
                 render: (text, record) => (
                     <Dropdown
                         overlay={

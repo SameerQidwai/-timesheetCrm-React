@@ -77,6 +77,7 @@ class Resources extends Component {
                 title: "Action",
                 key: "action",
                 align: "right",
+                width: 115,
                 render: (text, record, index) => (
                     <Dropdown
                         overlay={
@@ -312,6 +313,7 @@ function NestedTable(props) {
             title: "Action",
             key: "action",
             align: "right",
+            width: 115,
             render: (text, record, index) => (
                 <Dropdown
                     overlay={
