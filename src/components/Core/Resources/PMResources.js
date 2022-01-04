@@ -105,6 +105,7 @@ class PMResources extends Component {
         console.log(permissions);
         return (
             <Table
+                bordered
                 pagination={{pageSize: localStore().pageSize}}
                 rowKey={(record) => record.id}
                 columns={this.columns}
@@ -144,12 +145,13 @@ function NestedTable(props) {
     ];
 
     return <Table
-            key={props.skill}
-            rowKey={(record) => record.id} 
-            columns={columns} 
-            dataSource={props.data} 
-            pagination={false}
-        />
+        bordered
+        key={props.skill}
+        rowKey={(record) => record.id} 
+        columns={columns} 
+        dataSource={props.data} 
+        pagination={false}
+    />
 };
 
 

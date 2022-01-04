@@ -179,6 +179,7 @@ class Levels extends Component {
                     </Col>
                 </Row>
                 <Table
+                    bordered
                     rowKey={(data) => data.id}
                     columns={this.columns}
                     dataSource={data}

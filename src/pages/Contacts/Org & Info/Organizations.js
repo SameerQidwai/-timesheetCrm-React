@@ -155,6 +155,7 @@ class Organizations extends Component {
                     </Col>
                     <Col span={24}>
                         <Table
+                            bordered
                             pagination={{pageSize: localStore().pageSize}} 
                             rowKey={(data) => data.id}
                             columns={columns}

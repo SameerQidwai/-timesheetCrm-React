@@ -228,6 +228,7 @@ class Calenders extends Component {
                     </Col>
                     <Col span={24}>
                         <Table
+                            bordered
                             pagination={{pageSize: localStore().pageSize}}
                             columns={columns}
                             dataSource={data}

@@ -232,7 +232,8 @@ class Permission extends Component {
                     onCancel={()=>{closeModal()}}
                     width={700}
                 >
-                    <Table 
+                    <Table
+                        bordered
                         size='small' 
                         rowKey="key" 
                         columns={this.perColumns} 

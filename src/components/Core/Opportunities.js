@@ -113,7 +113,8 @@ class Skills extends Component {
         const { data, columns } = this.state
         return (
             <>
-                <Table 
+                <Table
+                    bordered
                     pagination={{pageSize: localStore().pageSize}}
                     columns={columns} 
                     dataSource={data} 

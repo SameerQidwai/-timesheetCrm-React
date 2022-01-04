@@ -162,6 +162,7 @@ class EmpBilling extends Component {
                     </Item>
                 </Descriptions>
                 <Table
+                    bordered
                     pagination={{pageSize: localStore().pageSize}}
                     rowKey={(data) => data.id}
                     columns={this.columns}

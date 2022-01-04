@@ -91,6 +91,7 @@ class Travels extends Component {
         return (
             <>
                 <Table
+                    bordered
                     pagination={{pageSize: localStore().pageSize}}
                     columns={this.columns}
                     dataSource={flights}

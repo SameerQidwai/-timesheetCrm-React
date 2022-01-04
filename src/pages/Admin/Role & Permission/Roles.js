@@ -200,6 +200,7 @@ class Roles extends Component {
                     </Col>
                     <Col span={24}>
                         <Table
+                            bordered
                             pagination={{pageSize: localStore().pageSize}}
                             rowKey="id"
                             columns={columns}

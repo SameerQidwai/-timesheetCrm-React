@@ -105,6 +105,7 @@ class Projects extends Component {
         return (
             <>
                 <Table
+                    bordered
                     pagination={{pageSize: localStore().pageSize}}
                     columns={columns}
                     dataSource={projects}

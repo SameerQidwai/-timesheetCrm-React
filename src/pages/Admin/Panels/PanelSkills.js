@@ -578,6 +578,7 @@ class PanelInfo extends Component {
                     </Col>
                 </Row>
                 <Table
+                    bordered
                     pagination={{pageSize: localStore().pageSize}}
                     rowKey={(data) => data.id}
                     columns={this.columns}

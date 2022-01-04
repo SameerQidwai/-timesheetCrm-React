@@ -179,6 +179,7 @@ class HolidayTypes extends Component {
                     </Col>
                 </Row>
                 <Table
+                    bordered
                     pagination={{pageSize: localStore().pageSize}}
                     columns={this.columns}
                     dataSource={data}

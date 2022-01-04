@@ -238,6 +238,7 @@ class Resources extends Component {
                     {/* <Col> <Button type="danger" size='small'>Delete Resource</Button></Col> */}
                 </Row>
                 <Table
+                    bordered
                     pagination={{pageSize: localStore().pageSize}}
                     rowKey={(record) => record.id}
                     columns={this.columns}
@@ -374,6 +375,7 @@ function NestedTable(props) {
 
     return <div style={{ paddingRight: 20}}> 
         <Table
+            bordered
             key={props.skill}
             rowKey={(record) => record.id} 
             columns={columns} 
