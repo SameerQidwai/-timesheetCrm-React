@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Row, Col, Menu, Table, Modal, Button, Dropdown, Popconfirm, Typography, Input, Space, } from "antd";
+import { Row, Col, Menu, Table, Modal, Button, Dropdown, Popconfirm, Typography, Input, Space, Switch, } from "antd";
 import { DownOutlined, SettingOutlined, PlusSquareOutlined, FilterOutlined, UploadOutlined,  SearchOutlined} from "@ant-design/icons"; //Icons
 // import { Link } from 'react-router-dom'
 
@@ -142,6 +142,39 @@ class Contact extends Component {
         this.contactForm.current.refs.contact_form.submit();
     };
 
+    generalFilter = () =>{
+        const { data } = this.state
+        return <Row>
+            <Col span={5} >
+            <Input.Search
+                enterButton
+                size="small"
+                onChange={(e)=>{
+                    const { value } = e.target
+                    const array = value.split(';')
+                    if (value){
+                        this.setState({
+                            filterData: data.filter(el => {
+                                return `00${el.id.toString()}`.includes(value) ||
+                                el.firstName && el.firstName.toLowerCase().includes(value.toLowerCase()) || 
+                                el.lastName && el.lastName.toLowerCase().includes(value.toLowerCase()) ||
+                                el.email && el.email.toLowerCase().includes(value.toLowerCase()) ||
+                                el.phoneNumber && el.phoneNumber.startsWith(value) 
+                            })
+                        })
+                    }else{
+                        this.setState({
+                            filterData: data
+                        })
+                    }
+                    
+                }}
+                allowClear
+            />
+            </Col>
+        </Row>
+    }
+
     render() {
         const {data, filterData, openModal, editCP, permissions} = this.state;
         const columns = this.columns;
@@ -174,30 +207,9 @@ class Contact extends Component {
                     </Col>
                     <Col span={24}>
                         <Table
-                            title={(dataSource)=> <Input.Search
-                                enterButton
-                                size="small"
-                                onChange={(e)=>{
-                                    const { value } = e.target
-                                    if (value){
-                                        this.setState({
-                                            filterData: data.filter(el => {
-                                                return el.firstName.toLowerCase().includes(value.toLowerCase()) || 
-                                                el.lastName.toLowerCase().includes(value.toLowerCase()) ||
-                                                el.email && el.email.toLowerCase().startsWith(value.toLowerCase()) ||
-                                                el.phoneNumber && el.phoneNumber.startsWith(value)
-                                            })
-                                        })
-                                    }else{
-                                        this.setState({
-                                            filterData: data
-                                        })
-                                    }
-                                    
-                                }}
-                                allowClear
-                            />}
+                            title={this.generalFilter}
                             bordered
+                            className="fixed-top"
                             pagination={{pageSize: localStore().pageSize}}
                             rowKey={(data) => data.id}
                             columns={columns}
