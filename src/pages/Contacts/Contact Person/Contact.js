@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Row, Col, Menu, Table, Modal, Button, Dropdown, Popconfirm, Typography, Input, Space, Switch, } from "antd";
+import { Row, Col, Menu, Table, Modal, Button, Dropdown, Popconfirm, Typography, Input, Space, Switch, InputNumber, } from "antd";
 import { DownOutlined, SettingOutlined, PlusSquareOutlined, FilterOutlined, UploadOutlined,  SearchOutlined} from "@ant-design/icons"; //Icons
 // import { Link } from 'react-router-dom'
 
@@ -7,7 +7,7 @@ import InfoModal from "./InfoModal";
 import { getList, delList } from "../../../service/conatct-person";
 import { localStore } from "../../../service/constant";
 import "../../styles/table.css";
-import { tableFilter, tableSorter } from "../../../components/Core/Table/TableFilter";
+import { tableFilter, tableSorter, tableSummaryFilter, tableTitleFilter } from "../../../components/Core/Table/TableFilter";
 
 const { Title } = Typography;
 
@@ -21,6 +21,7 @@ class Contact extends Component {
                 title: "Code",
                 dataIndex: "id",
                 key: "id",
+                width: 115,
                 render: (record) => `00${record}`,
                 // sorter: (a, b) => a.id - b.id,
                 ...tableSorter('id', 'number', true),
@@ -50,6 +51,7 @@ class Contact extends Component {
                 title: "Contact",
                 dataIndex: "phoneNumber",
                 key: "phoneNumber",
+                width: 150,
                 // ...tableFilter('firstName', 'startsWith')
             },
             {
@@ -57,10 +59,10 @@ class Contact extends Component {
                 key: "action",
                 align: "right",
                 width: 115,
-                render: (record) => (
+                render: (record, index) => (
                     <Dropdown
                         overlay={
-                            <Menu>
+                            <Menu key={index}>
                                 {/* <Menu.Item danger>
                                     <Popconfirm
                                         title="Sure to delete?"
@@ -98,10 +100,17 @@ class Contact extends Component {
             editCP: false,
             permissions: {},
             searchText: '',
-            searchedColumn: '',
+            searchedColumn: {
+                'id': {type: 'Input', value: '', showInColumn: true},
+                'firstName': {type: 'Input', value: '', showInColumn: true},
+                'lastName': { type: 'Input', value: '', showInColumn: true},
+                'email': {type: 'Input', value: '', showInColumn: true},
+                'phoneNumber': {type: 'Input', value: '', showInColumn: true},
+                'Action': {type: 'none', value: '', showInColumn: true, disabled:true},
+            }
         };
     }
-
+    
     componentDidMount = () =>{
         this.getData()
     }
@@ -142,41 +151,52 @@ class Contact extends Component {
         this.contactForm.current.refs.contact_form.submit();
     };
 
-    generalFilter = () =>{
+    generalFilter = (value) =>{
         const { data } = this.state
-        return <Row>
-            <Col span={5} >
-            <Input.Search
-                enterButton
-                size="small"
-                onChange={(e)=>{
-                    const { value } = e.target
-                    const array = value.split(';')
-                    if (value){
-                        this.setState({
-                            filterData: data.filter(el => {
-                                return `00${el.id.toString()}`.includes(value) ||
-                                el.firstName && el.firstName.toLowerCase().includes(value.toLowerCase()) || 
-                                el.lastName && el.lastName.toLowerCase().includes(value.toLowerCase()) ||
-                                el.email && el.email.toLowerCase().includes(value.toLowerCase()) ||
-                                el.phoneNumber && el.phoneNumber.startsWith(value) 
-                            })
-                        })
-                    }else{
-                        this.setState({
-                            filterData: data
-                        })
-                    }
-                    
-                }}
-                allowClear
-            />
-            </Col>
-        </Row>
+        if (value){
+            this.setState({
+                filterData: data.filter(el => {
+                    return `00${el.id.toString()}`.includes(value) ||
+                    el.firstName && el.firstName.toLowerCase().includes(value.toLowerCase()) || 
+                    el.lastName && el.lastName.toLowerCase().includes(value.toLowerCase()) ||
+                    el.email && el.email.toLowerCase().includes(value.toLowerCase()) ||
+                    el.phoneNumber && el.phoneNumber.startsWith(value) 
+                })
+            })
+        }else{
+            this.setState({
+                filterData: data
+            })
+        }
+    }
+
+    advancefilter = (e, column) =>{
+        const { data, searchedColumn: search }= this.state
+        const { value } = e.target
+        search[column]['value'] = value
+
+        if (search['id']['value'] || search['firstName']['value'] ||
+        search['lastName']['value'] || search['email']['value'] ||
+        search['phoneNumber']['value'] ){
+            this.setState({
+                filterData: data.filter(el => {
+                    return `00${el.id.toString()}`.includes(search['id']['value']) &&
+                    el.firstName && el.firstName.toLowerCase().includes(search['firstName']['value'].toLowerCase()) &&
+                    el.lastName && el.lastName.toLowerCase().includes(search['lastName']['value'].toLowerCase()) &&
+                    el.email && el.email.toLowerCase().includes(search['email']['value'].toLowerCase()) &&
+                    el.phoneNumber && el.phoneNumber.toLowerCase().includes(search['phoneNumber']['value'].toLowerCase())
+                }),
+                searchedColumn: search,
+            })
+        }else{
+            this.setState({
+                filterData: data
+            })
+        }
     }
 
     render() {
-        const {data, filterData, openModal, editCP, permissions} = this.state;
+        const {filterData, openModal, editCP, permissions, searchedColumn} = this.state;
         const columns = this.columns;
         return (
             <>
@@ -207,7 +227,7 @@ class Contact extends Component {
                     </Col>
                     <Col span={24}>
                         <Table
-                            title={this.generalFilter}
+                            title={()=>tableTitleFilter(5, this.generalFilter)}
                             bordered
                             className="fixed-top"
                             pagination={{pageSize: localStore().pageSize}}
@@ -215,6 +235,8 @@ class Contact extends Component {
                             columns={columns}
                             dataSource={filterData}
                             size="small"
+                            sticky
+                            summary={()=>tableSummaryFilter(searchedColumn, this.advancefilter)}
                         />
                     </Col>
                 </Row>

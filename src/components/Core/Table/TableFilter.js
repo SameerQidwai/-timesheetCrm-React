@@ -1,9 +1,9 @@
 import React from 'react'
-import { Button, Input, Space } from 'antd';
+import { Button, Col, Input, Modal, Row, Space, Table } from 'antd';
 import { SearchOutlined } from "@ant-design/icons";
 import moment from "moment";
                         //keys          //serachFunction
-export const tableFilter = (dataIndex, searchFunction) => ({
+export const tableFilter = (dataIndex, searchFunction) => ({ // filter on the head
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => ( 
         <div style={{ padding: 8 }}>
             <Input
@@ -18,18 +18,19 @@ export const tableFilter = (dataIndex, searchFunction) => ({
             />
             <Space>
                 <Button
-                type="primary"
-                onClick={() =>confirm()}
-                icon={<SearchOutlined />}
-                size="small"
-                style={{ width: 90 }}
+                    type="primary"
+                    onClick={() =>confirm()}
+                    icon={<SearchOutlined />}
+                    size="small"
+                    style={{ width: 90 }}
                 >
-                Search
+                    Search
                 </Button>
                 <Button 
-                onClick={() => clearFilters()} 
-                size="small" style={{ width: 90 }}>
-                Reset
+                    onClick={() => clearFilters()} 
+                    size="small" style={{ width: 90 }}
+                >
+                    Reset
                 </Button>
             </Space>
         </div>
@@ -42,7 +43,7 @@ export const tableFilter = (dataIndex, searchFunction) => ({
     },
 })
                         // Keys      //dataType  //defaultSortOrder
-export const tableSorter = (dataIndex, type, sortOrder) => ({
+export const tableSorter = (dataIndex, type, sortOrder) => ({ //sorter on the head
     sorter: (a, b) => { 
         let valueA = leaf(a, dataIndex)
         let valueB = leaf(b, dataIndex) 
@@ -58,5 +59,41 @@ export const tableSorter = (dataIndex, type, sortOrder) => ({
     },
     defaultSortOrder: sortOrder && 'ascend' 
 })
+                                    //filterObj    //filterFunction
+export const tableSummaryFilter = (filters, filterFunction) =>{ // filter on footer
+    let keys = Object.keys(filters)
+        return <Table.Summary fixed="top">
+        <Table.Summary.Row>
+                {keys.map(el => {
+                    return filters[el].showInColumn && (// filters[el].type === 'Input' &&
+                        <Table.Summary.Cell index={el} key={el}>
+                            <Input size="small" onChange={(e)=>filterFunction(e, el)} disabled={filters[el].type === 'none'} />
+                        </Table.Summary.Cell> )
+                })}
+        </Table.Summary.Row>
+    </Table.Summary>
+}
+                                    //Input Length   //filterFunction
+export const tableTitleFilter = (colSpan, filterFunction) =>{ // table filter on title //general filter
+    return <Row>
+            <Col span={colSpan} >
+                <Input.Search
+                    enterButton
+                    size="small"
+                    onChange={(e)=>{
+                        const { value } = e.target
+                        filterFunction(value)
+                    }}
+                    allowClear
+                />
+            </Col>
+        </Row>
+}
 
-const leaf = (obj, path) => (path.split('.').reduce((value, el) => value[el], obj))
+export const tableModalFilter = () =>{
+    return <Modal>
+        
+    </Modal>
+}
+
+export const leaf = (obj, path) => (path.split('.').reduce((value, el) => value[el], obj))

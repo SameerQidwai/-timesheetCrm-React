@@ -94,6 +94,9 @@ div.timeSheet-table .ant-table-tbody > tr.approveClass.ant-table-row-selected.an
     background: #e7e7e7b7 !important;
 }
 
+.filter-EmptyCell {
+    background: #e7e7e7b7 !important
+}
 
 
 /* width */
