@@ -1,6 +1,7 @@
 SORTING
-    Create an only sorter function in new File
     Organizaion ParentOrganization column sort is not yet complete
+
+    Check Form.List in accociation type thing
 
 Filtering     
     Filter function in new File

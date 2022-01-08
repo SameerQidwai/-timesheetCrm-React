@@ -5,9 +5,9 @@ import { DownOutlined, SettingOutlined, PlusSquareOutlined, FilterOutlined, Uplo
 
 import InfoModal from "./InfoModal";
 import { getList, delList } from "../../../service/conatct-person";
-import { localStore } from "../../../service/constant";
+import { GENDER, localStore } from "../../../service/constant";
 import "../../styles/table.css";
-import { tableFilter, tableSorter, tableSummaryFilter, tableTitleFilter } from "../../../components/Core/Table/TableFilter";
+import { tableFilter, TableModalFilter, tableModalFilter, tableSorter, tableSummaryFilter, tableTitleFilter } from "../../../components/Core/Table/TableFilter";
 
 const { Title } = Typography;
 
@@ -39,6 +39,14 @@ class Contact extends Component {
                 dataIndex: "lastName",
                 key: "lastName",
                 ...tableSorter('lastName', 'string'),
+                // ...tableFilter('firstName', 'includes')
+            },
+            {
+                title: "Gender",
+                dataIndex: "gender",
+                key: "gender",
+                width: 100,
+                render: (value)=> GENDER[value]
                 // ...tableFilter('firstName', 'includes')
             },
             {
@@ -94,6 +102,7 @@ class Contact extends Component {
         ];
 
         this.state = {
+            openSearch: false,
             filterData:[],
             data: [],
             openModal: false,
@@ -104,9 +113,12 @@ class Contact extends Component {
                 'id': {type: 'Input', value: '', showInColumn: true},
                 'firstName': {type: 'Input', value: '', showInColumn: true},
                 'lastName': { type: 'Input', value: '', showInColumn: true},
+                'gender': {type: 'Input', value: '', showInColumn: true},
                 'email': {type: 'Input', value: '', showInColumn: true},
                 'phoneNumber': {type: 'Input', value: '', showInColumn: true},
                 'Action': {type: 'none', value: '', showInColumn: true, disabled:true},
+                'stateId': {type: 'none', value: '', showInColumn: false, disabled:false},
+                'address': {type: 'none', value: '', showInColumn: false, disabled:false},
             }
         };
     }
@@ -170,23 +182,31 @@ class Contact extends Component {
         }
     }
 
-    advancefilter = (e, column) =>{
-        const { data, searchedColumn: search }= this.state
-        const { value } = e.target
-        search[column]['value'] = value
+    advancefilter = (value, column, advSearch) =>{
+        let { data, searchedColumn: search }= this.state
+        if(column){
+            search[column]['value'] = value
+        }else{
+            search = advSearch
+        }
 
         if (search['id']['value'] || search['firstName']['value'] ||
         search['lastName']['value'] || search['email']['value'] ||
-        search['phoneNumber']['value'] ){
+        search['phoneNumber']['value'] || search['gender']['value'] || 
+        search['stateId']['value']||search['address']['value']){
             this.setState({
                 filterData: data.filter(el => {
-                    return `00${el.id.toString()}`.includes(search['id']['value']) &&
+                    return el.id.toString().includes(search['id']['value']) &&
                     el.firstName && el.firstName.toLowerCase().includes(search['firstName']['value'].toLowerCase()) &&
                     el.lastName && el.lastName.toLowerCase().includes(search['lastName']['value'].toLowerCase()) &&
-                    el.email && el.email.toLowerCase().includes(search['email']['value'].toLowerCase()) &&
-                    el.phoneNumber && el.phoneNumber.toLowerCase().includes(search['phoneNumber']['value'].toLowerCase())
+                    `${el.email ?? ''}`.toLowerCase().includes(search['email']['value'].toLowerCase()) &&
+                    `${el.phoneNumber ?? ''}`.toLowerCase().includes(search['phoneNumber']['value'].toLowerCase())&&
+                    el.gender && el.gender.startsWith(search['gender']['value']) &&
+                    el.stateId && el.stateId.toString().includes( search['stateId']['value']) &&
+                    `${el.address ?? ''}`.toLowerCase().includes(search['address']['value'].toLowerCase())
                 }),
                 searchedColumn: search,
+                openSearch: false,
             })
         }else{
             this.setState({
@@ -196,7 +216,7 @@ class Contact extends Component {
     }
 
     render() {
-        const {filterData, openModal, editCP, permissions, searchedColumn} = this.state;
+        const {filterData, openModal, editCP, permissions, searchedColumn, openSearch} = this.state;
         const columns = this.columns;
         return (
             <>
@@ -207,7 +227,11 @@ class Contact extends Component {
                     <Col style={{ textAlign: "end" }} span={12}>
                         <Row justify="end">
                             <Col>
-                                <Button type="default" size="small">
+                                <Button 
+                                    type="default" 
+                                    size="small"
+                                    onClick={()=>this.setState({openSearch: true})}    
+                                >
                                     <FilterOutlined />
                                     Filter
                                 </Button>
@@ -240,6 +264,12 @@ class Contact extends Component {
                         />
                     </Col>
                 </Row>
+                {openSearch && <TableModalFilter 
+                    visible={openSearch}
+                    filters={searchedColumn}
+                    filterFunction={this.advancefilter}
+                    onClose={()=>this.setState({openSearch:false})}
+                />}
                 {openModal && (
                     <InfoModal
                         visible={openModal}

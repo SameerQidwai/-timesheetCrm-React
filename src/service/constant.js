@@ -16,6 +16,7 @@ export const O_STATUS = {O: 'Open', L: 'Lost', P: 'Open', NB: 'Not Bid', DNP: 'D
 export const O_TYPE = {1: 'Milestone', 2: 'Time'}
 export const JOB_TYPE = { 1:"Casual", 2:"Part Time" , 3: "Full Time" }
 export const DURATION = {1: "Hourly" , 2: "Daily" , 3: "Weekly" , 4: "Fortnightly" , 5: "Monthly" }
+export const GENDER = {   "M" :  "Male", "F" :  "Female", "O" :  "Other" }
 
 export const formatCurrency = (amount) => {
     //console.log('=== === === formatCurrency === === ===');
