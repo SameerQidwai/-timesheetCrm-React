@@ -113,10 +113,15 @@ class Contact extends Component {
                 'id': {type: 'Input', value: '', showInColumn: true},
                 'firstName': {type: 'Input', value: '', showInColumn: true},
                 'lastName': { type: 'Input', value: '', showInColumn: true},
-                'gender': {type: 'Input', value: '', showInColumn: true},
+                'gender': {type: 'Input', value: '', showInColumn: true, mode: 'multiple',
+                options: [
+                    { label: "Male", value: "M" },
+                    { label: "Female", value: "F" },
+                    { label: "Other", value: "O" },
+                ]},
                 'email': {type: 'Input', value: '', showInColumn: true},
                 'phoneNumber': {type: 'Input', value: '', showInColumn: true},
-                'Action': {type: 'none', value: '', showInColumn: true, disabled:true},
+                'Action': {type: 'Input', value: '', showInColumn: true, disabled:true},
                 'stateId': {type: 'none', value: '', showInColumn: false, disabled:false},
                 'address': {type: 'none', value: '', showInColumn: false, disabled:false},
             }
@@ -189,7 +194,7 @@ class Contact extends Component {
         }else{
             search = advSearch
         }
-
+        console.log(search['gender']['value']);
         if (search['id']['value'] || search['firstName']['value'] ||
         search['lastName']['value'] || search['email']['value'] ||
         search['phoneNumber']['value'] || search['gender']['value'] || 
@@ -201,7 +206,8 @@ class Contact extends Component {
                     el.lastName && el.lastName.toLowerCase().includes(search['lastName']['value'].toLowerCase()) &&
                     `${el.email ?? ''}`.toLowerCase().includes(search['email']['value'].toLowerCase()) &&
                     `${el.phoneNumber ?? ''}`.toLowerCase().includes(search['phoneNumber']['value'].toLowerCase())&&
-                    el.gender && el.gender.startsWith(search['gender']['value']) &&
+                    `${el.gender ?? ''}`.startsWith(search['gender']['value'])&&
+                    // el.gender  &&  search['gender']['value'].indexOf(search['gender']['value'].length >0 ?el.gender : '') > -1  &&
                     el.stateId && el.stateId.toString().includes( search['stateId']['value']) &&
                     `${el.address ?? ''}`.toLowerCase().includes(search['address']['value'].toLowerCase())
                 }),

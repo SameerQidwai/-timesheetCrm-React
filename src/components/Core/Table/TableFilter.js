@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react'
-import { Button, Col, Input, Modal, Row, Space, Table, Form } from 'antd';
+import { Button, Col, Input, Modal, Row, Space, Table, Form, Select } from 'antd';
 import FormItems from '../FormItems';
 import { SearchOutlined } from "@ant-design/icons";
 import moment from "moment";
@@ -69,17 +69,31 @@ export const tableSummaryFilter = (filters, filterFunction) =>{ // filter on foo
                 {keys.map(el => {
                     return filters[el].showInColumn && (
                         <Table.Summary.Cell index={el} key={el}>
-                            {/* {filters[el].type === 'Input' && */}
-                            <Input
-                                value={filters[el].value}
-                                size="small" 
-                                onChange={(e)=>{
-                                    const {value} = e.target
-                                    filterFunction(value, el)
-                                }} 
-                                maxLength={el==='gender' ? 1: 100}
-                                disabled={filters[el].disabled} />
-                                {/* } */}
+                            {filters[el].type === 'Input' ?
+                                <Input
+                                    value={filters[el].value}
+                                    size="small" 
+                                    onChange={(e)=>{
+                                        const {value} = e.target
+                                        filterFunction(value, el)
+                                    }} 
+                                    maxLength={el==='gender' ? 1: 100}
+                                    disabled={filters[el].disabled} 
+                                /> 
+                                :
+                                filters[el].type === 'Select' &&
+                                    <Select
+                                        value={filters[el].value}
+                                        options={filters[el].options}
+                                        mode={filters[el].mode}
+                                        size="small"
+                                        onChange={(value)=>{
+                                            filterFunction(value, el)
+                                        }}
+                                        style={{width: '100%'}}
+                                        // onChange={onChange}
+                                    />
+                                } 
                         </Table.Summary.Cell> )
                 })}
         </Table.Summary.Row>
@@ -221,6 +235,7 @@ const filterFields = [ //just here for fun will get shift to contact
         fieldCol: 12,
         key: "gender",
         size: "small",
+        mode: 'multiple',
         data: [
             { label: "Male", value: "M" },
             { label: "Female", value: "F" },
