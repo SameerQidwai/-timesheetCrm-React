@@ -7,7 +7,7 @@ import InfoModal from "./InfoModal";
 import { getList, delList } from "../../../service/conatct-person";
 import { GENDER, localStore } from "../../../service/constant";
 import "../../styles/table.css";
-import { tableFilter, TableModalFilter, tableModalFilter, tableSorter, tableSummaryFilter, tableTitleFilter } from "../../../components/Core/Table/TableFilter";
+import { Filtertag, TableModalFilter, tableSorter, tableSummaryFilter, tableTitleFilter } from "../../../components/Core/Table/TableFilter";
 
 const { Title } = Typography;
 
@@ -110,21 +110,161 @@ class Contact extends Component {
             permissions: {},
             searchText: '',
             searchedColumn: {
-                'id': {type: 'Input', value: '', showInColumn: true},
-                'firstName': {type: 'Input', value: '', showInColumn: true},
-                'lastName': { type: 'Input', value: '', showInColumn: true},
-                'gender': {type: 'Input', value: '', showInColumn: true, mode: 'multiple',
+                'id': {type: 'Input', value: '',  label:"Code", showInColumn: true},
+                'firstName': {type: 'Input', value: '', label:"First Name",  showInColumn: true},
+                'lastName': { type: 'Input', value: '', label:"Last Name",  showInColumn: true},
+                'gender': {type: 'Select', value: [], label:"Gender",  showInColumn: true, mode: 'multiple',
                 options: [
                     { label: "Male", value: "M" },
                     { label: "Female", value: "F" },
                     { label: "Other", value: "O" },
                 ]},
-                'email': {type: 'Input', value: '', showInColumn: true},
-                'phoneNumber': {type: 'Input', value: '', showInColumn: true},
-                'Action': {type: 'Input', value: '', showInColumn: true, disabled:true},
-                'stateId': {type: 'none', value: '', showInColumn: false, disabled:false},
-                'address': {type: 'none', value: '', showInColumn: false, disabled:false},
-            }
+                'email': {type: 'Input', value: '',  label:"Email", showInColumn: true},
+                'phoneNumber': {type: 'Input', value: '', label:"Phone Number",  showInColumn: true},
+                'Action': {type: 'Input', value: '', label:"",  showInColumn: true, disabled:true},
+                'stateId': {type: 'none', value: '', label:"State",  showInColumn: false, disabled:false},
+                'address': {type: 'none', value: '', label:"Address",  showInColumn: false, disabled:false},
+            },
+            
+            filterFields: [ //just here for fun will get shift to contact
+                {
+                    Placeholder: "First Name",
+                    fieldCol: 12,
+                    size: "small",
+                    type: "Text",
+                },
+                {
+                    Placeholder: "Last Name",
+                    fieldCol: 12,
+                    size: "small",
+                    type: "Text",
+                },
+                {
+                    object: "basic",
+                    fieldCol: 12,
+                    key: "firstName",
+                    size: "small",
+                    type: "input",
+                    itemStyle: { marginBottom: 10 },
+                },
+                {
+                    object: "basic",
+                    fieldCol: 12,
+                    key: "lastName",
+                    size: "small",
+                    type: "input",
+                    itemStyle: { marginBottom: 10 },
+                },
+                {
+                    Placeholder: "Phone",
+                    fieldCol: 12,
+                    size: "small",
+                    type: "Text",
+                },
+                {
+                    Placeholder: "Email",
+                    fieldCol: 12,
+                    size: "small",
+                    type: "Text",
+                },
+                {
+                    object: "basic",
+                    fieldCol: 12,
+                    key: "phoneNumber",
+                    size: "small",
+                    type: "input",
+                    itemStyle: { marginBottom: 10 },
+                },
+                {
+                    object: "basic",
+                    fieldCol: 12,
+                    key: "email",
+                    size: "small",
+                    type: "input",
+                    itemStyle: { marginBottom: 10 },
+                },
+                {
+                    Placeholder: "Gender",
+                    fieldCol: 12,
+                    size: "small",
+                    type: "Text",
+                },
+                {
+                    Placeholder: "State",
+                    fieldCol: 12,
+                    size: "small",
+                    type: "Text",
+                },
+                {
+                    object: "basic",
+                    fieldCol: 12,
+                    key: "gender",
+                    size: "small",
+                    mode: 'multiple',
+                    data: [
+                        { label: "Male", value: "M" },
+                        { label: "Female", value: "F" },
+                        { label: "Other", value: "O" },
+                    ],
+                    type: "Select",
+                    itemStyle: { marginBottom: 10 },
+                },
+                {
+                    object: "basic",
+                    fieldCol: 12,
+                    key: "stateId",
+                    size: "small",
+                    type: "Select",
+                    // data: ,
+                    itemStyle: { marginBottom: 10 },
+                },
+                {
+                    Placeholder: "Skill",
+                    fieldCol: 12,
+                    size: "small",
+                    type: "Text",
+                },
+                {
+                    object: "basic",
+                    fieldCol: 24,
+                    key: "skillId",
+                    size: "small",
+                    mode: 'multiple',
+                    data: [],
+                    type: "Select",
+                    itemStyle: { marginBottom: 10 },
+                },
+                {
+                    Placeholder: "Association",
+                    fieldCol: 12,
+                    size: "small",
+                    type: "Text",
+                },
+                {
+                    object: "basic",
+                    fieldCol: 24,
+                    key: "association",
+                    size: "small",
+                    mode: 'multiple',
+                    data: [],
+                    type: "Select",
+                    itemStyle: { marginBottom: 10 },
+                },
+                {
+                    Placeholder: "Address",
+                    fieldCol: 12,
+                    size: "small",
+                    type: "Text",
+                },
+                {
+                    object: "basic",
+                    fieldCol: 24,
+                    key: "address",
+                    size: "small",
+                    type: "Input",
+                    itemStyle: { marginBottom: 20 },
+                },
+            ]
         };
     }
     
@@ -194,23 +334,40 @@ class Contact extends Component {
         }else{
             search = advSearch
         }
-        console.log(search['gender']['value']);
         if (search['id']['value'] || search['firstName']['value'] ||
         search['lastName']['value'] || search['email']['value'] ||
         search['phoneNumber']['value'] || search['gender']['value'] || 
         search['stateId']['value']||search['address']['value']){
+            
             this.setState({
-                filterData: data.filter(el => {
-                    return el.id.toString().includes(search['id']['value']) &&
-                    el.firstName && el.firstName.toLowerCase().includes(search['firstName']['value'].toLowerCase()) &&
-                    el.lastName && el.lastName.toLowerCase().includes(search['lastName']['value'].toLowerCase()) &&
-                    `${el.email ?? ''}`.toLowerCase().includes(search['email']['value'].toLowerCase()) &&
-                    `${el.phoneNumber ?? ''}`.toLowerCase().includes(search['phoneNumber']['value'].toLowerCase())&&
-                    `${el.gender ?? ''}`.startsWith(search['gender']['value'])&&
-                    // el.gender  &&  search['gender']['value'].indexOf(search['gender']['value'].length >0 ?el.gender : '') > -1  &&
-                    el.stateId && el.stateId.toString().includes( search['stateId']['value']) &&
-                    `${el.address ?? ''}`.toLowerCase().includes(search['address']['value'].toLowerCase())
+                filterData: data.filter(el => { // method one which have mutliple if condition for every multiple search
+                    let filtering = false
+                    let multi = false
+                    if (
+                        `00${el.id.toString()}`.includes(search['id']['value']) &&
+                        el.firstName && el.firstName.toLowerCase().includes(search['firstName']['value'].toLowerCase()) &&
+                        el.lastName && el.lastName.toLowerCase().includes(search['lastName']['value'].toLowerCase()) &&
+                        `${el.email ?? ''}`.toLowerCase().includes(search['email']['value'].toLowerCase()) &&
+                        `${el.phoneNumber ?? ''}`.toLowerCase().includes(search['phoneNumber']['value'].toLowerCase())&&
+                        el.stateId && el.stateId.toString().includes( search['stateId']['value']) &&
+                        `${el.address ?? ''}`.toLowerCase().includes(search['address']['value'].toLowerCase())
+                        ){
+                            filtering = true
+                        }
+                    if (search['gender']['value'].length >0 ){
+                        if (el.gender && search['gender']['value'].indexOf(el.gender ) > -1){
+                            multi = true
+                        }else{
+                            multi= false
+                        }
+                    }else{
+                        multi = true
+                    }
+                    if (filtering && multi){
+                        return el
+                    }
                 }),
+
                 searchedColumn: search,
                 openSearch: false,
             })
@@ -222,7 +379,7 @@ class Contact extends Component {
     }
 
     render() {
-        const {filterData, openModal, editCP, permissions, searchedColumn, openSearch} = this.state;
+        const {filterData, openModal, editCP, permissions, searchedColumn, openSearch, filterFields} = this.state;
         const columns = this.columns;
         return (
             <>
@@ -255,6 +412,10 @@ class Contact extends Component {
                             </Col>
                         </Row>
                     </Col>
+                    <Filtertag 
+                        filters={searchedColumn}
+                        filterFunction={this.advancefilter}
+                    />
                     <Col span={24}>
                         <Table
                             title={()=>tableTitleFilter(5, this.generalFilter)}
@@ -273,6 +434,7 @@ class Contact extends Component {
                 {openSearch && <TableModalFilter 
                     visible={openSearch}
                     filters={searchedColumn}
+                    filterFields={filterFields}
                     filterFunction={this.advancefilter}
                     onClose={()=>this.setState({openSearch:false})}
                 />}

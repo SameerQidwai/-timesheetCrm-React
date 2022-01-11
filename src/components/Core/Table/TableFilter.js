@@ -1,8 +1,9 @@
 import React, {useEffect} from 'react'
-import { Button, Col, Input, Modal, Row, Space, Table, Form, Select } from 'antd';
+import { Button, Col, Input, Modal, Row, Space, Table, Form, Select, Tag } from 'antd';
 import FormItems from '../FormItems';
 import { SearchOutlined } from "@ant-design/icons";
 import moment from "moment";
+import { getStates } from '../../../service/constant-Apis';
 
                             //keys          //serachFunction
 export const tableFilter = (dataIndex, searchFunction) => ({ // filter on the head
@@ -87,6 +88,7 @@ export const tableSummaryFilter = (filters, filterFunction) =>{ // filter on foo
                                         options={filters[el].options}
                                         mode={filters[el].mode}
                                         size="small"
+                                        maxTagCount= 'responsive'
                                         onChange={(value)=>{
                                             filterFunction(value, el)
                                         }}
@@ -101,7 +103,7 @@ export const tableSummaryFilter = (filters, filterFunction) =>{ // filter on foo
 }
                                     //Input Length   //filterFunction
 export const tableTitleFilter = (colSpan, filterFunction) =>{ // table filter on title //general filter
-    return <Row>
+    return <Row justify="end" >
             <Col span={colSpan} >
                 <Input.Search
                     enterButton
@@ -116,7 +118,7 @@ export const tableTitleFilter = (colSpan, filterFunction) =>{ // table filter on
         </Row>
 }
 
-export const TableModalFilter = ({visible, onClose, filters, filterFunction}) =>{
+export const TableModalFilter = ({visible, onClose, filters, filterFunction, filterFields}) =>{
     const [form] = Form.useForm();
 
     useEffect(() => {
@@ -144,10 +146,7 @@ export const TableModalFilter = ({visible, onClose, filters, filterFunction}) =>
         centered
         visible={visible}
         onOk={() => { form.submit()}}
-        // okButtonProps={{ disabled: loading }}
-        // okText={loading ?<LoadingOutlined /> :"Save"}
         onCancel={()=>onClose()}
-        // width={900}
     >
         <Form
             form={form}
@@ -160,113 +159,33 @@ export const TableModalFilter = ({visible, onClose, filters, filterFunction}) =>
     </Modal>
 }
 
+export const Filtertag = ({filters, filterFunction}) =>{
+    let filterKeys = Object.keys(filters)
+    return <Col span={24}> 
+        {filterKeys.map(el=>(
+            filters[el].value.length>0 &&<>
+                <Tag color="magenta" key={el}>{filters[el].label}: </Tag>
+                {typeof(filters[el].value) === 'string' ?
+                    <Tag 
+                        key={`${el}value`}
+                        color="lime" 
+                        closable 
+                        onClose={()=>filterFunction('', el)}
+                    >{filters[el].value}</Tag> :
+                    filters[el].value.map(value=> <Tag 
+                        key={`${el}${value}`}
+                        color="lime" 
+                        closable 
+                        onClose={()=>{
+                            let remove = filters[el].value.filter(elem=> elem !== value)
+                            filterFunction(remove, el)
+                        }}
+                    >{value}</Tag>)
+                }
+            </> 
+        ))}
+    </Col>
+}
 
-const filterFields = [ //just here for fun will get shift to contact
-    {
-        Placeholder: "First Name",
-        fieldCol: 12,
-        size: "small",
-        type: "Text",
-    },
-    {
-        Placeholder: "Last Name",
-        fieldCol: 12,
-        size: "small",
-        type: "Text",
-    },
-    {
-        object: "basic",
-        fieldCol: 12,
-        key: "firstName",
-        size: "small",
-        type: "input",
-        itemStyle: { marginBottom: 10 },
-    },
-    {
-        object: "basic",
-        fieldCol: 12,
-        key: "lastName",
-        size: "small",
-        type: "input",
-        itemStyle: { marginBottom: 10 },
-    },
-    {
-        Placeholder: "Phone",
-        fieldCol: 12,
-        size: "small",
-        type: "Text",
-    },
-    {
-        Placeholder: "Email",
-        fieldCol: 12,
-        size: "small",
-        type: "Text",
-    },
-    {
-        object: "basic",
-        fieldCol: 12,
-        key: "phoneNumber",
-        size: "small",
-        type: "input",
-        itemStyle: { marginBottom: 10 },
-    },
-    {
-        object: "basic",
-        fieldCol: 12,
-        key: "email",
-        size: "small",
-        type: "input",
-        itemStyle: { marginBottom: 10 },
-    },
-    {
-        Placeholder: "Gender",
-        fieldCol: 12,
-        size: "small",
-        type: "Text",
-    },
-    {
-        Placeholder: "State",
-        fieldCol: 12,
-        size: "small",
-        type: "Text",
-    },
-    {
-        object: "basic",
-        fieldCol: 12,
-        key: "gender",
-        size: "small",
-        mode: 'multiple',
-        data: [
-            { label: "Male", value: "M" },
-            { label: "Female", value: "F" },
-            { label: "Other", value: "O" },
-        ],
-        type: "Select",
-        itemStyle: { marginBottom: 10 },
-    },
-    {
-        object: "basic",
-        fieldCol: 12,
-        key: "stateId",
-        size: "small",
-        type: "Select",
-        data: [],
-        itemStyle: { marginBottom: 10 },
-    },
-    {
-        Placeholder: "Address",
-        fieldCol: 12,
-        size: "small",
-        type: "Text",
-    },
-    {
-        object: "basic",
-        fieldCol: 24,
-        key: "address",
-        size: "small",
-        type: "Input",
-        itemStyle: { marginBottom: 20 },
-    },
-]
 
 export const leaf = (obj, path) => (path.split('.').reduce((value, el) => value[el], obj))
