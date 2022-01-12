@@ -8,7 +8,7 @@ import { getList, delOrg } from "../../../service/Organizations";
 
 import "../../styles/table.css";
 import { localStore } from "../../../service/constant";
-import { tableSorter, tableTitleFilter } from "../../../components/Core/Table/TableFilter";
+import { TableModalFilter, tableSorter, tableSummaryFilter, tableTitleFilter } from "../../../components/Core/Table/TableFilter";
 
 const { Title } = Typography;
 
@@ -20,6 +20,7 @@ class Organizations extends Component {
                 title: "Code",
                 dataIndex: "id",
                 key: "id",
+                width: 120,
                 render: (record) => `ORG-00${record}`,
                 ...tableSorter('id', 'number', true),
             },
@@ -28,6 +29,13 @@ class Organizations extends Component {
                 dataIndex: "name",
                 key: "name",
                 width: 500,
+                ...tableSorter('name', 'string'),
+            },
+            {
+                title: "Title",
+                dataIndex: "title",
+                key: "title",
+                width: 100,
                 ...tableSorter('name', 'string'),
             },
             {
@@ -48,7 +56,7 @@ class Organizations extends Component {
                 title: "Action",
                 key: "action",
                 align: "right",
-                width: 115,
+                width: 100,
                 render: (record) => ( 
                     <Dropdown
                         overlay={
@@ -89,9 +97,131 @@ class Organizations extends Component {
             searchedColumn: {
                 'id': {type: 'Input', value: '',  label:"Code", showInColumn: true},
                 'name': {type: 'Input', value: '', label:"Organisation",  showInColumn: true},
+                'title': {type: 'Input', value: '', label:"Title",  showInColumn: true},
                 'parentOrganization.name': { type: 'Input', value: '', label:"Parent Organisation",  showInColumn: true},
                 'Action': {type: 'Input', value: '', label:"",  showInColumn: true, disabled:true},
             },
+
+            filterFields: [
+                {
+                    Placeholder: "Name",
+                    rangeMin: true, 
+                    fieldCol: 9,
+                    size: "small",
+                    type: "Text",
+                },
+                {
+                    Placeholder: "Title",
+                    fieldCol: 3,
+                    size: "small",
+                    type: "Text",
+                },
+                {
+                    Placeholder: "Parent",
+                    fieldCol: 12,
+                    size: "small",
+                    type: "Text",
+                },
+                {
+                    object: "obj",
+                    fieldCol: 9,
+                    key: "name",
+                    size: "small",
+                    type: "Input",
+                },
+                {
+                    object: "obj",
+                    fieldCol: 3,
+                    key: "title",
+                    size: "small",
+                    type: "Input",
+                },
+                {
+                    object: "obj",
+                    fieldCol: 12,
+                    key: "parentOrganization.name",
+                    size: "small",
+                    type: "Input",
+                },
+                {
+                    Placeholder: "Phone",
+                    fieldCol: 12,
+                    size: "small",
+                    type: "Text",
+                },
+                {
+                    Placeholder: "Email",
+                    fieldCol: 12,
+                    size: "small",
+                    type: "Text",
+                },
+                {
+                    object: "obj",
+                    fieldCol: 12,
+                    key: "phone",
+                    size: "small",
+                    type: "Input",
+                },
+                {
+                    object: "obj",
+                    fieldCol: 12,
+                    key: "email",
+                    size: "small",
+                    type: "Input",
+                },
+                {
+                    Placeholder: "Business Type",
+                    rangeMin: true,
+                    fieldCol: 12,
+                    size: "small",
+                    type: "Text",
+                },
+                {
+                    Placeholder: "Delegate Contact person",
+                    fieldCol: 12,
+                    size: "small",
+                    type: "Text",
+                },
+                {
+                    object: "obj",
+                    fieldCol: 12,
+                    key: "businessType",
+                    size: "small",
+                    type: "Select",
+                    data: [
+                        {label: 'Sole Trader', value: 1 },
+                        {label: 'Partnership', value: 2 },
+                        {label: 'Company', value: 3 },
+                        {label: 'Trust', value: 4 },
+                    ]
+                },
+                {
+                    object: "obj",
+                    fieldCol: 12,
+                    key: "delegate_cp",
+                    size: "small",
+                    // rules:[{ required: true }],
+                    data: this.state? this.state.contactPerson : [],
+                    type: "Select",
+                    itemStyle: { marginBottom: "10px" },
+                },
+                {
+                    Placeholder: "Address",
+                    fieldCol: 24,
+                    size: "small",
+                    type: "Text",
+                    labelAlign: "right",
+                    // itemStyle:{marginBottom:'10px'},
+                },
+                {
+                    object: "obj",
+                    fieldCol: 24,
+                    key: "address",
+                    size: "small",
+                    // rules:[{ required: true }],
+                    type: "Input",
+                },
+            ]
         };
     }
     
@@ -108,7 +238,8 @@ class Organizations extends Component {
                     filterData: res.data,
                     infoModal: false,
                     editOrg: false,
-                    permissions: ORGANIZATIONS
+                    permissions: ORGANIZATIONS,
+                    openSearch: false
                 });
             }
         });
@@ -150,8 +281,35 @@ class Organizations extends Component {
         }
     }
 
+    advancefilter = (value, column, advSearch) =>{
+        let { data, searchedColumn: search }= this.state
+        if(column){
+            search[column]['value'] = value
+        }else{
+            search = advSearch
+        }
+        if (search['id']['value'] || search['name']['value'] ||
+        search['title']['value'] ||search['parentOrganization.name']['value'] ){
+            
+            this.setState({
+                filterData: data.filter(el => { // method one which have mutliple if condition for every multiple search
+                    return `00${el.id.toString()}`.includes(search['id']['value']) &&
+                        el.name && el.name.toLowerCase().includes(search['name']['value'].toLowerCase()) &&
+                        el.title && el.title.toLowerCase().includes(search['title']['value'].toLowerCase()) &&
+                        el.parentOrganization && el.parentOrganization.name.toLowerCase().includes(search['parentOrganization.name']['value'].toLowerCase())
+                }),
+                searchedColumn: search,
+                openSearch: false,
+            })
+        }else{
+            this.setState({
+                filterData: data
+            })
+        }
+    }
+
     render() {
-        const { data, infoModal, editOrg, permissions, filterData } = this.state;
+        const { data, infoModal, editOrg, permissions, filterData, searchedColumn, filterFields, openSearch } = this.state;
         const columns = this.columns;
         return (
             <>
@@ -162,7 +320,12 @@ class Organizations extends Component {
                     <Col style={{ textAlign: "end" }} span={4}>
                         <Row justify="space-between">
                             <Col>
-                                <Button type="default" size="small">
+                                
+                                <Button 
+                                    type="default" 
+                                    size="small"
+                                    onClick={()=>this.setState({openSearch: true})}    
+                                >
                                     <FilterOutlined />
                                     Filter
                                 </Button>
@@ -189,9 +352,19 @@ class Organizations extends Component {
                             columns={columns}
                             dataSource={filterData}
                             size="small"
+                            sticky
+                            summary={()=>tableSummaryFilter(searchedColumn, this.advancefilter)}
                         />
                     </Col>
                 </Row>
+                {openSearch && <TableModalFilter
+                    title="Search Organization"
+                    visible={openSearch}
+                    filters={searchedColumn}
+                    filterFields={filterFields}
+                    filterFunction={this.advancefilter}
+                    onClose={()=>this.setState({openSearch:false})}
+                />}
                 {infoModal && (
                     <InfoModal
                         visible={infoModal}

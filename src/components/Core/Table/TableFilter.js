@@ -65,7 +65,7 @@ export const tableSorter = (dataIndex, type, sortOrder) => ({ //sorter on the he
                                     //filterObj    //filterFunction
 export const tableSummaryFilter = (filters, filterFunction) =>{ // filter on footer
     let keys = Object.keys(filters)
-        return <Table.Summary fixed="top">
+        return <Table.Summary fixed="top"> 
         <Table.Summary.Row>
                 {keys.map(el => {
                     return filters[el].showInColumn && (
@@ -118,32 +118,31 @@ export const tableTitleFilter = (colSpan, filterFunction) =>{ // table filter on
         </Row>
 }
 
-export const TableModalFilter = ({visible, onClose, filters, filterFunction, filterFields}) =>{
+export const TableModalFilter = ({title, visible, onClose, filters, filterFunction, filterFields}) =>{
     const [form] = Form.useForm();
 
     useEffect(() => {
-        let basic = {}
-        let keys = Object.keys(filters)
-        keys.forEach(el => {
-            basic[el] = filters[el].value  ?? ''
-        });
-        form.setFieldsValue({basic});
+        let obj = {}
+        for (let el in filters) {
+            obj[el] = filters[el].value  ?? ''
+        }
+        form.setFieldsValue({obj});
     }, [])
 
     const onFinish = (values) =>{
-        values = values.basic
-        let keys = Object.keys(filters)
-        keys.forEach(el => {
+        values = values.obj
+        for (let el in filters) {
             filters[el].value = values[el] ?? ''
-        });
+        }
                 //single value/name   //value+name
         filterFunction(false, false, filters)
     }
 
     return <Modal
-        title={"Search Contact Persons"}
+        title={title}
         maskClosable={false}
         centered
+        width={750}
         visible={visible}
         onOk={() => { form.submit()}}
         onCancel={()=>onClose()}

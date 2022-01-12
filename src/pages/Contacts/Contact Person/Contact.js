@@ -140,7 +140,7 @@ class Contact extends Component {
                     type: "Text",
                 },
                 {
-                    object: "basic",
+                    object: "obj",
                     fieldCol: 12,
                     key: "firstName",
                     size: "small",
@@ -148,7 +148,7 @@ class Contact extends Component {
                     itemStyle: { marginBottom: 10 },
                 },
                 {
-                    object: "basic",
+                    object: "obj",
                     fieldCol: 12,
                     key: "lastName",
                     size: "small",
@@ -168,7 +168,7 @@ class Contact extends Component {
                     type: "Text",
                 },
                 {
-                    object: "basic",
+                    object: "obj",
                     fieldCol: 12,
                     key: "phoneNumber",
                     size: "small",
@@ -176,7 +176,7 @@ class Contact extends Component {
                     itemStyle: { marginBottom: 10 },
                 },
                 {
-                    object: "basic",
+                    object: "obj",
                     fieldCol: 12,
                     key: "email",
                     size: "small",
@@ -196,7 +196,7 @@ class Contact extends Component {
                     type: "Text",
                 },
                 {
-                    object: "basic",
+                    object: "obj",
                     fieldCol: 12,
                     key: "gender",
                     size: "small",
@@ -210,7 +210,7 @@ class Contact extends Component {
                     itemStyle: { marginBottom: 10 },
                 },
                 {
-                    object: "basic",
+                    object: "obj",
                     fieldCol: 12,
                     key: "stateId",
                     size: "small",
@@ -225,7 +225,7 @@ class Contact extends Component {
                     type: "Text",
                 },
                 {
-                    object: "basic",
+                    object: "obj",
                     fieldCol: 24,
                     key: "skillId",
                     size: "small",
@@ -241,7 +241,7 @@ class Contact extends Component {
                     type: "Text",
                 },
                 {
-                    object: "basic",
+                    object: "obj",
                     fieldCol: 24,
                     key: "association",
                     size: "small",
@@ -257,7 +257,7 @@ class Contact extends Component {
                     type: "Text",
                 },
                 {
-                    object: "basic",
+                    object: "obj",
                     fieldCol: 24,
                     key: "address",
                     size: "small",
@@ -308,6 +308,7 @@ class Contact extends Component {
         this.contactForm.current.refs.contact_form.submit();
     };
 
+    //Title bar filter for evey Coulmn showing 
     generalFilter = (value) =>{
         const { data } = this.state
         if (value){
@@ -327,6 +328,7 @@ class Contact extends Component {
         }
     }
 
+     //summary or modal filter
     advancefilter = (value, column, advSearch) =>{
         let { data, searchedColumn: search }= this.state
         if(column){
@@ -432,6 +434,7 @@ class Contact extends Component {
                     </Col>
                 </Row>
                 {openSearch && <TableModalFilter 
+                    title={"Search Contact Persons"}
                     visible={openSearch}
                     filters={searchedColumn}
                     filterFields={filterFields}
