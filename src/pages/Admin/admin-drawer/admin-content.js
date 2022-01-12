@@ -73,6 +73,7 @@ const pageLinks = [
         component: Skills,
         link: "/admin/skills",
     },
+    
 ];
 
 class AdminContent extends Component {

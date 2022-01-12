@@ -87,7 +87,7 @@ export const getSettings = () => {
                     address: contactPerson.address,
                     stateId:contactPerson.stateId,
                     username: data.username,
-                    password: data.password
+                    // password: data.password
                 }
                 const detail = {
                     superannuationName: data.superannuationName,

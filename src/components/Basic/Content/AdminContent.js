@@ -32,6 +32,8 @@ import ProjectResources from "../../../pages/Project/Resources";
 import ResourceHistory from "../../../pages/Project/ResourceHistory";
 import PurchaseOrder from "../../../pages/Project/PurchaseOrder";
 
+import LeaveRequest from "../../../pages/Leave Request/LeaveRequest";
+
 import Milestone from "../../../pages/Milestones/Milestone";
 
 import Calender from "../../Calender/Calender";
@@ -234,6 +236,10 @@ const pageLinks = [
     {
         component: TimeOff,
         link: "/time-off",
+    },
+    {
+        component: LeaveRequest,
+        link: "/leave-request",
     },
     // {
     //     component: Travels,

@@ -18,6 +18,7 @@ const Profile = ()=>{
     useEffect(() => {
         getData()
     }, [])
+
     const getData = () =>{
         getSettings().then(res=>{
             if(res && res.success){
@@ -41,7 +42,8 @@ const Profile = ()=>{
                 {contract &&<PersonalContract data={contract} />} 
             </TabPane>}
             <TabPane tab="Other Details" key="others"> {details && <OtherDetails  data={details}/>} </TabPane>
-            <TabPane tab="Password" key="password "> <PasswordUpdate password={basic.password}/> </TabPane>
+            {/* <TabPane tab="Password" key="password "> <PasswordUpdate password={basic.password}/> </TabPane> */}
+            <TabPane tab="Password" key="password "> <PasswordUpdate/> </TabPane>
             <TabPane tab="Attachments" key="attachments"> <Attachments targetType="emp" targetId={localStore().id}  /> </TabPane>
         </Tabs>
     )

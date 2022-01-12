@@ -38,6 +38,13 @@ const listData = [
         permissions: {module: "TIMESHEETS", key: 'APPROVAL'}
     },
     {
+        text: "Leave Request",
+        icon: <ScheduleOutlined />,
+        link: "/leave-request",
+        key: "LEAVE REQUEST",
+        permissions: {module: "TIMESHEETS", key: 'APPROVAL'}
+    },
+    {
         text: "Time Offs",
         icon: <FieldTimeOutlined />,
         link: "/time-off",
@@ -97,6 +104,7 @@ class Menus extends Component {
                 }
             })
        this.setState({allowedMenu})
+       console.log('Permission Obj: ', this.state.allowedMenu)
     }
 
     highlightRow(link) {

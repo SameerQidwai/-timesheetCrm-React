@@ -1,13 +1,4 @@
-fields={
-    backstyle: 'style on the Row',
-    Formstyle:' style on the Form ',
-    FormCol: 'form Column',
-    FieldSpace: 'Spaces between fields i.e={ xs: 12, sm: 16, md: 122}',
-    layout: 'set label column for alignment',
-    FormLayout: 'ant desingn has 3 layout // horizonta, vertical, inline',
-    justify: 'form',
-    initialValues:{obj:{key:'value'}},
-    fields:[ 
+fields=[ 
         { //fileds
 
             object: 'Object in what value to get objec',
@@ -48,9 +39,8 @@ fields={
             tooltipTitle: 'Title of the Tool tip', 
             tooltipTrigger: 'Hover click or focus tool tip trigger'
 
-        } 
+        }
     ]
-}
 
 const Example = {
     // Title: 'OneLM CRM',
