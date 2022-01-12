@@ -188,4 +188,4 @@ export const Filtertag = ({filters, filterFunction}) =>{
 }
 
 
-export const leaf = (obj, path) => (path.split('.').reduce((value, el) => value[el], obj))
+export const leaf = (obj, path) => (path.split('.').reduce((value, el) => value[el]?? 'zzz', obj))

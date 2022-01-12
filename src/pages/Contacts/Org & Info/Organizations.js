@@ -8,7 +8,7 @@ import { getList, delOrg } from "../../../service/Organizations";
 
 import "../../styles/table.css";
 import { localStore } from "../../../service/constant";
-import { tableSorter } from "../../../components/Core/Table/TableFilter";
+import { tableSorter, tableTitleFilter } from "../../../components/Core/Table/TableFilter";
 
 const { Title } = Typography;
 
@@ -28,7 +28,7 @@ class Organizations extends Component {
                 dataIndex: "name",
                 key: "name",
                 width: 500,
-                ...tableSorter('name', 'string', true),
+                ...tableSorter('name', 'string'),
             },
             {
                 title: "Parent Organisation",
@@ -42,7 +42,7 @@ class Organizations extends Component {
                     >
                         {record.name}</Link> 
                 },
-                //sorter
+                ...tableSorter('parentOrganization.name', 'string'),
             },
             {
                 title: "Action",
@@ -84,7 +84,14 @@ class Organizations extends Component {
             infoModal: false,
             editOrg: false, //creating Component
             data: [],
-            permissions: {}
+            filterData: [],
+            permissions: {},
+            searchedColumn: {
+                'id': {type: 'Input', value: '',  label:"Code", showInColumn: true},
+                'name': {type: 'Input', value: '', label:"Organisation",  showInColumn: true},
+                'parentOrganization.name': { type: 'Input', value: '', label:"Parent Organisation",  showInColumn: true},
+                'Action': {type: 'Input', value: '', label:"",  showInColumn: true, disabled:true},
+            },
         };
     }
     
@@ -98,6 +105,7 @@ class Organizations extends Component {
             if (res.success) {
                 this.setState({
                     data: res.data,
+                    filterData: res.data,
                     infoModal: false,
                     editOrg: false,
                     permissions: ORGANIZATIONS
@@ -120,12 +128,30 @@ class Organizations extends Component {
             editOrg: false,
         });
     };
+    
     callBack = () => {
         this.getData()
     };
 
+    generalFilter = (value) =>{
+        const { data } = this.state
+        if (value){
+            this.setState({
+                filterData: data.filter(el => {
+                    return `ORG-00${el.id.toString()}`.includes(value) ||
+                    el.name && el.name.toLowerCase().includes(value.toLowerCase()) || 
+                    el.parentOrganization && el.parentOrganization.name.toLowerCase().includes(value.toLowerCase())
+                })
+            })
+        }else{
+            this.setState({
+                filterData: data
+            })
+        }
+    }
+
     render() {
-        const { data, infoModal, editOrg, permissions } = this.state;
+        const { data, infoModal, editOrg, permissions, filterData } = this.state;
         const columns = this.columns;
         return (
             <>
@@ -156,11 +182,12 @@ class Organizations extends Component {
                     </Col>
                     <Col span={24}>
                         <Table
+                            title={()=>tableTitleFilter(5, this.generalFilter)}
                             bordered
                             pagination={{pageSize: localStore().pageSize}} 
                             rowKey={(data) => data.id}
                             columns={columns}
-                            dataSource={data}
+                            dataSource={filterData}
                             size="small"
                         />
                     </Col>
