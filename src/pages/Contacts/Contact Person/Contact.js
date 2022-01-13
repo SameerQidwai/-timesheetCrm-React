@@ -7,7 +7,8 @@ import InfoModal from "./InfoModal";
 import { getList, delList } from "../../../service/conatct-person";
 import { GENDER, localStore } from "../../../service/constant";
 import "../../styles/table.css";
-import { Filtertag, TableModalFilter, tableSorter, tableSummaryFilter, tableTitleFilter } from "../../../components/Core/Table/TableFilter";
+import { Filtertags, TableModalFilter, tableSorter, tableSummaryFilter, tableTitleFilter } from "../../../components/Core/Table/TableFilter";
+import { getOrganizations, getStandardLevels, getStates } from "../../../service/constant-Apis";
 
 const { Title } = Typography;
 
@@ -122,8 +123,10 @@ class Contact extends Component {
                 'email': {type: 'Input', value: '',  label:"Email", showInColumn: true},
                 'phoneNumber': {type: 'Input', value: '', label:"Phone Number",  showInColumn: true},
                 'Action': {type: 'Input', value: '', label:"",  showInColumn: true, disabled:true},
-                'stateId': {type: 'none', value: '', label:"State",  showInColumn: false, disabled:false},
+                'stateId': {type: 'none', value: [], label:"State",  showInColumn: false, disabled:false},
                 'address': {type: 'none', value: '', label:"Address",  showInColumn: false, disabled:false},
+                'skill': {type: 'none', value: [], label:"Skill",  showInColumn: false, disabled:false},
+                'association': {type: 'none', value: [], label:"Association",  showInColumn: false, disabled:false},
             },
             
             filterFields: [ //just here for fun will get shift to contact
@@ -145,7 +148,6 @@ class Contact extends Component {
                     key: "firstName",
                     size: "small",
                     type: "input",
-                    itemStyle: { marginBottom: 10 },
                 },
                 {
                     object: "obj",
@@ -153,7 +155,6 @@ class Contact extends Component {
                     key: "lastName",
                     size: "small",
                     type: "input",
-                    itemStyle: { marginBottom: 10 },
                 },
                 {
                     Placeholder: "Phone",
@@ -173,7 +174,6 @@ class Contact extends Component {
                     key: "phoneNumber",
                     size: "small",
                     type: "input",
-                    itemStyle: { marginBottom: 10 },
                 },
                 {
                     object: "obj",
@@ -181,7 +181,6 @@ class Contact extends Component {
                     key: "email",
                     size: "small",
                     type: "input",
-                    itemStyle: { marginBottom: 10 },
                 },
                 {
                     Placeholder: "Gender",
@@ -207,16 +206,15 @@ class Contact extends Component {
                         { label: "Other", value: "O" },
                     ],
                     type: "Select",
-                    itemStyle: { marginBottom: 10 },
                 },
                 {
                     object: "obj",
                     fieldCol: 12,
                     key: "stateId",
+                    mode: 'multiple',
                     size: "small",
                     type: "Select",
                     // data: ,
-                    itemStyle: { marginBottom: 10 },
                 },
                 {
                     Placeholder: "Skill",
@@ -227,12 +225,11 @@ class Contact extends Component {
                 {
                     object: "obj",
                     fieldCol: 24,
-                    key: "skillId",
+                    key: "skill",
                     size: "small",
                     mode: 'multiple',
                     data: [],
                     type: "Select",
-                    itemStyle: { marginBottom: 10 },
                 },
                 {
                     Placeholder: "Association",
@@ -248,7 +245,6 @@ class Contact extends Component {
                     mode: 'multiple',
                     data: [],
                     type: "Select",
-                    itemStyle: { marginBottom: 10 },
                 },
                 {
                     Placeholder: "Address",
@@ -262,7 +258,6 @@ class Contact extends Component {
                     key: "address",
                     size: "small",
                     type: "Input",
-                    itemStyle: { marginBottom: 20 },
                 },
             ]
         };
@@ -336,48 +331,60 @@ class Contact extends Component {
         }else{
             search = advSearch
         }
+
+        console.log(search['skill']['value']);
+        console.log(search['skill']['value'].some(r => data[0].standardSkillStandardLevels ? data[0].standardSkillStandardLevels.map((p, n) => p.standardSkillId).includes(r): [] ));
+
         if (search['id']['value'] || search['firstName']['value'] ||
         search['lastName']['value'] || search['email']['value'] ||
-        search['phoneNumber']['value'] || search['gender']['value'] || 
-        search['stateId']['value']||search['address']['value']){
+        search['phoneNumber']['value'] || search['gender']['value'].length>0 || 
+        search['stateId']['value'].length>0 ||search['address']['value'] ||
+        search['skill']['value'].length > 0  ||search['association']['value'].length > 0
+        ){
             
             this.setState({
                 filterData: data.filter(el => { // method one which have mutliple if condition for every multiple search
-                    let filtering = false
-                    let multi = false
-                    if (
-                        `00${el.id.toString()}`.includes(search['id']['value']) &&
-                        el.firstName && el.firstName.toLowerCase().includes(search['firstName']['value'].toLowerCase()) &&
-                        el.lastName && el.lastName.toLowerCase().includes(search['lastName']['value'].toLowerCase()) &&
-                        `${el.email ?? ''}`.toLowerCase().includes(search['email']['value'].toLowerCase()) &&
-                        `${el.phoneNumber ?? ''}`.toLowerCase().includes(search['phoneNumber']['value'].toLowerCase())&&
-                        el.stateId && el.stateId.toString().includes( search['stateId']['value']) &&
-                        `${el.address ?? ''}`.toLowerCase().includes(search['address']['value'].toLowerCase())
-                        ){
-                            filtering = true
-                        }
-                    if (search['gender']['value'].length >0 ){
-                        if (el.gender && search['gender']['value'].indexOf(el.gender ) > -1){
-                            multi = true
-                        }else{
-                            multi= false
-                        }
-                    }else{
-                        multi = true
-                    }
-                    if (filtering && multi){
-                        return el
-                    }
-                }),
+                    return  `00${el.id.toString()}`.includes(search['id']['value']) &&
+                    `${el.firstName ?? ''}`.toLowerCase().includes(search['firstName']['value'].toLowerCase()) &&
+                    `${el.lastName ?? ''}`.toLowerCase().includes(search['lastName']['value'].toLowerCase()) &&
+                    `${el.email ?? ''}`.toLowerCase().includes(search['email']['value'].toLowerCase()) &&
+                    `${el.phoneNumber ?? ''}`.toLowerCase().includes(search['phoneNumber']['value'].toLowerCase())&&
+                    `${el.address ?? ''}`.toLowerCase().includes(search['address']['value'].toLowerCase()) && 
+                    //Creating an string using reduce of all the String array and searching sting in the function
 
+    //Define  ====  //Reducing and creating the array        // but gotta check if the array is not empty otherwise gender value can't be found in emptySrting
+                    `${search['gender']['value'].reduce((p, n) => p + n, '')}`.includes(`${search['gender']['value'].length > 0 ?el.gender ?? '' : ''}`) &&
+                    `${search['stateId']['value'].reduce((p, n) => p + n, '')}`.includes(`${search['stateId']['value'].length > 0 ?el.stateId ?? '' : ''}`)
+                    //searching for skill in skills array
+                    // `${search['stateId']['value'].reduce((p, n) => p + n, '')}`.some(r => [28, 25, 29].includes(r))
+
+                    // `${search['association']['value'].reduce((p, n) => p + n, '')}`.includes(`${search['association']['value'].length > 0 ?
+                    // el.contactPersonOrganizations.reduce((p, n) => p.organizationId + n.organizationId, '') : ''}`) 
+                }),
                 searchedColumn: search,
                 openSearch: false,
-            })
+            }, ()=> console.log(this.state.filterData))
         }else{
             this.setState({
                 filterData: data
             })
         }
+    }
+
+    filterModalUseEffect = () =>{
+        Promise.all([ getStates(), getStandardLevels(), getOrganizations() ])
+        .then(res => {
+            const { filterFields } = this.state
+            filterFields[11].data = res[0].success? res[0].data : []
+            filterFields[13].data = res[1].success? res[1].data : []
+            filterFields[15].data = res[2].success? res[2].data : []
+            this.setState({
+                filterFields,
+            })
+        })
+        .catch(e => {
+            console.log(e);
+        })
     }
 
     render() {
@@ -414,7 +421,7 @@ class Contact extends Component {
                             </Col>
                         </Row>
                     </Col>
-                    <Filtertag 
+                    <Filtertags
                         filters={searchedColumn}
                         filterFunction={this.advancefilter}
                     />
@@ -439,6 +446,8 @@ class Contact extends Component {
                     filters={searchedColumn}
                     filterFields={filterFields}
                     filterFunction={this.advancefilter}
+                    effectFunction={this.filterModalUseEffect}
+                    effectRender={true}
                     onClose={()=>this.setState({openSearch:false})}
                 />}
                 {openModal && (

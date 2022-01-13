@@ -8,7 +8,7 @@ import { getList, delOrg } from "../../../service/Organizations";
 
 import "../../styles/table.css";
 import { localStore } from "../../../service/constant";
-import { TableModalFilter, tableSorter, tableSummaryFilter, tableTitleFilter } from "../../../components/Core/Table/TableFilter";
+import {  Filtertags, TableModalFilter, tableSorter, tableSummaryFilter, tableTitleFilter } from "../../../components/Core/Table/TableFilter";
 
 const { Title } = Typography;
 
@@ -100,12 +100,16 @@ class Organizations extends Component {
                 'title': {type: 'Input', value: '', label:"Title",  showInColumn: true},
                 'parentOrganization.name': { type: 'Input', value: '', label:"Parent Organisation",  showInColumn: true},
                 'Action': {type: 'Input', value: '', label:"",  showInColumn: true, disabled:true},
+                'email': {type: 'Input', value: '',  label:"Email", showInColumn: false},
+                'phoneNumber': {type: 'Input', value: '', label:"Phone Number",  showInColumn: false},
+                'address': {type: 'none', value: '', label:"Address",  showInColumn: false},
+                'businessType': {type: 'none', value: [], label:"Address",  showInColumn: false},
+
             },
 
             filterFields: [
                 {
                     Placeholder: "Name",
-                    rangeMin: true, 
                     fieldCol: 9,
                     size: "small",
                     type: "Text",
@@ -171,7 +175,6 @@ class Organizations extends Component {
                 },
                 {
                     Placeholder: "Business Type",
-                    rangeMin: true,
                     fieldCol: 12,
                     size: "small",
                     type: "Text",
@@ -188,6 +191,7 @@ class Organizations extends Component {
                     key: "businessType",
                     size: "small",
                     type: "Select",
+                    mode: "multiple",
                     data: [
                         {label: 'Sole Trader', value: 1 },
                         {label: 'Partnership', value: 2 },
@@ -289,18 +293,42 @@ class Organizations extends Component {
             search = advSearch
         }
         if (search['id']['value'] || search['name']['value'] ||
-        search['title']['value'] ||search['parentOrganization.name']['value'] ){
+        search['title']['value'] ||search['parentOrganization.name']['value']
+        || search['phoneNumber']['value'] || search['email']['value'] || 
+        search['address']['value'] || search['businessType']['value'].length >0  
+        ){
             
             this.setState({
                 filterData: data.filter(el => { // method one which have mutliple if condition for every multiple search
-                    return `00${el.id.toString()}`.includes(search['id']['value']) &&
-                        el.name && el.name.toLowerCase().includes(search['name']['value'].toLowerCase()) &&
-                        el.title && el.title.toLowerCase().includes(search['title']['value'].toLowerCase()) &&
-                        el.parentOrganization && el.parentOrganization.name.toLowerCase().includes(search['parentOrganization.name']['value'].toLowerCase())
+                    let filtering = false
+                    let multi = false
+                    if (`ORG-00${el.id.toString()}`.includes(search['id']['value']) &&
+                        `${el.name ?? ''}`.toLowerCase().includes(search['name']['value'].toLowerCase()) &&
+                        `${el.title ?? ''}`.toLowerCase().includes(search['title']['value'].toLowerCase()) &&
+                        `${el.parentOrganization ?el.parentOrganization.name : ""}`.toLowerCase()
+                        .includes(search['parentOrganization.name']['value'].toLowerCase()) &&
+                        `${el.phoneNumber ?? ''}`.toLowerCase().includes(search['phoneNumber']['value'].toLowerCase())&&
+                        `${el.email ?? ''}`.toLowerCase().includes(search['email']['value'].toLowerCase()) &&
+                        `${el.address ?? ''}`.toLowerCase().includes(search['address']['value'].toLowerCase())
+                    ){
+                        filtering = true
+                    }
+                    if (search['businessType']['value'].length >0 ){
+                        if (search['businessType']['value'].includes(el.businessType)){
+                            multi = true
+                        }else{
+                            multi= false
+                        }
+                    }else{
+                        multi = true
+                    }
+                    if (filtering && multi){
+                        return el
+                    }
                 }),
                 searchedColumn: search,
                 openSearch: false,
-            })
+            },()=> console.log(this.state.filterData))
         }else{
             this.setState({
                 filterData: data
@@ -343,6 +371,10 @@ class Organizations extends Component {
                             </Col>
                         </Row>
                     </Col>
+                    <Filtertags
+                        filters={searchedColumn}
+                        filterFunction={this.advancefilter}
+                    />
                     <Col span={24}>
                         <Table
                             title={()=>tableTitleFilter(5, this.generalFilter)}

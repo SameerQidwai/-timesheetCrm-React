@@ -118,15 +118,19 @@ export const tableTitleFilter = (colSpan, filterFunction) =>{ // table filter on
         </Row>
 }
 
-export const TableModalFilter = ({title, visible, onClose, filters, filterFunction, filterFields}) =>{
+export const TableModalFilter = ({title, visible, onClose, filters, filterFunction, filterFields, effectRender, effectFunction}) =>{
     const [form] = Form.useForm();
 
     useEffect(() => {
         let obj = {}
+        if(effectRender){
+            effectFunction()
+        }
         for (let el in filters) {
             obj[el] = filters[el].value  ?? ''
         }
         form.setFieldsValue({obj});
+        
     }, [])
 
     const onFinish = (values) =>{
@@ -144,6 +148,7 @@ export const TableModalFilter = ({title, visible, onClose, filters, filterFuncti
         centered
         width={750}
         visible={visible}
+        destroyOnClose
         onOk={() => { form.submit()}}
         onCancel={()=>onClose()}
     >
@@ -158,11 +163,11 @@ export const TableModalFilter = ({title, visible, onClose, filters, filterFuncti
     </Modal>
 }
 
-export const Filtertag = ({filters, filterFunction}) =>{
+export const Filtertags = ({filters, filterFunction}) =>{
     let filterKeys = Object.keys(filters)
     return <Col span={24}> 
         {filterKeys.map(el=>(
-            filters[el].value.length>0 &&<>
+            filters[el].value.length>0 &&<span key={el}>
                 <Tag color="magenta" key={el}>{filters[el].label}: </Tag>
                 {typeof(filters[el].value) === 'string' ?
                     <Tag 
@@ -181,7 +186,7 @@ export const Filtertag = ({filters, filterFunction}) =>{
                         }}
                     >{value}</Tag>)
                 }
-            </> 
+            </span> 
         ))}
     </Col>
 }
