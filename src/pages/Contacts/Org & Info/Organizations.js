@@ -103,7 +103,8 @@ class Organizations extends Component {
                 'email': {type: 'Input', value: '',  label:"Email", showInColumn: false},
                 'phoneNumber': {type: 'Input', value: '', label:"Phone Number",  showInColumn: false},
                 'address': {type: 'none', value: '', label:"Address",  showInColumn: false},
-                'businessType': {type: 'none', value: [], label:"Address",  showInColumn: false},
+                'businessType': {type: 'none', value: [], label:"Business Type",  showInColumn: false},
+                'delegate_cp': {type: 'none', value: [], label:"Delegate Contact Person",  showInColumn: false},
 
             },
 
@@ -300,35 +301,20 @@ class Organizations extends Component {
             
             this.setState({
                 filterData: data.filter(el => { // method one which have mutliple if condition for every multiple search
-                    let filtering = false
-                    let multi = false
-                    if (`ORG-00${el.id.toString()}`.includes(search['id']['value']) &&
+                    return `ORG-00${el.id.toString()}`.includes(search['id']['value']) &&
                         `${el.name ?? ''}`.toLowerCase().includes(search['name']['value'].toLowerCase()) &&
                         `${el.title ?? ''}`.toLowerCase().includes(search['title']['value'].toLowerCase()) &&
                         `${el.parentOrganization ?el.parentOrganization.name : ""}`.toLowerCase()
                         .includes(search['parentOrganization.name']['value'].toLowerCase()) &&
                         `${el.phoneNumber ?? ''}`.toLowerCase().includes(search['phoneNumber']['value'].toLowerCase())&&
                         `${el.email ?? ''}`.toLowerCase().includes(search['email']['value'].toLowerCase()) &&
-                        `${el.address ?? ''}`.toLowerCase().includes(search['address']['value'].toLowerCase())
-                    ){
-                        filtering = true
-                    }
-                    if (search['businessType']['value'].length >0 ){
-                        if (search['businessType']['value'].includes(el.businessType)){
-                            multi = true
-                        }else{
-                            multi= false
-                        }
-                    }else{
-                        multi = true
-                    }
-                    if (filtering && multi){
-                        return el
-                    }
+                        `${el.address ?? ''}`.toLowerCase().includes(search['address']['value'].toLowerCase()) &&
+                        `${search['businessType']['value'].reduce((p, n) => p + n, '')}`.includes(`${search['businessType']['value'].length > 0 ?el.businessType ?? '' : ''}`) 
+                        `${search['delegate_cp']['value'].reduce((p, n) => p + n, '')}`.includes(`${search['delegate_cp']['value'].length > 0 ?el.delegateContactPersonId ?? '' : ''}`) 
                 }),
                 searchedColumn: search,
                 openSearch: false,
-            },()=> console.log(this.state.filterData))
+            })
         }else{
             this.setState({
                 filterData: data

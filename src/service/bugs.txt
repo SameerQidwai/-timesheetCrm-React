@@ -2,6 +2,7 @@ SORTING
     Organizaion ParentOrganization column sort is not yet complete 
         ↪ // The value was not returning I have put a empty string but it would not work with number gotta do something for that
     dateSort is not working properly when there is an empty field present
+    states should be array to array search not sring search
 
     Check Form.List in accociation type thing
 

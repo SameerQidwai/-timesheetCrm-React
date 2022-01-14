@@ -270,7 +270,6 @@ class Contact extends Component {
     getData = () => {
         const { CONTACT_PERSONS }= JSON.parse(localStore().permissions)
         getList().then((res) => {
-            console.log(res);
             if (res.success) {
                 this.setState({
                     data: res.data,
@@ -332,9 +331,6 @@ class Contact extends Component {
             search = advSearch
         }
 
-        console.log(search['skill']['value']);
-        console.log(search['skill']['value'].some(r => data[0].standardSkillStandardLevels ? data[0].standardSkillStandardLevels.map((p, n) => p.standardSkillId).includes(r): [] ));
-
         if (search['id']['value'] || search['firstName']['value'] ||
         search['lastName']['value'] || search['email']['value'] ||
         search['phoneNumber']['value'] || search['gender']['value'].length>0 || 
@@ -354,16 +350,21 @@ class Contact extends Component {
 
     //Define  ====  //Reducing and creating the array        // but gotta check if the array is not empty otherwise gender value can't be found in emptySrting
                     `${search['gender']['value'].reduce((p, n) => p + n, '')}`.includes(`${search['gender']['value'].length > 0 ?el.gender ?? '' : ''}`) &&
-                    `${search['stateId']['value'].reduce((p, n) => p + n, '')}`.includes(`${search['stateId']['value'].length > 0 ?el.stateId ?? '' : ''}`)
-                    //searching for skill in skills array
-                    // `${search['stateId']['value'].reduce((p, n) => p + n, '')}`.some(r => [28, 25, 29].includes(r))
+                    `${search['stateId']['value'].reduce((p, n) => p + n, '')}`.includes(`${search['stateId']['value'].length > 0 ?el.stateId ?? '' : ''}`) &&
+                    // //searching for skill in skills array
+                    // giving some function a default array... and search it if not passed
+                    (search['skill']['value'].length > 0 ? search['skill']['value'] : [',']).some(s => 
+                        el.standardSkillStandardLevels && el.standardSkillStandardLevels.length> 0 && 
+                            (search['skill']['value'].length > 0 ? el.standardSkillStandardLevels.map(p => p.standardSkillId): [',']).includes(s)) &&
 
-                    // `${search['association']['value'].reduce((p, n) => p + n, '')}`.includes(`${search['association']['value'].length > 0 ?
-                    // el.contactPersonOrganizations.reduce((p, n) => p.organizationId + n.organizationId, '') : ''}`) 
+                    (search['association']['value'].length > 0 ? search['association']['value'] : [',']).some(s => 
+                        el.contactPersonOrganizations && el.contactPersonOrganizations.length> 0 && 
+                            (search['association']['value'].length > 0 ? el.contactPersonOrganizations.map(p => p.organizationId): [',']).includes(s))
+
                 }),
                 searchedColumn: search,
                 openSearch: false,
-            }, ()=> console.log(this.state.filterData))
+            })
         }else{
             this.setState({
                 filterData: data
