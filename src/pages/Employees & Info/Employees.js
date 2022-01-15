@@ -10,7 +10,8 @@ import InfoModal from "./Modals/InfoModal";
 import { getList, delList } from "../../service/Employees";
 import { localStore } from "../../service/constant";
 import "../styles/table.css";
-import { TableModalFilter, tableSorter, tableSummaryFilter, tableTitleFilter } from "../../components/Core/Table/TableFilter";
+import { Filtertags, TableModalFilter, tableSorter, tableSummaryFilter, tableTitleFilter } from "../../components/Core/Table/TableFilter";
+import { getRoles, getStates } from "../../service/constant-Apis";
 
 const { Title } = Typography;
 
@@ -323,52 +324,62 @@ class Employees extends Component {
             })
         }
     }
-
          //summary or modal filter
-         advancefilter = (value, column, advSearch) =>{
-            let { data, searchedColumn: search }= this.state
-            if(column){
-                search[column]['value'] = value
-            }else{
-                search = advSearch
-            }
-    
-            if (search['id']['value'] || search['firstName']['value'] ||
-            search['lastName']['value'] || search['email']['value'] ||
-            search['phoneNumber']['value'] || search['gender']['value'].length>0 || 
-            search['stateId']['value'].length>0 ||search['address']['value'] ||
-            search['role']['value'].length > 0 
-            ){
-                
-                this.setState({
-                    filterData: data.filter(el => { // method one which have mutliple if condition for every multiple search
-                        const {firstName, lastName, email, phoneNumber, id, gender, stateId, address}= el.contactPersonOrganization.contactPerson
-                        return  `Emp-00${id.toString()}`.includes(search['id']['value']) &&
-                        `${firstName ?? ''}`.toLowerCase().includes(search['firstName']['value'].toLowerCase()) &&
-                        `${lastName ?? ''}`.toLowerCase().includes(search['lastName']['value'].toLowerCase()) &&
-                        `${email ?? ''}`.toLowerCase().includes(search['email']['value'].toLowerCase()) &&
-                        `${phoneNumber ?? ''}`.toLowerCase().includes(search['phoneNumber']['value'].toLowerCase())&&
-                        `${address ?? ''}`.toLowerCase().includes(search['address']['value'].toLowerCase()) && 
-                        //Creating an string using reduce of all the String array and searching sting in the function
-    
-        //Define  ====  //Reducing and creating the array        // but gotta check if the array is not empty otherwise gender value can't be found in emptySrting
-                        `${search['gender']['value'].reduce((p, n) => p + n, '')}`.includes(`${search['gender']['value'].length > 0 ?gender ?? '' : ''}`) &&
-                        `${search['stateId']['value'].reduce((p, n) => p + n, '')}`.includes(`${search['stateId']['value'].length > 0 ?stateId ?? '' : ''}`) &&
-                        `${search['role']['value'].reduce((p, n) => p + n, '')}`.includes(`${search['role']['value'].length > 0 ?el.roleId ?? '' : ''}`) 
-    
-                    }),
-                    searchedColumn: search,
-                    openSearch: false,
-                })
-            }else{
-                this.setState({
-                    filterData: data
-                })
-            }
+    advancefilter = (value, column, advSearch) =>{
+        let { data, searchedColumn: search }= this.state
+        if(column){
+            search[column]['value'] = value
+        }else{
+            search = advSearch
         }
 
-    filterModalUseEffect = () =>{
+        if (search['id']['value'] || search['firstName']['value'] ||
+        search['lastName']['value'] || search['email']['value'] ||
+        search['phoneNumber']['value'] || search['gender']['value'].length>0 || 
+        search['stateId']['value'].length>0 ||search['address']['value'] ||
+        search['role']['value'].length > 0 
+        ){
+            
+            this.setState({
+                filterData: data.filter(el => { // method one which have mutliple if condition for every multiple search
+                    const {firstName, lastName, email, phoneNumber, id, gender, stateId, address}= el.contactPersonOrganization.contactPerson
+                    return  `Emp-00${id.toString()}`.includes(search['id']['value']) &&
+                    `${firstName ?? ''}`.toLowerCase().includes(search['firstName']['value'].toLowerCase()) &&
+                    `${lastName ?? ''}`.toLowerCase().includes(search['lastName']['value'].toLowerCase()) &&
+                    `${email ?? ''}`.toLowerCase().includes(search['email']['value'].toLowerCase()) &&
+                    `${phoneNumber ?? ''}`.toLowerCase().includes(search['phoneNumber']['value'].toLowerCase())&&
+                    `${address ?? ''}`.toLowerCase().includes(search['address']['value'].toLowerCase()) && 
+                    //Creating an string using reduce of all the String array and searching sting in the function
 
+    //Define  ====  //Reducing and creating the array        // but gotta check if the array is not empty otherwise gender value can't be found in emptySrting
+                    `${search['gender']['value'].reduce((p, n) => p + n, '')}`.includes(`${search['gender']['value'].length > 0 ?gender ?? '' : ''}`) &&
+                    `${search['stateId']['value'].reduce((p, n) => p + n, '')}`.includes(`${search['stateId']['value'].length > 0 ?stateId ?? '' : ''}`) &&
+                    `${search['role']['value'].reduce((p, n) => p + n, '')}`.includes(`${search['role']['value'].length > 0 ?el.roleId ?? '' : ''}`) 
+
+                }),
+                searchedColumn: search,
+                openSearch: false,
+            })
+        }else{
+            this.setState({
+                filterData: data
+            })
+        }
+    }
+
+    filterModalUseEffect = () =>{
+        Promise.all([ getStates(), getRoles() ])
+        .then(res => {
+            const { filterFields } = this.state
+            filterFields[11].data = res[0].success? res[0].data : []
+            filterFields[13].data = res[1].success? res[1].data : []
+            this.setState({
+                filterFields,
+            })
+        })
+        .catch(e => {
+            console.log(e);
+        })
     }
 
     render() {
@@ -405,6 +416,10 @@ class Employees extends Component {
                             </Col>
                         </Row>
                     </Col>
+                    <Filtertags
+                        filters={searchedColumn}
+                        filterFunction={this.advancefilter}
+                    />
                     <Col span={24}>
                         <Table
                             title={()=>tableTitleFilter(5, this.generalFilter)}
