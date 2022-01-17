@@ -382,6 +382,7 @@ class Contractors extends Component {
                 })
             }else{
                 this.setState({
+                    searchedColumn: search,
                     filterData: data
                 })
             }

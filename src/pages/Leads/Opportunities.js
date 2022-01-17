@@ -11,6 +11,7 @@ import '../styles/table.css'
 import moment from "moment";
 import { formatCurrency, localStore, O_STAGE, O_STATUS, O_TYPE } from '../../service/constant';
 import { Filtertags, TableModalFilter, tableSorter, tableSummaryFilter, tableTitleFilter } from '../../components/Core/Table/TableFilter';
+import { getOrganizations, getPanels, getStates } from '../../service/constant-Apis';
 const { Title } = Typography
 
 class Opportunities extends Component {
@@ -159,21 +160,15 @@ class Opportunities extends Component {
                 'id': {type: 'Input', value: '',  label:"Code", showInColumn: true},
                 'title': {type: 'Input', value: '', label:"Title",  showInColumn: true},
                 'organization': { type: 'Select', value: [], label:"Organization",  showInColumn: true},
+                'panel': { type: 'Select', value: [], label:"panel",  showInColumn: true},
                 'revenue': {type: 'Input', value: '', label:"Revenue",  showInColumn: true},
                 'startDate': {type: 'Date', value: null,  label:"Start Date", showInColumn: true},
                 'endDate': {type: 'Date', value: null,  label:"End Date", showInColumn: true, disabled:true},
                 'bidDate': {type: 'Date', value: null,  label:"Bid Date", showInColumn: true, disabled:true},
                 'entryDate': {type: 'Date', value: null,  label:"Entry Date", showInColumn: true, disabled:true},
-                'stage': { type: 'Select', value: [], label:"stage",  showInColumn: true, options: [
-                    { label: "L", value: "L" },
-                    { label: "TR", value: "TR" },
-                    { label: "BS", value: "BS" },
-                ]},
+                'stage': { type: 'Select', value: [], label:"stage",  showInColumn: true},
                 'status': { type: 'Select', value: [], label:"Status",  showInColumn: true},
-                'type': { type: 'Select', value: [], label:"Type",  showInColumn: true, options: [
-                    { label: "MB", value: 1 },
-                    { label: "TB", value: 2 },
-                ]},
+                'type': { type: 'Select', value: '', label:"Type",  showInColumn: true},
                 'Action': {type: 'Input', value: '', label:"",  showInColumn: true, disabled:true},
                 'stateId': {type: 'none', value: [], label:"State",  showInColumn: false, disabled:false},
                 'gender': {type: 'Select', value: [], label:"Gender",  showInColumn: false},
@@ -197,7 +192,8 @@ class Opportunities extends Component {
                 {
                     object: "obj",
                     fieldCol: 12,
-                    key: "panelId",
+                    mode: 'multiple',
+                    key: "panel",
                     size: "small",  
                     data: [],
                     type: "Select",
@@ -205,7 +201,8 @@ class Opportunities extends Component {
                 {
                     object: "obj",
                     fieldCol: 12,
-                    key: "organizationId",
+                    mode: 'multiple',
+                    key: "organization",
                     size: "small",
                     data: [],
                     type: "Select",
@@ -234,8 +231,8 @@ class Opportunities extends Component {
                     fieldCol: 12,
                     key: "type",
                     size: "small",
-                    data: [{label: 'MILESTONE BASE', value: 1},
-                        {label: 'TIME BASE', value: 2}],
+                    data: [{label: 'MILESTONE BASE', value: '1'},
+                        {label: 'TIME BASE', value: '2'}],
                     type: "Select",
                 },
                 {
@@ -253,6 +250,7 @@ class Opportunities extends Component {
                 {
                     object: "obj",
                     fieldCol: 12,
+                    mode: 'multiple',
                     key: "stateId",
                     size: "small",
                     data: [],
@@ -286,6 +284,7 @@ class Opportunities extends Component {
                     object: "obj",
                     fieldCol: 12,
                     key: "stage",
+                    mode: 'multiple',
                     size: "small",
                     data: [
                         { label: "Lead", value: 'L' },
@@ -331,28 +330,17 @@ class Opportunities extends Component {
                     type: "RangePicker",
                     fieldStyle: { width: "100%" },
                 },
-            
-                {
-                    Placeholder: "Daily Hours",
-                    fieldCol: 12,
-                    size: "small",
-                    type: "Text",
-                },
                 {
                     Placeholder: "Bid Date",
                     fieldCol: 12,
                     size: "small",
                     type: "Text",
                 },
-                
                 {
-                    object: "obj",
+                    Placeholder: "Entry Date",
                     fieldCol: 12,
-                    key: "hoursPerDay",
                     size: "small",
-                    // rules:[{ required: true }],
-                    type: "InputNumber",
-                    fieldStyle: { width: "100%" },
+                    type: "Text",
                 },
                 {
                     object: "obj",
@@ -361,14 +349,7 @@ class Opportunities extends Component {
                     size: "small",
                     type: "RangePicker",
                     fieldStyle: { width: "100%" },
-                },
-                
-                {
-                    Placeholder: "Entry Date",
-                    fieldCol: 24,
-                    size: "small",
-                    type: "Text",
-                },
+                },                
                 {
                     object: "obj",
                     fieldCol: 12,
@@ -450,10 +431,13 @@ class Opportunities extends Component {
         }else{
             search = advSearch
         }
-        console.log('search', search)
+        console.log(search);
         if (search['id']['value'] || search['title']['value'] ||
-        search['organization']['value'].length>0 || search['revenue']['value'] ||
-        search['startDate']['value']
+            search['organization']['value'].length>0 || search['revenue']['value'] ||
+            search['startDate']['value']|| search['endDate']['value']||
+            search['bidDate']['value']|| search['entryDate']['value'] ||
+            search['panel']['value'].length>0 || search['stage']['value'].length > 0||
+            search['type']['value'] || search['stateId']['value']
         ){
             const startDate = search['startDate']['value'] ?? [null, null]
             const endDate = search['endDate']['value'] ?? [null, null]
@@ -461,18 +445,28 @@ class Opportunities extends Component {
             const entryDate = search['entryDate']['value'] ?? [null, null]
             this.setState({
                 filterData: data.filter(el => { // method one which have mutliple if condition for every multiple search
-                    const { name: organization} = el.organization
+                    const { id: organization} = el.organization
                     return  `00${el.id.toString()}`.includes(search['id']['value']) &&
                         `${el.title ?? ''}`.toLowerCase().includes(search['title']['value'].toLowerCase()) &&
-                        (search['organization']['value'].length > 0 ? search['organization']['value'] : [','])
-                        .includes(`${search['organization']['value'].length > 0 ?organization ?? '' : ','}`) &&
                         `${el.value.toString() ?? ''}`.toLowerCase().includes(search['revenue']['value'].toLowerCase()) &&
-                        (search['stage']['value'].length > 0 ? search['stage']['value'] : [','])
-                        .includes(`${search['stage']['value'].length > 0 ? el.stage ?? '' : ','}`) &&
+                        `${el.type.toString() ?? ''}`.toLowerCase().includes(search['type']['value'].toLowerCase()) &&
+                        // multi Select Search
+
+                        (search['organization']['value'].length > 0 ? search['organization']['value'] : [',']).some(s => 
+                                (search['organization']['value'].length > 0 ? [organization]: [',']).includes(s)) &&
+
+                        `${search['stateId']['value'].reduce((p, n) => p + n, '')}`
+                        .includes(`${search['stateId']['value'].length > 0 ?el.stateId ?? '' : ''}`) &&
+
+                        `${search['stage']['value'].reduce((p, n) => p + n, '')}`
+                        .includes(`${search['stage']['value'].length > 0 ?el.stage ?? '' : ''}`) &&
+
                         (search['status']['value'].length > 0 ? search['status']['value'] : [','])
                         .includes(`${search['status']['value'].length > 0 ?el.status ?? '' : ','}`)  &&
-                        (search['type']['value'].length > 0 ? search['type']['value'] : [','])
-                        .includes(`${search['type']['value'].length > 0 ?el.type ?? '' : ','}`) &&
+
+                        `${search['panel']['value'].reduce((p, n) => p + n, '')}`
+                        .includes(`${search['panel']['value'].length > 0 ?el.panelId ?? '' : ''}`) &&
+
                         //Start Date Filter
                         moment(search['startDate']['value']? moment(el.startDate).format('YYYY-MM-DD'): '2010-10-20')
                         .isBetween(startDate[0]?? '2010-10-19',startDate[1]?? '2010-10-25' , undefined, '[]') &&
@@ -489,20 +483,25 @@ class Opportunities extends Component {
                 }),
                 searchedColumn: search,
                 openSearch: false,
-            },()=>{
-                console.log('this.state.filterData',this.state.filterData)
             })
         }else{
             this.setState({
-                filterData: data
-            },()=>console.log('this.state.data',this.state.filterData))
+                searchedColumn: search,
+                filterData: data,
+                openSearch: false,
+            })
         }
     }
 
     filterModalUseEffect = () =>{
-        Promise.all([ ])
+        Promise.all([getPanels(), getOrganizations(), getStates()])
         .then(res => {
-           
+            console.log(res);
+           const { filterFields } = this.state
+           filterFields[2].data = res[0].success ? res[0].data : []
+           filterFields[3].data = res[1].success ? res[1].data : []
+           filterFields[10].data = res[2].success ? res[2].data : []
+           this.setState({filterFields})
         })
         .catch(e => {
             console.log(e);

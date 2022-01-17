@@ -362,7 +362,9 @@ class Employees extends Component {
             })
         }else{
             this.setState({
-                filterData: data
+                searchedColumn: search,
+                filterData: data,
+                openSearch: false,
             })
         }
     }

@@ -3,7 +3,6 @@ import { Button, Col, Input, Modal, Row, Space, Table, Form, Select, Tag, DatePi
 import FormItems from '../FormItems';
 import { SearchOutlined } from "@ant-design/icons";
 import moment from "moment";
-import { getStates } from '../../../service/constant-Apis';
 
                             //keys          //serachFunction
 export const tableFilter = (dataIndex, searchFunction) => ({ // filter on the head
