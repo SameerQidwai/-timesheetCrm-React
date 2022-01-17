@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react'
-import { Button, Col, Input, Modal, Row, Space, Table, Form, Select, Tag } from 'antd';
+import { Button, Col, Input, Modal, Row, Space, Table, Form, Select, Tag, DatePicker } from 'antd';
 import FormItems from '../FormItems';
 import { SearchOutlined } from "@ant-design/icons";
 import moment from "moment";
@@ -78,11 +78,10 @@ export const tableSummaryFilter = (filters, filterFunction) =>{ // filter on foo
                                         const {value} = e.target
                                         filterFunction(value, el)
                                     }} 
-                                    maxLength={el==='gender' ? 1: 100}
                                     disabled={filters[el].disabled} 
                                 /> 
                                 :
-                                filters[el].type === 'Select' &&
+                                filters[el].type === 'Select' ?
                                     <Select
                                         value={filters[el].value}
                                         options={filters[el].options}
@@ -94,6 +93,19 @@ export const tableSummaryFilter = (filters, filterFunction) =>{ // filter on foo
                                         }}
                                         style={{width: '100%'}}
                                         // onChange={onChange}
+                                    />:
+                                    filters[el].type === 'Date' &&
+                                    <DatePicker
+                                        value={filters[el].value}
+                                        // picker={mode}
+                                        size="small"
+                                        style={{width: '100%'}}
+                                        format={'DD/MM/YYYY'}
+                                        disabled={filters[el].disabled} 
+                                        onChange={(value)=>{
+                                            console.log(value, el);
+                                            filterFunction(value, el)
+                                        }}
                                     />
                                 } 
                         </Table.Summary.Cell> )
