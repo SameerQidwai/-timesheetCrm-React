@@ -103,8 +103,8 @@ export const tableSummaryFilter = (filters, filterFunction) =>{ // filter on foo
                                         format={'DD/MM/YYYY'}
                                         disabled={filters[el].disabled} 
                                         onChange={(value)=>{
-                                            console.log(value, el);
-                                            filterFunction(value, el)
+                                            console.log(value);
+                                            filterFunction(value?? '', el)
                                         }}
                                     />
                                 } 
@@ -139,7 +139,12 @@ export const TableModalFilter = ({title, visible, onClose, filters, filterFuncti
             effectFunction()
         }
         for (let el in filters) {
-            obj[el] = filters[el].value  ?? ''
+            if (filters[el].type === 'Date'){
+                const rangeValue = filters[el].value 
+                obj[el] = rangeValue &&[moment(rangeValue[0]), moment(rangeValue[1])]
+            }else{
+                obj[el] = filters[el].value  ?? ''
+            }
         }
         form.setFieldsValue({obj});
         
@@ -148,7 +153,12 @@ export const TableModalFilter = ({title, visible, onClose, filters, filterFuncti
     const onFinish = (values) =>{
         values = values.obj
         for (let el in filters) {
-            filters[el].value = values[el] ?? ''
+            if (filters[el].type === 'Date'){
+                const rangeValue = values[el]
+                filters[el].value = rangeValue&&[rangeValue[0]?.format('YYYY-MM-DD'), rangeValue[1]?.format('YYYY-MM-DD')]
+            }else{
+                filters[el].value = values[el] ?? ''
+            }
         }
                 //single value/name   //value+name
         filterFunction(false, false, filters)
@@ -179,7 +189,7 @@ export const Filtertags = ({filters, filterFunction}) =>{
     let filterKeys = Object.keys(filters)
     return <Col span={24}> 
         {filterKeys.map(el=>(
-            filters[el].value.length>0 &&<span key={el}>
+            filters[el].value && filters[el].value.length>0 &&<span key={el}>
                 <Tag color="magenta" key={el}>{filters[el].label}: </Tag>
                 {typeof(filters[el].value) === 'string' ?
                     <Tag 
@@ -187,8 +197,20 @@ export const Filtertags = ({filters, filterFunction}) =>{
                         color="lime" 
                         closable 
                         onClose={()=>filterFunction('', el)}
-                    >{filters[el].value}</Tag> :
-                    filters[el].value.map(value=> <Tag 
+                    >{filters[el].value}</Tag> 
+                    :   filters[el].type === 'Date' ?
+                        <Tag 
+                            key={filters[el].value[0]}
+                            color="lime" 
+                            closable 
+                            onClose={()=>{
+                                let remove = null
+                                filterFunction(remove, el)
+                            }}
+                        >{`${filters[el].value[0]}=>${filters[el].value[1]}`}
+                        </Tag>
+                    :
+                    filters[el].value&&filters[el].value.map(value=> <Tag 
                         key={`${el}${value}`}
                         color="lime" 
                         closable 

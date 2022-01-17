@@ -265,9 +265,13 @@ class FormItems extends Component {
                     <RangePicker
                         picker={mode}
                         showTime={showTime}
+                        disabledDate={min ?? max}
                         size={size}
                         style={style}
+                        onBlur={onBlur}
+                        onChange={onChange}
                         format={'DD/MM/YYYY'}
+                        disabled={disabled}
                     />
                 );
                 break;

@@ -309,7 +309,7 @@ class Organizations extends Component {
                         `${el.phoneNumber ?? ''}`.toLowerCase().includes(search['phoneNumber']['value'].toLowerCase())&&
                         `${el.email ?? ''}`.toLowerCase().includes(search['email']['value'].toLowerCase()) &&
                         `${el.address ?? ''}`.toLowerCase().includes(search['address']['value'].toLowerCase()) &&
-                        `${search['businessType']['value'].reduce((p, n) => p + n, '')}`.includes(`${search['businessType']['value'].length > 0 ?el.businessType ?? '' : ''}`) 
+                        `${search['businessType']['value'].reduce((p, n) => p + n, '')}`.includes(`${search['businessType']['value'].length > 0 ?el.businessType ?? '' : ''}`) &&
                         `${search['delegate_cp']['value'].reduce((p, n) => p + n, '')}`.includes(`${search['delegate_cp']['value'].length > 0 ?el.delegateContactPersonId ?? '' : ''}`) 
                 }),
                 searchedColumn: search,

@@ -233,4 +233,17 @@ this.setState({
 })
 
 //=======================================================
-//Filering 
+//Filering Date
+
+ (search['startDate']['value'] && search['startDate']['value']) ?
+    moment(search['startDate']['value'].format('YYYY-MM-DD'))
+        .isSameOrAfter(moment(el.startDate).format('YYYY-MM-DD')) &&  
+    moment(search['endDate']['value'].format('YYYY-MM-DD'))
+        .isSameOrBefore(moment(el.endDate).format('YYYY-MM-DD')) 
+: search['startDate']['value'] ?
+    moment(search['startDate']['value'].format('YYYY-MM-DD'))
+        .isSame(moment(el.startDate).format('YYYY-MM-DD')) 
+: search['endDate']['value'] ? 
+    moment(search['endDate']['value'].format('YYYY-MM-DD'))
+        .isSame(moment(el.endDate).format('YYYY-MM-DD')) 
+: moment('1010-10-10').isSame(moment('1010-10-10'))

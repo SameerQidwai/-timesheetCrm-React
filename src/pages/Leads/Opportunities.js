@@ -160,9 +160,10 @@ class Opportunities extends Component {
                 'title': {type: 'Input', value: '', label:"Title",  showInColumn: true},
                 'organization': { type: 'Select', value: [], label:"Organization",  showInColumn: true},
                 'revenue': {type: 'Input', value: '', label:"Revenue",  showInColumn: true},
-                'startDate': {type: 'Date', value: '',  label:"Start Date", showInColumn: true},
-                'endDate': {type: 'Input', value: '',  label:"End Date", showInColumn: true, disabled:true},
-                'bidDate': {type: 'Input', value: '',  label:"Bid Date", showInColumn: true, disabled:true},
+                'startDate': {type: 'Date', value: null,  label:"Start Date", showInColumn: true},
+                'endDate': {type: 'Date', value: null,  label:"End Date", showInColumn: true, disabled:true},
+                'bidDate': {type: 'Date', value: null,  label:"Bid Date", showInColumn: true, disabled:true},
+                'entryDate': {type: 'Date', value: null,  label:"Entry Date", showInColumn: true, disabled:true},
                 'stage': { type: 'Select', value: [], label:"stage",  showInColumn: true, options: [
                     { label: "L", value: "L" },
                     { label: "TR", value: "TR" },
@@ -181,6 +182,201 @@ class Opportunities extends Component {
             },
 
             filterFields: [
+                {
+                    Placeholder: "Panel",
+                    fieldCol: 12,
+                    size: "small",
+                    type: "Text",
+                },
+                {
+                    Placeholder: "Organisation",
+                    fieldCol: 12,
+                    size: "small",
+                    type: "Text",
+                },
+                {
+                    object: "obj",
+                    fieldCol: 12,
+                    key: "panelId",
+                    size: "small",  
+                    data: [],
+                    type: "Select",
+                },
+                {
+                    object: "obj",
+                    fieldCol: 12,
+                    key: "organizationId",
+                    size: "small",
+                    data: [],
+                    type: "Select",
+                },
+                {
+                    Placeholder: "Name",
+                    fieldCol: 12,
+                    size: "small",
+                    type: "Text",
+                },
+                {
+                    Placeholder: "Type",
+                    fieldCol: 12,
+                    size: "small",
+                    type: "Text",
+                },
+                {
+                    object: "obj",
+                    fieldCol: 12,
+                    key: "title",
+                    size: "small",
+                    type: "Input",
+                },
+                {
+                    object: "obj",
+                    fieldCol: 12,
+                    key: "type",
+                    size: "small",
+                    data: [{label: 'MILESTONE BASE', value: 1},
+                        {label: 'TIME BASE', value: 2}],
+                    type: "Select",
+                },
+                {
+                    Placeholder: "State",
+                    fieldCol: 12,
+                    size: "small",
+                    type: "Text",
+                },
+                {
+                    Placeholder: "Qualified Ops",
+                    fieldCol: 12,
+                    size: "small",
+                    type: "Text",
+                },
+                {
+                    object: "obj",
+                    fieldCol: 12,
+                    key: "stateId",
+                    size: "small",
+                    data: [],
+                    type: "Select",
+                },
+                {
+                    object: "obj",
+                    fieldCol: 12,
+                    key: "qualifiedOps",
+                    // label: "Qualified Ops",
+                    size: "small",
+                    data: [
+                        { label: "True", value: true },
+                        { label: "False", value: false },
+                    ],
+                    type: "Select",
+                },  
+                {
+                    Placeholder: "Stage",
+                    fieldCol: 12,
+                    size: "small",
+                    type: "Text",
+                },
+                {
+                    Placeholder: "Estimated Value",
+                    fieldCol: 12,
+                    size: "small",
+                    type: "Text",
+                },
+                {
+                    object: "obj",
+                    fieldCol: 12,
+                    key: "stage",
+                    size: "small",
+                    data: [
+                        { label: "Lead", value: 'L' },
+                        { label: "Tender Released", value: 'TR' },
+                        { label: "Bid Submitted", value: 'BS' },
+                    ],
+                    type: "Select",
+                },       
+                {
+                    object: "obj",
+                    fieldCol: 12,
+                    key: "value",
+                    size: "small",
+                    shape: "$",
+                    type: "InputNumber",
+                    fieldStyle: { width: "100%" },
+                },
+                {
+                    Placeholder: "Start Date",
+                    fieldCol: 12,
+                    size: "small",
+                    type: "Text",
+                },
+                {
+                    Placeholder: "End Date",
+                    fieldCol: 12,
+                    size: "small",
+                    type: "Text",
+                },
+                {
+                    object: "obj",
+                    fieldCol: 12,
+                    key: "startDate",
+                    size: "small",
+                    type: "RangePicker",
+                    fieldStyle: { width: "100%" },
+                },
+                {
+                    object: "obj",
+                    fieldCol: 12,
+                    key: "endDate",
+                    size: "small",
+                    type: "RangePicker",
+                    fieldStyle: { width: "100%" },
+                },
+            
+                {
+                    Placeholder: "Daily Hours",
+                    fieldCol: 12,
+                    size: "small",
+                    type: "Text",
+                },
+                {
+                    Placeholder: "Bid Date",
+                    fieldCol: 12,
+                    size: "small",
+                    type: "Text",
+                },
+                
+                {
+                    object: "obj",
+                    fieldCol: 12,
+                    key: "hoursPerDay",
+                    size: "small",
+                    // rules:[{ required: true }],
+                    type: "InputNumber",
+                    fieldStyle: { width: "100%" },
+                },
+                {
+                    object: "obj",
+                    fieldCol: 12,
+                    key: "bidDate",
+                    size: "small",
+                    type: "RangePicker",
+                    fieldStyle: { width: "100%" },
+                },
+                
+                {
+                    Placeholder: "Entry Date",
+                    fieldCol: 24,
+                    size: "small",
+                    type: "Text",
+                },
+                {
+                    object: "obj",
+                    fieldCol: 12,
+                    key: "entryDate",
+                    size: "small",
+                    type: "RangePicker",
+                    fieldStyle: { width: "100%" },
+                },
             ],
         }
     }
@@ -254,37 +450,52 @@ class Opportunities extends Component {
         }else{
             search = advSearch
         }
-
+        console.log('search', search)
         if (search['id']['value'] || search['title']['value'] ||
-        search['organization']['value'] || search['revenue']['value'] ||
+        search['organization']['value'].length>0 || search['revenue']['value'] ||
         search['startDate']['value']
         ){
-            
+            const startDate = search['startDate']['value'] ?? [null, null]
+            const endDate = search['endDate']['value'] ?? [null, null]
+            const bidDate = search['bidDate']['value'] ?? [null, null]
+            const entryDate = search['entryDate']['value'] ?? [null, null]
             this.setState({
                 filterData: data.filter(el => { // method one which have mutliple if condition for every multiple search
                     const { name: organization} = el.organization
                     return  `00${el.id.toString()}`.includes(search['id']['value']) &&
-                    `${el.title ?? ''}`.toLowerCase().includes(search['title']['value'].toLowerCase()) &&
-                    (search['organization']['value'].length > 0 ? search['organization']['value'] : [','])
-                    .includes(`${search['organization']['value'].length > 0 ?organization ?? '' : ','}`) &&
-                    `${el.value ?? ''}`.toLowerCase().includes(search['revenue']['value'].toLowerCase()) &&
-                    (search['stage']['value'].length > 0 ? search['stage']['value'] : [','])
-                    .includes(`${search['stage']['value'].length > 0 ? el.stage ?? '' : ','}`) &&
-                    (search['status']['value'].length > 0 ? search['status']['value'] : [','])
-                    .includes(`${search['status']['value'].length > 0 ?el.status ?? '' : ','}`)  &&
-                    (search['type']['value'].length > 0 ? search['type']['value'] : [','])
-                    .includes(`${search['type']['value'].length > 0 ?el.type ?? '' : ','}`) &&
-                    //Date filter
-                    (!search['endDate']['value'] && search['startDate']['value']) ?
-                    moment(search['startDate']['value']).isSame(el.starDate) : '' 
+                        `${el.title ?? ''}`.toLowerCase().includes(search['title']['value'].toLowerCase()) &&
+                        (search['organization']['value'].length > 0 ? search['organization']['value'] : [','])
+                        .includes(`${search['organization']['value'].length > 0 ?organization ?? '' : ','}`) &&
+                        `${el.value.toString() ?? ''}`.toLowerCase().includes(search['revenue']['value'].toLowerCase()) &&
+                        (search['stage']['value'].length > 0 ? search['stage']['value'] : [','])
+                        .includes(`${search['stage']['value'].length > 0 ? el.stage ?? '' : ','}`) &&
+                        (search['status']['value'].length > 0 ? search['status']['value'] : [','])
+                        .includes(`${search['status']['value'].length > 0 ?el.status ?? '' : ','}`)  &&
+                        (search['type']['value'].length > 0 ? search['type']['value'] : [','])
+                        .includes(`${search['type']['value'].length > 0 ?el.type ?? '' : ','}`) &&
+                        //Start Date Filter
+                        moment(search['startDate']['value']? moment(el.startDate).format('YYYY-MM-DD'): '2010-10-20')
+                        .isBetween(startDate[0]?? '2010-10-19',startDate[1]?? '2010-10-25' , undefined, '[]') &&
+                        //End Date Filter
+                        moment(search['endDate']['value']? moment(el.endDate).format('YYYY-MM-DD'): '2010-10-20')
+                        .isBetween(endDate[0]?? '2010-10-19', endDate[1]?? '2010-10-25' , undefined, '[]') &&
+                        //Bid Date Filter
+                        moment(search['bidDate']['value']? moment(el.bidDate).format('YYYY-MM-DD'): '2010-10-20')
+                        .isBetween(bidDate[0]?? '2010-10-19', bidDate[1]?? '2010-10-25' , undefined, '[]') &&
+                        //Entry Date Filter
+                        moment(search['entryDate']['value']? moment(el.entryDate).format('YYYY-MM-DD'): '2010-10-20')
+                        .isBetween(entryDate[0]?? '2010-10-19', entryDate[1]?? '2010-10-25' , undefined, '[]') 
+                   
                 }),
                 searchedColumn: search,
                 openSearch: false,
+            },()=>{
+                console.log('this.state.filterData',this.state.filterData)
             })
         }else{
             this.setState({
                 filterData: data
-            })
+            },()=>console.log('this.state.data',this.state.filterData))
         }
     }
 
@@ -346,8 +557,8 @@ class Opportunities extends Component {
                             columns={this.columns}
                             dataSource={filterData}
                             size='small'
-                            sticky
-                            summary={()=>tableSummaryFilter(searchedColumn, this.advancefilter)}
+                            // sticky
+                            // summary={()=>tableSummaryFilter(searchedColumn, this.advancefilter)}
                         />
                     </Col>
                 </Row>
