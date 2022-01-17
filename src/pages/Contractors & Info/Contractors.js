@@ -449,7 +449,7 @@ class Contractors extends Component {
                             dataSource={filterData}
                             size="small"
                             sticky
-                            summary={()=>tableSummaryFilter(searchedColumn, this.advancefilter)}
+                            // summary={()=>tableSummaryFilter(searchedColumn, this.advancefilter)}
                         />
                     </Col>
                 </Row>
