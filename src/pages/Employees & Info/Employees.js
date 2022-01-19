@@ -130,10 +130,10 @@ class Employees extends Component {
                 'phoneNumber': {type: 'Input', value: '', label:"Phone Number",  showInColumn: true},
                 'email': {type: 'Input', value: '',  label:"Email", showInColumn: true},
                 'Action': {type: 'Input', value: '', label:"",  showInColumn: true, disabled:true},
-                'stateId': {type: 'none', value: [], label:"State",  showInColumn: false, disabled:false},
-                'gender': {type: 'Select', value: [], label:"Gender",  showInColumn: false},
+                'stateId': {type: 'none', multi: true, value: [], label:"State",  showInColumn: false, disabled:false},
+                'gender': {type: 'Select', multi: true, value: [], label:"Gender",  showInColumn: false},
                 'address': {type: 'none', value: '', label:"Address",  showInColumn: false, disabled:false},
-                'role': {type: 'none', value: [], label:"Role",  showInColumn: false, disabled:false},
+                'role': {type: 'none', multi: true, value: [], label:"Role",  showInColumn: false, disabled:false},
             },
 
             filterFields: [
@@ -218,6 +218,7 @@ class Employees extends Component {
                     fieldCol: 12,
                     key: "gender",
                     mode: 'multiple',
+                    customValue: (value, option)=>option,
                     size: "small",
                     data: [
                         { label: "Male", value: "M" },
@@ -230,6 +231,7 @@ class Employees extends Component {
                     object: "obj",
                     fieldCol: 12,
                     mode: 'multiple',
+                    customValue: (value, option)=>option,
                     key: "stateId",
                     size: "small",
                     type: "Select",
@@ -247,6 +249,7 @@ class Employees extends Component {
                     fieldCol: 12,
                     mode: 'multiple',
                     key: "role",
+                    customValue: (value, option)=>option,
                     size: "small",
                     type: "Select",
                     data: [],
@@ -352,9 +355,14 @@ class Employees extends Component {
                     //Creating an string using reduce of all the String array and searching sting in the function
 
     //Define  ====  //Reducing and creating the array        // but gotta check if the array is not empty otherwise gender value can't be found in emptySrting
-                    `${search['gender']['value'].reduce((p, n) => p + n, '')}`.includes(`${search['gender']['value'].length > 0 ?gender ?? '' : ''}`) &&
-                    `${search['stateId']['value'].reduce((p, n) => p + n, '')}`.includes(`${search['stateId']['value'].length > 0 ?stateId ?? '' : ''}`) &&
-                    `${search['role']['value'].reduce((p, n) => p + n, '')}`.includes(`${search['role']['value'].length > 0 ?el.roleId ?? '' : ''}`) 
+                    (search['gender']['value'].length > 0 ? search['gender']['value'] : [{value: ','}])
+                        .some(s => (search['gender']['value'].length > 0 ? [gender]: [',']).includes(s.value)) &&
+
+                    (search['stateId']['value'].length > 0 ? search['stateId']['value'] : [{value: ','}])
+                        .some(s => (search['stateId']['value'].length > 0 ? [stateId]: [',']).includes(s.value)) &&
+
+                    (search['role']['value'].length > 0 ? search['role']['value'] : [{value: ','}])
+                        .some(s => (search['role']['value'].length > 0 ? [el.roleId]: [',']).includes(s.value))
 
                 }),
                 searchedColumn: search,

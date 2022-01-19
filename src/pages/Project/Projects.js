@@ -147,20 +147,19 @@ class Projects extends Component {
             searchedColumn: {
                 'id': {type: 'Input', value: '',  label:"Code", showInColumn: true},
                 'title': {type: 'Input', value: '', label:"Title",  showInColumn: true},
-                'organization': { type: 'Select', value: [], label:"Organization",  showInColumn: true},
-                'panel': { type: 'Select', value: [], label:"panel",  showInColumn: true},
+                'organization': { type: 'Select', multi: true, value: [], label:"Organization",  showInColumn: true},
+                'panel': { type: 'Select', multi: true, value: [], label:"panel",  showInColumn: true},
                 'revenue': {type: 'Input', value: '', label:"Revenue",  showInColumn: true},
                 'startDate': {type: 'Date', value: null,  label:"Start Date", showInColumn: true},
                 'endDate': {type: 'Date', value: null,  label:"End Date", showInColumn: true, disabled:true},
                 'entryDate': {type: 'Date', value: null,  label:"Entry Date", showInColumn: true, disabled:true},
-                'stage': { type: 'Select', value: [], label:"stage",  showInColumn: true},
+                'stage': { type: 'Select', multi: true, value: [], label:"stage",  showInColumn: true},
                 'status': { type: 'Select', value: [], label:"Status",  showInColumn: true},
-                'type': { type: 'Select', value: '', label:"Type",  showInColumn: true},
+                'type': { type: 'Select', value: "", label:"Type",  showInColumn: true},
                 'Action': {type: 'Input', value: '', label:"",  showInColumn: true, disabled:true},
-                'stateId': {type: 'none', value: [], label:"State",  showInColumn: false, disabled:false},
-                'gender': {type: 'Select', value: [], label:"Gender",  showInColumn: false},
+                'stateId': {type: 'none', multi: true, value: [], label:"State",  showInColumn: false, disabled:false},
                 'address': {type: 'none', value: '', label:"Address",  showInColumn: false, disabled:false},
-                'role': {type: 'none', value: [], label:"Role",  showInColumn: false, disabled:false},
+                'qualifiedOps': {type: 'none', value: '', label:"Qualified Ops",  showInColumn: false, disabled:false},
             },
 
             filterFields: [
@@ -181,6 +180,7 @@ class Projects extends Component {
                     fieldCol: 12,
                     mode: 'multiple',
                     key: "panel",
+                    customValue: (value, option)=> option,
                     size: "small",  
                     data: [],
                     type: "Select",
@@ -190,6 +190,7 @@ class Projects extends Component {
                     fieldCol: 12,
                     mode: 'multiple',
                     key: "organization",
+                    customValue: (value, option)=> option,
                     size: "small",
                     data: [],
                     type: "Select",
@@ -239,6 +240,7 @@ class Projects extends Component {
                     fieldCol: 12,
                     mode: 'multiple',
                     key: "stateId",
+                    customValue: (value, option)=> option,
                     size: "small",
                     data: [],
                     type: "Select",
@@ -250,8 +252,8 @@ class Projects extends Component {
                     // label: "Qualified Ops",
                     size: "small",
                     data: [
-                        { label: "True", value: true },
-                        { label: "False", value: false },
+                        { label: "True", value: 'True' },
+                        { label: "False", value: 'False' },
                     ],
                     type: "Select",
                 },  
@@ -272,6 +274,7 @@ class Projects extends Component {
                     fieldCol: 12,
                     key: "stage",
                     mode: 'multiple',
+                    customValue: (value, option)=> option,
                     size: "small",
                     data: [
                         { label: "Lead", value: 'L' },
@@ -283,7 +286,7 @@ class Projects extends Component {
                 {
                     object: "obj",
                     fieldCol: 12,
-                    key: "value",
+                    key: "revenue",
                     size: "small",
                     shape: "$",
                     type: "InputNumber",
@@ -399,11 +402,11 @@ class Projects extends Component {
             search = advSearch
         }
         if (search['id']['value'] || search['title']['value'] ||
-            search['organization']['value'].length>0 || search['revenue']['value'] ||
-            search['startDate']['value']|| search['endDate']['value']||
-            search['entryDate']['value'] ||
-            search['panel']['value'].length>0 || search['stage']['value'].length > 0||
-            search['type']['value'] || search['stateId']['value']
+        search['organization']['value'].length>0 || search['revenue']['value'] ||
+        search['startDate']['value']|| search['endDate']['value']||
+        search['entryDate']['value'] || search['panel']['value'].length>0 ||
+        search['stage']['value'].length > 0|| search['type']['value'] || 
+        search['stateId']['value'].length>0
         ){
             const startDate = search['startDate']['value'] ?? [null, null]
             const endDate = search['endDate']['value'] ?? [null, null]
@@ -413,30 +416,32 @@ class Projects extends Component {
                     const { id: organization} = el.organization
                     return  `00${el.id.toString()}`.includes(search['id']['value']) &&
                         `${el.title ?? ''}`.toLowerCase().includes(search['title']['value'].toLowerCase()) &&
-                        `${el.value.toString() ?? ''}`.toLowerCase().includes(search['revenue']['value'].toLowerCase()) &&
-                        `${el.type.toString() ?? ''}`.toLowerCase().includes(search['type']['value'].toLowerCase()) &&
+                        `${el.value.toString() ?? ''}`.toLowerCase().includes(search['revenue']['value'].toString().toLowerCase()) &&
+                        `${el.type?? ''}`.toLowerCase().includes(search['type']['value'].toLowerCase()) &&
+                        `${el.qualifiedOps?? ''}`.toLowerCase().includes(search['qualifiedOps']['value'].toLowerCase()) &&
                         // multi Select Search
-                        (search['organization']['value'].length > 0 ? search['organization']['value'] : [','])
-                        .some(s => (search['organization']['value'].length > 0 ? [organization]: [',']).includes(s)) &&
 
-                        `${search['stateId']['value'].reduce((p, n) => p + n, '')}`
-                        .includes(`${search['stateId']['value'].length > 0 ?el.stateId ?? '' : ''}`) &&
-                        
-                        `${search['stage']['value'].reduce((p, n) => p + n, '')}`
-                        .includes(`${search['stage']['value'].length > 0 ?el.stage ?? '' : ''}`) &&
+                        (search['organization']['value'].length > 0 ? search['organization']['value'] : [{value: ','}])
+                        .some(s => (search['organization']['value'].length > 0 ? [organization]: [',']).includes(s.value)) &&
 
-                        (search['status']['value'].length > 0 ? search['status']['value'] : [','])
-                        .includes(`${search['status']['value'].length > 0 ?el.status ?? '' : ','}`)  &&
+                        (search['stateId']['value'].length > 0 ? search['stateId']['value'] : [{value: ','}])
+                        .some(s => (search['stateId']['value'].length > 0 ? [el.stateId]: [',']).includes(s.value)) &&
 
-                        `${search['panel']['value'].reduce((p, n) => p + n, '')}`
-                        .includes(`${search['panel']['value'].length > 0 ?el.panelId ?? '' : ''}`) &&
+                        (search['stage']['value'].length > 0 ? search['stage']['value'] : [{value: ','}])
+                        .some(s => (search['stage']['value'].length > 0 ? [el.stage]: [',']).includes(s.value)) &&
+
+                        (search['status']['value'].length > 0 ? search['status']['value'] : [{value: ','}])
+                        .some(s => (search['status']['value'].length > 0 ? [el.status]: [',']).includes(s.value)) &&
+
+                        (search['panel']['value'].length > 0 ? search['panel']['value'] : [{value:','}])
+                        .some(s => (search['panel']['value'].length > 0 ? [el.panelId]: [',']).includes(s.value)) &&
+
                         //Start Date Filter
                         moment(search['startDate']['value']? moment(el.startDate).format('YYYY-MM-DD'): '2010-10-20')
                         .isBetween(startDate[0]?? '2010-10-19',startDate[1]?? '2010-10-25' , undefined, '[]') &&
                         //End Date Filter
                         moment(search['endDate']['value']? moment(el.endDate).format('YYYY-MM-DD'): '2010-10-20')
                         .isBetween(endDate[0]?? '2010-10-19', endDate[1]?? '2010-10-25' , undefined, '[]') &&
-                        //Bid Date Filter
                         //Entry Date Filter
                         moment(search['entryDate']['value']? moment(el.entryDate).format('YYYY-MM-DD'): '2010-10-20')
                         .isBetween(entryDate[0]?? '2010-10-19', entryDate[1]?? '2010-10-25' , undefined, '[]') 
@@ -457,7 +462,6 @@ class Projects extends Component {
     filterModalUseEffect = () =>{
         Promise.all([getPanels(), getOrganizations(), getStates()])
         .then(res => {
-            console.log(res);
            const { filterFields } = this.state
            filterFields[2].data = res[0].success ? res[0].data : []
            filterFields[3].data = res[1].success ? res[1].data : []

@@ -114,7 +114,7 @@ class Contact extends Component {
                 'id': {type: 'Input', value: '',  label:"Code", showInColumn: true},
                 'firstName': {type: 'Input', value: '', label:"First Name",  showInColumn: true},
                 'lastName': { type: 'Input', value: '', label:"Last Name",  showInColumn: true},
-                'gender': {type: 'Select', value: [], label:"Gender",  showInColumn: true, mode: 'multiple',
+                'gender': {type: 'Select', multi: true, value: [], label:"Gender",  showInColumn: true, mode: 'multiple',
                 options: [
                     { label: "Male", value: "M" },
                     { label: "Female", value: "F" },
@@ -123,10 +123,10 @@ class Contact extends Component {
                 'email': {type: 'Input', value: '',  label:"Email", showInColumn: true},
                 'phoneNumber': {type: 'Input', value: '', label:"Phone Number",  showInColumn: true},
                 'Action': {type: 'Input', value: '', label:"",  showInColumn: true, disabled:true},
-                'stateId': {type: 'none', value: [], label:"State",  showInColumn: false, disabled:false},
+                'stateId': {type: 'none', multi: true, value: [], label:"State",  showInColumn: false, disabled:false},
                 'address': {type: 'none', value: '', label:"Address",  showInColumn: false, disabled:false},
-                'skill': {type: 'none', value: [], label:"Skill",  showInColumn: false, disabled:false},
-                'association': {type: 'none', value: [], label:"Association",  showInColumn: false, disabled:false},
+                'skill': {type: 'none', multi: true, value: [], label:"Skill",  showInColumn: false, disabled:false},
+                'association': {type: 'none', multi: true, value: [], label:"Association",  showInColumn: false, disabled:false},
             },
             
             filterFields: [ //just here for fun will get shift to contact
@@ -200,6 +200,7 @@ class Contact extends Component {
                     key: "gender",
                     size: "small",
                     mode: 'multiple',
+                    customValue: (value, option) => option,
                     data: [
                         { label: "Male", value: "M" },
                         { label: "Female", value: "F" },
@@ -212,6 +213,7 @@ class Contact extends Component {
                     fieldCol: 12,
                     key: "stateId",
                     mode: 'multiple',
+                    customValue: (value, option) => option,
                     size: "small",
                     type: "Select",
                     // data: ,
@@ -228,6 +230,7 @@ class Contact extends Component {
                     key: "skill",
                     size: "small",
                     mode: 'multiple',
+                    customValue: (value, option) => option,
                     data: [],
                     type: "Select",
                 },
@@ -243,6 +246,7 @@ class Contact extends Component {
                     key: "association",
                     size: "small",
                     mode: 'multiple',
+                    customValue: (value, option) => option,
                     data: [],
                     type: "Select",
                 },
@@ -349,17 +353,20 @@ class Contact extends Component {
                     //Creating an string using reduce of all the String array and searching sting in the function
 
     //Define  ====  //Reducing and creating the array        // but gotta check if the array is not empty otherwise gender value can't be found in emptySrting
-                    `${search['gender']['value'].reduce((p, n) => p + n, '')}`.includes(`${search['gender']['value'].length > 0 ?el.gender ?? '' : ''}`) &&
-                    `${search['stateId']['value'].reduce((p, n) => p + n, '')}`.includes(`${search['stateId']['value'].length > 0 ?el.stateId ?? '' : ''}`) &&
+                    (search['gender']['value'].length > 0 ? search['gender']['value'] : [{value: ','}])
+                        .some(s => (search['gender']['value'].length > 0 ? [el.gender]: [',']).includes(s.value)) &&
+
+                    (search['stateId']['value'].length > 0 ? search['stateId']['value'] : [{value: ','}])
+                        .some(s => (search['stateId']['value'].length > 0 ? [el.stateId]: [',']).includes(s.value)) &&
                     // //searching for skill in skills array
                     // giving some function a default array... and search it if not passed
-                    (search['skill']['value'].length > 0 ? search['skill']['value'] : [',']).some(s => 
+                    (search['skill']['value'].length > 0 ? search['skill']['value'] : [{value: ','}]).some(s => 
                         el.standardSkillStandardLevels && el.standardSkillStandardLevels.length> 0 && 
-                            (search['skill']['value'].length > 0 ? el.standardSkillStandardLevels.map(p => p.standardSkillId): [',']).includes(s)) &&
+                            (search['skill']['value'].length > 0 ? el.standardSkillStandardLevels.map(p => p.standardSkillId): [',']).includes(s.value)) &&
 
-                    (search['association']['value'].length > 0 ? search['association']['value'] : [',']).some(s => 
+                    (search['association']['value'].length > 0 ? search['association']['value'] : [{value: ','}]).some(s => 
                         el.contactPersonOrganizations && el.contactPersonOrganizations.length> 0 && 
-                            (search['association']['value'].length > 0 ? el.contactPersonOrganizations.map(p => p.organizationId): [',']).includes(s))
+                            (search['association']['value'].length > 0 ? el.contactPersonOrganizations.map(p => p.organizationId): [',']).includes(s.value))
 
                 }),
                 searchedColumn: search,

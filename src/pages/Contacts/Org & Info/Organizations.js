@@ -103,7 +103,7 @@ class Organizations extends Component {
                 'email': {type: 'Input', value: '',  label:"Email", showInColumn: false},
                 'phoneNumber': {type: 'Input', value: '', label:"Phone Number",  showInColumn: false},
                 'address': {type: 'none', value: '', label:"Address",  showInColumn: false},
-                'businessType': {type: 'none', value: [], label:"Business Type",  showInColumn: false},
+                'businessType': {type: 'none', multi: true, value: [], label:"Business Type",  showInColumn: false},
                 'delegate_cp': {type: 'none', value: [], label:"Delegate Contact Person",  showInColumn: false},
 
             },
@@ -193,6 +193,7 @@ class Organizations extends Component {
                     size: "small",
                     type: "Select",
                     mode: "multiple",
+                    customValue: (value, option) => option,
                     data: [
                         {label: 'Sole Trader', value: 1 },
                         {label: 'Partnership', value: 2 },
@@ -309,8 +310,10 @@ class Organizations extends Component {
                         `${el.phoneNumber ?? ''}`.toLowerCase().includes(search['phoneNumber']['value'].toLowerCase())&&
                         `${el.email ?? ''}`.toLowerCase().includes(search['email']['value'].toLowerCase()) &&
                         `${el.address ?? ''}`.toLowerCase().includes(search['address']['value'].toLowerCase()) &&
-                        `${search['businessType']['value'].reduce((p, n) => p + n, '')}`.includes(`${search['businessType']['value'].length > 0 ?el.businessType ?? '' : ''}`) &&
-                        `${search['delegate_cp']['value'].reduce((p, n) => p + n, '')}`.includes(`${search['delegate_cp']['value'].length > 0 ?el.delegateContactPersonId ?? '' : ''}`) 
+                        `${search['delegate_cp']['value'].reduce((p, n) => p + n, '')}`.includes(`${search['delegate_cp']['value'].length > 0 ?el.delegateContactPersonId ?? '' : ''}`) &&
+                        
+                        (search['businessType']['value'].length > 0 ? search['businessType']['value'] : [{value: ','}])
+                        .some(s => (search['businessType']['value'].length > 0 ? [el.businessType]: [',']).includes(s.value))
                 }),
                 searchedColumn: search,
                 openSearch: false,

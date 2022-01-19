@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import { Button, Col, Input, Modal, Row, Space, Table, Form, Select, Tag, DatePicker } from 'antd';
 import FormItems from '../FormItems';
 import { SearchOutlined } from "@ant-design/icons";
@@ -186,11 +186,17 @@ export const TableModalFilter = ({title, visible, onClose, filters, filterFuncti
 
 export const Filtertags = ({filters, filterFunction}) =>{
     let filterKeys = Object.keys(filters)
+    const [state, setState] = useState({});
+    useEffect(() => {
+        return () => {
+          setState({}); // This worked for me
+        };
+    }, []);
     return <Col span={24}> 
         {filterKeys.map(el=>(
-            filters[el].value && (filters[el].value.length>0 || filters[el].value >1) &&<span key={el}>
+            filters[el].value && filters[el].value.length>0 &&<span key={el}>
                 <Tag color="magenta" key={el}>{filters[el].label}: </Tag>
-                {typeof(filters[el].value) === 'string' || 'number' ?
+                {typeof(filters[el].value) === 'string' ?
                     <Tag 
                         key={`${el}value`}
                         color="lime" 
@@ -215,7 +221,6 @@ export const Filtertags = ({filters, filterFunction}) =>{
                         closable 
                         onClose={()=>{
                             let remove = filters[el].value.filter(elem=> elem.value !== value.value)
-                            console.log({remove});
                             filterFunction(remove, el)
                         }}
                     >{value.label}</Tag>) 

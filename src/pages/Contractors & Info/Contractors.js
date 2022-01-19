@@ -10,7 +10,7 @@ import { getList } from "../../service/contractors";
 import { localStore } from "../../service/constant";
 import "../styles/table.css";
 import { getOrganizations, getRoles, getStates } from "../../service/constant-Apis";
-import { TableModalFilter, tableSorter, tableSummaryFilter, tableTitleFilter } from "../../components/Core/Table/TableFilter";
+import { Filtertags, TableModalFilter, tableSorter, tableSummaryFilter, tableTitleFilter } from "../../components/Core/Table/TableFilter";
 
 const { Title } = Typography;
 
@@ -123,14 +123,14 @@ class Contractors extends Component {
                 'id': {type: 'Input', value: '',  label:"Code", showInColumn: true},
                 'firstName': {type: 'Input', value: '', label:"First Name",  showInColumn: true},
                 'lastName': { type: 'Input', value: '', label:"Last Name",  showInColumn: true},
-                'organization': { type: 'Select', value: [], label:"Organisation",  showInColumn: true},
+                'organization': { type: 'Select', multi: true, value: [], label:"Organisation",  showInColumn: true},
                 'phoneNumber': {type: 'Input', value: '', label:"Phone Number",  showInColumn: true},
                 'email': {type: 'Input', value: '',  label:"Email", showInColumn: true},
                 'Action': {type: 'Input', value: '', label:"",  showInColumn: true, disabled:true},
-                'stateId': {type: 'none', value: [], label:"State",  showInColumn: false, disabled:false},
-                'gender': {type: 'Select', value: [], label:"Gender",  showInColumn: false},
+                'stateId': {type: 'none', multi: true, value: [], label:"State",  showInColumn: false, disabled:false},
+                'gender': {type: 'Select', multi: true, value: [], label:"Gender",  showInColumn: false},
                 'address': {type: 'none', value: '', label:"Address",  showInColumn: false, disabled:false},
-                'role': {type: 'none', value: [], label:"Role",  showInColumn: false, disabled:false},
+                'role': {type: 'none', multi: true, value: [], label:"Role",  showInColumn: false, disabled:false},
             },
 
             filterFields: [
@@ -215,6 +215,7 @@ class Contractors extends Component {
                     fieldCol: 12,
                     key: "gender",
                     mode: 'multiple',
+                    customValue: (value, option)=> option,
                     size: "small",
                     data: [
                         { label: "Male", value: "M" },
@@ -227,6 +228,7 @@ class Contractors extends Component {
                     object: "obj",
                     fieldCol: 12,
                     mode: 'multiple',
+                    customValue: (value, option)=> option,
                     key: "stateId",
                     size: "small",
                     type: "Select",
@@ -250,6 +252,7 @@ class Contractors extends Component {
                     object: "obj",
                     fieldCol: 12,
                     mode: 'multiple',
+                    customValue: (value, option)=> option,
                     key: "role",
                     size: "small",
                     type: "Select",
@@ -259,6 +262,7 @@ class Contractors extends Component {
                     object: "obj",
                     fieldCol: 12,
                     mode: 'multiple',
+                    customValue: (value, option)=> option,
                     key: "organization",
                     size: "small",
                     type: "Select",
@@ -368,14 +372,17 @@ class Contractors extends Component {
                             `${address ?? ''}`.toLowerCase().includes(search['address']['value'].toLowerCase()) && 
                             //Creating an string using reduce of all the String array and searching sting in the function
                                                         
-                            (search['gender']['value'].length > 0 ? search['gender']['value'] : [',']).includes(`${search['gender']['value'].length > 0 ?gender ?? '' : ','}`) &&
-                            (search['stateId']['value'].length > 0 ? search['stateId']['value'] : [','])
-                            .includes(`${search['stateId']['value'].length > 0 ?stateId ?? '' : ','}`) &&
-                            (search['role']['value'].length > 0 ? search['role']['value'] : [','])
-                            .includes(`${search['role']['value'].length > 0 ?el.roleId ?? '' : ','}`) &&
+                            (search['gender']['value'].length > 0 ? search['gender']['value'] : [{value: ','}])
+                             .some(s => (search['gender']['value'].length > 0 ? [gender]: [',']).includes(s.value)) &&
+    
+                            (search['stateId']['value'].length > 0 ? search['stateId']['value'] : [{value: ','}])
+                             .some(s => (search['stateId']['value'].length > 0 ? [stateId]: [',']).includes(s.value)) &&
+        
+                            (search['role']['value'].length > 0 ? search['role']['value'] : [{value: ','}])
+                             .some(s => (search['role']['value'].length > 0 ? [el.roleId]: [',']).includes(s.value)) &&
 
-                            (search['organization']['value'].length > 0 ? search['organization']['value'] : [','])
-                            .includes(search['organization']['value'].length > 0 ? organizationId: ',')
+                             (search['organization']['value'].length > 0 ? search['organization']['value'] : [{value: ','}])
+                             .some(s => (search['organization']['value'].length > 0 ? [organizationId]: [',']).includes(s.value)) 
                     }),
                     searchedColumn: search,
                     openSearch: false,
@@ -439,6 +446,10 @@ class Contractors extends Component {
                             </Col>
                         </Row>
                     </Col>
+                    <Filtertags
+                        filters={searchedColumn}
+                        filterFunction={this.advancefilter}
+                    />
                     <Col span={24}>
                         <Table
                             title={()=>tableTitleFilter(5, this.generalFilter)}
