@@ -188,9 +188,9 @@ export const Filtertags = ({filters, filterFunction}) =>{
     let filterKeys = Object.keys(filters)
     return <Col span={24}> 
         {filterKeys.map(el=>(
-            filters[el].value && filters[el].value.length>0 &&<span key={el}>
+            filters[el].value && (filters[el].value.length>0 || filters[el].value >1) &&<span key={el}>
                 <Tag color="magenta" key={el}>{filters[el].label}: </Tag>
-                {typeof(filters[el].value) === 'string' ?
+                {typeof(filters[el].value) === 'string' || 'number' ?
                     <Tag 
                         key={`${el}value`}
                         color="lime" 
@@ -208,8 +208,18 @@ export const Filtertags = ({filters, filterFunction}) =>{
                             }}
                         >{`${filters[el].value[0]}=>${filters[el].value[1]}`}
                         </Tag>
-                    :
+                    : filters[el].multi ?
                     filters[el].value&&filters[el].value.map(value=> <Tag 
+                        key={`${el}${value.value}`}
+                        color="lime" 
+                        closable 
+                        onClose={()=>{
+                            let remove = filters[el].value.filter(elem=> elem.value !== value.value)
+                            console.log({remove});
+                            filterFunction(remove, el)
+                        }}
+                    >{value.label}</Tag>) 
+                    : filters[el].value&&filters[el].value.map(value=> <Tag 
                         key={`${el}${value}`}
                         color="lime" 
                         closable 

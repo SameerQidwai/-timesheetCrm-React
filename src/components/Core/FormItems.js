@@ -84,9 +84,7 @@ class FormItems extends Component {
                         wrapperCol={item.wrapperCol}
                         rules={item.rules}
                         valuePropName={item.valuePropName}
-                        getValueFromEvent={
-                            item.getValue && normFile
-                        }
+                        getValueFromEvent={item.customValue}
                         hidden={item.hidden === true}
                         style={item.itemStyle}
                         noStyle={item.noStyle}
