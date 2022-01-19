@@ -152,7 +152,6 @@ class Projects extends Component {
                 'revenue': {type: 'Input', value: '', label:"Revenue",  showInColumn: true},
                 'startDate': {type: 'Date', value: null,  label:"Start Date", showInColumn: true},
                 'endDate': {type: 'Date', value: null,  label:"End Date", showInColumn: true, disabled:true},
-                'bidDate': {type: 'Date', value: null,  label:"Bid Date", showInColumn: true, disabled:true},
                 'entryDate': {type: 'Date', value: null,  label:"Entry Date", showInColumn: true, disabled:true},
                 'stage': { type: 'Select', value: [], label:"stage",  showInColumn: true},
                 'status': { type: 'Select', value: [], label:"Status",  showInColumn: true},
@@ -319,25 +318,11 @@ class Projects extends Component {
                     fieldStyle: { width: "100%" },
                 },
                 {
-                    Placeholder: "Bid Date",
-                    fieldCol: 12,
-                    size: "small",
-                    type: "Text",
-                },
-                {
                     Placeholder: "Entry Date",
-                    fieldCol: 12,
+                    fieldCol: 24,
                     size: "small",
                     type: "Text",
                 },
-                {
-                    object: "obj",
-                    fieldCol: 12,
-                    key: "bidDate",
-                    size: "small",
-                    type: "RangePicker",
-                    fieldStyle: { width: "100%" },
-                },                
                 {
                     object: "obj",
                     fieldCol: 12,
@@ -416,13 +401,12 @@ class Projects extends Component {
         if (search['id']['value'] || search['title']['value'] ||
             search['organization']['value'].length>0 || search['revenue']['value'] ||
             search['startDate']['value']|| search['endDate']['value']||
-            search['bidDate']['value']|| search['entryDate']['value'] ||
+            search['entryDate']['value'] ||
             search['panel']['value'].length>0 || search['stage']['value'].length > 0||
             search['type']['value'] || search['stateId']['value']
         ){
             const startDate = search['startDate']['value'] ?? [null, null]
             const endDate = search['endDate']['value'] ?? [null, null]
-            const bidDate = search['bidDate']['value'] ?? [null, null]
             const entryDate = search['entryDate']['value'] ?? [null, null]
             this.setState({
                 filterData: data.filter(el => { // method one which have mutliple if condition for every multiple search
@@ -432,8 +416,8 @@ class Projects extends Component {
                         `${el.value.toString() ?? ''}`.toLowerCase().includes(search['revenue']['value'].toLowerCase()) &&
                         `${el.type.toString() ?? ''}`.toLowerCase().includes(search['type']['value'].toLowerCase()) &&
                         // multi Select Search
-                        (search['organization']['value'].length > 0 ? search['organization']['value'] : [',']).some(s => 
-                                (search['organization']['value'].length > 0 ? [organization]: [',']).includes(s))
+                        (search['organization']['value'].length > 0 ? search['organization']['value'] : [','])
+                        .some(s => (search['organization']['value'].length > 0 ? [organization]: [',']).includes(s)) &&
 
                         `${search['stateId']['value'].reduce((p, n) => p + n, '')}`
                         .includes(`${search['stateId']['value'].length > 0 ?el.stateId ?? '' : ''}`) &&
@@ -453,8 +437,6 @@ class Projects extends Component {
                         moment(search['endDate']['value']? moment(el.endDate).format('YYYY-MM-DD'): '2010-10-20')
                         .isBetween(endDate[0]?? '2010-10-19', endDate[1]?? '2010-10-25' , undefined, '[]') &&
                         //Bid Date Filter
-                        moment(search['bidDate']['value']? moment(el.bidDate).format('YYYY-MM-DD'): '2010-10-20')
-                        .isBetween(bidDate[0]?? '2010-10-19', bidDate[1]?? '2010-10-25' , undefined, '[]') &&
                         //Entry Date Filter
                         moment(search['entryDate']['value']? moment(el.entryDate).format('YYYY-MM-DD'): '2010-10-20')
                         .isBetween(entryDate[0]?? '2010-10-19', entryDate[1]?? '2010-10-25' , undefined, '[]') 

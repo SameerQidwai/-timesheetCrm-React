@@ -452,8 +452,8 @@ class Opportunities extends Component {
                         `${el.type.toString() ?? ''}`.toLowerCase().includes(search['type']['value'].toLowerCase()) &&
                         // multi Select Search
 
-                        (search['organization']['value'].length > 0 ? search['organization']['value'] : [',']).some(s => 
-                                (search['organization']['value'].length > 0 ? [organization]: [',']).includes(s)) &&
+                        (search['organization']['value'].length > 0 ? search['organization']['value'] : [','])
+                        .some(s => (search['organization']['value'].length > 0 ? [organization]: [',']).includes(s)) &&
 
                         `${search['stateId']['value'].reduce((p, n) => p + n, '')}`
                         .includes(`${search['stateId']['value'].length > 0 ?el.stateId ?? '' : ''}`) &&
