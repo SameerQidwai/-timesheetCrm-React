@@ -51,7 +51,6 @@ class Opportunities extends Component {
                 dataIndex: 'value',
                 key: 'value',
                 render: (record)=>  `${formatCurrency(record)}`,
-                sorter: (a, b) => a.value - b.value,
                 ...tableSorter('value', 'number'),
             },
             {
@@ -368,6 +367,7 @@ class Opportunities extends Component {
     componentDidMount = () =>{
         this.getList()
     }
+    
     resRoute = ()=>{
         let splitted = this.props.match.url
         splitted = splitted.split('/', 2)

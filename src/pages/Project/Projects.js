@@ -11,7 +11,7 @@ import '../styles/table.css'
 import moment from "moment";
 import { formatCurrency, localStore, O_TYPE } from '../../service/constant';
 import { getOrganizations, getPanels, getStates } from '../../service/constant-Apis';
-import { Filtertags, TableModalFilter, tableTitleFilter } from '../../components/Core/Table/TableFilter';
+import { Filtertags, TableModalFilter, tableSorter, tableTitleFilter } from '../../components/Core/Table/TableFilter';
 const { Title } = Typography
 
 class Projects extends Component {
@@ -24,15 +24,14 @@ class Projects extends Component {
                 dataIndex: 'id',
                 key: 'id',
                 render:(record) =>( `00${record}` ),
-                sorter: (a, b) => a.id - b.id,
-                defaultSortOrder: 'ascend'
+                ...tableSorter('id', 'number', true),
             },
             {
                 title: 'Title',
                 dataIndex: 'title',
                 key: 'title',
                 width: 400,
-                sorter: (a, b) => a.title.localeCompare(b.title)
+                ...tableSorter('title', 'string'),
             },
             {
                 title: 'Organisation Name',
@@ -46,28 +45,28 @@ class Projects extends Component {
                     >
                         {record.name}</Link> 
                 },
-                sorter: (a, b) => a.organization.name.localeCompare(b.organization.name)
+                ...tableSorter('organization.name', 'string'),
             },
             {
                 title: 'Revenue',
                 dataIndex: 'value',
                 key: 'value',
                 render: record =>   `${formatCurrency(record)}`,
-                sorter: (a, b) => a.value - b.value,
+                ...tableSorter('value', 'number'),
             },
             {
                 title: 'Start Date',
                 dataIndex: 'startDate',
                 key: 'startDate',
                 render: (record) =>(record && moment(record).format('ddd DD MM yyyy')),
-                sorter: (a, b) => moment(a.startDate).unix() - moment(b.startDate).unix()
+                ...tableSorter('startDate', 'date'),
             },
             {
                 title: 'End Date',
                 dataIndex: 'endDate',
                 key: 'endDtae',
                 render: (record) =>(record &&  moment(record).format('ddd DD MM yyyy')),
-                sorter: (a, b) => moment(a.endDate).unix() - moment(b.endDate).unix()
+                ...tableSorter('endDate', 'date'),
             },
             {
                 title: 'Type',
