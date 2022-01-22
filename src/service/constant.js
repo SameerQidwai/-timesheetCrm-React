@@ -1,3 +1,4 @@
+import moment from 'moment'
 // export const Api = "http://localhost:3301/api/v1";
 
 // export const Api = "http://onelmcrm.gaamatech.com:8000/api/v1";
@@ -27,6 +28,10 @@ export const formatCurrency = (amount) => {
     return  formatter.format(amount).replace(/^(\D+)/, '$1 ');
 }; //end
 
+
+export const fomratDate = (date, format) =>{
+  return moment(date).format(format ??'ddd DD MMM yyyy')
+}
 
 export const setToken = (token) => {
   localStorage.setItem('accessToken', token?? localStore().accessToken)

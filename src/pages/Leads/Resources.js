@@ -6,7 +6,7 @@ import ResModal from "./Modals/ResModal";
 import { getRecord, getLeadSkills, delLeadSkill, delLeadSkillResource, selectLeadSkillResource } from "../../service/opportunities";
 
 import moment from "moment"
-import { formatCurrency, localStore } from "../../service/constant";
+import { fomratDate, formatCurrency, localStore } from "../../service/constant";
 
 const { Item } = Descriptions;
 
@@ -52,14 +52,14 @@ class Resources extends Component {
                 title: "Start Date",
                 dataIndex: "startDate",
                 key: "startDate",
-                render: (record)=> {return record && moment(record).format('ddd DD MM YYYY')},
+                render: (record)=> record && fomratDate(record),
                 sorter: (a, b) => moment(a.startDate).unix() - moment(b.startDate).unix()
             },
             {
                 title: "End Date",
                 dataIndex: "endDate",
                 key: "endDate",
-                render: (record)=> {return record && moment(record).format('ddd DD MM YYYY')},
+                render: (record)=> record && fomratDate(record),
                 sorter: (a, b) => moment(a.endDate).unix() - moment(b.endDate).unix()
             },
             {
@@ -220,9 +220,9 @@ class Resources extends Component {
                 >
                     <Item label="Title">{desc.title}</Item>
                     <Item label="Value">{ formatCurrency(desc.value)}</Item>
-                    <Item label="Start Date">{desc.startDate ? moment(desc.startDate).format('ddd DD MM YYYY'): null} </Item>
-                    <Item label="End Date">{desc.endDate ? moment(desc.endDate).format('ddd DD MM YYYY'): null}</Item>
-                    <Item label="Bid Date">{desc.bidDate ? moment(desc.bidDate).format('ddd DD MM YYYY'): null}</Item>
+                    <Item label="Start Date">{desc.startDate ? fomratDate(desc.startDate): null} </Item>
+                    <Item label="End Date">{desc.endDate ? fomratDate(desc.endDate): null}</Item>
+                    <Item label="Bid Date">{desc.bidDate ? fomratDate(desc.bidDate): null}</Item>
                     {/* <Item label="Gender">{data.gender}</Item> */}
                 </Descriptions>
                 <Row justify="end">

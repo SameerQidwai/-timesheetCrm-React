@@ -316,6 +316,7 @@ class Contact extends Component {
                     el.firstName && el.firstName.toLowerCase().includes(value.toLowerCase()) || 
                     el.lastName && el.lastName.toLowerCase().includes(value.toLowerCase()) ||
                     el.email && el.email.toLowerCase().includes(value.toLowerCase()) ||
+                    el.gender && GENDER[el.gender].toLowerCase().includes(value.toLowerCase()) ||
                     el.phoneNumber && el.phoneNumber.startsWith(value) 
                 })
             })

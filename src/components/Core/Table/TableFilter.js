@@ -49,15 +49,15 @@ export const tableSorter = (dataIndex, type, sortOrder) => ({ //sorter on the he
     sorter: (a, b) => { 
         let valueA = leaf(a, dataIndex)
         let valueB = leaf(b, dataIndex) 
-        if(valueA && valueB){
+        // if(valueA && valueB){
             if(type=== 'number'){
                 return valueA -  valueB 
             }else if(type === 'string'){
                 return valueA.localeCompare(valueB)
             }else if (type === 'date'){
-                return moment(valueA).unix() - moment(valueB).unix()
+                return moment(valueA ? valueA :'2011 11 10' ).unix() - moment(valueB ? valueB : '2011 11 10').unix()
             }
-        }
+        // }
     },
     defaultSortOrder: sortOrder && 'ascend' 
 })
@@ -240,4 +240,4 @@ export const Filtertags = ({filters, filterFunction}) =>{
 }
 
 
-export const leaf = (obj, path) => (path.split('.').reduce((value, el) => value[el]?? 'zzz', obj))
+export const leaf = (obj, path) => (path.split('.').reduce((value, el) => value[el]?? '', obj))

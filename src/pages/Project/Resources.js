@@ -7,7 +7,7 @@ import ResModal from "./Modals/ResModal";
 import { getRecord, getLeadSkills, delLeadSkill } from "../../service/projects";
 
 import moment from "moment"
-import { formatCurrency, localStore } from "../../service/constant";
+import { fomratDate, formatCurrency, localStore } from "../../service/constant";
 import { tableSorter, tableTitleFilter } from "../../components/Core/Table/TableFilter";
 
 const { Item } = Descriptions;
@@ -134,14 +134,7 @@ class Resources extends Component {
                   type: "Text",
                   labelAlign: "right",
                 },
-                {
-                  Placeholder: "Level",
-                  fieldCol: 12,
-                  size: "small",
-                  rangeMin: true,
-                  type: "Text",
-                  labelAlign: "right",
-                },
+
                 {
                   object: "obj",
                   fieldCol: 12,
@@ -173,17 +166,6 @@ class Resources extends Component {
                   size: "small",
                   data: [],
                   type: "Select",
-                  onChange: (e, value) =>{
-                    const { filterFields } = this.state;
-                    const customUrl = `employees/get/by-skills?psslId=${value&&value.value}`
-                    getOrgPersons(customUrl).then((res) => {
-                      filterFields[7].data = res.success ? res.data : [];
-                      const { obj, } = this.formRef.current.getFieldsValue(); // const
-                      obj["contactPersonId"] = undefined;
-                      this.formRef.current.setFieldsValue({ obj, });
-                      this.setState({ filterFields });
-                    });
-                  },
                 },
                 {
                   Placeholder: "Work Hours",
@@ -410,8 +392,8 @@ class Resources extends Component {
                         `${el.qualifiedOps?? ''}`.toLowerCase().includes(search['qualifiedOps']['value'].toLowerCase()) &&
                         // multi Select Search
 
-                        (search['organization']['value'].length > 0 ? search['organization']['value'] : [{value: ','}])
-                        .some(s => (search['organization']['value'].length > 0 ? [organization]: [',']).includes(s.value)) &&
+                        // (search['organization']['value'].length > 0 ? search['organization']['value'] : [{value: ','}])
+                        // .some(s => (search['organization']['value'].length > 0 ? [organization]: [',']).includes(s.value)) &&
 
                         (search['stateId']['value'].length > 0 ? search['stateId']['value'] : [{value: ','}])
                         .some(s => (search['stateId']['value'].length > 0 ? [el.stateId]: [',']).includes(s.value)) &&
@@ -451,19 +433,19 @@ class Resources extends Component {
         }
     }
 
-    filterModalUseEffect = () =>{
-        Promise.all([getPanels(), getOrganizations(), getStates()])
-        .then(res => {
-           const { filterFields } = this.state
-           filterFields[2].data = res[0].success ? res[0].data : []
-           filterFields[3].data = res[1].success ? res[1].data : []
-           filterFields[10].data = res[2].success ? res[2].data : []
-           this.setState({filterFields})
-        })
-        .catch(e => {
-            console.log(e);
-        })
-    }
+    // filterModalUseEffect = () =>{
+    //     Promise.all([getPanels(), getOrganizations(), getStates()])
+    //     .then(res => {
+    //        const { filterFields } = this.state
+    //        filterFields[2].data = res[0].success ? res[0].data : []
+    //        filterFields[3].data = res[1].success ? res[1].data : []
+    //        filterFields[10].data = res[2].success ? res[2].data : []
+    //        this.setState({filterFields})
+    //     })
+    //     .catch(e => {
+    //         console.log(e);
+    //     })
+    // }
 
 
     render() {
@@ -480,8 +462,8 @@ class Resources extends Component {
                     <Item label="Project Name">{desc.title}</Item>
                     <Item label="Estimated Value">{ formatCurrency(desc.value ?? 0)}</Item>
                     <Item label="Organisation">{desc.organizationName ? desc.organization.name :' No Organisation'}</Item>
-                    <Item label="Start date">{desc.startDate ? moment(desc.startDate).format('ddd DD MM YYYY'): null} </Item>
-                    <Item label="End Date">{desc.endDate ? moment(desc.endDate).format('ddd DD MM YYYY'): null}</Item>
+                    <Item label="Start date">{desc.startDate ? fomratDate(desc.startDate): null} </Item>
+                    <Item label="End Date">{desc.endDate ? fomratDate(desc.endDate): null}</Item>
                     {/* <Item label="Gender">{data.gender}</Item> */}
                 </Descriptions>
                 <Row justify="end">

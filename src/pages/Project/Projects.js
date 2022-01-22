@@ -9,7 +9,7 @@ import { getList, delList } from "../../service/projects";
 
 import '../styles/table.css'
 import moment from "moment";
-import { formatCurrency, localStore, O_TYPE } from '../../service/constant';
+import { fomratDate, formatCurrency, localStore, O_TYPE } from '../../service/constant';
 import { getOrganizations, getPanels, getStates } from '../../service/constant-Apis';
 import { Filtertags, TableModalFilter, tableSorter, tableTitleFilter } from '../../components/Core/Table/TableFilter';
 const { Title } = Typography
@@ -58,14 +58,14 @@ class Projects extends Component {
                 title: 'Start Date',
                 dataIndex: 'startDate',
                 key: 'startDate',
-                render: (record) =>(record && moment(record).format('ddd DD MM yyyy')),
+                render: (record) =>(record && fomratDate(record)),
                 ...tableSorter('startDate', 'date'),
             },
             {
                 title: 'End Date',
                 dataIndex: 'endDate',
                 key: 'endDtae',
-                render: (record) =>(record &&  moment(record).format('ddd DD MM yyyy')),
+                render: (record) =>(record &&  fomratDate(record)),
                 ...tableSorter('endDate', 'date'),
             },
             {
@@ -345,7 +345,7 @@ class Projects extends Component {
         const { PROJECTS }= JSON.parse(localStore().permissions)
         getList().then(res=>{
             this.setState({
-                data: res.success ? res.data : [],
+                data: res.success ? res.data.filter((el, x)=> x <10) : [],
                 filterData: res.success ? res.data : [],
                 openModal: false,
                 editPro: false,
@@ -382,7 +382,10 @@ class Projects extends Component {
                     return `00${el.id.toString()}`.includes(value) ||
                     el.title && el.title.toLowerCase().includes(value.toLowerCase()) || 
                     organization && organization.toLowerCase().includes(value.toLowerCase()) ||
-                    el.value && `${el.value.toString()}`.toLowerCase().includes(value.toLowerCase()) ||
+                    el.value && `${formatCurrency(el.value)}`.toLowerCase().includes(value.toLowerCase()) ||
+                    el.startDate && `${fomratDate(el.startDate)}`.toLowerCase().includes(value.toLowerCase()) ||
+                    el.endDate && `${fomratDate(el.endDate)}`.toLowerCase().includes(value.toLowerCase()) ||
+                    el.type && `${O_TYPE[el.type]}`.toLowerCase().includes(value.toLowerCase()) ||
                     el.phoneNumber && el.phoneNumber.startsWith(value)
                 })
             })

@@ -8,7 +8,7 @@ import { getRecord as empRecord } from "../../service/Employees";
 import { getList, delList } from "../../service/employee-leases";
 
 import "../styles/table.css";
-import { formatCurrency, localStore } from "../../service/constant";
+import { fomratDate, formatCurrency, localStore } from "../../service/constant";
 
 const { Title } = Typography;
 const { Item } = Descriptions;
@@ -40,14 +40,14 @@ class NovatedLease extends Component {
                 title: "Start Date",
                 dataIndex: "startDate",
                 key: "startDate",
-                render: (record) =>( record && moment(record).format('ddd DD MM YYYY') ),
+                render: (record) =>( record && fomratDate(record)),
                 sorter: (a, b) => moment(a.startDate).unix() - moment(b.startDate).unix()
             },
             {
                 title: "End Date",
                 dataIndex: "endDate",
                 key: "endDate",
-                render: (record) =>( record && moment(record).format('ddd DD MM YYYY') ),
+                render: (record) =>( record && fomratDate(record)),
                 sorter: (a, b) => moment(a.endDate).unix() - moment(b.endDate).unix()
             },
             {
