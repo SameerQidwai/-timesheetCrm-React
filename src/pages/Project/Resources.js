@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { Row, Col, Menu, Button, Dropdown, Descriptions, Table, Popconfirm } from "antd";
-import { SettingOutlined, DownOutlined } from "@ant-design/icons"; //Icons
+import { Row, Col, Menu, Button, Dropdown, Descriptions, Table } from "antd";
+import { SettingOutlined, DownOutlined, FilterOutlined } from "@ant-design/icons"; //Icons
 import { Link } from "react-router-dom"; 
 
 import ResModal from "./Modals/ResModal";
@@ -8,7 +8,7 @@ import { getRecord, getLeadSkills, delLeadSkill } from "../../service/projects";
 
 import moment from "moment"
 import { fomratDate, formatCurrency, localStore } from "../../service/constant";
-import { tableSorter, tableTitleFilter } from "../../components/Core/Table/TableFilter";
+import { TableModalFilter, tableSorter, tableTitleFilter } from "../../components/Core/Table/TableFilter";
 
 const { Item } = Descriptions;
 
@@ -17,6 +17,12 @@ class Resources extends Component {
         super(props);
 
         this.columns = [
+            {
+                title: "Title",
+                dataIndex: "title",
+                key: "title",
+                ...tableSorter('title', 'string'),
+            },
             {
                 title: "Skill",
                 dataIndex: ["panelSkill", "label"],
@@ -130,40 +136,29 @@ class Resources extends Component {
                   Placeholder: "Skill",
                   fieldCol: 12,
                   size: "small",
-                  rangeMin: true,
                   type: "Text",
-                  labelAlign: "right",
                 },
-
+                {
+                  Placeholder: "Level",
+                  fieldCol: 12,
+                  size: "small",
+                  type: "Text",
+                },
                 {
                   object: "obj",
                   fieldCol: 12,
                   key: "panelSkillId",
-          
-                  // disabled: true,
+                  mode: 'multiple',
                   size: "small",
                   data: [],
                   type: "Select",
-                  onChange: (e, value) =>{
-                    const { filterFields } = this.state;
-                    filterFields[3].data = value ? value.levels : [];
-                    const {
-                      obj,
-                    } = this.formRef.current.getFieldsValue(); // const
-                    obj["panelSkillStandardLevelId"] = undefined;
-                    obj["contactPersonId"] = undefined;
-                    this.formRef.current.setFieldsValue({
-                      obj,
-                    });
-                    this.setState({ filterFields });
-                  },
                 },
                 {
                   object: "obj",
                   fieldCol: 12,
                   key: "panelSkillStandardLevelId",
-                  // disabled: true,
                   size: "small",
+                  mode: 'multiple',
                   data: [],
                   type: "Select",
                 },
@@ -172,16 +167,12 @@ class Resources extends Component {
                   fieldCol: 12,
                   size: "small",
                   type: "Text",
-                  rangeMin: true,
-                  labelAlign: "right",
                 },
                 {
                   Placeholder: "Resource",
                   fieldCol: 12,
-                  rangeMin: true,
                   size: "small",
                   type: "Text",
-                  labelAlign: "right",
                 },
                 {
                   object: "obj",
@@ -195,7 +186,7 @@ class Resources extends Component {
                   object: "obj",
                   fieldCol: 12,
                   key: "contactPersonId",
-                  // disabled: true,
+                  mode: 'multiple',
                   size: "small",
                   data: [],
                   type: "Select",
@@ -204,17 +195,13 @@ class Resources extends Component {
                   Placeholder: "Start Date",
                   fieldCol: 12,
                   size: "small",
-                  rangeMin: true,
                   type: "Text",
-                  labelAlign: "right",
                 },
                 {
                   Placeholder: "End Date",
                   fieldCol: 12,
                   size: "small",
-                  rangeMin: true,
                   type: "Text",
-                  labelAlign: "right",
                 },
                 {
                   object: "obj",
@@ -236,17 +223,13 @@ class Resources extends Component {
                   Placeholder: "Effort Rate",
                   fieldCol: 12,
                   size: "small",
-                  rangeMin: true,
                   type: "Text",
-                  labelAlign: "right",
                 },
                 {
                   Placeholder: "Buy Cost",
                   fieldCol: 12,
                   size: "small",
-                  rangeMin: true,
                   type: "Text",
-                  labelAlign: "right",
                 },
                 {
                   object: "obj",
@@ -256,7 +239,6 @@ class Resources extends Component {
                   size: "small",
                   type: "InputNumber",
                   fieldStyle: { width: "100%" },
-                  rangeMin: 0,
                   rangeMax: 100,
                 },
                 {
@@ -271,10 +253,8 @@ class Resources extends Component {
                 {
                   Placeholder: "Sale Cost",
                   fieldCol: 24,
-                  rangeMin: true,
                   size: "small",
                   type: "Text",
-                  labelAlign: "right",
                 },
                 {
                   object: "obj",
@@ -353,7 +333,16 @@ class Resources extends Component {
             this.setState({
                 filterData: data.filter(el => {
                     const {firstName, lastName } = el.opportunityResourceAllocations[0].contactPerson
-                    return (firstName ?`${firstName} ${lastName}` : '').toLowerCase().includes(value.toLowerCase()) 
+                    const {buyingRate, sellingRate } = el.opportunityResourceAllocations[0]
+                    const { label } = el.panelSkill 
+                    const { levelLabel } = el.panelSkillStandardLevel
+                    return el.title && el.title.toLowerCase().includes(value.toLowerCase()) ||
+                    (`${firstName ?? ''} ${lastName ?? ''}`).toLowerCase().includes(value.toLowerCase()) ||
+                    `${label ?? ''}`.toLowerCase().includes(value.toLowerCase()) ||
+                    `${levelLabel ?? ''}`.toLowerCase().includes(value.toLowerCase()) ||
+                    `${el.billableHours ?? ''}`.toLowerCase().includes(value.toLowerCase()) ||
+                    buyingRate && formatCurrency(buyingRate).toLowerCase().includes(value.toLowerCase()) ||
+                    sellingRate && formatCurrency(sellingRate).toLowerCase().includes(value.toLowerCase())
                 })
             })
         }else{
@@ -449,7 +438,7 @@ class Resources extends Component {
 
 
     render() {
-        const { desc, data, infoModal, editRex, proId, permissions, crud, mileId, filterData } = this.state;
+        const { desc, data, infoModal, editRex, proId, permissions, crud, mileId, filterData, openSearch, searchedColumn, filterFields } = this.state;
         return (
             <>
                 <Descriptions
@@ -466,7 +455,17 @@ class Resources extends Component {
                     <Item label="End Date">{desc.endDate ? fomratDate(desc.endDate): null}</Item>
                     {/* <Item label="Gender">{data.gender}</Item> */}
                 </Descriptions>
-                <Row justify="end">
+                <Row justify="end" span={4} gutter={[30, 0]}>
+                    <Col>
+                        <Button 
+                            type="default" 
+                            size="small"
+                            onClick={()=>this.setState({openSearch: true})}    
+                        >
+                            <FilterOutlined />
+                            Filter
+                        </Button>
+                    </Col>
                     <Col> 
                         <Button 
                             type="primary" 
@@ -486,6 +485,16 @@ class Resources extends Component {
                     dataSource={filterData}
                     size="small"
                 />
+                {openSearch && <TableModalFilter
+                    title={"Search Employees"}
+                    visible={openSearch}
+                    filters={searchedColumn}
+                    filterFields={filterFields}
+                    filterFunction={this.advancefilter}
+                    effectFunction={this.filterModalUseEffect}
+                    effectRender={false}
+                    onClose={()=>this.setState({openSearch:false})}
+                />}
                 {infoModal && (
                     <ResModal
                         visible={infoModal}

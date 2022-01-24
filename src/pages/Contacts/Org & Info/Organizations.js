@@ -277,6 +277,7 @@ class Organizations extends Component {
                 filterData: data.filter(el => {
                     return `ORG-00${el.id.toString()}`.includes(value) ||
                     el.name && el.name.toLowerCase().includes(value.toLowerCase()) || 
+                    el.title && el.title.toLowerCase().includes(value.toLowerCase()) ||
                     el.parentOrganization && el.parentOrganization.name.toLowerCase().includes(value.toLowerCase())
                 })
             })

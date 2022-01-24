@@ -330,9 +330,10 @@ class Contractors extends Component {
                 filterData: data.filter(el => {
                     const {firstName, lastName, email, phoneNumber, id}= el.contactPersonOrganization.contactPerson
                     const {name: organization}= el.contactPersonOrganization.organization
-                    return `Sub-${id.toString()}`.includes(value) ||
+                    return `Sub-00${id.toString()}`.includes(value) ||
                     firstName && firstName.toLowerCase().includes(value.toLowerCase()) || 
                     lastName && lastName.toLowerCase().includes(value.toLowerCase()) ||
+                    organization && organization.toLowerCase().includes(value.toLowerCase()) ||
                     email && email.toLowerCase().includes(value.toLowerCase()) ||
                     phoneNumber && phoneNumber.startsWith(value) 
                 })

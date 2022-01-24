@@ -385,8 +385,7 @@ class Projects extends Component {
                     el.value && `${formatCurrency(el.value)}`.toLowerCase().includes(value.toLowerCase()) ||
                     el.startDate && `${fomratDate(el.startDate)}`.toLowerCase().includes(value.toLowerCase()) ||
                     el.endDate && `${fomratDate(el.endDate)}`.toLowerCase().includes(value.toLowerCase()) ||
-                    el.type && `${O_TYPE[el.type]}`.toLowerCase().includes(value.toLowerCase()) ||
-                    el.phoneNumber && el.phoneNumber.startsWith(value)
+                    el.type && `${O_TYPE[el.type]}`.toLowerCase().includes(value.toLowerCase()) 
                 })
             })
         }else{
