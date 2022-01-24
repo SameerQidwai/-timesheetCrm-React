@@ -3,7 +3,8 @@ import { Table, Button, Row, Col, Typography, Menu, Dropdown} from 'antd'
 import { DownOutlined, SettingOutlined, PlusSquareOutlined, FilterOutlined} from '@ant-design/icons';
 import { localStore } from '../../service/constant';
 import AddRequestModal from './Modals/AddRequestModal';
-
+import { getLeaveTypes, getRequests } from '../../service/leaveRequest-Apis';
+import moment from 'moment';
 const { Title } = Typography
 
 class LeaveRequest extends Component {
@@ -58,7 +59,7 @@ class LeaveRequest extends Component {
                 dataIndex: 'startDate',
                 key: 'startDate',
                 render:(text, records) =>(
-                    <Title level={5}>{records.startDate}</Title>
+                    <Title level={5}>{moment(records.startDate).format('ddd DD MM yyyy')}</Title>
                 ),
             },
             {
@@ -66,7 +67,7 @@ class LeaveRequest extends Component {
                 dataIndex: 'endDate',
                 key: 'endDate',
                 render:(text, records) =>(
-                    <Title level={5}>{records.endDate}</Title>
+                    <Title level={5}>{moment(records.endDate).format('ddd DD MM yyyy')}</Title>
                 ),
             },
             {
@@ -74,7 +75,7 @@ class LeaveRequest extends Component {
                 dataIndex: 'hours',
                 key: 'hours',
                 render:(text, records) =>(
-                    <Title level={5}>{records.hours}</Title>
+                    <Title level={5}>{records.totalHours}</Title>
                 ),
             },
             {
@@ -82,7 +83,11 @@ class LeaveRequest extends Component {
                 dataIndex: 'status',
                 key: 'status',
                 render:(text, records) =>(
-                    <Title level={5}>{records.status}</Title>
+                    <Title level={5}>{
+                        records.status === 'AP' ? 'Approved' :
+                        records.status === 'SB' ? 'Submitted' :
+                        records.status === 'R' ? 'Rejected' : 'Invalid'
+                    }</Title>
                 ),
             },
             {
@@ -93,18 +98,20 @@ class LeaveRequest extends Component {
                     <Dropdown overlay={
                         <Menu>
                             <Menu.Item 
-                                onClick={()=>this.setState({
-                                    openModal: true,
-                                })}
+                                onClick={()=> {
+                                    this.setState({
+                                        openModal: true,
+                                        editRequest: record
+                                    })
+                                }
+                            }
                             >Edit</Menu.Item>
                             <Menu.Item 
-                                onClick={()=>this.setState({
-                                    openModal: true,
-                                })}
+                                onClick={()=>{}}
                             >Delete</Menu.Item>
                             
                         </Menu>
-                    }>
+                    }> 
                         <Button size='small'>
                             <SettingOutlined/> Option <DownOutlined/>
                         </Button>
@@ -115,43 +122,96 @@ class LeaveRequest extends Component {
 
         this.state = {
             request : [],
+            editRequest: {},
+            leaveTypes: [],
             type: [],
             openModal: false
         }   
     }
 
     componentDidMount = () =>{
+        getLeaveTypes().then(res => {
+            this.setState({leaveTypes: res.data}) 
+        });
+        getRequests().then(res =>{
+            this.setState({request: res.data})
+        });
         this.getData();
     }
 
     closeModal = () =>{
+        getRequests().then(res =>{
+            this.setState({request: res.data})
+            // console.log('My Data: ', res.data)
+        });
         this.setState({
             openModal: false,
+            editRequest: {}
         })
+    }
+
+    addRequest = (reqObj) => {
+        this.setState({ request: [...this.state.request, reqObj] })
     }
 
     getData = () =>{
         this.setState({
-        request: [
-            {
-                startDate: '01/07/2021', 
-                endDate:'01/07/2021',
-                hours:'8.0',
-                status:'Approved'
-            },
-            {
-                startDate: '20/07/2021', 
-                endDate:'21/07/2021',
-                hours:'16',
-                status:'Rejected'
-            },
-            {
-                startDate: '01/08/2021', 
-                endDate:'01/08/2021',
-                hours:'8.0',
-                status:'Submitted'
-            },
-        ],
+        // request: [
+        //     {
+        //         key: 0,
+        //         description: 'This is 1st Request',
+        //         typeId: 1,
+        //         workId: 2,
+        //         entries: [
+        //             {
+        //                 date: '01/07/2021',
+        //                 hours: '8.0'
+        //             }
+        //         ],
+        //         hours: '8.0',
+        //         status: 'Approved'
+        //     },
+        //     {
+        //         key: 1,
+        //         description: 'This is 2nd Request',
+        //         typeId: 2,
+        //         workId: 4,
+        //         entries: [
+        //             {
+        //                 date: '11/07/2021',
+        //                 hours: '4.0'
+        //             },
+        //             {
+        //                 date: '11/08/2021',
+        //                 hours: '4.0'
+        //             },
+        //             {
+        //                 date: '11/09/2021',
+        //                 hours: '4.0'
+        //             },
+        //             {
+        //                 date: '11/10/2021',
+        //                 hours: '4.0'
+        //             },
+        //         ],
+        //         hours: '16.0',
+        //         status: 'Rejected'
+        //     },
+        //     {
+        //         key: 2,
+        //         description: 'This is 3rd Request',
+        //         typeId: 3,
+        //         workId: 3,
+        //         entries: [
+        //             {
+        //                 date: '01/08/2021',
+        //                 hours: '8.0'
+        //             },
+        //         ],
+        //         hours: '8.0',
+        //         status: 'Submitted'
+        //     },
+        // ],
         type: [
             {
                 type: 'Sick Leave',
@@ -172,8 +232,7 @@ class LeaveRequest extends Component {
     }
 
     render(){
-        const { request, openModal, type } = this.state
-        // console.log('Data: ', data)
+        const { request, openModal, type, editRequest } = this.state
         return(
             <>
                 <Row justify="space-between">
@@ -227,7 +286,8 @@ class LeaveRequest extends Component {
                     <AddRequestModal
                         visible={openModal}
                         close={this.closeModal}
-                        // callBack={this.callBack}
+                        dataReceived={editRequest}
+                        addRequest={this.addRequest}
                     />
                 )}
             </>

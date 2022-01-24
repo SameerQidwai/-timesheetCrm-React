@@ -33,6 +33,7 @@ import ResourceHistory from "../../../pages/Project/ResourceHistory";
 import PurchaseOrder from "../../../pages/Project/PurchaseOrder";
 
 import LeaveRequest from "../../../pages/Leave Request/LeaveRequest";
+import ApproveRequest from "../../../pages/ApproveRequest/ApproveRequest";
 
 import Milestone from "../../../pages/Milestones/Milestone";
 
@@ -240,6 +241,10 @@ const pageLinks = [
     {
         component: LeaveRequest,
         link: "/leave-request",
+    },
+    {
+        component: ApproveRequest,
+        link: "/approve-request",
     },
     // {
     //     component: Travels,

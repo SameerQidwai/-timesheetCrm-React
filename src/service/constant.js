@@ -4,9 +4,12 @@
 // export const Api = "http://192.168.0.243:3000/api/v1"; // Shahzaib/   
 // export const Api = "http://192.168.43.207:3000/api/v1"; // new Shahzaib/   
 // export const Api = "https://0dc7-42-201-227-153.ngrok.io/api/v1"; // Shahzaib/ tunnel   
-// export const Api = "http://192.168.0.191:3301/api/v1"; // Me
+// export const Api = "http://192.168.0.218:3301/api/v1"; // Me
 
-export const Api = "http://54.91.49.138:8000/api/v1"; //Test 
+// export const Api = "http://54.91.49.138:8000/api/v1"; //Test 
+
+export const Api = "http://192.168.0.110:3301/api/v1"; // TrunRajPal Home
+// export const Api = "http://192.168.0.244:3301/api/v1"; // TrunRajPal Office
 
 
 // export const Api = "http://3.239.21.153:8000/api/v1"; //live api  

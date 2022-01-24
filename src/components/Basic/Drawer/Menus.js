@@ -42,6 +42,13 @@ const listData = [
         icon: <ScheduleOutlined />,
         link: "/leave-request",
         key: "LEAVE REQUEST",
+        permissions: {module: "TIMESHEETS", key: 'READ'}
+    },
+    {
+        text: "Approve Request",
+        icon: <ScheduleOutlined />,
+        link: "/approve-request",
+        key: "APPROVE REQUEST",
         permissions: {module: "TIMESHEETS", key: 'APPROVAL'}
     },
     {
@@ -93,6 +100,7 @@ class Menus extends Component {
     componentDidMount = () =>{
         this.getAllowedMenu()
     }
+
     getAllowedMenu = () =>{
         let permissions = localStore().permissions
         permissions = permissions ? JSON.parse(permissions) : []
@@ -103,8 +111,7 @@ class Menus extends Component {
                     allowedMenu.push(el)
                 }
             })
-       this.setState({allowedMenu})
-       console.log('Permission Obj: ', this.state.allowedMenu)
+        this.setState({allowedMenu})
     }
 
     highlightRow(link) {

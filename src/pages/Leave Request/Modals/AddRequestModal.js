@@ -1,16 +1,13 @@
 import React, { Component } from "react";
-import { Modal, Table, Form, Row, Col, Upload, Typography, Input } from "antd";
-import { LoadingOutlined, PlusOutlined } from "@ant-design/icons"; //Icons
-import moment from "moment";
+import { Modal, Table, Form, Row, Col, Upload, Typography, Input, InputNumber } from "antd";
+import { PlusOutlined } from "@ant-design/icons"; //Icons
 import FormItems from "../../../components/Core/FormItems";
 import './AddRequestModal.css';
-
-import { addList, editList, getRecord } from "../../../service/employee-contracts";
 import { addFiles } from "../../../service/Attachment-Apis";
 import { getProjects, } from "../../../service/constant-Apis";
-
-import { localStore } from '../../../service/constant';
-const { Title } = Typography
+import { addRequest, getLeaveTypes } from "../../../service/leaveRequest-Apis";
+import moment from 'moment'
+const { Text } = Typography
 
 class AddRequestModal extends Component{
     constructor(props){
@@ -18,7 +15,8 @@ class AddRequestModal extends Component{
         this.formRef = React.createRef();
         this.state = {
             data: [],
-            leaveType: [],
+            totalHours: 0,
+            isEditable: Object.keys(this.props.dataReceived).length !== 0,
             loading: false,
             fileList: [],
             fileIds:null,
@@ -35,28 +33,14 @@ class AddRequestModal extends Component{
             {
                 object: "dates",
                 fieldCol: 16,
-                key: "leaveType",
+                key: "typeId",
                 size: "small",
                 rules: [{ required: true, message: "Leave Type is Required" }],
-                data: [
-                    {
-                        label: 'Annual',
-                        value: 0
-                    },
-                    {
-                        label: 'Sick Leave',
-                        value: 1
-                    },
-                    {
-                        label: 'Unpaid',
-                        value: 2
-                    },
-                ],
+                data: [],
                 type: "Select",
             },
             {
                 Placeholder: "Project Name",
-                rangeMin: true,
                 fieldCol: 8,
                 size: "small",
                 type: "Text",
@@ -66,7 +50,7 @@ class AddRequestModal extends Component{
             {
                 object: "dates",
                 fieldCol: 16,
-                key: "projectName",
+                key: "workId",
                 size: "small",
                 data: [],
                 type: "Select",
@@ -92,28 +76,21 @@ class AddRequestModal extends Component{
                     const { dates } = this.formRef.current.getFieldsValue();
                     const { startDate, endDate } = dates;
                     // console.log('DATES: ', dates)
-                    
+
                     if(startDate){
-                        this.setState({data: [{date: startDate._d.toDateString()}]});
                         let { BasicFields } = this.state;
                         BasicFields[7].disabled = false
-                        this.setState({BasicFields});
+                        this.setState({data: [{date: startDate}], BasicFields});
                         
                         if( endDate ){
-                            let dateArr = this.getDateArray(startDate._d, endDate._d);
-                            let newDateArr = [];
-                            for(var i = 0; i < dateArr.length; i++){
-                                newDateArr[i] = {date: dateArr[i].toDateString()};
-                            }
-                            this.setState({data: newDateArr})
+                            this.getDateArray(startDate, endDate);
                         }
                     }
                     else{
                         this.formRef.current.setFieldsValue({dates: {...dates, endDate: null}})
-                        this.setState({data: []});
                         let { BasicFields } = this.state;
                         BasicFields[7].disabled = true
-                        this.setState({BasicFields});
+                        this.setState({BasicFields, data: []});
                     }
                 },
             },
@@ -140,21 +117,15 @@ class AddRequestModal extends Component{
                     const { endDate, startDate } = dates;
                     // console.log('DATES: ', dates)
                     if(endDate) {
-                        let dateArr = this.getDateArray(startDate._d, endDate._d);
-                        let newDateArr = [];
-                        for(var i = 0; i < dateArr.length; i++){
-                            newDateArr[i] = {date: dateArr[i].toDateString()};
-                        }
-                        this.setState({data: newDateArr})
+                        this.getDateArray(startDate, endDate);
                     }
                     else{
-                        this.setState({data: [{date: startDate._d.toDateString()}]});
+                        this.setState({data: [{date: startDate}]});
                     }
                 },
             },
             {
                 Placeholder: "Description",
-                rangeMin: true,
                 fieldCol: 8,
                 size: "small",
                 type: "Text",
@@ -166,7 +137,6 @@ class AddRequestModal extends Component{
                 fieldCol: 24,
                 key: "description",
                 size: "small",
-                rules: [{ required: true, message: "Description is Required" }],
                 type: "Textarea",
                 fieldStyle: { height: '10vh' },
             },
@@ -178,7 +148,7 @@ class AddRequestModal extends Component{
                 dataIndex: 'date',
                 key: 'date',
                 render:(text, records) =>(
-                    <p>{records.date}</p>
+                    moment(text).format('ddd DD MM yyyy')
                 ),
             },
             {
@@ -186,17 +156,14 @@ class AddRequestModal extends Component{
                 dataIndex: 'hours',
                 key: 'hours',
                 render:(text, records, index) =>(
-                    <Input 
-                        placeholder="Hours"
+                    <InputNumber
+                        placeholder= "Hours"
+                        value= {text}
                         size="small" 
                         onChange={(e)=>{
-                            // console.log("Input is: ", e.target.value);
-                            // console.log('Index is: ', index);
-                            let data = [...this.state.data];                                // Make Copy..
-                            let updatedValue = {...data[index], hours: e.target.value}      // Update Value..
-                            data[index] = updatedValue;                                     // Set Value..
-                            this.setState({data})                                           // Set State..
-                            console.log('New State: ',this.state.data)
+                            const { data } = this.state
+                            data[index].hours = e
+                            this.setState({data})
                         }}
                     />
                 ),
@@ -246,36 +213,88 @@ class AddRequestModal extends Component{
 
     getDateArray = (start, end) => {
             var arr = new Array();
-            var dt = new Date(start);
-            while (dt <= end) {
-                arr.push(new Date(dt));
-                dt.setDate(dt.getDate() + 1);
+            while(start.isSameOrBefore(end)){
+                arr.push({date: start})
+                start = moment(start).add(1,'d')
             }
-            return arr;
+            this.setState({data: arr})
     }
 
     getData = () =>{
-    Promise.all([getProjects()])
-    .then((res) => {
-    const { BasicFields } = this.state;
-    BasicFields[3].data = res[0].success ? res[0].data : [];
-    this.setState({ BasicFields });
-    })
-    .catch((e) => {
-        console.log(e);
-    });
+        const { BasicFields, isEditable } = this.state;
+        const { dataReceived } = this.props;
+        
+        // Get Projects
+        Promise.all([getProjects(), getLeaveTypes()])
+        .then((res) => {
+        BasicFields[3].data = res[0].success ? res[0].data : [];
+        BasicFields[1].data = res[1].success ? res[1].data : []
+        this.setState({ BasicFields });
+        })
+        .catch((e) => {
+            console.log(e);
+        });
+
+        // PreFill Data
+        if(isEditable){
+            const editRequest = {
+                typeId: dataReceived.typeId,
+                workId: dataReceived.workId,
+                description: dataReceived.description,
+                startDate: moment(dataReceived.entries[0].date),
+                endDate: moment(dataReceived.entries[dataReceived.entries.length - 1].date)
+            }
+
+            //console.log('Object: ', editRequest)
+            this.formRef.current.setFieldsValue({dates: editRequest})
+            this.setState({data: dataReceived.entries})
+        }
+    }
+
+    getFormValues = (val) => {
+        const dates = val.dates;
+        const newVal = {
+                description: dates.description,
+                typeId: dates.typeId,
+                workId: dates.workId,
+                entries: this.state.data,
+                attachments: []
+        }
+
+        // console.log('newVal: ', newVal)
+        addRequest(newVal).then((res) => {
+            if (res) {
+                // this.getData();
+                this.props.close()
+            }
+        });
+    }
+
+    getTableSummary = (data) => {
+        console.log('Data Received: ', data)
+        let total = 0;
+        data.forEach(({hours})=>{
+            total += parseInt(hours ? hours : 0); 
+        })
+        
+        return(
+            <Table.Summary.Row>
+                <Table.Summary.Cell>Total</Table.Summary.Cell>
+                <Table.Summary.Cell>{total}</Table.Summary.Cell>
+            </Table.Summary.Row>
+        )
     }
 
     render(){
-        const { visible, close } = this.props;
-        const { BasicFields, fileList, data } = this.state;
+        const { visible, close, addRequest } = this.props;
+        const { BasicFields, fileList, data, isEditable } = this.state;
+
         return(
             <Modal
-                title="New Request"
+                title={ isEditable ? "Edit Request" : "New Request"}
                 maskClosable={false}
-                centered
                 visible={visible}
-                // okButtonProps={{ readOnly: loading, htmlType: 'submit', form: 'my-form'  }}
+                okButtonProps={{ htmlType: 'submit', form: 'my-form'  }}
                 okText={"Submit"}
                 onCancel={close}
                 width={1000}
@@ -285,13 +304,13 @@ class AddRequestModal extends Component{
                         <Form
                         id={'my-form'}
                         ref={this.formRef}
-                        scrollToFirstError={true}
                         size="small"
                         layout="inline"
+                        onFinish={this.getFormValues}
                         >
                             <FormItems FormFields={BasicFields} />
                         </Form>
-                        <p style={{marginTop: 10, marginBottom: 2}}>Attachments</p>
+                        <Text style={{marginTop: 10, marginBottom: 2}}>Attachments</Text>
                         <Upload
                         customRequest={this.handleUpload}
                         listType="picture"
@@ -317,17 +336,7 @@ class AddRequestModal extends Component{
                             dataSource={data}
                             size='small'
                             summary={(data)=>{
-                                let total = 0;
-                                data.forEach(({hours})=>{
-                                    total += parseInt(hours ? hours : 0); 
-                                })
-
-                                return(
-                                    <Table.Summary.Row>
-                                        <Table.Summary.Cell>Total</Table.Summary.Cell>
-                                        <Table.Summary.Cell>{total}</Table.Summary.Cell>
-                                    </Table.Summary.Row>
-                                )
+                                return this.getTableSummary(data);
                             }}
                         />
                     </Col>
