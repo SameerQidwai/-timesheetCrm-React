@@ -101,7 +101,7 @@ class LeaveRequest extends Component {
                                 onClick={()=> {
                                     this.setState({
                                         openModal: true,
-                                        editRequest: record
+                                        editRequest: record.id
                                     })
                                 }
                             }
@@ -122,7 +122,7 @@ class LeaveRequest extends Component {
 
         this.state = {
             request : [],
-            editRequest: {},
+            editRequest: '',
             leaveTypes: [],
             type: [],
             openModal: false
@@ -142,7 +142,6 @@ class LeaveRequest extends Component {
     closeModal = () =>{
         getRequests().then(res =>{
             this.setState({request: res.data})
-            // console.log('My Data: ', res.data)
         });
         this.setState({
             openModal: false,
@@ -156,64 +155,9 @@ class LeaveRequest extends Component {
 
     getData = () =>{
         this.setState({
-        // request: [
-        //     {
-        //         key: 0,
-        //         description: 'This is 1st Request',
-        //         typeId: 1,
-        //         workId: 2,
-        //         entries: [
-        //             {
-        //                 date: '01/07/2021',
-        //                 hours: '8.0'
-        //             }
-        //         ],
-        //         hours: '8.0',
-        //         status: 'Approved'
-        //     },
-        //     {
-        //         key: 1,
-        //         description: 'This is 2nd Request',
-        //         typeId: 2,
-        //         workId: 4,
-        //         entries: [
-        //             {
-        //                 date: '11/07/2021',
-        //                 hours: '4.0'
-        //             },
-        //             {
-        //                 date: '11/08/2021',
-        //                 hours: '4.0'
-        //             },
-        //             {
-        //                 date: '11/09/2021',
-        //                 hours: '4.0'
-        //             },
-        //             {
-        //                 date: '11/10/2021',
-        //                 hours: '4.0'
-        //             },
-        //         ],
-        //         hours: '16.0',
-        //         status: 'Rejected'
-        //     },
-        //     {
-        //         key: 2,
-        //         description: 'This is 3rd Request',
-        //         typeId: 3,
-        //         workId: 3,
-        //         entries: [
-        //             {
-        //                 date: '01/08/2021',
-        //                 hours: '8.0'
-        //             },
-        //         ],
-        //         hours: '8.0',
-        //         status: 'Submitted'
-        //     },
-        // ],
         type: [
             {
+                id: '1',
                 type: 'Sick Leave',
                 accured: '20',
                 earned: '30',
@@ -221,6 +165,7 @@ class LeaveRequest extends Component {
                 balance: '40'
             },
             {
+                id: '2',
                 type: 'Annual Leave',
                 accured: '20',
                 earned: '20',

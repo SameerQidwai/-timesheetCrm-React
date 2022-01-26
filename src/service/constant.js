@@ -8,8 +8,8 @@
 
 // export const Api = "http://54.91.49.138:8000/api/v1"; //Test 
 
-export const Api = "http://192.168.0.110:3301/api/v1"; // TrunRajPal Home
-// export const Api = "http://192.168.0.244:3301/api/v1"; // TrunRajPal Office
+// export const Api = "http://192.168.0.110:3301/api/v1"; // TrunRajPal Home
+export const Api = "http://192.168.0.244:3301/api/v1"; // TrunRajPal Office
 
 
 // export const Api = "http://3.239.21.153:8000/api/v1"; //live api  
