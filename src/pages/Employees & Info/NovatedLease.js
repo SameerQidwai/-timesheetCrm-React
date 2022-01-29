@@ -9,6 +9,7 @@ import { getList, delList } from "../../service/employee-leases";
 
 import "../styles/table.css";
 import { fomratDate, formatCurrency, localStore } from "../../service/constant";
+import { tableSorter, tableTitleFilter } from "../../components/Core/Table/TableFilter";
 
 const { Title } = Typography;
 const { Item } = Descriptions;
@@ -21,34 +22,34 @@ class NovatedLease extends Component {
                 title: "Company Name",
                 dataIndex: "companyName",
                 key: "companyName",
-                sorter: (a, b) => a.companyName.localeCompare(b.companyName)
+                ...tableSorter('companyName', 'string')
             },
             {
                 title: "Financer Name",
                 dataIndex: "financerName",
                 key: "financerName",
-                sorter: (a, b) => a.financerName.localeCompare(b.financerName)
+                ...tableSorter('financerName', 'string')
             },
             {
                 title: "Finance Amount",
                 dataIndex: "financedAmount",
                 key: "financedAmount",
                 render: record => `${formatCurrency(record)}` ,
-                sorter: (a, b) => a.financedAmount - b.financedAmount
+                ...tableSorter('financedAmount', 'number'),
             },
             {
                 title: "Start Date",
                 dataIndex: "startDate",
                 key: "startDate",
                 render: (record) =>( record && fomratDate(record)),
-                sorter: (a, b) => moment(a.startDate).unix() - moment(b.startDate).unix()
+                ...tableSorter('startDate', 'date'),
             },
             {
                 title: "End Date",
                 dataIndex: "endDate",
                 key: "endDate",
                 render: (record) =>( record && fomratDate(record)),
-                sorter: (a, b) => moment(a.endDate).unix() - moment(b.endDate).unix()
+                ...tableSorter('endDate', 'date'),
             },
             {
                 title: "Action",
@@ -91,7 +92,9 @@ class NovatedLease extends Component {
             empId: false,
             data: [],
             employee: {},
-            editLease: false
+            editLease: false,
+            openSearch: false,
+            filterData: [],
         };
     }
 
@@ -103,9 +106,9 @@ class NovatedLease extends Component {
     fetchAll = (id) =>{
         Promise.all([ getList(id), empRecord(id) ])
         .then(res => {
-            console.log(res[0].data);
             this.setState({
                 data: res[0].data,
+                filterData: res[0].data,
                 employee: res[1].basic? res[1].basic: {},
                 infoModal: false,
                 empId: id,
@@ -122,6 +125,7 @@ class NovatedLease extends Component {
         getList(empId).then(res =>{
             this.setState({
                 data: res.data,
+                filterData: res.data,
                 infoModal: false,
                 editLease: false
             })
@@ -146,8 +150,27 @@ class NovatedLease extends Component {
         this.getList()
     };
 
+    generalFilter = (value) =>{
+        const { data } = this.state
+        if (value){
+            this.setState({
+                filterData: data.filter(el => {
+                    return `${el.companyName ?? ''}`.toLowerCase().includes(value.toLowerCase()) ||
+                    `${el.financerName ?? ''}`.toLowerCase().includes(value.toLowerCase()) ||
+                    el.startDate && `${fomratDate(el.startDate)}`.toLowerCase().includes(value.toLowerCase()) ||
+                    el.endDate && `${fomratDate(el.endDate)}`.toLowerCase().includes(value.toLowerCase()) ||
+                    `${el.financedAmount ?? ''}`.toLowerCase().includes(value.toLowerCase()) 
+                })
+            })
+        }else{
+            this.setState({
+                filterData: data
+            })
+        }
+    }
+
     render() {
-        const { data, infoModal, empId, employee, editLease } = this.state;
+        const { data, infoModal, empId, employee, editLease, filterData } = this.state;
         const columns = this.columns;
         return (
             <>
@@ -181,11 +204,12 @@ class NovatedLease extends Component {
                     </Col>
                     <Col span={24}>
                         <Table
+                            title={()=>tableTitleFilter(5, this.generalFilter)}
                             bordered
                             pagination={{pageSize: localStore().pageSize}}
                             rowKey={(data) => data.id}
                             columns={columns}
-                            dataSource={data}
+                            dataSource={filterData}
                             size="small"
                         />
                     </Col>

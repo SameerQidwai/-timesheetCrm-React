@@ -9,6 +9,7 @@ import { getRecord, getLeadSkills, delLeadSkill } from "../../service/projects";
 import moment from "moment"
 import { fomratDate, formatCurrency, localStore } from "../../service/constant";
 import { TableModalFilter, tableSorter, tableTitleFilter } from "../../components/Core/Table/TableFilter";
+import { getPanelSkills } from "../../service/constant-Apis";
 
 const { Item } = Descriptions;
 
@@ -33,6 +34,7 @@ class Resources extends Component {
                 title: "Level",
                 dataIndex: ["panelSkillStandardLevel", "levelLabel"],
                 key: "panelSkillStandardLevel",
+                ...tableSorter('panelSkillStandardLevel.levelLabel', 'string'),
             },
             {
                 title: "Employee Name",
@@ -40,15 +42,9 @@ class Resources extends Component {
                 key: "contactPerson",
                 render: (record)=>(
                     // record && record[0] && record[0].contactPerson && `${record[0].contactPerson.firstName	} ${record[0].contactPerson.lastName	}`
-                    `${record.firstName	} ${record.lastName	}`
+                    `${record?.firstName	} ${record?.lastName	}`
                 ),
-                sorter: (a, b) => {
-                    if(a["opportunityResourceAllocations"][0]["contactPerson"]){
-                        const {firstName, lastName } = a["opportunityResourceAllocations"][0]["contactPerson"]
-                        const {firstName: firstNameB, lastName: lastNameB} = b["opportunityResourceAllocations"][0]["contactPerson"]
-                        return `${firstName} ${lastName}`.localeCompare(`${firstNameB} ${lastNameB}`)
-                    }
-                },
+                ...tableSorter('opportunityResourceAllocations.0.contactPerson', 'string'),
             },
             {
                 title: "Billable Hours",
@@ -122,14 +118,15 @@ class Resources extends Component {
             openSearch: false,
             filterData: [],
             searchedColumn: {
-                skill: {
-                    'skill': { type: 'Select', multi: true, value: [], label:"Skill",  showInColumn: true},
-                    'level': { type: 'Select', multi: true, value: [], label:"Level",  showInColumn: true},
-                    'name': { type: 'Input', value: "", label:"Name",  showInColumn: true },
-                    'billableHour': { type: 'Input', value: "", label: 'Billable Hour' },
-                    'buyCost': { type: 'Input', value: "", label: 'Billable Hour' },
-                    'saleCost': { type: 'Input', value: "", label: 'Billable Hour' },
-                }
+                'skill': { type: 'Select', multi: true, value: [], label:"Skill",  showInColumn: true},
+                'level': { type: 'Select', multi: true, value: [], label:"Level",  showInColumn: true},
+                'name': { type: 'Input', value: "", label:"Name",  showInColumn: true },
+                'billableHours': { type: 'Input', value: "", label: 'Billable Hour' },
+                'buyingRate': { type: 'Input', value: "", label: 'Buy Cost' },
+                'sellingRate': { type: 'Input', value: "", label: 'Sale Cost' },
+                'effortRate': { type: 'Input', value: "", label: 'Effort Rate' },
+                'startDate': {type: 'Date', value: null,  label:"Start Date", showInColumn: true},
+                'endDate': {type: 'Date', value: null,  label:"End Date", showInColumn: true, disabled:true},
             },
             filterFields: [
                 {
@@ -139,40 +136,20 @@ class Resources extends Component {
                   type: "Text",
                 },
                 {
-                  Placeholder: "Level",
-                  fieldCol: 12,
-                  size: "small",
-                  type: "Text",
-                },
+                    Placeholder: "Work Hours",
+                    fieldCol: 12,
+                    size: "small",
+                    type: "Text",
+                  },
                 {
-                  object: "obj",
-                  fieldCol: 12,
-                  key: "panelSkillId",
-                  mode: 'multiple',
-                  size: "small",
-                  data: [],
-                  type: "Select",
-                },
-                {
-                  object: "obj",
-                  fieldCol: 12,
-                  key: "panelSkillStandardLevelId",
-                  size: "small",
-                  mode: 'multiple',
-                  data: [],
-                  type: "Select",
-                },
-                {
-                  Placeholder: "Work Hours",
-                  fieldCol: 12,
-                  size: "small",
-                  type: "Text",
-                },
-                {
-                  Placeholder: "Resource",
-                  fieldCol: 12,
-                  size: "small",
-                  type: "Text",
+                    object: "obj",
+                    fieldCol: 12,
+                    mode: 'multiple',
+                    key: "skill",
+                    customValue: (value, option)=> option,
+                    size: "small",  
+                    data: [],
+                    type: "Select",
                 },
                 {
                   object: "obj",
@@ -181,15 +158,6 @@ class Resources extends Component {
                   size: "small",
                   type: "InputNumber",
                   fieldStyle: { width: "100%" },
-                },
-                {
-                  object: "obj",
-                  fieldCol: 12,
-                  key: "contactPersonId",
-                  mode: 'multiple',
-                  size: "small",
-                  data: [],
-                  type: "Select",
                 },
                 {
                   Placeholder: "Start Date",
@@ -265,7 +233,7 @@ class Resources extends Component {
                   type: "InputNumber",
                   fieldStyle: { width: "100%" },
                 },
-              ],
+            ],
         };
     }
 
@@ -302,6 +270,7 @@ class Resources extends Component {
             if(res.success){
                 this.setState({
                     data: res.success? res.data : [],
+                    filterData: res.success? res.data : [],
                     editRex: false,
                     infoModal: false
                 })
@@ -332,8 +301,8 @@ class Resources extends Component {
         if (value){
             this.setState({
                 filterData: data.filter(el => {
-                    const {firstName, lastName } = el.opportunityResourceAllocations[0].contactPerson
-                    const {buyingRate, sellingRate } = el.opportunityResourceAllocations[0]
+                    const {firstName, lastName } = el.opportunityResourceAllocations && el.opportunityResourceAllocations[0]?.contactPerson
+                    const {buyingRate, sellingRate } = el.opportunityResourceAllocations && el.opportunityResourceAllocations[0]
                     const { label } = el.panelSkill 
                     const { levelLabel } = el.panelSkillStandardLevel
                     return el.title && el.title.toLowerCase().includes(value.toLowerCase()) ||
@@ -354,60 +323,39 @@ class Resources extends Component {
 
     advancefilter = (value, column, advSearch) =>{
         let { data, searchedColumn: search }= this.state
-        if(column){
-            search[column]['value'] = value
+        if(column){ 
+            search[column]['value'] = value // this will need in column filter 
         }else{
             search = advSearch
         }
 
-        if (search['id']['value'] || search['title']['value'] ||
-        search['organization']['value'].length>0 || search['revenue']['value'] ||
-        search['startDate']['value']|| search['endDate']['value']||
-        search['bidDate']['value']|| search['entryDate']['value'] ||
-        search['panel']['value'].length>0 || search['stage']['value'].length > 0||
-        search['type']['value'] || search['stateId']['value'].length>0
+        if ( search['skill']['value'] ||
+        search['billableHours']['value'] || search['startDate']['value'] || 
+        search['endDate']['value'] || search['buyingRate']['value'] ||
+        search['sellingRate']['value'] || search['effortRate']['value'] 
         ){
             const startDate = search['startDate']['value'] ?? [null, null]
             const endDate = search['endDate']['value'] ?? [null, null]
-            const bidDate = search['bidDate']['value'] ?? [null, null]
-            const entryDate = search['entryDate']['value'] ?? [null, null]
             this.setState({
                 filterData: data.filter(el => { // method one which have mutliple if condition for every multiple search
-                    const {firstName, lastName } = el.opportunityResourceAllocations[0].contactPerson
-                    return  
-                        (firstName ?`${firstName} ${lastName}` : '').toLowerCase().includes(value.toLowerCase())  &&
-                        `${el.value.toString() ?? ''}`.toLowerCase().includes(search['revenue']['value'].toString().toLowerCase()) &&
-                        `${el.type?? ''}`.toLowerCase().includes(search['type']['value'].toLowerCase()) &&
-                        `${el.qualifiedOps?? ''}`.toLowerCase().includes(search['qualifiedOps']['value'].toLowerCase()) &&
+                    const {buyingRate, sellingRate, effortRate } = el.opportunityResourceAllocations && el.opportunityResourceAllocations[0]
+
+                    return `${el.billableHours.toString() ?? ''}`.toLowerCase().includes(search['billableHours']['value'].toString().toLowerCase()) &&
+                        (formatCurrency(buyingRate) ?? '').toLowerCase().includes(search['buyingRate']['value'].toString().toLowerCase()) &&
+                        (formatCurrency(sellingRate) ?? '').toLowerCase().includes(search['sellingRate']['value'].toString().toLowerCase()) &&
+                        (formatCurrency(effortRate) ?? '').toLowerCase().includes(search['effortRate']['value'].toString().toLowerCase()) &&
+                        
                         // multi Select Search
 
-                        // (search['organization']['value'].length > 0 ? search['organization']['value'] : [{value: ','}])
-                        // .some(s => (search['organization']['value'].length > 0 ? [organization]: [',']).includes(s.value)) &&
-
-                        (search['stateId']['value'].length > 0 ? search['stateId']['value'] : [{value: ','}])
-                        .some(s => (search['stateId']['value'].length > 0 ? [el.stateId]: [',']).includes(s.value)) &&
-
-                        (search['stage']['value'].length > 0 ? search['stage']['value'] : [{value: ','}])
-                        .some(s => (search['stage']['value'].length > 0 ? [el.stage]: [',']).includes(s.value)) &&
-
-                        (search['status']['value'].length > 0 ? search['status']['value'] : [{value: ','}])
-                        .some(s => (search['status']['value'].length > 0 ? [el.status]: [',']).includes(s.value)) &&
-
-                        (search['panel']['value'].length > 0 ? search['panel']['value'] : [{value:','}])
-                        .some(s => (search['panel']['value'].length > 0 ? [el.panelId]: [',']).includes(s.value)) &&
+                        (search['skill']['value'].length > 0 ? search['skill']['value'] : [{value: ','}])
+                        .some(s => (search['skill']['value'].length > 0 ? [el.panelSkillId]: [',']).includes(s.value)) &&
 
                         //Start Date Filter
                         moment(search['startDate']['value']? moment(el.startDate).format('YYYY-MM-DD'): '2010-10-20')
                         .isBetween(startDate[0]?? '2010-10-19',startDate[1]?? '2010-10-25' , undefined, '[]') &&
                         //End Date Filter
                         moment(search['endDate']['value']? moment(el.endDate).format('YYYY-MM-DD'): '2010-10-20')
-                        .isBetween(endDate[0]?? '2010-10-19', endDate[1]?? '2010-10-25' , undefined, '[]') &&
-                        //Bid Date Filter
-                        moment(search['bidDate']['value']? moment(el.bidDate).format('YYYY-MM-DD'): '2010-10-20')
-                        .isBetween(bidDate[0]?? '2010-10-19', bidDate[1]?? '2010-10-25' , undefined, '[]') &&
-                        //Entry Date Filter
-                        moment(search['entryDate']['value']? moment(el.entryDate).format('YYYY-MM-DD'): '2010-10-20')
-                        .isBetween(entryDate[0]?? '2010-10-19', entryDate[1]?? '2010-10-25' , undefined, '[]') 
+                        .isBetween(endDate[0]?? '2010-10-19', endDate[1]?? '2010-10-25' , undefined, '[]') 
                    
                 }),
                 searchedColumn: search,
@@ -422,19 +370,18 @@ class Resources extends Component {
         }
     }
 
-    // filterModalUseEffect = () =>{
-    //     Promise.all([getPanels(), getOrganizations(), getStates()])
-    //     .then(res => {
-    //        const { filterFields } = this.state
-    //        filterFields[2].data = res[0].success ? res[0].data : []
-    //        filterFields[3].data = res[1].success ? res[1].data : []
-    //        filterFields[10].data = res[2].success ? res[2].data : []
-    //        this.setState({filterFields})
-    //     })
-    //     .catch(e => {
-    //         console.log(e);
-    //     })
-    // }
+    filterModalUseEffect = () =>{
+        const { desc } = this.state
+        Promise.all([getPanelSkills(desc.panelId) ])
+        .then(res => {
+           const { filterFields } = this.state
+           filterFields[2].data = res[0].success ? res[0].data : []
+           this.setState({filterFields})
+        })
+        .catch(e => {
+            console.log(e);
+        })
+    }
 
 
     render() {
@@ -492,7 +439,7 @@ class Resources extends Component {
                     filterFields={filterFields}
                     filterFunction={this.advancefilter}
                     effectFunction={this.filterModalUseEffect}
-                    effectRender={false}
+                    effectRender={true}
                     onClose={()=>this.setState({openSearch:false})}
                 />}
                 {infoModal && (

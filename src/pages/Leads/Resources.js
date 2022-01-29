@@ -1,12 +1,14 @@
 import React, { Component, useState } from "react";
 import { Row, Col, Menu, Button, Dropdown, Descriptions, Table } from "antd";
-import { SettingOutlined, DownOutlined } from "@ant-design/icons"; //Icons
+import { SettingOutlined, DownOutlined, FilterOutlined } from "@ant-design/icons"; //Icons
 
 import ResModal from "./Modals/ResModal";
 import { getRecord, getLeadSkills, delLeadSkill, delLeadSkillResource, selectLeadSkillResource } from "../../service/opportunities";
 
 import moment from "moment"
 import { fomratDate, formatCurrency, localStore } from "../../service/constant";
+import { TableModalFilter, tableSorter, tableTitleFilter } from "../../components/Core/Table/TableFilter";
+import { getPanelSkills } from "../../service/constant-Apis";
 
 const { Item } = Descriptions;
 
@@ -18,59 +20,39 @@ class Resources extends Component {
                 title: "Title",
                 dataIndex: "title",
                 key: "title",
-                sorter: (a, b) => {
-                    if (a.title && b.title){
-                        return a.title.localeCompare(b.title)
-                    }
-                },
+                ...tableSorter('title', 'string'),
             },
             {
                 title: "Skill",
                 dataIndex: ["panelSkill", "label"],
                 key: "panelSkill",
-                sorter: (a, b) => {
-                    if (a.panelSkill && b.panelSkill){
-                        const { label } = a.panelSkill
-                        const { label:labelB } = b.panelSkill
-                        return label.localeCompare(labelB)
-                    }
-                },
+                ...tableSorter('panelSkill.label', 'string'),
             },
             {
                 title: "Level",
                 dataIndex: ["panelSkillStandardLevel", "levelLabel"],
                 key: "panelSkillStandardLevel",
-                sorter: (a, b) => {
-                    if (a.panelSkillStandardLevel && b.panelSkillStandardLevel){
-                        const { levelLabel } = a.panelSkillStandardLevel
-                        const { levelLabel:levelLabelB } = b.panelSkillStandardLevel
-                        return levelLabel.localeCompare(levelLabelB)
-                    }
-                },
+                ...tableSorter('panelSkillStandardLevel.levelLabel', 'string'),
             },
             {
                 title: "Start Date",
                 dataIndex: "startDate",
                 key: "startDate",
                 render: (record)=> record && fomratDate(record),
-                sorter: (a, b) => moment(a.startDate).unix() - moment(b.startDate).unix()
+                ...tableSorter('startDate', 'Date'),
             },
             {
                 title: "End Date",
                 dataIndex: "endDate",
                 key: "endDate",
                 render: (record)=> record && fomratDate(record),
-                sorter: (a, b) => moment(a.endDate).unix() - moment(b.endDate).unix()
+                ...tableSorter('endDate', 'Date'),
             },
             {
                 title: "Total Hours",
                 dataIndex: "billableHours",
                 key: "billableHours",
-                sorter: (a,b) =>{
-                    if (a.billableHours && b.billableHours){
-                        return a.billableHours - b.billableHours
-                    }
-                }
+                ...tableSorter('billableHours', 'number'),
             },
            
             {
@@ -121,7 +103,77 @@ class Resources extends Component {
             crud: false,
             mileId: false,
             resource: false,
-            permissons: {ADD: true}
+            permissons: {ADD: true},
+            openSearch: false,
+            filterData: [],
+            searchedColumn: {
+                'skill': { type: 'Select', multi: true, value: [], label:"Skill",  showInColumn: true},
+                'level': { type: 'Select', multi: true, value: [], label:"Level",  showInColumn: true},
+                'billableHours': { type: 'Input', value: "", label: 'Billable Hour' },
+                'startDate': {type: 'Date', value: null,  label:"Start Date", showInColumn: true},
+                'endDate': {type: 'Date', value: null,  label:"End Date", showInColumn: true, disabled:true},
+            },
+            filterFields: [
+                {
+                  Placeholder: "Skill",
+                  fieldCol: 12,
+                  size: "small",
+                  type: "Text",
+                },
+                {
+                    Placeholder: "Work Hours",
+                    fieldCol: 12,
+                    size: "small",
+                    type: "Text",
+                },
+                {
+                    object: "obj",
+                    fieldCol: 12,
+                    mode: 'multiple',
+                    key: "skill",
+                    customValue: (value, option)=> option,
+                    size: "small",  
+                    data: [],
+                    type: "Select",
+                },
+                {
+                  object: "obj",
+                  fieldCol: 12,
+                  key: "billableHours",
+                  size: "small",
+                  type: "InputNumber",
+                  fieldStyle: { width: "100%" },
+                },
+                {
+                  Placeholder: "Start Date",
+                  fieldCol: 12,
+                  size: "small",
+                  type: "Text",
+                },
+                {
+                  Placeholder: "End Date",
+                  fieldCol: 12,
+                  size: "small",
+                  type: "Text",
+                },
+                {
+                  object: "obj",
+                  fieldCol: 12,
+                  key: "startDate",
+                  size: "small",
+                  type: "RangePicker",
+                  fieldStyle: { width: "100%" },
+                },
+                {
+                  object: "obj",
+                  fieldCol: 12,
+                  key: "endDate",
+                  size: "small",
+                  type: "RangePicker",
+                  fieldStyle: { width: "100%" },
+                },
+                
+              ],
         };
     }
 
@@ -144,6 +196,7 @@ class Resources extends Component {
                 mileId: mileId,
                 crud: url,
                 data: res[1].success? res[1].data : [],
+                filterData: res[1].success? res[1].data : [],
                 permissions: OPPORTUNITIES
             })
         })
@@ -158,6 +211,7 @@ class Resources extends Component {
             if(res.success){
                 this.setState({
                     data: res.data,
+                    filterData: res.data,
                     editRex: false,
                     infoModal: false,
                     skillId: false,
@@ -206,9 +260,86 @@ class Resources extends Component {
         this.getLeadSkills(leadId)
     };
 
+    generalFilter = (value) =>{
+        const { data } = this.state
+        if (value){
+            this.setState({
+                filterData: data.filter(el => {
+                    const { label: skill } = el.panelSkill 
+                    const { levelLabel: skillLevel } = el.panelSkillStandardLevel
+                    return el.title && el.title.toLowerCase().includes(value.toLowerCase()) ||
+                    `${skill ?? ''}`.toLowerCase().includes(value.toLowerCase()) ||
+                    `${skillLevel ?? ''}`.toLowerCase().includes(value.toLowerCase()) ||
+                    el.startDate && `${fomratDate(el.startDate)}`.toLowerCase().includes(value.toLowerCase()) ||
+                    el.endDate && `${fomratDate(el.endDate)}`.toLowerCase().includes(value.toLowerCase()) ||
+                    `${el.billableHours ?? ''}`.toLowerCase().includes(value.toLowerCase()) 
+                })
+            })
+        }else{
+            this.setState({
+                filterData: data
+            })
+        }
+    }
+
+    advancefilter = (value, column, advSearch) =>{
+        let { data, searchedColumn: search }= this.state
+        if(column){ 
+            search[column]['value'] = value // this will need in column filter 
+        }else{
+            search = advSearch
+        }
+
+        if ( search['skill']['value'] ||
+            search['billableHours']['value'] || search['startDate']['value'] || 
+            search['endDate']['value'] 
+        ){
+            const startDate = search['startDate']['value'] ?? [null, null]
+            const endDate = search['endDate']['value'] ?? [null, null]
+            this.setState({
+                filterData: data.filter(el => { // method one which have mutliple if condition for every multiple search
+
+                    return `${el.billableHours.toString() ?? ''}`.toLowerCase().includes(search['billableHours']['value'].toString().toLowerCase()) &&                        
+                        // multi Select Search
+
+                        (search['skill']['value'].length > 0 ? search['skill']['value'] : [{value: ','}])
+                        .some(s => (search['skill']['value'].length > 0 ? [el.panelSkillId]: [',']).includes(s.value)) &&
+
+                        //Start Date Filter
+                        moment(search['startDate']['value']? moment(el.startDate).format('YYYY-MM-DD'): '2010-10-20')
+                        .isBetween(startDate[0]?? '2010-10-19',startDate[1]?? '2010-10-25' , undefined, '[]') &&
+                        //End Date Filter
+                        moment(search['endDate']['value']? moment(el.endDate).format('YYYY-MM-DD'): '2010-10-20')
+                        .isBetween(endDate[0]?? '2010-10-19', endDate[1]?? '2010-10-25' , undefined, '[]') 
+                   
+                }),
+                searchedColumn: search,
+                openSearch: false,
+            })
+        }else{
+            this.setState({
+                searchedColumn: search,
+                filterData: data,
+                openSearch: false,
+            })
+        }
+    }
+
+    filterModalUseEffect = () =>{
+        const { desc } = this.state
+        Promise.all([getPanelSkills(desc.panelId) ])
+        .then(res => {
+           const { filterFields } = this.state
+           filterFields[2].data = res[0].success ? res[0].data : []
+           this.setState({filterFields})
+        })
+        .catch(e => {
+            console.log(e);
+        })
+    }
+
     render() {
-        const { desc, data, infoModal, editRex, leadId, resource , skillId, levelId, permissions, mileId, crud} = this.state;
-        console.log(permissions);
+        const { desc, filterData, data, infoModal, editRex, leadId, resource , skillId, levelId, permissions, mileId, crud, openSearch, filterFields, searchedColumn} = this.state;
         return (
             <>
                 <Descriptions
@@ -225,7 +356,17 @@ class Resources extends Component {
                     <Item label="Bid Date">{desc.bidDate ? fomratDate(desc.bidDate): null}</Item>
                     {/* <Item label="Gender">{data.gender}</Item> */}
                 </Descriptions>
-                <Row justify="end">
+                <Row justify="end" span={4} gutter={[30, 0]}>
+                    <Col>
+                        <Button 
+                            type="default" 
+                            size="small"
+                            onClick={()=>this.setState({openSearch: true})}    
+                        >
+                            <FilterOutlined />
+                            Filter
+                        </Button>
+                    </Col>
                     <Col> 
                         <Button 
                             type="primary" 
@@ -239,11 +380,12 @@ class Resources extends Component {
                     {/* <Col> <Button type="danger" size='small'>Delete Resource</Button></Col> */}
                 </Row>
                 <Table
+                    title={()=>tableTitleFilter(5, this.generalFilter)}
                     bordered
                     pagination={{pageSize: localStore().pageSize}}
                     rowKey={(record) => record.id}
                     columns={this.columns}
-                    dataSource={data}
+                    dataSource={filterData}
                     expandable={{
                         expandedRowRender: record => {
                             return (
@@ -263,6 +405,16 @@ class Resources extends Component {
                       }}
                     size="small"
                 />
+                {openSearch && <TableModalFilter
+                    title={"Search Employees"}
+                    visible={openSearch}
+                    filters={searchedColumn}
+                    filterFields={filterFields}
+                    filterFunction={this.advancefilter}
+                    effectFunction={this.filterModalUseEffect}
+                    effectRender={true}
+                    onClose={()=>this.setState({openSearch:false})}
+                />}
                 {infoModal && (
                     <ResModal
                         visible={infoModal}
@@ -290,14 +442,18 @@ function NestedTable(props) {
     const [editRex, setEditRex] = useState(false)
     // const [selectedRowKeys, setSelectedRowKeys] = useState(props.data ? [props.data.findIndex(el => el.isMarkedAsSelected === true)]: [])
     const [selectedRowKeys, setSelectedRowKeys] = useState(
-        (props.data && //checking data
-            props.data.length ===1 ? //checking if data length is one
-                props.data[0].id // this must be selected
-            : props.data.findIndex(el => el.isMarkedAsSelected === true)!==-1) ? // otherwise check if anyone is selected
-                [props.data[props.data.findIndex(el => el.isMarkedAsSelected === true)].id] // get the selected resource
+        props.data ? //checking data
+            props.data.length === 1 ? //checking if data length is one
+                [props.data[0].id] // this must be selected
+            // console.log(props.data)
+            : props.data.findIndex(el => el.isMarkedAsSelected === true)!==-1 ? // otherwise check if anyone is selected
+                [props.data[props.data.findIndex(el => el.isMarkedAsSelected)].id] // get the selected resource
             :
                 []
+        :   
+            []
         )
+        
     const columns = [
         { 
             

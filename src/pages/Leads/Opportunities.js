@@ -435,7 +435,7 @@ class Opportunities extends Component {
     advancefilter = (value, column, advSearch) =>{
         let { data, searchedColumn: search }= this.state
         if(column){
-            search[column]['value'] = value
+            search[column]['value'] = value // this will need in column filter
         }else{
             search = advSearch
         }
