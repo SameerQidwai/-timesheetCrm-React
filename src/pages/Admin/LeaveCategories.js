@@ -7,7 +7,7 @@ import "../styles/table.css";
 
 import { getList, addList, editLabel, delLabel } from "../../service/time-off";
 import { localStore } from "../../service/constant";
-import { tableSorter } from "../../components/Core/Table/TableFilter";
+import { tableSorter, tableTitleFilter } from "../../components/Core/Table/TableFilter";
 
 const { Title } = Typography;
 
@@ -21,11 +21,6 @@ class LeaveCategories extends Component {
                 title: "Title",
                 dataIndex: "label",
                 key: "label",
-                // sorter: (a, b)=>{
-                //     if (a.label && b.label){
-                //         return a.label.localeCompare(b.label)
-                //     }
-                // },
                 ...tableSorter('label', 'string')
             },
             {
@@ -65,6 +60,7 @@ class LeaveCategories extends Component {
 
         this.state = {
             data: [],
+            filterData: [],
             openModal: false,
             editTimeoff: false,
             loading: false,
@@ -105,6 +101,7 @@ class LeaveCategories extends Component {
             if (res.success) {
                 this.setState({
                     data: res.data,
+                    filterData: res.data,
                     openModal: false,
                     editTimeoff: false,
                     loading: false,
@@ -186,8 +183,23 @@ class LeaveCategories extends Component {
         });
     };
 
+    generalFilter = (value) =>{
+        const { data } = this.state
+        if (value){
+            this.setState({
+                filterData: data.filter(el => {
+                    return el.label && el.label.toLowerCase().includes(value.toLowerCase()) 
+                })
+            })
+        }else{
+            this.setState({
+                filterData: data
+            })
+        }
+    }
+
     render() {
-        const {data, editTimeoff, openModal, loading, FormFields } = this.state;
+        const {data, editTimeoff, openModal, loading, FormFields, filterData } = this.state;
         const columns = this.columns;
         return (
             <>
@@ -209,10 +221,11 @@ class LeaveCategories extends Component {
                     </Col>
                     <Col span={24}>
                         <Table
+                            title={()=>tableTitleFilter(5, this.generalFilter)}
                             bordered
                             pagination={{pageSize: localStore().pageSize}}
                             columns={columns}
-                            dataSource={data}
+                            dataSource={filterData}
                             size="small"
                             rowKey={(data) => data.id}
                         />

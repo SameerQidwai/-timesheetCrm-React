@@ -406,7 +406,7 @@ class Resources extends Component {
                     size="small"
                 />
                 {openSearch && <TableModalFilter
-                    title={"Search Employees"}
+                    title={"Search Resources"}
                     visible={openSearch}
                     filters={searchedColumn}
                     filterFields={filterFields}

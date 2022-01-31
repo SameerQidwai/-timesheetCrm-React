@@ -529,7 +529,7 @@ class Projects extends Component {
                     </Col>
                 </Row>
                 {openSearch && <TableModalFilter
-                    title={"Search Employees"}
+                    title={"Search Projects"}
                     visible={openSearch}
                     filters={searchedColumn}
                     filterFields={filterFields}

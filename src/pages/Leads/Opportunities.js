@@ -570,7 +570,7 @@ class Opportunities extends Component {
                     </Col>
                 </Row>
                 {openSearch && <TableModalFilter
-                    title={"Search Employees"}
+                    title={"Search Opportunities"}
                     visible={openSearch}
                     filters={searchedColumn}
                     filterFields={filterFields}

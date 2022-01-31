@@ -8,7 +8,7 @@ import { getlevels, getSkills, getList, editLabel, addList, delLabel, } from "..
 import { getSkillLevels as selectedSkill } from "../../../service/constant-Apis";
 import Operation from "antd/lib/transfer/operation";
 import { localStore } from "../../../service/constant";
-import { tableSorter } from "../../../components/Core/Table/TableFilter";
+import { tableSorter, tableTitleFilter } from "../../../components/Core/Table/TableFilter";
 
 const { Title } = Typography;
 
@@ -23,11 +23,6 @@ class PanelInfo extends Component {
                 title: "Skill",
                 dataIndex: "label",
                 key: "label",
-                // sorter: (a, b)=>{
-                //     if (a.label && b.label){
-                //         return a.label.localeCompare(b.label)
-                //     }
-                // }
                 ...tableSorter('label', 'string')
             },
             {
@@ -76,6 +71,7 @@ class PanelInfo extends Component {
             skill_pirority: false,
             loading: false,
             data: [],
+            filterData: [],
 
             FormFields: {
                 formId: "title_form",
@@ -102,9 +98,7 @@ class PanelInfo extends Component {
                     {
                         object: "obj",
                         fieldCol: 12,
-                        // wrapperCol: { span: 20 },
                         key: "label",
-                        // label: "Panel Skill",
                         size: "small",
                         rules: [
                             {
@@ -119,9 +113,7 @@ class PanelInfo extends Component {
                     {
                         object: "obj",
                         fieldCol: 12,
-                        // labelCol: { span: 7 },
                         key: "standard",
-                        // label: "Generic Skill",
                         size: "small",
                         rules: [
                             {
@@ -150,7 +142,6 @@ class PanelInfo extends Component {
                                         })
                                     }
                                 })
-                                // const { FormFields_1 } = this.state
                             }  
                         },
                         labelAlign: "left",
@@ -224,12 +215,9 @@ class PanelInfo extends Component {
                 justify: "center",
                 preserve: false,
                 FormCol: 24,
-                // FieldSpace: { xs: 12, sm: 16, md: 12},
-                // layout: {labelCol: { span: 12 }},
                 justifyField: "center",
                 FormLayout: "inline",
                 size: "small",
-                // backstyle: {maxHeight:'145px',overflowY: 'auto'},
                 fields: [],
             },
         };
@@ -257,20 +245,6 @@ class PanelInfo extends Component {
             }
         });
     };
-    // getSkilllevels = () => {
-    //     getlevels().then((level_res) => {
-    //         getSkills().then((skill_res) => {
-    //             if (level_res.success && skill_res.success) {
-    //                 const { FormFields } = this.state;
-    //                 FormFields.fields[3].data = skill_res.data;
-    //                 this.setState({
-    //                     FormFields,
-    //                     skill_pirority: level_res.data,
-    //                 });
-    //             }
-    //         });
-    //     });
-    // };
 
     getData = () => {
         const { panelId, FormFields, FormFields_1 } = this.state;
@@ -278,6 +252,7 @@ class PanelInfo extends Component {
             if (res.success) {
                 this.setState({
                     data: res.data,
+                    filterData: res.data,
                     FormFields: { ...FormFields, initialValues: {} },
                     FormFields_1: {
                         ...FormFields_1,
@@ -557,8 +532,23 @@ class PanelInfo extends Component {
         });
     };
 
+    generalFilter = (value) =>{
+        const { data } = this.state
+        if (value){
+            this.setState({
+                filterData: data.filter(el => {
+                    return el.label && el.label.toLowerCase().includes(value.toLowerCase()) 
+                })
+            })
+        }else{
+            this.setState({
+                filterData: data
+            })
+        }
+    }
+
     render() {
-        const {data, openModal, editPS, FormFields, FormFields_1, loading} = this.state;
+        const {data, openModal, editPS, FormFields, FormFields_1, loading, filterData} = this.state;
         return (
             <>
                 <Row justify="space-between">
@@ -579,11 +569,12 @@ class PanelInfo extends Component {
                     </Col>
                 </Row>
                 <Table
+                    title={()=>tableTitleFilter(5, this.generalFilter)}
                     bordered
                     pagination={{pageSize: localStore().pageSize}}
                     rowKey={(data) => data.id}
                     columns={this.columns}
-                    dataSource={data}
+                    dataSource={filterData}
                     size="small"
                 />
                 {openModal ? (

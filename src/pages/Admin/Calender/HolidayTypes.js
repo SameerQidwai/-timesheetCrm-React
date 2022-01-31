@@ -5,7 +5,7 @@ import Forms from "../../../components/Core/Form";
 
 import { getList, addList, delLabel, editLabel, } from "../../../service/holiday-type";
 import { localStore } from "../../../service/constant";
-import { tableSorter } from "../../../components/Core/Table/TableFilter";
+import { tableSorter, tableTitleFilter } from "../../../components/Core/Table/TableFilter";
 
 const { Title } = Typography;
 
@@ -18,11 +18,6 @@ class HolidayTypes extends Component {
                 title: "Types",
                 dataIndex: "label",
                 key: "label",
-                // sorter: (a, b)=>{
-                //     if (a.label && b.label){
-                //         return a.label.localeCompare(b.label)
-                //     }
-                // }
                 ...tableSorter('label', 'string')
             },
             {
@@ -63,6 +58,7 @@ class HolidayTypes extends Component {
             isVisible: false,
             newType: "",
             data: [],
+            filterData: [],
             editType: false,
             FormFields: {
                 formId: "type_form",
@@ -95,6 +91,7 @@ class HolidayTypes extends Component {
             if (res.success) {
                 this.setState({
                     data: res.data,
+                    filterData: res.data,
                     isVisible: false,
                     editType: false,
                 });
@@ -157,8 +154,23 @@ class HolidayTypes extends Component {
         });
     };
 
+    generalFilter = (value) =>{
+        const { data } = this.state
+        if (value){
+            this.setState({
+                filterData: data.filter(el => {
+                    return el.label && el.label.toLowerCase().includes(value.toLowerCase()) 
+                })
+            })
+        }else{
+            this.setState({
+                filterData: data
+            })
+        }
+    }
+
     render() {
-        const { data, isVisible, editType, FormFields, loading } = this.state;
+        const { data, isVisible, editType, FormFields, loading, filterData } = this.state;
         return (
             <>
                 <Row justify="space-between">
@@ -180,10 +192,11 @@ class HolidayTypes extends Component {
                     </Col>
                 </Row>
                 <Table
+                    title={()=>tableTitleFilter(5, this.generalFilter)}
                     bordered
                     pagination={{pageSize: localStore().pageSize}}
                     columns={this.columns}
-                    dataSource={data}
+                    dataSource={filterData}
                     size="small"
                     rowKey={(data) => data.id}
                 />

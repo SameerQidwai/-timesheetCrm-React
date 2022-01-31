@@ -466,7 +466,7 @@ class Contractors extends Component {
                     </Col>
                 </Row>
                 {openSearch && <TableModalFilter
-                    title={"Search Employees"}
+                    title={"Search Contractors"}
                     visible={openSearch}
                     filters={searchedColumn}
                     filterFields={filterFields}
