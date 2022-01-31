@@ -7,7 +7,7 @@ import OrderModal from "./Modals/OrderModal";
 import { getRecord, getOrders, delOrder } from "../../service/projects";
 
 import moment from "moment"
-import { formatCurrency, localStore } from "../../service/constant";
+import { fomratDate, formatCurrency, localStore } from "../../service/constant";
 
 const { Item } = Descriptions;
 
@@ -20,30 +20,35 @@ class PurchaseOrder extends Component {
                 title: "Issue Date",
                 dataIndex: "issueDate",
                 key: "issueDate",
-                render:(record)=> record && moment(record).format(`ddd MMM DD YYYY`)
+                render:(record)=> record && moment(record).format(`ddd MMM DD YYYY`),
+                sorter: (a, b) => moment(a.issueDate).unix() - moment(b.issueDate).unix()
             },
             {
                 title: "Expiry Date",
                 dataIndex: "expiryDate",
                 key: "expiryDate",
-                render:(record)=> record && moment(record).format(`ddd MMM DD YYYY`)
+                render:(record)=> record && moment(record).format(`ddd MMM DD YYYY`),
+                sorter: (a, b) => moment(a.expiryDate).unix() - moment(b.expiryDate).unix()
             },
             {
                 title: "Value",
                 dataIndex: "value",
                 key: "value",
-                render: record => `${formatCurrency(record)}`
+                render: record => `${formatCurrency(record)}`,
+                sorter: (a, b) => a.value - b.value,
             },
             {
                 title: "Expense",
                 dataIndex: "expense",
                 key: "expense",
-                render: record => `${formatCurrency(record)}`
+                render: record => `${formatCurrency(record)}`,
+                sorter: (a, b) => a.expense - b.expense,
             },
             {
                 title: "Action",
                 key: "action",
                 align: "right",
+                width: 115,
                 render: (record) => (
                     <Dropdown
                         overlay={
@@ -148,8 +153,8 @@ class PurchaseOrder extends Component {
                     <Item label="Project Name">{desc.title}</Item>
                     <Item label="Estimated Value">{formatCurrency(desc.value)}</Item>
                     <Item label="Organisation">{desc.organizationName ? desc.organization.name :' No Organisation'}</Item>
-                    <Item label="Start date">{desc.startDate ? moment(desc.startDate).format('ddd DD MM YYYY'): null} </Item>
-                    <Item label="End Date">{desc.endDate ? moment(desc.endDate).format('ddd DD MM YYYY'): null}</Item>
+                    <Item label="Start date">{desc.startDate ? fomratDate(desc.startDate): null} </Item>
+                    <Item label="End Date">{desc.endDate ? fomratDate(desc.endDate): null}</Item>
                     {/* <Item label="Gender">{data.gender}</Item> */}
                 </Descriptions>
                 <Row justify="end">
@@ -162,6 +167,7 @@ class PurchaseOrder extends Component {
                     {/* <Col> <Button type="danger" size='small'>Delete Resource</Button></Col> */}
                 </Row>
                 <Table
+                    bordered
                     pagination={{pageSize: localStore().pageSize}}
                     rowKey={(data) => data.id}
                     columns={this.columns}

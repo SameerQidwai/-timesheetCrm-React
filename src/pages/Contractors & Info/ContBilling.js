@@ -9,12 +9,12 @@ import { getList, delList } from "../../service/subContrators-contracts";
 
 import moment from "moment"
 import "../styles/table.css";
-import { formatCurrency, localStore } from "../../service/constant";
+import { formatCurrency, localStore, DURATION, fomratDate } from "../../service/constant";
+import { tableSorter, tableTitleFilter } from "../../components/Core/Table/TableFilter";
 
 
 const { Title } = Typography;
 const { Item } = Descriptions;
-const DURATION = {1: "Hourly" , 2: "Daily" , 3: "Weekly" , 4: "Fortnightly" , 5: "Monthly" }
 
 class EmpBilling extends Component {
     constructor () {
@@ -25,24 +25,28 @@ class EmpBilling extends Component {
                 dataIndex: "id",
                 key: "id",
                 render: (record) => `00${record}`,
+                ...tableSorter('id', 'number', true),
             },
             {
                 title: "Start Date",
                 dataIndex: "startDate",
                 key: "startDate",
-                render:(record)=> record && moment(record).format(`ddd MMM DD YYYY`)
+                render:(record)=> record && fomratDate(record),
+                ...tableSorter('startDate', 'date'),
             },
             {
                 title: "End Date",
                 dataIndex: "endDate",
                 key: "endDate",
-                render:(record)=> record && moment(record).format(`ddd MMM DD YYYY`)
+                render:(record)=> record && fomratDate(record),
+                ...tableSorter('endDate', 'date'),
             },
             {
                 title: "Rate",
                 dataIndex: "remunerationAmount",
                 key: "remunerationAmount",
-                render: record =>   `${formatCurrency(record)}`
+                render: record =>   `${formatCurrency(record)}`,
+                ...tableSorter('remunerationAmount', 'number'),
             },
             {
                 title: "Rate Duration",
@@ -54,6 +58,7 @@ class EmpBilling extends Component {
                 title: "Action",
                 key: "action",
                 align: "right",
+                width: 115,
                 render: (record) => (
                     <Dropdown
                         overlay={
@@ -89,6 +94,8 @@ class EmpBilling extends Component {
             data: [],
             billModal: false,
             editCntrct: false,
+            openSearch: false,
+            filterData: [],
         }
     }
     componentDidMount = ()=>{
@@ -101,6 +108,7 @@ class EmpBilling extends Component {
         .then(res => {
             this.setState({
                 data: res[0].data,
+                filterData: res[0].data,
                 intro: res[1].basic,
                 billModal: false,
                 editCntrct: false,
@@ -115,6 +123,7 @@ class EmpBilling extends Component {
             if(res.success){
                 this.setState({
                     data: res.data,
+                    filterData: res.data,
                     billModal: false,
                     editCntrct: false,
                 })
@@ -134,8 +143,26 @@ class EmpBilling extends Component {
         });
     };
 
+    generalFilter = (value) =>{
+        const { data } = this.state
+        if (value){
+            this.setState({
+                filterData: data.filter(el => {
+                    return `00${el.id}`.includes(value)||
+                    el.startDate && `${fomratDate(el.startDate)}`.toLowerCase().includes(value.toLowerCase()) ||
+                    el.endDate && `${fomratDate(el.endDate)}`.toLowerCase().includes(value.toLowerCase()) ||
+                    `${formatCurrency(el.remunerationAmount) ?? ''}`.toLowerCase().includes(value.toLowerCase()) ||
+                    `${DURATION[el.remunerationAmountPer] ?? ''}`.toLowerCase().includes(value.toLowerCase())                })
+            })
+        }else{
+            this.setState({
+                filterData: data
+            })
+        }
+    }
+
     render () {
-        const { billModal, editCntrct, data, intro  } = this.state
+        const { billModal, editCntrct, data, intro, filterData  } = this.state
         const Sub = this.props.match.params.id
         return (
             <>
@@ -158,10 +185,12 @@ class EmpBilling extends Component {
                     </Item>
                 </Descriptions>
                 <Table
+                    title={()=>tableTitleFilter(5, this.generalFilter)}
+                    bordered
                     pagination={{pageSize: localStore().pageSize}}
                     rowKey={(data) => data.id}
                     columns={this.columns}
-                    dataSource={data}
+                    dataSource={filterData}
                     size="small"
                 />
 

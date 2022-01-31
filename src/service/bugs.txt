@@ -1,41 +1,26 @@
+SORTING
+    Organizaion ParentOrganization column sort is not yet complete 
+        ↪ // The value was not returning I have put a empty string but it would not work with number gotta do something for that
+    dateSort is not working properly when there is an empty field present
+    states should be array to array search not sring search
+
+    Check Form.List in accociation type thing
+
+Filtering     
+    Filter function in new File
+
 update
     work can't surpass dates milestone dates
         milestone can't surpass dates resouces dates
             resource can't surpass dats of timesheet entry
 
-Tagrget
-    Timesheet:
-        timesheet will come with respect start date and end date ???
-        Row Height Same ----X----
-        
-        Refresh on notes save
-        background after Submitt
-
-        Export Timesheet error
-
-
-    Opportunity
-        Stage and linked_Project .....
-        status .....
-
-    Allocation
-        Title in resouces position ....
-        Dates in resource position ......
-
-    milestone
-        Default milestone
-        Description should not be required field
-    
-    Opportunity and Project
-        Status all view
-        if I change delegate_contact_person on won.. gives error 500
-        I am not getting MilstoneId if type is (2 or Tm)
-    
-    Project 
-        Not getting Contact person Id
-
-    Approval View
-        can be under process ???
+Target 
+    Sorts
+    Filters
+    Links
+    Update (backend)
+    Time Off
+    Expense
 
 New Things
     Resource Allocation
@@ -46,9 +31,6 @@ Changes not allowing
     Oppotunity and Project changes panel should not be allowed if resource added
     Resource
         Skill won't be change when allocation is added
-
-
-
 
 shortcut 
     class component
@@ -70,7 +52,198 @@ shortcut
     fof→	for(let itemName of objectName { }
     fin→	for(let itemName in objectName { }
 
-
+updating 
+    "antd": "^4.15.6",
 xampp
     service mysql stop
     sudo /opt/lampp/lampp start
+
+
+
+
+
+
+
+//Filering 
+//=======================================================
+// Method 1
+// =========================================================
+filterData: data.filter(el => { // method one in which I can be able to filter array
+    let filtering = []
+    filtering = el.id.toString().includes(search['id']['value']) &&
+    el.firstName && el.firstName.toLowerCase().includes(search['firstName']['value'].toLowerCase()) &&
+    el.lastName && el.lastName.toLowerCase().includes(search['lastName']['value'].toLowerCase()) &&
+    `${el.email ?? ''}`.toLowerCase().includes(search['email']['value'].toLowerCase()) &&
+    `${el.phoneNumber ?? ''}`.toLowerCase().includes(search['phoneNumber']['value'].toLowerCase())&&
+    `${el.gender ?? ''}`.startsWith(search['gender']['value'])&&
+    // el.gender  &&  search['gender']['value'].indexOf(search['gender']['value'].length >0 ?el.gender : '') > -1  &&
+    el.stateId && el.stateId.toString().includes( search['stateId']['value']) &&
+    `${el.address ?? ''}`.toLowerCase().includes(search['address']['value'].toLowerCase())
+})
+
+// Method 2
+// ========================================================
+
+let filtering = []
+filtering = data.filter(el => {
+    return el.id.toString().includes(search['id']['value']) &&
+    el.firstName && el.firstName.toLowerCase().includes(search['firstName']['value'].toLowerCase()) &&
+    el.lastName && el.lastName.toLowerCase().includes(search['lastName']['value'].toLowerCase()) &&
+    `${el.email ?? ''}`.toLowerCase().includes(search['email']['value'].toLowerCase()) &&
+    `${el.phoneNumber ?? ''}`.toLowerCase().includes(search['phoneNumber']['value'].toLowerCase())&&
+    // `${el.gender ?? ''}`.startsWith(search['gender']['value'])&&
+    el.gender  &&  search['gender']['value'].indexOf(search['gender']['value'].length >0 ?el.gender : '') > -1  &&
+    el.stateId && el.stateId.toString().includes( search['stateId']['value']) &&
+    `${el.address ?? ''}`.toLowerCase().includes(search['address']['value'].toLowerCase())
+})
+
+if (search['gender']['value'].length >0){
+    filtering = filtering.filter(el => {
+        return  el.gender  &&  search['gender']['value'].indexOf(el.gender) > -1
+    })
+}
+filterData: filtering
+
+
+// METHOD 3
+// =======================================================
+
+filterData: data.filter(el => { // method one which have mutliple if condition for every multiple search
+    let filtering = false
+    let multi = false
+    if (
+        el.id.toString().includes(search['id']['value']) &&
+        el.firstName && el.firstName.toLowerCase().includes(search['firstName']['value'].toLowerCase()) &&
+        el.lastName && el.lastName.toLowerCase().includes(search['lastName']['value'].toLowerCase()) &&
+        `${el.email ?? ''}`.toLowerCase().includes(search['email']['value'].toLowerCase()) &&
+        `${el.phoneNumber ?? ''}`.toLowerCase().includes(search['phoneNumber']['value'].toLowerCase())&&
+        el.stateId && el.stateId.toString().includes( search['stateId']['value']) &&
+        `${el.address ?? ''}`.toLowerCase().includes(search['address']['value'].toLowerCase())
+        ){
+            filtering = true
+        }
+    if (search['gender']['value'].length >0 ){
+        if (el.gender && search['gender']['value'].indexOf(el.gender ) > -1){
+            multi = true
+        }else{
+            multi= false
+        }
+    }else{
+        multi = true
+    }
+    if (filtering && multi){
+        return el
+    }
+})
+
+
+// METHOD 4
+// ==========================================================
+   //NOt working Becuse array can't find value in gender value...
+filterData: data.filter(el => { // method one which have mutliple if condition for every multiple search
+    return  `00${el.id.toString()}`.includes(search['id']['value']) &&
+     `${el.firstName ?? ''}`.toLowerCase().includes(search['firstName']['value'].toLowerCase()) &&
+     `${el.lastName ?? ''}`.toLowerCase().includes(search['lastName']['value'].toLowerCase()) &&
+     `${el.email ?? ''}`.toLowerCase().includes(search['email']['value'].toLowerCase()) &&
+     `${el.phoneNumber ?? ''}`.toLowerCase().includes(search['phoneNumber']['value'].toLowerCase())&&
+     `${el.address ?? ''}`.toLowerCase().includes(search['address']['value'].toLowerCase()) && 
+     //Creating an string using reduce of all the String array and searching sting in the function
+     `${search['gender']['value'].reduce((p, n) => p + n, '')?? ''}`.includes(`${el.gender ?? ''}`) &&
+     search['stateId']['value'].reduce((p,n) => p +n, '').includes(`${el.stateId ?? ''}`)
+})
+
+
+//METHOD 5
+// ==========================================================
+   //NOt working Becuse if we multi select includes try to find whole contantaion in gender value
+   filterData: data.filter(el => { // method one which have mutliple if condition for every multiple search
+    return  `00${el.id.toString()}`.includes(search['id']['value']) &&
+     `${el.firstName ?? ''}`.toLowerCase().includes(search['firstName']['value'].toLowerCase()) &&
+     `${el.lastName ?? ''}`.toLowerCase().includes(search['lastName']['value'].toLowerCase()) &&
+     `${el.email ?? ''}`.toLowerCase().includes(search['email']['value'].toLowerCase()) &&
+     `${el.phoneNumber ?? ''}`.toLowerCase().includes(search['phoneNumber']['value'].toLowerCase())&&
+     `${el.address ?? ''}`.toLowerCase().includes(search['address']['value'].toLowerCase()) && 
+     //Creating an string using reduce of all the String array and searching sting in the function
+     `${el.gender ?? ''}`.includes(search['gender']['value'].reduce((p, n) => p + n, '')) &&
+     `${el.stateId ?? ''}`.includes(search['stateId']['value'].reduce((p, n) => p + n, ''))
+}),
+
+
+//METHOD 6 
+// ==========================================================
+   // Complete and Working
+   filterData: data.filter(el => { // method one which have mutliple if condition for every multiple search
+    return  `00${el.id.toString()}`.includes(search['id']['value']) &&
+     `${el.firstName ?? ''}`.toLowerCase().includes(search['firstName']['value'].toLowerCase()) &&
+     `${el.lastName ?? ''}`.toLowerCase().includes(search['lastName']['value'].toLowerCase()) &&
+     `${el.email ?? ''}`.toLowerCase().includes(search['email']['value'].toLowerCase()) &&
+     `${el.phoneNumber ?? ''}`.toLowerCase().includes(search['phoneNumber']['value'].toLowerCase())&&
+     `${el.address ?? ''}`.toLowerCase().includes(search['address']['value'].toLowerCase()) && 
+     //Creating an string using reduce of all the String array and searching sting in the function
+     `${search['gender']['value'].reduce((p, n) => p + n, '')?? ''}`.includes(`${search['gender']['value'].length > 0 ?el.gender ?? '' : ''}`) 
+    //  &&
+    //  search['stateId']['value'].reduce((p,n) => p +n, '').includes(`${el.stateId ?? ''}`)
+})
+
+
+
+//WORKING FILTER BUT LENGTHY
+  // ==========================================================
+this.setState({
+    filterData: data.filter(el => { // method one which have mutliple if condition for every multiple search
+        let filtering = false
+        let gender = false
+        let states = false
+        if (
+            `00${el.id.toString()}`.includes(search['id']['value']) &&
+            `${el.firstName ?? ''}`.toLowerCase().includes(search['firstName']['value'].toLowerCase()) &&
+            `${el.lastName ?? ''}`.toLowerCase().includes(search['lastName']['value'].toLowerCase()) &&
+            `${el.email ?? ''}`.toLowerCase().includes(search['email']['value'].toLowerCase()) &&
+            `${el.phoneNumber ?? ''}`.toLowerCase().includes(search['phoneNumber']['value'].toLowerCase())&&
+            `${el.address ?? ''}`.toLowerCase().includes(search['address']['value'].toLowerCase())
+            ){
+                filtering = true
+            }
+        if (search['gender']['value'].length >0 ){ // multiple array search filter from an array
+            if (search['gender']['value'].includes(el.gender)){
+                gender = true
+            }else{
+                gender= false
+            }
+        }else{
+            gender = true
+        }
+
+        if (search['stateId']['value'].length >0 ){
+            if (search['stateId']['value'].includes(el.stateId)){
+                states = true
+            }else{
+                states= false
+            }
+        }else{
+            states = true
+        }
+        if (filtering && gender && states){
+            return el
+        }
+    }),
+
+    searchedColumn: search,
+    openSearch: false,
+})
+
+//=======================================================
+//Filering Date
+
+ (search['startDate']['value'] && search['startDate']['value']) ?
+    moment(search['startDate']['value'].format('YYYY-MM-DD'))
+        .isSameOrAfter(moment(el.startDate).format('YYYY-MM-DD')) &&  
+    moment(search['endDate']['value'].format('YYYY-MM-DD'))
+        .isSameOrBefore(moment(el.endDate).format('YYYY-MM-DD')) 
+: search['startDate']['value'] ?
+    moment(search['startDate']['value'].format('YYYY-MM-DD'))
+        .isSame(moment(el.startDate).format('YYYY-MM-DD')) 
+: search['endDate']['value'] ? 
+    moment(search['endDate']['value'].format('YYYY-MM-DD'))
+        .isSame(moment(el.endDate).format('YYYY-MM-DD')) 
+: moment('1010-10-10').isSame(moment('1010-10-10'))

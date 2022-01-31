@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 
 import moment from "moment";
 
-import { formatCurrency, localStore } from "../../service/constant";
+import { fomratDate, formatCurrency, localStore } from "../../service/constant";
 import { entityProjects } from "../../service/constant-Apis";
 
 class Projects extends Component {
@@ -42,18 +42,19 @@ class Projects extends Component {
                 title: 'Start Date',
                 dataIndex: 'startDate',
                 key: 'startDate',
-                render: (record) =>(record && moment(record).format('ddd DD MM yyyy'))
+                render: (record) =>(record && fomratDate(record))
             },
             {
                 title: 'End Date',
                 dataIndex: 'endDate',
                 key: 'endDtae',
-                render: (record) =>(record &&  moment(record).format('ddd DD MM yyyy'))
+                render: (record) =>(record &&  fomratDate(record))
             },
             {
                 title: 'Action',
                 key: 'action',
                 align: 'right',
+                width: 115,
                 render: (record) => (
                     <Dropdown overlay={
                         <Menu>
@@ -105,6 +106,7 @@ class Projects extends Component {
         return (
             <>
                 <Table
+                    bordered
                     pagination={{pageSize: localStore().pageSize}}
                     columns={columns}
                     dataSource={projects}

@@ -4,7 +4,7 @@ import { Menu, Button, Dropdown, Table } from "antd";
 import { getMilestones } from "../../../service/Milestone-Apis";
 
 import moment from "moment"
-import { formatCurrency, localStore } from "../../../service/constant";
+import { fomratDate, formatCurrency, localStore } from "../../../service/constant";
 
 
 class PMResources extends Component {
@@ -29,13 +29,13 @@ class PMResources extends Component {
                     title: "Start Date",
                     dataIndex: "startDate",
                     key: "startDate",
-                    render: (record) =>(record && moment(record).format('ddd DD MM yyyy'))
+                    render: (record) =>(record && fomratDate(record))
                 },
                 {
                     title: "End Date",
                     dataIndex: "endDate",
                     key: "endDate",
-                    render: (record) =>(record && moment(record).format('ddd DD MM yyyy'))
+                    render: (record) =>(record && fomratDate(record))
                 },
                 {
                     title: "Progress",
@@ -52,6 +52,7 @@ class PMResources extends Component {
                     title: "Action",
                     key: "action",
                     align: "right",
+                    width: 115,
                     render: (value, record, index) => (
                         
                         <Dropdown
@@ -105,6 +106,7 @@ class PMResources extends Component {
         console.log(permissions);
         return (
             <Table
+                bordered
                 pagination={{pageSize: localStore().pageSize}}
                 rowKey={(record) => record.id}
                 columns={this.columns}
@@ -144,12 +146,13 @@ function NestedTable(props) {
     ];
 
     return <Table
-            key={props.skill}
-            rowKey={(record) => record.id} 
-            columns={columns} 
-            dataSource={props.data} 
-            pagination={false}
-        />
+        bordered
+        key={props.skill}
+        rowKey={(record) => record.id} 
+        columns={columns} 
+        dataSource={props.data} 
+        pagination={false}
+    />
 };
 
 

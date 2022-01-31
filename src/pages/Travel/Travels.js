@@ -60,6 +60,7 @@ class Travels extends Component {
                 title: "Action",
                 key: "action",
                 align: "right",
+                width: 115,
                 render: (record) => (
                     <Dropdown
                         overlay={
@@ -205,6 +206,7 @@ class Travels extends Component {
                     </Col>
                     <Col span={24}>
                         <Table
+                            bordered
                             pagination={{pageSize: localStore().pageSize}}
                             columns={columns}
                             dataSource={data}

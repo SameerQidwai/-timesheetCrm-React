@@ -98,6 +98,7 @@ class PTResources extends Component {
         const { data } = this.state;
         return (
             <Table
+                bordered
                 pagination={{pageSize: localStore().pageSize}}
                 rowKey={(data) => data.id}
                 columns={this.columns}

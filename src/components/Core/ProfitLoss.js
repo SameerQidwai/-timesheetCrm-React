@@ -155,6 +155,7 @@ class ProfitLoss extends Component {
                     </Row>
                 </Col>
                 <Table
+                    bordered
                     rowKey= {(data =>data.label)}
                     columns={columns}
                     dataSource={data}

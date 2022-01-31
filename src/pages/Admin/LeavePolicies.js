@@ -7,6 +7,7 @@ import "../styles/table.css";
 
 import { timeOff, addList, getList, editLabel, delLabel, } from "../../service/time-off-policy";
 import { localStore } from "../../service/constant";
+import { tableSorter, tableTitleFilter } from "../../components/Core/Table/TableFilter";
 
 const { Title } = Typography;
 
@@ -21,11 +22,13 @@ class LeavePolicies extends Component {
                 title: "Title",
                 dataIndex: "label",
                 key: "label",
+                ...tableSorter('label', 'string')
             },
             {
                 title: "Action",
                 key: "action",
                 align: "right",
+                width: 115,
                 render: (text, record) => (
                     <Dropdown
                         overlay={
@@ -59,6 +62,7 @@ class LeavePolicies extends Component {
         this.state = {
             timeoff: [],
             data: [],
+            filterData: [],
             openModal: false,
             mergeObj: {},
             form1Submitted: false,
@@ -204,6 +208,7 @@ class LeavePolicies extends Component {
             if (res.success) {
                 this.setState({
                     data: res.data,
+                    filterData: res.data,
                     openModal: false,
                     editTimeoff: false,
                     FormFields: {
@@ -490,14 +495,28 @@ class LeavePolicies extends Component {
     renderTable = () => {
         const { mergeObj } = this.state;
         this.setState({loading: true})
-        console.log(mergeObj);
         addList(mergeObj).then((res) => {
             this.getData();
         });
     };
 
+    generalFilter = (value) =>{
+        const { data } = this.state
+        if (value){
+            this.setState({
+                filterData: data.filter(el => {
+                    return el.label && el.label.toLowerCase().includes(value.toLowerCase()) 
+                })
+            })
+        }else{
+            this.setState({
+                filterData: data
+            })
+        }
+    }
+
     render() {
-        const {data, openModal, editTimeoff, FormFields, FormFields_1, loading} = this.state;
+        const {data, openModal, editTimeoff, FormFields, FormFields_1, loading, filterData} = this.state;
         const columns = this.columns;
         return (
             <>
@@ -519,10 +538,12 @@ class LeavePolicies extends Component {
                     </Col>
                     <Col span={24}>
                         <Table
+                            title={()=>tableTitleFilter(5, this.generalFilter)}
+                            bordered
                             pagination={{pageSize: localStore().pageSize}}
                             rowKey={(data) => data.id}
                             columns={columns}
-                            dataSource={data}
+                            dataSource={filterData}
                             size="small"
                         />
                     </Col>

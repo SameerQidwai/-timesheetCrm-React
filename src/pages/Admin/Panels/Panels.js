@@ -8,6 +8,7 @@ import { getList, addList, delLabel, editLabel } from "../../../service/panel";
 
 import "../../styles/table.css";
 import { localStore } from "../../../service/constant";
+import { tableSorter, tableTitleFilter } from "../../../components/Core/Table/TableFilter";
 
 const { Title } = Typography;
 
@@ -21,16 +22,13 @@ class Panels extends Component {
                 title: "Name",
                 dataIndex: "label",
                 key: "label",
+                ...tableSorter('label', 'string')
             },
-            // {
-            //     title: "Contact",
-            //     dataIndex: "contact",
-            //     key: "contact",
-            // },
             {
                 title: "Action",
                 key: "action",
                 align: "right",
+                width: 115,
                 render: (text, record) => (
                     <Dropdown
                         overlay={
@@ -72,16 +70,15 @@ class Panels extends Component {
 
         this.state = {
             data: [],
+            filterData: [],
             openModal: false,
             editPanel: false,
             FormFields: {
                 formId: "time_off",
                 justify: "center",
                 FormCol: 20,
-                // FieldSpace: { xs: 12, sm: 16, md: 122},
                 layout: { labelCol: { span: 6 } },
                 justifyField: "center",
-                // FormLayout:'inline',
                 size: "middle",
                 fields: [
                     {
@@ -90,20 +87,9 @@ class Panels extends Component {
                         key: "label",
                         label: "Name",
                         size: "small",
-                        // rules:[{ required: true }],
                         type: "input",
                         labelAlign: "right",
                     },
-                    // {
-                    //     object: "obj",
-                    //     fieldCol: 24,
-                    //     key: "contact",
-                    //     label: "Contact",
-                    //     size: "small",
-                    //     // rules:[{ required: true }],
-                    //     type: "input",
-                    //     labelAlign: "right",
-                    // },
                 ],
             },
         };
@@ -118,6 +104,7 @@ class Panels extends Component {
             if (res.success) {
                 this.setState({
                     data: res.data,
+                    filterData: res.data,
                     FormFields: { ...this.state.FormFields, initialValues: {} },
                     openModal: false,
                     editPanel: false,
@@ -200,8 +187,23 @@ class Panels extends Component {
         });
     };
 
+    generalFilter = (value) =>{
+        const { data } = this.state
+        if (value){
+            this.setState({
+                filterData: data.filter(el => {
+                    return el.label && el.label.toLowerCase().includes(value.toLowerCase()) 
+                })
+            })
+        }else{
+            this.setState({
+                filterData: data
+            })
+        }
+    }
+
     render() {
-        const { data, openModal, editPanel, FormFields , loading} = this.state;
+        const { data, openModal, editPanel, FormFields , loading, filterData} = this.state;
         const columns = this.columns;
         return (
             <>
@@ -223,10 +225,12 @@ class Panels extends Component {
                     </Col>
                     <Col span={24}>
                         <Table
+                            title={()=>tableTitleFilter(5, this.generalFilter)}
+                            bordered
                             pagination={{pageSize: localStore().pageSize}}
                             rowKey= {data=> data.id}
                             columns={columns}
-                            dataSource={data}
+                            dataSource={filterData}
                             size="small"
                         />
                     </Col>

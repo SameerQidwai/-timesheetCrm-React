@@ -67,6 +67,7 @@ class TimeOff extends Component {
                 title: "Action",
                 key: "action",
                 align: "right",
+                width: 115,
                 render: (record) => (
                     <Dropdown
                         overlay={
@@ -280,6 +281,7 @@ class TimeOff extends Component {
                             </Col>
                             <Col span={24}>
                                 <Table
+                                    bordered
                                     columns={this.columns}
                                     dataSource={data}
                                     size="small"
@@ -294,6 +296,7 @@ class TimeOff extends Component {
                             </Col>
                             <Col span={24}>
                                 <Table
+                                    bordered
                                     columns={this.col_Status}
                                     dataSource={data_status}
                                     size="small"

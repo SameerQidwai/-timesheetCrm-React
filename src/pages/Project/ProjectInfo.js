@@ -14,7 +14,7 @@ import InfoModal from "./Modals/InfoModal";
 import { getRecord, delList } from "../../service/projects";
 
 import moment from "moment"
-import { formatCurrency, localStore, O_STATUS } from "../../service/constant";
+import { fomratDate, formatCurrency, localStore, O_STATUS } from "../../service/constant";
 
 const { Item } = Descriptions;
 const { TabPane } = Tabs;
@@ -145,9 +145,9 @@ class ProjectInfo extends Component {
                         
                     }</Item>
                     <Item label="Delegate Contact"> {basic ?basic.ContactName: null}</Item>
-                    <Item label="Start date">{data.startDate ? moment(data.startDate).format('ddd DD MM YYYY'): null} </Item>
-                    <Item label="End Date">{data.endDate ? moment(data.endDate).format('ddd DD MM YYYY'): null}</Item>
-                    <Item label="Bid Date">{data.bidDate ? moment(data.bidDate).format('ddd DD MM YYYY'): null}</Item>
+                    <Item label="Start date">{data.startDate ? fomratDate(data.startDate): null} </Item>
+                    <Item label="End Date">{data.endDate ? fomratDate(data.endDate): null}</Item>
+                    <Item label="Bid Date">{data.bidDate ? fomratDate(data.bidDate): null}</Item>
                     <Item label="Status">{basic.status ? O_STATUS[basic.status]: ''}</Item>
                     {/* <Item label="Gender">{data.gender}</Item> */}
                 </Descriptions>

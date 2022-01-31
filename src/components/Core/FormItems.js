@@ -84,9 +84,7 @@ class FormItems extends Component {
                         wrapperCol={item.wrapperCol}
                         rules={item.rules}
                         valuePropName={item.valuePropName}
-                        getValueFromEvent={
-                            item.getValue && normFile
-                        }
+                        getValueFromEvent={item.customValue}
                         hidden={item.hidden === true}
                         style={item.itemStyle}
                         noStyle={item.noStyle}
@@ -265,9 +263,13 @@ class FormItems extends Component {
                     <RangePicker
                         picker={mode}
                         showTime={showTime}
+                        disabledDate={min ?? max}
                         size={size}
                         style={style}
+                        onBlur={onBlur}
+                        onChange={onChange}
                         format={'DD/MM/YYYY'}
+                        disabled={disabled}
                     />
                 );
                 break;

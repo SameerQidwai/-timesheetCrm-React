@@ -8,6 +8,7 @@ import "../../styles/table.css";
 
 import { getList, addList, editLabel } from "../../../service/calender";
 import { localStore } from "../../../service/constant";
+import { tableSorter, tableTitleFilter } from "../../../components/Core/Table/TableFilter";
 
 const { Title } = Typography;
 
@@ -22,6 +23,7 @@ class Calenders extends Component {
                 title: "Title",
                 dataIndex: "label",
                 key: "label",
+                ...tableSorter('label', 'string')
             },
             {
                 title: "Status",
@@ -45,6 +47,7 @@ class Calenders extends Component {
                 title: "Action",
                 key: "action",
                 align: "right",
+                width: 115,
                 render: (record, text) => (
                     <Dropdown
                         overlay={
@@ -79,6 +82,7 @@ class Calenders extends Component {
             data: [],
             calenderForm: React.createRef(),
             openModal: false,
+            filterData: [],
 
             FormFields: {
                 formId: "calenderId",
@@ -132,6 +136,7 @@ class Calenders extends Component {
             if (res.success) {
                 this.setState({
                     data: res.data,
+                    filterData: res.data,
                     FormFields: {
                         ...this.state.FormFields,
                         initialValues: {},
@@ -203,8 +208,24 @@ class Calenders extends Component {
         this.state.calenderForm.current.refs.calenderId.submit();
     };
 
+    generalFilter = (value) =>{
+        const { data } = this.state
+        if (value){
+            this.setState({
+                filterData: data.filter(el => {
+                    return el.label && el.label.toLowerCase().includes(value.toLowerCase()) || 
+                    `${el.isActive ? "Enabled" : "Disabled"}`.toLowerCase().includes(value.toLowerCase())
+                })
+            })
+        }else{
+            this.setState({
+                filterData: data
+            })
+        }
+    }
+
     render() {
-        const { data, openModal, editTimeoff, loading, calenderForm, FormFields } = this.state;
+        const { data, openModal, editTimeoff, loading, calenderForm, FormFields, filterData } = this.state;
         const columns = this.columns;
         return (
             <>
@@ -226,9 +247,11 @@ class Calenders extends Component {
                     </Col>
                     <Col span={24}>
                         <Table
+                            title={()=>tableTitleFilter(5, this.generalFilter)}
+                            bordered
                             pagination={{pageSize: localStore().pageSize}}
                             columns={columns}
-                            dataSource={data}
+                            dataSource={filterData}
                             size="small"
                             rowKey={(data) => data.id}
                         />
