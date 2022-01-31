@@ -415,7 +415,7 @@ class Opportunities extends Component {
                     return `00${el.id.toString()}`.includes(value) ||
                     el.title && el.title.toLowerCase().includes(value.toLowerCase()) || 
                     organization && organization.toLowerCase().includes(value.toLowerCase()) ||
-                    el.value && `${el.value.toString()}`.toLowerCase().includes(value.toLowerCase()) ||
+                    el.value && formatCurrency(el.value).toLowerCase().includes(value.toLowerCase()) ||
                     el.startDate && `${fomratDate(el.startDate)}`.toLowerCase().includes(value.toLowerCase()) ||
                     el.endDate && `${fomratDate(el.endDate)}`.toLowerCase().includes(value.toLowerCase()) ||
                     el.bidDate && `${fomratDate(el.bidDate)}`.toLowerCase().includes(value.toLowerCase()) ||
