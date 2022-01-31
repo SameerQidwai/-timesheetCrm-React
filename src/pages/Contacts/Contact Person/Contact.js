@@ -451,7 +451,7 @@ class Contact extends Component {
                         />
                     </Col>
                 </Row>
-                {openSearch && <TableModalFilter 
+                {openSearch && <TableModalFilter
                     title={"Search Contact Persons"}
                     visible={openSearch}
                     filters={searchedColumn}

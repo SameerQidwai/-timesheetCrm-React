@@ -8,7 +8,7 @@ import "../../styles/table.css";
 
 import { holidayType, addList, getList, editLabel, delLabel, } from "../../../service/calendar-holidays";
 import { fomratDate, localStore } from "../../../service/constant";
-import { TableModalFilter, tableSorter, tableTitleFilter } from "../../../components/Core/Table/TableFilter";
+import { Filtertags, TableModalFilter, tableSorter, tableTitleFilter } from "../../../components/Core/Table/TableFilter";
 
 const { Title } = Typography;
 
@@ -342,6 +342,10 @@ class CalenerHolidays extends Component {
                             </Col>
                         </Row>
                     </Col>
+                    <Filtertags
+                        filters={searchedColumn}
+                        filterFunction={this.advancefilter}
+                    />
                     <Col span={24}>
                         <Table
                             title={()=>tableTitleFilter(5, this.generalFilter)}

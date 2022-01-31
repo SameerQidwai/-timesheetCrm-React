@@ -8,7 +8,7 @@ import { getRecord, getLeadSkills, delLeadSkill } from "../../service/projects";
 
 import moment from "moment"
 import { fomratDate, formatCurrency, localStore } from "../../service/constant";
-import { TableModalFilter, tableSorter, tableTitleFilter } from "../../components/Core/Table/TableFilter";
+import { Filtertags, TableModalFilter, tableSorter, tableTitleFilter } from "../../components/Core/Table/TableFilter";
 import { getPanelSkills } from "../../service/constant-Apis";
 
 const { Item } = Descriptions;
@@ -423,6 +423,10 @@ class Resources extends Component {
                     </Col>
                     {/* <Col> <Button type="danger" size='small'>Delete Resource</Button></Col> */}
                 </Row>
+                <Filtertags
+                    filters={searchedColumn}
+                    filterFunction={this.advancefilter}
+                />
                 <Table
                     title={()=>tableTitleFilter(5, this.generalFilter)}
                     bordered
