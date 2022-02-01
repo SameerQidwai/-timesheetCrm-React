@@ -33,7 +33,7 @@ import ResourceHistory from "../../../pages/Project/ResourceHistory";
 import PurchaseOrder from "../../../pages/Project/PurchaseOrder";
 
 import LeaveRequest from "../../../pages/Leave Request/LeaveRequest";
-import ApproveRequest from "../../../pages/ApproveRequest/ApproveRequest";
+import ApproveRequest from "../../../pages/Leave Request/ApproveRequest";
 
 import Milestone from "../../../pages/Milestones/Milestone";
 
