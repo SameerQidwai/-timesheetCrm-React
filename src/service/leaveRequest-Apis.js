@@ -2,9 +2,11 @@ import axios from "axios";
 import { message as messageAlert } from "antd";
 import { Api, headers, setToken, jwtExpired } from "./constant";
 
+const url = `${Api}/leave-requests`
+
 export const getLeaveTypes = () => {
     return axios
-        .get(`${Api}/time-off-types`,{headers:headers()})
+        .get(`${Api}/leave-request-types`,{headers:headers()})
         .then((res) => {
             const { success, data } = res.data;
             var states = []
@@ -26,7 +28,7 @@ export const getLeaveTypes = () => {
 export const addRequest = (data) => {
     messageAlert.loading({ content: 'Loading...', key: 1 })
     return axios
-        .post(`${Api}/leaveRequests`, data, {headers:headers()})
+        .post(url, data, {headers:headers()})
         .then((res) => {
             // console.log('RES: ', res);
             const { success, message } = res.data;
@@ -49,7 +51,7 @@ export const addRequest = (data) => {
 
 export const getRequests = () => {
     return axios
-        .get(`${Api}/leaveRequests`,{headers:headers()})
+        .get(url,{headers:headers()})
         .then((res) => {
             const { success, data } = res.data;
             setToken(res.headers && res.headers.authorization)
@@ -66,7 +68,7 @@ export const getRequests = () => {
 
 export const getSingleRequest = (data) => {
     return axios
-        .get(`${Api}/leaveRequests/${data}`,{headers:headers()})
+        .get(`${url}/${data}`,{headers:headers()})
         .then((res) => {
             const { success, data } = res.data;
             setToken(res.headers && res.headers.authorization)
@@ -84,7 +86,7 @@ export const getSingleRequest = (data) => {
 export const editRequest = (id, data) => {
     messageAlert.loading({ content: 'Loading...', key: id })
     return axios
-        .patch(`${Api}/leaveRequests/${id}`, data, {headers:headers()})
+        .patch(`${url}/${id}`, data, {headers:headers()})
         .then((res) => {
             const { success, message, data } = res.data;
             jwtExpired(message)

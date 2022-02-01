@@ -127,7 +127,8 @@ function reStructure(data) {
         stateId:contactPerson.stateId,
         username: data.username,
         password: data.password,
-        roleId: data.roleId
+        roleId: data.roleId,
+        lineManagerId: data.lineManagerId
     }
     const detail = {
         superannuationName: data.superannuationName,
@@ -171,6 +172,7 @@ function reStructure(data) {
         remunerationAmount:employmentContracts.remunerationAmount,
         remunerationAmountPer: employmentContracts.remunerationAmountPer,  
         comments: employmentContracts.comments,
+        leaveRequestPolicyId: employmentContracts.leaveRequestPolicyId ?? 0,
         fileId: employmentContracts.fileId,
         file: employmentContracts.fileId ? [{
             id: employmentContracts.file.id,

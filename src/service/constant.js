@@ -1,4 +1,4 @@
-// export const Api = "http://localhost:3301/api/v1";
+export const Api = "http://localhost:3301/api/v1";
 
 // export const Api = "http://onelmcrm.gaamatech.com:8000/api/v1";
 // export const Api = "http://192.168.0.243:3000/api/v1"; // Shahzaib/   
@@ -9,13 +9,14 @@
 // export const Api = "http://54.91.49.138:8000/api/v1"; //Test 
 
 // export const Api = "http://192.168.0.110:3301/api/v1"; // TrunRajPal Home
-export const Api = "http://192.168.0.244:3301/api/v1"; // TrunRajPal Office
+// export const Api = "http://192.168.0.244:3301/api/v1"; // TrunRajPal Office
 
 
 // export const Api = "http://3.239.21.153:8000/api/v1"; //live api  
 
 export const O_STAGE = {L: 'Lead', TR: 'Tender Released', BS: 'Bid Submitted'}
 export const O_STATUS = {O: 'Open', L: 'Lost', P: 'Open', NB: 'Not Bid', DNP: 'Did Not Proceed', C: 'Completed'}
+export const R_STATUS = { 'AP' : 'Approved', 'SB' : 'Submitted' , 'R' : 'Rejected' } //Request Status
 
 export const formatCurrency = (amount) => {
     //console.log('=== === === formatCurrency === === ===');

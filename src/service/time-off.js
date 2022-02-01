@@ -3,7 +3,7 @@ import axios from "axios";
 
 import { Api, headers, jwtExpired, setToken } from "./constant";
 
-const url = `${Api}/time-off-types`;
+const url = `${Api}/leave-request-types`;
 
 export const getList = () => {
     return axios

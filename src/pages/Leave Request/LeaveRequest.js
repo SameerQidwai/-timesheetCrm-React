@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import { Table, Button, Row, Col, Typography, Menu, Dropdown} from 'antd'
 import { DownOutlined, SettingOutlined, PlusSquareOutlined, FilterOutlined} from '@ant-design/icons';
-import { localStore } from '../../service/constant';
+import { localStore, R_STATUS } from '../../service/constant';
 import AddRequestModal from './Modals/AddRequestModal';
 import { getLeaveTypes, getRequests } from '../../service/leaveRequest-Apis';
 import moment from 'moment';
@@ -15,41 +15,26 @@ class LeaveRequest extends Component {
                 title: 'Type',
                 dataIndex: 'type',
                 key: 'type',
-                render:(text, records) =>(
-                    <Title level={5}>{records.type}</Title>
-                ),
             },
             {
                 title: 'Accured',
                 dataIndex: 'accured',
                 key: 'accured',
-                render:(text, records) =>(
-                    <Title level={5}>{records.accured}</Title>
-                ),
             },
             {
                 title: 'Earned',
                 dataIndex: 'earned',
                 key: 'earned',
-                render:(text, records) =>(
-                    <Title level={5}>{records.earned}</Title>
-                ),
             },
             {
                 title: 'Used',
                 dataIndex: 'used',
                 key: 'used',
-                render:(text, records) =>(
-                    <Title level={5}>{records.used}</Title>
-                ),
             },
             {
                 title: 'Balance',
                 dataIndex: 'balance',
                 key: 'balance',
-                render:(text, records) =>(
-                    <Title level={5}>{records.balance}</Title>
-                ),
             },
         ]
 
@@ -58,37 +43,24 @@ class LeaveRequest extends Component {
                 title: 'Start Date',
                 dataIndex: 'startDate',
                 key: 'startDate',
-                render:(text, records) =>(
-                    <Title level={5}>{moment(records.startDate).format('ddd DD MM yyyy')}</Title>
-                ),
+                render:(text, records) => text && moment(text).format('ddd DD MM yyyy')
             },
             {
                 title: 'End Date',
                 dataIndex: 'endDate',
                 key: 'endDate',
-                render:(text, records) =>(
-                    <Title level={5}>{moment(records.endDate).format('ddd DD MM yyyy')}</Title>
-                ),
+                render:(text, records) => text && moment(text).format('ddd DD MM yyyy')
             },
             {
                 title: 'Hours',
-                dataIndex: 'hours',
-                key: 'hours',
-                render:(text, records) =>(
-                    <Title level={5}>{records.totalHours}</Title>
-                ),
+                dataIndex: 'totalHours',
+                key: 'totalHours',
             },
             {
                 title: 'Status',
                 dataIndex: 'status',
                 key: 'status',
-                render:(text, records) =>(
-                    <Title level={5}>{
-                        records.status === 'AP' ? 'Approved' :
-                        records.status === 'SB' ? 'Submitted' :
-                        records.status === 'R' ? 'Rejected' : 'Invalid'
-                    }</Title>
-                ),
+                render:(text, records) => R_STATUS[text]
             },
             {
                 title: 'Action',

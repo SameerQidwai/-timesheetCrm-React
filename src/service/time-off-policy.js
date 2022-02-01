@@ -3,7 +3,7 @@ import axios from "axios";
 
 import { Api, headers, jwtExpired, setToken } from "./constant";
 
-const url = `${Api}/time-off-policies`;
+const url = `${Api}/leave-request-policies`;
 
 export const timeOff = () => {
     return axios

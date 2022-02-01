@@ -355,3 +355,25 @@ export const entityProjects = (url) =>{
         };
     });
 }
+
+export const getLeavePolicy = () => {
+    return axios
+        .get(`${Api}/leave-request-policies`, {headers:headers()})
+        .then((res) => {
+            const { success, data } = res.data;
+            var policies = []
+            data.map((el) => {
+                policies.push({value: el.id, label: el.label})
+            });
+            policies.push({value: 0, label: 'unpaid'})
+            setToken(res.headers && res.headers.authorization)
+            if (success) return { success: success, data: policies };
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                success: false,
+                message: err.message,
+            };
+        });
+};

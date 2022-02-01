@@ -2,16 +2,7 @@ import React, { Component } from "react";
 import { Menu } from "antd";
 import { Link, withRouter } from "react-router-dom";
 
-import {
-    FieldTimeOutlined,
-    CalendarOutlined,
-    ScheduleOutlined,
-    HomeOutlined,
-    FileOutlined,
-    FileTextOutlined,
-    BookOutlined,
-    RightSquareOutlined
-} from "@ant-design/icons"; //Icons
+import { FieldTimeOutlined, CalendarOutlined, ScheduleOutlined, HomeOutlined, FileOutlined, FileTextOutlined, BookOutlined, RightSquareOutlined } from "@ant-design/icons"; //Icons
 
 import "../../Styles/Menus.css";
 import { localStore } from "../../../service/constant";

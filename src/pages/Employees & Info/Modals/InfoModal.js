@@ -5,7 +5,7 @@ import { LoadingOutlined, UploadOutlined,PlusOutlined } from "@ant-design/icons"
 import FormItems from "../../../components/Core/FormItems";
 import moment from "moment";
 
-import { getEmpPersons, getOrgPersons, getRoles, getStates } from "../../../service/constant-Apis";
+import { getEmpPersons, getLeavePolicy, getOrgPersons, getRoles, getStates } from "../../../service/constant-Apis";
 import { getContactRecord } from "../../../service/conatct-person";
 import { addList, getRecord, editList } from "../../../service/Employees";
 import { addAttachments, addFiles } from "../../../service/Attachment-Apis";
@@ -624,7 +624,16 @@ class InfoModal extends Component {
                 {
                     Placeholder: "Pay Frequence",
                     rangeMin: true,
-                    fieldCol: 24,
+                    fieldCol: 12,
+                    size: "small",
+                    type: "Text",
+                    labelAlign: "right",
+                    // itemStyle:{marginBottom:'10px'},
+                },
+                {
+                    Placeholder: "Leave Policy",
+                    rangeMin: true,
+                    fieldCol: 12,
                     size: "small",
                     type: "Text",
                     labelAlign: "right",
@@ -647,6 +656,16 @@ class InfoModal extends Component {
                     itemStyle: { marginBottom: 10 },
                 },
                 {
+                    object: "billing",
+                    fieldCol: 12,
+                    key: "leaveRequestPolicyId",
+                    size: "small",
+                    data: [],
+                    type: "Select",
+                    rules: [ { required: true, message: "Policy is required", }, ],
+                    itemStyle: { marginBottom: 10 },
+                },
+                {
                     Placeholder: "Comments",
                     fieldCol: 24,
                     size: "small",
@@ -661,6 +680,25 @@ class InfoModal extends Component {
                     size: "small",
                     type: "Textarea",
                     itemStyle: { marginBottom: 1 },
+                },
+            ],
+
+            ManagerFields: [
+                {
+                    Placeholder: "Employee Manager",
+                    fieldCol: 24,
+                    size: "small",
+                    type: "Text",
+                    labelAlign: "right",
+                },
+                {
+                    object: "basic",
+                    fieldCol: 12,
+                    key: "lineManagerId",
+                    size: "small",
+                    data: [],
+                    type: "Select",
+                    itemStyle: { marginBottom: 10 },
                 },
             ],
 
@@ -693,12 +731,14 @@ class InfoModal extends Component {
 
     fetchAll = (edit) =>{
         const { editEmp } = this.props
-        const customUrl = `helpers/contact-persons?organizationId=1&active=0&associated=1`
-        Promise.all([ getStates(), getRoles() , edit ? this.getRecord(editEmp) : getOrgPersons(customUrl) ])
+        const customUrl = `helpers/contact-persons?organizationId=1`
+        Promise.all([ getStates(), getRoles() , edit ? this.getRecord(editEmp) : getOrgPersons(customUrl), getLeavePolicy(), getOrgPersons(customUrl) ])
         .then(res => {
-            const { BasicFields } = this.state
+            const { BasicFields, BillingFields, ManagerFields } = this.state
             BasicFields[15].data = res[0].data;
             BasicFields[17].data = res[1].data;
+            BillingFields[16].data = res[3].data;
+            ManagerFields[1].data = res[4].data;
                 this.setState({
                     BasicFields,
                     CONTACT: !edit ? res[2].data: [],
@@ -742,7 +782,6 @@ class InfoModal extends Component {
     }
 
     addEmployee = (data) => {
-        console.log("addEmployee", data);
         const { callBack } = this.props;
         const { sContact } = this.state
         data.contactPersonId = sContact
@@ -947,6 +986,7 @@ class InfoModal extends Component {
                 itemStyle: { marginBottom: "10px" },
             },
         ]
+
         let { DetailFields } = this.state
         const { detail } = this.formRef.current.getFieldsValue(); // get the values from from data
         const { superAnnuationName, superannuationType } = detail
@@ -972,7 +1012,6 @@ class InfoModal extends Component {
         if (formValues.billing.type ){
             formValues.billing.type === 1 ? formValues.billing.remunerationAmountPer = 1 : formValues.billing.remunerationAmountPer = 7
         }
-        formValues.billing.fileId = fileIds
 
         const values  = {
             ...formValues.basic, 
@@ -986,7 +1025,11 @@ class InfoModal extends Component {
                 taxFreeThreshold: formValues.bank.taxFreeThreshold,
                 helpHECS: formValues.bank.helpHECS,
             },
-            latestEmploymentContract: formValues.billing,  
+            latestEmploymentContract: {
+                ...formValues.billing,
+                fileId: fileIds,
+                leaveRequestPolicyId: formValues.billing.leaveRequestPolicyId ?formValues.billing.leaveRequestPolicyId: null, 
+            },  
         } 
         if (!this.props.editEmp) {
             console.log("emes");
@@ -1047,7 +1090,7 @@ class InfoModal extends Component {
 
     render() {
         const { editEmp, visible, close } = this.props;
-        const { BasicFields, DetailFields, KinFields, BankFields, BillingFields, TrainFields,  CONTACT, loading, fileList, activeKey } = this.state;
+        const { BasicFields, DetailFields, KinFields, BankFields, BillingFields, TrainFields, ManagerFields,  CONTACT, loading, fileList, activeKey } = this.state;
         return (
             <Modal
                 title={editEmp ? "Edit Employee" : "Add Employee"}
@@ -1134,6 +1177,9 @@ class InfoModal extends Component {
                         </TabPane>
                         <TabPane tab="Banking/Tax Details" key="bank" forceRender className="ant-form ant-form-inline ant-form-small">
                             <FormItems FormFields={BankFields} />
+                        </TabPane>
+                        <TabPane tab="Employee Manager" key="manage" forceRender className="ant-form ant-form-inline ant-form-small">
+                            <FormItems FormFields={ManagerFields} />
                         </TabPane>
                         <TabPane tab="Training Detail" key="train" forceRender className="ant-form ant-form-inline ant-form-small">
                             <FormItems FormFields={TrainFields} />
