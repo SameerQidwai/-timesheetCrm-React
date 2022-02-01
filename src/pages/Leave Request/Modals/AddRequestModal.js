@@ -5,7 +5,7 @@ import FormItems from "../../../components/Core/FormItems";
 import './AddRequestModal.css';
 import { addFiles } from "../../../service/Attachment-Apis";
 import { getProjects, } from "../../../service/constant-Apis";
-import { addRequest, editRequest, getLeaveTypes, getSingleRequest } from "../../../service/leaveRequest-Apis";
+import { addRequest, getLeaveTypes } from "../../../service/leaveRequest-Apis";
 import moment from 'moment'
 const { Text } = Typography
 
@@ -16,7 +16,7 @@ class AddRequestModal extends Component{
         this.state = {
             data: [],
             totalHours: 0,
-            // isEditable: Object.keys(this.props.dataReceived).length !== 0,
+            isEditable: Object.keys(this.props.dataReceived).length !== 0,
             loading: false,
             fileList: [],
             fileIds:null,
@@ -236,47 +236,22 @@ class AddRequestModal extends Component{
         });
 
         // PreFill Data
-        // if(isEditable){
-        //     const editRequest = {
-        //         typeId: dataReceived.typeId,
-        //         workId: dataReceived.workId,
-        //         description: dataReceived.description,
-        //         startDate: moment(dataReceived.entries[0].date),
-        //         endDate: moment(dataReceived.entries[dataReceived.entries.length - 1].date)
-        //     }
+        if(isEditable){
+            const editRequest = {
+                typeId: dataReceived.typeId,
+                workId: dataReceived.workId,
+                description: dataReceived.description,
+                startDate: moment(dataReceived.entries[0].date),
+                endDate: moment(dataReceived.entries[dataReceived.entries.length - 1].date)
+            }
 
-        //     //console.log('Object: ', editRequest)
-        //     this.formRef.current.setFieldsValue({dates: editRequest})
-        //     this.setState({data: dataReceived.entries})
-        // }
-        if(dataReceived){   
-            getSingleRequest(dataReceived).then(
-                (res) => {
-                    if(res.success){
-                        console.log('[RES]: ', res.data);
-                        const editRequest = {
-                            typeId: res.data.typeId,
-                            workId: res.data.workId,
-                            description: res.data.desc,
-                            startDate: moment(res.data.entries[0].date),
-                            endDate: moment(res.data.entries[res.data.entries.length - 1].date),
-                        }
-                        
-                        var entries = []
-                        res.data.entries.map((el) => {
-                            entries.push({date: el.date, hours: el.hours})
-                        });
-
-                        this.formRef.current.setFieldsValue({dates: editRequest})
-                        this.setState({data: entries})
-                    } 
-                }
-            )
+            //console.log('Object: ', editRequest)
+            this.formRef.current.setFieldsValue({dates: editRequest})
+            this.setState({data: dataReceived.entries})
         }
     }
 
     getFormValues = (val) => {
-        const { dataReceived } = this.props;
         const dates = val.dates;
         const newVal = {
                 description: dates.description,
@@ -286,27 +261,17 @@ class AddRequestModal extends Component{
                 attachments: []
         }
 
-        console.log("VALUES", newVal)
-
         // console.log('newVal: ', newVal)
-        if(dataReceived){
-            editRequest(dataReceived, newVal).then((res) => {
-                if (res) {
-                    this.props.close()
-                }
-            });
-        }
-        else{
-            addRequest(newVal).then((res) => {
-                if (res) {
-                    // this.getData();
-                    this.props.close()
-                }
-            });
-        }
+        addRequest(newVal).then((res) => {
+            if (res) {
+                // this.getData();
+                this.props.close()
+            }
+        });
     }
 
     getTableSummary = (data) => {
+        console.log('Data Received: ', data)
         let total = 0;
         data.forEach(({hours})=>{
             total += parseInt(hours ? hours : 0); 
@@ -321,12 +286,12 @@ class AddRequestModal extends Component{
     }
 
     render(){
-        const { visible, close, addRequest, dataReceived } = this.props;
+        const { visible, close, addRequest } = this.props;
         const { BasicFields, fileList, data, isEditable } = this.state;
 
         return(
             <Modal
-                title={ dataReceived ? "Edit Request" : "New Request"}
+                title={ isEditable ? "Edit Request" : "New Request"}
                 maskClosable={false}
                 visible={visible}
                 okButtonProps={{ htmlType: 'submit', form: 'my-form'  }}

@@ -9,6 +9,8 @@ import {
     HomeOutlined,
     FileOutlined,
     FileTextOutlined,
+    BookOutlined,
+    RightSquareOutlined
 } from "@ant-design/icons"; //Icons
 
 import "../../Styles/Menus.css";
@@ -39,14 +41,14 @@ const listData = [
     },
     {
         text: "Leave Request",
-        icon: <ScheduleOutlined />,
+        icon: <BookOutlined />,
         link: "/leave-request",
         key: "LEAVE REQUEST",
         permissions: {module: "TIMESHEETS", key: 'READ'}
     },
     {
         text: "Approve Request",
-        icon: <ScheduleOutlined />,
+        icon: <RightSquareOutlined />,
         link: "/approve-request",
         key: "APPROVE REQUEST",
         permissions: {module: "TIMESHEETS", key: 'APPROVAL'}
