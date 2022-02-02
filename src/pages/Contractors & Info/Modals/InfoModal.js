@@ -473,6 +473,25 @@ class InfoModal extends Component {
                     itemStyle: { marginBottom: 1 },
                 },
             ],
+            
+            ManagerFields: [
+                {
+                    Placeholder: "Contractor Manager",
+                    fieldCol: 24,
+                    size: "small",
+                    type: "Text",
+                    labelAlign: "right",
+                },
+                {
+                    object: "basic",
+                    fieldCol: 12,
+                    key: "lineManagerId",
+                    size: "small",
+                    data: [],
+                    type: "Select",
+                    itemStyle: { marginBottom: 10 },
+                },
+            ],
 
         };
     }
@@ -498,11 +517,13 @@ class InfoModal extends Component {
     };
 
     fetchAll = (edit) =>{
-        Promise.all([ getStates(), getRoles(), edit ? this.getRecord(edit) : getOrganizations()])
+        const getManagerUrl = `helpers/contact-persons?organizationId=1`
+        Promise.all([ getStates(), getRoles(), edit ? this.getRecord(edit) : getOrganizations(), getOrgPersons(getManagerUrl)])
         .then(res => {
-            const { BasicFields } = this.state
+            const { BasicFields, ManagerFields } = this.state
             BasicFields[15].data = res[0].data;
             BasicFields[17].data = res[1].data;
+            ManagerFields[1].data = res[3].data;
                 this.setState({
                     BasicFields,
                     sUsername: edit ? res[2].username: null,
@@ -657,7 +678,7 @@ class InfoModal extends Component {
 
     render() {
         const { editCont, visible } = this.props;
-        const { BasicFields, BillingFields, KinFields, sContact, CONTACTS, ORGS, sOrg, fileIds, loading, fileList, activeKey } = this.state;
+        const { BasicFields, BillingFields, KinFields, ManagerFields, sContact, CONTACTS, ORGS, sOrg, fileIds, loading, fileList, activeKey } = this.state;
 
         return (
             <Modal
@@ -732,7 +753,7 @@ class InfoModal extends Component {
                     />
                     </Form.Item>
                 </Col> }
-                <Col span={7} style={{marginLeft: 'auto'}}>
+                <Col span={!editCont? 7: 8} style={{marginLeft: 'auto', marginBottom: 10}}>
                     <Form.Item
                     name={['basic', 'username']}
                     rules={[{required: true, type: 'email', message: 'Email is Required'}]}
@@ -744,7 +765,6 @@ class InfoModal extends Component {
                         /> 
                     </Form.Item>
                 </Col>
-            {/* </Row> */}
                 <Tabs type="card" activeKey={activeKey} onChange={(activeKey)=>{this.setState({activeKey})}} >
                     <TabPane tab="Contractor Details" key="basic" forceRender className="ant-form ant-form-inline ant-form-small">
                         <FormItems FormFields={BasicFields} />
@@ -772,6 +792,9 @@ class InfoModal extends Component {
                     <TabPane tab="Next of Kin" key="kin" forceRender className="ant-form ant-form-inline ant-form-small">
                         <FormItems FormFields={KinFields} />
                     </TabPane>
+                    <TabPane tab="Contractor Manager" key="manage" forceRender className="ant-form ant-form-inline ant-form-small">
+                            <FormItems FormFields={ManagerFields} />
+                        </TabPane>
                 </Tabs>
             </Form>
         </Modal>

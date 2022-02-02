@@ -7,7 +7,7 @@ const url = `${Api}/leave-request-policies`;
 
 export const timeOff = () => {
     return axios
-        .get(`${Api}/time-off-types`, {headers:headers()})
+        .get(`${Api}/leave-request-types`, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)

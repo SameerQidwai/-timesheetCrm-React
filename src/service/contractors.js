@@ -122,7 +122,8 @@ function reStructure(data) {
         address: contactPerson.address,
         stateId:contactPerson.stateId,
         username: data.username,
-        roleId: data.roleId
+        roleId: data.roleId,
+        lineManagerId: data.lineManagerId
     }
     const kin = {
         nextOfKinDateOfBirth: data.nextOfKinDateOfBirth? moment(data.nextOfKinDateOfBirth) : null,

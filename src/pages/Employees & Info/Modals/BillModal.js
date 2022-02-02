@@ -269,7 +269,7 @@ class BillModal extends Component {
         billing.endDate = billing.endDate ? moment(billing.endDate).valueOf(): null;
         billing.employeeId = editEmp;
         billing.fileId = fileIds;
-        billing.leaveRequestPolicyId = billing.leaveRequestPolicyId ?billing.leaveRequestPolicyId: null; 
+        billing.leaveRequestPolicyId = billing.leaveRequestPolicyId || null; 
 
         if (!editCntrct) {
             console.log("emes");

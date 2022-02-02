@@ -1028,7 +1028,7 @@ class InfoModal extends Component {
             latestEmploymentContract: {
                 ...formValues.billing,
                 fileId: fileIds,
-                leaveRequestPolicyId: formValues.billing.leaveRequestPolicyId ?formValues.billing.leaveRequestPolicyId: null, 
+                leaveRequestPolicyId: formValues.billing.leaveRequestPolicyId || null, 
             },  
         } 
         if (!this.props.editEmp) {
