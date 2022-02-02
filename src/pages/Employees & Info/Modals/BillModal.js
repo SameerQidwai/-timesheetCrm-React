@@ -185,7 +185,16 @@ class BillModal extends Component {
                     {
                         Placeholder: "Pay Frequence",
                         rangeMin: true,
-                        fieldCol: 24,
+                        fieldCol: 12,
+                        size: "small",
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                    {
+                        Placeholder: "Leave Policy",
+                        rangeMin: true,
+                        fieldCol: 12,
                         size: "small",
                         type: "Text",
                         labelAlign: "right",
@@ -205,7 +214,17 @@ class BillModal extends Component {
                         ],
                         type: "Select",
                         rules: [ { required: true, message: "Payment Frequncy is required", }, ],
-                        itemStyle: { marginBottom: 1 },
+                        itemStyle: { marginBottom: 10 },
+                    },
+                    {
+                        object: "billing",
+                        fieldCol: 12,
+                        key: "leaveRequestPolicyId",
+                        size: "small",
+                        data: [],
+                        type: "Select",
+                        rules: [ { required: true, message: "Policy is required", }, ],
+                        itemStyle: { marginBottom: 10 },
                     },
                     {
                         Placeholder: "Comments",
@@ -245,11 +264,12 @@ class BillModal extends Component {
         const { fileIds } = this.state
         const { billing } = vake;
         billing.noOfHoursPer = 1; 
-        billing.type === 1 ? billing.remunerationAmountPer = 1 : billing.remunerationAmountPer = 7
-        billing.startDate = billing.startDate ? moment(billing.startDate).valueOf(): null
-        billing.endDate = billing.endDate ? moment(billing.endDate).valueOf(): null
+        billing.type === 1 ? billing.remunerationAmountPer = 1 : billing.remunerationAmountPer = 7;
+        billing.startDate = billing.startDate ? moment(billing.startDate).valueOf(): null;
+        billing.endDate = billing.endDate ? moment(billing.endDate).valueOf(): null;
         billing.employeeId = editEmp;
-        billing.fileId = fileIds
+        billing.fileId = fileIds;
+        billing.leaveRequestPolicyId = billing.leaveRequestPolicyId ?billing.leaveRequestPolicyId: null; 
 
         if (!editCntrct) {
             console.log("emes");
