@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Modal, Tabs, Row, Col, Button, Input } from "antd";
-import { UploadOutlined, PlusSquareFilled, CloseOutlined, LoadingOutlined } from "@ant-design/icons"; //Icons
+import { UploadOutlined, PlusSquareFilled, MinusCircleFilled, LoadingOutlined } from "@ant-design/icons"; //Icons
 
 import Form from "../../../components/Core/Form";
 import { addList, getContactRecord, editList } from "../../../service/conatct-person";
@@ -531,7 +531,7 @@ class InfoModal extends Component {
             {
                 fieldCol: 2,
                 size: "small",
-                Placeholder: <CloseOutlined />,
+                Placeholder: <MinusCircleFilled />,
                 key: item_no,
                 // rules:[{ required: true }],
                 type: "Text",
@@ -623,7 +623,7 @@ class InfoModal extends Component {
             {
                 fieldCol: 2,
                 size: "small",
-                Placeholder: <CloseOutlined />,
+                Placeholder: <MinusCircleFilled />,
                 key: item_no,
                 // rules:[{ required: true }],
                 type: "Text",

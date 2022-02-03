@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Row, Col, Typography, Button, Table, Menu, Dropdown, Popconfirm, Modal, } from "antd";
-import { DownOutlined, SettingOutlined, PlusSquareOutlined, CloseOutlined, LoadingOutlined} from "@ant-design/icons"; //Icons
+import { DownOutlined, SettingOutlined, PlusSquareOutlined, MinusCircleOutlined, LoadingOutlined} from "@ant-design/icons"; //Icons
 
 import Form from "../../../components/Core/Form";
 
@@ -349,7 +349,7 @@ class PanelInfo extends Component {
             {
                 fieldCol: 1,
                 size: "small",
-                Placeholder: <CloseOutlined />,
+                Placeholder: <MinusCircleOutlined />,
                 key: splice_key[5],
                 // rules:[{ required: true }],
                 type: "Text",

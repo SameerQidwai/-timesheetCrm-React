@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Typography, Row, Col, Popconfirm, Modal, Button, Table, Dropdown, Menu, } from "antd";
-import { SettingOutlined, DownOutlined, CloseOutlined, PlusSquareOutlined, LoadingOutlined} from "@ant-design/icons"; //Icons
+import { SettingOutlined, DownOutlined, MinusCircleOutlined, PlusSquareOutlined, LoadingOutlined} from "@ant-design/icons"; //Icons
 import Forms from "../../../components/Core/Form";
 
 import { levels, addList, getList, editLabel, delLabel, } from "../../../service/skills";
@@ -254,7 +254,7 @@ class Skills extends Component {
             {
                 fieldCol: 1,
                 size: "small",
-                Placeholder: <CloseOutlined />,
+                Placeholder: <MinusCircleOutlined />,
                 key: item_no,
                 // rules:[{ required: true }],
                 type: "Text",

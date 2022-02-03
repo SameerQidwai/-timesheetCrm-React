@@ -64,8 +64,7 @@ class FormItems extends Component {
     };
 
     content = () => {
-        const { FormFields } = this.props;
-        const fields = FormFields;
+        const { FormFields: fields, listName} = this.props;
         return (
             fields.map((item, j) => (
                 <Col
@@ -76,7 +75,7 @@ class FormItems extends Component {
                 >
                     <Item
                         {...item.layout}
-                        name={[item.object, item.key]}
+                        name={[listName??item.object, item.key]}
                         extra={item.hint}
                         labelAlign={item.labelAlign}
                         label={item.label}
