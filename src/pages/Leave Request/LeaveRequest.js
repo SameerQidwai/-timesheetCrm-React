@@ -94,113 +94,55 @@ class LeaveRequest extends Component {
 
         this.state = {
             request : [],
-            editRequest: {},
-            leaveTypes: [],
+            editRequest: false,
             type: [],
             openModal: false
         }   
     }
 
     componentDidMount = () =>{
-        getLeaveTypes().then(res => {
-            this.setState({leaveTypes: res.data}) 
-        });
-        getRequests().then(res =>{
-            this.setState({request: res.data})
-        });
         this.getData();
     }
 
-    closeModal = () =>{
-        getRequests().then(res =>{
-            this.setState({request: res.data})
-            // console.log('My Data: ', res.data)
+    getData = () =>{ 
+        Promise.all([getRequests() /*, here comes the type ApiFunction*/])
+        .then((res) => {
+            this.setState({ 
+                request: res[0].success? res[0].data : [],
+                type: [
+                    {
+                        id:0,
+                        type: 'Sick Leave',
+                        accured: '20',
+                        earned: '30',
+                        used: '10',
+                        balance: '40'
+                    },
+                    {
+                        id:1,
+                        type: 'Annual Leave',
+                        accured: '20',
+                        earned: '20',
+                        used: '20',
+                        balance: '20'
+                    },
+                ]
+            });
+        })
+        .catch((e) => {
+            console.log(e);
         });
+    }
+
+    closeModal = () =>{
         this.setState({
             openModal: false,
-            editRequest: {}
+            editRequest: false
         })
     }
 
     addRequest = (reqObj) => {
         this.setState({ request: [...this.state.request, reqObj] })
-    }
-
-    getData = () =>{
-        this.setState({
-        // request: [
-        //     {
-        //         key: 0,
-        //         description: 'This is 1st Request',
-        //         typeId: 1,
-        //         workId: 2,
-        //         entries: [
-        //             {
-        //                 date: '01/07/2021',
-        //                 hours: '8.0'
-        //             }
-        //         ],
-        //         hours: '8.0',
-        //         status: 'Approved'
-        //     },
-        //     {
-        //         key: 1,
-        //         description: 'This is 2nd Request',
-        //         typeId: 2,
-        //         workId: 4,
-        //         entries: [
-        //             {
-        //                 date: '11/07/2021',
-        //                 hours: '4.0'
-        //             },
-        //             {
-        //                 date: '11/08/2021',
-        //                 hours: '4.0'
-        //             },
-        //             {
-        //                 date: '11/09/2021',
-        //                 hours: '4.0'
-        //             },
-        //             {
-        //                 date: '11/10/2021',
-        //                 hours: '4.0'
-        //             },
-        //         ],
-        //         hours: '16.0',
-        //         status: 'Rejected'
-        //     },
-        //     {
-        //         key: 2,
-        //         description: 'This is 3rd Request',
-        //         typeId: 3,
-        //         workId: 3,
-        //         entries: [
-        //             {
-        //                 date: '01/08/2021',
-        //                 hours: '8.0'
-        //             },
-        //         ],
-        //         hours: '8.0',
-        //         status: 'Submitted'
-        //     },
-        // ],
-        type: [
-            {
-                type: 'Sick Leave',
-                accured: '20',
-                earned: '30',
-                used: '10',
-                balance: '40'
-            },
-            {
-                type: 'Annual Leave',
-                accured: '20',
-                earned: '20',
-                used: '20',
-                balance: '20'
-            },
-        ]
-    });
     }
 
     render(){
@@ -209,22 +151,19 @@ class LeaveRequest extends Component {
             <>
                 <Row justify="space-between">
                     <Col>
-                        <Title level={1}>LEAVE REQUESTS</Title>
+                        <Title level={4}>LEAVE REQUESTS</Title>
                     </Col>
                     <Col style={{textAlign:'end'}} span={4} >
-                        
-                            
-                                <Button 
-                                    type="primary" 
-                                    size='small'
-                                    onClick={()=>{
-                                        this.setState({
-                                            openModal: true,
-                                        })
-                                    }}
-                                    // disabled={!permissions['ADD']}
-                                    ><PlusSquareOutlined />Add Request</Button>
-                        
+                        <Button 
+                            type="primary" 
+                            size='small'
+                            onClick={()=>{
+                                this.setState({
+                                    openModal: true,
+                                })
+                            }}
+                            // disabled={!permissions['ADD']}
+                            ><PlusSquareOutlined />Add Request</Button>
                     </Col>
                     <Col span={24}>
                         <Table
@@ -240,7 +179,7 @@ class LeaveRequest extends Component {
 
                 <Row style={{marginTop: '20px'}} justify="space-between">
                     <Col>
-                        <Title level={1}>TIME OFF BALANCE</Title>
+                        <Title level={4}>TIME OFF BALANCE</Title>
                     </Col>
                     
                     <Col span={24}>

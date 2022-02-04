@@ -377,3 +377,21 @@ export const getLeavePolicy = () => {
             };
         });
 };
+
+export const getUserLeaveType = () => {
+    return axios
+        .get(`${Api}/leave-request-types/getOwn`, {headers:headers()})
+        .then((res) => {
+            const { success, data } = res.data;
+            console.log(data);
+            setToken(res.headers && res.headers.authorization)
+            // if (success) return { success: success, data: data };
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                success: false,
+                message: err.message,
+            };
+        });
+};

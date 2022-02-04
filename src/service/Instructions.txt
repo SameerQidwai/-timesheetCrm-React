@@ -1,0 +1,10 @@
+LEAVEREQUEST.js
+    Don't call api's over and over.. 
+    if you edit a sinlge entry edit in local yourself on response of patch api
+
+    use Hooks less: try to change state in less setState
+
+    Don't need to call api for onClose Modal instead create a single callback function for edit and add entry and a function for close
+
+AddRequestModal.js
+    try to use less variable like as per edit you can look dataReceived variable and set the condition on it isntead of create a new variable "isEditAble"

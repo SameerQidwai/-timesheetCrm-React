@@ -2,11 +2,11 @@ import React, { Component } from "react";
 import { Modal, Table, Form, Row, Col, Upload, Typography, Input, InputNumber } from "antd";
 import { PlusOutlined } from "@ant-design/icons"; //Icons
 import FormItems from "../../../components/Core/FormItems";
-import './AddRequestModal.css';
 import { addFiles } from "../../../service/Attachment-Apis";
-import { getProjects, } from "../../../service/constant-Apis";
-import { addRequest, getLeaveTypes } from "../../../service/leaveRequest-Apis";
+import { getUserProjects, getUserLeaveType} from "../../../service/constant-Apis";
+import { addRequest } from "../../../service/leaveRequest-Apis";
 import moment from 'moment'
+import { localStore } from "../../../service/constant";
 const { Text } = Typography
 
 class AddRequestModal extends Component{
@@ -15,8 +15,6 @@ class AddRequestModal extends Component{
         this.formRef = React.createRef();
         this.state = {
             data: [],
-            totalHours: 0,
-            isEditable: Object.keys(this.props.dataReceived).length !== 0,
             loading: false,
             fileList: [],
             fileIds:null,
@@ -221,14 +219,14 @@ class AddRequestModal extends Component{
     }
 
     getData = () =>{
-        const { BasicFields, isEditable } = this.state;
+        const { BasicFields } = this.state;
         const { dataReceived } = this.props;
-        
+        const {id: userId} = localStore()
         // Get Projects
-        Promise.all([getProjects(), getLeaveTypes()])
+        Promise.all([getUserProjects(userId), getUserLeaveType()])
         .then((res) => {
-        BasicFields[3].data = res[0].success ? res[0].data : [];
-        BasicFields[1].data = res[1].success ? res[1].data : []
+            BasicFields[3].data = res[0].success ? res[0].data : [];
+            BasicFields[1].data = res[1].success ? res[1].data : []
         this.setState({ BasicFields });
         })
         .catch((e) => {
@@ -236,7 +234,7 @@ class AddRequestModal extends Component{
         });
 
         // PreFill Data
-        if(isEditable){
+        if(dataReceived){
             const editRequest = {
                 typeId: dataReceived.typeId,
                 workId: dataReceived.workId,
@@ -271,27 +269,28 @@ class AddRequestModal extends Component{
     }
 
     getTableSummary = (data) => {
-        console.log('Data Received: ', data)
         let total = 0;
         data.forEach(({hours})=>{
             total += parseInt(hours ? hours : 0); 
         })
         
         return(
-            <Table.Summary.Row>
-                <Table.Summary.Cell>Total</Table.Summary.Cell>
-                <Table.Summary.Cell>{total}</Table.Summary.Cell>
-            </Table.Summary.Row>
+            <Table.Summary fixed="top">
+                <Table.Summary.Row >
+                    <Table.Summary.Cell index={0}>Total</Table.Summary.Cell>
+                    <Table.Summary.Cell index={1}>{total}</Table.Summary.Cell>
+                </Table.Summary.Row>
+            </Table.Summary>
         )
     }
 
     render(){
-        const { visible, close, addRequest } = this.props;
-        const { BasicFields, fileList, data, isEditable } = this.state;
+        const { visible, close, dataReceived } = this.props;
+        const { BasicFields, fileList, data } = this.state;
 
         return(
             <Modal
-                title={ isEditable ? "Edit Request" : "New Request"}
+                title={ dataReceived ? "Edit Request" : "New Request"}
                 maskClosable={false}
                 visible={visible}
                 okButtonProps={{ htmlType: 'submit', form: 'my-form'  }}

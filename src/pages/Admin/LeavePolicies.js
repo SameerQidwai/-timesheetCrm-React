@@ -93,7 +93,7 @@ class LeavePolicies extends Component {
                     itemStyle: { marginBottom: 5 },
                 },
                 {
-                    fieldCol: 6,
+                    fieldCol: 5,
                     Placeholder: "Categories",
                     type: "Text",
                     size: "small",
@@ -108,7 +108,7 @@ class LeavePolicies extends Component {
                     size: "small",
                 },
                 {
-                    fieldCol: 4,
+                    fieldCol: 3,
                     layout: {
                         wrapperCol: { offset: 1 },
                     },
@@ -117,7 +117,7 @@ class LeavePolicies extends Component {
                     size: "small",
                 },
                 {
-                    fieldCol: 4,
+                    fieldCol: 3,
                     layout: {
                         wrapperCol: { offset: 1 },
                     },
@@ -143,28 +143,38 @@ class LeavePolicies extends Component {
                     type: "Text",
                     size: "small",
                 },
+                {
+                    fieldCol: 3,
+                    layout: {
+                        wrapperCol: { offset: 1 },
+                    },
+                    Placeholder: "Include Holidays",
+                    type: "Text",
+                    size: "small",
+                },
             ],
 
             FormFields_1: [
                 {
-                    fieldCol: 6,
+                    fieldCol: 5,
                     key: "leaveRequestTypeId",
                     size: "small",
                     type: "Select",
+                    itemStyle: { marginBottom: "5px" },
                 },
                 {
                     fieldCol: 3,
                     key: "earnHours",
                     size: "small",
                     type: "InputNumber",
+                    fieldStyle: { width: "100%" },
                 },
                 {
-                    fieldCol: 4,
+                    fieldCol: 3,
                     key: "earnEvery",
                     size: "small",
                     type: "Select",
                     labelAlign: "left",
-                    itemStyle: { marginBottom: "5px" },
                     data: [
                         { value: "M", label: "Monthly" },
                         { value: "Y", label: "Yearly" },
@@ -179,15 +189,14 @@ class LeavePolicies extends Component {
                     size: "small",
                     type: "InputNumber",
                     labelAlign: "left",
-                    itemStyle: { marginBottom: "5px" },
+                    fieldStyle: { width: "100%" },
                 },
                 {
-                    fieldCol: 4,
+                    fieldCol: 3,
                     key: "resetEvery",
                     size: "small",
                     type: "Select",
                     labelAlign: "left",
-                    itemStyle: { marginBottom: "5px" },
                     data: [
                         { value: "M", label: "Monthly" },
                         { value: "Y", label: "Yearly" },
@@ -202,8 +211,17 @@ class LeavePolicies extends Component {
                     size: "small",
                     type: "InputNumber",
                     labelAlign: "left",
-                    itemStyle: { marginBottom: "5px" },
-                }
+                    fieldStyle: { width: "100%" },
+                },
+                {
+                    fieldCol: 1,
+                    key: "includeOffDays",
+                    valuePropName:"checked",
+                    size: "small", 
+                    type: "Switch",
+                    labelAlign: "left",
+                    style:{textAlign: 'center'}
+                },
             ],
 
             editTimeoff: false,
@@ -248,21 +266,7 @@ class LeavePolicies extends Component {
         });
     };
 
-    toggelModal = (status) => {
-        if (!status) {
-
-            this.setState({
-                openModal: false,
-                editTimeoff: false,
-            });
-        } else {
-            this.setState({
-                openModal: status,
-            });
-        }
-    };
-
-    getRecord = (data, text) => {       
+    getRecord = (data, text) => {   
         this.setState({
             editTimeoff: data.id,
             openModal: true,
@@ -275,7 +279,6 @@ class LeavePolicies extends Component {
         editLabel(value).then((res) => {
             if (res) {
                 this.getData();
-                this.toggelModal(false);
             }
         });
     };
@@ -311,7 +314,7 @@ class LeavePolicies extends Component {
                         <Button
                             type="primary"
                             onClick={() => {
-                                this.toggelModal(true);
+                                this.setState({openModal: true})
                             }}
                             size="small"
                         >
@@ -337,7 +340,7 @@ class LeavePolicies extends Component {
                         visible={openModal}
                         okButtonProps={{ disabled: loading, htmlType: 'submit', form: 'my-form' }}
                         okText={loading ?<LoadingOutlined /> :"Save"}
-                        onCancel={() => { this.toggelModal(false); }}
+                        onCancel={() => { this.setState({openModal: false}) }}
                         width={1200}
                         forceRender={true}
                     >   
@@ -358,10 +361,10 @@ class LeavePolicies extends Component {
                                     </Button>
                                 </Form.Item>
                                     {fields.map(({name, key}) => (
-                                    <>
+                                    <span className="ant-row" key={key} style={{width: '100%'}}>
                                         <FormItems FormFields={FormFields_1} listName={name} />
-                                        <MinusCircleFilled style={{color:"red"}} onClick={() => remove(name)} />
-                                    </>
+                                        <MinusCircleFilled style={{color:"red",margin: 'auto'}} onClick={() => remove(name)} />
+                                    </span>
                                 ))}
                             </>)}
                             </Form.List>

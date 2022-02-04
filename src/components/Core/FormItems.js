@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { InputNumber, Typography, DatePicker, TimePicker, Checkbox, Divider, Upload, Button, Select, Switch, Radio, Input, Space, Form, Row, Col, Tooltip} from "antd";
+import { CheckOutlined, CloseOutlined} from "@ant-design/icons"; //Icons
 
 const { Item } = Form;
 const { Dragger } = Upload;
@@ -190,7 +191,7 @@ class FormItems extends Component {
                 );
                 break;
             case "Switch":
-                item = <Switch size={size} style={style} />;
+                item = <Switch size={size} style={style} checkedChildren={shape??<CheckOutlined />} unCheckedChildren={shape??<CloseOutlined />}/>;
                 break;
             case "Radio":
                 item = (
