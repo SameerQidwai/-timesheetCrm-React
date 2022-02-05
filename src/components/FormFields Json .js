@@ -37,7 +37,8 @@ fields=[
             onClear: 'onBlur function on anyField', 
             tooltip: 'ToolTip on Text or Title types', 
             tooltipTitle: 'Title of the Tool tip', 
-            tooltipTrigger: 'Hover click or focus tool tip trigger'
+            tooltipTrigger: 'Hover click or focus tool tip trigger',
+            fieldNames: 'Select Box Label and value key'
 
         }
     ]

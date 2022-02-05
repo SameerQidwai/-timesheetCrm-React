@@ -84,9 +84,7 @@ class FormItems extends Component {
                         wrapperCol={item.wrapperCol}
                         rules={item.rules}
                         valuePropName={item.valuePropName}
-                        getValueFromEvent={
-                            item.getValue && normFile
-                        }
+                        getValueFromEvent={item.customValue}
                         hidden={item.hidden === true}
                         style={item.itemStyle}
                         noStyle={item.noStyle}
@@ -95,7 +93,7 @@ class FormItems extends Component {
                             this.filedformat( 
                                 item.type, item.Placeholder, item.data, item.mode, item.rangeMin, item.rangeMax, item.showTime, item.shape, 
                                 item.size, item.fieldStyle, item.disabled, item.readOnly, item.onChange, item.onClick, item.onBlur, 
-                                item.onClear, item.tooltip, item.tooltipTitle, item.tooltipTrigger 
+                                item.onClear, item.tooltip, item.tooltipTitle, item.tooltipTrigger, item.fieldNames
                             )
                         }
                     </Item>
@@ -105,7 +103,7 @@ class FormItems extends Component {
         );
     };
 
-    filedformat = ( type, placeholder, data, mode, min, max, showTime, shape, size, style, disabled, readOnly, onChange, onClick, onBlur, onClear, tooltip, tTitle, tTrigger ) => {
+    filedformat = ( type, placeholder, data, mode, min, max, showTime, shape, size, style, disabled, readOnly, onChange, onClick, onBlur, onClear, tooltip, tTitle, tTrigger, fieldNames ) => {
         let item = null;
         switch (type) {
             case "Title":
@@ -175,14 +173,18 @@ class FormItems extends Component {
                         showSearch
                         size={size}
                         allowClear
+                        fieldNames={fieldNames}
                         onChange={onChange}
                         onClear={onClear}
-                        style={style}
-                        optionFilterProp={["label", "value"]}
+                        style={style}    //gotta tell the Select what keys should go in filterOption tag
+                        optionFilterProp={[fieldNames?.label??"label", fieldNames?.value??"value"]}
                         filterOption={
-                            (input, option) =>{
-                                const label = option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                                const value = option.value.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0
+                            (input, option) =>{ //custom filter 
+                                const labelKey = fieldNames?.label??"label"
+                                const valueKey = fieldNames?.value??"value"
+                                
+                                const label = option[labelKey].toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                const value = option[valueKey].toString().toLowerCase().indexOf(input.toLowerCase()) >= 0
                                     return label || value
                             }
                         }
@@ -229,6 +231,7 @@ class FormItems extends Component {
                     <DatePicker
                         picker={mode}
                         showTime={showTime}
+                        disabledDate={min ?? max}
                         size={size}
                         style={style}
                         onBlur={onBlur}

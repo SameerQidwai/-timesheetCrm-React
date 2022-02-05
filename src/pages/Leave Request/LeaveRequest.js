@@ -3,7 +3,7 @@ import { Table, Button, Row, Col, Typography, Menu, Dropdown} from 'antd'
 import { DownOutlined, SettingOutlined, PlusSquareOutlined, FilterOutlined} from '@ant-design/icons';
 import { localStore, R_STATUS } from '../../service/constant';
 import AddRequestModal from './Modals/AddRequestModal';
-import { getLeaveTypes, getRequests } from '../../service/leaveRequest-Apis';
+import { getRequests } from '../../service/leaveRequest-Apis';
 import moment from 'moment';
 const { Title } = Typography
 
@@ -153,7 +153,7 @@ class LeaveRequest extends Component {
                     <Col>
                         <Title level={4}>LEAVE REQUESTS</Title>
                     </Col>
-                    <Col style={{textAlign:'end'}} span={4} >
+                    <Col style={{marginLeft: 'auto'}} >
                         <Button 
                             type="primary" 
                             size='small'

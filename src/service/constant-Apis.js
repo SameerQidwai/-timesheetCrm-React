@@ -383,11 +383,24 @@ export const getUserLeaveType = () => {
         .get(`${Api}/leave-request-types/getOwn`, {headers:headers()})
         .then((res) => {
             const { success, data } = res.data;
-            console.log(data);
             setToken(res.headers && res.headers.authorization)
-            // if (success) return { success: success, data: data };
+            if (success){
+                const {holidays, contractDetails, LeaveRequestTypes} = data
+                let requestType = []
+                LeaveRequestTypes.forEach((el,index)=>{
+                    const type= {}
+                    Object.entries(el).forEach(([key, value]) => {
+                        var camelToSnakeKey = key.replace(/([A-Z])/g, "_$1").toLowerCase();
+                        type[camelToSnakeKey]= value
+                    })
+                    
+                    requestType.push(type)
+                })
+                return { success: success, data: data, holidays, contractDetails, LeaveRequestTypes: requestType }
+            };
         })
         .catch((err) => {
+            console.log(err);
             return {
                 error: "Please login again!",
                 success: false,

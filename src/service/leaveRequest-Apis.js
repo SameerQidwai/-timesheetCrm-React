@@ -4,27 +4,6 @@ import { Api, headers, setToken, jwtExpired } from "./constant";
 
 const url = `${Api}/leave-requests`
 
-export const getLeaveTypes = () => {
-    return axios
-        .get(`${Api}/leave-request-types`,{headers:headers()})
-        .then((res) => {
-            const { success, data } = res.data;
-            var states = []
-            data.map((el) => {
-                states.push({value: el.id, label: el.label})
-            });
-            setToken(res.headers && res.headers.authorization)
-            if (success) return { success: success, data: states };
-        })
-        .catch((err) => {
-            return {
-                error: "Please login again!",
-                success: false,
-                message: err.message,
-            };
-        });
-};
-
 export const addRequest = (data) => {
     messageAlert.loading({ content: 'Loading...', key: 1 })
     return axios
