@@ -45,13 +45,17 @@ export const getRequests = () => {
         });
 };
 
-export const getSingleRequest = (data) => {
+export const getSingleRequest = (id) => {
     return axios
-        .get(`${url}/${data}`,{headers:headers()})
+        .get(`${url}/${id}`,{headers:headers()})
         .then((res) => {
             const { success, data } = res.data;
             setToken(res.headers && res.headers.authorization)
-            if (success) return { success: success, data: data };
+            if (success){ 
+                const entries = data?.entries
+                return { success, data, entries }
+            }
+            return {success, data }
         })
         .catch((err) => {
             return {

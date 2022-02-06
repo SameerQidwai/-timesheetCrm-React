@@ -4,7 +4,7 @@ import { PlusOutlined } from "@ant-design/icons"; //Icons
 import FormItems from "../../../components/Core/FormItems";
 import { addFiles } from "../../../service/Attachment-Apis";
 import { getUserProjects, getUserLeaveType} from "../../../service/constant-Apis";
-import { addRequest } from "../../../service/leaveRequest-Apis";
+import { addRequest, editRequest, getSingleRequest } from "../../../service/leaveRequest-Apis";
 import moment from 'moment'
 import { localStore } from "../../../service/constant";
 const { Text } = Typography
@@ -152,7 +152,7 @@ class AddRequestModal extends Component{
                 {
                     object: "dates",
                     fieldCol: 24,
-                    key: "description",
+                    key: "desc",
                     size: "small",
                     type: "Textarea",
                     fieldStyle: { height: '10vh' },
@@ -208,7 +208,6 @@ class AddRequestModal extends Component{
         let { BasicFields, contractDetails, holidays, data } = this.state;
         const hours = contractDetails?.noOfHours ?? 0
         const { include_off_days } = LeaveRequestType
-        console.log({start, end, include_off_days});
         if (start && end){
             var arr = new Array();
             while(start.isSameOrBefore(end)){
@@ -237,10 +236,10 @@ class AddRequestModal extends Component{
 
     getData = () =>{
         const { BasicFields } = this.state;
-        const { dataReceived } = this.props;
+        const { edit } = this.props;
         const {id: userId} = localStore()
         // Get Projects
-        Promise.all([getUserProjects(userId), getUserLeaveType()])
+        Promise.all([getUserProjects(userId), getUserLeaveType(), edit && getSingleRequest(edit)])
         .then((res) => {
             const {success, contractDetails, holidays, LeaveRequestTypes} = res[1]
             BasicFields[3].data = res[0].success ? res[0].data : [];
@@ -249,45 +248,49 @@ class AddRequestModal extends Component{
             BasicFields,
             holidays: success ? holidays :{},
             contractDetails: success ? contractDetails :{},
+            data: edit && res[2].success && res[2].entries
          });
+         if (edit && res[2].success){
+             let { entries, data } = res[2]
+            const formValues = {
+                ...data,
+                startDate: moment(entries[0].date),
+                endDate: moment(entries[entries.length-1].date),
+            }
+            this.formRef.current.setFieldsValue({dates: formValues})
+         }
+
         })
         .catch((e) => {
             console.log(e);
         });
-
-        // PreFill Data
-        if(dataReceived){
-            const editRequest = {
-                typeId: dataReceived.typeId,
-                workId: dataReceived.workId,
-                description: dataReceived.description,
-                startDate: moment(dataReceived.entries[0].date),
-                endDate: moment(dataReceived.entries[dataReceived.entries.length - 1].date)
-            }
-
-            //console.log('Object: ', editRequest)
-            this.formRef.current.setFieldsValue({dates: editRequest})
-            this.setState({data: dataReceived.entries})
-        }
     }
 
     getFormValues = (val) => {
-        const dates = val.dates;
+        const { dates } = val;
+        const { edit } = this.state
         const newVal = {
-                description: dates.description,
+            desc: dates.desc,
                 typeId: dates.typeId,
                 workId: dates.workId,
                 entries: this.state.data,
                 attachments: []
         }
 
-        // console.log('newVal: ', newVal)
-        addRequest(newVal).then((res) => {
-            if (res) {
-                // this.getData();
-                this.props.close()
-            }
-        });
+        if(edit){
+            editRequest(edit, newVal).then((res) => {
+                if (res) {
+                    this.props.close()
+                }
+            });
+        }else{
+            // console.log('newVal: ', newVal)
+            addRequest(newVal).then((res) => {
+                if (res) {
+                    this.props.close()
+                }
+            });
+        }
     }
 
     getTableSummary = (data) => {
@@ -307,12 +310,12 @@ class AddRequestModal extends Component{
     }
 
     render(){
-        const { visible, close, dataReceived } = this.props;
+        const { visible, close, edit } = this.props;
         const { BasicFields, fileList, data } = this.state;
 
         return(
             <Modal
-                title={ dataReceived ? "Edit Request" : "New Request"}
+                title={ edit ? "Edit Request" : "New Request"}
                 maskClosable={false}
                 visible={visible}
                 okButtonProps={{ htmlType: 'submit', form: 'my-form'  }}

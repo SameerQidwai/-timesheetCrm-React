@@ -73,7 +73,7 @@ class LeaveRequest extends Component {
                                 onClick={()=> {
                                     this.setState({
                                         openModal: true,
-                                        editRequest: record
+                                        editRequest: record.id
                                     })
                                 }
                             }
@@ -197,7 +197,7 @@ class LeaveRequest extends Component {
                     <AddRequestModal
                         visible={openModal}
                         close={this.closeModal}
-                        dataReceived={editRequest}
+                        edit={editRequest}
                         addRequest={this.addRequest}
                     />
                 )}
