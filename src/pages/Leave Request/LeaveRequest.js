@@ -66,14 +66,15 @@ class LeaveRequest extends Component {
                 title: 'Action',
                 key: 'action',
                 align: 'right',
-                render: (record) => (
+                render: (record, index) => (
                     <Dropdown overlay={
                         <Menu>
                             <Menu.Item 
                                 onClick={()=> {
                                     this.setState({
                                         openModal: true,
-                                        editRequest: record.id
+                                        editRequest: record.id,
+                                        // editIndex: index
                                     })
                                 }
                             }
@@ -108,6 +109,8 @@ class LeaveRequest extends Component {
         Promise.all([getRequests() /*, here comes the type ApiFunction*/])
         .then((res) => {
             this.setState({ 
+                openModal: false,
+                editRequest: false,
                 request: res[0].success? res[0].data : [],
                 type: [
                     {
@@ -141,8 +144,8 @@ class LeaveRequest extends Component {
         })
     }
 
-    addRequest = (reqObj) => {
-        this.setState({ request: [...this.state.request, reqObj] })
+    callBack = (reqObj) => {
+        this.getData()
     }
 
     render(){
@@ -198,7 +201,7 @@ class LeaveRequest extends Component {
                         visible={openModal}
                         close={this.closeModal}
                         edit={editRequest}
-                        addRequest={this.addRequest}
+                        callBack={this.getData}
                     />
                 )}
             </>

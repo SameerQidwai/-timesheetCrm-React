@@ -18,7 +18,6 @@ export const addRequest = (data) => {
             return success;
         })
         .catch((err) => {
-            // console.log('ERR: ', err)
             messageAlert.error({ content: err.message, key: 1})
             return {
                 error: "Please login again!",

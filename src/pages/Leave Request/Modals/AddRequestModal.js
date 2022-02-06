@@ -152,7 +152,7 @@ class AddRequestModal extends Component{
                 {
                     object: "dates",
                     fieldCol: 24,
-                    key: "desc",
+                    key: "description",
                     size: "small",
                     type: "Textarea",
                     fieldStyle: { height: '10vh' },
@@ -202,25 +202,42 @@ class AddRequestModal extends Component{
         })  
     }
 
-    getDateArray = (start, end, LeaveRequestType) => {
+    getDateArray = (start, end, LeaveRequestType, entries) => {
         //try to put your condition to put closer to eachother if they link to eachother
             //so it will be easy to track conditions
         let { BasicFields, contractDetails, holidays, data } = this.state;
-        const hours = contractDetails?.noOfHours ?? 0
         const { include_off_days } = LeaveRequestType
-        if (start && end){
+        var hours = contractDetails?.noOfHours ?? 0
+        // if entries is sent it will only be send on open the modal on edit
+        if (entries){
+            var arr = new Array();
+            data = entries.map(el=> {
+                var {date, hours } = el // in this conditon this hours value will be replace
+                date = moment(date)
+                const disabled = include_off_days && (
+                    (date.format('ddd') === 'Sun' || date.format('ddd') === 'Sat') && 'Weekend' ||
+                    holidays[date.format('M/D/YYYY')]
+                )
+                return {id: date.format('D/M'), date: date, hours: disabled? 0: hours, disabled}
+            })
+            BasicFields[7].disabled = false
+            
+        }else if (start && end){
+            //it will call on change of start and end date and found
             var arr = new Array();
             while(start.isSameOrBefore(end)){
                 // need key to push in the table
                 const disabled = include_off_days && (
                     (start.format('ddd') === 'Sun' || start.format('ddd') === 'Sat') && 'Weekend' ||
                     holidays[start.format('M/D/YYYY')]
-                )
+                )                                               //hours are getting update on each call
                 arr.push({id: start.format('D/M'), date: start, hours: disabled? 0: hours, disabled, })
                 start = moment(start).add(1,'d')
             }
             data = arr
+            BasicFields[7].disabled = false
         }else if (start){
+            //if end date is not sent
             const disabled = include_off_days && ((start.format('ddd') === 'Sun' || start.format('ddd') === 'Sat') && 'Weekend' || holidays[start.format('M/D/YYYY')])
             BasicFields[7].disabled = false // disabling the endDate
             data= [{id: start.format('D/M'), date: start, hours: disabled? 0: hours, disabled,}]
@@ -241,24 +258,28 @@ class AddRequestModal extends Component{
         // Get Projects
         Promise.all([getUserProjects(userId), getUserLeaveType(), edit && getSingleRequest(edit)])
         .then((res) => {
-            const {success, contractDetails, holidays, LeaveRequestTypes} = res[1]
-            BasicFields[3].data = res[0].success ? res[0].data : [];
-            BasicFields[1].data = success ? LeaveRequestTypes : []
-        this.setState({ 
-            BasicFields,
-            holidays: success ? holidays :{},
-            contractDetails: success ? contractDetails :{},
-            data: edit && res[2].success && res[2].entries
-         });
-         if (edit && res[2].success){
-             let { entries, data } = res[2]
-            const formValues = {
-                ...data,
-                startDate: moment(entries[0].date),
-                endDate: moment(entries[entries.length-1].date),
+            //Destructure res[1] to avoid writing res[1] repeateadly
+            const {success, contractDetails, holidays, LeaveRequestTypes} = res[1] 
+            BasicFields[3].data = res[0].success ? res[0].data : []; //set projects to select box
+            BasicFields[1].data = success ? LeaveRequestTypes : [] //set LeaveTypes to select box
+            this.setState({ 
+                BasicFields,
+                holidays: success ? holidays :{}, //holidays to cross of dates if type is not include holidays
+                contractDetails: success ? contractDetails :{}, //cotract details
+            });
+            if (edit && res[2]?.success){ // run if modal is opened for editing
+                let { entries, data } = res[2] 
+                //find holiday type to find if holidays are included or not
+                let selectedLeaveType = LeaveRequestTypes.find(x=> x.id === data.typeId)
+                const formValues = {
+                    ...data,
+                    description: data.desc,
+                    startDate: moment(entries[0].date),
+                    endDate: moment(entries[entries.length-1].date),
+                }
+                this.getDateArray(formValues.startDate, formValues.endDate, selectedLeaveType, entries)
+                this.formRef.current.setFieldsValue({dates: formValues})
             }
-            this.formRef.current.setFieldsValue({dates: formValues})
-         }
 
         })
         .catch((e) => {
@@ -268,9 +289,9 @@ class AddRequestModal extends Component{
 
     getFormValues = (val) => {
         const { dates } = val;
-        const { edit } = this.state
+        const { edit, callBack } = this.props
         const newVal = {
-            desc: dates.desc,
+                description: dates.description,
                 typeId: dates.typeId,
                 workId: dates.workId,
                 entries: this.state.data,
@@ -280,14 +301,14 @@ class AddRequestModal extends Component{
         if(edit){
             editRequest(edit, newVal).then((res) => {
                 if (res) {
-                    this.props.close()
+                    callBack()
                 }
             });
         }else{
             // console.log('newVal: ', newVal)
             addRequest(newVal).then((res) => {
                 if (res) {
-                    this.props.close()
+                    callBack()
                 }
             });
         }
@@ -359,9 +380,7 @@ class AddRequestModal extends Component{
                             columns={this.columns}
                             dataSource={data}
                             size='small'
-                            summary={(data)=>{
-                                return this.getTableSummary(data);
-                            }}
+                            summary={(data)=>{ return this.getTableSummary(data); }}
                         />
                     </Col>
                 </Row>
