@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
-import { Table, Button, Row, Col, Typography, Menu, Dropdown} from 'antd'
+import { Table, Button, Row, Col, Typography, Menu, Dropdown, Tag} from 'antd'
 import { DownOutlined, SettingOutlined, PlusSquareOutlined, FilterOutlined} from '@ant-design/icons';
-import { localStore, R_STATUS } from '../../service/constant';
+import { localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
 import AddRequestModal from './Modals/AddRequestModal';
 import { getRequests } from '../../service/leaveRequest-Apis';
 import moment from 'moment';
@@ -60,7 +60,9 @@ class LeaveRequest extends Component {
                 title: 'Status',
                 dataIndex: 'status',
                 key: 'status',
-                render:(text, records) => R_STATUS[text]
+                render:(text, records) => {
+                    return  <Tag color={STATUS_COLOR[text]}> {R_STATUS[text]} </Tag>
+                }
             },
             {
                 title: 'Action',

@@ -16,7 +16,8 @@ export const Api = "http://localhost:3301/api/v1";
 
 export const O_STAGE = {L: 'Lead', TR: 'Tender Released', BS: 'Bid Submitted'}
 export const O_STATUS = {O: 'Open', L: 'Lost', P: 'Open', NB: 'Not Bid', DNP: 'Did Not Proceed', C: 'Completed'}
-export const R_STATUS = { 'AP' : 'Approved', 'SB' : 'Submitted' , 'R' : 'Rejected' } //Request Status
+export const R_STATUS = { 'AP' : 'Approved', 'SB' : 'Submitted' , 'R' : 'Rejected','RJ' : 'Rejected' } //Request Status
+export const STATUS_COLOR = { 'AP' : 'green', 'SB' : 'cyan' , 'RJ' : 'red', 'R': 'red' } //Request Status
 
 export const formatCurrency = (amount) => {
     //console.log('=== === === formatCurrency === === ===');

@@ -1,8 +1,10 @@
 import React, {Component} from 'react'
-import { Table, Button, Row, Col, Typography, Menu, Dropdown, DatePicker} from 'antd'
+import { Table, Button, Row, Col, Typography, Menu, Dropdown, DatePicker, Tag} from 'antd'
 import { DownOutlined, SettingOutlined, PlusSquareOutlined, FilterOutlined} from '@ant-design/icons';
-import { localStore } from '../../service/constant';
+import { localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
 import moment from "moment";
+import { getApprovalRequests } from '../../service/leaveRequest-Apis';
+import AddRequestModal from './Modals/AddRequestModal';
 // import AddRequestModal from './Modals/AddRequestModal';
 
 const { Title } = Typography
@@ -13,67 +15,49 @@ class ApproveRequest extends Component {
         this.requestColumns = [
             {
                 title: 'Resource',
-                dataIndex: 'resource',
-                key: 'resource',
-                render:(text, records) =>(
-                    <Title level={5}>{records.resource}</Title>
-                ),
+                dataIndex: 'employee',
+                key: 'employee',
             },
             {
                 title: 'Project',
                 dataIndex: 'project',
                 key: 'project',
-                render:(text, records) =>(
-                    <Title level={5}>{records.project}</Title>
-                ),
             },
             {
                 title: 'Leave Type',
-                dataIndex: 'leaveType',
-                key: 'leaveType',
-                render:(text, records) =>(
-                    <Title level={5}>{records.leaveType}</Title>
-                ),
+                dataIndex: 'leaveRequestName',
+                key: 'leaveRequestName',
             },
             {
                 title: 'Start Date',
                 dataIndex: 'startDate',
                 key: 'startDate',
-                render:(text, records) =>(
-                    <Title level={5}>{records.startDate}</Title>
-                ),
+                render:(text, records) =>text && moment(text).format('ddd DD MMM yyyy')
             },
             {
                 title: 'End Date',
                 dataIndex: 'endDate',
                 key: 'endDate',
-                render:(text, records) =>(
-                    <Title level={5}>{records.endDate}</Title>
-                ),
+                render:(text, records) =>text && moment(text).format('ddd DD MMM yyyy')
             },
             {
                 title: 'Submit Date',
-                dataIndex: 'submitDate',
-                key: 'submitDate',
-                render:(text, records) =>(
-                    <Title level={5}>{records.submitDate}</Title>
-                ),
+                dataIndex: 'submitBy',
+                key: 'submitBy',
+                render:(text, records) =>text && moment(text).format('ddd DD MMM yyyy')
             },
             {
                 title: 'Status',
                 dataIndex: 'status',
                 key: 'status',
                 render:(text, records) =>(
-                    <Title level={5}>{records.status}</Title>
+                    <Tag color={STATUS_COLOR[text]}> {R_STATUS[text]} </Tag>
                 ),
             },
             {
                 title: 'Total Hours',
                 dataIndex: 'totalHours',
                 key: 'totalHours',
-                render:(text, records) =>(
-                    <Title level={5}>{records.totalHours}</Title>
-                ),
             },
             {
                 title: 'Action',
@@ -83,7 +67,14 @@ class ApproveRequest extends Component {
                     <Dropdown overlay={
                         <Menu>
                             <Menu.Item 
-                                onClick={()=>{}}
+                                onClick={()=> {
+                                    this.setState({
+                                        openModal: true,
+                                        viewRequest: record.id,
+                                        // editIndex: index
+                                    })
+                                }
+                            }
                             >View</Menu.Item>
                             <Menu.Item 
                                 onClick={()=>{}}
@@ -113,54 +104,13 @@ class ApproveRequest extends Component {
     }
 
     getData = () =>{
-        this.setState({
-        request: [
-            {
-                id: '0',
-                resource: 'Name',
-                project: '-',
-                leaveType: 'Annual',
-                startDate: '01/05/2021', 
-                endDate:'02/05/2021',
-                submitDate: '01/05/2021',
-                status: 'Pending',
-                totalHours: '4'
-            },
-            {
-                id: '1',
-                resource: 'Name',
-                project: 'Project name',
-                leaveType: 'Sick',
-                startDate: '01/05/2021', 
-                endDate:'02/05/2021',
-                submitDate: '01/05/2021',
-                status: 'Approved',
-                totalHours: '4'
-            },
-            {
-                id: '2',
-                resource: 'Name',
-                project: '-',
-                leaveType: 'Annual',
-                startDate: '01/05/2021', 
-                endDate:'02/05/2021',
-                submitDate: '01/05/2021',
-                status: 'Pending',
-                totalHours: '4'
-            },
-            {
-                id: '3',
-                resource: 'Name',
-                project: 'Project name',
-                leaveType: 'Sick',
-                startDate: '01/05/2021', 
-                endDate:'02/05/2021',
-                submitDate: '01/05/2021',
-                status: 'Rejected',
-                totalHours: '4'
-            },
-        ]
-    });
+        getApprovalRequests().then(res=>{
+            if(res.success){
+                this.setState({
+                    request: res.data
+                })
+            }
+        })
     }
 
     requestSelect = (selectedRowKeys, selectedRows)=>{
@@ -172,13 +122,20 @@ class ApproveRequest extends Component {
         })
     }
 
+    closeModal = () =>{
+        this.setState({
+            openModal: false,
+            viewRequest: false
+        })
+    }
+
     render(){
-        const { request, sRequest } = this.state;
+        const { request, sRequest, openModal, viewRequest } = this.state;
         return(
             <>
                 <Row justify="space-between">
                     <Col span={20}>
-                        <Title level={1}>APPROVE REQUESTS</Title>
+                        <Title level={4}>APPROVE REQUESTS</Title>
                     </Col>
                     <Col>
                     <DatePicker
@@ -238,6 +195,14 @@ class ApproveRequest extends Component {
                         </Button>
                     </Col>
                 </Row>
+                {openModal && (
+                    <AddRequestModal
+                        visible={openModal}
+                        close={this.closeModal}
+                        edit={viewRequest}
+                        callBack={this.getData}
+                    />
+                )}
             </>
         )
     }

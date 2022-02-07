@@ -105,3 +105,20 @@ export const editRequest = (id, data) => {
             };
         });
 };
+
+export const getApprovalRequests = () => {
+    return axios
+        .get(`${url}/approvalLeaveRequests`,{headers:headers()})
+        .then((res) => {
+            const { success, data } = res.data;
+            setToken(res.headers && res.headers.authorization)
+            if (success) return { success: success, data: data };
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                success: false,
+                message: err.message,
+            };
+        });
+};
