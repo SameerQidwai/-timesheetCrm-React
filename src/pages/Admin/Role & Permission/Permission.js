@@ -11,6 +11,7 @@ const constant = {
     'PROJECTS': {label: 'Projects', len: 3, }, 
     'OPPORTUNITIES':{label: "Opportunities", len:3},
     'TIMESHEETS': {label: 'Timesheets', len: 3, }, 
+    'LEAVE_REQUESTS': {label: 'Leave Requests', len: 3, }, 
     'PROFILE':{label: "Profile", len:1},
 } 
 
@@ -29,7 +30,7 @@ class Permission extends Component {
                 key: 'ADD',
                 dataIndex: 'ADD',
                 render: (text, record, rowIndex) => {
-                    {return  record.key === "TIMESHEETS" ?
+                    {return  record.key === "TIMESHEETS" || record.key === "LEAVE_REQUESTS" ?
                         <Checkbox.Group name={'ADD'} value={text} options={['ANY', 'MANAGE', 'OWN']} onChange={(values)=>this.changePermission(values, 'ADD', rowIndex)} />
                         : record.key === "PROFILE" ?
                             null
@@ -46,7 +47,7 @@ class Permission extends Component {
                 render: (text, record, rowIndex) => {
                     {return  record.key === "PROJECTS" || record.key === "OPPORTUNITIES"?
                         <Checkbox.Group name={'UPDATE'} value={text} options={['ANY', 'MANAGE']} onChange={(values)=>this.changePermission(values, 'UPDATE', rowIndex)} />
-                        : record.key === "TIMESHEETS" ?
+                        : record.key === "TIMESHEETS" || record.key === "LEAVE_REQUESTS"  ?
                             <Checkbox.Group name={'UPDATE'} value={text} options={['ANY', 'MANAGE', 'OWN']} onChange={(values)=>this.changePermission(values, 'UPDATE', rowIndex)} />
                         : record.key === "PROFILE" ?
                             <Checkbox.Group name={'UPDATE'} value={text} options={['OWN']} onChange={(values)=>this.changePermission(values, 'UPDATE', rowIndex)} />
@@ -60,7 +61,7 @@ class Permission extends Component {
                 key: 'READ',
                 dataIndex: 'READ',
                 render: (text, record,  rowIndex) => {
-                    {return  record.key === "PROJECTS" || record.key === "TIMESHEETS" ?
+                    {return  record.key === "PROJECTS" || record.key === "TIMESHEETS"|| record.key === "LEAVE_REQUESTS"  ?
                         <Checkbox.Group name={'READ'} value={text} options={['ANY', 'MANAGE', 'OWN']} onChange={(values)=>this.changePermission(values, 'READ', rowIndex)} />
                         : record.key === "OPPORTUNITIES"? 
                             <Checkbox.Group name={'READ'} value={text} options={['ANY', 'MANAGE']} onChange={(values)=>this.changePermission(values, 'READ', rowIndex)} />
@@ -79,7 +80,7 @@ class Permission extends Component {
                     {return  record.key === "PROFILE" ?
                         null 
                         :
-                        <Checkbox.Group name={'DELETE'} value={text} options={['ANY']} onChange={(values)=>this.changePermission(values, 'DELETE', rowIndex)} />
+                        <Checkbox.Group name={'DELETE'} value={text} options={['ANY', 'OWN']} onChange={(values)=>this.changePermission(values, 'DELETE', rowIndex)} />
                     }
                 },
             },
@@ -88,7 +89,7 @@ class Permission extends Component {
                 key: 'APPROVAL',
                 dataIndex: 'APPROVAL',
                 render: (text, record, rowIndex) => {
-                    {return  record.key === "TIMESHEETS" && (
+                    {return  (record.key === "TIMESHEETS" || record.key === "LEAVE_REQUESTS" ) && (
                             <Checkbox.Group name={'APPROVAL'} value={text} options={['ANY', 'MANAGE']} onChange={(values)=>this.changePermission(values, 'APPROVAL', rowIndex)} />
                         )
                     }
@@ -126,6 +127,10 @@ class Permission extends Component {
                 {
                     key: 'TIMESHEETS',
                     category: "Timesheets",
+                },
+                {
+                    key: 'LEAVE_REQUESTS',
+                    category: "Leave Requests",
                 },
                 {
                     key: 'PROFILE',
