@@ -43,13 +43,13 @@ class LeaveRequest extends Component {
                 title: 'Start Date',
                 dataIndex: 'startDate',
                 key: 'startDate',
-                render:(text, records) => text && moment(text).format('ddd DD MM yyyy')
+                render:(text, records) => text && moment(text).format('ddd DD MMM yyyy')
             },
             {
                 title: 'End Date',
                 dataIndex: 'endDate',
                 key: 'endDate',
-                render:(text, records) => text && moment(text).format('ddd DD MM yyyy')
+                render:(text, records) => text && moment(text).format('ddd DD MMM yyyy')
             },
             {
                 title: 'Hours',

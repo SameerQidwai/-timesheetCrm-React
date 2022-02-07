@@ -20,7 +20,7 @@ class AddRequestModal extends Component{
                 dataIndex: 'date',
                 key: 'date',
                 render:(text, records) =>(<Row justify="space-between" >
-                    <Col> {moment(text).format('ddd DD MM yyyy')} </Col>
+                    <Col> {moment(text).format('ddd DD MMM yyyy')} </Col>
                     <Col style={{marginLeft: 'auto', color: 'red'}} >{records.disabled}</Col>
                 </Row>
                 ),
@@ -35,10 +35,8 @@ class AddRequestModal extends Component{
                         value= {text}
                         size="small" 
                         disabled={records.disabled}
-                        onChange={(e)=>{
-                            const { data } = this.state
-                            data[index].hours = e
-                            this.setState({data})
+                        onChange={(value)=>{
+                            this.setHours(records, value, index)
                         }}
                     />
                 ),
@@ -47,6 +45,7 @@ class AddRequestModal extends Component{
 
         this.state = {
             data: [],
+            hoursEntry: {}, //need to remeber hours if date is change for now it is setting it to defualt if any date selected
             loading: false,
             fileList: [],
             fileIds: null,
@@ -202,23 +201,31 @@ class AddRequestModal extends Component{
         })  
     }
 
+    setHours = (record, value, index) =>{
+        const { data, hoursEntry } = this.state
+        data[index].hours = value
+        hoursEntry[record.id] = value
+        console.log(hoursEntry);
+        this.setState({ data, hoursEntry })
+    }
+
+    // this function is a mess right now need some fixes so it will be readable
     getDateArray = (start, end, LeaveRequestType, entries) => {
         //try to put your condition to put closer to eachother if they link to eachother
             //so it will be easy to track conditions
-        let { BasicFields, contractDetails, holidays, data } = this.state;
+        let { BasicFields, contractDetails, holidays, data, hoursEntry } = this.state;
         const { include_off_days } = LeaveRequestType
-        var hours = contractDetails?.noOfHours ?? 0
+        var deFaulthours = contractDetails?.noOfHours ?? 0
         // if entries is sent it will only be send on open the modal on edit
         if (entries){
             var arr = new Array();
             data = entries.map(el=> {
                 var {date, hours } = el // in this conditon this hours value will be replace
                 date = moment(date)
-                const disabled = include_off_days && (
-                    (date.format('ddd') === 'Sun' || date.format('ddd') === 'Sat') && 'Weekend' ||
-                    holidays[date.format('M/D/YYYY')]
-                )
-                return {id: date.format('D/M'), date: date, hours: disabled? 0: hours, disabled}
+                const disabled = include_off_days && ( (date.format('ddd') === 'Sun' || date.format('ddd') === 'Sat') && 'Weekend' || holidays[date.format('M/D/YYYY')] )
+
+                hoursEntry[date.format('M/D/YYYY')] = hours // setting the hours object before return 
+                return {id: date.format('M/D/YYYY'), date: date, hours: disabled? 0: hours, disabled}
             })
             BasicFields[7].disabled = false
             
@@ -227,11 +234,12 @@ class AddRequestModal extends Component{
             var arr = new Array();
             while(start.isSameOrBefore(end)){
                 // need key to push in the table
-                const disabled = include_off_days && (
-                    (start.format('ddd') === 'Sun' || start.format('ddd') === 'Sat') && 'Weekend' ||
-                    holidays[start.format('M/D/YYYY')]
-                )                                               //hours are getting update on each call
-                arr.push({id: start.format('D/M'), date: start, hours: disabled? 0: hours, disabled, })
+                const disabled = include_off_days && ( (start.format('ddd') === 'Sun' || start.format('ddd') === 'Sat') && 'Weekend' || holidays[start.format('M/D/YYYY')] )                                              
+                 //hours are getting update on each call
+                 console.log(hoursEntry, start.format('M/D/YYYY'));
+                const hours = disabled? 0: hoursEntry[start.format('M/D/YYYY')] ?? deFaulthours
+                        
+                arr.push({id: start.format('M/D/YYYY'), date: start, hours, disabled, })
                 start = moment(start).add(1,'d')
             }
             data = arr
@@ -239,16 +247,19 @@ class AddRequestModal extends Component{
         }else if (start){
             //if end date is not sent
             const disabled = include_off_days && ((start.format('ddd') === 'Sun' || start.format('ddd') === 'Sat') && 'Weekend' || holidays[start.format('M/D/YYYY')])
-            BasicFields[7].disabled = false // disabling the endDate
+            const hours = disabled? 0: hoursEntry[start.format('M/D/YYYY')] ?? deFaulthours
+            
             data= [{id: start.format('D/M'), date: start, hours: disabled? 0: hours, disabled,}]
+            BasicFields[7].disabled = false // disabling the endDate
 
         }else{
             this.formRef.current.setFieldsValue({dates: {startDate: null, endDate: null}})
             BasicFields[7].disabled = true
+            hoursEntry= {}
             data = []
         }
-        this.setState({ BasicFields, data, LeaveRequestType })
-        //single hook cal for all the state
+        this.setState({ BasicFields, data, LeaveRequestType, hoursEntry })
+        //single hook cal for all the condition
     }
 
     getData = () =>{
@@ -264,8 +275,8 @@ class AddRequestModal extends Component{
             BasicFields[1].data = success ? LeaveRequestTypes : [] //set LeaveTypes to select box
             this.setState({ 
                 BasicFields,
-                holidays: success ? holidays :{}, //holidays to cross of dates if type is not include holidays
-                contractDetails: success ? contractDetails :{}, //cotract details
+                holidays: success ? holidays ?? {} :{}, //holidays to cross of dates if type is not include holidays
+                contractDetails: success ? contractDetails?? {} :{}, //cotract details
             });
             if (edit && res[2]?.success){ // run if modal is opened for editing
                 let { entries, data } = res[2] 
@@ -291,7 +302,7 @@ class AddRequestModal extends Component{
         const { dates } = val;
         const { edit, callBack } = this.props
         const newVal = {
-                description: dates.description,
+                description: dates.description ?? '',
                 typeId: dates.typeId,
                 workId: dates.workId,
                 entries: this.state.data,

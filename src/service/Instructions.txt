@@ -8,3 +8,8 @@ LEAVEREQUEST.js
 
 AddRequestModal.js
     try to use less variable like as per edit you can look dataReceived variable and set the condition on it isntead of create a new variable "isEditAble"
+
+     hours = disabled? 0: hoursEntry[date.format('M/D/YYYY')] ?? contractDetails?.noOfHours
+     //if include holiday is true hours will be 0
+     //if hoursEntry is set alrady give the data same as the employee selected 
+     // if not hours will be defualt
