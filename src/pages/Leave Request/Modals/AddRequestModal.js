@@ -206,7 +206,10 @@ class AddRequestModal extends Component{
         data[index].hours = value
         hoursEntry[record.id] = value
         console.log(hoursEntry);
-        this.setState({ data, hoursEntry })
+        this.setState({ 
+            data:{...data}, 
+            hoursEntry: {...hoursEntry}
+        })
     }
 
     // this function is a mess right now need some fixes so it will be readable
