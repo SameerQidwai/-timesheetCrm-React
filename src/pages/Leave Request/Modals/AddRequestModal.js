@@ -7,13 +7,16 @@ import { getUserProjects, getUserLeaveType} from "../../../service/constant-Apis
 import { addRequest, editRequest, getSingleRequest } from "../../../service/leaveRequest-Apis";
 import moment from 'moment'
 import { localStore } from "../../../service/constant";
+import Attachments from "../../../components/Core/Attachments";
+import Attach from "../../../components/Core/Attach";
 const { Text } = Typography
 
 class AddRequestModal extends Component{
     constructor(props){
         super(props);
         this.formRef = React.createRef();
-
+        this.attachRef = React.createRef()
+        
         this.columns = [
             {
                 title: 'Date',
@@ -45,10 +48,11 @@ class AddRequestModal extends Component{
 
         this.state = {
             data: [],
+            reRender: false,
             hoursEntry: {}, //need to remeber hours if date is change for now it is setting it to defualt if any date selected
             loading: false,
             fileList: [],
-            fileIds: null,
+            fileIds: [],
             holidays: {},
             contractDetails: {},
             LeaveRequestType: {},
@@ -154,6 +158,7 @@ class AddRequestModal extends Component{
                     key: "description",
                     size: "small",
                     type: "Textarea",
+                    mode:{ minRows: 2, maxRows:3},
                     fieldStyle: { height: '10vh' },
                 },
             ],
@@ -164,51 +169,14 @@ class AddRequestModal extends Component{
         this.getData();
     }
 
-    handleUpload = async (option) => {
-        const { onSuccess, onError, file, onProgress } = option;
-        const formData = new FormData();
-        const  config = {
-            headers: {"content-type": "multipart/form-data"},
-            onUploadProgress: event =>{
-                const percent = Math.floor((event.loaded / event.total) * 100);
-                this.setState({progress: percent});
-                if (percent === 100) {
-                    setTimeout(() => this.setState({progres: 0}), 1000);
-                }
-                onProgress({ percent: (event.loaded / event.total) * 100 });
-                }
-            }
-            formData.append('files', file)
-            addFiles(formData, config).then((res,err)=>{
-                if (res.success){
-                    onSuccess("Ok");
-                    this.setState({
-                        fileList: [res.file],
-                        fileIds: res.file.fileId
-                    })
-                }else{
-                    console.log("Eroor: ", err);
-                    const error = new Error("Some error");
-                    onError({ err });
-                }
-            })
-    }
-
-    onRemove = (file) => {
-        this.setState({
-            fileIds: null,
-            fileList: []
-        })  
-    }
-
     setHours = (record, value, index) =>{
-        const { data, hoursEntry } = this.state
+        const { data, hoursEntry, reRender } = this.state
         data[index].hours = value
-        hoursEntry[record.id] = value
+        hoursEntry[record.key] = value
         console.log(hoursEntry);
         this.setState({ 
-            data:{...data}, 
-            hoursEntry: {...hoursEntry}
+            data:[...data], 
+            hoursEntry: {...hoursEntry}, 
         })
     }
 
@@ -228,7 +196,7 @@ class AddRequestModal extends Component{
                 const disabled = include_off_days && ( (date.format('ddd') === 'Sun' || date.format('ddd') === 'Sat') && 'Weekend' || holidays[date.format('M/D/YYYY')] )
 
                 hoursEntry[date.format('M/D/YYYY')] = hours // setting the hours object before return 
-                return {id: date.format('M/D/YYYY'), date: date, hours: disabled? 0: hours, disabled}
+                return {key: date.format('M/D/YYYY'), date: date, hours: disabled? 0: hours, disabled}
             })
             BasicFields[7].disabled = false
             
@@ -242,7 +210,7 @@ class AddRequestModal extends Component{
                  console.log(hoursEntry, start.format('M/D/YYYY'));
                 const hours = disabled? 0: hoursEntry[start.format('M/D/YYYY')] ?? deFaulthours
                         
-                arr.push({id: start.format('M/D/YYYY'), date: start, hours, disabled, })
+                arr.push({key: start.format('M/D/YYYY'), date: start, hours, disabled, })
                 start = moment(start).add(1,'d')
             }
             data = arr
@@ -252,7 +220,7 @@ class AddRequestModal extends Component{
             const disabled = include_off_days && ((start.format('ddd') === 'Sun' || start.format('ddd') === 'Sat') && 'Weekend' || holidays[start.format('M/D/YYYY')])
             const hours = disabled? 0: hoursEntry[start.format('M/D/YYYY')] ?? deFaulthours
             
-            data= [{id: start.format('D/M'), date: start, hours: disabled? 0: hours, disabled,}]
+            data= [{key: start.format('M/D/YYYY'), date: start, hours: disabled? 0: hours, disabled,}]
             BasicFields[7].disabled = false // disabling the endDate
 
         }else{
@@ -273,13 +241,15 @@ class AddRequestModal extends Component{
         Promise.all([getUserProjects(userId), getUserLeaveType(), edit && getSingleRequest(edit)])
         .then((res) => {
             //Destructure res[1] to avoid writing res[1] repeateadly
-            const {success, contractDetails, holidays, LeaveRequestTypes} = res[1] 
+            const {success, contractDetails, holidays, LeaveRequestTypes, fileList, fileIds} = res[1] 
             BasicFields[3].data = res[0].success ? res[0].data : []; //set projects to select box
             BasicFields[1].data = success ? LeaveRequestTypes : [] //set LeaveTypes to select box
             this.setState({ 
                 BasicFields,
                 holidays: success ? holidays ?? {} :{}, //holidays to cross of dates if type is not include holidays
                 contractDetails: success ? contractDetails?? {} :{}, //cotract details
+                fileList: res[2].fileList ?? [],
+                fileIds: res[2].fileIds ?? [],
             });
             if (edit && res[2]?.success){ // run if modal is opened for editing
                 let { entries, data } = res[2] 
@@ -303,13 +273,15 @@ class AddRequestModal extends Component{
 
     getFormValues = (val) => {
         const { dates } = val;
+        console.log(val);
         const { edit, callBack } = this.props
+        const { data, fileIds } = this.state
         const newVal = {
                 description: dates.description ?? '',
                 typeId: dates.typeId,
                 workId: dates.workId,
-                entries: this.state.data,
-                attachments: []
+                entries: data,
+                attachments: fileIds ?? []
         }
 
         if(edit){
@@ -343,10 +315,54 @@ class AddRequestModal extends Component{
             </Table.Summary>
         )
     }
+    //File
+    handleUpload = async option=>{
+        const { onSuccess, onError, file, onProgress } = option;
+        const formData = new FormData();
+        const  config = {
+            headers: {"content-type": "multipart/form-data"},
+            onUploadProgress: event =>{
+                const percent = Math.floor((event.loaded / event.total) * 100);
+                this.setState({progress: percent});
+                if (percent === 100) {
+                  setTimeout(() => this.setState({progres: 0}), 1000);
+                }
+                onProgress({ percent: (event.loaded / event.total) * 100 });
+              }
+            }
+            formData.append('files', file)
+            addFiles(formData, config).then((res,err)=>{
+                if (res.success){
+                    onSuccess("Ok");
+                    this.setState({
+                        fileList: [...this.state.fileList, res.file],
+                        fileIds: [...this.state.fileIds, res.file.fileId]
+                    })
+                }else{
+                    console.log("Eroor: ", err);
+                    const error = new Error("Some error");
+                    onError({ err });
+                }
+            })
+    }
 
+    onRemove = (file) => {
+        this.setState((state) => {
+            const index = state.fileList.indexOf(file);
+            const newFileList = state.fileList.slice();
+            const fileIds = state.fileIds
+            newFileList.splice(index, 1);
+            fileIds.splice(index, 1);
+            return {
+                fileIds,
+                fileList: newFileList,
+            };
+        })
+    }
+    //File
     render(){
         const { visible, close, edit } = this.props;
-        const { BasicFields, fileList, data } = this.state;
+        const { BasicFields, fileList, data, fileIds } = this.state;
 
         return(
             <Modal
@@ -361,24 +377,24 @@ class AddRequestModal extends Component{
                 <Row>
                     <Col span={12}>
                         <Form
-                        id={'my-form'}
-                        ref={this.formRef}
-                        size="small"
-                        layout="inline"
-                        onFinish={this.getFormValues}
+                            id={'my-form'}
+                            ref={this.formRef}
+                            size="small"
+                            layout="inline"
+                            onFinish={this.getFormValues}
                         >
                             <FormItems FormFields={BasicFields} />
                         </Form>
                         <Text style={{marginTop: 10, marginBottom: 2}}>Attachments</Text>
                         <Upload
-                        customRequest={this.handleUpload}
-                        listType="picture"
-                        listType="picture-card"
-                        maxCount={1}
-                        fileList={fileList}
-                        onRemove= {this.onRemove}
+                            customRequest={this.handleUpload}
+                            listType="picture"
+                            listType="picture-card"
+                            maxCount={4}
+                            fileList={fileList}
+                            onRemove= {this.onRemove}
                         >
-                            {fileList.length < 1 &&
+                            {fileList.length < 4 &&
                                 <div style={{marginTop: 10}} >
                                     <PlusOutlined />
                                     <div style={{ marginTop: 8 }}>Upload</div>
@@ -390,7 +406,7 @@ class AddRequestModal extends Component{
                         <Table sticky
                             style={{maxHeight: "40vh", overflowY: 'scroll', position: 'relative'}}
                             pagination={false}
-                            rowKey={(data) => data.id} 
+                            rowKey={(data) => data.key} 
                             columns={this.columns}
                             dataSource={data}
                             size='small'

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { message as messageAlert } from "antd";
-import { Api, headers, setToken, jwtExpired } from "./constant";
+import { Api, headers, setToken, jwtExpired, thumbUrl } from "./constant";
 
 const url = `${Api}/leave-requests`
 
@@ -52,7 +52,26 @@ export const getSingleRequest = (id) => {
             setToken(res.headers && res.headers.authorization)
             if (success){ 
                 const entries = data?.entries
-                return { success, data, entries }
+                let attachments = data?.attachments ?? []
+                var fileIds = []
+                var fileList = []
+                attachments.map((el) => {
+                    fileIds.push(el.id)
+                    fileList.push({
+                        id: el.id,
+                        createdAt: el.createdAt,
+                        fileId: el.fileId,
+                        status: el.status,
+                        targetId: el.targetId,
+                        targetType: el.targetType,
+                        uid: el.file.uniqueName,
+                        name: el.file.originalName,
+                        type: el.file.type === 'png'? 'image/png': el.file.type,
+                        url: `${Api}/files/${el.file.uniqueName}`,
+                        thumbUrl: thumbUrl(el.file.type)
+                    })
+                });
+                return { success, data, entries, fileIds, fileList }
             }
             return {success, data }
         })

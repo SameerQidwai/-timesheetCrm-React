@@ -96,13 +96,14 @@ class Attachments extends Component {
 
     render() {
         const { fileList, loading } = this.state;
+        const { listType } = this.props;
         return (
             <Row>
                 <Col span="24">
                     <Upload 
                         multiple={true}
                         showUploadList= {{showRemoveIcon: true }}
-                        listType= "picture"
+                        listType= {listType??"picture"}
                         fileList={fileList}
                         customRequest={this.handleUpload}
                         onRemove= {this.onRemove}
