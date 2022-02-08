@@ -7,6 +7,7 @@ import { getApprovalRequests, manageLeaveRequests, manageRequests } from '../../
 import AddRequestModal from './Modals/AddRequestModal';
 import { getMilestones } from '../../service/timesheet';
 import { getLineEmployees, getUserProjects } from '../../service/constant-Apis';
+import { tableSorter, tableTitleFilter } from '../../components/Core/Table/TableFilter';
 
 const { Title, Text } = Typography
 
@@ -18,34 +19,40 @@ class ApproveRequest extends Component {
                 title: 'Resource',
                 dataIndex: 'employeeName',
                 key: 'employeeName',
+                ...tableSorter('employeeName', 'string'),
             },
             {
                 title: 'Project',
                 dataIndex: 'project',
                 key: 'project',
+                ...tableSorter('project', 'string'),
             },
             {
                 title: 'Leave Type',
                 dataIndex: 'leaveRequestName',
                 key: 'leaveRequestName',
+                ...tableSorter('leaveRequestName', 'string'),
             },
             {
                 title: 'Start Date',
                 dataIndex: 'startDate',
                 key: 'startDate',
-                render:(text, records) =>text && fomratDate(text)
+                render:(text, records) =>text && fomratDate(text),
+                ...tableSorter('startDate', 'date'),
             },
             {
                 title: 'End Date',
                 dataIndex: 'endDate',
                 key: 'endDate',
-                render:(text, records) =>text && fomratDate(text)
+                render:(text, records) =>text && fomratDate(text),
+                ...tableSorter('endDate', 'date'),
             },
             {
                 title: 'Submit Date',
                 dataIndex: 'submittedAt',
                 key: 'submittedAt',
-                render:(text, records) =>text && fomratDate(text)
+                render:(text, records) =>text && fomratDate(text),
+                ...tableSorter('submittedAt', 'date'),
             },
             {
                 title: 'Status',
@@ -60,7 +67,8 @@ class ApproveRequest extends Component {
                 dataIndex: 'totalHours',
                 key: 'totalHours',
                 align: 'center',
-                render: (text, record)=> text && <Text strong>{text}</Text>
+                render: (text, record)=> text && <Text strong>{text}</Text>,
+                ...tableSorter('totalHours', 'number'),
             },
             {
                 title: 'Action',
@@ -95,6 +103,7 @@ class ApproveRequest extends Component {
 
         this.state = {
             request : [],
+            filterRequest : [],
             readRequest: false,
             canApprove: false,
             loginId: {},
@@ -132,6 +141,7 @@ class ApproveRequest extends Component {
                 loginId,
                 permissions: LEAVE_REQUESTS,
                 request: res[1].success? res[1].data : [],
+                filterRequest: res[1].success? res[1].data : [],
                 USERS: res[2].success? res[2].data : [],
                 readRequest: false,
             })
@@ -155,6 +165,7 @@ class ApproveRequest extends Component {
             if(res.success){
                 this.setState({
                     request: res.data,
+                    filterRequest: res.data,
                     readRequest: false,
                 })
             }
@@ -187,8 +198,29 @@ class ApproveRequest extends Component {
         })
     }
 
+    generalFilter = (value) =>{
+        const { request } = this.state
+        if (value){
+            this.setState({
+                filterRequest: request.filter(el => {
+                    return `${el.employeeName??''}`.toLowerCase().includes(value.toLowerCase()) || 
+                    `${el.project??''}`.toLowerCase().includes(value.toLowerCase()) || 
+                    `${el.leaveRequestName??''}`.toLowerCase().includes(value.toLowerCase()) || 
+                    `${fomratDate(el.startDate)??''}`.toLowerCase().includes(value.toLowerCase()) ||
+                    `${fomratDate(el.endDate)??''}`.toLowerCase().includes(value.toLowerCase()) ||
+                    `${fomratDate(el.submittedAt)??''}`.toLowerCase().includes(value.toLowerCase()) ||
+                    `${R_STATUS[el.status]}`.toLowerCase().includes(value.toLowerCase())
+                })
+            })
+        }else{
+            this.setState({
+                filterData: request
+            })
+        }
+    }
+
     render(){
-        const { request, sRequest, openModal, readRequest, queryRequest, WORKS, USERS    } = this.state;
+        const { request, filterRequest, sRequest, openModal, readRequest, queryRequest, WORKS, USERS    } = this.state;
         const { startDate, endDate, workId, userId } = queryRequest
         return(
             <>
@@ -275,6 +307,7 @@ class ApproveRequest extends Component {
                     
                     <Col span={24}>
                         <Table
+                            title={()=>tableTitleFilter(5, this.generalFilter)}
                             rowSelection={{
                                 onChange:(selectedRowKeys, selectedRows)=>{this.requestSelect(selectedRowKeys, selectedRows )},
                                 getCheckboxProps: (record) => ({
@@ -288,7 +321,7 @@ class ApproveRequest extends Component {
                             pagination={{pageSize: localStore().pageSize}}
                             rowKey={(data) => data.id} 
                             columns={this.requestColumns}
-                            dataSource={request}
+                            dataSource={filterRequest}
                             size='small'
                         />
                     </Col>
