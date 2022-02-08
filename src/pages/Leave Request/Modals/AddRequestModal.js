@@ -170,7 +170,7 @@ class AddRequestModal extends Component{
     }
 
     setHours = (record, value, index) =>{
-        const { data, hoursEntry, reRender } = this.state
+        const { data, hoursEntry } = this.state
         data[index].hours = value
         hoursEntry[record.key] = value
         console.log(hoursEntry);
@@ -207,7 +207,6 @@ class AddRequestModal extends Component{
                 // need key to push in the table
                 const disabled = include_off_days && ( (start.format('ddd') === 'Sun' || start.format('ddd') === 'Sat') && 'Weekend' || holidays[start.format('M/D/YYYY')] )                                              
                  //hours are getting update on each call
-                 console.log(hoursEntry, start.format('M/D/YYYY'));
                 const hours = disabled? 0: hoursEntry[start.format('M/D/YYYY')] ?? deFaulthours
                         
                 arr.push({key: start.format('M/D/YYYY'), date: start, hours, disabled, })
@@ -238,7 +237,7 @@ class AddRequestModal extends Component{
         const { edit } = this.props;
         const {id: userId} = localStore()
         // Get Projects
-        Promise.all([getUserProjects(userId), getUserLeaveType(), edit && getSingleRequest(edit)])
+        Promise.all([getUserProjects(userId, 'O'), getUserLeaveType(), edit && getSingleRequest(edit)])
         .then((res) => {
             //Destructure res[1] to avoid writing res[1] repeateadly
             const {success, contractDetails, holidays, LeaveRequestTypes, fileList, fileIds} = res[1] 
@@ -272,8 +271,8 @@ class AddRequestModal extends Component{
     }
 
     getFormValues = (val) => {
+        this.setState({loading: true})
         const { dates } = val;
-        console.log(val);
         const { edit, callBack } = this.props
         const { data, fileIds } = this.state
         const newVal = {
@@ -287,6 +286,7 @@ class AddRequestModal extends Component{
         if(edit){
             editRequest(edit, newVal).then((res) => {
                 if (res) {
+                    this.setState({loading: false})
                     callBack()
                 }
             });
@@ -294,6 +294,7 @@ class AddRequestModal extends Component{
             // console.log('newVal: ', newVal)
             addRequest(newVal).then((res) => {
                 if (res) {
+                    this.setState({loading: false})
                     callBack()
                 }
             });
@@ -361,15 +362,15 @@ class AddRequestModal extends Component{
     }
     //File
     render(){
-        const { visible, close, edit } = this.props;
-        const { BasicFields, fileList, data, fileIds } = this.state;
+        const { visible, close, edit, readOnly } = this.props;
+        const { BasicFields, fileList, data, fileIds, loading } = this.state;
 
         return(
             <Modal
                 title={ edit ? "Edit Request" : "New Request"}
                 maskClosable={false}
                 visible={visible}
-                okButtonProps={{ htmlType: 'submit', form: 'my-form'  }}
+                okButtonProps={{ htmlType: 'submit', form: 'my-form', disabled: readOnly, loading: loading }}
                 okText={"Submit"}
                 onCancel={close}
                 width={1000}

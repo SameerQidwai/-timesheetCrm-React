@@ -35,14 +35,14 @@ const listData = [
         icon: <BookOutlined />,
         link: "/leave-request",
         key: "LEAVE REQUEST",
-        permissions: {module: "TIMESHEETS", key: 'READ'}
+        permissions: {module: "LEAVE_REQUESTS", key: 'READ'}
     },
     {
-        text: "Approve Request",
+        text: "Leave Approval ",
         icon: <RightSquareOutlined />,
         link: "/approve-request",
         key: "APPROVE REQUEST",
-        permissions: {module: "TIMESHEETS", key: 'APPROVAL'}
+        permissions: {module: "LEAVE_REQUESTS", key: 'APPROVAL'}
     },
     {
         text: "Time Offs",
@@ -57,7 +57,7 @@ const listData = [
     //     key: "/travles",
     // },
     {
-        text: "Reporting",
+        text: "Approval",
         icon: <FileTextOutlined />,
         key: "Reporting",
         subMenu: [
@@ -100,7 +100,18 @@ class Menus extends Component {
         let { allowedMenu } = this.state
             // allowedMenu[0] = pageLinks[0]
             listData.map(el=>{
-                if((el.permissions && permissions[el.permissions.module]) && permissions[el.permissions.module][el.permissions.key]){
+                if (el.subMenu){
+                    const subMenu = []
+                    el.subMenu.map(sEl => {
+                        if((sEl.permissions && permissions[sEl.permissions.module]) && permissions[sEl.permissions.module][sEl.permissions.key]){
+                            subMenu.push(sEl)
+                        }
+                    })
+                    if(subMenu.length> 0){
+                        el.subMenu = subMenu
+                        allowedMenu.push(el)
+                    }
+                }else if((el.permissions && permissions[el.permissions.module]) && permissions[el.permissions.module][el.permissions.key]){
                     allowedMenu.push(el)
                 }
             })

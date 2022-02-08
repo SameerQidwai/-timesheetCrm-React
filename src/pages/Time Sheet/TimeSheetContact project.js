@@ -153,7 +153,7 @@ class TimeSheetContact extends Component {
     }
 
     getProjects = (value) =>{
-        getUserProjects(value).then(res=>{
+        getUserProjects(value, 'O').then(res=>{
             if(res.success){
                 this.setState({
                     projects: res.data

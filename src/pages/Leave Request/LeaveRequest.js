@@ -3,7 +3,7 @@ import { Table, Button, Row, Col, Typography, Menu, Dropdown, Tag} from 'antd'
 import { DownOutlined, SettingOutlined, PlusSquareOutlined, FilterOutlined} from '@ant-design/icons';
 import { localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
 import AddRequestModal from './Modals/AddRequestModal';
-import { getRequests } from '../../service/leaveRequest-Apis';
+import { getLeaveBalance, getRequests } from '../../service/leaveRequest-Apis';
 import moment from 'moment';
 const { Title } = Typography
 
@@ -13,18 +13,19 @@ class LeaveRequest extends Component {
         this.typeColumns = [
             {
                 title: 'Type',
-                dataIndex: 'type',
-                key: 'type',
+                dataIndex: 'name',
+                key: 'name',
             },
             {
                 title: 'Accured',
-                dataIndex: 'accured',
-                key: 'accured',
+                dataIndex: 'carryForward',
+                key: 'carryForward',
             },
             {
                 title: 'Earned',
                 dataIndex: 'earned',
                 key: 'earned',
+                render:(text, record)=> record.balanceHours - record.carryForward
             },
             {
                 title: 'Used',
@@ -33,8 +34,8 @@ class LeaveRequest extends Component {
             },
             {
                 title: 'Balance',
-                dataIndex: 'balance',
-                key: 'balance',
+                dataIndex: 'balanceHours',
+                key: 'balanceHours',
             },
         ]
 
@@ -72,6 +73,7 @@ class LeaveRequest extends Component {
                     <Dropdown overlay={
                         <Menu>
                             <Menu.Item 
+                                disabled={!this?.state?.permissions?.['UPDATE']}
                                 onClick={()=> {
                                     this.setState({
                                         openModal: true,
@@ -81,9 +83,9 @@ class LeaveRequest extends Component {
                                 }
                             }
                             >Edit</Menu.Item>
-                            <Menu.Item 
+                            {/* <Menu.Item 
                                 onClick={()=>{}}
-                            >Delete</Menu.Item>
+                            >Delete</Menu.Item> */}
                             
                         </Menu>
                     }> 
@@ -98,6 +100,7 @@ class LeaveRequest extends Component {
         this.state = {
             request : [],
             editRequest: false,
+            permissions: {},
             type: [],
             openModal: false
         }   
@@ -108,30 +111,16 @@ class LeaveRequest extends Component {
     }
 
     getData = () =>{ 
-        Promise.all([getRequests() /*, here comes the type ApiFunction*/])
+        const { permissions } = localStore()
+        const { LEAVE_REQUESTS } = JSON.parse(permissions)
+        Promise.all([getRequests(), getLeaveBalance()])
         .then((res) => {
             this.setState({ 
                 openModal: false,
                 editRequest: false,
                 request: res[0].success? res[0].data : [],
-                type: [
-                    {
-                        id:0,
-                        type: 'Sick Leave',
-                        accured: '20',
-                        earned: '30',
-                        used: '10',
-                        balance: '40'
-                    },
-                    {
-                        id:1,
-                        type: 'Annual Leave',
-                        accured: '20',
-                        earned: '20',
-                        used: '20',
-                        balance: '20'
-                    },
-                ]
+                permissions: LEAVE_REQUESTS,
+                type: res[1].success? res[1].data : []
             });
         })
         .catch((e) => {
@@ -151,7 +140,7 @@ class LeaveRequest extends Component {
     }
 
     render(){
-        const { request, openModal, type, editRequest } = this.state
+        const { request, openModal, type, editRequest, permissions } = this.state
         return(
             <>
                 <Row justify="space-between">
@@ -162,12 +151,12 @@ class LeaveRequest extends Component {
                         <Button 
                             type="primary" 
                             size='small'
+                            disabled={!permissions['ADD']}
                             onClick={()=>{
                                 this.setState({
                                     openModal: true,
                                 })
                             }}
-                            // disabled={!permissions['ADD']}
                             ><PlusSquareOutlined />Add Request</Button>
                     </Col>
                     <Col span={24}>

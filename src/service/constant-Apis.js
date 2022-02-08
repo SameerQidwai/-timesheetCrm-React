@@ -240,9 +240,9 @@ export const getProjects = () => {
         });
 };
 
-export const getUserProjects = (userId) => {
+export const getUserProjects = (userId, mod) => {
     return axios
-        .get(`${Api}/helpers/projects?userId=${userId}`, { headers: headers() })
+        .get(`${Api}/helpers/projects?userId=${userId}&mod=${mod}`, { headers: headers() })
         .then((res) => {
             const { success, data } = res.data;
             if (success) {
