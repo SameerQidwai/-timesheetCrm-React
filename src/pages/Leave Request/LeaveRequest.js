@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import { Table, Button, Row, Col, Typography, Menu, Dropdown, Tag} from 'antd'
 import { DownOutlined, SettingOutlined, PlusSquareOutlined, FilterOutlined} from '@ant-design/icons';
-import { localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
+import { fomratDate, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
 import AddRequestModal from './Modals/AddRequestModal';
 import { getLeaveBalance, getRequests } from '../../service/leaveRequest-Apis';
 import moment from 'moment';
@@ -44,13 +44,13 @@ class LeaveRequest extends Component {
                 title: 'Start Date',
                 dataIndex: 'startDate',
                 key: 'startDate',
-                render:(text, records) => text && moment(text).format('ddd DD MMM yyyy')
+                render:(text, records) => text && fomratDate(text)
             },
             {
                 title: 'End Date',
                 dataIndex: 'endDate',
                 key: 'endDate',
-                render:(text, records) => text && moment(text).format('ddd DD MMM yyyy')
+                render:(text, records) => text && fomratDate(text)
             },
             {
                 title: 'Hours',

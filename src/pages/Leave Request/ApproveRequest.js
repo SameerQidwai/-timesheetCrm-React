@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import { Table, Button, Row, Col, Typography, Menu, Dropdown, DatePicker, Tag, Select} from 'antd'
 import { DownOutlined, SettingOutlined, PlusSquareOutlined, FilterOutlined} from '@ant-design/icons';
-import { localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
+import { fomratDate, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
 import moment from "moment";
 import { getApprovalRequests, manageLeaveRequests, manageRequests } from '../../service/leaveRequest-Apis';
 import AddRequestModal from './Modals/AddRequestModal';
@@ -33,19 +33,19 @@ class ApproveRequest extends Component {
                 title: 'Start Date',
                 dataIndex: 'startDate',
                 key: 'startDate',
-                render:(text, records) =>text && moment(text).format('ddd DD MMM yyyy')
+                render:(text, records) =>text && fomratDate(text)
             },
             {
                 title: 'End Date',
                 dataIndex: 'endDate',
                 key: 'endDate',
-                render:(text, records) =>text && moment(text).format('ddd DD MMM yyyy')
+                render:(text, records) =>text && fomratDate(text)
             },
             {
                 title: 'Submit Date',
                 dataIndex: 'submittedAt',
                 key: 'submittedAt',
-                render:(text, records) =>text && moment(text).format('ddd DD MMM yyyy')
+                render:(text, records) =>text && fomratDate(text)
             },
             {
                 title: 'Status',
@@ -120,7 +120,7 @@ class ApproveRequest extends Component {
 
     fetchAll = () =>{
         const { startDate, endDate, workId, userId } = this.state.queryRequest
-        const query = { startDate: startDate.format('DD-MM-YYYY'), endDate: endDate.format('DD-MM-YYYY'), workId, userId, }
+        const query = { startDate: fomratDate(startDate, 'DD-MM-YYYY'), endDate: fomratDate(endDate, 'DD-MM-YYYY'), workId, userId, }
         const { id, permissions } = localStore()
         const loginId = parseInt(id)
         const { LEAVE_REQUESTS } = JSON.parse(permissions)
@@ -146,8 +146,8 @@ class ApproveRequest extends Component {
     getData = () =>{
         const { startDate, endDate, workId, userId } = this.state.queryRequest
         const query = {
-            startDate: startDate.format('DD-MM-YYYY'),
-            endDate: endDate.format('DD-MM-YYYY'),
+            startDate: fomratDate(startDate, 'DD-MM-YYYY'),
+            endDate: fomratDate(endDate, 'DD-MM-YYYY'),
             workId,
             userId,
         }

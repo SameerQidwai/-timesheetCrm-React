@@ -89,6 +89,10 @@ class MileModal extends Component {
             rules:[{ required: true, message: 'Start Date is Required' }],
             type: "DatePicker",
             fieldStyle: { width: "100%" },
+            rangeMin: (current)=>{
+                const { obj } = this.formRef.current.getFieldValue();
+                return  obj.endDate && current > obj.endDate
+            }
           },
           {
             object: "obj",
@@ -98,6 +102,10 @@ class MileModal extends Component {
             rules:[{ required: true, message: 'End Date is Required' }],
             type: "DatePicker",
             fieldStyle: { width: "100%" },
+            rangeMax: (current)=>{
+                const { obj } = this.formRef.current.getFieldValue();
+                return  obj.startDate && current < obj.startDate
+            }
           },
           {
             Placeholder: "Approved",
@@ -213,6 +221,7 @@ class MileModal extends Component {
             scrollToFirstError={true}
             size="small"
             layout="inline"
+            initialValues={{obj:{progress:0}}}
         >
             <FormItems FormFields={MileFields} />
         </Form>

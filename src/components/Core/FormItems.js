@@ -170,7 +170,6 @@ class FormItems extends Component {
                         options={data}
                         mode={mode}
                         showArrow
-                        showSearch
                         size={size}
                         allowClear
                         fieldNames={fieldNames}
@@ -178,6 +177,7 @@ class FormItems extends Component {
                         onClear={onClear}
                         style={style}    //gotta tell the Select what keys should go in filterOption tag
                         optionFilterProp={[fieldNames?.label??"label", fieldNames?.value??"value"]}
+                        showSearch
                         filterOption={
                             (input, option) =>{ //custom filter 
                                 const labelKey = fieldNames?.label??"label"
@@ -267,9 +267,13 @@ class FormItems extends Component {
                     <RangePicker
                         picker={mode}
                         showTime={showTime}
+                        disabledDate={min ?? max}
                         size={size}
                         style={style}
+                        onBlur={onBlur}
+                        onChange={onChange}
                         format={'DD/MM/YYYY'}
+                        disabled={disabled}
                     />
                 );
                 break;

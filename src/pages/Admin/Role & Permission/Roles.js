@@ -8,6 +8,7 @@ import "../../styles/table.css";
 import Permission from "./Permission";
 import { addList, delLabel, editLabel, getList } from "../../../service/Roles-Apis";
 import { localStore } from "../../../service/constant";
+import { tableSorter } from "../../../components/Core/Table/TableFilter";
 
 const { Title } = Typography;
 
@@ -20,11 +21,18 @@ class Roles extends Component {
                 title: "Title",
                 dataIndex: "label",
                 key: "label",
+                // sorter: (a, b)=>{
+                //     if (a.label && b.label){
+                //         return a.label.localeCompare(b.label)
+                //     }
+                // }
+                ...tableSorter('label', 'string')
             },
             {
                 title: "Action",
                 key: "action",
                 align: "right",
+                width: 115,
                 render: (record, obj , index) => (
                     <Dropdown
                         overlay={
@@ -193,6 +201,7 @@ class Roles extends Component {
                     </Col>
                     <Col span={24}>
                         <Table
+                            bordered
                             pagination={{pageSize: localStore().pageSize}}
                             rowKey="id"
                             columns={columns}

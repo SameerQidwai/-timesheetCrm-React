@@ -334,6 +334,10 @@ class InfoModal extends Component {
                         },
                     ],
                     itemStyle: { marginBottom: 1 },
+                    rangeMin: (current)=>{
+                        const { billing } = this.formRef.current.getFieldValue();
+                        return  billing.endDate && current < billing.endDate
+                    }
                 },
                 {
                     object: "billing",
@@ -349,6 +353,10 @@ class InfoModal extends Component {
                         },
                     ],
                     itemStyle: { marginBottom: 1 },
+                    rangeMax: (current)=>{
+                        const { billing } = this.formRef.current.getFieldValue();
+                        return  billing.startDate && current < billing.startDate
+                    }
                 },
             
                 {
@@ -699,6 +707,7 @@ class InfoModal extends Component {
                 scrollToFirstError={true}
                 size="small"
                 layout="inline"
+                initialValues={{billing: {startDate: null}}}
             > 
             {/* <Row style={{marginBottom:"1em"}} justify="space-between"> */}
                 {!editCont &&<Col span={7} style={{marginBottom: '1em'}}>
@@ -710,11 +719,11 @@ class InfoModal extends Component {
                         placeholder="Organization"
                         options={ORGS}
                         showArrow
-                        showSearch
                         size="small"
                         allowClear
                         onChange={this.onOrg}
                         onClear={()=>this.onClear(null, null)}
+                        showSearch
                         optionFilterProp="label"
                         filterOption={
                             (input, option) =>
@@ -736,12 +745,12 @@ class InfoModal extends Component {
                         placeholder="Contact Person"
                         options={CONTACTS}
                         showArrow
-                        showSearch
                         disabled={!sOrg}
                         size="small"
                         allowClear
                         onChange={this.onPerson}
                         onClear={()=>this.onClear(sOrg, null)}
+                        showSearch
                         optionFilterProp="label"
                         filterOption={
                             (input, option) =>

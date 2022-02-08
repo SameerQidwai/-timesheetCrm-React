@@ -790,7 +790,6 @@ class InfoModal extends Component {
                 let result = skillArray.length < assoArray.length? assoArray.length :skillArray.length; // check the largest length to run loop only once not twice for two array
                 console.log('sameer', result, assoArray.length, skillArray.length);
                 for (let i = 0; i < result; i++) {
-                    console.log('sameer', result, assoArray.length, skillArray.length);
                     let skillEl = skillArray[i];
                     let assoEl = assoArray[i]
                     if(skillEl){ // checking if the next skillEl have obj to insert value and fields into form 

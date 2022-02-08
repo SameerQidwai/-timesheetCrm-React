@@ -115,7 +115,7 @@ export const getSettings = () => {
                         taxFreeThreshold: data.taxFreeThreshold,
                         helpHECS: data.helpHECS,
                 }
-                const employmentContracts = data.employmentContracts.length >0 ? data.employmentContracts[0] : {}
+                const employmentContracts = (data.employmentContracts && data.employmentContracts.length >0) ? data.employmentContracts[0] : {}
                 const billing ={
                     employeeId: employmentContracts.employeeId,
                     payslipEmail: employmentContracts.payslipEmail, 

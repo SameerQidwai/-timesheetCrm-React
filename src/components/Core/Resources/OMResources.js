@@ -6,7 +6,7 @@ import ResModal from "./Modals/ResModal";
 import { getLeadSkills, delLeadSkill, delLeadSkillResource, selectLeadSkillResource } from "../../../service/opportunities";
 
 import moment from "moment"
-import { formatCurrency, localStore } from "../../../service/constant";
+import { fomratDate, formatCurrency, localStore } from "../../../service/constant";
 
 const { Item } = Descriptions;
 
@@ -37,6 +37,7 @@ class OMResource extends Component {
                 title: "Action",
                 key: "action",
                 align: "right",
+                width: 115,
                 render: (text, record, index) => (
                     <Dropdown
                         overlay={
@@ -174,9 +175,9 @@ class OMResource extends Component {
                 >
                     <Item label="Title">{desc.title}</Item>
                     <Item label="Value">{ formatCurrency(desc.value)}</Item>
-                    <Item label="Start Date">{desc.startDate ? moment(desc.startDate).format('ddd DD MM YYYY'): null} </Item>
-                    <Item label="End Date">{desc.endDate ? moment(desc.endDate).format('ddd DD MM YYYY'): null}</Item>
-                    <Item label="Bid Date">{desc.bidDate ? moment(desc.bidDate).format('ddd DD MM YYYY'): null}</Item>
+                    <Item label="Start Date">{desc.startDate ? fomratDate(desc.startDate): null} </Item>
+                    <Item label="End Date">{desc.endDate ? fomratDate(desc.endDate): null}</Item>
+                    <Item label="Bid Date">{desc.bidDate ? fomratDate(desc.bidDate): null}</Item>
                     {/* <Item label="Gender">{data.gender}</Item> */}
                 </Descriptions>
                 <Row justify="end">
@@ -193,6 +194,7 @@ class OMResource extends Component {
                     {/* <Col> <Button type="danger" size='small'>Delete Resource</Button></Col> */}
                 </Row>
                 <Table
+                    bordered
                     pagination={{pageSize: localStore().pageSize}}
                     rowKey={(record) => record.id}
                     columns={this.columns}
@@ -254,6 +256,7 @@ function NestedTable(props) {
             title: "Action",
             key: "action",
             align: "right",
+            width: 115,
             render: (text, record, index) => (
                 <Dropdown
                     overlay={
@@ -317,6 +320,7 @@ function NestedTable(props) {
 
     return <div style={{ paddingRight: 20}}> 
         <Table
+            bordered
             key={props.skill}
             rowKey={(record) => record.id} 
             columns={columns} 

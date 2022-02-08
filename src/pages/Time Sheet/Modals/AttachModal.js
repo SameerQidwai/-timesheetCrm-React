@@ -7,6 +7,7 @@ import Dragger from 'antd/lib/upload/Dragger';
 import { Api, localStore } from "../../../service/constant";
 import { addFiles, getAttachments } from "../../../service/Attachment-Apis";
 import { addMilestoneTimesheetNote } from "../../../service/timesheet";
+
 class AttachModal extends Component{
     constructor(){
         super()
@@ -20,7 +21,7 @@ class AttachModal extends Component{
     
     componentDidMount=()=>{
         const { milestoneEntryId } = this.props.timeObj
-        this.getRecord('PEN', milestoneEntryId)
+        this.getRecord('PEN', milestoneEntryId[0])
     }
 
     getRecord = (targetType, targetId) =>{
@@ -86,10 +87,12 @@ class AttachModal extends Component{
         const { notes, fileIds, fileList } = this.state
         const obj = {
             note: notes,
-            attachments: fileList.length>0 ? [fileList[0].fileId]: []
+            attachments: fileList.length>0 ? [fileList[0].fileId]: [],
+            milestoneEntryIds: timeObj.milestoneEntryId
         }
-        addMilestoneTimesheetNote(timeObj.milestoneEntryId, obj).then(res=>{
+        addMilestoneTimesheetNote(timeObj.milestoneEntryId[0], obj).then(res=>{
             if(res.success){
+                res.data.notes = notes
                 callBack(res.data)
             }
         })
@@ -98,7 +101,7 @@ class AttachModal extends Component{
     render (){
         const { visible, editTime, loading, close, timeObj } = this.props
         const {  fileList, notes } = this.state;
-        const disabled = (timeObj.status === 'SB' || timeObj.status === 'AP') 
+        const disabled =  false //(timeObj.status === 'SB' || timeObj.status === 'AP') 
         return(
             <Modal
                 title={editTime ? "Edit Attachments & Notes" : "Add Attachments & Notes"}

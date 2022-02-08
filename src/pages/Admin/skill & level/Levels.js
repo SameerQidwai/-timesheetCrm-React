@@ -4,6 +4,7 @@ import { SettingOutlined, DownOutlined, PlusSquareOutlined, LoadingOutlined} fro
 import Forms from "../../../components/Core/Form";
 
 import { getList, addList, delLabel, editLabel } from "../../../service/level";
+import { tableSorter, tableTitleFilter } from "../../../components/Core/Table/TableFilter";
 
 const { Title } = Typography;
 
@@ -16,11 +17,13 @@ class Levels extends Component {
                 title: "Level Name",
                 dataIndex: "label",
                 key: "label",
+                ...tableSorter('label', 'string')
             },
             {
                 title: "Action",
                 key: "action",
                 align: "right",
+                width: 115,
                 render: (record, text) => (
                     <Dropdown
                         overlay={
@@ -54,6 +57,7 @@ class Levels extends Component {
             isVisible: false,
             newSkill: "",
             data: [],
+            filterData: [],
             editLevel: false,
             loading: false,
             FormFields: {
@@ -87,6 +91,7 @@ class Levels extends Component {
             if (res.success) {
                 this.setState({
                     data: res.data,
+                    filterData: res.data,
                     isVisible: false,
                     editLevel: false,
                     FormFields: {
@@ -149,8 +154,23 @@ class Levels extends Component {
         });
     };
 
+    generalFilter = (value) =>{
+        const { data } = this.state
+        if (value){
+            this.setState({
+                filterData: data.filter(el => {
+                    return el.label && el.label.toLowerCase().includes(value.toLowerCase()) 
+                })
+            })
+        }else{
+            this.setState({
+                filterData: data
+            })
+        }
+    }
+
     render() {
-        const {data, isVisible, editLevel, FormFields, loading} = this.state;
+        const {data, isVisible, editLevel, FormFields, loading, filterData} = this.state;
         return (
             <>
                 <Row justify="space-between">
@@ -172,9 +192,11 @@ class Levels extends Component {
                     </Col>
                 </Row>
                 <Table
+                    title={()=>tableTitleFilter(5, this.generalFilter)}
+                    bordered
                     rowKey={(data) => data.id}
                     columns={this.columns}
-                    dataSource={data}
+                    dataSource={filterData}
                     size="small"
                 />
                 {isVisible && (

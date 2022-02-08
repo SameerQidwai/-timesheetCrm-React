@@ -28,7 +28,7 @@ code {
 
 @media print {
   .page-break {
-    margin-top: 1rem;
+    /* margin-top: 1rem; */
     display: block;
     page-break-before: auto;
   }
@@ -36,5 +36,5 @@ code {
 
 @page {
   size: auto;
-  margin: 20mm;
+  /* margin: 10mm; */
 }

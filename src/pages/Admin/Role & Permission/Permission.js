@@ -237,7 +237,14 @@ class Permission extends Component {
                     onCancel={()=>{closeModal()}}
                     width={700}
                 >
-                    <Table rowKey="key" columns={this.perColumns} dataSource={permissions} size='small' pagination={false} />
+                    <Table
+                        bordered
+                        size='small' 
+                        rowKey="key" 
+                        columns={this.perColumns} 
+                        dataSource={permissions} 
+                        pagination={false} 
+                    />
                 </Modal>
             
         )

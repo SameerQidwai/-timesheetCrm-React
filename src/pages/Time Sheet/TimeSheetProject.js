@@ -1,15 +1,16 @@
 import React, { Component } from "react";
 import { Row, Col, Table, Button, Select, Typography, Modal, DatePicker, Space, Tag, Tooltip} from "antd";
-import { DownloadOutlined, SaveOutlined, ExclamationCircleOutlined, CheckCircleOutlined } from "@ant-design/icons"; //Icons
+import { DownloadOutlined, SaveOutlined, ExclamationCircleOutlined, PaperClipOutlined, CheckCircleOutlined } from "@ant-design/icons"; //Icons
 import moment from "moment";
 import AttachModal from "./Modals/AttachModal";
 import {  getList, reviewTimeSheet, getMilestones, getUsersTimesheet  } from "../../service/timesheet"
-import { localStore } from "../../service/constant";
+import { Api, localStore } from "../../service/constant";
 
 import "../styles/table.css";
+import "../styles/button.css";
 import TimeSheetPDF from "./Modals/TimeSheetPDF";
 
-const { Title } = Typography;
+const { Title, Link } = Typography;
 //inTable insert
 
 class TimeSheetProject extends Component {
@@ -30,9 +31,9 @@ class TimeSheetProject extends Component {
             permissions: {},
             canApprove: false,
             milestones: [], // users Time Sheet
-            sTimesheet: { // selected timesheet 
-                timesheet: [], //  Timesheet Object 
-                keys: [] // TimeSheet keys
+            sTimesheet: { // selected timesheets 
+                timesheet: [], //  Timesheets Object 
+                keys: [] // TimeSheets key
             },
 
             columns : [
@@ -44,20 +45,58 @@ class TimeSheetProject extends Component {
                     width: 300,
                     style:{height: 110},
                     render: (value, record, index) => (
-                        <Row gutter={[0, 10]}>
+                        <Row gutter={[0, 10]} style={{height: 90}}>
                             <Col span={24}>
                                 <Row justify="space-between">
-                                    <Col> {`${value}`} </Col>
+                                    <Col span={20}> {`${value}`} </Col>
                                      <Col style={{marginLeft: 'auto'}}> 
-                                        <DownloadOutlined onClick={()=>{this.exporPDF(record.projectEntryId, index)}}/>
-                                        <SaveOutlined onClick={()=>{this.openAttachModal(record, index)} } style={{color: '#1890ff', marginLeft:10}}/>
+                                     <Tooltip 
+                                            placement="top"
+                                            title="Export"
+                                            destroyTooltipOnHide
+                                        >
+                                            <DownloadOutlined onClick={()=>{this.exporPDF([record.milestoneEntryId], index)}}/>
+                                        </Tooltip>
+                                        <span className={record.status === 'AP' ? 'disabledanticon' : 'anticon'}>  
+                                            <Tooltip 
+                                                placement="top"
+                                                title="Upload"
+                                                destroyTooltipOnHide
+                                            >
+                                                <SaveOutlined disabled={record.status === 'AP'}  
+                                                    onClick={()=>{this.openAttachModal(record, index)} }
+                                                    style={{color: '#1890ff', marginLeft:10}}
+                                                />
+                                            </Tooltip>
+                                        </span>
                                     </Col>
                                 </Row>
                             </Col>
-                            <Col span={4} style={{marginLeft:'auto', marginRight: 20}}>
-                                {record.status === 'SB' &&<Tag color="cyan"> Submitted </Tag>}
-                                {record.status === 'AP' &&<Tag color="green"> Approved </Tag>}
-                                {record.status === 'RJ' &&<Tag color="red"> Rejected </Tag>}
+                            <Col span={24}>
+                                <Row justify="space-between">
+                                    {record.attachment &&<Col span={18}>
+                                            <Link
+                                                href={`${Api}/files/${record.attachment.uid}`}
+                                                download={record.attachment.name}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            >
+                                                <PaperClipOutlined /> {" "}
+                                                    <Tooltip 
+                                                        placement="top" 
+                                                        title={record.attachment.name}
+                                                        destroyTooltipOnHide
+                                                    >
+                                                        {`${record.attachment.name.substr(0,23)}${record.attachment.name.length>22 ?'\u2026':''}`}
+                                                    </Tooltip>
+                                            </Link>
+                                            </Col>}
+                                    <Col span={5} style={{marginLeft:'auto', marginRight: 5}}>
+                                        {record.status === 'SB' &&<Tag color="cyan"> Submitted </Tag>}
+                                        {record.status === 'AP' &&<Tag color="green"> Approved </Tag>}
+                                        {record.status === 'RJ' &&<Tag color="red"> Rejected </Tag>}
+                                    </Col>
+                                </Row>
                             </Col>
                         </Row>
                     ),
@@ -153,7 +192,7 @@ class TimeSheetProject extends Component {
                     if(value){
                         let breakHours = moment.duration(value["breakHours"],'hours')
                         breakHours = breakHours && moment(moment().hours(breakHours.hours()).minutes(breakHours.minutes())).format("HH:mm")
-                    {return <Tooltip title={`Note: ${value['notes'] ?? ''}`}><Row style={{ border: "1px solid" }}>
+                    {return <Tooltip title={value['notes'] && `Note: ${value['notes'] }`} ><Row style={{ border: "1px solid" }}>
                             <Col span={24}>Start Time: {value["startTime"]&& moment(value["startTime"], ["HH:mm"]).format("h:mm A")}</Col>
                             <Col span={24}>End Time: {value["endTime"] && moment(value["endTime"], ["HH:mm"]).format("h:mm A")}</Col>
                             <Col span={24}>Break: {breakHours && breakHours}</Col>
@@ -166,7 +205,6 @@ class TimeSheetProject extends Component {
         }
         this.setState({columns})
     }
-
   
     reviewTimeSheet = (id, stage, index, key) => {
         const { startDate, endDate } = this.state.sheetDates
@@ -195,20 +233,34 @@ class TimeSheetProject extends Component {
     };
 
     openAttachModal = (record, index) =>{
-        const timeObj= {
-            projectEntryId: record.projectEntryId,
-            projectId: record.projectId,
-            notes: record.notes,
-            project: record.project,
-            status: record.status,
-            rowIndex: index
+        console.log(record, index);
+        let timeObj = {}
+        if(index >= 0){
+            timeObj = {
+                milestoneEntryId: [record.milestoneEntryId],
+                milestoneId: record.milestoneId,
+                notes: record.notes,
+                milestone: record.milestone,
+                status: record.status,
+                rowIndex: index
+            }
+        }else{
+            const {keys, timesheet} = this.state.sTimesheet
+            timeObj = {
+                milestoneEntryId: keys,
+                milestoneId: timesheet[0].milestoneId,
+                notes: timesheet[0].notes,
+                milestone: timesheet[0].milestone,
+                status: false,
+            }
         }
-        this.setState({ timeObj, isAttach: true })
+        this.setState({ timeObj, isAttach: true})
     }
 
-    exporPDF = (entryId) =>{
+    exporPDF = (entryIds) =>{
+        console.log(entryIds);
         this.setState({
-            eData: entryId,
+            eData:  entryIds,
             isDownload: true
         })   
     }
@@ -217,25 +269,25 @@ class TimeSheetProject extends Component {
         const { columns } = this.state
         if(data.length>0)
         return (
-            <Table.Summary.Row>
-                {/* //multiple select commented */}
-                <Table.Summary.Cell  index={0}> </Table.Summary.Cell> 
-                {columns.map(({key, dateObj}, kIndex)=>{
-                    let value = 0
-                    data.map((rowData, index) =>{
-                        if(key !== 'user' ){
-                            if(key === 'totalHours'){
-                                value += data[index]['totalHours'] ?? 0
-                            }else{
-                                value += (rowData[key] ? rowData[key]['actualHours'] :0)
+            <Table.Summary fixed="top">
+                <Table.Summary.Row>
+                    {/* //multiple select commented */}
+                    <Table.Summary.Cell  index={0}> </Table.Summary.Cell> 
+                    {columns.map(({key, dateObj}, kIndex)=>{
+                        let value = 0
+                        data.map((rowData, index) =>{
+                            if(key !== 'user' ){
+                                if(key === 'totalHours'){
+                                    value += data[index]['totalHours'] ?? 0
+                                }else{
+                                    value += (rowData[key] ? rowData[key]['actualHours'] :0)
+                                }
                             }
-                        }
-                    })
-                    return key === 'user' ? <Table.Summary.Cell index={kIndex+1} key={kIndex+1}>
-                        Total Work In A day  
-                    </Table.Summary.Cell > 
-                    : // show total and normal background if the column month is same as selected month or the key is totalHours of the month
-                        (key === 'totalHours') ? 
+                        })
+                        return key === 'user' ? <Table.Summary.Cell index={kIndex+1} key={kIndex+1}>
+                            Total Work In A day  
+                        </Table.Summary.Cell > 
+                        : // show total and normal background if the column month is same as selected month or the key is totalHours of the month
                         <Table.Summary.Cell 
                             index={kIndex+1}
                             key={kIndex+1}
@@ -243,15 +295,10 @@ class TimeSheetProject extends Component {
                         >
                             {value && value.toFixed(2)}
                         </Table.Summary.Cell>
-                        : // show background grey if the column month is NOT same as selected month
-                            <Table.Summary.Cell 
-                                index={kIndex+1} 
-                                key={kIndex+1}
-                                align='center'
-                                className="prevDates-TMcell" 
-                            >0</Table.Summary.Cell>
-                })}
-        </Table.Summary.Row>)
+                    })}
+                </Table.Summary.Row>
+            </Table.Summary>
+        )
     }
     
     highlightRow(record) {
@@ -269,7 +316,7 @@ class TimeSheetProject extends Component {
         this.setState({
             sTimesheet: {
                 timesheet: selectedRows,
-                keys: selectedRowKeys
+                keys: selectedRowKeys,
             }
         })
     }
@@ -295,6 +342,18 @@ class TimeSheetProject extends Component {
         });
     }
 
+    attachCallBack = (res) =>{ 
+        const {data, timeObj } = this.state
+        const {rowIndex} = timeObj
+        if(rowIndex >= 0 ){
+            data[rowIndex].notes = res.notes
+            data[rowIndex].attachment = res.attachment
+            this.setState({data, isAttach: false, editTime: false, timeObj: false})
+        }else{
+            this.getSheet()
+        }
+    }
+
     render() {
         const {  data,   columns,  timeObj,  milestones, sMilestone, isAttach, isDownload, eData, sTimesheet } = this.state
         return (
@@ -310,6 +369,7 @@ class TimeSheetProject extends Component {
                             size="large"
                             options={milestones}
                             value={sMilestone}           
+                            showSearch
                             optionFilterProp={["label", "value"]}
                             filterOption={
                                 (input, option) =>{
@@ -351,13 +411,17 @@ class TimeSheetProject extends Component {
                     </Col>
                 </Row>
                 <Table
+                    sticky
                     size="small"
+                    style={{maxHeight: 'fit-content'}}
                     className="timeSheet-table"
                     rowSelection={{ //multiple select commented
+                        preserveSelectedRowKeys: false,
+                        fixed:true,
                         onChange:(selectedRowKeys, selectedRows)=>{this.milestoneSelect(selectedRowKeys, selectedRows )},
                         getCheckboxProps: (record) => ({
-                            disabled: record.timesheetStatus === 'SV' || record.timesheetStatus === 'AP', // Column configuration not to be checked
-                          })
+                            disabled: record.timesheetStatus === 'SV' || record.timesheetStatus === 'AP' ||record.timesheetStatus === 'NC', // Column configuration not to be checked
+                          }),
                     }}
                     scroll={{
                         // x: "calc(700px + 100%)",
@@ -365,8 +429,8 @@ class TimeSheetProject extends Component {
                     }}
                     bordered
                     pagination={false}
-                    rowKey={data=>data.milestoneEntryId}
-                    rowClassName={(record) => this.highlightRow(record)}
+                    rowKey={'milestoneEntryId'}
+                    // rowClassName={(record) => this.highlightRow(record)}
                     columns={columns}
                     dataSource={[...data]}
                     summary={ columnData => this.summaryFooter(columnData)}
@@ -374,14 +438,17 @@ class TimeSheetProject extends Component {
                 <Row justify="end" gutter={[20,200]}>
                     <Col>
                         <Button 
-                            disabled={ sTimesheet.keys.length<1}
+                            disabled={ sTimesheet.keys.length<1 || sTimesheet.approved|| sTimesheet.rejected}
+                            onClick={()=>this.openAttachModal()}
                         >
-                            Upload
+                            Import
                         </Button>
                     </Col>
                     <Col>
                         <Button 
+                            type="primary" 
                             disabled={ sTimesheet.keys.length<1}
+                            onClick={()=>{this.exporPDF(sTimesheet.keys)}}
                         >
                             Export
                         </Button>
@@ -390,7 +457,7 @@ class TimeSheetProject extends Component {
                         <Button 
                             type="primary" 
                             danger
-                            disabled={ sTimesheet.keys.length<1}
+                            disabled={ sTimesheet.keys.length<1 || sTimesheet.rejected}
                             onClick={()=>this.multiAction('Reject')}
                         > 
                             Reject
@@ -399,7 +466,7 @@ class TimeSheetProject extends Component {
                     <Col>
                         <Button
                             className={'success'}
-                            disabled={ sTimesheet.keys.length<1}
+                            disabled={ sTimesheet.keys.length<1 || sTimesheet.approved}
                             onClick={()=> this.multiAction('Approve') }
                         >
                             Approval
@@ -410,12 +477,13 @@ class TimeSheetProject extends Component {
                     <AttachModal
                         visible={isAttach}
                         timeObj={timeObj}
+                        callBack={this.attachCallBack}
                         close={()=>this.setState({isAttach: false, timeObj: false})}
                     />
                 )}
                 {isDownload && (
                     <TimeSheetPDF
-                        projectEntryId={eData}
+                        milestoneEntryId={eData}
                         close={()=>this.setState({isDownload: false})}
                     />
                 )}

@@ -5,6 +5,7 @@ import Forms from "../../../components/Core/Form";
 
 import { levels, addList, getList, editLabel, delLabel, } from "../../../service/skills";
 import { localStore } from "../../../service/constant";
+import { tableSorter, tableTitleFilter } from "../../../components/Core/Table/TableFilter";
 
 const { Title } = Typography;
 
@@ -18,11 +19,13 @@ class Skills extends Component {
                 title: "Skill Name",
                 dataIndex: "label",
                 key: "label",
+                ...tableSorter('label', 'string')
             },
             {
                 title: "Action",
                 key: "action",
                 align: "right",
+                width: 115,
                 render: (record, text) => (
                     <Dropdown
                         overlay={
@@ -113,6 +116,7 @@ class Skills extends Component {
             level_data: false,
             loading: false,
             data_skill: [],
+            filterData: [],
             skillFields: {
                 formId: "skill_form",
                 FormCol: 24,
@@ -205,6 +209,7 @@ class Skills extends Component {
             if (res.success) {
                 this.setState({
                     data_skill: res.data,
+                    filterData: res.data,
                     isVisible: false,
                     editSkill: false,
                     skillFields: {
@@ -438,8 +443,23 @@ class Skills extends Component {
         });
     };
 
+    generalFilter = (value) =>{
+        const { data_skill } = this.state
+        if (value){
+            this.setState({
+                filterData: data_skill.filter(el => {
+                    return el.label && el.label.toLowerCase().includes(value.toLowerCase()) 
+                })
+            })
+        }else{
+            this.setState({
+                filterData: data_skill
+            })
+        }
+    }
+
     render() {
-        const { data_skill, isVisible, editSkill, LevelFields, skillFields, loading } = this.state;
+        const { data_skill, isVisible, editSkill, LevelFields, skillFields, loading, filterData } = this.state;
         return (
             <>
                 <Row justify="space-between">
@@ -457,9 +477,11 @@ class Skills extends Component {
                     </Col>
                 </Row>
                 <Table
+                    title={()=>tableTitleFilter(5, this.generalFilter)}
+                    bordered
                     pagination={{pageSize: localStore().pageSize}}
                     columns={this.columns}
-                    dataSource={data_skill}
+                    dataSource={filterData}
                     size="small"
                 />
                 {isVisible && (
