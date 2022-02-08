@@ -408,3 +408,21 @@ export const getUserLeaveType = () => {
             };
         });
 };
+
+export const getLineEmployees = () =>{
+    return axios
+    .get(`${Api}/users`, {headers:headers()})
+    .then((res) => {
+        const { success, data } = res.data;
+        setToken(res.headers && res.headers.authorization)
+        console.log(data);
+        if (success) return { success: success, data: data };
+    })
+    .catch((err) => {
+        return {
+            error: "Please login again!",
+            success: false,
+            message: err.message,
+        };
+    });
+}

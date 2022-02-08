@@ -7,8 +7,9 @@ import { getUserProjects, getUserLeaveType} from "../../../service/constant-Apis
 import { addRequest, editRequest, getSingleRequest } from "../../../service/leaveRequest-Apis";
 import moment from 'moment'
 import { localStore } from "../../../service/constant";
-import Attachments from "../../../components/Core/Attachments";
-import Attach from "../../../components/Core/Attach";
+
+import "../styles.css"
+
 const { Text } = Typography
 
 class AddRequestModal extends Component{
@@ -185,7 +186,7 @@ class AddRequestModal extends Component{
         //try to put your condition to put closer to eachother if they link to eachother
             //so it will be easy to track conditions
         let { BasicFields, contractDetails, holidays, data, hoursEntry } = this.state;
-        const { include_off_days } = LeaveRequestType
+        const { include_off_days } = LeaveRequestType??{}
         var deFaulthours = contractDetails?.noOfHours ?? 0
         // if entries is sent it will only be send on open the modal on edit
         if (entries){

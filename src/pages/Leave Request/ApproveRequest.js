@@ -6,7 +6,7 @@ import moment from "moment";
 import { getApprovalRequests, manageLeaveRequests, manageRequests } from '../../service/leaveRequest-Apis';
 import AddRequestModal from './Modals/AddRequestModal';
 import { getMilestones } from '../../service/timesheet';
-import { getUserProjects } from '../../service/constant-Apis';
+import { getLineEmployees, getUserProjects } from '../../service/constant-Apis';
 
 const { Title, Text } = Typography
 
@@ -125,13 +125,14 @@ class ApproveRequest extends Component {
         const loginId = parseInt(id)
         const { LEAVE_REQUESTS } = JSON.parse(permissions)
 
-        Promise.all([ getUserProjects(loginId, 'M'), getApprovalRequests(query) ])
+        Promise.all([ getUserProjects(loginId, 'M'), getApprovalRequests(query), getLineEmployees() ])
         .then(res => {
             this.setState({
                 WORKS: res[0].success? res[0].data : [],
                 loginId,
                 permissions: LEAVE_REQUESTS,
                 request: res[1].success? res[1].data : [],
+                USERS: res[2].success? res[2].data : [],
                 readRequest: false,
             })
             
@@ -201,7 +202,8 @@ class ApproveRequest extends Component {
                             style={{ width: 200 }}
                             size="small"
                             options={WORKS}
-                            value={workId}           
+                            value={workId}     
+                            allowClear      
                             optionFilterProp={["label", "value"]}
                             filterOption={
                                 (input, option) =>{
@@ -210,7 +212,7 @@ class ApproveRequest extends Component {
                                         return label || value
                                 }
                             }
-                            onSelect={(value, option)=>{
+                            onChange={(value, option)=>{
                                 this.setState({
                                     queryRequest : {
                                         ...queryRequest,
@@ -229,6 +231,7 @@ class ApproveRequest extends Component {
                             options={USERS}
                             value={userId}           
                             optionFilterProp={["label", "value"]}
+                            allowClear
                             style={{ width: 200 }}
                             filterOption={
                                 (input, option) =>{
@@ -237,7 +240,7 @@ class ApproveRequest extends Component {
                                         return label || value
                                 }
                             }
-                            onSelect={(value, option)=>{
+                            onChange={(value, option)=>{
                                 this.setState({
                                     queryRequest : {
                                         ...queryRequest,
