@@ -79,7 +79,7 @@ class LeaveRequest extends Component {
                     <Dropdown overlay={
                         <Menu>
                             <Menu.Item 
-                                disabled={!this?.state?.permissions?.['UPDATE']}
+                                disabled={!this?.state?.permissions?.['UPDATE'] || record.status === 'AP'}
                                 onClick={()=> {
                                     this.setState({
                                         openModal: true,
