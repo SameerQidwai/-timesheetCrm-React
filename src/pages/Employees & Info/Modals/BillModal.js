@@ -7,6 +7,7 @@ import FormItems from "../../../components/Core/FormItems";
 import moment from "moment";
 import { addList, editList, getRecord } from "../../../service/employee-contracts";
 import { addAttachments, addFiles } from "../../../service/Attachment-Apis";
+import { getLeavePolicy } from "../../../service/constant-Apis";
 
 class BillModal extends Component {
     constructor() {
@@ -174,7 +175,16 @@ class BillModal extends Component {
                 {
                     Placeholder: "Pay Frequence",
                     rangeMin: true,
-                    fieldCol: 24,
+                    fieldCol: 12,
+                    size: "small",
+                    type: "Text",
+                    labelAlign: "right",
+                    // itemStyle:{marginBottom:'10px'},
+                },
+                {
+                    Placeholder: "Leave Policy",
+                    rangeMin: true,
+                    fieldCol: 12,
                     size: "small",
                     type: "Text",
                     labelAlign: "right",
@@ -197,6 +207,16 @@ class BillModal extends Component {
                     itemStyle: { marginBottom: 1 },
                 },
                 {
+                    object: "billing",
+                    fieldCol: 12,
+                    key: "leaveRequestPolicyId",
+                    size: "small",
+                    data: [],
+                    type: "Select",
+                    rules: [ { required: true, message: "Policy is required", }, ],
+                    itemStyle: { marginBottom: 10 },
+                },
+                {
                     Placeholder: "Comments",
                     fieldCol: 24,
                     size: "small",
@@ -217,10 +237,7 @@ class BillModal extends Component {
     }
 
     componentDidMount = () => {
-        const { editCntrct } = this.props
-        if (editCntrct) {
-            this.getRecord(editCntrct);
-        }
+        this.getData();
     };
 
     onFinish = (vake) => {
@@ -257,18 +274,23 @@ class BillModal extends Component {
         });
     };
 
-    getRecord = (data) => {
-        getRecord(data).then(res=>{
-            const {success, data} = res
+    getData = () => {
+        const { editCntrct } = this.props
+        Promise.all([getLeavePolicy(), editCntrct && getRecord(editCntrct)])
+        .then(res => {
+            const{BillingFields} = this.state
+            BillingFields[16].data = res[0].success ? res[0].data:[];
+            const {success, data} = res[1]
             if (success){
                 data.startDate = data.startDate && moment(data.startDate)
                 data.endDate = data.endDate && moment(data.endDate)
                 this.formRef.current.setFieldsValue({ billing: data, });
-                this.setState({
-                    fileIds: data.fileId,
-                    fileList: data.file
-                })
             }
+            this.setState({
+                fileIds: success? data.fileId : null,
+                fileList: success? data.file: [],
+                BillingFields
+            })
         })        
     };
 
