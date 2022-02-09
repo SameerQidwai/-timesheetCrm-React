@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Form, { useForm } from 'antd/lib/form/Form'
 import FormItems from '../../components/Core/FormItems'
+import { getLeavePolicy } from "../../service/constant-Apis";
 
 const PersonalContract = (props)=> {
     const [form] = useForm();
-    const fields = [
+    const [fields, setFields] = useState([
         {
             Placeholder: "Employment Status",
             rangeMin: true,
@@ -151,15 +152,24 @@ const PersonalContract = (props)=> {
             fieldStyle: { width: "100%" },
             rules: [ { required: true, message: "Salary is Required", }, ],
             itemStyle: { marginBottom: 20 },
-        },  
+        },
         {
             Placeholder: "Pay Frequence",
             rangeMin: true,
-            fieldCol: 24,
+            fieldCol: 12,
             size: "small",
             type: "Text",
             labelAlign: "right",
             // itemStyle:{marginBottom:'10p20'},
+        },
+        {
+            Placeholder: "Leave Policy",
+            rangeMin: true,
+            fieldCol: 12,
+            size: "small",
+            type: "Text",
+            labelAlign: "right",
+            // itemStyle:{marginBottom:'10px'},
         },
         {
             object: "billing",
@@ -179,6 +189,17 @@ const PersonalContract = (props)=> {
             itemStyle: { marginBottom: 20 },
         },
         {
+            object: "billing",
+            fieldCol: 12,
+            disabled: true,
+            key: "leaveRequestPolicyId",
+            size: "small",
+            data: [],
+            type: "Select",
+            rules: [ { required: true, message: "Policy is required", }, ],
+            itemStyle: { marginBottom: 10 },
+        },
+        {
             Placeholder: "Comments",
             fieldCol: 24,
             size: "small",
@@ -195,10 +216,22 @@ const PersonalContract = (props)=> {
             type: "Textarea",
             itemStyle: { marginBottom: 20 },
         },
-    ];
+    ]);
     useEffect(() => {
+        setLeavePolicy()
         form.setFieldsValue({billing: props.data})
     }, [])
+
+    
+    const setLeavePolicy = () =>{
+        getLeavePolicy().then(res=>{
+            if(res.success){
+                const dummy = fields
+                dummy[16].data = res.data
+                setFields([...dummy])
+            }
+        })
+    }
     return (
         <Form
             id={'my-form'}

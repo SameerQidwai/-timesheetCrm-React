@@ -9,9 +9,6 @@ export const tableFilter = (dataIndex, searchFunction) => ({ // filter on the he
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => ( 
         <div style={{ padding: 8 }}>
             <Input
-                // ref={node => {
-                // this.searchInput = node;
-                // }}
                 placeholder={`Search Code`}
                 value={selectedKeys[0]}
                 onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}

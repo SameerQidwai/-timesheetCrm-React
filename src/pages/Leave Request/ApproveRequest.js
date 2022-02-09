@@ -167,6 +167,10 @@ class ApproveRequest extends Component {
                     request: res.data,
                     filterRequest: res.data,
                     readRequest: false,
+                    sRequest: { // selected request 
+                        request: [], //  request Object 
+                        keys: [] // request keys
+                    },
                 })
             }
         })
@@ -319,6 +323,7 @@ class ApproveRequest extends Component {
                                 x: "'max-content'",
                             }}
                             pagination={{pageSize: localStore().pageSize}}
+                            bordered
                             rowKey={(data) => data.id} 
                             columns={this.requestColumns}
                             dataSource={filterRequest}

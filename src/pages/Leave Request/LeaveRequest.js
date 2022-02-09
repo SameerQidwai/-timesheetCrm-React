@@ -40,6 +40,7 @@ class LeaveRequest extends Component {
         ]
 
         this.requestColumns = [
+            
             {
                 title: 'Start Date',
                 dataIndex: 'startDate',
@@ -51,6 +52,11 @@ class LeaveRequest extends Component {
                 dataIndex: 'endDate',
                 key: 'endDate',
                 render:(text, records) => text && fomratDate(text)
+            },
+            {
+                title: 'Project',
+                dataIndex: 'project',
+                key: 'project',
             },
             {
                 title: 'Hours',
@@ -73,7 +79,7 @@ class LeaveRequest extends Component {
                     <Dropdown overlay={
                         <Menu>
                             <Menu.Item 
-                                disabled={!this?.state?.permissions?.['UPDATE']}
+                                disabled={!this?.state?.permissions?.['UPDATE'] || record.status === 'AP'}
                                 onClick={()=> {
                                     this.setState({
                                         openModal: true,
@@ -161,6 +167,7 @@ class LeaveRequest extends Component {
                     </Col>
                     <Col span={24}>
                         <Table
+                            bordered
                             style={{maxHeight: '40vh', overflowY: 'scroll'}}
                             pagination={{pageSize: localStore().pageSize}}
                             rowKey={(data) => data.id} 
@@ -178,6 +185,7 @@ class LeaveRequest extends Component {
                     
                     <Col span={24}>
                         <Table
+                            bordered
                             style={{maxHeight: '30vh', overflowY: 'scroll'}}
                             pagination={{pageSize: localStore().pageSize}}
                             rowKey={(data) => data.id} 

@@ -194,7 +194,7 @@ class AddRequestModal extends Component{
             data = entries.map(el=> {
                 var {date, hours } = el // in this conditon this hours value will be replace
                 date = moment(date)
-                const disabled = include_off_days && ( (date.format('ddd') === 'Sun' || date.format('ddd') === 'Sat') && 'Weekend' || holidays[date.format('M/D/YYYY')] )
+                const disabled = !include_off_days && ( (date.format('ddd') === 'Sun' || date.format('ddd') === 'Sat') && 'Weekend' || holidays[date.format('M/D/YYYY')] )
 
                 hoursEntry[date.format('M/D/YYYY')] = hours // setting the hours object before return 
                 return {key: date.format('M/D/YYYY'), date: date, hours: disabled? 0: hours, disabled}
@@ -206,7 +206,7 @@ class AddRequestModal extends Component{
             var arr = new Array();
             while(start.isSameOrBefore(end)){
                 // need key to push in the table
-                const disabled = include_off_days && ( (start.format('ddd') === 'Sun' || start.format('ddd') === 'Sat') && 'Weekend' || holidays[start.format('M/D/YYYY')] )                                              
+                const disabled = !include_off_days && ( (start.format('ddd') === 'Sun' || start.format('ddd') === 'Sat') && 'Weekend' || holidays[start.format('M/D/YYYY')] )                                              
                  //hours are getting update on each call
                 const hours = disabled? 0: hoursEntry[start.format('M/D/YYYY')] ?? deFaulthours
                         
@@ -217,7 +217,7 @@ class AddRequestModal extends Component{
             BasicFields[7].disabled = false
         }else if (start){
             //if end date is not sent
-            const disabled = include_off_days && ((start.format('ddd') === 'Sun' || start.format('ddd') === 'Sat') && 'Weekend' || holidays[start.format('M/D/YYYY')])
+            const disabled = !include_off_days && ((start.format('ddd') === 'Sun' || start.format('ddd') === 'Sat') && 'Weekend' || holidays[start.format('M/D/YYYY')])
             const hours = disabled? 0: hoursEntry[start.format('M/D/YYYY')] ?? deFaulthours
             
             data= [{key: start.format('M/D/YYYY'), date: start, hours: disabled? 0: hours, disabled,}]
@@ -258,6 +258,7 @@ class AddRequestModal extends Component{
                 const formValues = {
                     ...data,
                     description: data.desc,
+                    typeId: data.typeId ?? null,
                     startDate: moment(entries[0].date),
                     endDate: moment(entries[entries.length-1].date),
                 }
@@ -278,7 +279,7 @@ class AddRequestModal extends Component{
         const { data, fileIds } = this.state
         const newVal = {
                 description: dates.description ?? '',
-                typeId: dates.typeId,
+                typeId: dates.typeId || null,
                 workId: dates.workId,
                 entries: data,
                 attachments: fileIds ?? []

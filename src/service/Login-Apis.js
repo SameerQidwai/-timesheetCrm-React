@@ -128,7 +128,8 @@ export const getSettings = () => {
                     noOfHoursPer: employmentContracts.noOfHoursPer, 
                     remunerationAmount:employmentContracts.remunerationAmount,
                     remunerationAmountPer: employmentContracts.remunerationAmountPer,  
-                    comments: employmentContracts.comments
+                    comments: employmentContracts.comments,
+                    leaveRequestPolicyId: employmentContracts.leaveRequestPolicyId ?? 0,
                 }
                 setToken(res.headers && res.headers.authorization)
                 return { success, data, basic, detail, kin, bank, billing }

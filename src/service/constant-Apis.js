@@ -386,14 +386,13 @@ export const getUserLeaveType = () => {
             setToken(res.headers && res.headers.authorization)
             if (success){
                 const {holidays, contractDetails, LeaveRequestTypes} = data
-                let requestType = []
+                let requestType = [{id: 0, name: 'unpaid', include_off_days: true}]
                 LeaveRequestTypes.forEach((el,index)=>{
                     const type= {}
                     Object.entries(el).forEach(([key, value]) => {
                         var camelToSnakeKey = key.replace(/([A-Z])/g, "_$1").toLowerCase();
                         type[camelToSnakeKey]= value
                     })
-                    
                     requestType.push(type)
                 })
                 return { success: success, data: data, holidays, contractDetails, LeaveRequestTypes: requestType }
