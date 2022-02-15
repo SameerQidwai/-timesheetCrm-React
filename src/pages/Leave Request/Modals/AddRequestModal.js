@@ -34,15 +34,16 @@ class AddRequestModal extends Component{
                 dataIndex: 'hours',
                 key: 'hours',
                 render:(text, records, index) =>(
-                    <InputNumber
-                        placeholder= "Hours"
-                        value= {text}
-                        size="small" 
-                        disabled={records.disabled}
-                        onChange={(value)=>{
-                            this.setHours(records, value, index)
-                        }}
-                    />
+                    <Form.Item noStyle name={['hours', moment(records.date).format('M/D/YYYY')]}>
+                        <InputNumber
+                            placeholder= "Hours"
+                            size="small" 
+                            disabled={props.readOnly}
+                            onChange={(value)=>{
+                                this.setHours(records, value, index)
+                            }}
+                        />
+                    </Form.Item>
                 ),
             },
         ]
@@ -186,16 +187,44 @@ class AddRequestModal extends Component{
         //try to put your condition to put closer to eachother if they link to eachother
             //so it will be easy to track conditions
         let { BasicFields, contractDetails, holidays, data, hoursEntry } = this.state;
-        const { include_off_days } = LeaveRequestType??{}
+        const { readOnly } = this.props
+        const { include_off_days, balance,  minimum_balance, minimum_balance_required} = LeaveRequestType??{}
         var deFaulthours = contractDetails?.noOfHours ?? 0
         // if entries is sent it will only be send on open the modal on edit
+        if(LeaveRequestType.balance){
+            if (BasicFields[2].note){
+                BasicFields[2] = {
+                    Placeholder: <div><div>Current Balance: {balance}</div><div>Requird Balnce: {minimum_balance_required}</div><div>Minimum Balnce: {minimum_balance}</div></div>,
+                    fieldCol: 24,
+                    note: true, 
+                    size: "small",
+                    type: "Text",
+                    labelAlign: "right",
+                    itemStyle:{marginBottom:'10px', border: '1px black solid', paddingLeft: '10px'},
+                }
+            }else{
+                BasicFields.splice(2, 0, {
+                    Placeholder: <div><div>Current Balance: {balance}</div><div>Requird Balnce: {minimum_balance_required}</div><div>Minimum Balnce: {minimum_balance}</div></div>,
+                    fieldCol: 24,
+                    note: true, 
+                    size: "small",
+                    type: "Text",
+                    labelAlign: "right",
+                    itemStyle:{marginBottom:'10px', border: '1px black solid', paddingLeft: '10px'},
+                },)
+            }
+        }else if(BasicFields[2].note){
+            BasicFields.splice(2, 1)
+        }
+        
         if (entries){
             var arr = new Array();
             data = entries.map(el=> {
                 var {date, hours } = el // in this conditon this hours value will be replace
                 date = moment(date)
-                const disabled = !include_off_days && ( (date.format('ddd') === 'Sun' || date.format('ddd') === 'Sat') && 'Weekend' || holidays[date.format('M/D/YYYY')] )
-
+                const disabled = !include_off_days &&
+                    ( (date.format('ddd') === 'Sun' || date.format('ddd') === 'Sat') && 'Weekend' || holidays[date.format('M/D/YYYY')] ) || readOnly
+                
                 hoursEntry[date.format('M/D/YYYY')] = hours // setting the hours object before return 
                 return {key: date.format('M/D/YYYY'), date: date, hours: disabled? 0: hours, disabled}
             })
@@ -209,7 +238,9 @@ class AddRequestModal extends Component{
                 const disabled = !include_off_days && ( (start.format('ddd') === 'Sun' || start.format('ddd') === 'Sat') && 'Weekend' || holidays[start.format('M/D/YYYY')] )                                              
                  //hours are getting update on each call
                 const hours = disabled? 0: hoursEntry[start.format('M/D/YYYY')] ?? deFaulthours
-                        
+                // to set it in form for date
+                hoursEntry[start.format('M/D/YYYY')] = disabled? 0: hoursEntry[start.format('M/D/YYYY')] ?? deFaulthours
+
                 arr.push({key: start.format('M/D/YYYY'), date: start, hours, disabled, })
                 start = moment(start).add(1,'d')
             }
@@ -219,7 +250,9 @@ class AddRequestModal extends Component{
             //if end date is not sent
             const disabled = !include_off_days && ((start.format('ddd') === 'Sun' || start.format('ddd') === 'Sat') && 'Weekend' || holidays[start.format('M/D/YYYY')])
             const hours = disabled? 0: hoursEntry[start.format('M/D/YYYY')] ?? deFaulthours
-            
+            // to set it in form for date
+            hoursEntry[start.format('M/D/YYYY')] = disabled? 0: hoursEntry[start.format('M/D/YYYY')] ?? deFaulthours
+
             data= [{key: start.format('M/D/YYYY'), date: start, hours: disabled? 0: hours, disabled,}]
             BasicFields[7].disabled = false // disabling the endDate
 
@@ -230,12 +263,13 @@ class AddRequestModal extends Component{
             data = []
         }
         this.setState({ BasicFields, data, LeaveRequestType, hoursEntry })
+        this.formRef.current.setFieldsValue({hours: hoursEntry})
         //single hook cal for all the condition
     }
 
     getData = () =>{
         const { BasicFields } = this.state;
-        const { edit } = this.props;
+        const { edit, readOnly } = this.props;
         const {id: userId} = localStore()
         // Get Projects
         Promise.all([getUserProjects(userId, 'O'), getUserLeaveType(), edit && getSingleRequest(edit)])
@@ -245,7 +279,7 @@ class AddRequestModal extends Component{
             BasicFields[3].data = res[0].success ? res[0].data : []; //set projects to select box
             BasicFields[1].data = success ? LeaveRequestTypes : [] //set LeaveTypes to select box
             this.setState({ 
-                BasicFields,
+                BasicFields: BasicFields.map(el => {el.type !== "Text" &&(el.disabled = readOnly); return el}),
                 holidays: success ? holidays ?? {} :{}, //holidays to cross of dates if type is not include holidays
                 contractDetails: success ? contractDetails?? {} :{}, //cotract details
                 fileList: res[2].fileList ?? [],
@@ -377,46 +411,48 @@ class AddRequestModal extends Component{
                 onCancel={close}
                 width={1000}
             >
-                <Row>
-                    <Col span={12}>
-                        <Form
-                            id={'my-form'}
-                            ref={this.formRef}
-                            size="small"
-                            layout="inline"
-                            onFinish={this.getFormValues}
-                        >
-                            <FormItems FormFields={BasicFields} />
-                        </Form>
-                        <Text style={{marginTop: 10, marginBottom: 2}}>Attachments</Text>
-                        <Upload
-                            customRequest={this.handleUpload}
-                            listType="picture"
-                            listType="picture-card"
-                            maxCount={4}
-                            fileList={fileList}
-                            onRemove= {this.onRemove}
-                        >
-                            {fileList.length < 4 &&
-                                <div style={{marginTop: 10}} >
-                                    <PlusOutlined />
-                                    <div style={{ marginTop: 8 }}>Upload</div>
-                                </div>
-                            }
-                        </Upload>
-                    </Col>
-                    <Col span={12}>
-                        <Table sticky
-                            style={{maxHeight: "40vh", overflowY: 'scroll', position: 'relative'}}
-                            pagination={false}
-                            rowKey={(data) => data.key} 
-                            columns={this.columns}
-                            dataSource={data}
-                            size='small'
-                            summary={(data)=>{ return this.getTableSummary(data); }}
-                        />
-                    </Col>
-                </Row>
+                <Form
+                    id={'my-form'}
+                    ref={this.formRef}
+                    size="small"
+                    layout="inline"
+                    onFinish={this.getFormValues}
+                >
+                    <Row>
+                        <Col span={12}>
+                            <Row>
+                                <FormItems FormFields={BasicFields} />
+                            </Row>
+                            <Text style={{marginTop: 10, marginBottom: 2}}>Attachments</Text>
+                            <Upload
+                                customRequest={this.handleUpload}
+                                listType="picture"
+                                listType="picture-card"
+                                maxCount={4}
+                                fileList={fileList}
+                                onRemove= {this.onRemove}
+                            >
+                                {fileList.length < 4 &&
+                                    <div style={{marginTop: 10}} >
+                                        <PlusOutlined />
+                                        <div style={{ marginTop: 8 }}>Upload</div>
+                                    </div>
+                                }
+                            </Upload>
+                        </Col>
+                        <Col span={12}>
+                            <Table sticky
+                                style={{maxHeight: "40vh", overflowY: 'scroll', position: 'relative'}}
+                                pagination={false}
+                                rowKey={(data) => data.key} 
+                                columns={this.columns}
+                                dataSource={data}
+                                size='small'
+                                summary={(data)=>{ return this.getTableSummary(data); }}
+                            />
+                        </Col>
+                    </Row>
+                </Form>
             </Modal>
         )
     }

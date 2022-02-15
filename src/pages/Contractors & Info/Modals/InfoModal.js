@@ -450,10 +450,10 @@ class InfoModal extends Component {
                     size: "small",
                     type: "Select",
                     data: [
-                        { label: "Daily", value: 2 },
+                        // { label: "Daily", value: 2 },
                         { label: "Weekly", value: 3 },
-                        { label: "Fortnightly", value: 4 },
-                        { label: "Monthly", value: 5 },
+                        // { label: "Fortnightly", value: 4 },
+                        // { label: "Monthly", value: 5 },
                     ],
                     fieldStyle: { width: "100%" },
                     rules: [

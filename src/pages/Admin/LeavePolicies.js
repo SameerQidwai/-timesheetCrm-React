@@ -389,7 +389,7 @@ class LeavePolicies extends Component {
                                     </span>
                                 ))}
                             </>)}
-                            </Form.List>
+                        </Form.List>
                         </Form>
                     </Modal>
                 )}

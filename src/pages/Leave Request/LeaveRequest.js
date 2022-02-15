@@ -79,16 +79,17 @@ class LeaveRequest extends Component {
                     <Dropdown overlay={
                         <Menu>
                             <Menu.Item 
-                                disabled={!this?.state?.permissions?.['UPDATE'] || record.status === 'AP'}
+                                disabled={!this?.state?.permissions?.['UPDATE']}
                                 onClick={()=> {
                                     this.setState({
                                         openModal: true,
                                         editRequest: record.id,
+                                        readOnly: record.status === 'AP'
                                         // editIndex: index
                                     })
                                 }
                             }
-                            >Edit</Menu.Item>
+                            >{record.status === 'AP' ?'View': 'Edit' }</Menu.Item>
                             {/* <Menu.Item 
                                 onClick={()=>{}}
                             >Delete</Menu.Item> */}
@@ -105,6 +106,7 @@ class LeaveRequest extends Component {
 
         this.state = {
             request : [],
+            readOnly: false,
             editRequest: false,
             permissions: {},
             type: [],
@@ -146,7 +148,7 @@ class LeaveRequest extends Component {
     }
 
     render(){
-        const { request, openModal, type, editRequest, permissions } = this.state
+        const { request, openModal, type, editRequest, permissions, readOnly } = this.state
         return(
             <>
                 <Row justify="space-between">
@@ -201,6 +203,7 @@ class LeaveRequest extends Component {
                         close={this.closeModal}
                         edit={editRequest}
                         callBack={this.getData}
+                        readOnly={readOnly}
                     />
                 )}
             </>
