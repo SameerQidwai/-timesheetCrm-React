@@ -182,40 +182,28 @@ class AddRequestModal extends Component{
         })
     }
 
+    getLeaveDetail = (balance,  minimum_balance, minimum_balance_required) =>{
+        return {
+            Placeholder: <div><div>Current Balance: {balance}</div><div>Requird Balnce: {minimum_balance_required}</div><div>Minimum Balnce: {minimum_balance}</div></div>,
+            fieldCol: 24,
+            note: true, 
+            size: "small",
+            type: "Text",
+            labelAlign: "right",
+            itemStyle:{marginBottom:'10px', border: '1px black solid', paddingLeft: '10px'},
+        }
+    }
+
     // this function is a mess right now need some fixes so it will be readable
-    getDateArray = (start, end, LeaveRequestType, entries) => {
+    getDateArray = (start, end, LeaveRequestType, entries, status) => {
+        console.log(status);
         //try to put your condition to put closer to eachother if they link to eachother
             //so it will be easy to track conditions
         let { BasicFields, contractDetails, holidays, data, hoursEntry } = this.state;
         const { readOnly } = this.props
-        const { include_off_days, balance,  minimum_balance, minimum_balance_required} = LeaveRequestType??{}
+        let { include_off_days, balance,  minimum_balance, minimum_balance_required} = LeaveRequestType??{}
         var deFaulthours = contractDetails?.noOfHours ?? 0
         // if entries is sent it will only be send on open the modal on edit
-        if(LeaveRequestType.balance){
-            if (BasicFields[2].note){
-                BasicFields[2] = {
-                    Placeholder: <div><div>Current Balance: {balance}</div><div>Requird Balnce: {minimum_balance_required}</div><div>Minimum Balnce: {minimum_balance}</div></div>,
-                    fieldCol: 24,
-                    note: true, 
-                    size: "small",
-                    type: "Text",
-                    labelAlign: "right",
-                    itemStyle:{marginBottom:'10px', border: '1px black solid', paddingLeft: '10px'},
-                }
-            }else{
-                BasicFields.splice(2, 0, {
-                    Placeholder: <div><div>Current Balance: {balance}</div><div>Requird Balnce: {minimum_balance_required}</div><div>Minimum Balnce: {minimum_balance}</div></div>,
-                    fieldCol: 24,
-                    note: true, 
-                    size: "small",
-                    type: "Text",
-                    labelAlign: "right",
-                    itemStyle:{marginBottom:'10px', border: '1px black solid', paddingLeft: '10px'},
-                },)
-            }
-        }else if(BasicFields[2].note){
-            BasicFields.splice(2, 1)
-        }
         
         if (entries){
             var arr = new Array();
@@ -224,7 +212,9 @@ class AddRequestModal extends Component{
                 date = moment(date)
                 const disabled = !include_off_days &&
                     ( (date.format('ddd') === 'Sun' || date.format('ddd') === 'Sat') && 'Weekend' || holidays[date.format('M/D/YYYY')] ) || readOnly
-                
+                    
+                if(status === 'SB' ){ balance += hours}
+
                 hoursEntry[date.format('M/D/YYYY')] = hours // setting the hours object before return 
                 return {key: date.format('M/D/YYYY'), date: date, hours: disabled? 0: hours, disabled}
             })
@@ -262,6 +252,17 @@ class AddRequestModal extends Component{
             hoursEntry= {}
             data = []
         }
+
+        if(LeaveRequestType.balance){
+            if (BasicFields[2].note){
+                BasicFields[2] = this.getLeaveDetail(balance,  minimum_balance, minimum_balance_required)
+            }else{
+                BasicFields.splice(2, 0, this.getLeaveDetail(balance,  minimum_balance, minimum_balance_required))
+            }
+        }else if(BasicFields[2].note){
+            BasicFields.splice(2, 1)
+        }
+
         this.setState({ BasicFields, data, LeaveRequestType, hoursEntry })
         this.formRef.current.setFieldsValue({hours: hoursEntry})
         //single hook cal for all the condition
@@ -296,7 +297,7 @@ class AddRequestModal extends Component{
                     startDate: moment(entries[0].date),
                     endDate: moment(entries[entries.length-1].date),
                 }
-                this.getDateArray(formValues.startDate, formValues.endDate, selectedLeaveType, entries)
+                this.getDateArray(formValues.startDate, formValues.endDate, selectedLeaveType, entries, data.status)
                 this.formRef.current.setFieldsValue({dates: formValues})
             }
 

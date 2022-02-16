@@ -119,12 +119,17 @@ class Milestone extends Component {
         const customUrl = this.props.match.url
         let crud = this.props.match.url
         crud = crud.split('/')
+        let work = crud[1]
         crud = `${crud[1]}/${crud[2]}`
+        
         Promise.all([ getProjectDetail( crud ), getMilestones( customUrl) ])
         .then(res => {
+            let { columns } = this.state
+            if (work === 'opportunities') columns.splice(3,1);
             this.setState({
                 desc: res[0].success && res[0].data,
                 data: res[1].success && res[1].data,
+                columns: [...columns],
                 proId: id,
                 customUrl, // for temporary bases
                 permissions: PROJECTS
