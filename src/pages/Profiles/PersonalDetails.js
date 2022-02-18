@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import FormItems from '../../components/Core/FormItems'
 import Form, { useForm } from 'antd/lib/form/Form'
 import { getStates } from '../../service/constant-Apis';
+import { Button } from 'antd';
 
 const PersonalDetails= (props) => {
     const [form] = useForm();
@@ -183,7 +184,6 @@ const PersonalDetails= (props) => {
         },
         {
             object: "basic",
-            readOnly: true,
             fieldCol: 24,
             key: "address",
             size: "small",
@@ -211,7 +211,11 @@ const PersonalDetails= (props) => {
             }
         })
     } 
-    
+    const onFinish = (value) =>{
+        const { basic } = value
+        console.log(basic.address);
+    }
+
     return (
         <Form
             id={'my-form'}
@@ -220,8 +224,10 @@ const PersonalDetails= (props) => {
             size="small"
             layout="inline"
             style={{padding: 50, paddingTop:20}}
+            onFinish={onFinish}
         >
             <FormItems FormFields={fields} />
+            <Button type="primary" htmlType="submit" style={{margin: '0 15px 0 auto'}}> Submit </Button>
         </Form>
     )
     
