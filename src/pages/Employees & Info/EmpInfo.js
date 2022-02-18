@@ -14,6 +14,7 @@ import InfoModal from "./Modals/InfoModal";
 import { getRecord, delList } from "../../service/Employees";
 
 import moment from "moment"
+import LeaveBalance from "../../components/Core/LeaveBalance";
 
 const { Item } = Descriptions;
 const { TabPane } = Tabs;
@@ -139,6 +140,9 @@ class OrgInfo extends Component {
                         </TabPane>
                         <TabPane tab="Bank Account" key="account">
                             <Bank targetType="EMP" targetId={emp} title={data.name} bank={bank}/>
+                        </TabPane>
+                        <TabPane tab="Leave Balance" key="leaveBalance">
+                            <LeaveBalance />
                         </TabPane>
                     </Tabs>
                 )}

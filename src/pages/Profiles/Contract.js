@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react'
-import Form, { useForm } from 'antd/lib/form/Form'
+import React, { useEffect, useState, Form } from 'react'
 import FormItems from '../../components/Core/FormItems'
 import { getLeavePolicy } from "../../service/constant-Apis";
 
 const PersonalContract = (props)=> {
-    const [form] = useForm();
+    const [form] = Form.useForm();
     const [fields, setFields] = useState([
         {
             Placeholder: "Employment Status",

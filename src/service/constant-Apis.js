@@ -365,7 +365,7 @@ export const getLeavePolicy = () => {
             data.map((el) => {
                 policies.push({value: el.id, label: el.label})
             });
-            policies.push({value: 0, label: 'unpaid'})
+            policies.push({value: 0, label: 'Unpaid'})
             setToken(res.headers && res.headers.authorization)
             if (success) return { success: success, data: policies };
         })
@@ -386,7 +386,7 @@ export const getUserLeaveType = () => {
             setToken(res.headers && res.headers.authorization)
             if (success){
                 const {holidays, contractDetails, LeaveRequestTypes} = data
-                let requestType = [{id: 0, name: 'unpaid', include_off_days: true}]
+                let requestType = [{id: 0, name: 'Unpaid', include_off_days: true}]
                 LeaveRequestTypes.forEach((el,index)=>{
                     const type= {}
                     Object.entries(el).forEach(([key, value]) => {

@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react'
+import { Button, Form } from 'antd';
 import FormItems from '../../components/Core/FormItems'
-import Form, { useForm } from 'antd/lib/form/Form'
-import { getStates } from '../../service/constant-Apis';
-import { Button } from 'antd';
 
 
 const SecurityClearance = (props) =>{
-    const [form] = useForm();
+    const [form] = Form.useForm();
     const [fields, setFields] = useState([
         {
             Placeholder: "Clearance Level",

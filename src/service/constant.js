@@ -38,6 +38,13 @@ export const fomratDate = (date, format) =>{
   return moment(date).format(format ??'ddd DD MMM yyyy')
 }
 
+export const formatFloat = (number) =>{
+  return (number && number > 0) ? number.toFixed(2) : '0.00'
+}
+
+
+// Login and Api's
+
 export const setToken = (token) => {
   localStorage.setItem('accessToken', token?? localStore().accessToken)
   localStorage.setItem('jwtTimer', new Date().getTime())
@@ -71,9 +78,6 @@ export const jwtExpired = (message) => {
   }
 }
 
-
-
-// export let headers = { 'content-type': 'application/json','Authorization' : `${localStorage.getItem('accessToken')}`}
 
 export const  headers=()=>{
   return { 'content-type': 'application/json',

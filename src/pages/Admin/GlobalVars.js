@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { Row, Button, Space, Popconfirm, Divider } from "antd";
-import Form, { useForm } from 'antd/lib/form/Form'
+import { Row, Button, Space, Popconfirm, Divider, Form } from "antd";
 import { getSettings, upadteSettings } from "../../service/global-apis"
 import FormItems from "../../components/Core/FormItems";
 
 let states = ['ACT','NSW','VIC','QLD','SA','WA','NT','TSA']
 
 function GlobalVars(props) {
-    const [form] = useForm();
+    const [form] = Form.useForm();
     const column = []
     const [fields, setFields] = useState([
     {

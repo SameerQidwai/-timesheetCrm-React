@@ -6,7 +6,7 @@ import { addFiles } from "../../../service/Attachment-Apis";
 import { getUserProjects, getUserLeaveType} from "../../../service/constant-Apis";
 import { addRequest, editRequest, getSingleRequest } from "../../../service/leaveRequest-Apis";
 import moment from 'moment'
-import { localStore } from "../../../service/constant";
+import { formatFloat, localStore } from "../../../service/constant";
 
 import "../styles.css"
 
@@ -196,12 +196,12 @@ class AddRequestModal extends Component{
 
     // this function is a mess right now need some fixes so it will be readable
     getDateArray = (start, end, LeaveRequestType, entries, status) => {
-        console.log(status);
+        console.log(LeaveRequestType);
         //try to put your condition to put closer to eachother if they link to eachother
             //so it will be easy to track conditions
         let { BasicFields, contractDetails, holidays, data, hoursEntry } = this.state;
         const { readOnly } = this.props
-        let { include_off_days, balance,  minimum_balance, minimum_balance_required} = LeaveRequestType??{}
+        let { include_off_days = true, balance =0,  minimum_balance, minimum_balance_required, id: typeId} = LeaveRequestType??{}
         var deFaulthours = contractDetails?.noOfHours ?? 0
         // if entries is sent it will only be send on open the modal on edit
         
@@ -253,7 +253,7 @@ class AddRequestModal extends Component{
             data = []
         }
 
-        if(LeaveRequestType.balance){
+        if(typeId && balance){
             if (BasicFields[2].note){
                 BasicFields[2] = this.getLeaveDetail(balance,  minimum_balance, minimum_balance_required)
             }else{
@@ -289,15 +289,15 @@ class AddRequestModal extends Component{
             if (edit && res[2]?.success){ // run if modal is opened for editing
                 let { entries, data } = res[2] 
                 //find holiday type to find if holidays are included or not
-                let selectedLeaveType = LeaveRequestTypes.find(x=> x.id === data.typeId)
+                let selectedLeaveType = LeaveRequestTypes.find(x=> x.id === (data.typeId ?? 0))
                 const formValues = {
                     ...data,
                     description: data.desc,
-                    typeId: data.typeId ?? null,
+                    typeId: selectedLeaveType.id,
                     startDate: moment(entries[0].date),
                     endDate: moment(entries[entries.length-1].date),
                 }
-                this.getDateArray(formValues.startDate, formValues.endDate, selectedLeaveType, entries, data.status)
+                this.getDateArray(formValues.startDate, formValues.endDate, selectedLeaveType, entries, formValues.status)
                 this.formRef.current.setFieldsValue({dates: formValues})
             }
 
@@ -341,14 +341,14 @@ class AddRequestModal extends Component{
     getTableSummary = (data) => {
         let total = 0;
         data.forEach(({hours})=>{
-            total += parseInt(hours ? hours : 0); 
+            total += parseFloat(hours ?? 0); 
         })
         
         return(
             <Table.Summary fixed="top">
                 <Table.Summary.Row >
                     <Table.Summary.Cell index={0}>Total</Table.Summary.Cell>
-                    <Table.Summary.Cell index={1}>{total}</Table.Summary.Cell>
+                    <Table.Summary.Cell index={1}>{formatFloat(total)}</Table.Summary.Cell>
                 </Table.Summary.Row>
             </Table.Summary>
         )
@@ -405,7 +405,8 @@ class AddRequestModal extends Component{
         return(
             <Modal
                 title={ edit ? "Edit Request" : "New Request"}
-                maskClosable={false}
+                maskClosable
+                destroyOnClose={true}
                 visible={visible}
                 okButtonProps={{ htmlType: 'submit', form: 'my-form', disabled: readOnly, loading: loading }}
                 okText={"Submit"}
