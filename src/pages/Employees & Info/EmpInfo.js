@@ -15,6 +15,7 @@ import { getRecord, delList } from "../../service/Employees";
 
 import moment from "moment"
 import LeaveBalance from "../../components/Core/LeaveBalance";
+import { GENDER } from "../../service/constant";
 
 const { Item } = Descriptions;
 const { TabPane } = Tabs;
@@ -118,7 +119,7 @@ class OrgInfo extends Component {
                     <Item label="Email">{data.email}</Item>
                     <Item label="Address">{data.address}</Item>
                     <Item label="Date Of Birth">{data.dateOfBirth ? moment(data.dateOfBirth).format('DD MM YYYY'): null}</Item>
-                    <Item label="Gender">{data.gender}</Item>
+                    <Item label="Gender">{GENDER[data.gender]}</Item>
                 </Descriptions>
                {emp &&( 
                     <Tabs

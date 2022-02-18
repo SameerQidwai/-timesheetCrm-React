@@ -1,5 +1,6 @@
 import React, { Component, useContext, useState, useEffect, useRef } from 'react';
-import { Table, Row, Col, Form, Button, Popconfirm, InputNumber } from 'antd'
+import { Table, Row, Col, Form, Button, Popconfirm, InputNumber, Tag } from 'antd'
+import { CloseSquareFilled, CheckSquareFilled } from "@ant-design/icons"; //Icons
 import { formatFloat } from '../../service/constant';
 import { getLeaveBalance, getRequests } from '../../service/leaveRequest-Apis';
 
@@ -46,21 +47,28 @@ const EditableCell = ({ title, editable, children, dataIndex, record, handleSave
   let childNode = children;
 
   if (editable) {
-    childNode = editing ? (
-      <Form.Item
-        style={{
-          margin: 0,
-        }}
-        name={dataIndex}
-        rules={[
-          {
-            required: true,
-            message: `${title} is required.`,
-          },
-        ]}
-      >
-        <InputNumber size='small' ref={inputRef} onPressEnter={save} onBlur={save} />
-      </Form.Item>
+    childNode = editing ? (<Row  >
+      <Col span={10}>
+        <Form.Item
+          style={{
+            margin: 0,
+          }}
+          name={dataIndex}
+          rules={[
+            {
+              required: true,
+              message: `${title} is required.`,
+            },
+          ]}
+        >
+          <InputNumber size='small' ref={inputRef} onBlur={()=>setEditing(!editing)} />
+        </Form.Item>
+      </Col>
+      <Col>
+        <CloseSquareFilled style={{color: 'red', fontSize: 24}} onClick={()=>setEditing(!editing)}/>
+        <CheckSquareFilled style={{color: 'green', fontSize: 24}} onClick={save} />
+      </Col>
+      </Row>
     ) : (
       <div
         className="editable-cell-value-wrap"
@@ -90,6 +98,7 @@ class LeaveBalance extends Component {
                 title: 'Accured',
                 dataIndex: 'carryForward',
                 key: 'carryForward',
+                width: 275,
                 editable: true,
                 render:(text) => formatFloat(text)
             },
