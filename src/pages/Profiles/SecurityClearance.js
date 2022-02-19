@@ -24,6 +24,7 @@ const SecurityClearance = (props) =>{
             object: "security",
             fieldCol: 12,
             key: "clearanceLevel",
+            disabled: true,
             size: "small",
             data: [
                 { label: "BV - Baseline Vetting", value: "BV" },
@@ -34,32 +35,12 @@ const SecurityClearance = (props) =>{
             ],
             type: "Select",
             itemStyle: { marginBottom: 10 },
-            onChange: (value) => {
-                if (value){
-                    fields[1].rangeMin= true
-                    fields[4].rangeMin= true
-                    fields[5].rangeMin= true
-
-                    fields[3].rules= [ { required: true, message: "Date Granted is required", }, ]
-                    fields[6].rules= [ { required: true, message: "Expiry Date is required", }, ]
-                    fields[7].rules= [ { required: true, message: "Current Sponsor is required", }, ]
-
-                }else{
-                    fields[1].rangeMin= false
-                    fields[4].rangeMin= false
-                    fields[5].rangeMin= false
-
-                    fields[3].rules = [{required: false, message: ''}]
-                    fields[6].rules = [{required: false, message: ''}]
-                    fields[7].rules = [{required: false, message: ''}]
-                }
-                setFields([...fields])
-            }
         },
         {
             object: "security",
             fieldCol: 12,
             key: "clearanceGrantedDate",
+            disabled: true,
             size: "small",
             type: "DatePicker",
             fieldStyle: { width: "100%" },
@@ -84,6 +65,7 @@ const SecurityClearance = (props) =>{
             fieldCol: 12,
             key: "clearanceExpiryDate",
             size: "small",
+            disabled: true,
             type: "DatePicker",
             fieldStyle: { width: "100%" },
             itemStyle: { marginBottom: 10 },
@@ -92,6 +74,7 @@ const SecurityClearance = (props) =>{
             object: "security",
             fieldCol: 12,
             key: "clearanceSponsorId",
+            disabled: true,
             size: "small",
             type: "Select",
             labelAlign: "right",
@@ -103,10 +86,6 @@ const SecurityClearance = (props) =>{
         form.setFieldsValue({security: props.data})
     }, [])
 
-    const onFinish = (value) =>{
-        const { security } = value
-        console.log(security.address);
-    }
 
     return (
         <Form
@@ -116,10 +95,8 @@ const SecurityClearance = (props) =>{
             size="small"
             layout="inline"
             style={{padding: 50, paddingTop:20}}
-            onFinish={onFinish}
         >
             <FormItems FormFields={fields} />
-            <Button type="primary" htmlType="submit" style={{margin: '20px 15px 0 auto'}}> Submit </Button>
         </Form>
     )
 }

@@ -107,6 +107,7 @@ class Projects extends Component {
             <>
                 <Table
                     bordered
+                    rowKey={(data) => data.id} 
                     pagination={{pageSize: localStore().pageSize}}
                     columns={columns}
                     dataSource={projects}

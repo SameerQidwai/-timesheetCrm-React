@@ -1,4 +1,5 @@
-import React, { useEffect, useState, Form } from 'react'
+import React, { useEffect, useState } from 'react'
+import { Form } from 'antd';
 import FormItems from '../../components/Core/FormItems'
 import { getLeavePolicy } from "../../service/constant-Apis";
 
@@ -44,12 +45,6 @@ const PersonalContract = (props)=> {
             key: "payslipEmail",
             size: "small",
             type: "input",
-            // rules: [
-            //     {
-            //         required: true,
-            //         message: "Payment Email is required",
-            //     },
-            // ],
             itemStyle: { marginBottom: 20 },
         },
         {
@@ -59,7 +54,6 @@ const PersonalContract = (props)=> {
             size: "small",
             type: "Text",
             labelAlign: "right",
-            // itemStyle:{marginBottom:'10p20'},
         },
         {
             Placeholder: "Contract Start Date",
@@ -68,7 +62,6 @@ const PersonalContract = (props)=> {
             size: "small",
             type: "Text",
             labelAlign: "right",
-            // itemStyle:{marginBottom:'10p20'},
         },
         
         {
@@ -119,7 +112,6 @@ const PersonalContract = (props)=> {
             size: "small",
             type: "Text",
             labelAlign: "right",
-            // itemStyle:{marginBottom:'10p20'},
         },
         {
             Placeholder: "Annual Base Salary",
@@ -128,7 +120,6 @@ const PersonalContract = (props)=> {
             size: "small",
             type: "Text",
             labelAlign: "right",
-            // itemStyle:{marginBottom:'10p20'},
         },
         {
             object: "billing",
@@ -159,7 +150,6 @@ const PersonalContract = (props)=> {
             size: "small",
             type: "Text",
             labelAlign: "right",
-            // itemStyle:{marginBottom:'10p20'},
         },
         {
             Placeholder: "Leave Policy",
@@ -168,7 +158,6 @@ const PersonalContract = (props)=> {
             size: "small",
             type: "Text",
             labelAlign: "right",
-            // itemStyle:{marginBottom:'10px'},
         },
         {
             object: "billing",
@@ -204,7 +193,6 @@ const PersonalContract = (props)=> {
             size: "small",
             type: "Text",
             labelAlign: "right",
-            // itemStyle:{marginBottom:'10p20'},
         },
         {
             object: "billing",

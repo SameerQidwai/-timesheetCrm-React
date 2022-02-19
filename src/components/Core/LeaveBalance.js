@@ -1,8 +1,10 @@
 import React, { Component, useContext, useState, useEffect, useRef } from 'react';
-import { Table, Row, Col, Form, Button, Popconfirm, InputNumber, Tag } from 'antd'
+import { Table, Row, Col, Form, Popconfirm, InputNumber } from 'antd'
 import { CloseSquareFilled, CheckSquareFilled } from "@ant-design/icons"; //Icons
 import { formatFloat } from '../../service/constant';
-import { getLeaveBalance, getRequests } from '../../service/leaveRequest-Apis';
+import { getLeaveBalance } from '../../service/leaveRequest-Apis';
+
+import '../Styles/table.css'
 
 const EditableContext = React.createContext(null);
 
@@ -47,7 +49,8 @@ const EditableCell = ({ title, editable, children, dataIndex, record, handleSave
   let childNode = children;
 
   if (editable) {
-    childNode = editing ? (<Row  >
+    childNode = editing ? (
+    <Row>
       <Col span={10}>
         <Form.Item
           style={{
@@ -61,11 +64,17 @@ const EditableCell = ({ title, editable, children, dataIndex, record, handleSave
             },
           ]}
         >
-          <InputNumber size='small' ref={inputRef} onBlur={()=>setEditing(!editing)} />
+          <InputNumber 
+            ref={inputRef} 
+            size='small' 
+            onBlur={()=> setTimeout(() => { setEditing(!editing) }, 300)} 
+          />
         </Form.Item>
       </Col>
-      <Col>
+      <Col style={{margin: 'auto 0'}} span={3}>
         <CloseSquareFilled style={{color: 'red', fontSize: 24}} onClick={()=>setEditing(!editing)}/>
+      </Col>
+      <Col style={{margin: 'auto 0'}}>
         <CheckSquareFilled style={{color: 'green', fontSize: 24}} onClick={save} />
       </Col>
       </Row>
@@ -98,6 +107,7 @@ class LeaveBalance extends Component {
                 title: 'Accured',
                 dataIndex: 'carryForward',
                 key: 'carryForward',
+                className: 'editable-cell',
                 width: 275,
                 editable: true,
                 render:(text) => formatFloat(text)
@@ -175,6 +185,7 @@ class LeaveBalance extends Component {
                 <Col span={24}>
                     <Table
                         components={components}
+                        // rowClassName={() => 'editable-cell'}
                         bordered
                         rowKey={(data) => data.id} 
                         columns={columns}
