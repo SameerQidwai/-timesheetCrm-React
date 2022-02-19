@@ -101,15 +101,17 @@ class LeavePolicies extends Component {
                     Placeholder: "Categories",
                     type: "Text",
                     size: "small",
+                    style: {margin: 'auto 0'}
                 },
                 {
-                    fieldCol: 3,
+                    fieldCol: 2,
                     layout: {
                         wrapperCol: { offset: 1 },
                     },
                     Placeholder: "Earn Hours",
                     type: "Text",
                     size: "small",
+                    style: {margin: 'auto 0'}
                 },
                 {
                     fieldCol: 3,
@@ -119,6 +121,17 @@ class LeavePolicies extends Component {
                     Placeholder: "Earn Every",
                     type: "Text",
                     size: "small",
+                    style: {margin: 'auto 0'}
+                },
+                {
+                    fieldCol: 2,
+                    layout: {
+                        wrapperCol: { offset: 1 },
+                    },
+                    Placeholder: "Rest Hours",
+                    type: "Text",
+                    size: "small",
+                    style: {margin: 'auto 0'}
                 },
                 {
                     fieldCol: 3,
@@ -128,33 +141,47 @@ class LeavePolicies extends Component {
                     Placeholder: "Reset Every",
                     type: "Text",
                     size: "small",
+                    style: {margin: 'auto 0'}
                 },
                 {
-                    fieldCol: 3,
-                    layout: {
-                        wrapperCol: { offset: 1 },
-                    },
-                    Placeholder: "Rest Hours",
-                    type: "Text",
-                    size: "small",
-                },
-                {
-                    fieldCol: 3,
+                    fieldCol: 2,
                     layout: {
                         wrapperCol: { offset: 1 },
                     },
                     Placeholder: "Threshold",
                     type: "Text",
                     size: "small",
+                    style: {margin: 'auto 0'}
                 },
                 {
-                    fieldCol: 3,
+                    fieldCol: 2,
+                    layout: {
+                        wrapperCol: { offset: 1 },
+                    },
+                    Placeholder: "Extra",
+                    type: "Text",
+                    size: "small",
+                    style: {margin: 'auto 0'}
+                },
+                {
+                    fieldCol: 2,
+                    layout: {
+                        wrapperCol: { offset: 1 },
+                    },
+                    Placeholder: "Balance Required",
+                    type: "Text",
+                    size: "small",
+                    style: {margin: 'auto 0'}
+                },
+                {
+                    fieldCol: 2,
                     layout: {
                         wrapperCol: { offset: 1 },
                     },
                     Placeholder: "Include Holidays",
                     type: "Text",
                     size: "small",
+                    style: {margin: 'auto 0'}
                 },
             ],
 
@@ -167,7 +194,7 @@ class LeavePolicies extends Component {
                     itemStyle: { marginBottom: "5px" },
                 },
                 {
-                    fieldCol: 3,
+                    fieldCol: 2,
                     key: "earnHours",
                     size: "small",
                     type: "InputNumber",
@@ -188,7 +215,7 @@ class LeavePolicies extends Component {
                     ],
                 },
                 {
-                    fieldCol: 3,
+                    fieldCol: 2,
                     key: "resetHours",
                     size: "small",
                     type: "InputNumber",
@@ -210,7 +237,23 @@ class LeavePolicies extends Component {
                     ],
                 },
                 {
-                    fieldCol: 3,
+                    fieldCol: 2,
+                    key: "threshold",
+                    size: "small",
+                    type: "InputNumber",
+                    labelAlign: "left",
+                    fieldStyle: { width: "100%" },
+                },
+                {
+                    fieldCol: 2,
+                    key: "threshold",
+                    size: "small",
+                    type: "InputNumber",
+                    labelAlign: "left",
+                    fieldStyle: { width: "100%" },
+                },
+                {
+                    fieldCol: 2,
                     key: "threshold",
                     size: "small",
                     type: "InputNumber",
@@ -363,7 +406,7 @@ class LeavePolicies extends Component {
                         okButtonProps={{ disabled: loading, htmlType: 'submit', form: 'my-form' }}
                         okText={loading ?<LoadingOutlined /> :"Save"}
                         onCancel={() => { this.setState({openModal: false}) }}
-                        width={1200}
+                        width={1400}
                         forceRender={true}
                     >   
                     <Form

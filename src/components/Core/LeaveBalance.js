@@ -67,7 +67,8 @@ const EditableCell = ({ title, editable, children, dataIndex, record, handleSave
           <InputNumber 
             ref={inputRef} 
             size='small' 
-            onBlur={()=> setTimeout(() => { setEditing(!editing) }, 300)} 
+            // onBlur={()=> setTimeout(() => { setEditing(!editing) }, 300)} 
+            
           />
         </Form.Item>
       </Col>
@@ -75,7 +76,14 @@ const EditableCell = ({ title, editable, children, dataIndex, record, handleSave
         <CloseSquareFilled style={{color: 'red', fontSize: 24}} onClick={()=>setEditing(!editing)}/>
       </Col>
       <Col style={{margin: 'auto 0'}}>
-        <CheckSquareFilled style={{color: 'green', fontSize: 24}} onClick={save} />
+        <Popconfirm
+            title="You Want to Update Accured Balance?"
+            onConfirm={save}
+            okText="Yes"
+            cancelText="No"
+        >
+          <CheckSquareFilled style={{color: 'green', fontSize: 24}}/>
+        </Popconfirm>
       </Col>
       </Row>
     ) : (
