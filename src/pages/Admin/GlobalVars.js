@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Row, Button, Space, Popconfirm, Divider, Form } from "antd";
 import { getSettings, upadteSettings } from "../../service/global-apis"
-import FormItems from "../../components/Core/FormItems";
+import FormItems from "../../components/Core/Forms/FormItems";
 
 let states = ['ACT','NSW','VIC','QLD','SA','WA','NT','TSA']
 

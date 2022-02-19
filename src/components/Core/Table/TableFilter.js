@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import { Button, Col, Input, Modal, Row, Space, Table, Form, Select, Tag, DatePicker } from 'antd';
-import FormItems from '../FormItems';
+import FormItems from '../Forms/FormItems';
 import { SearchOutlined } from "@ant-design/icons";
 import moment from "moment";
 

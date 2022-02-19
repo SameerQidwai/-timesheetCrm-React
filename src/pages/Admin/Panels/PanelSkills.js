@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Row, Col, Typography, Button, Table, Menu, Dropdown, Popconfirm, Modal, } from "antd";
 import { DownOutlined, SettingOutlined, PlusSquareOutlined, MinusCircleOutlined, LoadingOutlined} from "@ant-design/icons"; //Icons
 
-import Form from "../../../components/Core/Form";
+import Form from "../../../components/Core/Forms/Form";
 
 import { getlevels, getSkills, getList, editLabel, addList, delLabel, } from "../../../service/panelSkill";
 import { getSkillLevels as selectedSkill } from "../../../service/constant-Apis";

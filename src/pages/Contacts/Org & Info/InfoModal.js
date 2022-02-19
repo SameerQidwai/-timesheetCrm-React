@@ -4,7 +4,7 @@ import Draggable from 'react-draggable';
 
 import { UploadOutlined, LoadingOutlined } from "@ant-design/icons"; //Icons
 import moment from "moment";
-import Form from "../../../components/Core/Form";
+import Form from "../../../components/Core/Forms/Form";
 import { addList, getOrgRecord, editList } from "../../../service/Organizations";
 import { getOrganizations, getOrgPersons } from "../../../service/constant-Apis";
 

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Modal, Table, Form, Row, Col, Upload, Typography, Input, InputNumber } from "antd";
 import { PlusOutlined } from "@ant-design/icons"; //Icons
-import FormItems from "../../../components/Core/FormItems";
+import FormItems from "../../../components/Core/Forms/FormItems";
 import { addFiles } from "../../../service/Attachment-Apis";
 import { getUserProjects, getUserLeaveType} from "../../../service/constant-Apis";
 import { addRequest, editRequest, getSingleRequest } from "../../../service/leaveRequest-Apis";

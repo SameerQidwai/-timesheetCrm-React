@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Modal, Upload, Form } from "antd";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons"; //Icons
-import FormItems from "../../../components/Core/FormItems";
+import FormItems from "../../../components/Core/Forms/FormItems";
 import { headers } from "../../../service/constant";
 
 import moment from "moment";

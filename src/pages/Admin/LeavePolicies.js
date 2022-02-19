@@ -7,7 +7,7 @@ import "../styles/table.css";
 
 import { timeOff, addList, getList, editLabel, delLabel, } from "../../service/time-off-policy";
 import { localStore } from "../../service/constant";
-import FormItems from "../../components/Core/FormItems";
+import FormItems from "../../components/Core/Forms/FormItems";
 import { tableSorter, tableTitleFilter } from "../../components/Core/Table/TableFilter";
 
 const { Title } = Typography;

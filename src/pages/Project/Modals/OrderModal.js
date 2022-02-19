@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Modal, Tabs } from "antd";
 import { LoadingOutlined } from "@ant-design/icons"; //Icons
 import moment from "moment";
-import Form from "../../../components/Core/Form";
+import Form from "../../../components/Core/Forms/Form";
 
 import { addOrder, getOrder, editOrder } from "../../../service/projects";
 import { getPanelSkills, getStandardLevels, getContactPersons  } from "../../../service/constant-Apis";

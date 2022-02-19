@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Form } from 'antd';
-import FormItems from '../../components/Core/FormItems'
+import FormItems from '../../components/Core/Forms/FormItems'
 import { getLeavePolicy } from "../../service/constant-Apis";
 
 const PersonalContract = (props)=> {

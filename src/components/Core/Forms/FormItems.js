@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { InputNumber, Typography, DatePicker, TimePicker, Checkbox, Divider, Upload, Button, Select, Switch, Radio, Input, Space, Form, Row, Col, Tooltip} from "antd";
-import { CheckOutlined, CloseOutlined} from "@ant-design/icons"; //Icons
+import { CheckOutlined, CloseOutlined } from "@ant-design/icons"; //Icons
 
 const { Item } = Form;
 const { Dragger } = Upload;

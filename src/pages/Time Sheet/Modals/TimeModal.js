@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Modal, Tabs, Row, Col, Button, Input, Typography } from "antd";
 import { LoadingOutlined } from "@ant-design/icons"; //Icons
 
-import Form from "../../../components/Core/Form";
+import Form from "../../../components/Core/Forms/Form";
 
 import moment from "moment";
 import { addTime, editTime, deleteTime } from "../../../service/timesheet";

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Modal, Tabs, Row, Col, Select, Input, Form, Upload } from "antd";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons"; //Icons
 import moment from "moment";
-import FormItems from "../../../components/Core/FormItems";
+import FormItems from "../../../components/Core/Forms/FormItems";
 import { addList, getRecord, editList } from "../../../service/contractors";
 import { getContactRecord } from "../../../service/conatct-person";
 import { getOrganizations, getOrgPersons, getRoles, getStates } from "../../../service/constant-Apis";

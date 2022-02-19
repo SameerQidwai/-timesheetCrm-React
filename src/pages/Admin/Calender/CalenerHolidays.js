@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Row, Col, Menu, Table, Modal, Button, Dropdown, Popconfirm, Typography, DatePicker, } from "antd";
 import { DownOutlined, SettingOutlined, PlusSquareOutlined, LoadingOutlined, FilterOutlined} from "@ant-design/icons"; //Icons
 
-import Form from "../../../components/Core/Form";
+import Form from "../../../components/Core/Forms/Form";
 import moment from "moment";
 import "../../styles/table.css";
 
