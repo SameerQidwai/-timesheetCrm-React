@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Form } from 'antd';
 import FormItems from '../../components/Core/Forms/FormItems'
+import { getOrganizations } from '../../service/constant-Apis';
 
 
 const SecurityClearance = (props) =>{
@@ -83,6 +84,13 @@ const SecurityClearance = (props) =>{
     ])
 
     useEffect(() => {
+        getOrganizations().then(res=>{
+            if (res.success){
+                const updateField = [...fields]
+                updateField[7].data = res.data
+                setFields([...updateField])
+            }
+        })
         form.setFieldsValue({security: props.data})
     }, [])
 

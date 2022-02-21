@@ -410,7 +410,7 @@ export const getUserLeaveType = () => {
 
 export const getLineEmployees = () =>{
     return axios
-    .get(`${Api}/users`, {headers:headers()})
+    .get(`${Api}/auth/users`, {headers:headers()})
     .then((res) => {
         const { success, data } = res.data;
         setToken(res.headers && res.headers.authorization)
@@ -425,3 +425,22 @@ export const getLineEmployees = () =>{
         };
     });
 }
+
+export const getManageProjects = () =>{
+    return axios
+    .get(`${Api}/auth/projects`, {headers:headers()})
+    .then((res) => {
+        const { success, data } = res.data;
+        setToken(res.headers && res.headers.authorization)
+        console.log(data);
+        if (success) return { success: success, data: data };
+    })
+    .catch((err) => {
+        return {
+            error: "Please login again!",
+            success: false,
+            message: err.message,
+        };
+    });
+}
+

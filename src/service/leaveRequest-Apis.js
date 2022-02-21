@@ -151,9 +151,27 @@ export const manageLeaveRequests = (manage, data) => {
             };
         });
 };
-    export const getLeaveBalance = () => {
+    export const getLeaveBalance = (id) => {
         return axios
-            .get(`${Api}/leave-request-balances`,{headers:headers()})
+            .get(`${Api}/leave-request-balances?employeeId=${id}`,{headers:headers()})
+            .then((res) => {
+                const { success, data } = res.data;
+                setToken(res.headers && res.headers.authorization)
+                if (success) return { success: success, data: data };
+            })
+            .catch((err) => {
+                const {message} = err?.response?.data
+                messageAlert.error({ content: message??err.message , key: 1})
+                return {
+                    error: "Please login again!",
+                    success: false,
+                    message: err.message,
+                };
+            });
+    };
+    export const updateLeavebalance = (id, data) => {
+        return axios
+            .patch(`${Api}/leave-request-balances/${id}`, data,{headers:headers()})
             .then((res) => {
                 const { success, data } = res.data;
                 setToken(res.headers && res.headers.authorization)

@@ -143,7 +143,7 @@ class OrgInfo extends Component {
                             <Bank targetType="EMP" targetId={emp} title={data.name} bank={bank}/>
                         </TabPane>
                         <TabPane tab="Leave Balance" key="leaveBalance">
-                            <LeaveBalance />
+                            <LeaveBalance empId={emp} editable={true}/>
                         </TabPane>
                     </Tabs>
                 )}

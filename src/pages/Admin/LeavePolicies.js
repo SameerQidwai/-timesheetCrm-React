@@ -158,7 +158,7 @@ class LeavePolicies extends Component {
                     layout: {
                         wrapperCol: { offset: 1 },
                     },
-                    Placeholder: "Extra",
+                    Placeholder: "Minimum",
                     type: "Text",
                     size: "small",
                     style: {margin: 'auto 0'}
@@ -246,7 +246,7 @@ class LeavePolicies extends Component {
                 },
                 {
                     fieldCol: 2,
-                    key: "threshold",
+                    key: "minimumBalance",
                     size: "small",
                     type: "InputNumber",
                     labelAlign: "left",
@@ -254,7 +254,7 @@ class LeavePolicies extends Component {
                 },
                 {
                     fieldCol: 2,
-                    key: "threshold",
+                    key: "minimumBalanceRequired",
                     size: "small",
                     type: "InputNumber",
                     labelAlign: "left",
@@ -323,6 +323,7 @@ class LeavePolicies extends Component {
 
     editRecord = (value) => {
         value.id = this.state.editTimeoff;
+        console.log(value);
         this.setState({loading: true})
         editLabel(value).then((res) => {
             if (res) {

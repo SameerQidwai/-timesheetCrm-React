@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Row, Col, Table, Button, Select, Typography, Modal, DatePicker, Space, Tag, Tooltip} from "antd";
+import { Row, Col, Table, Button, Select, Typography, Modal, DatePicker, Space, Tag, Tooltip, Input} from "antd";
 import { DownloadOutlined, SaveOutlined, ExclamationCircleOutlined, PaperClipOutlined, CheckCircleOutlined } from "@ant-design/icons"; //Icons
 import moment from "moment";
 import AttachModal from "./Modals/AttachModal";
@@ -10,7 +10,7 @@ import "../styles/table.css";
 import "../styles/button.css";
 import TimeSheetPDF from "./Modals/TimeSheetPDF";
 
-const { Title, Link } = Typography;
+const { Title, Link, Text } = Typography;
 //inTable insert
 
 class TimeSheetProject extends Component {
@@ -31,6 +31,7 @@ class TimeSheetProject extends Component {
             permissions: {},
             canApprove: false,
             milestones: [], // users Time Sheet
+            actionNotes: '',
             sTimesheet: { // selected timesheets 
                 timesheet: [], //  Timesheets Object 
                 keys: [] // TimeSheets key
@@ -221,12 +222,12 @@ class TimeSheetProject extends Component {
         })
     };
 
-    actionTimeSheet = (stage) => {
+    actionTimeSheet = (stage, value) => {
         const { startDate, endDate } = this.state.sheetDates
         const { keys } = this.state.sTimesheet
-        const { sMilestone } = this.state
+        const { sMilestone, actionNotes } = this.state
         const query= { userId: sMilestone, startDate: startDate.format('DD-MM-YYYY'), endDate: endDate.format('DD-MM-YYYY') }
-        const data = {milestoneEntries: keys}
+        const data = {milestoneEntries: keys, notes: actionNotes}
         reviewTimeSheet(query, stage, data).then(res=>{
             this.getSheet()
         })
@@ -322,12 +323,27 @@ class TimeSheetProject extends Component {
     }
 
     multiAction = (stage)=> {
-        const { timesheet, keys } = this.state.sTimesheet
+        const { actionNotes} = this.state
         const { cMonth } = this.state.sheetDates
-        let content = ''
-        // timesheet.forEach(({project}) => {
-        //     content += `${project}, ` 
-        // })
+        let content = stage !== 'Delete' ? <Row>
+            <Col span="24">
+                <Title>Notes</Title>
+            </Col>
+            <Col span="24">
+                <Input.TextArea
+                     placeholder="Enter Your Notes...."
+                     value={actionNotes}
+                     autoSize={{ minRows: 3, maxRows: 10 }}
+                     allowClear
+                     onChange={(e)=>{
+                         console.log(e.target.value);
+                         this.setState({
+                            actionNotes: e.target.value
+                         },()=>console.log(this.state.actionNotes))
+                     }}
+                />
+            </Col>
+            </Row> : ''
         const modal = Modal.confirm({
           title: `${stage} Timesheet For the month of ${cMonth.format('MMM YYYY')}`,
           icon: stage=== 'Reject' ? <ExclamationCircleOutlined /> : <CheckCircleOutlined />,

@@ -236,7 +236,7 @@ class FormItems extends Component {
                         style={style}
                         onBlur={onBlur}
                         onChange={onChange}
-                        format={'DD/MM/YYYY'}
+                        format={'ddd DD MMM yyyy'} //donot change yet
                         disabled={disabled}
                     />
                 );
@@ -272,7 +272,7 @@ class FormItems extends Component {
                         style={style}
                         onBlur={onBlur}
                         onChange={onChange}
-                        format={'DD/MM/YYYY'}
+                        format={'ddd DD MMM yyyy'} //donot change yet
                         disabled={disabled}
                     />
                 );

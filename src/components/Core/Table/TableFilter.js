@@ -96,7 +96,7 @@ export const tableSummaryFilter = (filters, filterFunction) =>{ // filter on foo
                                         // picker={mode}
                                         size="small"
                                         style={{width: '100%'}}
-                                        format={'DD/MM/YYYY'}
+                                        format={'ddd DD MMM yyyy'} //donot change yet
                                         disabled={filters[el].disabled} 
                                         onChange={(value)=>{
                                             console.log(value);

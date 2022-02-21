@@ -1,8 +1,8 @@
 import React, { Component, useContext, useState, useEffect, useRef } from 'react';
 import { Table, Row, Col, Form, Popconfirm, InputNumber } from 'antd'
 import { CloseSquareFilled, CheckSquareFilled } from "@ant-design/icons"; //Icons
-import { formatFloat } from '../../service/constant';
-import { getLeaveBalance } from '../../service/leaveRequest-Apis';
+import { formatFloat, localStore } from '../../service/constant';
+import { getLeaveBalance, updateLeavebalance } from '../../service/leaveRequest-Apis';
 
 import '../Styles/table.css'
 
@@ -105,6 +105,7 @@ const EditableCell = ({ title, editable, children, dataIndex, record, handleSave
 class LeaveBalance extends Component {
     constructor(props) {
         super(props);
+
         this.columns = [
             {
                 title: 'Type',
@@ -117,14 +118,14 @@ class LeaveBalance extends Component {
                 key: 'carryForward',
                 className: 'editable-cell',
                 width: 275,
-                editable: true,
+                editable: props.editable,
                 render:(text) => formatFloat(text)
             },
             {
                 title: 'Earned YTD',
                 dataIndex: 'earned',
                 key: 'earned',
-                render:(text, record)=> formatFloat(record.balanceHours - record.carryForward)
+                render:(text, record)=> formatFloat(record.balanceHours - record.carryForward + record.used)
             },
             {
                 title: 'Used YTD',
@@ -142,32 +143,40 @@ class LeaveBalance extends Component {
 
         this.state = {
             data: [],
+            permissions: {}
         }
     }
 
     componentDidMount = () =>{
-        getLeaveBalance().then(res=>{
+      const { empId } = this.props
+        getLeaveBalance(empId).then(res=>{
             if(res.success){
                 this.setState({
-                    data: res.data
+                    data: res.data,
                 })
             }
         })
     }
 
     handleSave = (row) => {
-        const data = [...this.state.data];
-        const index = data.findIndex((item) => row.id === item.id);
-        const item = data[index];
-        data.splice(index, 1, { ...item, ...row });
+      updateLeavebalance(row.id, row).then(res => {
+        if(res.success){
+          console.log(res.data);
+          const data = [...this.state.data];
+          const index = data.findIndex((item) => row.id === item.id);
+          const item = data[index];
+          data.splice(index, 1, { ...item, ...row });
 
-        this.setState({
-          data,
+          this.setState({
+            data,
         });
-      };
+        }
+      })
+    };
 
     render(){
         const { data } = this.state
+        const { style } = this.props 
         const components = {
             body: {
                 row: EditableRow,
@@ -175,25 +184,25 @@ class LeaveBalance extends Component {
             },
         };
         const columns = this.columns.map((col) => {
-            if (!col.editable) {
-                return col;
-            }
+          if (!col.editable) {
+              return col;
+          }
 
-            return {
-                ...col,
-                onCell: (record) => ({
-                    ...col,
-                    record,
-                    handleSave: this.handleSave,
-                }),
-            };
+          return {
+              ...col,
+              onCell: (record) => ({
+                  ...col,
+                  record,
+                  handleSave: this.handleSave,
+              }),
+          };
         });
         return (
             <Row>
                 <Col span={24}>
                     <Table
                         components={components}
-                        // rowClassName={() => 'editable-cell'}
+                        style={style}
                         bordered
                         rowKey={(data) => data.id} 
                         columns={columns}

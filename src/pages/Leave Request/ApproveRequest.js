@@ -6,7 +6,7 @@ import moment from "moment";
 import { getApprovalRequests, manageLeaveRequests, manageRequests } from '../../service/leaveRequest-Apis';
 import AddRequestModal from './Modals/AddRequestModal';
 import { getMilestones } from '../../service/timesheet';
-import { getLineEmployees, getUserProjects } from '../../service/constant-Apis';
+import { getLineEmployees, getManageProjects } from '../../service/constant-Apis';
 import { tableSorter, tableTitleFilter } from '../../components/Core/Table/TableFilter';
 
 const { Title, Text } = Typography
@@ -134,7 +134,7 @@ class ApproveRequest extends Component {
         const loginId = parseInt(id)
         const { LEAVE_REQUESTS } = JSON.parse(permissions)
 
-        Promise.all([ getUserProjects(loginId, 'M'), getApprovalRequests(query), getLineEmployees() ])
+        Promise.all([ getManageProjects(loginId, 'M'), getApprovalRequests(query), getLineEmployees() ])
         .then(res => {
             this.setState({
                 WORKS: res[0].success? res[0].data : [],

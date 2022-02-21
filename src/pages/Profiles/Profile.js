@@ -15,6 +15,7 @@ const Profile = ()=>{
     const [basic, setBasic] = useState(false)
     const [contract, setContract] = useState(false)
     const [details, setDetails] = useState(false)
+    const [clearance, setClearance] = useState(false)
     const loginType = JSON.parse(localStore().role).type
 
     useEffect(() => {
@@ -29,9 +30,10 @@ const Profile = ()=>{
                 setDetails({
                     kin: res.kin, 
                     detail: res.detail, 
-                    bank: res.bank
+                    bank: res.bank,
                     // train:res.train, 
                 })
+                setClearance(res.sClearance)
             }
         })
     }
@@ -44,7 +46,7 @@ const Profile = ()=>{
                 {contract &&<PersonalContract data={contract} />} 
             </TabPane>}
             <TabPane tab="Other Details" key="others"> {details && <OtherDetails  data={details}/>} </TabPane>
-            <TabPane tab="Security Clearance" key="security"> {details && <SecurityClearance  data={details}/>} </TabPane>
+            <TabPane tab="Security Clearance" key="security"> {details && <SecurityClearance  data={clearance}/>} </TabPane>
             <TabPane tab="Password" key="password "> <PasswordUpdate/> </TabPane>
             <TabPane tab="Attachments" key="attachments"> <Attachments targetType="emp" targetId={localStore().id}  /> </TabPane>
         </Tabs>

@@ -131,8 +131,14 @@ export const getSettings = () => {
                     comments: employmentContracts.comments,
                     leaveRequestPolicyId: employmentContracts.leaveRequestPolicyId ?? 0,
                 }
+                const sClearance = {
+                    clearanceLevel: contactPerson.clearanceLevel,
+                    clearanceGrantedDate: contactPerson.clearanceGrantedDate ? moment(contactPerson.clearanceGrantedDate) : null, 
+                    clearanceExpiryDate: contactPerson.clearanceExpiryDate ? moment(contactPerson.clearanceExpiryDate) : null, 
+                    clearanceSponsorId: contactPerson.clearanceSponsorId,
+                }
                 setToken(res.headers && res.headers.authorization)
-                return { success, data, basic, detail, kin, bank, billing }
+                return { success, data, basic, detail, kin, bank, billing, sClearance }
             }
             return { success }
         })
