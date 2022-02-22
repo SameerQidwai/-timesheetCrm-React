@@ -201,26 +201,27 @@ class AddRequestModal extends Component{
             //so it will be easy to track conditions
         let { BasicFields, contractDetails, holidays, data, hoursEntry } = this.state;
         const { readOnly } = this.props
-        let { include_off_days = true, balance =0,  minimum_balance, minimum_balance_required, id: typeId} = LeaveRequestType??{}
+        let { include_off_days, balance = -1,  minimum_balance, minimum_balance_required, id: typeId} = LeaveRequestType??{}
         var deFaulthours = contractDetails?.noOfHours ?? 0
         // if entries is sent it will only be send on open the modal on edit
         
         if (entries){
+            console.log('entries');
             var arr = new Array();
             data = entries.map(el=> {
                 var {date, hours } = el // in this conditon this hours value will be replace
                 date = moment(date)
-                const disabled = !include_off_days &&
-                    ( (date.format('ddd') === 'Sun' || date.format('ddd') === 'Sat') && 'Weekend' || holidays[date.format('M/D/YYYY')] ) || readOnly
+                const disabled = readOnly === true && (!!include_off_days && ( (date.format('ddd') === 'Sun' || date.format('ddd') === 'Sat') && 'Weekend' || holidays[date.format('M/D/YYYY')] ) )
                     
                 if(status === 'SB' ){ balance += hours}
 
                 hoursEntry[date.format('M/D/YYYY')] = hours // setting the hours object before return 
                 return {key: date.format('M/D/YYYY'), date: date, hours: disabled? 0: hours, disabled}
             })
-            BasicFields[7].disabled = false
+            BasicFields[BasicFields[2].note ? 8: 7].disabled = false // adding an object when select leavetype
             
         }else if (start && end){
+            console.log('start && end');
             //it will call on change of start and end date and found
             var arr = new Array();
             while(start.isSameOrBefore(end)){
@@ -235,8 +236,9 @@ class AddRequestModal extends Component{
                 start = moment(start).add(1,'d')
             }
             data = arr
-            BasicFields[7].disabled = false
+            BasicFields[BasicFields[2].note ? 8: 7].disabled = false // adding an object when select leavetype
         }else if (start){
+            console.log('start');
             //if end date is not sent
             const disabled = !include_off_days && ((start.format('ddd') === 'Sun' || start.format('ddd') === 'Sat') && 'Weekend' || holidays[start.format('M/D/YYYY')])
             const hours = disabled? 0: hoursEntry[start.format('M/D/YYYY')] ?? deFaulthours
@@ -244,16 +246,17 @@ class AddRequestModal extends Component{
             hoursEntry[start.format('M/D/YYYY')] = disabled? 0: hoursEntry[start.format('M/D/YYYY')] ?? deFaulthours
 
             data= [{key: start.format('M/D/YYYY'), date: start, hours: disabled? 0: hours, disabled,}]
-            BasicFields[7].disabled = false // disabling the endDate
+            BasicFields[BasicFields[2].note ? 8: 7].disabled = false // // adding an object when select leavetype
 
         }else{
+            console.log('startEnddate');
             this.formRef.current.setFieldsValue({dates: {startDate: null, endDate: null}})
-            BasicFields[7].disabled = true
+            BasicFields[BasicFields[2].note ? 8: 7].disabled = true // adding an object when select leavetype
             hoursEntry= {}
             data = []
         }
 
-        if(typeId && balance){
+        if(typeId && balance>= 0){
             if (BasicFields[2].note){
                 BasicFields[2] = this.getLeaveDetail(balance,  minimum_balance, minimum_balance_required)
             }else{
@@ -263,7 +266,7 @@ class AddRequestModal extends Component{
             BasicFields.splice(2, 1)
         }
 
-        this.setState({ BasicFields, data, LeaveRequestType, hoursEntry })
+        this.setState({ BasicFields: [...BasicFields], data, LeaveRequestType, hoursEntry })
         this.formRef.current.setFieldsValue({hours: hoursEntry})
         //single hook cal for all the condition
     }
@@ -400,8 +403,40 @@ class AddRequestModal extends Component{
     //File
     render(){
         const { visible, close, edit, readOnly } = this.props;
-        const { BasicFields, fileList, data, fileIds, loading } = this.state;
-
+        const { BasicFields, fileList, data, fileIds, loading, contractDetails } = this.state;
+         // for timeBeing 
+        let columns = [
+            {
+                title: 'Date',
+                dataIndex: 'date',
+                key: 'date',
+                render:(text, records) =>(<Row justify="space-between" >
+                    <Col> {moment(text).format('ddd DD MMM yyyy')} </Col>
+                    <Col style={{marginLeft: 'auto', color: 'red'}} >{records.disabled}</Col>
+                </Row>
+                ),
+            },
+            {
+                title: 'Hours',
+                dataIndex: 'hours',
+                key: 'hours',
+                render:(text, records, index) =>(
+                    <Form.Item noStyle name={['hours', moment(records.date).format('M/D/YYYY')]} >
+                        <InputNumber
+                            max={contractDetails?.noOfHours ?? false}
+                            min={0}
+                            placeholder= "Hours"
+                            size="small" 
+                            disabled={readOnly}
+                            onChange={(value)=>{
+                                this.setHours(records, value, index)
+                            }}
+                        />
+                    </Form.Item>
+                ),
+            },
+        ]
+        // For time bring
         return(
             <Modal
                 title={ edit ? "Edit Request" : "New Request"}
@@ -447,7 +482,7 @@ class AddRequestModal extends Component{
                                 style={{maxHeight: "40vh", overflowY: 'scroll', position: 'relative'}}
                                 pagination={false}
                                 rowKey={(data) => data.key} 
-                                columns={this.columns}
+                                columns={columns}
                                 dataSource={data}
                                 size='small'
                                 summary={(data)=>{ return this.getTableSummary(data); }}

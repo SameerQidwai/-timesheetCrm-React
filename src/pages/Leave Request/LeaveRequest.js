@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { Table, Button, Row, Col, Typography, Menu, Dropdown, Tag} from 'antd'
+import { Table, Button, Row, Col, Typography, Menu, Dropdown, Tag, Tooltip} from 'antd'
 import { DownOutlined, SettingOutlined, PlusSquareOutlined, FilterOutlined} from '@ant-design/icons';
 import { formatFloat, fomratDate, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
 import AddRequestModal from './Modals/AddRequestModal';
@@ -73,7 +73,13 @@ class LeaveRequest extends Component {
                 dataIndex: 'status',
                 key: 'status',
                 render:(text, records) => {
-                    return  <Tag color={STATUS_COLOR[text]}> {R_STATUS[text]} </Tag>
+                    return  <Tooltip 
+                        placement="top" 
+                        title={records.note}
+                        destroyTooltipOnHide
+                    >
+                        <Tag color={STATUS_COLOR[text]}> {R_STATUS[text]} </Tag>
+                    </Tooltip>
                 }
             },
             {

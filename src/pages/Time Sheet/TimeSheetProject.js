@@ -4,7 +4,7 @@ import { DownloadOutlined, SaveOutlined, ExclamationCircleOutlined, PaperClipOut
 import moment from "moment";
 import AttachModal from "./Modals/AttachModal";
 import {  getList, reviewTimeSheet, getMilestones, getUsersTimesheet  } from "../../service/timesheet"
-import { Api, localStore } from "../../service/constant";
+import { Api, localStore, R_STATUS, STATUS_COLOR } from "../../service/constant";
 
 import "../styles/table.css";
 import "../styles/button.css";
@@ -95,9 +95,13 @@ class TimeSheetProject extends Component {
                                             </Link>
                                             </Col>}
                                     <Col span={5} style={{marginLeft:'auto', marginRight: 5}}>
-                                        {record.status === 'SB' &&<Tag color="cyan"> Submitted </Tag>}
-                                        {record.status === 'AP' &&<Tag color="green"> Approved </Tag>}
-                                        {record.status === 'RJ' &&<Tag color="red"> Rejected </Tag>}
+                                    <Tooltip 
+                                        placement="top" 
+                                        title={record.actionNotes}
+                                        destroyTooltipOnHide
+                                    >
+                                        <Tag color={STATUS_COLOR[record.status]}> {R_STATUS[record.status]} </Tag>
+                                    </Tooltip>
                                     </Col>
                                 </Row>
                             </Col>

@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { Table, Button, Row, Col, Typography, Menu, Dropdown, DatePicker, Tag, Select, Modal, Form, Input} from 'antd'
+import { Table, Button, Row, Col, Typography, Menu, Dropdown, DatePicker, Tag, Select, Modal, Form, Input, Tooltip} from 'antd'
 import { DownOutlined, SettingOutlined, ExclamationCircleOutlined, CheckCircleOutlined} from '@ant-design/icons';
 import { fomratDate, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
 import moment from "moment";
@@ -60,7 +60,13 @@ class ApproveRequest extends Component {
                 dataIndex: 'status',
                 key: 'status',
                 render:(text, records) =>(
-                    <Tag color={STATUS_COLOR[text]}> {R_STATUS[text]} </Tag>
+                    <Tooltip
+                        placement="top" 
+                        title={records.note}
+                        destroyTooltipOnHide
+                    >
+                        <Tag color={STATUS_COLOR[text]}> {R_STATUS[text]} </Tag>
+                    </Tooltip>
                 ),
             },
             {
