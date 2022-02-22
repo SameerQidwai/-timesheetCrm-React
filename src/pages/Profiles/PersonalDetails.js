@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import FormItems from '../../components/Core/FormItems'
-import Form, { useForm } from 'antd/lib/form/Form'
+import { Button, Form } from 'antd';
+import FormItems from '../../components/Core/Forms/FormItems'
 import { getStates } from '../../service/constant-Apis';
+import { upadteAddress } from '../../service/Login-Apis';
 
 const PersonalDetails= (props) => {
-    const [form] = useForm();
+    const [form] = Form.useForm();
+    const [disabled, setDisabled] =  useState(true)
     const [fields, setFields] = useState([
         {
             fieldCol: 12, // this is only label 1
@@ -183,13 +185,15 @@ const PersonalDetails= (props) => {
         },
         {
             object: "basic",
-            readOnly: true,
             fieldCol: 24,
             key: "address",
             size: "small",
             // rules:[{ required: true }],
             type: "Input",
             itemStyle: { marginBottom: 30 },
+            onChange: () =>{
+                setDisabled(false)
+            }
         },
     ])
 
@@ -211,7 +215,15 @@ const PersonalDetails= (props) => {
             }
         })
     } 
-    
+    const onFinish = (value) =>{
+        const { basic } = value
+        upadteAddress({address: basic.address}).then(res =>{
+            if (res.success){
+                setDisabled(true)
+            }
+        })
+    }
+
     return (
         <Form
             id={'my-form'}
@@ -220,8 +232,10 @@ const PersonalDetails= (props) => {
             size="small"
             layout="inline"
             style={{padding: 50, paddingTop:20}}
+            onFinish={onFinish}
         >
             <FormItems FormFields={fields} />
+            <Button type="primary" disabled={disabled} htmlType="submit" style={{margin: '0 15px 0 auto'}}> Edit Address </Button>
         </Form>
     )
     

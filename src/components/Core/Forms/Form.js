@@ -297,7 +297,7 @@ class Forms extends Component {
                         style={style}
                         onBlur={onBlur}
                         onChange={onChange}
-                        format={'DD/MM/YYYY'}
+                        format={'ddd DD MMM yyyy'} //donot change yet
                     />
                 );
                 break;
@@ -332,7 +332,7 @@ class Forms extends Component {
                         showTime={showTime}
                         size={size}
                         style={style}
-                        format={'DD/MM/YYYY'}
+                        format={'ddd DD MMM yyyy'} //donot change yet
                     />
                 );
                 break;

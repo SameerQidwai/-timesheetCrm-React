@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import { Modal, Table, Form, Row, Col, Upload, Typography, Input, InputNumber } from "antd";
 import { PlusOutlined } from "@ant-design/icons"; //Icons
-import FormItems from "../../../components/Core/FormItems";
+import FormItems from "../../../components/Core/Forms/FormItems";
 import { addFiles } from "../../../service/Attachment-Apis";
 import { getUserProjects, getUserLeaveType} from "../../../service/constant-Apis";
 import { addRequest, editRequest, getSingleRequest } from "../../../service/leaveRequest-Apis";
 import moment from 'moment'
-import { localStore } from "../../../service/constant";
+import { formatFloat, localStore } from "../../../service/constant";
 
 import "../styles.css"
 
@@ -34,15 +34,16 @@ class AddRequestModal extends Component{
                 dataIndex: 'hours',
                 key: 'hours',
                 render:(text, records, index) =>(
-                    <InputNumber
-                        placeholder= "Hours"
-                        value= {text}
-                        size="small" 
-                        disabled={records.disabled}
-                        onChange={(value)=>{
-                            this.setHours(records, value, index)
-                        }}
-                    />
+                    <Form.Item noStyle name={['hours', moment(records.date).format('M/D/YYYY')]}>
+                        <InputNumber
+                            placeholder= "Hours"
+                            size="small" 
+                            disabled={props.readOnly}
+                            onChange={(value)=>{
+                                this.setHours(records, value, index)
+                            }}
+                        />
+                    </Form.Item>
                 ),
             },
         ]
@@ -181,27 +182,46 @@ class AddRequestModal extends Component{
         })
     }
 
+    getLeaveDetail = (balance,  minimum_balance, minimum_balance_required) =>{
+        return {
+            Placeholder: <div><div>Current Balance: {balance}</div><div>Requird Balnce: {minimum_balance_required}</div><div>Minimum Balnce: {minimum_balance}</div></div>,
+            fieldCol: 24,
+            note: true, 
+            size: "small",
+            type: "Text",
+            labelAlign: "right",
+            itemStyle:{marginBottom:'10px', border: '1px black solid', paddingLeft: '10px'},
+        }
+    }
+
     // this function is a mess right now need some fixes so it will be readable
-    getDateArray = (start, end, LeaveRequestType, entries) => {
+    getDateArray = (start, end, LeaveRequestType, entries, status) => {
+        console.log(LeaveRequestType);
         //try to put your condition to put closer to eachother if they link to eachother
             //so it will be easy to track conditions
         let { BasicFields, contractDetails, holidays, data, hoursEntry } = this.state;
-        const { include_off_days } = LeaveRequestType??{}
+        const { readOnly } = this.props
+        let { include_off_days, balance = -1,  minimum_balance, minimum_balance_required, id: typeId} = LeaveRequestType??{}
         var deFaulthours = contractDetails?.noOfHours ?? 0
         // if entries is sent it will only be send on open the modal on edit
+        
         if (entries){
+            console.log('entries');
             var arr = new Array();
             data = entries.map(el=> {
                 var {date, hours } = el // in this conditon this hours value will be replace
                 date = moment(date)
-                const disabled = !include_off_days && ( (date.format('ddd') === 'Sun' || date.format('ddd') === 'Sat') && 'Weekend' || holidays[date.format('M/D/YYYY')] )
+                const disabled = (!!include_off_days && ( (date.format('ddd') === 'Sun' || date.format('ddd') === 'Sat') && 'Weekend' || holidays[date.format('M/D/YYYY')] ) )
+                    
+                if(status === 'SB' ){ balance += hours}
 
                 hoursEntry[date.format('M/D/YYYY')] = hours // setting the hours object before return 
                 return {key: date.format('M/D/YYYY'), date: date, hours: disabled? 0: hours, disabled}
             })
-            BasicFields[7].disabled = false
+            BasicFields[BasicFields[2].note ? 8: 7].disabled = false // adding an object when select leavetype
             
         }else if (start && end){
+            console.log('start && end');
             //it will call on change of start and end date and found
             var arr = new Array();
             while(start.isSameOrBefore(end)){
@@ -209,33 +229,51 @@ class AddRequestModal extends Component{
                 const disabled = !include_off_days && ( (start.format('ddd') === 'Sun' || start.format('ddd') === 'Sat') && 'Weekend' || holidays[start.format('M/D/YYYY')] )                                              
                  //hours are getting update on each call
                 const hours = disabled? 0: hoursEntry[start.format('M/D/YYYY')] ?? deFaulthours
-                        
+                // to set it in form for date
+                hoursEntry[start.format('M/D/YYYY')] = disabled? 0: hoursEntry[start.format('M/D/YYYY')] ?? deFaulthours
+
                 arr.push({key: start.format('M/D/YYYY'), date: start, hours, disabled, })
                 start = moment(start).add(1,'d')
             }
             data = arr
-            BasicFields[7].disabled = false
+            BasicFields[BasicFields[2].note ? 8: 7].disabled = false // adding an object when select leavetype
         }else if (start){
+            console.log('start');
             //if end date is not sent
             const disabled = !include_off_days && ((start.format('ddd') === 'Sun' || start.format('ddd') === 'Sat') && 'Weekend' || holidays[start.format('M/D/YYYY')])
             const hours = disabled? 0: hoursEntry[start.format('M/D/YYYY')] ?? deFaulthours
-            
+            // to set it in form for date
+            hoursEntry[start.format('M/D/YYYY')] = disabled? 0: hoursEntry[start.format('M/D/YYYY')] ?? deFaulthours
+
             data= [{key: start.format('M/D/YYYY'), date: start, hours: disabled? 0: hours, disabled,}]
-            BasicFields[7].disabled = false // disabling the endDate
+            BasicFields[BasicFields[2].note ? 8: 7].disabled = false // // adding an object when select leavetype
 
         }else{
+            console.log('startEnddate');
             this.formRef.current.setFieldsValue({dates: {startDate: null, endDate: null}})
-            BasicFields[7].disabled = true
+            BasicFields[BasicFields[2].note ? 8: 7].disabled = true // adding an object when select leavetype
             hoursEntry= {}
             data = []
         }
-        this.setState({ BasicFields, data, LeaveRequestType, hoursEntry })
+
+        if(typeId && balance>= 0){
+            if (BasicFields[2].note){
+                BasicFields[2] = this.getLeaveDetail(balance,  minimum_balance, minimum_balance_required)
+            }else{
+                BasicFields.splice(2, 0, this.getLeaveDetail(balance,  minimum_balance, minimum_balance_required))
+            }
+        }else if(BasicFields[2].note){
+            BasicFields.splice(2, 1)
+        }
+
+        this.setState({ BasicFields: [...BasicFields], data, LeaveRequestType, hoursEntry })
+        this.formRef.current.setFieldsValue({hours: hoursEntry})
         //single hook cal for all the condition
     }
 
     getData = () =>{
         const { BasicFields } = this.state;
-        const { edit } = this.props;
+        const { edit, readOnly } = this.props;
         const {id: userId} = localStore()
         // Get Projects
         Promise.all([getUserProjects(userId, 'O'), getUserLeaveType(), edit && getSingleRequest(edit)])
@@ -245,7 +283,7 @@ class AddRequestModal extends Component{
             BasicFields[3].data = res[0].success ? res[0].data : []; //set projects to select box
             BasicFields[1].data = success ? LeaveRequestTypes : [] //set LeaveTypes to select box
             this.setState({ 
-                BasicFields,
+                BasicFields: BasicFields.map(el => {el.type !== "Text" &&(el.disabled = readOnly); return el}),
                 holidays: success ? holidays ?? {} :{}, //holidays to cross of dates if type is not include holidays
                 contractDetails: success ? contractDetails?? {} :{}, //cotract details
                 fileList: res[2].fileList ?? [],
@@ -254,15 +292,15 @@ class AddRequestModal extends Component{
             if (edit && res[2]?.success){ // run if modal is opened for editing
                 let { entries, data } = res[2] 
                 //find holiday type to find if holidays are included or not
-                let selectedLeaveType = LeaveRequestTypes.find(x=> x.id === data.typeId)
+                let selectedLeaveType = LeaveRequestTypes.find(x=> x.id === (data.typeId ?? 0))
                 const formValues = {
                     ...data,
                     description: data.desc,
-                    typeId: data.typeId ?? null,
+                    typeId: selectedLeaveType.id,
                     startDate: moment(entries[0].date),
                     endDate: moment(entries[entries.length-1].date),
                 }
-                this.getDateArray(formValues.startDate, formValues.endDate, selectedLeaveType, entries)
+                this.getDateArray(formValues.startDate, formValues.endDate, selectedLeaveType, entries, formValues.status)
                 this.formRef.current.setFieldsValue({dates: formValues})
             }
 
@@ -306,14 +344,14 @@ class AddRequestModal extends Component{
     getTableSummary = (data) => {
         let total = 0;
         data.forEach(({hours})=>{
-            total += parseInt(hours ? hours : 0); 
+            total += parseFloat(hours ?? 0); 
         })
         
         return(
             <Table.Summary fixed="top">
                 <Table.Summary.Row >
                     <Table.Summary.Cell index={0}>Total</Table.Summary.Cell>
-                    <Table.Summary.Cell index={1}>{total}</Table.Summary.Cell>
+                    <Table.Summary.Cell index={1}>{formatFloat(total)}</Table.Summary.Cell>
                 </Table.Summary.Row>
             </Table.Summary>
         )
@@ -365,58 +403,93 @@ class AddRequestModal extends Component{
     //File
     render(){
         const { visible, close, edit, readOnly } = this.props;
-        const { BasicFields, fileList, data, fileIds, loading } = this.state;
-
+        const { BasicFields, fileList, data, fileIds, loading, contractDetails } = this.state;
+         // for timeBeing 
+        let columns = [
+            {
+                title: 'Date',
+                dataIndex: 'date',
+                key: 'date',
+                render:(text, records) =>(<Row justify="space-between" >
+                    <Col> {moment(text).format('ddd DD MMM yyyy')} </Col>
+                    <Col style={{marginLeft: 'auto', color: 'red'}} >{records.disabled}</Col>
+                </Row>
+                ),
+            },
+            {
+                title: 'Hours',
+                dataIndex: 'hours',
+                key: 'hours',
+                render:(text, records, index) =>(
+                    <Form.Item noStyle name={['hours', moment(records.date).format('M/D/YYYY')]} >
+                        <InputNumber
+                            max={contractDetails?.noOfHours ?? false}
+                            min={0}
+                            placeholder= "Hours"
+                            size="small" 
+                            disabled={records.disabled|| readOnly}
+                            onChange={(value)=>{
+                                this.setHours(records, value, index)
+                            }}
+                        />
+                    </Form.Item>
+                ),
+            },
+        ]
+        // For time bring
         return(
             <Modal
                 title={ edit ? "Edit Request" : "New Request"}
-                maskClosable={false}
+                maskClosable
+                destroyOnClose={true}
                 visible={visible}
                 okButtonProps={{ htmlType: 'submit', form: 'my-form', disabled: readOnly, loading: loading }}
                 okText={"Submit"}
                 onCancel={close}
                 width={1000}
             >
-                <Row>
-                    <Col span={12}>
-                        <Form
-                            id={'my-form'}
-                            ref={this.formRef}
-                            size="small"
-                            layout="inline"
-                            onFinish={this.getFormValues}
-                        >
-                            <FormItems FormFields={BasicFields} />
-                        </Form>
-                        <Text style={{marginTop: 10, marginBottom: 2}}>Attachments</Text>
-                        <Upload
-                            customRequest={this.handleUpload}
-                            listType="picture"
-                            listType="picture-card"
-                            maxCount={4}
-                            fileList={fileList}
-                            onRemove= {this.onRemove}
-                        >
-                            {fileList.length < 4 &&
-                                <div style={{marginTop: 10}} >
-                                    <PlusOutlined />
-                                    <div style={{ marginTop: 8 }}>Upload</div>
-                                </div>
-                            }
-                        </Upload>
-                    </Col>
-                    <Col span={12}>
-                        <Table sticky
-                            style={{maxHeight: "40vh", overflowY: 'scroll', position: 'relative'}}
-                            pagination={false}
-                            rowKey={(data) => data.key} 
-                            columns={this.columns}
-                            dataSource={data}
-                            size='small'
-                            summary={(data)=>{ return this.getTableSummary(data); }}
-                        />
-                    </Col>
-                </Row>
+                <Form
+                    id={'my-form'}
+                    ref={this.formRef}
+                    size="small"
+                    layout="inline"
+                    onFinish={this.getFormValues}
+                >
+                    <Row>
+                        <Col span={12}>
+                            <Row>
+                                <FormItems FormFields={BasicFields} />
+                            </Row>
+                            <Text style={{marginTop: 10, marginBottom: 2}}>Attachments</Text>
+                            <Upload
+                                customRequest={this.handleUpload}
+                                listType="picture"
+                                listType="picture-card"
+                                maxCount={4}
+                                fileList={fileList}
+                                onRemove= {this.onRemove}
+                            >
+                                {fileList.length < 4 &&
+                                    <div style={{marginTop: 10}} >
+                                        <PlusOutlined />
+                                        <div style={{ marginTop: 8 }}>Upload</div>
+                                    </div>
+                                }
+                            </Upload>
+                        </Col>
+                        <Col span={12}>
+                            <Table sticky
+                                style={{maxHeight: "40vh", overflowY: 'scroll', position: 'relative'}}
+                                pagination={false}
+                                rowKey={(data) => data.key} 
+                                columns={columns}
+                                dataSource={data}
+                                size='small'
+                                summary={(data)=>{ return this.getTableSummary(data); }}
+                            />
+                        </Col>
+                    </Row>
+                </Form>
             </Modal>
         )
     }

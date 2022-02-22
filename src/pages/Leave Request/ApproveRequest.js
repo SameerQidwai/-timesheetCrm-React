@@ -1,15 +1,16 @@
 import React, {Component} from 'react'
-import { Table, Button, Row, Col, Typography, Menu, Dropdown, DatePicker, Tag, Select} from 'antd'
-import { DownOutlined, SettingOutlined, PlusSquareOutlined, FilterOutlined} from '@ant-design/icons';
+import { Table, Button, Row, Col, Typography, Menu, Dropdown, DatePicker, Tag, Select, Modal, Form, Input, Tooltip} from 'antd'
+import { DownOutlined, SettingOutlined, ExclamationCircleOutlined, CheckCircleOutlined} from '@ant-design/icons';
 import { fomratDate, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
 import moment from "moment";
-import { getApprovalRequests, manageLeaveRequests, manageRequests } from '../../service/leaveRequest-Apis';
+import { getApprovalRequests, manageLeaveRequests } from '../../service/leaveRequest-Apis';
 import AddRequestModal from './Modals/AddRequestModal';
 import { getMilestones } from '../../service/timesheet';
-import { getLineEmployees, getUserProjects } from '../../service/constant-Apis';
+import { getLineEmployees, getManageProjects } from '../../service/constant-Apis';
 import { tableSorter, tableTitleFilter } from '../../components/Core/Table/TableFilter';
 
 const { Title, Text } = Typography
+let modal = ''
 
 class ApproveRequest extends Component {
     constructor(props) {
@@ -59,7 +60,13 @@ class ApproveRequest extends Component {
                 dataIndex: 'status',
                 key: 'status',
                 render:(text, records) =>(
-                    <Tag color={STATUS_COLOR[text]}> {R_STATUS[text]} </Tag>
+                    <Tooltip
+                        placement="top" 
+                        title={records.note}
+                        destroyTooltipOnHide
+                    >
+                        <Tag color={STATUS_COLOR[text]}> {R_STATUS[text]} </Tag>
+                    </Tooltip>
                 ),
             },
             {
@@ -134,7 +141,7 @@ class ApproveRequest extends Component {
         const loginId = parseInt(id)
         const { LEAVE_REQUESTS } = JSON.parse(permissions)
 
-        Promise.all([ getUserProjects(loginId, 'M'), getApprovalRequests(query), getLineEmployees() ])
+        Promise.all([ getManageProjects(loginId, 'M'), getApprovalRequests(query), getLineEmployees() ])
         .then(res => {
             this.setState({
                 WORKS: res[0].success? res[0].data : [],
@@ -185,14 +192,52 @@ class ApproveRequest extends Component {
         })
     }
 
-    manageRequests = (manage) =>{
+    // manageRequests = (manage, notes) =>{
+    //     const { keys } = this.state.sRequest
+    //     const data = {leaveRequests: keys, note: notes}
+    //     manageLeaveRequests(manage, data).then(res=>{
+    //         if(res.success){
+    //             this.getData();
+    //         }
+    //     })
+    // }
+
+    onActionFinished = (notes, manage) => {
         const { keys } = this.state.sRequest
-        const data = {leaveRequests: keys}
+        const data = {leaveRequests: keys, note: notes}
         manageLeaveRequests(manage, data).then(res=>{
             if(res.success){
                 this.getData();
             }
+            modal.destroy();
         })
+    }
+
+    multiAction = (manage)=> {
+        let content = <Row>
+            <Col span="24">
+                <Title level={5}>Notes</Title>
+            </Col>
+            <Col span="24">
+                <Form  id={'my-form' } onFinish={(value)=> this.onActionFinished(value.notes, manage)} >
+                    <Form.Item noStyle name={'notes'} >
+                        <Input.TextArea
+                            placeholder="Enter Your Notes...."
+                            autoSize={{ minRows: 3, maxRows: 10 }}
+                            allowClear
+                        />
+                        </Form.Item>
+                </Form>
+            </Col>
+        </Row>
+        modal = Modal.confirm({
+          title: manage=== 'leaveRequestsReject' ? 'Reject Leave Requests' : 'Approve Leave Requests',
+          icon: manage=== 'leaveRequestsReject' ? <ExclamationCircleOutlined style={{color: 'red' }} /> : <CheckCircleOutlined style={{color: 'green' }}/>,
+          content: content,
+          okButtonProps: { htmlType: 'submit', form: 'my-form'  },
+          okText: 'Okay',
+          cancelText: 'Cancel',
+        });
     }
 
     closeModal = () =>{
@@ -230,13 +275,12 @@ class ApproveRequest extends Component {
             <>
                 <Row justify="space-between">
                     <Col >
-                        <Title level={4}>APPROVE REQUESTS</Title>
+                        <Title level={3}>APPROVE REQUESTS</Title>
                     </Col>
                     <Col>
                         <Select
                             placeholder="Select Project"
-                            style={{ width: 200 }}
-                            size="small"
+                            style={{ width: 250 }}
                             options={WORKS}
                             value={workId}     
                             allowClear      
@@ -262,13 +306,12 @@ class ApproveRequest extends Component {
                     </Col>
                     <Col>
                         <Select
-                            size="small"
                             placeholder="Select User"
                             options={USERS}
                             value={userId}           
                             optionFilterProp={["label", "value"]}
                             allowClear
-                            style={{ width: 200 }}
+                            style={{ width: 250 }}
                             filterOption={
                                 (input, option) =>{
                                     const label = option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
@@ -290,7 +333,6 @@ class ApproveRequest extends Component {
                     </Col>
                     <Col>
                         <DatePicker
-                            size="small"
                             mode="month"
                             picker="month"
                             format="MMM-YYYY"
@@ -313,6 +355,7 @@ class ApproveRequest extends Component {
                         <Table
                             title={()=>tableTitleFilter(5, this.generalFilter)}
                             rowSelection={{
+                                selectedRowKeys: sRequest.keys,
                                 onChange:(selectedRowKeys, selectedRows)=>{this.requestSelect(selectedRowKeys, selectedRows )},
                                 getCheckboxProps: (record) => ({
                                     disabled: record.status !== 'SB'
@@ -337,7 +380,7 @@ class ApproveRequest extends Component {
                             type="primary" 
                             danger
                             disabled={ sRequest.keys.length<1 }
-                            onClick={()=>this.manageRequests('leaveRequestsReject')}
+                            onClick={()=>this.multiAction('leaveRequestsReject')}
                         > 
                             Reject
                         </Button>
@@ -346,7 +389,7 @@ class ApproveRequest extends Component {
                         <Button 
                             type="primary"
                             disabled={ sRequest.keys.length<1}
-                            onClick={()=>this.manageRequests('leaveRequestsApprove')}
+                            onClick={()=>this.multiAction('leaveRequestsApprove')}
                         > 
                             Approve
                         </Button>

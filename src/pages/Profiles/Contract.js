@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import Form, { useForm } from 'antd/lib/form/Form'
-import FormItems from '../../components/Core/FormItems'
+import { Form } from 'antd';
+import FormItems from '../../components/Core/Forms/FormItems'
 import { getLeavePolicy } from "../../service/constant-Apis";
 
 const PersonalContract = (props)=> {
-    const [form] = useForm();
+    const [form] = Form.useForm();
     const [fields, setFields] = useState([
         {
             Placeholder: "Employment Status",
@@ -45,12 +45,6 @@ const PersonalContract = (props)=> {
             key: "payslipEmail",
             size: "small",
             type: "input",
-            // rules: [
-            //     {
-            //         required: true,
-            //         message: "Payment Email is required",
-            //     },
-            // ],
             itemStyle: { marginBottom: 20 },
         },
         {
@@ -60,7 +54,6 @@ const PersonalContract = (props)=> {
             size: "small",
             type: "Text",
             labelAlign: "right",
-            // itemStyle:{marginBottom:'10p20'},
         },
         {
             Placeholder: "Contract Start Date",
@@ -69,7 +62,6 @@ const PersonalContract = (props)=> {
             size: "small",
             type: "Text",
             labelAlign: "right",
-            // itemStyle:{marginBottom:'10p20'},
         },
         
         {
@@ -93,11 +85,11 @@ const PersonalContract = (props)=> {
             type: "Select",
             // shape: " Hours",
             data: [
-                { label: "Hourly", value: 1 },
-                { label: "Daily", value: 2 },
+                // { label: "Hourly", value: 1 },
+                // { label: "Daily", value: 2 },
                 { label: "Weekly", value: 3 },
-                { label: "Fortnightly", value: 4 },
-                { label: "Monthly", value: 5 },
+                // { label: "Fortnightly", value: 4 },
+                // { label: "Monthly", value: 5 },
             ],
             fieldStyle: { width: "100%" },
             rules: [ { required: true, message: "Work Hours is Required", }, ],
@@ -120,7 +112,6 @@ const PersonalContract = (props)=> {
             size: "small",
             type: "Text",
             labelAlign: "right",
-            // itemStyle:{marginBottom:'10p20'},
         },
         {
             Placeholder: "Annual Base Salary",
@@ -129,7 +120,6 @@ const PersonalContract = (props)=> {
             size: "small",
             type: "Text",
             labelAlign: "right",
-            // itemStyle:{marginBottom:'10p20'},
         },
         {
             object: "billing",
@@ -160,7 +150,6 @@ const PersonalContract = (props)=> {
             size: "small",
             type: "Text",
             labelAlign: "right",
-            // itemStyle:{marginBottom:'10p20'},
         },
         {
             Placeholder: "Leave Policy",
@@ -169,7 +158,6 @@ const PersonalContract = (props)=> {
             size: "small",
             type: "Text",
             labelAlign: "right",
-            // itemStyle:{marginBottom:'10px'},
         },
         {
             object: "billing",
@@ -205,7 +193,6 @@ const PersonalContract = (props)=> {
             size: "small",
             type: "Text",
             labelAlign: "right",
-            // itemStyle:{marginBottom:'10p20'},
         },
         {
             object: "billing",

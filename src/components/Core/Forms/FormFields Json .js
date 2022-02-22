@@ -28,7 +28,6 @@ fields=[
             showTime: 'boolean for datePicker to show Time as well and string for TimePicker for format...',
             shape: 'to set shape for Button and buttonStle for Radio prop and suffix in input fields',
             size: 'set Size of any element',
-            fieldStyle: 'style on the field',
             getValue: 'If field is not getting getValueFromEvent',
             noStyle: "If don't want form style",
             onChange: 'onChange function on anyFiled',

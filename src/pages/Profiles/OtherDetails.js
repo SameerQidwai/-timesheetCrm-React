@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Col, Form } from 'antd'
-import FormItems from '../../components/Core/FormItems'
+import FormItems from '../../components/Core/Forms/FormItems'
 import { upadteSettings } from '../../service/Login-Apis';
 import { localStore } from '../../service/constant';
 

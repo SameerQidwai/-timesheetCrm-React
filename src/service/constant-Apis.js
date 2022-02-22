@@ -365,7 +365,7 @@ export const getLeavePolicy = () => {
             data.map((el) => {
                 policies.push({value: el.id, label: el.label})
             });
-            policies.push({value: 0, label: 'unpaid'})
+            policies.push({value: 0, label: 'Unpaid'})
             setToken(res.headers && res.headers.authorization)
             if (success) return { success: success, data: policies };
         })
@@ -386,7 +386,7 @@ export const getUserLeaveType = () => {
             setToken(res.headers && res.headers.authorization)
             if (success){
                 const {holidays, contractDetails, LeaveRequestTypes} = data
-                let requestType = [{id: 0, name: 'unpaid', include_off_days: true}]
+                let requestType = [{id: 0, name: 'Unpaid', include_off_days: true}]
                 LeaveRequestTypes.forEach((el,index)=>{
                     const type= {}
                     Object.entries(el).forEach(([key, value]) => {
@@ -410,7 +410,7 @@ export const getUserLeaveType = () => {
 
 export const getLineEmployees = () =>{
     return axios
-    .get(`${Api}/users`, {headers:headers()})
+    .get(`${Api}/auth/users`, {headers:headers()})
     .then((res) => {
         const { success, data } = res.data;
         setToken(res.headers && res.headers.authorization)
@@ -425,3 +425,22 @@ export const getLineEmployees = () =>{
         };
     });
 }
+
+export const getManageProjects = () =>{
+    return axios
+    .get(`${Api}/auth/projects`, {headers:headers()})
+    .then((res) => {
+        const { success, data } = res.data;
+        setToken(res.headers && res.headers.authorization)
+        console.log(data);
+        if (success) return { success: success, data: data };
+    })
+    .catch((err) => {
+        return {
+            error: "Please login again!",
+            success: false,
+            message: err.message,
+        };
+    });
+}
+

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Typography, Row, Col, Popconfirm, Modal, Button, Table, Dropdown, Menu, } from "antd";
 import { SettingOutlined, DownOutlined, MinusCircleOutlined, PlusSquareOutlined, LoadingOutlined} from "@ant-design/icons"; //Icons
-import Forms from "../../../components/Core/Form";
+import Forms from "../../../components/Core/Forms/Form";
 
 import { levels, addList, getList, editLabel, delLabel, } from "../../../service/skills";
 import { localStore } from "../../../service/constant";

@@ -45,3 +45,24 @@ div.timeSheet-table div.ant-table-content::-webkit-scrollbar-track-piece {
     background: #d8d2d2;
     border-radius: 10px;
 }
+
+/* Editable Cell */
+.editable-cell {
+    position: relative;
+}
+  
+.editable-cell-value-wrap {
+/* padding: 5px 12px; */
+cursor: pointer;
+}
+  
+.editable-cell:hover .editable-cell-value-wrap {
+/* padding: 4px 11px; */
+border: 1px solid #d9d9d9;
+border-radius: 2px;
+}
+  
+[data-theme='dark'] .editable-cell:hover .editable-cell-value-wrap {
+border: 1px solid #434343;
+}
+  

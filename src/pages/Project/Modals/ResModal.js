@@ -4,7 +4,7 @@ import { LoadingOutlined } from "@ant-design/icons"; //Icons
 
 import { addLeadSkill, getLeadSkill, editLeadSkill, } from "../../../service/projects";
 import { getPanelSkills, getOrgPersons, } from "../../../service/constant-Apis";
-import FormItems from "../../../components/Core/FormItems";
+import FormItems from "../../../components/Core/Forms/FormItems";
 
 const { TabPane } = Tabs;
 

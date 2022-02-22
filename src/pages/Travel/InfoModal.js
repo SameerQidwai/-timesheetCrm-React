@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Modal } from "antd";
 import { LoadingOutlined, UploadOutlined } from "@ant-design/icons"; //Icons
 
-import Form from "../../components/Core/Form";
+import Form from "../../components/Core/Forms/Form";
 import moment from "moment";
 
 class InfoModal extends Component {

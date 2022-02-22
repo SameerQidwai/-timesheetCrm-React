@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Modal, Tabs, Row, Col, Button, Input } from "antd";
 import { UploadOutlined, PlusSquareFilled, MinusCircleFilled, LoadingOutlined } from "@ant-design/icons"; //Icons
 
-import Form from "../../../components/Core/Form";
+import Form from "../../../components/Core/Forms/Form";
 import { addList, getContactRecord, editList } from "../../../service/conatct-person";
 import { getStates, getStandardLevels, getOrganizations } from "../../../service/constant-Apis";
 

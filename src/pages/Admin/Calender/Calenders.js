@@ -3,7 +3,7 @@ import { Table, Menu, Dropdown, Button, Tag, Row, Col, Typography, Modal, } from
 import { DownOutlined, SettingOutlined, PlusSquareOutlined, LoadingOutlined} from "@ant-design/icons"; //Icons
 import { Link } from "react-router-dom";
 
-import Form from "../../../components/Core/Form";
+import Form from "../../../components/Core/Forms/Form";
 import "../../styles/table.css";
 
 import { getList, addList, editLabel } from "../../../service/calender";

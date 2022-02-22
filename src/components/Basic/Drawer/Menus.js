@@ -45,6 +45,13 @@ const listData = [
         permissions: {module: "LEAVE_REQUESTS", key: 'APPROVAL'}
     },
     {
+        text: "Training",
+        icon: <RightSquareOutlined />,
+        link: "/training",
+        key: "Training",
+        permissions: {module: "TIMESHEETS", key: 'READ'}
+    },
+    {
         text: "Time Offs",
         icon: <FieldTimeOutlined />,
         link: "/time-off",

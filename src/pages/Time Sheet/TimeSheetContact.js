@@ -573,17 +573,16 @@ class TimeSheetContact extends Component {
         const {sWeek, startDate, endDate } = this.state.sheetDates
         return (
             <>
-                <Row >
-                    <Col span={8}>
-                        <Title>Timesheet</Title>
+                <Row justify="space-between">
+                    <Col >
+                        <Title level={3}>Timesheet</Title>
                     </Col>
-                    <Col span={5}>
+                    <Col >
                         <Select
-                            size="large"
                             placeholder="Select User"
                             options={USERS}
                             value={sUser}           
-                            style={{ width: 200 }}
+                            style={{ width: 300 }}
                             showSearch
                             optionFilterProp={["label", "value"]}
                             filterOption={
@@ -602,9 +601,8 @@ class TimeSheetContact extends Component {
                             }}
                         />
                     </Col>
-                    <Col span={5}>
+                    <Col >
                         <DatePicker
-                            size="large"
                             mode="month"
                             picker="month"
                             format="MMM-YYYY"
@@ -624,9 +622,8 @@ class TimeSheetContact extends Component {
                             defaultValue={moment()}
                         />
                     </Col>
-                    <Col style={{marginLeft:'auto'}}>
+                    <Col >
                         <Button
-                            size="small"
                             type="primary"
                             disabled={sUser !== loginId}
                             onClick={() => {

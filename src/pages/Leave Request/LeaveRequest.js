@@ -1,10 +1,11 @@
 import React, {Component} from 'react'
-import { Table, Button, Row, Col, Typography, Menu, Dropdown, Tag} from 'antd'
+import { Table, Button, Row, Col, Typography, Menu, Dropdown, Tag, Tooltip} from 'antd'
 import { DownOutlined, SettingOutlined, PlusSquareOutlined, FilterOutlined} from '@ant-design/icons';
-import { fomratDate, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
+import { formatFloat, fomratDate, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
 import AddRequestModal from './Modals/AddRequestModal';
-import { getLeaveBalance, getRequests } from '../../service/leaveRequest-Apis';
+import { getRequests } from '../../service/leaveRequest-Apis';
 import moment from 'moment';
+import LeaveBalance from '../../components/Core/LeaveBalance';
 const { Title } = Typography
 
 class LeaveRequest extends Component {
@@ -20,22 +21,25 @@ class LeaveRequest extends Component {
                 title: 'Accured',
                 dataIndex: 'carryForward',
                 key: 'carryForward',
+                render:(text) => formatFloat(text)
             },
             {
-                title: 'Earned',
+                title: 'Earned YTD',
                 dataIndex: 'earned',
                 key: 'earned',
-                render:(text, record)=> record.balanceHours - record.carryForward
+                render:(text, record)=> formatFloat(record.balanceHours - record.carryForward + record.used)
             },
             {
-                title: 'Used',
+                title: 'Used YTD',
                 dataIndex: 'used',
                 key: 'used',
+                render:(text) => formatFloat(text)
             },
             {
                 title: 'Balance',
                 dataIndex: 'balanceHours',
                 key: 'balanceHours',
+                render:(text) => formatFloat(text)
             },
         ]
 
@@ -62,13 +66,20 @@ class LeaveRequest extends Component {
                 title: 'Hours',
                 dataIndex: 'totalHours',
                 key: 'totalHours',
+                render:(text) => formatFloat(text)
             },
             {
                 title: 'Status',
                 dataIndex: 'status',
                 key: 'status',
                 render:(text, records) => {
-                    return  <Tag color={STATUS_COLOR[text]}> {R_STATUS[text]} </Tag>
+                    return  <Tooltip 
+                        placement="top" 
+                        title={records.note}
+                        destroyTooltipOnHide
+                    >
+                        <Tag color={STATUS_COLOR[text]}> {R_STATUS[text]} </Tag>
+                    </Tooltip>
                 }
             },
             {
@@ -79,16 +90,17 @@ class LeaveRequest extends Component {
                     <Dropdown overlay={
                         <Menu>
                             <Menu.Item 
-                                disabled={!this?.state?.permissions?.['UPDATE'] || record.status === 'AP'}
+                                disabled={!this?.state?.permissions?.['UPDATE']}
                                 onClick={()=> {
                                     this.setState({
                                         openModal: true,
                                         editRequest: record.id,
+                                        readOnly: record.status === 'AP'
                                         // editIndex: index
                                     })
                                 }
                             }
-                            >Edit</Menu.Item>
+                            >{record.status === 'AP' ?'View': 'Edit' }</Menu.Item>
                             {/* <Menu.Item 
                                 onClick={()=>{}}
                             >Delete</Menu.Item> */}
@@ -105,6 +117,7 @@ class LeaveRequest extends Component {
 
         this.state = {
             request : [],
+            readOnly: false,
             editRequest: false,
             permissions: {},
             type: [],
@@ -119,14 +132,14 @@ class LeaveRequest extends Component {
     getData = () =>{ 
         const { permissions } = localStore()
         const { LEAVE_REQUESTS } = JSON.parse(permissions)
-        Promise.all([getRequests(), getLeaveBalance()])
+        Promise.all([getRequests()])
         .then((res) => {
             this.setState({ 
                 openModal: false,
+                readOnly: false,
                 editRequest: false,
                 request: res[0].success? res[0].data : [],
                 permissions: LEAVE_REQUESTS,
-                type: res[1].success? res[1].data : []
             });
         })
         .catch((e) => {
@@ -137,7 +150,8 @@ class LeaveRequest extends Component {
     closeModal = () =>{
         this.setState({
             openModal: false,
-            editRequest: false
+            editRequest: false,
+            readOnly: false,
         })
     }
 
@@ -146,7 +160,7 @@ class LeaveRequest extends Component {
     }
 
     render(){
-        const { request, openModal, type, editRequest, permissions } = this.state
+        const { request, openModal, editRequest, permissions, readOnly } = this.state
         return(
             <>
                 <Row justify="space-between">
@@ -167,6 +181,7 @@ class LeaveRequest extends Component {
                     </Col>
                     <Col span={24}>
                         <Table
+                            sticky
                             bordered
                             style={{maxHeight: '40vh', overflowY: 'scroll'}}
                             pagination={{pageSize: localStore().pageSize}}
@@ -180,19 +195,11 @@ class LeaveRequest extends Component {
 
                 <Row style={{marginTop: '20px'}} justify="space-between">
                     <Col>
-                        <Title level={4}>TIME OFF BALANCE</Title>
+                        <Title level={4}>My Leave Balance</Title>
                     </Col>
                     
                     <Col span={24}>
-                        <Table
-                            bordered
-                            style={{maxHeight: '30vh', overflowY: 'scroll'}}
-                            pagination={{pageSize: localStore().pageSize}}
-                            rowKey={(data) => data.id} 
-                            columns={this.typeColumns}
-                            dataSource={type}
-                            size='small'
-                        />
+                        <LeaveBalance editable={false} style={{maxHeight: '30vh', overflowY: 'scroll'}}/>
                     </Col>
                 </Row>
                 {openModal && (
@@ -201,6 +208,7 @@ class LeaveRequest extends Component {
                         close={this.closeModal}
                         edit={editRequest}
                         callBack={this.getData}
+                        readOnly={readOnly}
                     />
                 )}
             </>
