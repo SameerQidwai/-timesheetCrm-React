@@ -70,7 +70,7 @@ export const upadtePassword = (data) => {
 
 export const getSettings = () => {
     return axios
-        .get(`${Api}/settings`, {headers:headers()})
+        .get(`${Api}/auth/settings`, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -137,8 +137,10 @@ export const getSettings = () => {
                     clearanceExpiryDate: contactPerson.clearanceExpiryDate ? moment(contactPerson.clearanceExpiryDate) : null, 
                     clearanceSponsorId: contactPerson.clearanceSponsorId,
                 }
+                const resourceSkill = contactPerson.standardSkillStandardLevels
+
                 setToken(res.headers && res.headers.authorization)
-                return { success, data, basic, detail, kin, bank, billing, sClearance }
+                return { success, data, basic, detail, kin, bank, billing, sClearance, resourceSkill }
             }
             return { success }
         })
@@ -155,7 +157,27 @@ export const getSettings = () => {
 
 export const upadteSettings = (data) => {
     return axios
-        .patch(`${Api}/settings`, data, {headers:headers()})
+        .patch(`${Api}/auth/settings`, data, {headers:headers()})
+        .then((res) => {
+            const { success, data, message } = res.data;
+            jwtExpired(message)
+            messageAlert.success({ content: message, key: 'logout'})
+            if (success) setToken(res.headers && res.headers.authorization)
+            return {success, data};
+        })
+        .catch((err) => {
+                messageAlert.error({ content: err.message, key: 'logout'})
+            return {
+                error: "Please login again!",
+                status: false,
+                message: err.message,
+            };
+        });
+};
+
+export const upadteAddress = (data) => {
+    return axios
+        .patch(`${Api}/auth/address`, data, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)

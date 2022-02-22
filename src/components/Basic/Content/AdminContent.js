@@ -41,6 +41,8 @@ import Calender from "../../Calender/Calender";
 
 import Profile from "../../../pages/Profiles/Profile"
 
+import Training from "../../../pages/Trainings/Training"
+
 // import TimeSheetHTML from "../../Core/TimeSheetHTML" 
 import { localStore } from "../../../service/constant";
 
@@ -246,10 +248,10 @@ const pageLinks = [
         component: ApproveRequest,
         link: "/approve-request",
     },
-    // {
-    //     component: Travels,
-    //     link: "/travles",
-    // },
+    {
+        component: Training,
+        link: "/training",
+    },
 ];
 
 class AdminContent extends Component {

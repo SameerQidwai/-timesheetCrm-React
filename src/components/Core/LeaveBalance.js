@@ -165,7 +165,7 @@ class LeaveBalance extends Component {
           const data = [...this.state.data];
           const index = data.findIndex((item) => row.id === item.id);
           const item = data[index];
-          data.splice(index, 1, { ...item, ...row });
+          data.splice(index, 1, { ...item, ...res.data });
 
           this.setState({
             data,

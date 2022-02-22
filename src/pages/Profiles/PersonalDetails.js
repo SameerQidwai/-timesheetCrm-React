@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { Button, Form } from 'antd';
 import FormItems from '../../components/Core/Forms/FormItems'
 import { getStates } from '../../service/constant-Apis';
+import { upadteAddress } from '../../service/Login-Apis';
 
 const PersonalDetails= (props) => {
     const [form] = Form.useForm();
+    const [disabled, setDisabled] =  useState(true)
     const [fields, setFields] = useState([
         {
             fieldCol: 12, // this is only label 1
@@ -189,6 +191,9 @@ const PersonalDetails= (props) => {
             // rules:[{ required: true }],
             type: "Input",
             itemStyle: { marginBottom: 30 },
+            onChange: () =>{
+                setDisabled(false)
+            }
         },
     ])
 
@@ -212,7 +217,11 @@ const PersonalDetails= (props) => {
     } 
     const onFinish = (value) =>{
         const { basic } = value
-        console.log(basic.address);
+        upadteAddress({address: basic.address}).then(res =>{
+            if (res.success){
+                setDisabled(true)
+            }
+        })
     }
 
     return (
@@ -226,7 +235,7 @@ const PersonalDetails= (props) => {
             onFinish={onFinish}
         >
             <FormItems FormFields={fields} />
-            <Button type="primary" htmlType="submit" style={{margin: '0 15px 0 auto'}}> Submit </Button>
+            <Button type="primary" disabled={disabled} htmlType="submit" style={{margin: '0 15px 0 auto'}}> Edit Address </Button>
         </Form>
     )
     

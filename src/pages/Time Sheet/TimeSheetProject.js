@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Row, Col, Table, Button, Select, Typography, Modal, DatePicker, Space, Tag, Tooltip, Input} from "antd";
+import { Row, Col, Table, Button, Select, Typography, Modal, DatePicker, Space, Tag, Tooltip, Input, Form} from "antd";
 import { DownloadOutlined, SaveOutlined, ExclamationCircleOutlined, PaperClipOutlined, CheckCircleOutlined } from "@ant-design/icons"; //Icons
 import moment from "moment";
 import AttachModal from "./Modals/AttachModal";
@@ -12,6 +12,8 @@ import TimeSheetPDF from "./Modals/TimeSheetPDF";
 
 const { Title, Link, Text } = Typography;
 //inTable insert
+
+let modal = ""
 
 class TimeSheetProject extends Component {
     constructor() {
@@ -222,12 +224,12 @@ class TimeSheetProject extends Component {
         })
     };
 
-    actionTimeSheet = (stage, value) => {
+    actionTimeSheet = (stage, notes) => {
         const { startDate, endDate } = this.state.sheetDates
         const { keys } = this.state.sTimesheet
-        const { sMilestone, actionNotes } = this.state
+        const { sMilestone } = this.state
         const query= { userId: sMilestone, startDate: startDate.format('DD-MM-YYYY'), endDate: endDate.format('DD-MM-YYYY') }
-        const data = {milestoneEntries: keys, notes: actionNotes}
+        const data = {milestoneEntries: keys, note: notes}
         reviewTimeSheet(query, stage, data).then(res=>{
             this.getSheet()
         })
@@ -322,39 +324,37 @@ class TimeSheetProject extends Component {
         })
     }
 
+    onActionFinished = (notes, stage) => {
+        this.actionTimeSheet(stage, notes) 
+        modal.destroy();
+    }
+
     multiAction = (stage)=> {
-        const { actionNotes} = this.state
         const { cMonth } = this.state.sheetDates
         let content = stage !== 'Delete' ? <Row>
             <Col span="24">
-                <Title>Notes</Title>
+                <Title level={5}>Notes</Title>
             </Col>
             <Col span="24">
-                <Input.TextArea
-                     placeholder="Enter Your Notes...."
-                     value={actionNotes}
-                     autoSize={{ minRows: 3, maxRows: 10 }}
-                     allowClear
-                     onChange={(e)=>{
-                         console.log(e.target.value);
-                         this.setState({
-                            actionNotes: e.target.value
-                         },()=>console.log(this.state.actionNotes))
-                     }}
-                />
+                <Form  id={'my-form' } onFinish={(value)=> this.onActionFinished(value, stage)} >
+                    <Form.Item noStyle name={'notes'} >
+                        <Input.TextArea
+                            placeholder="Enter Your Notes...."
+                            autoSize={{ minRows: 3, maxRows: 10 }}
+                            allowClear
+                        />
+                        </Form.Item>
+                </Form>
             </Col>
-            </Row> : ''
-        const modal = Modal.confirm({
+        </Row> : ''
+        modal = Modal.confirm({
           title: `${stage} Timesheet For the month of ${cMonth.format('MMM YYYY')}`,
+          width: 520,
           icon: stage=== 'Reject' ? <ExclamationCircleOutlined /> : <CheckCircleOutlined />,
           content: content,
-          okButtonProps: {danger: stage === 'Delete'??true},
+          okButtonProps: {danger: stage === 'Delete'??true, htmlType: 'submit', form: 'my-form'  },
           okText: 'Okay',
           cancelText: 'Cancel',
-          onOk:()=>{
-              this.actionTimeSheet(stage) 
-              modal.destroy();
-          }
         });
     }
 
@@ -374,15 +374,14 @@ class TimeSheetProject extends Component {
         const {  data,   columns,  timeObj,  milestones, sMilestone, isAttach, isDownload, eData, sTimesheet } = this.state
         return (
             <>
-                <Row >
+                <Row justify="space-between" >
                     <Col>
-                        <Title>Approval</Title>
+                        <Title level={3}>Approval</Title>
                     </Col>
-                    <Col md={{span: 5, offset: 4}} >
+                    <Col  >
                         <Select
                             placeholder="Select Project"
-                            style={{ width: '100%' }}
-                            size="large"
+                            style={{ width: 300 }}
                             options={milestones}
                             value={sMilestone}           
                             showSearch
@@ -404,9 +403,8 @@ class TimeSheetProject extends Component {
                             }}
                         />
                     </Col>
-                    <Col md={{span: 5, offset: 1}}>
+                    <Col >
                         <DatePicker
-                            size="large"
                             mode="month"
                             picker="month"
                             format="MMM-YYYY"
@@ -432,7 +430,7 @@ class TimeSheetProject extends Component {
                     style={{maxHeight: 'fit-content'}}
                     className="timeSheet-table"
                     rowSelection={{ //multiple select commented
-                        preserveSelectedRowKeys: false,
+                        selectedRowKeys: sTimesheet.keys,
                         fixed:true,
                         onChange:(selectedRowKeys, selectedRows)=>{this.milestoneSelect(selectedRowKeys, selectedRows )},
                         getCheckboxProps: (record) => ({
