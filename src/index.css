@@ -18,6 +18,16 @@ code {
   }
 }
 
+.ant-table-wrapper{
+  scrollbar-width: thin;
+  scrollbar-color: grey
+}
+
+.moz-scroller{
+  scrollbar-width: thin;
+  scrollbar-color: grey
+}
+
 @media print {
   html, body {
     height: initial !important;

@@ -455,7 +455,7 @@ class AddRequestModal extends Component{
                     layout="inline"
                     onFinish={this.getFormValues}
                 >
-                    <Row>
+                    <Row className="moz-width">
                         <Col span={12}>
                             <Row>
                                 <FormItems FormFields={BasicFields} />
