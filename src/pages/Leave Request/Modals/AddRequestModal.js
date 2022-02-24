@@ -317,7 +317,7 @@ class AddRequestModal extends Component{
         const { data, fileIds } = this.state
         const newVal = {
                 description: dates.description ?? '',
-                typeId: dates.typeId || null,
+                typeId: dates.typeId || 0,
                 workId: dates.workId,
                 entries: data,
                 attachments: fileIds ?? []
