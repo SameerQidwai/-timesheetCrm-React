@@ -740,7 +740,7 @@ class InfoModal extends Component {
 
     fetchAll = (edit) =>{
         const { editEmp } = this.props
-        const customUrl = `helpers/contact-persons?organizationId=1`
+        const customUrl = `helpers/contact-persons?organizationId=1&employee=1`
         Promise.all([ getStates(), getRoles() , edit ? this.getRecord(editEmp) : getOrgPersons(customUrl), getLeavePolicy(), getOrgPersons(customUrl) ])
         .then(res => {
             const { BasicFields, BillingFields, ManagerFields } = this.state
@@ -1021,7 +1021,8 @@ class InfoModal extends Component {
         if (formValues.billing.type ){
             formValues.billing.type === 1 ? formValues.billing.remunerationAmountPer = 1 : formValues.billing.remunerationAmountPer = 7
         }
-
+        formValues.basic.lineManagerId =  formValues.basic?.lineManagerId ?? null
+        formValues.detail.superannuationType =  formValues.detail?.superannuationType ?? null
         const values  = {
             ...formValues.basic, 
             ...formValues.detail,
