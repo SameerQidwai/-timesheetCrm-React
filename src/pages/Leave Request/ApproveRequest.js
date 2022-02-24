@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import { Table, Button, Row, Col, Typography, Menu, Dropdown, DatePicker, Tag, Select, Modal, Form, Input, Tooltip} from 'antd'
 import { DownOutlined, SettingOutlined, ExclamationCircleOutlined, CheckCircleOutlined} from '@ant-design/icons';
-import { fomratDate, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
+import { fomratDate, formatFloat, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
 import moment from "moment";
 import { getApprovalRequests, manageLeaveRequests } from '../../service/leaveRequest-Apis';
 import AddRequestModal from './Modals/AddRequestModal';
@@ -74,7 +74,7 @@ class ApproveRequest extends Component {
                 dataIndex: 'totalHours',
                 key: 'totalHours',
                 align: 'center',
-                render: (text, record)=> text && <Text strong>{text}</Text>,
+                render: (text, record)=> text && <Text strong>{formatFloat(text)}</Text>,
                 ...tableSorter('totalHours', 'number'),
             },
             {

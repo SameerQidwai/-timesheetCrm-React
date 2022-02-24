@@ -184,7 +184,7 @@ class AddRequestModal extends Component{
 
     getLeaveDetail = (balance,  minimum_balance, minimum_balance_required) =>{
         return {
-            Placeholder: <div><div>Current Balance: {balance}</div><div>Requird Balnce: {minimum_balance_required}</div><div>Minimum Balnce: {minimum_balance}</div></div>,
+            Placeholder: <div><div>Current Balance: {balance}</div><div>Requird Balance: {minimum_balance_required}</div><div>Minimum Balnce: {minimum_balance}</div></div>,
             fieldCol: 24,
             note: true, 
             size: "small",
