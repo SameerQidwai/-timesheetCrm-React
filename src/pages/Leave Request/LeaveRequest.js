@@ -58,6 +58,11 @@ class LeaveRequest extends Component {
                 render:(text, records) => text && fomratDate(text)
             },
             {
+                title: 'Leave Type',
+                dataIndex: 'leaveRequestName',
+                key: 'leaveRequestName',
+            },
+            {
                 title: 'Project',
                 dataIndex: 'project',
                 key: 'project',
