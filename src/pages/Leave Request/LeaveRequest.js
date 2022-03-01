@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
-import { Table, Button, Row, Col, Typography, Menu, Dropdown, Tag, Tooltip} from 'antd'
-import { DownOutlined, SettingOutlined, PlusSquareOutlined, FilterOutlined} from '@ant-design/icons';
+import { Table, Button, Row, Col, Typography, Menu, Dropdown, Tag, Tooltip, Space} from 'antd'
+import { DownOutlined, SettingOutlined, PlusSquareOutlined, AuditOutlined} from '@ant-design/icons';
 import { formatFloat, fomratDate, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
 import AddRequestModal from './Modals/AddRequestModal';
 import { getRequests } from '../../service/leaveRequest-Apis';
@@ -78,13 +78,20 @@ class LeaveRequest extends Component {
                 dataIndex: 'status',
                 key: 'status',
                 render:(text, records) => {
-                    return  <Tooltip 
-                        placement="top" 
-                        title={records.note}
-                        destroyTooltipOnHide
-                    >
-                        <Tag color={STATUS_COLOR[text]}> {R_STATUS[text]} </Tag>
-                    </Tooltip>
+                    // note outside the tag
+                    return(<Space  align="end">
+                            <Tag color={STATUS_COLOR[text]}> 
+                                {R_STATUS[text]}  
+                            </Tag>
+                        <Tooltip 
+                            placement="top" 
+                            title={records.note}
+                            destroyTooltipOnHide
+                        >
+                                
+                            {records.note && <AuditOutlined style={{fontSize: 'large'}} />}
+                        </Tooltip>
+                    </Space>)
                 }
             },
             {
@@ -222,3 +229,19 @@ class LeaveRequest extends Component {
 }
 
 export default LeaveRequest;
+
+// inside tag
+// (<Tooltip 
+//     placement="top" 
+//     title={records.note}
+//     destroyTooltipOnHide
+// >
+//     <Tag color={STATUS_COLOR[text]}> 
+//     <Space style={{ display: 'flex'}} align="baseline">
+//         {R_STATUS[text]}  
+//         {records.note && <AuditOutlined />}
+//     </Space>
+//         </Tag>
+    
+// </Tooltip>
+// )

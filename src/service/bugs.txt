@@ -1,13 +1,17 @@
-SORTING
-    Organizaion ParentOrganization column sort is not yet complete 
-        ↪ // The value was not returning I have put a empty string but it would not work with number gotta do something for that
-    dateSort is not working properly when there is an empty field present
-    states should be array to array search not sring search
+Uodate and check 
+    // Balance spelling
 
-    Check Form.List in accociation type thing
+    Ap Reject hours show for created according to the policy (weekends)
+    disable leave type if onece created
+ 
+    Leave policy 
+    // Minimum => OVERDRAW aLLOWANCE
+    // default Values
 
-Filtering     
-    Filter function in new File
+    Leave balance set
+        // Negative... format date
+
+        //Notes in timesheet visible and Leave Request
 
 update
     work can't surpass dates milestone dates

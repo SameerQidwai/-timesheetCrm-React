@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import { Row, Col, Table, Modal, Button, Select, Typography, Popconfirm, DatePicker, Space, Tag, Tooltip, message, Dropdown, Menu, } from "antd";
 import { DownloadOutlined, SaveOutlined, LoadingOutlined, PlusCircleOutlined, MoreOutlined, DeleteOutlined, EditOutlined, 
-    LeftOutlined, RightOutlined,ExclamationCircleOutlined, CheckCircleOutlined, PaperClipOutlined } from "@ant-design/icons"; //Icons
+    LeftOutlined, RightOutlined,ExclamationCircleOutlined, CheckCircleOutlined, PaperClipOutlined, AuditOutlined } from "@ant-design/icons"; //Icons
 import moment from "moment";
 import TimeModal from "./Modals/TimeModal"
 import AttachModal from "./Modals/AttachModal";
 import {  getList, reviewTimeSheet, getUsers, deleteTime,  } from "../../service/timesheet"
 import { getUserMilestones } from "../../service/constant-Apis";
-import { localStore, Api, thumbUrl } from "../../service/constant";
+import { localStore, Api, thumbUrl, fomratDate, STATUS_COLOR, R_STATUS, formatFloat } from "../../service/constant";
 
 import "../styles/table.css";
 import "../styles/button.css";
@@ -87,7 +87,7 @@ class TimeSheetContact extends Component {
                             </Col>
                             <Col span={24}>
                                 <Row justify="space-between">
-                                    {record.attachment &&<Col span={18} >
+                                    {record.attachment &&<Col span={17} >
                                         <Link
                                             href={`${Api}/files/${record.attachment.uid}`}
                                             download={record.attachment.name}
@@ -100,14 +100,29 @@ class TimeSheetContact extends Component {
                                                     title={record.attachment.name}
                                                     destroyTooltipOnHide
                                                 >
-                                                    {`${record.attachment.name.substr(0,23)}${record.attachment.name.length>22 ?'\u2026':''}`}
+                                                    {`${record.attachment.name.substr(0,22)}${record.attachment.name.length>21 ?'\u2026':''}`}
                                                 </Tooltip>
                                         </Link>
                                     </Col>}
-                                    <Col  span={5} style={{marginLeft:'auto', marginRight:5}} >
+                                    {/* <Col  span={5} style={{marginLeft:'auto', marginRight:5}} >
                                         {record.status === 'SB' &&<Tag color="cyan"> Submitted </Tag>}
                                         {record.status === 'AP' &&<Tag color="green"> Approved </Tag>}
                                         {record.status === 'RJ' &&<Tag color="red"> Rejected </Tag>}
+                                    </Col> */}
+                                    <Col  span={6} style={{marginLeft:'auto', marginRight:5}} >
+                                        <Space  align="end">
+                                            <Tag color={STATUS_COLOR[record.status]}> 
+                                                {R_STATUS[record.status]}  
+                                            </Tag>
+                                            <Tooltip 
+                                                placement="top" 
+                                                title={record.actionNotes}
+                                                destroyTooltipOnHide
+                                            >
+                                                    
+                                                {record.actionNotes && <AuditOutlined style={{fontSize: 'small'}} />}
+                                            </Tooltip>
+                                        </Space>
                                     </Col>
                                 </Row>
                             </Col>
@@ -510,7 +525,7 @@ class TimeSheetContact extends Component {
                                 key={kIndex+1}
                                 align="center" 
                             >
-                                {value && value.toFixed(2)}
+                                {formatFloat(value)}
                             </Table.Summary.Cell>
                             : // show background grey if the column month is NOT same as selected month
                                 <Table.Summary.Cell 

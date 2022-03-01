@@ -158,7 +158,7 @@ class LeavePolicies extends Component {
                     layout: {
                         wrapperCol: { offset: 1 },
                     },
-                    Placeholder: "Minimum",
+                    Placeholder: "Overdraw Allowance",
                     type: "Text",
                     size: "small",
                     style: {margin: 'auto 0'}
@@ -196,6 +196,7 @@ class LeavePolicies extends Component {
                 {
                     fieldCol: 2,
                     key: "earnHours",
+                    initialValue:  0,
                     size: "small",
                     type: "InputNumber",
                     fieldStyle: { width: "100%" },
@@ -203,6 +204,7 @@ class LeavePolicies extends Component {
                 {
                     fieldCol: 3,
                     key: "earnEvery",
+                    initialValue: 'N',
                     size: "small",
                     type: "Select",
                     labelAlign: "left",
@@ -217,6 +219,7 @@ class LeavePolicies extends Component {
                 {
                     fieldCol: 2,
                     key: "resetHours",
+                    initialValue:  0,
                     size: "small",
                     type: "InputNumber",
                     labelAlign: "left",
@@ -225,6 +228,7 @@ class LeavePolicies extends Component {
                 {
                     fieldCol: 3,
                     key: "resetEvery",
+                    initialValue: 'N',
                     size: "small",
                     type: "Select",
                     labelAlign: "left",
@@ -239,6 +243,7 @@ class LeavePolicies extends Component {
                 {
                     fieldCol: 2,
                     key: "threshold",
+                    initialValue:  0,
                     size: "small",
                     type: "InputNumber",
                     labelAlign: "left",
@@ -247,6 +252,7 @@ class LeavePolicies extends Component {
                 {
                     fieldCol: 2,
                     key: "minimumBalance",
+                    initialValue:  0,
                     size: "small",
                     type: "InputNumber",
                     labelAlign: "left",
@@ -256,6 +262,7 @@ class LeavePolicies extends Component {
                 {
                     fieldCol: 2,
                     key: "minimumBalanceRequired",
+                    initialValue:  0,
                     size: "small",
                     type: "InputNumber",
                     labelAlign: "left",
@@ -422,7 +429,10 @@ class LeavePolicies extends Component {
                     >
                         <FormItems FormFields={FormFields} />
 
-                        <Form.List name={['obj', "leaveRequestPolicyLeaveRequestTypes"]}>
+                        <Form.List 
+                            name={['obj', "leaveRequestPolicyLeaveRequestTypes"]}
+                            // initialValue={[{ earnHours: 0, earnEvery: 'N', resetHours: 0, resetEvery: 'N', threshold: 0, minimumBalance: 0, minimumBalanceRequired: 0,}]}
+                        >
                             {(fields, { add, remove }) => (<>
                                 <Form.Item style={{textAlign: "right"}}>
                                     <Button size="small" onClick={() => add()} ref={(el)=>this.addField =el} >

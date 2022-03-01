@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Row, Col, Table, Button, Select, Typography, Modal, DatePicker, Space, Tag, Tooltip, Input, Form} from "antd";
-import { DownloadOutlined, SaveOutlined, ExclamationCircleOutlined, PaperClipOutlined, CheckCircleOutlined } from "@ant-design/icons"; //Icons
+import { DownloadOutlined, SaveOutlined, ExclamationCircleOutlined, PaperClipOutlined, CheckCircleOutlined, AuditOutlined } from "@ant-design/icons"; //Icons
 import moment from "moment";
 import AttachModal from "./Modals/AttachModal";
 import {  getList, reviewTimeSheet, getMilestones, getUsersTimesheet  } from "../../service/timesheet"
@@ -77,7 +77,7 @@ class TimeSheetProject extends Component {
                             </Col>
                             <Col span={24}>
                                 <Row justify="space-between">
-                                    {record.attachment &&<Col span={18}>
+                                    {record.attachment &&<Col span={17}>
                                             <Link
                                                 href={`${Api}/files/${record.attachment.uid}`}
                                                 download={record.attachment.name}
@@ -90,18 +90,24 @@ class TimeSheetProject extends Component {
                                                         title={record.attachment.name}
                                                         destroyTooltipOnHide
                                                     >
-                                                        {`${record.attachment.name.substr(0,23)}${record.attachment.name.length>22 ?'\u2026':''}`}
+                                                        {`${record.attachment.name.substr(0,22)}${record.attachment.name.length>21 ?'\u2026':''}`}
                                                     </Tooltip>
                                             </Link>
                                             </Col>}
-                                    <Col span={5} style={{marginLeft:'auto', marginRight: 5}}>
-                                    <Tooltip 
-                                        placement="top" 
-                                        title={record.actionNotes}
-                                        destroyTooltipOnHide
-                                    >
-                                        <Tag color={STATUS_COLOR[record.status]}> {R_STATUS[record.status]} </Tag>
-                                    </Tooltip>
+                                    <Col span={6} style={{marginLeft:'auto', marginRight: 5}}>
+                                        <Space  align="end">
+                                            <Tag color={STATUS_COLOR[record.status]}> 
+                                                {R_STATUS[record.status]}  
+                                            </Tag>
+                                            <Tooltip 
+                                                placement="top" 
+                                                title={record.actionNotes}
+                                                destroyTooltipOnHide
+                                            >
+                                                    
+                                                {record.actionNotes && <AuditOutlined style={{fontSize: 'small'}} />}
+                                            </Tooltip>
+                                        </Space>
                                     </Col>
                                 </Row>
                             </Col>

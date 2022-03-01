@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
-import { Table, Button, Row, Col, Typography, Menu, Dropdown, DatePicker, Tag, Select, Modal, Form, Input, Tooltip} from 'antd'
-import { DownOutlined, SettingOutlined, ExclamationCircleOutlined, CheckCircleOutlined} from '@ant-design/icons';
+import { Table, Button, Row, Col, Typography, Menu, Dropdown, DatePicker, Tag, Select, Modal, Form, Input, Tooltip, Space} from 'antd'
+import { DownOutlined, SettingOutlined, ExclamationCircleOutlined, CheckCircleOutlined, AuditOutlined} from '@ant-design/icons';
 import { fomratDate, formatFloat, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
 import moment from "moment";
 import { getApprovalRequests, manageLeaveRequests } from '../../service/leaveRequest-Apis';
@@ -60,13 +60,19 @@ class ApproveRequest extends Component {
                 dataIndex: 'status',
                 key: 'status',
                 render:(text, records) =>(
-                    <Tooltip
-                        placement="top" 
-                        title={records.note}
-                        destroyTooltipOnHide
-                    >
-                        <Tag color={STATUS_COLOR[text]}> {R_STATUS[text]} </Tag>
-                    </Tooltip>
+                    <Space  align="end">
+                            <Tag color={STATUS_COLOR[text]}> 
+                                {R_STATUS[text]}  
+                            </Tag>
+                        <Tooltip 
+                            placement="top" 
+                            title={records.note}
+                            destroyTooltipOnHide
+                        >
+                                
+                            {records.note && <AuditOutlined style={{fontSize: 'large'}} />}
+                        </Tooltip>
+                    </Space>
                 ),
             },
             {
