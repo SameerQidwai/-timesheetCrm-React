@@ -59,6 +59,7 @@ class ApproveRequest extends Component {
                 title: 'Status',
                 dataIndex: 'status',
                 key: 'status',
+                ...tableSorter('status', 'string'),
                 render:(text, records) =>(
                     <Space  align="end">
                             <Tag color={STATUS_COLOR[text]}> 
