@@ -107,12 +107,12 @@ class LeaveRequest extends Component {
                                     this.setState({
                                         openModal: true,
                                         editRequest: record.id,
-                                        readOnly: record.status === 'AP'
+                                        readOnly: record.status
                                         // editIndex: index
                                     })
                                 }
                             }
-                            >{record.status === 'AP' ?'View': 'Edit' }</Menu.Item>
+                            >{record.status !== 'SB' ?'View': 'Edit' }</Menu.Item>
                             {/* <Menu.Item 
                                 onClick={()=>{}}
                             >Delete</Menu.Item> */}
@@ -133,6 +133,7 @@ class LeaveRequest extends Component {
             editRequest: false,
             permissions: {},
             type: [],
+            reload: true,
             openModal: false
         }   
     }
@@ -150,9 +151,10 @@ class LeaveRequest extends Component {
                 openModal: false,
                 readOnly: false,
                 editRequest: false,
-                request: res[0].success? res[0].data : [],
+                reload: false,
+                request: res[0]?.success? res[0].data : [],
                 permissions: LEAVE_REQUESTS,
-            });
+            },()=> this.setState({reload: true}) );
         })
         .catch((e) => {
             console.log(e);
@@ -172,7 +174,7 @@ class LeaveRequest extends Component {
     }
 
     render(){
-        const { request, openModal, editRequest, permissions, readOnly } = this.state
+        const { request, openModal, editRequest, permissions, readOnly, reload } = this.state
         return(
             <>
                 <Row justify="space-between">
@@ -187,6 +189,7 @@ class LeaveRequest extends Component {
                             onClick={()=>{
                                 this.setState({
                                     openModal: true,
+                                    readOnly: false
                                 })
                             }}
                             ><PlusSquareOutlined />Add Request</Button>
@@ -211,7 +214,7 @@ class LeaveRequest extends Component {
                     </Col>
                     
                     <Col span={24}>
-                        <LeaveBalance editable={false} style={{maxHeight: '30vh', overflowY: 'scroll'}}/>
+                       {reload && <LeaveBalance editable={false} style={{maxHeight: '30vh', overflowY: 'scroll'}}/>}
                     </Col>
                 </Row>
                 {openModal && (
@@ -220,7 +223,8 @@ class LeaveRequest extends Component {
                         close={this.closeModal}
                         edit={editRequest}
                         callBack={this.getData}
-                        readOnly={readOnly}
+                        readOnly={ readOnly === 'AP' ||readOnly === 'RJ' }
+                        showDetails={!readOnly || readOnly === 'SB'}
                     />
                 )}
             </>

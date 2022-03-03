@@ -1,4 +1,20 @@
 Uodate and check 
+    In Contract Emplyee: [
+        Working hours in a weekends,
+        working days in a week,
+    ],
+
+    leave Request: [
+        // end_date disable,
+        // balance field note remove,
+        //upload delete disable,
+
+        //update My Leace Balance Table when submit one Leave Request
+    ]
+
+    backend: [
+        Leave_request not adding again when rejected,
+    ]
     // Balance spelling
 
     Ap Reject hours show for created according to the policy (weekends)

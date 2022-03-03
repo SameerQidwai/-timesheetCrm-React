@@ -150,7 +150,7 @@ class LeaveBalance extends Component {
     componentDidMount = () =>{
       const { empId } = this.props
         getLeaveBalance(empId).then(res=>{
-            if(res.success){
+            if(res?.success){
                 this.setState({
                     data: res.data,
                 })

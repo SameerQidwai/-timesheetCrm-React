@@ -195,33 +195,32 @@ class AddRequestModal extends Component{
     }
 
     // this function is a mess right now need some fixes so it will be readable
-    getDateArray = (start, end, LeaveRequestType, entries, status) => {
-        console.log(LeaveRequestType);
+    getDateArray = (start, end, LeaveRequestType, entries) => {
         //try to put your condition to put closer to eachother if they link to eachother
             //so it will be easy to track conditions
+        const { showDetails, readOnly } = this.props
+        console.log({ showDetails, readOnly });
         let { BasicFields, contractDetails, holidays, data, hoursEntry } = this.state;
-        const { readOnly } = this.props
+        // const { readOnly } = this.props
         let { include_off_days, balance = -1,  minimum_balance, minimum_balance_required, id: typeId} = LeaveRequestType??{}
         var deFaulthours = contractDetails?.noOfHours ?? 0
         // if entries is sent it will only be send on open the modal on edit
         
         if (entries){
-            console.log('entries');
             var arr = new Array();
             data = entries.map(el=> {
                 var {date, hours } = el // in this conditon this hours value will be replace
                 date = moment(date)
                 const disabled = !include_off_days && ( (date.format('ddd') === 'Sun' || date.format('ddd') === 'Sat') && 'Weekend' || holidays[date.format('M/D/YYYY')] ) 
                     
-                if(status === 'SB' ){ balance += hours}
+                if(showDetails ){ balance += hours}
 
                 hoursEntry[date.format('M/D/YYYY')] = hours // setting the hours object before return 
                 return {key: date.format('M/D/YYYY'), date: date, hours: disabled? 0: hours, disabled}
             })
-            BasicFields[BasicFields[2].note ? 8: 7].disabled = false // adding an object when select leavetype
-            
+            BasicFields[BasicFields[2].note ? 8: 7].disabled = readOnly // adding an object when select leavetype
+                                                                        // and disabling endDate
         }else if (start && end){
-            console.log('start && end');
             //it will call on change of start and end date and found
             var arr = new Array();
             while(start.isSameOrBefore(end)){
@@ -238,7 +237,6 @@ class AddRequestModal extends Component{
             data = arr
             BasicFields[BasicFields[2].note ? 8: 7].disabled = false // adding an object when select leavetype
         }else if (start){
-            console.log('start');
             //if end date is not sent
             const disabled = !include_off_days && ((start.format('ddd') === 'Sun' || start.format('ddd') === 'Sat') && 'Weekend' || holidays[start.format('M/D/YYYY')])
             const hours = disabled? 0: hoursEntry[start.format('M/D/YYYY')] ?? deFaulthours
@@ -249,14 +247,14 @@ class AddRequestModal extends Component{
             BasicFields[BasicFields[2].note ? 8: 7].disabled = false // // adding an object when select leavetype
 
         }else{
-            console.log('startEnddate');
             this.formRef.current.setFieldsValue({dates: {startDate: null, endDate: null}})
             BasicFields[BasicFields[2].note ? 8: 7].disabled = true // adding an object when select leavetype
             hoursEntry= {}
             data = []
         }
 
-        if(typeId && balance>= 0){
+        // set type detail note
+        if(typeId && balance>= 0 && showDetails ){
             if (BasicFields[2].note){
                 BasicFields[2] = this.getLeaveDetail(balance,  minimum_balance, minimum_balance_required)
             }else{
@@ -282,8 +280,19 @@ class AddRequestModal extends Component{
             const {success, contractDetails, holidays, LeaveRequestTypes, fileList, fileIds} = res[1] 
             BasicFields[3].data = res[0].success ? res[0].data : []; //set projects to select box
             BasicFields[1].data = success ? LeaveRequestTypes : [] //set LeaveTypes to select box
+            BasicFields.map(el => {
+                if (el.type !== "Text"){
+                    el.disabled = readOnly 
+                }
+                //Set type to default if it is created already
+                if (el.key === "typeId" && res[2]){
+                    el.disabled = true   //res[2] is get id reaquest if it is false that means new request 
+                }                         // don't wanna disable type
+                return el
+            })
+
             this.setState({ 
-                BasicFields: BasicFields.map(el => {el.type !== "Text" &&(el.disabled = readOnly); return el}),
+                BasicFields,
                 holidays: success ? holidays ?? {} :{}, //holidays to cross of dates if type is not include holidays
                 contractDetails: success ? contractDetails?? {} :{}, //cotract details
                 fileList: res[2].fileList ?? [],
@@ -300,7 +309,7 @@ class AddRequestModal extends Component{
                     startDate: moment(entries[0].date),
                     endDate: moment(entries[entries.length-1].date),
                 }
-                this.getDateArray(formValues.startDate, formValues.endDate, selectedLeaveType, entries, formValues.status)
+                this.getDateArray(formValues.startDate, formValues.endDate, selectedLeaveType, entries)
                 this.formRef.current.setFieldsValue({dates: formValues})
             }
 
@@ -468,6 +477,7 @@ class AddRequestModal extends Component{
                                 maxCount={4}
                                 fileList={fileList}
                                 onRemove= {this.onRemove}
+                                disabled={readOnly}
                             >
                                 {fileList.length < 4 &&
                                     <div style={{marginTop: 10}} >
