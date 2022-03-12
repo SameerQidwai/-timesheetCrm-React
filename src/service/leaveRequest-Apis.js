@@ -15,10 +15,18 @@ export const addRequest = (data) => {
             messageAlert.success({ content: 'Success!', key: 1})
             if (success) 
                 setToken(res.headers && res.headers.authorization)
-            return success;
+            return {success};
         })
         .catch((err) => {
-            const {message} = err.response.data
+            const {message} = err?.response?.data
+            if (message === 'Balance is less than minimum balance!'){
+                messageAlert.error({ content: message, duration: 0, key: 1, style: { marginTop: '15vh', }}) 
+                return {
+                    balanceError: true,
+                    success: false, 
+                    message
+                }
+            }
             messageAlert.error({ content: message, key: 1})
             return {
                 error: "Please login again!",
@@ -38,7 +46,9 @@ export const getRequests = () => {
         })
         .catch((err) => {
             const {message} = err.response.data
-            messageAlert.error({ content: message, key: 1})
+            if(message !== 'Leave Requests not found'){
+                messageAlert.error({ content: message, key: 1})
+            }
             return {
                 error: "Please login again!",
                 success: false,

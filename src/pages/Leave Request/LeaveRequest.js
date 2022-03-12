@@ -88,7 +88,6 @@ class LeaveRequest extends Component {
                             title={records.note}
                             destroyTooltipOnHide
                         >
-                                
                             {records.note && <AuditOutlined style={{fontSize: 'large'}} />}
                         </Tooltip>
                     </Space>)
@@ -145,20 +144,16 @@ class LeaveRequest extends Component {
     getData = () =>{ 
         const { permissions } = localStore()
         const { LEAVE_REQUESTS } = JSON.parse(permissions)
-        Promise.all([getRequests()])
-        .then((res) => {
+        getRequests().then((res) => {
             this.setState({ 
                 openModal: false,
                 readOnly: false,
                 editRequest: false,
                 reload: false,
-                request: res[0]?.success? res[0].data : [],
+                request: res?.success? res.data : [],
                 permissions: LEAVE_REQUESTS,
             },()=> this.setState({reload: true}) );
         })
-        .catch((e) => {
-            console.log(e);
-        });
     }
 
     closeModal = () =>{

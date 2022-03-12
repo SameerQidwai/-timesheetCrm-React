@@ -48,9 +48,9 @@ class BillModal extends Component {
                     rules: [ { required: true, message: "Start Date is required", }, ],
                     labelAlign: "right",
                     rangeMin: (current)=>{
-                    const { billing } = this.formRef.current.getFieldValue();
-                    return  billing.endDate && current >  billing.endDate
-                }
+                        const { billing } = this.formRef.current.getFieldValue();
+                        return  billing.endDate && current >  billing.endDate
+                    }
                 },
                 {
                     object: "billing",
@@ -60,9 +60,9 @@ class BillModal extends Component {
                     type: "DatePicker",
                     fieldStyle: { width: "100%" },
                     rangeMax: (current)=>{
-                    const { billing } = this.formRef.current.getFieldValue();
-                    return  billing.startDate && current < billing.startDate
-                }
+                        const { billing } = this.formRef.current.getFieldValue();
+                        return  billing.startDate && current < billing.startDate
+                    }
                 },
                 {
                     Placeholder: "Contract Payment Basis",

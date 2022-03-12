@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Modal, Table, Form, Row, Col, Upload, Typography, Input, InputNumber } from "antd";
+import { Modal, Table, Form, Row, Col, Upload, Typography, Input, InputNumber, message } from "antd";
 import { PlusOutlined } from "@ant-design/icons"; //Icons
 import FormItems from "../../../components/Core/Forms/FormItems";
 import { addFiles } from "../../../service/Attachment-Apis";
@@ -122,6 +122,11 @@ class AddRequestModal extends Component{
                         const { LeaveRequestType } = this.state
                         this.getDateArray(startDate, endDate, LeaveRequestType);
                     },
+                    rangeMin: (current)=>{
+                        const { dates } = this.formRef.current.getFieldsValue();
+                        const { endDate } = dates;
+                        return  endDate && current >  endDate
+                    }
                 },
                 {
                     Placeholder: "End Date",
@@ -145,6 +150,11 @@ class AddRequestModal extends Component{
                         const { LeaveRequestType } = this.state
                         this.getDateArray(startDate, endDate, LeaveRequestType);
                     },
+                    rangeMax: (current)=>{
+                        const { dates } = this.formRef.current.getFieldsValue();
+                        const { startDate } = dates;
+                        return  startDate  && current < startDate
+                    }
                 },
                 {
                     Placeholder: "Description",
@@ -184,7 +194,7 @@ class AddRequestModal extends Component{
 
     getLeaveDetail = (balance,  minimum_balance, minimum_balance_required) =>{
         return {
-            Placeholder: <div><div>Current Balance: {balance}</div><div>Required Balance: {minimum_balance_required}</div><div>Minimum Balance: {minimum_balance}</div></div>,
+            Placeholder: <div><div>Current Balance: {balance}</div><div>Required Balance: {minimum_balance_required}</div><div>Overdraw Allowances: {minimum_balance}</div></div>,
             fieldCol: 24,
             note: true, 
             size: "small",
@@ -342,9 +352,11 @@ class AddRequestModal extends Component{
         }else{
             // console.log('newVal: ', newVal)
             addRequest(newVal).then((res) => {
-                if (res) {
+                if (res.success) {
                     this.setState({loading: false})
                     callBack()
+                }else if(res.balanceError){
+                    this.setState({loading: false})
                 }
             });
         }
@@ -448,13 +460,16 @@ class AddRequestModal extends Component{
         // For time bring
         return(
             <Modal
-                title={ edit ? "Edit Request" : "New Request"}
+                title={ readOnly ? 'View Request' :  edit ? "Edit Request" : "New Request"}
                 maskClosable
                 destroyOnClose={true}
                 visible={visible}
                 okButtonProps={{ htmlType: 'submit', form: 'my-form', disabled: readOnly, loading: loading }}
                 okText={"Submit"}
-                onCancel={close}
+                onCancel={()=>{
+                    message.destroy()
+                    close()
+                }}
                 width={1000}
             >
                 <Form
@@ -472,7 +487,7 @@ class AddRequestModal extends Component{
                             <Text style={{marginTop: 10, marginBottom: 2}}>Attachments</Text>
                             <Upload
                                 customRequest={this.handleUpload}
-                                listType="picture"
+                                // listType="picture"
                                 listType="picture-card"
                                 maxCount={4}
                                 fileList={fileList}
