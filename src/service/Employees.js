@@ -168,6 +168,7 @@ function reStructure(data) {
         endDate: employmentContracts.endDate ? moment(employmentContracts.endDate) : null,
         type: employmentContracts.type, 
         noOfHours: employmentContracts.noOfHours, 
+        noOfDays: employmentContracts.noOfDays, 
         noOfHoursPer: employmentContracts.noOfHoursPer, 
         remunerationAmount:employmentContracts.remunerationAmount,
         remunerationAmountPer: employmentContracts.remunerationAmountPer,  

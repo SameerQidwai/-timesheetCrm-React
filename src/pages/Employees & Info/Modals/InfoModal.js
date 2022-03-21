@@ -528,9 +528,18 @@ class InfoModal extends Component {
                     itemStyle: { marginBottom: 10 },
                 },
                 {
-                    Placeholder: "Full Work Hours",
+                    Placeholder: "Work Hours In A Week",
                     rangeMin: true,
-                    fieldCol: 12,
+                    fieldCol: 6,
+                    size: "small",
+                    type: "Text",
+                    labelAlign: "right",
+                    // itemStyle:{marginBottom:'10px'},
+                },
+                {
+                    Placeholder: "Work Days In A Week",
+                    rangeMin: true,
+                    fieldCol: 6,
                     size: "small",
                     type: "Text",
                     labelAlign: "right",
@@ -554,24 +563,24 @@ class InfoModal extends Component {
                     type: "InputNumber",
                     // shape: " Hours",
                     fieldStyle: { width: "100%" },
-                    rules: [ { required: true, message: "Work Hours is Required", }, ],
+                    rules: [ { required: true, message: "Work Hours are Required", }, ],
                     itemStyle: { marginBottom: 10 },
                 },
                 {
                     object: "billing",
                     fieldCol: 6,
-                    key: "noOfHoursPer",
+                    key: "noOfDays",
                     size: "small",
-                    type: "Select",
+                    type: "InputNumber",
                     // shape: " Hours",
-                    data: [
-                        // { label: "Daily", value: 2 },
-                        { label: "Weekly", value: 3 },
-                        // { label: "Fortnightly", value: 4 },
-                        // { label: "Monthly", value: 5 },
-                    ],
+                    // data: [
+                    //     // { label: "Daily", value: 2 },
+                    //     { label: "Weekly", value: 3 },
+                    //     // { label: "Fortnightly", value: 4 },
+                    //     // { label: "Monthly", value: 5 },
+                    // ],
                     fieldStyle: { width: "100%" },
-                    rules: [ { required: true, message: "Work Hours is Required", }, ],
+                    rules: [ { required: true, message: "Work Days are Required", }, ],
                     itemStyle: { marginBottom: 10 },
                 },
                 {
@@ -741,12 +750,12 @@ class InfoModal extends Component {
     fetchAll = (edit) =>{
         const { editEmp } = this.props
         const customUrl = `helpers/contact-persons?organizationId=1&employee=1`
-        Promise.all([ getStates(), getRoles() , edit ? this.getRecord(editEmp) : getOrgPersons(customUrl), getLeavePolicy(), getOrgPersons(customUrl) ])
+        Promise.all([ getStates(), getRoles() , edit && this.getRecord(editEmp), getLeavePolicy(), getOrgPersons(customUrl) ])
         .then(res => {
             const { BasicFields, BillingFields, ManagerFields } = this.state
             BasicFields[15].data = res[0].data;
             BasicFields[17].data = res[1].data;
-            BillingFields[16].data = res[3].data;
+            BillingFields[17].data = res[3].data;
             ManagerFields[1].data = res[4].data;
                 this.setState({
                     BasicFields,

@@ -409,6 +409,7 @@ class ApproveRequest extends Component {
                         edit={readRequest}
                         callBack={this.getData}
                         readOnly={true}
+                        approval={true}
                     />
                 )}
             </>

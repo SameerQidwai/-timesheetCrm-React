@@ -420,13 +420,22 @@ class InfoModal extends Component {
                     itemStyle: { marginBottom: 1 },
                 },
                 {
-                    Placeholder: "Full Work Hours",
-                    fieldCol: 24,
-                    size: "small",
+                    Placeholder: "Work Hours In A Week",
                     rangeMin: true,
+                    fieldCol: 6,
+                    size: "small",
                     type: "Text",
                     labelAlign: "right",
-                    
+                    // itemStyle:{marginBottom:'10px'},
+                },
+                {
+                    Placeholder: "Work Days In A Week",
+                    rangeMin: true,
+                    fieldCol: 18,
+                    size: "small",
+                    type: "Text",
+                    labelAlign: "right",
+                    // itemStyle:{marginBottom:'10px'},
                 },
                 {
                     object: "billing",
@@ -446,23 +455,19 @@ class InfoModal extends Component {
                 {
                     object: "billing",
                     fieldCol: 6,
-                    key: "noOfHoursPer",
+                    key: "noOfDays",
                     size: "small",
-                    type: "Select",
-                    data: [
-                        // { label: "Daily", value: 2 },
-                        { label: "Weekly", value: 3 },
-                        // { label: "Fortnightly", value: 4 },
-                        // { label: "Monthly", value: 5 },
-                    ],
+                    type: "InputNumber",
+                    // shape: " Hours",
+                    // data: [
+                    //     // { label: "Daily", value: 2 },
+                    //     { label: "Weekly", value: 3 },
+                    //     // { label: "Fortnightly", value: 4 },
+                    //     // { label: "Monthly", value: 5 },
+                    // ],
                     fieldStyle: { width: "100%" },
-                    rules: [
-                        {
-                            required: true,
-                            message: "Work Frequency is Required",
-                        },
-                    ],
-                    itemStyle: { marginBottom: 1 },
+                    rules: [ { required: true, message: "Work Days are Required", }, ],
+                    itemStyle: { marginBottom: 10 },
                 },
                 {
                     Placeholder: "Comments",
@@ -637,7 +642,6 @@ class InfoModal extends Component {
 
 
     //file upload testing
-
     handleUpload = async option=>{
         const { onSuccess, onError, file, onProgress } = option;
         const formData = new FormData();

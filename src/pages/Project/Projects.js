@@ -345,7 +345,7 @@ class Projects extends Component {
         const { PROJECTS }= JSON.parse(localStore().permissions)
         getList().then(res=>{
             this.setState({
-                data: res.success ? res.data.filter((el, x)=> x <10) : [],
+                data: res.success ? res.data : [],
                 filterData: res.success ? res.data : [],
                 openModal: false,
                 editPro: false,
@@ -374,8 +374,9 @@ class Projects extends Component {
     }
 
     generalFilter = (value) =>{
-        const { data } = this.state
+        let { data } = this.state
         if (value){
+            console.log('insert');
             this.setState({
                 filterData: data.filter(el => {
                     const { name: organization} = el.organization
@@ -389,6 +390,7 @@ class Projects extends Component {
                 })
             })
         }else{
+            console.log(data.length)
             this.setState({
                 filterData: data
             })

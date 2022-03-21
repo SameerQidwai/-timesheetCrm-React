@@ -178,7 +178,12 @@ class AddRequestModal extends Component{
         
     }
     componentDidMount = () => {
-        this.getData();
+        const {approval} = this.props
+        if(approval){
+            this.getApprovingData()
+        }else{
+            this.getSubmittedData();
+        }
     }
 
     setHours = (record, value, index) =>{
@@ -209,11 +214,10 @@ class AddRequestModal extends Component{
         //try to put your condition to put closer to eachother if they link to eachother
             //so it will be easy to track conditions
         const { showDetails, readOnly } = this.props
-        console.log({ showDetails, readOnly });
         let { BasicFields, contractDetails, holidays, data, hoursEntry } = this.state;
         // const { readOnly } = this.props
         let { include_off_days, balance = -1,  minimum_balance, minimum_balance_required, id: typeId} = LeaveRequestType??{}
-        var deFaulthours = contractDetails?.noOfHours ?? 0
+        var deFaulthours = contractDetails?.hoursPerDay ?? 0
         // if entries is sent it will only be send on open the modal on edit
         
         if (entries){
@@ -279,13 +283,66 @@ class AddRequestModal extends Component{
         //single hook cal for all the condition
     }
 
-    getData = () =>{
+    getApprovingData = () =>{
+        const { BasicFields } = this.state;
+        const { edit } = this.props;
+        // const {id: userId} = localStore()
+        // Get Projects
+        getSingleRequest(edit).then(srRes=> {
+            if (srRes.success){
+                const { employeeId } = srRes.data
+                Promise.all([getUserProjects(employeeId, 'O'), getUserLeaveType()])
+                .then((proRes) => {
+                    console.log(proRes);
+                    //Destructure proRes[1] to avoid writing proRes[1] repeateadly
+                    const {success, contractDetails, holidays, LeaveRequestTypes, fileList, fileIds} = proRes[1] 
+                    BasicFields[3].data = proRes[0].success ? proRes[0].data : []; //set projects to select box
+                    BasicFields[1].data = success ? LeaveRequestTypes : [] //set LeaveTypes to select box
+                    BasicFields.map(el => {
+                        if (el.type !== "Text"){
+                            el.disabled = true 
+                        }
+                        return el
+                    })
+
+                    this.setState({ 
+                        BasicFields,
+                        holidays: success ? holidays ?? {} :{}, //holidays to cross of dates if type is not include holidays
+                        contractDetails: success ? contractDetails?? {} :{}, //cotract details
+                        fileList: srRes.fileList ?? [],
+                        fileIds: srRes.fileIds ?? [],
+                    });
+                    if (edit && srRes?.success){ // run if modal is opened for editing
+                        let { entries, data } = srRes 
+                        //find holiday type to find if holidays are included or not
+                        let selectedLeaveType = LeaveRequestTypes.find(x=> x.id === (data.typeId ?? 0))
+                        const formValues = {
+                            ...data,
+                            description: data.desc,
+                            typeId: selectedLeaveType?.id,
+                            startDate: moment(entries[0].date),
+                            endDate: moment(entries[entries.length-1].date),
+                        }
+                        this.getDateArray(formValues.startDate, formValues.endDate, selectedLeaveType, entries)
+                        this.formRef.current.setFieldsValue({dates: formValues})
+                    }
+
+                })
+                .catch((e) => {
+                    console.log(e);
+                });
+            }
+        })
+    }
+
+    getSubmittedData = () =>{
         const { BasicFields } = this.state;
         const { edit, readOnly } = this.props;
         const {id: userId} = localStore()
         // Get Projects
         Promise.all([getUserProjects(userId, 'O'), getUserLeaveType(), edit && getSingleRequest(edit)])
         .then((res) => {
+            console.log(res);
             //Destructure res[1] to avoid writing res[1] repeateadly
             const {success, contractDetails, holidays, LeaveRequestTypes, fileList, fileIds} = res[1] 
             BasicFields[3].data = res[0].success ? res[0].data : []; //set projects to select box
@@ -315,7 +372,7 @@ class AddRequestModal extends Component{
                 const formValues = {
                     ...data,
                     description: data.desc,
-                    typeId: selectedLeaveType.id,
+                    typeId: selectedLeaveType?.id,
                     startDate: moment(entries[0].date),
                     endDate: moment(entries[entries.length-1].date),
                 }
@@ -444,7 +501,7 @@ class AddRequestModal extends Component{
                 render:(text, records, index) =>(
                     <Form.Item noStyle name={['hours', moment(records.date).format('M/D/YYYY')]} >
                         <InputNumber
-                            max={contractDetails?.noOfHours ?? false}
+                            max={contractDetails?.hoursPerDay ?? false}
                             min={0}
                             placeholder= "Hours"
                             size="small" 
