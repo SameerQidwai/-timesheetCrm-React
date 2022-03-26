@@ -124,9 +124,9 @@ export const editRequest = (id, data) => {
         });
 };
 
-export const getApprovalRequests = (query) => {
+export const getApprovalRequests = (queries) => {
     return axios //${query?.startDate}&${query?.endDate}&${query?.userId}&${query?.workId}
-    .get(`${url}/approvalLeaveRequests?startDate=${query?.startDate}&endDate=${query?.endDate}&userId=${query?.userId}&workId=${query?.workId}`,{headers:headers()})
+    .get(`${url}/approvalLeaveRequests?${queries}`,{headers:headers()})
         .then((res) => {
             const { success, data } = res.data;
             setToken(res.headers && res.headers.authorization)

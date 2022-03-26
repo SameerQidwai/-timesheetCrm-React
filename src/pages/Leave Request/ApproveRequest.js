@@ -131,8 +131,8 @@ class ApproveRequest extends Component {
             queryRequest : {
                 startDate: moment().startOf("month"),
                 endDate: moment().endOf("month"), 
-                workId: '', 
-                userId: '', 
+                workId: null, 
+                userId: null, 
             }
         }   
     }
@@ -147,8 +147,9 @@ class ApproveRequest extends Component {
         const { id, permissions } = localStore()
         const loginId = parseInt(id)
         const { LEAVE_REQUESTS } = JSON.parse(permissions)
+        const queryParams = `startDate=${query?.startDate}&endDate=${query?.endDate}&userId=${query?.userId}&workId=${query?.workId}`
 
-        Promise.all([ getManageProjects(loginId, 'M'), getApprovalRequests(query), getLineEmployees() ])
+        Promise.all([ getManageProjects('LEAVE_REQUESTS'), getApprovalRequests(queryParams), getLineEmployees() ])
         .then(res => {
             this.setState({
                 WORKS: res[0].success? res[0].data : [],
@@ -170,12 +171,18 @@ class ApproveRequest extends Component {
     getData = () =>{
         const { startDate, endDate, workId, userId } = this.state.queryRequest
         const query = {
-            startDate: fomratDate(startDate, 'DD-MM-YYYY'),
-            endDate: fomratDate(endDate, 'DD-MM-YYYY'),
+            startDate: fomratDate(startDate, 'DD-MM-YYYY') ?? undefined,
+            endDate: fomratDate(endDate, 'DD-MM-YYYY') ?? undefined,
             workId,
             userId,
         }
-        getApprovalRequests(query).then(res=>{
+        let queryParams = ''
+        if (query.startDate){
+            queryParams = `startDate=${query?.startDate}&endDate=${query?.endDate}&userId=${query?.userId}&workId=${query?.workId}`
+        }else{
+            queryParams = `userId=${query?.userId}&workId=${query?.workId}`
+        }
+        getApprovalRequests(queryParams).then(res=>{
             if(res.success){
                 this.setState({
                     request: res.data,
@@ -291,6 +298,7 @@ class ApproveRequest extends Component {
                             options={WORKS}
                             value={workId}     
                             allowClear      
+                            showSearch
                             optionFilterProp={["label", "value"]}
                             filterOption={
                                 (input, option) =>{
@@ -313,12 +321,13 @@ class ApproveRequest extends Component {
                     </Col>
                     <Col>
                         <Select
+                            allowClear
                             placeholder="Select User"
                             options={USERS}
                             value={userId}           
-                            optionFilterProp={["label", "value"]}
-                            allowClear
                             style={{ width: 250 }}
+                            showSearch
+                            optionFilterProp={["label", "value"]}
                             filterOption={
                                 (input, option) =>{
                                     const label = option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
@@ -345,11 +354,12 @@ class ApproveRequest extends Component {
                             format="MMM-YYYY"
                             value={startDate}
                             onChange={(value)=>{
+                                console.log(value);
                                 this.setState({
                                     queryRequest : {
                                         ...queryRequest,
-                                        startDate: moment(value ?? moment()).startOf("month"),
-                                        endDate: moment(value ?? moment()).endOf("month")
+                                        startDate: value && moment(value).startOf("month"),
+                                        endDate: value && moment(value).endOf("month") 
                                     }
                                 },()=>{
                                     this.getData()

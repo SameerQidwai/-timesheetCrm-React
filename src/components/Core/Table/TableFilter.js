@@ -114,6 +114,7 @@ export const tableTitleFilter = (colSpan, filterFunction) =>{ // table filter on
     return <Row justify="end" >
             <Col span={colSpan} >
                 <Input.Search
+                    placeholder='Search Table'
                     enterButton
                     size="small"
                     onChange={(e)=>{

@@ -426,9 +426,9 @@ export const getLineEmployees = () =>{
     });
 }
 
-export const getManageProjects = () =>{
+export const getManageProjects = (resourcePermission) =>{
     return axios
-    .get(`${Api}/auth/projects`, {headers:headers()})
+    .get(`${Api}/auth/projects?resource=${resourcePermission}`, {headers:headers()})
     .then((res) => {
         const { success, data } = res.data;
         setToken(res.headers && res.headers.authorization)
