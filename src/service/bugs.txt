@@ -1,4 +1,8 @@
 Uodate and check 
+
+    dropdown in Approval screen if Project/ employee permission is NOT set to Manage and Approval or read
+    permission is set to Manage
+
     In Contract Emplyee: [
         Working hours in a weekends,
         working days in a week,

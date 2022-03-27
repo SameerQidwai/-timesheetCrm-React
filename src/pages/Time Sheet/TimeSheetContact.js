@@ -55,9 +55,9 @@ class TimeSheetContact extends Component {
                     fixed: "left",
                     width: 300,
                     render: (value, record, index) => {
-                        if (record.LeaveRequest){
-                            return <Row gutter={[0, 10]} style={{height: 90}}>
-                                <Col span={24}>{record.LeaveType}</Col>
+                        if (record.leaveRequest){ // for Leave Request Timesse data
+                            return <Row gutter={[0,10]} >
+                                <Col span={24}>{record.leaveType}</Col>
                                 <Col span={24}>{value} </Col>
                             </Row>
                         }
@@ -100,7 +100,7 @@ class TimeSheetContact extends Component {
                                             target="_blank"
                                             rel="noopener noreferrer"
                                         >
-                                            <PaperClipOutlined /> {" "}
+                                            <PaperClipOutlined />
                                                 <Tooltip 
                                                     placement="top" 
                                                     title={record.attachment.name}
@@ -110,20 +110,23 @@ class TimeSheetContact extends Component {
                                                 </Tooltip>
                                         </Link>
                                     </Col>}
-                                    <Col  span={6} style={{marginLeft:'auto', marginRight:5}} >
-                                        <Space  align="end">
-                                            <Tag color={STATUS_COLOR[record.status]}> 
+                                    <Col style={{marginLeft:'auto'}} >
+                                        {/* <Space  align="end"> */}
+                                            {record.status && <Tag color={STATUS_COLOR[record.status]}> 
                                                 {R_STATUS[record.status]}  
-                                            </Tag>
-                                            <Tooltip 
-                                                placement="top" 
-                                                title={record.actionNotes}
-                                                destroyTooltipOnHide
-                                            >
-                                                    
-                                                {record.actionNotes && <AuditOutlined style={{fontSize: 'small'}} />}
-                                            </Tooltip>
-                                        </Space>
+                                            </Tag>}
+                                           
+                                        {/* </Space> */}
+                                    </Col>
+                                    <Col>
+                                        <Tooltip 
+                                            placement="top" 
+                                            title={record.actionNotes}
+                                            destroyTooltipOnHide
+                                        >
+                                            
+                                            {record.actionNotes && <AuditOutlined style={{fontSize: 'small'}} />}
+                                        </Tooltip>
                                     </Col>
                                 </Row>
                             </Col>
@@ -137,7 +140,7 @@ class TimeSheetContact extends Component {
                     fixed: "left",
                     align: "center",
                     width: 100,
-                    render: (value) => (value&& value.toFixed(2))
+                    render: (value) => ( formatFloat(value))
                 }
             ]
         };
@@ -201,9 +204,10 @@ class TimeSheetContact extends Component {
         if(sUser){
             getList({userId: sUser, startDate: startDate.format('DD-MM-YYYY'), endDate: endDate.format('DD-MM-YYYY')}).then(res=>{
                 if (res.success){
+                    console.log(res.success);
                     this.setState({
                         timesheet: res.data?? {},
-                        data: res.data ? res.data.milestones ?? []: [],
+                        data:  res?.data?.milestones ?? [],
                         sTMilestones: {
                             milestones: [],
                             keys: []
@@ -253,33 +257,28 @@ class TimeSheetContact extends Component {
                 return {
                   ...col,
                     render: (value, record, rowIndex) =>{
-                        if (record.LeaveRequest){
-                            if(value){
-                                <Tooltip title={value['notes'] && `Note: ${value['notes'] }`} >
-                                    <Row style={{ border: "1px solid" }}>
+                        if (record.leaveRequest){
+                            if(value){ // for leave request columns
+                                {return <Tooltip title={value['notes'] && `Note: ${value['notes'] }`} >
+                                    <Row>
                                     <Col span={24}>Off Hours: {formatFloat(value['hours'])}</Col>
-                                    <Col span={24}>
-                                        <Row>
-                                            <Col span={2} >Status: </Col>
-                                            <Col  span={6} style={{marginLeft:'auto', marginRight:5}} >
-                                                <Space  align="end">
-                                                    <Tag color={STATUS_COLOR[value['status']]}> 
-                                                        {R_STATUS[value['status']]}  
-                                                    </Tag>
-                                                    <Tooltip 
-                                                        placement="top" 
-                                                        title={value['statusMsg']}
-                                                        destroyTooltipOnHide
-                                                    >
-                                                            
-                                                        {value['statusMsg'] && <AuditOutlined style={{fontSize: 'small'}} />}
-                                                    </Tooltip>
-                                                </Space>
-                                            </Col>``
-                                        </Row>
+                                    <Col >Status: </Col>
+                                    <Col style={{marginLeft:'auto', marginRight:5}} >
+                                        <Space  align="end">
+                                            <Tag color={STATUS_COLOR[value['status']]}> 
+                                                {R_STATUS[value['status']]}  
+                                            </Tag>
+                                            <Tooltip 
+                                                placement="top" 
+                                                title={value['statusMsg']}
+                                                destroyTooltipOnHide
+                                            >
+                                                {value['statusMsg'] && <AuditOutlined style={{fontSize: 'small'}} />}
+                                            </Tooltip>
+                                        </Space>
                                     </Col>
                                     </Row>
-                                </Tooltip>
+                                </Tooltip>}
                             }
                         }else{
 
@@ -540,7 +539,7 @@ class TimeSheetContact extends Component {
                                     key={kIndex+1}
                                     align='center'
                                     className="prevDates-TMcell" 
-                                >0</Table.Summary.Cell>
+                                >0.00</Table.Summary.Cell>
                     })}
                 </Table.Summary.Row>
             </Table.Summary>
