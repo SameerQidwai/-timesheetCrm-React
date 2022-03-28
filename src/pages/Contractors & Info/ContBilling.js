@@ -9,7 +9,7 @@ import { getList, delList } from "../../service/subContrators-contracts";
 
 import moment from "moment"
 import "../styles/table.css";
-import { formatCurrency, localStore, DURATION, fomratDate } from "../../service/constant";
+import { formatCurrency, localStore, DURATION, formatDate } from "../../service/constant";
 import { tableSorter, tableTitleFilter } from "../../components/Core/Table/TableFilter";
 
 
@@ -31,14 +31,14 @@ class EmpBilling extends Component {
                 title: "Start Date",
                 dataIndex: "startDate",
                 key: "startDate",
-                render:(record)=> record && fomratDate(record),
+                render:(record)=> record && formatDate(record),
                 ...tableSorter('startDate', 'date'),
             },
             {
                 title: "End Date",
                 dataIndex: "endDate",
                 key: "endDate",
-                render:(record)=> record && fomratDate(record),
+                render:(record)=> record && formatDate(record),
                 ...tableSorter('endDate', 'date'),
             },
             {
@@ -149,8 +149,8 @@ class EmpBilling extends Component {
             this.setState({
                 filterData: data.filter(el => {
                     return `00${el.id}`.includes(value)||
-                    el.startDate && `${fomratDate(el.startDate)}`.toLowerCase().includes(value.toLowerCase()) ||
-                    el.endDate && `${fomratDate(el.endDate)}`.toLowerCase().includes(value.toLowerCase()) ||
+                    el.startDate && `${formatDate(el.startDate)}`.toLowerCase().includes(value.toLowerCase()) ||
+                    el.endDate && `${formatDate(el.endDate)}`.toLowerCase().includes(value.toLowerCase()) ||
                     `${formatCurrency(el.remunerationAmount) ?? ''}`.toLowerCase().includes(value.toLowerCase()) ||
                     `${DURATION[el.remunerationAmountPer] ?? ''}`.toLowerCase().includes(value.toLowerCase())                })
             })

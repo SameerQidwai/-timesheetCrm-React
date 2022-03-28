@@ -18,7 +18,7 @@ export const getList = (keys) => {
         .catch((err) => {
             return {
                 error: "Please login again!",
-                success: true,
+                success: false,
                 message: err.message,
                 data: [],
             };

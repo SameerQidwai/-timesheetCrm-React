@@ -15,16 +15,24 @@ export const addRequest = (data) => {
             messageAlert.success({ content: 'Success!', key: 1})
             if (success) 
                 setToken(res.headers && res.headers.authorization)
-            return success;
+            return {success};
         })
         .catch((err) => {
-            const {message} = err.response.data
-            messageAlert.error({ content: message, key: 1})
-            return {
-                error: "Please login again!",
-                status: false,
-                message: err.message,
-            };
+            const {message} = err?.response?.data
+            // if (message === 'Balance is less than minimum balance!'){
+                messageAlert.error({ content: message, duration: 120, key: 1, style: { marginTop: '15vh', }}) 
+                return {
+                    balanceError: true,
+                    success: false, 
+                    message
+                }
+            // }
+            // messageAlert.error({ content: message, key: 1})
+            // return {
+            //     error: "Please login again!",
+            //     status: false,
+            //     message: err.message,
+            // };
         });
 };
 
@@ -38,7 +46,9 @@ export const getRequests = () => {
         })
         .catch((err) => {
             const {message} = err.response.data
-            messageAlert.error({ content: message, key: 1})
+            if(message !== 'Leave Requests not found'){
+                messageAlert.error({ content: message, key: 1})
+            }
             return {
                 error: "Please login again!",
                 success: false,
@@ -105,18 +115,18 @@ export const editRequest = (id, data) => {
         })
         .catch((err) => {
             const {message} = err.response.data
-            messageAlert.error({ content: message, key: id})
+            messageAlert.error({ content: message, duration: 10000, key: id, style: { marginTop: '15vh', }}) 
             return {
-                error: "Please login again!",
-                status: false,
-                message: err.message,
-            };
+                balanceError: true,
+                success: false, 
+                message
+            }
         });
 };
 
-export const getApprovalRequests = (query) => {
+export const getApprovalRequests = (queries) => {
     return axios //${query?.startDate}&${query?.endDate}&${query?.userId}&${query?.workId}
-    .get(`${url}/approvalLeaveRequests?startDate=${query?.startDate}&endDate=${query?.endDate}&userId=${query?.userId}&workId=${query?.workId}`,{headers:headers()})
+    .get(`${url}/approvalLeaveRequests?${queries}`,{headers:headers()})
         .then((res) => {
             const { success, data } = res.data;
             setToken(res.headers && res.headers.authorization)

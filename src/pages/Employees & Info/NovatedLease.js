@@ -8,7 +8,7 @@ import { getRecord as empRecord } from "../../service/Employees";
 import { getList, delList } from "../../service/employee-leases";
 
 import "../styles/table.css";
-import { fomratDate, formatCurrency, localStore } from "../../service/constant";
+import { formatDate, formatCurrency, localStore } from "../../service/constant";
 import { tableSorter, tableTitleFilter } from "../../components/Core/Table/TableFilter";
 
 const { Title } = Typography;
@@ -41,14 +41,14 @@ class NovatedLease extends Component {
                 title: "Start Date",
                 dataIndex: "startDate",
                 key: "startDate",
-                render: (record) =>( record && fomratDate(record)),
+                render: (record) =>( record && formatDate(record)),
                 ...tableSorter('startDate', 'date'),
             },
             {
                 title: "End Date",
                 dataIndex: "endDate",
                 key: "endDate",
-                render: (record) =>( record && fomratDate(record)),
+                render: (record) =>( record && formatDate(record)),
                 ...tableSorter('endDate', 'date'),
             },
             {
@@ -157,8 +157,8 @@ class NovatedLease extends Component {
                 filterData: data.filter(el => {
                     return `${el.companyName ?? ''}`.toLowerCase().includes(value.toLowerCase()) ||
                     `${el.financerName ?? ''}`.toLowerCase().includes(value.toLowerCase()) ||
-                    el.startDate && `${fomratDate(el.startDate)}`.toLowerCase().includes(value.toLowerCase()) ||
-                    el.endDate && `${fomratDate(el.endDate)}`.toLowerCase().includes(value.toLowerCase()) ||
+                    el.startDate && `${formatDate(el.startDate)}`.toLowerCase().includes(value.toLowerCase()) ||
+                    el.endDate && `${formatDate(el.endDate)}`.toLowerCase().includes(value.toLowerCase()) ||
                     `${el.financedAmount ?? ''}`.toLowerCase().includes(value.toLowerCase()) 
                 })
             })

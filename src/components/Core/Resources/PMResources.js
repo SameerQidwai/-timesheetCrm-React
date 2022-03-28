@@ -4,7 +4,7 @@ import { Menu, Button, Dropdown, Table } from "antd";
 import { getMilestones } from "../../../service/Milestone-Apis";
 
 import moment from "moment"
-import { fomratDate, formatCurrency, localStore } from "../../../service/constant";
+import { formatDate, formatCurrency, localStore } from "../../../service/constant";
 
 
 class PMResources extends Component {
@@ -29,13 +29,13 @@ class PMResources extends Component {
                     title: "Start Date",
                     dataIndex: "startDate",
                     key: "startDate",
-                    render: (record) =>(record && fomratDate(record))
+                    render: (record) =>(record && formatDate(record))
                 },
                 {
                     title: "End Date",
                     dataIndex: "endDate",
                     key: "endDate",
-                    render: (record) =>(record && fomratDate(record))
+                    render: (record) =>(record && formatDate(record))
                 },
                 {
                     title: "Progress",

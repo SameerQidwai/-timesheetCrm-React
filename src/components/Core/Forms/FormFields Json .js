@@ -37,7 +37,8 @@ fields=[
             tooltip: 'ToolTip on Text or Title types', 
             tooltipTitle: 'Title of the Tool tip', 
             tooltipTrigger: 'Hover click or focus tool tip trigger',
-            fieldNames: 'Select Box Label and value key'
+            fieldNames: 'Select Box Label and value key',
+            initialValue: 'Gives Item an initaialValues'
 
         }
     ]

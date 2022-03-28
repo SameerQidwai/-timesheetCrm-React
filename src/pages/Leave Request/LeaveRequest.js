@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
-import { Table, Button, Row, Col, Typography, Menu, Dropdown, Tag, Tooltip} from 'antd'
-import { DownOutlined, SettingOutlined, PlusSquareOutlined, FilterOutlined} from '@ant-design/icons';
-import { formatFloat, fomratDate, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
+import { Table, Button, Row, Col, Typography, Menu, Dropdown, Tag, Tooltip, Space} from 'antd'
+import { DownOutlined, SettingOutlined, PlusSquareOutlined, AuditOutlined} from '@ant-design/icons';
+import { formatFloat, formatDate, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
 import AddRequestModal from './Modals/AddRequestModal';
 import { getRequests } from '../../service/leaveRequest-Apis';
 import moment from 'moment';
@@ -49,13 +49,18 @@ class LeaveRequest extends Component {
                 title: 'Start Date',
                 dataIndex: 'startDate',
                 key: 'startDate',
-                render:(text, records) => text && fomratDate(text)
+                render:(text, records) => text && formatDate(text)
             },
             {
                 title: 'End Date',
                 dataIndex: 'endDate',
                 key: 'endDate',
-                render:(text, records) => text && fomratDate(text)
+                render:(text, records) => text && formatDate(text)
+            },
+            {
+                title: 'Leave Type',
+                dataIndex: 'leaveRequestName',
+                key: 'leaveRequestName',
             },
             {
                 title: 'Project',
@@ -73,13 +78,19 @@ class LeaveRequest extends Component {
                 dataIndex: 'status',
                 key: 'status',
                 render:(text, records) => {
-                    return  <Tooltip 
-                        placement="top" 
-                        title={records.note}
-                        destroyTooltipOnHide
-                    >
-                        <Tag color={STATUS_COLOR[text]}> {R_STATUS[text]} </Tag>
-                    </Tooltip>
+                    // note outside the tag
+                    return(<Space  align="end">
+                            <Tag color={STATUS_COLOR[text]}> 
+                                {R_STATUS[text]}  
+                            </Tag>
+                        <Tooltip 
+                            placement="top" 
+                            title={records.note}
+                            destroyTooltipOnHide
+                        >
+                            {records.note && <AuditOutlined style={{fontSize: 'large'}} />}
+                        </Tooltip>
+                    </Space>)
                 }
             },
             {
@@ -95,7 +106,7 @@ class LeaveRequest extends Component {
                                     this.setState({
                                         openModal: true,
                                         editRequest: record.id,
-                                        readOnly: record.status === 'AP'
+                                        readOnly: record.status
                                         // editIndex: index
                                     })
                                 }
@@ -121,6 +132,7 @@ class LeaveRequest extends Component {
             editRequest: false,
             permissions: {},
             type: [],
+            reload: true,
             openModal: false
         }   
     }
@@ -132,19 +144,16 @@ class LeaveRequest extends Component {
     getData = () =>{ 
         const { permissions } = localStore()
         const { LEAVE_REQUESTS } = JSON.parse(permissions)
-        Promise.all([getRequests()])
-        .then((res) => {
+        getRequests().then((res) => {
             this.setState({ 
                 openModal: false,
                 readOnly: false,
                 editRequest: false,
-                request: res[0].success? res[0].data : [],
+                reload: false,
+                request: res?.success? res.data : [],
                 permissions: LEAVE_REQUESTS,
-            });
+            },()=> this.setState({reload: true}) );
         })
-        .catch((e) => {
-            console.log(e);
-        });
     }
 
     closeModal = () =>{
@@ -160,7 +169,7 @@ class LeaveRequest extends Component {
     }
 
     render(){
-        const { request, openModal, editRequest, permissions, readOnly } = this.state
+        const { request, openModal, editRequest, permissions, readOnly, reload } = this.state
         return(
             <>
                 <Row justify="space-between">
@@ -175,6 +184,7 @@ class LeaveRequest extends Component {
                             onClick={()=>{
                                 this.setState({
                                     openModal: true,
+                                    readOnly: false
                                 })
                             }}
                             ><PlusSquareOutlined />Add Request</Button>
@@ -199,7 +209,7 @@ class LeaveRequest extends Component {
                     </Col>
                     
                     <Col span={24}>
-                        <LeaveBalance editable={false} style={{maxHeight: '30vh', overflowY: 'scroll'}}/>
+                       {reload && <LeaveBalance editable={false} style={{maxHeight: '30vh', overflowY: 'scroll'}}/>}
                     </Col>
                 </Row>
                 {openModal && (
@@ -208,7 +218,8 @@ class LeaveRequest extends Component {
                         close={this.closeModal}
                         edit={editRequest}
                         callBack={this.getData}
-                        readOnly={readOnly}
+                        readOnly={ readOnly === 'AP' }
+                        showDetails={!readOnly || readOnly === 'SB' || readOnly === 'RJ' }
                     />
                 )}
             </>
@@ -217,3 +228,19 @@ class LeaveRequest extends Component {
 }
 
 export default LeaveRequest;
+
+// inside tag
+// (<Tooltip 
+//     placement="top" 
+//     title={records.note}
+//     destroyTooltipOnHide
+// >
+//     <Tag color={STATUS_COLOR[text]}> 
+//     <Space style={{ display: 'flex'}} align="baseline">
+//         {R_STATUS[text]}  
+//         {records.note && <AuditOutlined />}
+//     </Space>
+//         </Tag>
+    
+// </Tooltip>
+// )

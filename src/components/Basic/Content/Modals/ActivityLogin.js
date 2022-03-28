@@ -14,7 +14,8 @@ function ActivityLogin(props) {
 
     const loginFunc = (value) => {
         login(value).then(res=>{
-            if(res&& res.success){
+            console.log(res);
+            if(res?.success){
                 // setLogout(true) // if login Modal will do anyharm uncomment this
                 form.resetFields();
                 props.close()

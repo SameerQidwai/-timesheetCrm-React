@@ -9,7 +9,7 @@ import { getList, delList } from "../../service/opportunities";
 
 import '../styles/table.css'
 import moment from "moment";
-import { fomratDate, formatCurrency, localStore, O_STAGE, O_STATUS, O_TYPE } from '../../service/constant';
+import { formatDate, formatCurrency, localStore, O_STAGE, O_STATUS, O_TYPE } from '../../service/constant';
 import { Filtertags, TableModalFilter, tableSorter, tableSummaryFilter, tableTitleFilter } from '../../components/Core/Table/TableFilter';
 import { getOrganizations, getPanels, getStates } from '../../service/constant-Apis';
 const { Title } = Typography
@@ -57,21 +57,21 @@ class Opportunities extends Component {
                 title: 'Start Date',
                 dataIndex: 'startDate',
                 key: 'startDate',
-                render: (record) =>(record && fomratDate(record)),
+                render: (record) =>(record && formatDate(record)),
                 ...tableSorter('startDate', 'date'),
             },
             {
                 title: 'End Date',
                 dataIndex: 'endDate',
                 key: 'endDtae',
-                render: (record) =>(record && fomratDate(record)),
+                render: (record) =>(record && formatDate(record)),
                 ...tableSorter('endDate', 'date'),
             },
             {
                 title: 'Bid Date',
                 dataIndex: 'bidDate',
                 key: 'bidDate',
-                render: (record) =>(record && fomratDate(record)),
+                render: (record) =>(record && formatDate(record)),
                 ...tableSorter('bidDate', 'date'),            },
             {
                 title: 'Stage',
@@ -416,9 +416,9 @@ class Opportunities extends Component {
                     el.title && el.title.toLowerCase().includes(value.toLowerCase()) || 
                     organization && organization.toLowerCase().includes(value.toLowerCase()) ||
                     el.value && formatCurrency(el.value).toLowerCase().includes(value.toLowerCase()) ||
-                    el.startDate && `${fomratDate(el.startDate)}`.toLowerCase().includes(value.toLowerCase()) ||
-                    el.endDate && `${fomratDate(el.endDate)}`.toLowerCase().includes(value.toLowerCase()) ||
-                    el.bidDate && `${fomratDate(el.bidDate)}`.toLowerCase().includes(value.toLowerCase()) ||
+                    el.startDate && `${formatDate(el.startDate)}`.toLowerCase().includes(value.toLowerCase()) ||
+                    el.endDate && `${formatDate(el.endDate)}`.toLowerCase().includes(value.toLowerCase()) ||
+                    el.bidDate && `${formatDate(el.bidDate)}`.toLowerCase().includes(value.toLowerCase()) ||
                     el.stage && `${O_STAGE[el.stage]}`.toLowerCase().includes(value.toLowerCase()) ||
                     el.status && `${O_STATUS[el.status]}`.toLowerCase().includes(value.toLowerCase()) ||
                     el.type && `${O_TYPE[el.type]}`.toLowerCase().includes(value.toLowerCase()) ||

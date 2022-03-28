@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 
 import moment from "moment";
 
-import { fomratDate, formatCurrency, localStore } from "../../service/constant";
+import { formatDate, formatCurrency, localStore } from "../../service/constant";
 import { entityProjects } from "../../service/constant-Apis";
 
 class Projects extends Component {
@@ -42,13 +42,13 @@ class Projects extends Component {
                 title: 'Start Date',
                 dataIndex: 'startDate',
                 key: 'startDate',
-                render: (record) =>(record && fomratDate(record))
+                render: (record) =>(record && formatDate(record))
             },
             {
                 title: 'End Date',
                 dataIndex: 'endDate',
                 key: 'endDtae',
-                render: (record) =>(record &&  fomratDate(record))
+                render: (record) =>(record &&  formatDate(record))
             },
             {
                 title: 'Action',

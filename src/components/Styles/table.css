@@ -16,6 +16,10 @@
     padding: 0;
 } */
 
+div.timeSheet-table div.ant-table-body{
+    scrollbar-width: thin;
+}
+
 div.timeSheet-table div.ant-table-content {
     overflow-x: hidden !important;
 }

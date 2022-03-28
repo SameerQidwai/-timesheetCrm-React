@@ -385,7 +385,8 @@ export const getUserLeaveType = () => {
             const { success, data } = res.data;
             setToken(res.headers && res.headers.authorization)
             if (success){
-                const {holidays, contractDetails, LeaveRequestTypes} = data
+                console.log(data);
+                const {holidays, contractDetails, LeaveRequestTypes = []} = data
                 let requestType = [{id: 0, name: 'Unpaid', include_off_days: true}]
                 LeaveRequestTypes.forEach((el,index)=>{
                     const type= {}
@@ -414,7 +415,6 @@ export const getLineEmployees = () =>{
     .then((res) => {
         const { success, data } = res.data;
         setToken(res.headers && res.headers.authorization)
-        console.log(data);
         if (success) return { success: success, data: data };
     })
     .catch((err) => {
@@ -426,13 +426,12 @@ export const getLineEmployees = () =>{
     });
 }
 
-export const getManageProjects = () =>{
+export const getManageProjects = (resourcePermission) =>{
     return axios
-    .get(`${Api}/auth/projects`, {headers:headers()})
+    .get(`${Api}/auth/projects?resource=${resourcePermission}`, {headers:headers()})
     .then((res) => {
         const { success, data } = res.data;
         setToken(res.headers && res.headers.authorization)
-        console.log(data);
         if (success) return { success: success, data: data };
     })
     .catch((err) => {

@@ -77,6 +77,7 @@ class FormItems extends Component {
                     <Item
                         {...item.layout}
                         name={[listName??item.object, item.key]}
+                        initialValue={item.initialValue}
                         extra={item.hint}
                         labelAlign={item.labelAlign}
                         label={item.label}

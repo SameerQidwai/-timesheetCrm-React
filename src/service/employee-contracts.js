@@ -31,6 +31,7 @@ export const getRecord = (id) => {
             jwtExpired(message)
             if (success)  {
                 setToken(res.headers && res.headers.authorization)
+                data.leaveRequestPolicyId = data.leaveRequestPolicyId?? 0
                 data.file= data.fileId ? [{
                     id: data.file.id,
                     createdAt: data.file.createdAt,

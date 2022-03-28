@@ -70,9 +70,18 @@ class BillModal extends Component {
                     itemStyle: { marginBottom: 1 },
                 },
                 {
-                    Placeholder: "Full Work Hours",
+                    Placeholder: "Work Hours In A Week",
                     rangeMin: true,
-                    fieldCol: 12,
+                    fieldCol: 6,
+                    size: "small",
+                    type: "Text",
+                    labelAlign: "right",
+                    // itemStyle:{marginBottom:'10px'},
+                },
+                {
+                    Placeholder: "Work Days In A Week",
+                    rangeMin: true,
+                    fieldCol: 6,
                     size: "small",
                     type: "Text",
                     labelAlign: "right",
@@ -102,20 +111,19 @@ class BillModal extends Component {
                 {
                     object: "billing",
                     fieldCol: 6,
-                    key: "noOfHoursPer",
+                    key: "noOfDays",
                     size: "small",
-                    type: "Select",
+                    type: "InputNumber",
                     // shape: " Hours",
-                    data: [
-                        // { label: "Hourly", value: 1 },
-                        // { label: "Daily", value: 2 },
-                        { label: "Weekly", value: 3 },
-                        // { label: "Fortnightly", value: 4 },
-                        // { label: "Monthly", value: 5 },
-                    ],
+                    // data: [
+                    //     // { label: "Daily", value: 2 },
+                    //     { label: "Weekly", value: 3 },
+                    //     // { label: "Fortnightly", value: 4 },
+                    //     // { label: "Monthly", value: 5 },
+                    // ],
                     fieldStyle: { width: "100%" },
-                    rules: [ { required: true, message: "Work Hours is Required", }, ],
-                    itemStyle: { marginBottom: 1 },
+                    rules: [ { required: true, message: "Work Days are Required", }, ],
+                    itemStyle: { marginBottom: 10 },
                 },
                 {
                     object: "billing",
@@ -279,7 +287,7 @@ class BillModal extends Component {
         Promise.all([getLeavePolicy(), editCntrct && getRecord(editCntrct)])
         .then(res => {
             const{BillingFields} = this.state
-            BillingFields[16].data = res[0].success ? res[0].data:[];
+            BillingFields[17].data = res[0].success ? res[0].data:[];
             const {success, data} = res[1]
             if (success){
                 data.startDate = data.startDate && moment(data.startDate)

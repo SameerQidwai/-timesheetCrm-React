@@ -3,7 +3,7 @@ import { Button, Table, Dropdown, Menu} from 'antd'
 import { SettingOutlined, DownOutlined} from '@ant-design/icons'; //Icons
 import { Link } from 'react-router-dom'
 import moment from 'moment'
-import { fomratDate, formatCurrency, localStore } from '../../service/constant';
+import { formatDate, formatCurrency, localStore } from '../../service/constant';
 import { entityProjects } from "../../service/constant-Apis";
 
 class Skills extends Component {
@@ -41,19 +41,19 @@ class Skills extends Component {
                 dataIndex: 'startDate',
                 key: 'startDate',
                 width: 'fit-content',
-                render: (record) =>(record && fomratDate(record))
+                render: (record) =>(record && formatDate(record))
             },
             {
                 title: 'End Date',
                 dataIndex: 'endDate',
                 key: 'endDtae',
-                render: (record) =>(record && fomratDate(record))
+                render: (record) =>(record && formatDate(record))
             },
             {
                 title: 'Bid Date',
                 dataIndex: 'bidDate',
                 key: 'bidDate',
-                render: (record) =>(record && fomratDate(record))
+                render: (record) =>(record && formatDate(record))
             },
             {
                 title: 'Status',

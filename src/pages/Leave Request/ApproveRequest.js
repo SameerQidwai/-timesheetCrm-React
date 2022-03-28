@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
-import { Table, Button, Row, Col, Typography, Menu, Dropdown, DatePicker, Tag, Select, Modal, Form, Input, Tooltip} from 'antd'
-import { DownOutlined, SettingOutlined, ExclamationCircleOutlined, CheckCircleOutlined} from '@ant-design/icons';
-import { fomratDate, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
+import { Table, Button, Row, Col, Typography, Menu, Dropdown, DatePicker, Tag, Select, Modal, Form, Input, Tooltip, Space} from 'antd'
+import { DownOutlined, SettingOutlined, ExclamationCircleOutlined, CheckCircleOutlined, AuditOutlined} from '@ant-design/icons';
+import { formatDate, formatFloat, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
 import moment from "moment";
 import { getApprovalRequests, manageLeaveRequests } from '../../service/leaveRequest-Apis';
 import AddRequestModal from './Modals/AddRequestModal';
@@ -38,35 +38,42 @@ class ApproveRequest extends Component {
                 title: 'Start Date',
                 dataIndex: 'startDate',
                 key: 'startDate',
-                render:(text, records) =>text && fomratDate(text),
+                render:(text, records) =>text && formatDate(text),
                 ...tableSorter('startDate', 'date'),
             },
             {
                 title: 'End Date',
                 dataIndex: 'endDate',
                 key: 'endDate',
-                render:(text, records) =>text && fomratDate(text),
+                render:(text, records) =>text && formatDate(text),
                 ...tableSorter('endDate', 'date'),
             },
             {
                 title: 'Submit Date',
                 dataIndex: 'submittedAt',
                 key: 'submittedAt',
-                render:(text, records) =>text && fomratDate(text),
+                render:(text, records) =>text && formatDate(text),
                 ...tableSorter('submittedAt', 'date'),
             },
             {
                 title: 'Status',
                 dataIndex: 'status',
                 key: 'status',
+                ...tableSorter('status', 'string'),
                 render:(text, records) =>(
-                    <Tooltip
-                        placement="top" 
-                        title={records.note}
-                        destroyTooltipOnHide
-                    >
-                        <Tag color={STATUS_COLOR[text]}> {R_STATUS[text]} </Tag>
-                    </Tooltip>
+                    <Space  align="end">
+                            <Tag color={STATUS_COLOR[text]}> 
+                                {R_STATUS[text]}  
+                            </Tag>
+                        <Tooltip 
+                            placement="top" 
+                            title={records.note}
+                            destroyTooltipOnHide
+                        >
+                                
+                            {records.note && <AuditOutlined style={{fontSize: 'large'}} />}
+                        </Tooltip>
+                    </Space>
                 ),
             },
             {
@@ -74,7 +81,7 @@ class ApproveRequest extends Component {
                 dataIndex: 'totalHours',
                 key: 'totalHours',
                 align: 'center',
-                render: (text, record)=> text && <Text strong>{text}</Text>,
+                render: (text, record)=> text && <Text strong>{formatFloat(text)}</Text>,
                 ...tableSorter('totalHours', 'number'),
             },
             {
@@ -124,8 +131,8 @@ class ApproveRequest extends Component {
             queryRequest : {
                 startDate: moment().startOf("month"),
                 endDate: moment().endOf("month"), 
-                workId: '', 
-                userId: '', 
+                workId: null, 
+                userId: null, 
             }
         }   
     }
@@ -136,12 +143,13 @@ class ApproveRequest extends Component {
 
     fetchAll = () =>{
         const { startDate, endDate, workId, userId } = this.state.queryRequest
-        const query = { startDate: fomratDate(startDate, 'DD-MM-YYYY'), endDate: fomratDate(endDate, 'DD-MM-YYYY'), workId, userId, }
+        const query = { startDate: formatDate(startDate, 'DD-MM-YYYY'), endDate: formatDate(endDate, 'DD-MM-YYYY'), workId, userId, }
         const { id, permissions } = localStore()
         const loginId = parseInt(id)
         const { LEAVE_REQUESTS } = JSON.parse(permissions)
+        const queryParams = `startDate=${query?.startDate}&endDate=${query?.endDate}&userId=${query?.userId}&workId=${query?.workId}`
 
-        Promise.all([ getManageProjects(loginId, 'M'), getApprovalRequests(query), getLineEmployees() ])
+        Promise.all([ getManageProjects('LEAVE_REQUESTS'), getApprovalRequests(queryParams), getLineEmployees() ])
         .then(res => {
             this.setState({
                 WORKS: res[0].success? res[0].data : [],
@@ -163,12 +171,18 @@ class ApproveRequest extends Component {
     getData = () =>{
         const { startDate, endDate, workId, userId } = this.state.queryRequest
         const query = {
-            startDate: fomratDate(startDate, 'DD-MM-YYYY'),
-            endDate: fomratDate(endDate, 'DD-MM-YYYY'),
+            startDate: formatDate(startDate, 'DD-MM-YYYY') ?? undefined,
+            endDate: formatDate(endDate, 'DD-MM-YYYY') ?? undefined,
             workId,
             userId,
         }
-        getApprovalRequests(query).then(res=>{
+        let queryParams = ''
+        if (query.startDate){
+            queryParams = `startDate=${query?.startDate}&endDate=${query?.endDate}&userId=${query?.userId}&workId=${query?.workId}`
+        }else{
+            queryParams = `userId=${query?.userId}&workId=${query?.workId}`
+        }
+        getApprovalRequests(queryParams).then(res=>{
             if(res.success){
                 this.setState({
                     request: res.data,
@@ -255,9 +269,9 @@ class ApproveRequest extends Component {
                     return `${el.employeeName??''}`.toLowerCase().includes(value.toLowerCase()) || 
                     `${el.project??''}`.toLowerCase().includes(value.toLowerCase()) || 
                     `${el.leaveRequestName??''}`.toLowerCase().includes(value.toLowerCase()) || 
-                    `${fomratDate(el.startDate)??''}`.toLowerCase().includes(value.toLowerCase()) ||
-                    `${fomratDate(el.endDate)??''}`.toLowerCase().includes(value.toLowerCase()) ||
-                    `${fomratDate(el.submittedAt)??''}`.toLowerCase().includes(value.toLowerCase()) ||
+                    `${formatDate(el.startDate)??''}`.toLowerCase().includes(value.toLowerCase()) ||
+                    `${formatDate(el.endDate)??''}`.toLowerCase().includes(value.toLowerCase()) ||
+                    `${formatDate(el.submittedAt)??''}`.toLowerCase().includes(value.toLowerCase()) ||
                     `${R_STATUS[el.status]}`.toLowerCase().includes(value.toLowerCase())
                 })
             })
@@ -284,6 +298,7 @@ class ApproveRequest extends Component {
                             options={WORKS}
                             value={workId}     
                             allowClear      
+                            showSearch
                             optionFilterProp={["label", "value"]}
                             filterOption={
                                 (input, option) =>{
@@ -306,12 +321,13 @@ class ApproveRequest extends Component {
                     </Col>
                     <Col>
                         <Select
+                            allowClear
                             placeholder="Select User"
                             options={USERS}
                             value={userId}           
-                            optionFilterProp={["label", "value"]}
-                            allowClear
                             style={{ width: 250 }}
+                            showSearch
+                            optionFilterProp={["label", "value"]}
                             filterOption={
                                 (input, option) =>{
                                     const label = option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
@@ -338,11 +354,12 @@ class ApproveRequest extends Component {
                             format="MMM-YYYY"
                             value={startDate}
                             onChange={(value)=>{
+                                console.log(value);
                                 this.setState({
                                     queryRequest : {
                                         ...queryRequest,
-                                        startDate: moment(value ?? moment()).startOf("month"),
-                                        endDate: moment(value ?? moment()).endOf("month")
+                                        startDate: value && moment(value).startOf("month"),
+                                        endDate: value && moment(value).endOf("month") 
                                     }
                                 },()=>{
                                     this.getData()
@@ -402,6 +419,7 @@ class ApproveRequest extends Component {
                         edit={readRequest}
                         callBack={this.getData}
                         readOnly={true}
+                        approval={true}
                     />
                 )}
             </>

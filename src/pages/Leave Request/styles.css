@@ -1,3 +1,7 @@
 .ant-upload.ant-upload-select{
     width: 104px !important
 }
+
+.moz-width {
+    width: -moz-fit-content
+}

@@ -1,13 +1,13 @@
 import React, { Component } from "react";
-import { Row, Col, Table, Modal, Button, Select, Typography, Popconfirm, DatePicker, Space, Tag, Tooltip, message, Dropdown, Menu, } from "antd";
+import { Row, Col, Table, Modal, Button, Select, Typography, Popconfirm, DatePicker, Space, Tag, Tooltip, message, Dropdown, Menu, Radio, } from "antd";
 import { DownloadOutlined, SaveOutlined, LoadingOutlined, PlusCircleOutlined, MoreOutlined, DeleteOutlined, EditOutlined, 
-    LeftOutlined, RightOutlined,ExclamationCircleOutlined, CheckCircleOutlined, PaperClipOutlined } from "@ant-design/icons"; //Icons
+    LeftOutlined, RightOutlined,ExclamationCircleOutlined, CheckCircleOutlined, PaperClipOutlined, AuditOutlined } from "@ant-design/icons"; //Icons
 import moment from "moment";
 import TimeModal from "./Modals/TimeModal"
 import AttachModal from "./Modals/AttachModal";
 import {  getList, reviewTimeSheet, getUsers, deleteTime,  } from "../../service/timesheet"
 import { getUserMilestones } from "../../service/constant-Apis";
-import { localStore, Api, thumbUrl } from "../../service/constant";
+import { localStore, Api, thumbUrl, formatDate, STATUS_COLOR, R_STATUS, formatFloat } from "../../service/constant";
 
 import "../styles/table.css";
 import "../styles/button.css";
@@ -54,13 +54,19 @@ class TimeSheetContact extends Component {
                     key: "project",
                     fixed: "left",
                     width: 300,
-                    render: (value, record, index) => (
-                        <Row gutter={[0, 10]} style={{height: 90}}>
+                    render: (value, record, index) => {
+                        if (record.leaveRequest){ // for Leave Request Timesse data
+                            return <Row gutter={[0,10]} >
+                                <Col span={24}>{record.leaveType}</Col>
+                                <Col span={24}>{value} </Col>
+                            </Row>
+                        }
+                        return <Row gutter={[0, 10]} style={{height: 90}}>
                             <Col span={24}>
                                 <Row justify="space-between">
                                     <Col span={20}> {record.projectType ===1 ? `${value} \n(${record.milestone})` : `${value}`} </Col>
                                     {/* File_name and paperclip to show under project is in comment section line 156*/}
-                                     <Col style={{marginLeft: 'auto'}}> 
+                                    <Col style={{marginLeft: 'auto'}}> 
                                         <Tooltip 
                                             placement="top"
                                             title="Export"
@@ -87,57 +93,45 @@ class TimeSheetContact extends Component {
                             </Col>
                             <Col span={24}>
                                 <Row justify="space-between">
-                                    {record.attachment &&<Col span={18} >
+                                    {record.attachment &&<Col span={16} >
                                         <Link
                                             href={`${Api}/files/${record.attachment.uid}`}
                                             download={record.attachment.name}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                         >
-                                            <PaperClipOutlined /> {" "}
+                                            <PaperClipOutlined />
                                                 <Tooltip 
                                                     placement="top" 
                                                     title={record.attachment.name}
                                                     destroyTooltipOnHide
                                                 >
-                                                    {`${record.attachment.name.substr(0,23)}${record.attachment.name.length>22 ?'\u2026':''}`}
+                                                    {`${record.attachment.name.substr(0,20)}${record.attachment.name.length>19 ?'\u2026':''}`}
                                                 </Tooltip>
                                         </Link>
                                     </Col>}
-                                    <Col  span={5} style={{marginLeft:'auto', marginRight:5}} >
-                                        {record.status === 'SB' &&<Tag color="cyan"> Submitted </Tag>}
-                                        {record.status === 'AP' &&<Tag color="green"> Approved </Tag>}
-                                        {record.status === 'RJ' &&<Tag color="red"> Rejected </Tag>}
+                                    <Col style={{marginLeft:'auto'}} >
+                                        {/* <Space  align="end"> */}
+                                            { record.status &&record.status !== 'SV' && <Tag color={STATUS_COLOR[record.status]}> 
+                                                {R_STATUS[record.status]}  
+                                            </Tag>}
+                                           
+                                        {/* </Space> */}
+                                    </Col>
+                                    <Col>
+                                        <Tooltip 
+                                            placement="top" 
+                                            title={record.actionNotes}
+                                            destroyTooltipOnHide
+                                        >
+                                            
+                                            {record.actionNotes && <AuditOutlined style={{fontSize: 'small'}} />}
+                                        </Tooltip>
                                     </Col>
                                 </Row>
                             </Col>
-                            {/* {this.state && this.state.sUser === this.state.loginId && (record.status === 'SV' || record.status === 'RJ') ?<Col sapn={12}>
-                                <Popconfirm
-                                    title={`You want to submit ${value}'s timesheet?`}
-                                    onConfirm={()=>{this.reviewTimeSheet(record.milestoneEntryId, 'submit', index, 'SB')}}
-                                >
-                                    <Button style={{backgroundColor: "#4CAF50"}} size="small" type="primary"> Submit </Button>
-                                </Popconfirm>
-                            </Col> : 
-                            (record.status === 'SB' && (record.isManaged || this.state && this.state.canApprove)) &&
-                            <Col sapn={12}>
-                                <Space >
-                                    <Popconfirm
-                                        title={`You want to Approve ${value}'s timesheet?`}
-                                        onConfirm={()=>{this.reviewTimeSheet(record.milestoneEntryId, 'approve', index, 'AP')}}
-                                    >
-                                        <Button style={{backgroundColor: "#4CAF50"}} size="small" type="primary"> Approve </Button>
-                                    </Popconfirm>
-                                    <Popconfirm
-                                        title={`You want to Reject ${value}'s timesheet?`}
-                                        onConfirm={()=>{this.reviewTimeSheet(record.milestoneEntryId, 'reject', index, 'RJ')}}
-                                    >
-                                        <Button danger  size="small" type="primary"> Reject </Button>
-                                    </Popconfirm>
-                                </Space>
-                            </Col>} */}
                         </Row>
-                    ),
+                    },
                 },
                 {
                     title: "Total",
@@ -146,7 +140,7 @@ class TimeSheetContact extends Component {
                     fixed: "left",
                     align: "center",
                     width: 100,
-                    render: (value) => (value&& value.toFixed(2))
+                    render: (value) => ( formatFloat(value))
                 }
             ]
         };
@@ -209,16 +203,17 @@ class TimeSheetContact extends Component {
         const { startDate, endDate } = sheetDates
         if(sUser){
             getList({userId: sUser, startDate: startDate.format('DD-MM-YYYY'), endDate: endDate.format('DD-MM-YYYY')}).then(res=>{
-                if (res.success){
+                // if (res.success){
+                    console.log(res.success);
                     this.setState({
                         timesheet: res.data?? {},
-                        data: res.data ? res.data.milestones ?? []: [],
+                        data:  res?.data?.milestones ?? [],
                         sTMilestones: {
                             milestones: [],
                             keys: []
                         },
                     })
-                }
+                // }
             })
         }
         this.columns()
@@ -262,59 +257,85 @@ class TimeSheetContact extends Component {
                 return {
                   ...col,
                     render: (value, record, rowIndex) =>{
-                        //checking delete permission   // only admin and loggedin user will see the menu icon
-                        const canDelete = permissions && permissions['DELETE'] && permissions['DELETE']['ANY'] || sUser === loginId
-                        const clickable = ((record.status === 'SV' || record.status === 'RJ' || !record.status)) && canDelete
-                        if(value){ // I didn't put the conditon for column previos or next month because this column won't have any value for now
-                            let breakHours = moment.duration(value["breakHours"],'hours')
-                            breakHours = breakHours && moment(moment().hours(breakHours.hours()).minutes(breakHours.minutes())).format("HH:mm")
+                        if (record.leaveRequest){
+                            if(value){ // for leave request columns
+                                {return <Tooltip title={value['notes'] && `Note: ${value['notes'] }`} >
+                                    <Row>
+                                    <Col span={24}>Off Hours: {formatFloat(value['hours'])}</Col>
+                                    <Col >Status: </Col>
+                                    <Col style={{marginLeft:'auto', marginRight:5}} >
+                                        <Space  align="end">
+                                            <Tag color={STATUS_COLOR[value['status']]}> 
+                                                {R_STATUS[value['status']]}  
+                                            </Tag>
+                                            <Tooltip 
+                                                placement="top" 
+                                                title={value['statusMsg']}
+                                                destroyTooltipOnHide
+                                            >
+                                                {value['statusMsg'] && <AuditOutlined style={{fontSize: 'small'}} />}
+                                            </Tooltip>
+                                        </Space>
+                                    </Col>
+                                    </Row>
+                                </Tooltip>}
+                            }
+                        }else{
 
-                            //if note is null hide the tooltip condistion
-                        {return <Tooltip title={value['notes'] && `Note: ${value['notes'] }`} >
-                            <Row style={{ border: "1px solid" }}>
-                            <Col span={22}>Start Time: {value["startTime"]&& moment(value["startTime"], ["HH:mm"]).format("h:mm A")}</Col>
-                            <Col span={2} >
-                            {clickable &&<Dropdown
-                                placement="bottomCenter" 
-                                overlay={
-                                    <Menu onClick={this.handleMenuClick}>
-                                        <Menu.Item
-                                            disabled={sUser !== loginId}
-                                            key="Edit" 
-                                            onClick={()=>{     //data //index    //col key      //Col heading to show on Modal
-                                                this.getRecord(record,rowIndex, col.dataIndex, col.heading); // call function to save data in
-                                            }}
-                                        >
-                                            <EditOutlined />
-                                        </Menu.Item>
-                                            <Menu.Item 
-                                                key="delete"
-                                                disabled={!permissions['DELETE']}
-                                                onClick={()=>{
-                                                    this.deleteRecord(value, rowIndex, col.dataIndex)
-                                                }} 
-                                            > 
-                                                <DeleteOutlined />
+                            //checking delete permission   // only admin and loggedin user will see the menu icon
+                            const canDelete = permissions && permissions['DELETE'] && permissions['DELETE']['ANY'] || sUser === loginId
+                            const clickable = ((record.status === 'SV' || record.status === 'RJ' || !record.status)) && canDelete
+                            if(value){ // I didn't put the conditon for column previos or next month because this column won't have any value for now
+                                let breakHours = moment.duration(value["breakHours"],'hours')
+                                breakHours = breakHours && moment(moment().hours(breakHours.hours()).minutes(breakHours.minutes())).format("HH:mm")
+
+                                //if note is null hide the tooltip condistion
+                            {return <Tooltip title={value['notes'] && `Note: ${value['notes'] }`} >
+                                <Row style={{ border: "1px solid" }}>
+                                <Col span={22}>Start Time: {value["startTime"]&& moment(value["startTime"], ["HH:mm"]).format("h:mm A")}</Col>
+                                <Col span={2} >
+                                {clickable &&<Dropdown
+                                    placement="bottomCenter" 
+                                    overlay={
+                                        <Menu onClick={this.handleMenuClick}>
+                                            <Menu.Item
+                                                disabled={sUser !== loginId}
+                                                key="Edit" 
+                                                onClick={()=>{     //data //index    //col key      //Col heading to show on Modal
+                                                    this.getRecord(record,rowIndex, col.dataIndex, col.heading); // call function to save data in
+                                                }}
+                                            >
+                                                <EditOutlined />
                                             </Menu.Item>
-                                    </Menu>
-                                }  
-                            >
-                                <MoreOutlined  style={{ cursor:'pointer' }} />
-                            </Dropdown>}
-                            </Col>
-                            <Col span={24}>End Time: {value["endTime"] && moment(value["endTime"], ["HH:mm"]).format("h:mm A")}</Col>
-                            <Col span={24}>Break: {breakHours && breakHours}</Col>
-                            <Col span={24}>Total Hours: {value["actualHours"] && value["actualHours"]}</Col>
-                            </Row>
-                        </Tooltip>}
-                        }else { // to not show add button if column month doesn't match with  selected month
-                            return clickable && col.dateObj.isSameOrAfter(startDate)  && col.dateObj.isSameOrBefore(endDate) &&
-                                <PlusCircleOutlined 
-                                style={{fontSize: 24, color: '#1890ff'}} 
-                                onClick={()=>{     //data //index    //col key      //Col heading to show on Modal
-                                    this.getRecord(record,rowIndex, col.dataIndex, col.heading); // call function to save data in
-                                }}
-                            />
+                                                <Menu.Item 
+                                                    key="delete"
+                                                    disabled={!permissions['DELETE']}
+                                                    onClick={()=>{
+                                                        this.deleteRecord(value, rowIndex, col.dataIndex)
+                                                    }} 
+                                                > 
+                                                    <DeleteOutlined />
+                                                </Menu.Item>
+                                        </Menu>
+                                    }  
+                                >
+                                    <MoreOutlined  style={{ cursor:'pointer' }} />
+                                </Dropdown>}
+                                </Col>
+                                <Col span={24}>End Time: {value["endTime"] && moment(value["endTime"], ["HH:mm"]).format("h:mm A")}</Col>
+                                <Col span={24}>Break: {breakHours && breakHours}</Col>
+                                <Col span={24}>Total Hours: {value["actualHours"] && value["actualHours"]}</Col>
+                                </Row>
+                            </Tooltip>}
+                            }else { // to not show add button if column month doesn't match with  selected month
+                                return clickable && col.dateObj.isSameOrAfter(startDate)  && col.dateObj.isSameOrBefore(endDate) &&
+                                    <PlusCircleOutlined 
+                                    style={{fontSize: 24, color: '#1890ff'}} 
+                                    onClick={()=>{     //data //index    //col key      //Col heading to show on Modal
+                                        this.getRecord(record,rowIndex, col.dataIndex, col.heading); // call function to save data in
+                                    }}
+                                />
+                            }
                         }
                     },
                 };
@@ -510,7 +531,7 @@ class TimeSheetContact extends Component {
                                 key={kIndex+1}
                                 align="center" 
                             >
-                                {value && value.toFixed(2)}
+                                {formatFloat(value)}
                             </Table.Summary.Cell>
                             : // show background grey if the column month is NOT same as selected month
                                 <Table.Summary.Cell 
@@ -518,7 +539,7 @@ class TimeSheetContact extends Component {
                                     key={kIndex+1}
                                     align='center'
                                     className="prevDates-TMcell" 
-                                >0</Table.Summary.Cell>
+                                >0.00</Table.Summary.Cell>
                     })}
                 </Table.Summary.Row>
             </Table.Summary>
@@ -564,6 +585,35 @@ class TimeSheetContact extends Component {
               modal.destroy();
           }
         });
+    }
+
+    handleSelWeek = (buttonPress) =>{
+        const { sheetDates } = this.state
+        const { sWeek, startDate, endDate, cMonth } = sheetDates
+        console.log({'sWeek': formatDate(sWeek),'endDate': formatDate(endDate),'startDate': formatDate(startDate)})
+        if (buttonPress === 'pWeek'){
+            let showWeek = moment(sWeek.subtract(7, 'days'))
+            console.log({'showWeek': formatDate(showWeek),'sWeek': formatDate(sWeek),'startDate': formatDate(startDate)})
+            if(!sWeek.isSame(startDate)){ // will not run hook if sWeek and startDate is same
+                this.setState({
+                    sheetDates:{
+                        ...sheetDates,  
+                        sWeek: showWeek.isSameOrAfter(startDate) ? showWeek : moment(cMonth).startOf("month")
+                    }          //check if the date is right    //select calcyalte week   //else 1st of month
+                },()=> this.columns())
+            }
+        }else if (buttonPress === 'nWeek'){
+            let showWeek = moment(sWeek.add(7, 'days'))
+            console.log({'showWeek': formatDate(showWeek),'sWeek': formatDate(sWeek),'endDate': formatDate(endDate)})
+            if(!sWeek.isSame(endDate)){ // will not run the hook if sWeek is same as endDate
+                this.setState({
+                    sheetDates:{
+                        ...sheetDates,  
+                        sWeek: showWeek.isSameOrBefore(endDate) ? showWeek : moment(cMonth).endOf("month")
+                    }         //check if the date is right    //select calcyalte week   //else 1st of month
+                },()=> this.columns())
+            }
+        }
     }
 
     render() {
@@ -638,39 +688,15 @@ class TimeSheetContact extends Component {
                 <Row justify="end">
                         <Col>
                             <Button 
-                                disabled={sWeek.isSame(startDate)}
-                                onClick={()=>{
-                                    const { sheetDates } = this.state
-                                    const { sWeek, startDate } = this.state.sheetDates
-                                    let pWeek = moment(sWeek.format())
-                                    pWeek = moment(pWeek.subtract(7, 'days'))
-                                    if(!sWeek.isSame(startDate)){ // will not run hook if sWeek and startDate is same
-                                        this.setState({
-                                            sheetDates:{
-                                                ...sheetDates,  
-                                                sWeek: pWeek.isSameOrAfter(startDate) ? pWeek : moment().startOf("month")
-                                            }          //check if the date is right    //select calcyalte week   //else 1st of month
-                                        },()=> this.columns())
-                                    }
-                                }}
+                                disabled={sWeek.isSameOrBefore(startDate)}
+                                value="pWeek"
+                                onClick={()=>this.handleSelWeek('pWeek')}
                             > <LeftOutlined />
                             </Button>
                             <Button 
-                                disabled={sWeek.isSame(endDate)}
-                                onClick={()=>{
-                                    const { sheetDates } = this.state
-                                    const { sWeek, endDate } = this.state.sheetDates
-                                    let nWeek = moment(sWeek.format())
-                                    nWeek = moment(nWeek.add(7, 'days'))
-                                    if(!sWeek.isSame(endDate)){ // will not run the hook if sWeek is same as endDate
-                                        this.setState({
-                                            sheetDates:{
-                                                ...sheetDates,  
-                                                sWeek: nWeek.isSameOrBefore(endDate) ? nWeek : moment().endOf("month")
-                                            }         //check if the date is right    //select calcyalte week   //else 1st of month
-                                        },()=> this.columns())
-                                    }
-                                }}
+                                disabled={sWeek.isSameOrAfter(endDate)}
+                                value="nWeek"
+                                onClick={()=>this.handleSelWeek('nWeek')}
                             >  <RightOutlined />
                             </Button>
                         </Col>

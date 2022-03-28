@@ -48,9 +48,9 @@ class BillModal extends Component {
                     rules: [ { required: true, message: "Start Date is required", }, ],
                     labelAlign: "right",
                     rangeMin: (current)=>{
-                    const { billing } = this.formRef.current.getFieldValue();
-                    return  billing.endDate && current >  billing.endDate
-                }
+                        const { billing } = this.formRef.current.getFieldValue();
+                        return  billing.endDate && current >  billing.endDate
+                    }
                 },
                 {
                     object: "billing",
@@ -60,9 +60,9 @@ class BillModal extends Component {
                     type: "DatePicker",
                     fieldStyle: { width: "100%" },
                     rangeMax: (current)=>{
-                    const { billing } = this.formRef.current.getFieldValue();
-                    return  billing.startDate && current < billing.startDate
-                }
+                        const { billing } = this.formRef.current.getFieldValue();
+                        return  billing.startDate && current < billing.startDate
+                    }
                 },
                 {
                     Placeholder: "Contract Payment Basis",
@@ -111,6 +111,56 @@ class BillModal extends Component {
                     rules: [ { required: true, message: "Total Fee is Required", }, ],
                 },
                 {
+                    Placeholder: "Work Hours In A Week",
+                    rangeMin: true,
+                    fieldCol: 6,
+                    size: "small",
+                    type: "Text",
+                    labelAlign: "right",
+                    // itemStyle:{marginBottom:'10px'},
+                },
+                {
+                    Placeholder: "Work Days In A Week",
+                    rangeMin: true,
+                    fieldCol: 18,
+                    size: "small",
+                    type: "Text",
+                    labelAlign: "right",
+                    // itemStyle:{marginBottom:'10px'},
+                },
+                {
+                    object: "billing",
+                    fieldCol: 6,
+                    key: "noOfHours",
+                    size: "small",
+                    type: "InputNumber",
+                    fieldStyle: { width: "100%" },
+                    rules: [
+                        {
+                            required: true,
+                            message: "Work Hour is Reqired",
+                        },
+                    ],
+                    itemStyle: { marginBottom: 1 },
+                },
+                {
+                    object: "billing",
+                    fieldCol: 6,
+                    key: "noOfDays",
+                    size: "small",
+                    type: "InputNumber",
+                    // shape: " Hours",
+                    // data: [
+                    //     // { label: "Daily", value: 2 },
+                    //     { label: "Weekly", value: 3 },
+                    //     // { label: "Fortnightly", value: 4 },
+                    //     // { label: "Monthly", value: 5 },
+                    // ],
+                    fieldStyle: { width: "100%" },
+                    rules: [ { required: true, message: "Work Days are Required", }, ],
+                    itemStyle: { marginBottom: 10 },
+                },
+                {
                     Placeholder: "Comments",
                     fieldCol: 24,
                     size: "small",
@@ -141,7 +191,7 @@ class BillModal extends Component {
         const { fileIds } = this.state
         const {editCntrct, editEmp} = this.props
         const { billing } = vake;
-        billing.noOfHoursPer = 1; 
+        // billing.noOfHoursPer = 1; 
         billing.startDate = billing.startDate ? moment(billing.startDate).valueOf(): null
         billing.endDate = billing.endDate ? moment(billing.endDate).valueOf(): null
         billing.subContractorId = editEmp;
@@ -241,7 +291,7 @@ class BillModal extends Component {
 
         return (
             <Modal
-                title={editCntrct ? "Edit Billing" : "Add Billing"}
+                title={editCntrct ? "Edit Contract" : "Add Contract"}
                 maskClosable={false}
                 centered
                 visible={visible}
