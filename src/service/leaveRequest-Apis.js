@@ -134,7 +134,9 @@ export const getApprovalRequests = (queries) => {
         })
         .catch((err) => {
             const {message} = err.response.data
-            messageAlert.error({ content: message, key: 1})
+            if(message !== 'Leave Requests not found'){
+                messageAlert.error({ content: message, key: 1})
+            }
             return {
                 error: "Please login again!",
                 success: false,
