@@ -218,8 +218,8 @@ class LeaveRequest extends Component {
                         close={this.closeModal}
                         edit={editRequest}
                         callBack={this.getData}
-                        readOnly={ readOnly === 'AP' ||readOnly === 'RJ' }
-                        showDetails={!readOnly || readOnly === 'SB'}
+                        readOnly={ readOnly === 'AP' }
+                        showDetails={!readOnly || readOnly === 'SB' || readOnly === 'RJ' }
                     />
                 )}
             </>
