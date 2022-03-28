@@ -115,7 +115,7 @@ export const editRequest = (id, data) => {
         })
         .catch((err) => {
             const {message} = err.response.data
-            messageAlert.error({ content: message, duration: 10000, key: 1, style: { marginTop: '15vh', }}) 
+            messageAlert.error({ content: message, duration: 10000, key: id, style: { marginTop: '15vh', }}) 
             return {
                 balanceError: true,
                 success: false, 

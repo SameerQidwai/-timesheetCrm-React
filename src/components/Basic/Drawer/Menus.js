@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Menu } from "antd";
 import { Link, withRouter } from "react-router-dom";
 
-import { FieldTimeOutlined, CalendarOutlined, ScheduleOutlined, HomeOutlined, FileOutlined, FileTextOutlined, BookOutlined, RightSquareOutlined } from "@ant-design/icons"; //Icons
+import { FieldTimeOutlined, CalendarOutlined, ScheduleOutlined, HomeOutlined, FileOutlined, FileTextOutlined, BookOutlined, FileDoneOutlined, RightSquareOutlined } from "@ant-design/icons"; //Icons
 
 import "../../Styles/Menus.css";
 import { localStore } from "../../../service/constant";
@@ -39,7 +39,7 @@ const listData = [
     },
     {
         text: "Leave Approval ",
-        icon: <RightSquareOutlined />,
+        icon: <FileDoneOutlined />,
         link: "/approve-request",
         key: "APPROVE REQUEST",
         permissions: {module: "LEAVE_REQUESTS", key: 'APPROVAL'}

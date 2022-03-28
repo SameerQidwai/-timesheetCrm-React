@@ -1,14 +1,15 @@
 Update and check 
     Leave Requets ERRORs
-        Error on index leave request api,
-        I am also unable to submit leave application for the date when my leave application has already been rejected ...
-        if I am selecting single date...(Rejected already for the leave request) 
+        // Error on index leave request api,
+        // I am also unable to submit leave application for the date when my leave application has already been rejected ...
+        // if I am selecting single date...(Rejected already for the leave request) 
             (so my concern is single date might not be checking if leave request already submitted or not)
                 dateEroro
-         status condition. (from backend)
-        can you please add one more boolean key of reSubmission in this error please?
+        // status condition. (from backend)
 
-        I am unable to check edit leave
+        // I am unable to check edit leave
+
+        //
             (concern that you are also checking this editing Leave request so it will also throw error)
     backend: [
         Leave_request not adding again when rejected,

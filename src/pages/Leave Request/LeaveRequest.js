@@ -111,7 +111,7 @@ class LeaveRequest extends Component {
                                     })
                                 }
                             }
-                            >{record.status !== 'SB' ?'View': 'Edit' }</Menu.Item>
+                            >{record.status === 'AP' ?'View': 'Edit' }</Menu.Item>
                             {/* <Menu.Item 
                                 onClick={()=>{}}
                             >Delete</Menu.Item> */}

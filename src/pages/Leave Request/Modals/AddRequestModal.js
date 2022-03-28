@@ -241,11 +241,12 @@ class AddRequestModal extends Component{
                 // need key to push in the table
                 const disabled = !include_off_days && ( (start.format('ddd') === 'Sun' || start.format('ddd') === 'Sat') && 'Weekend' || holidays[start.format('M/D/YYYY')] )                                              
                  //hours are getting update on each call
-                const hours = disabled? 0: hoursEntry[start.format('M/D/YYYY')] ?? deFaulthours
+                let newDate = start.format('M/D/YYYY') // newDate  = date for the new row
+                const hours = disabled? 0: hoursEntry[newDate] ?? deFaulthours
                 // to set it in form for date
-                hoursEntry[start.format('M/D/YYYY')] = disabled? 0: hoursEntry[start.format('M/D/YYYY')] ?? deFaulthours
+                hoursEntry[newDate] = disabled? 0: hoursEntry[newDate] ?? deFaulthours
 
-                arr.push({key: start.format('M/D/YYYY'), date: start, hours, disabled, })
+                arr.push({key: newDate, date: start.format('YYYY-MM-DD'), hours, disabled, })
                 start = moment(start).add(1,'d')
             }
             data = arr
@@ -253,11 +254,12 @@ class AddRequestModal extends Component{
         }else if (start){
             //if end date is not sent
             const disabled = !include_off_days && ((start.format('ddd') === 'Sun' || start.format('ddd') === 'Sat') && 'Weekend' || holidays[start.format('M/D/YYYY')])
-            const hours = disabled? 0: hoursEntry[start.format('M/D/YYYY')] ?? deFaulthours
+            let newDate = start.format('M/D/YYYY')
+            const hours = disabled? 0: hoursEntry[newDate] ?? deFaulthours
             // to set it in form for date
-            hoursEntry[start.format('M/D/YYYY')] = disabled? 0: hoursEntry[start.format('M/D/YYYY')] ?? deFaulthours
+            hoursEntry[newDate] = disabled? 0: hoursEntry[newDate] ?? deFaulthours
 
-            data= [{key: start.format('M/D/YYYY'), date: start, hours: disabled? 0: hours, disabled,}]
+            data= [{key: newDate, date: start.format('YYYY-MM-DD'), hours: disabled? 0: hours, disabled,}]
             BasicFields[BasicFields[2].note ? 8: 7].disabled = false // // adding an object when select leavetype
 
         }else{
