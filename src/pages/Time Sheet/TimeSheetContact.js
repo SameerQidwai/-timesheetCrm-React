@@ -93,7 +93,7 @@ class TimeSheetContact extends Component {
                             </Col>
                             <Col span={24}>
                                 <Row justify="space-between">
-                                    {record.attachment &&<Col span={17} >
+                                    {record.attachment &&<Col span={16} >
                                         <Link
                                             href={`${Api}/files/${record.attachment.uid}`}
                                             download={record.attachment.name}
@@ -106,13 +106,13 @@ class TimeSheetContact extends Component {
                                                     title={record.attachment.name}
                                                     destroyTooltipOnHide
                                                 >
-                                                    {`${record.attachment.name.substr(0,22)}${record.attachment.name.length>21 ?'\u2026':''}`}
+                                                    {`${record.attachment.name.substr(0,20)}${record.attachment.name.length>19 ?'\u2026':''}`}
                                                 </Tooltip>
                                         </Link>
                                     </Col>}
                                     <Col style={{marginLeft:'auto'}} >
                                         {/* <Space  align="end"> */}
-                                            {record.status !== 'SV' && <Tag color={STATUS_COLOR[record.status]}> 
+                                            { record.status &&record.status !== 'SV' && <Tag color={STATUS_COLOR[record.status]}> 
                                                 {R_STATUS[record.status]}  
                                             </Tag>}
                                            

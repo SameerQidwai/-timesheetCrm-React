@@ -77,37 +77,40 @@ class TimeSheetProject extends Component {
                             </Col>
                             <Col span={24}>
                                 <Row justify="space-between">
-                                    {record.attachment &&<Col span={17}>
-                                            <Link
-                                                href={`${Api}/files/${record.attachment.uid}`}
-                                                download={record.attachment.name}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                            >
-                                                <PaperClipOutlined /> {" "}
-                                                    <Tooltip 
-                                                        placement="top" 
-                                                        title={record.attachment.name}
-                                                        destroyTooltipOnHide
-                                                    >
-                                                        {`${record.attachment.name.substr(0,22)}${record.attachment.name.length>21 ?'\u2026':''}`}
-                                                    </Tooltip>
-                                            </Link>
-                                            </Col>}
-                                    <Col span={6} style={{marginLeft:'auto', marginRight: 5}}>
-                                        <Space  align="end">
-                                            <Tag color={STATUS_COLOR[record.status]}> 
+                                    {record.attachment &&<Col span={16}>
+                                        <Link
+                                            href={`${Api}/files/${record.attachment.uid}`}
+                                            download={record.attachment.name}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            <PaperClipOutlined /> {" "}
+                                                <Tooltip 
+                                                    placement="top" 
+                                                    title={record.attachment.name}
+                                                    destroyTooltipOnHide
+                                                >
+                                                    {`${record.attachment.name.substr(0,20)}${record.attachment.name.length>19 ?'\u2026':''}`}
+                                                </Tooltip>
+                                        </Link>
+                                    </Col>}
+                                    <Col style={{marginLeft:'auto'}} >
+                                        {/* <Space  align="end"> */}
+                                            { record.status &&record.status !== 'SV' && <Tag color={STATUS_COLOR[record.status]}> 
                                                 {R_STATUS[record.status]}  
-                                            </Tag>
-                                            <Tooltip 
-                                                placement="top" 
-                                                title={record.actionNotes}
-                                                destroyTooltipOnHide
-                                            >
-                                                    
-                                                {record.actionNotes && <AuditOutlined style={{fontSize: 'small'}} />}
-                                            </Tooltip>
-                                        </Space>
+                                            </Tag>}
+                                           
+                                        {/* </Space> */}
+                                    </Col>
+                                    <Col>
+                                        <Tooltip 
+                                            placement="top" 
+                                            title={record.actionNotes}
+                                            destroyTooltipOnHide
+                                        >
+                                            
+                                            {record.actionNotes && <AuditOutlined style={{fontSize: 'small'}} />}
+                                        </Tooltip>
                                     </Col>
                                 </Row>
                             </Col>
@@ -234,12 +237,12 @@ class TimeSheetProject extends Component {
         })
     };
 
-    actionTimeSheet = (stage, notes) => {
+    actionTimeSheet = (stage, obj) => {
         const { startDate, endDate } = this.state.sheetDates
         const { keys } = this.state.sTimesheet
         const { sMilestone } = this.state
         const query= { userId: sMilestone, startDate: startDate.format('DD-MM-YYYY'), endDate: endDate.format('DD-MM-YYYY') }
-        const data = {milestoneEntries: keys, note: notes}
+        const data = {milestoneEntries: keys, note: obj?.notes}
         reviewTimeSheet(query, stage, data).then(res=>{
             this.getSheet()
         })

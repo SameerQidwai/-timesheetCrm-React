@@ -86,7 +86,7 @@ class LeavePolicies extends Component {
                 {
                     fieldCol: 24,
                     layout: { wrapperCol: { span: 0 } },
-                    Placeholder: "Insert Time Off",
+                    Placeholder: "Insert Leave Type",
                     type: "Button",
                     mode: "primary",
                     style: { textAlign: "right" },
