@@ -19,20 +19,20 @@ export const addRequest = (data) => {
         })
         .catch((err) => {
             const {message} = err?.response?.data
-            if (message === 'Balance is less than minimum balance!'){
-                messageAlert.error({ content: message, duration: 0, key: 1, style: { marginTop: '15vh', }}) 
+            // if (message === 'Balance is less than minimum balance!'){
+                messageAlert.error({ content: message, duration: 120, key: 1, style: { marginTop: '15vh', }}) 
                 return {
                     balanceError: true,
                     success: false, 
                     message
                 }
-            }
-            messageAlert.error({ content: message, key: 1})
-            return {
-                error: "Please login again!",
-                status: false,
-                message: err.message,
-            };
+            // }
+            // messageAlert.error({ content: message, key: 1})
+            // return {
+            //     error: "Please login again!",
+            //     status: false,
+            //     message: err.message,
+            // };
         });
 };
 
@@ -115,12 +115,12 @@ export const editRequest = (id, data) => {
         })
         .catch((err) => {
             const {message} = err.response.data
-            messageAlert.error({ content: message, key: id})
+            messageAlert.error({ content: message, duration: 10000, key: 1, style: { marginTop: '15vh', }}) 
             return {
-                error: "Please login again!",
-                status: false,
-                message: err.message,
-            };
+                balanceError: true,
+                success: false, 
+                message
+            }
         });
 };
 

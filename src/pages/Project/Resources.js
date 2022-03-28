@@ -7,7 +7,7 @@ import ResModal from "./Modals/ResModal";
 import { getRecord, getLeadSkills, delLeadSkill } from "../../service/projects";
 
 import moment from "moment"
-import { fomratDate, formatCurrency, localStore } from "../../service/constant";
+import { formatDate, formatCurrency, localStore } from "../../service/constant";
 import { Filtertags, TableModalFilter, tableSorter, tableTitleFilter } from "../../components/Core/Table/TableFilter";
 import { getPanelSkills } from "../../service/constant-Apis";
 
@@ -398,8 +398,8 @@ class Resources extends Component {
                     <Item label="Project Name">{desc.title}</Item>
                     <Item label="Estimated Value">{ formatCurrency(desc.value ?? 0)}</Item>
                     <Item label="Organisation">{desc.organizationName ? desc.organization.name :' No Organisation'}</Item>
-                    <Item label="Start date">{desc.startDate ? fomratDate(desc.startDate): null} </Item>
-                    <Item label="End Date">{desc.endDate ? fomratDate(desc.endDate): null}</Item>
+                    <Item label="Start date">{desc.startDate ? formatDate(desc.startDate): null} </Item>
+                    <Item label="End Date">{desc.endDate ? formatDate(desc.endDate): null}</Item>
                     {/* <Item label="Gender">{data.gender}</Item> */}
                 </Descriptions>
                 <Row justify="end" span={4} gutter={[30, 0]}>

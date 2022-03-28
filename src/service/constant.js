@@ -34,7 +34,7 @@ export const formatCurrency = (amount) => {
 }; //end
 
 
-export const fomratDate = (date, format) =>{
+export const formatDate = (date, format) =>{
   return date && moment(date).format(format ??'ddd DD MMM yyyy')
 }
 

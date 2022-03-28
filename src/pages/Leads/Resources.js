@@ -6,7 +6,7 @@ import ResModal from "./Modals/ResModal";
 import { getRecord, getLeadSkills, delLeadSkill, delLeadSkillResource, selectLeadSkillResource } from "../../service/opportunities";
 
 import moment from "moment"
-import { fomratDate, formatCurrency, localStore } from "../../service/constant";
+import { formatDate, formatCurrency, localStore } from "../../service/constant";
 import { Filtertags, TableModalFilter, tableSorter, tableTitleFilter } from "../../components/Core/Table/TableFilter";
 import { getPanelSkills } from "../../service/constant-Apis";
 
@@ -38,14 +38,14 @@ class Resources extends Component {
                 title: "Start Date",
                 dataIndex: "startDate",
                 key: "startDate",
-                render: (record)=> record && fomratDate(record),
+                render: (record)=> record && formatDate(record),
                 ...tableSorter('startDate', 'Date'),
             },
             {
                 title: "End Date",
                 dataIndex: "endDate",
                 key: "endDate",
-                render: (record)=> record && fomratDate(record),
+                render: (record)=> record && formatDate(record),
                 ...tableSorter('endDate', 'Date'),
             },
             {
@@ -270,8 +270,8 @@ class Resources extends Component {
                     return el.title && el.title.toLowerCase().includes(value.toLowerCase()) ||
                     `${skill ?? ''}`.toLowerCase().includes(value.toLowerCase()) ||
                     `${skillLevel ?? ''}`.toLowerCase().includes(value.toLowerCase()) ||
-                    el.startDate && `${fomratDate(el.startDate)}`.toLowerCase().includes(value.toLowerCase()) ||
-                    el.endDate && `${fomratDate(el.endDate)}`.toLowerCase().includes(value.toLowerCase()) ||
+                    el.startDate && `${formatDate(el.startDate)}`.toLowerCase().includes(value.toLowerCase()) ||
+                    el.endDate && `${formatDate(el.endDate)}`.toLowerCase().includes(value.toLowerCase()) ||
                     `${el.billableHours ?? ''}`.toLowerCase().includes(value.toLowerCase()) 
                 })
             })
@@ -351,9 +351,9 @@ class Resources extends Component {
                 >
                     <Item label="Title">{desc.title}</Item>
                     <Item label="Value">{ formatCurrency(desc.value)}</Item>
-                    <Item label="Start Date">{desc.startDate ? fomratDate(desc.startDate): null} </Item>
-                    <Item label="End Date">{desc.endDate ? fomratDate(desc.endDate): null}</Item>
-                    <Item label="Bid Date">{desc.bidDate ? fomratDate(desc.bidDate): null}</Item>
+                    <Item label="Start Date">{desc.startDate ? formatDate(desc.startDate): null} </Item>
+                    <Item label="End Date">{desc.endDate ? formatDate(desc.endDate): null}</Item>
+                    <Item label="Bid Date">{desc.bidDate ? formatDate(desc.bidDate): null}</Item>
                     {/* <Item label="Gender">{data.gender}</Item> */}
                 </Descriptions>
                 <Row justify="end" span={4} gutter={[30, 0]}>

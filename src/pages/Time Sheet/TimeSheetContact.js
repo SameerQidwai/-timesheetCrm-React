@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Row, Col, Table, Modal, Button, Select, Typography, Popconfirm, DatePicker, Space, Tag, Tooltip, message, Dropdown, Menu, } from "antd";
+import { Row, Col, Table, Modal, Button, Select, Typography, Popconfirm, DatePicker, Space, Tag, Tooltip, message, Dropdown, Menu, Radio, } from "antd";
 import { DownloadOutlined, SaveOutlined, LoadingOutlined, PlusCircleOutlined, MoreOutlined, DeleteOutlined, EditOutlined, 
     LeftOutlined, RightOutlined,ExclamationCircleOutlined, CheckCircleOutlined, PaperClipOutlined, AuditOutlined } from "@ant-design/icons"; //Icons
 import moment from "moment";
@@ -7,7 +7,7 @@ import TimeModal from "./Modals/TimeModal"
 import AttachModal from "./Modals/AttachModal";
 import {  getList, reviewTimeSheet, getUsers, deleteTime,  } from "../../service/timesheet"
 import { getUserMilestones } from "../../service/constant-Apis";
-import { localStore, Api, thumbUrl, fomratDate, STATUS_COLOR, R_STATUS, formatFloat } from "../../service/constant";
+import { localStore, Api, thumbUrl, formatDate, STATUS_COLOR, R_STATUS, formatFloat } from "../../service/constant";
 
 import "../styles/table.css";
 import "../styles/button.css";
@@ -112,7 +112,7 @@ class TimeSheetContact extends Component {
                                     </Col>}
                                     <Col style={{marginLeft:'auto'}} >
                                         {/* <Space  align="end"> */}
-                                            {record.status && <Tag color={STATUS_COLOR[record.status]}> 
+                                            {record.status !== 'SV' && <Tag color={STATUS_COLOR[record.status]}> 
                                                 {R_STATUS[record.status]}  
                                             </Tag>}
                                            
@@ -203,7 +203,7 @@ class TimeSheetContact extends Component {
         const { startDate, endDate } = sheetDates
         if(sUser){
             getList({userId: sUser, startDate: startDate.format('DD-MM-YYYY'), endDate: endDate.format('DD-MM-YYYY')}).then(res=>{
-                if (res.success){
+                // if (res.success){
                     console.log(res.success);
                     this.setState({
                         timesheet: res.data?? {},
@@ -213,7 +213,7 @@ class TimeSheetContact extends Component {
                             keys: []
                         },
                     })
-                }
+                // }
             })
         }
         this.columns()
@@ -587,6 +587,35 @@ class TimeSheetContact extends Component {
         });
     }
 
+    handleSelWeek = (buttonPress) =>{
+        const { sheetDates } = this.state
+        const { sWeek, startDate, endDate, cMonth } = sheetDates
+        console.log({'sWeek': formatDate(sWeek),'endDate': formatDate(endDate),'startDate': formatDate(startDate)})
+        if (buttonPress === 'pWeek'){
+            let showWeek = moment(sWeek.subtract(7, 'days'))
+            console.log({'showWeek': formatDate(showWeek),'sWeek': formatDate(sWeek),'startDate': formatDate(startDate)})
+            if(!sWeek.isSame(startDate)){ // will not run hook if sWeek and startDate is same
+                this.setState({
+                    sheetDates:{
+                        ...sheetDates,  
+                        sWeek: showWeek.isSameOrAfter(startDate) ? showWeek : moment(cMonth).startOf("month")
+                    }          //check if the date is right    //select calcyalte week   //else 1st of month
+                },()=> this.columns())
+            }
+        }else if (buttonPress === 'nWeek'){
+            let showWeek = moment(sWeek.add(7, 'days'))
+            console.log({'showWeek': formatDate(showWeek),'sWeek': formatDate(sWeek),'endDate': formatDate(endDate)})
+            if(!sWeek.isSame(endDate)){ // will not run the hook if sWeek is same as endDate
+                this.setState({
+                    sheetDates:{
+                        ...sheetDates,  
+                        sWeek: showWeek.isSameOrBefore(endDate) ? showWeek : moment(cMonth).endOf("month")
+                    }         //check if the date is right    //select calcyalte week   //else 1st of month
+                },()=> this.columns())
+            }
+        }
+    }
+
     render() {
         const { loading, data, isVisible, proVisible, columns, editTime, timeObj, sheetDates, milestones, sMilestone, isAttach, isDownload, eData, USERS, sUser, loginId, sTMilestones, permissions } = this.state
         // delete button disable condition
@@ -659,39 +688,15 @@ class TimeSheetContact extends Component {
                 <Row justify="end">
                         <Col>
                             <Button 
-                                disabled={sWeek.isSame(startDate)}
-                                onClick={()=>{
-                                    const { sheetDates } = this.state
-                                    const { sWeek, startDate } = this.state.sheetDates
-                                    let pWeek = moment(sWeek.format())
-                                    pWeek = moment(pWeek.subtract(7, 'days'))
-                                    if(!sWeek.isSame(startDate)){ // will not run hook if sWeek and startDate is same
-                                        this.setState({
-                                            sheetDates:{
-                                                ...sheetDates,  
-                                                sWeek: pWeek.isSameOrAfter(startDate) ? pWeek : moment().startOf("month")
-                                            }          //check if the date is right    //select calcyalte week   //else 1st of month
-                                        },()=> this.columns())
-                                    }
-                                }}
+                                disabled={sWeek.isSameOrBefore(startDate)}
+                                value="pWeek"
+                                onClick={()=>this.handleSelWeek('pWeek')}
                             > <LeftOutlined />
                             </Button>
                             <Button 
-                                disabled={sWeek.isSame(endDate)}
-                                onClick={()=>{
-                                    const { sheetDates } = this.state
-                                    const { sWeek, endDate } = this.state.sheetDates
-                                    let nWeek = moment(sWeek.format())
-                                    nWeek = moment(nWeek.add(7, 'days'))
-                                    if(!sWeek.isSame(endDate)){ // will not run the hook if sWeek is same as endDate
-                                        this.setState({
-                                            sheetDates:{
-                                                ...sheetDates,  
-                                                sWeek: nWeek.isSameOrBefore(endDate) ? nWeek : moment().endOf("month")
-                                            }         //check if the date is right    //select calcyalte week   //else 1st of month
-                                        },()=> this.columns())
-                                    }
-                                }}
+                                disabled={sWeek.isSameOrAfter(endDate)}
+                                value="nWeek"
+                                onClick={()=>this.handleSelWeek('nWeek')}
                             >  <RightOutlined />
                             </Button>
                         </Col>

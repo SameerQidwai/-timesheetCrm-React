@@ -7,7 +7,7 @@ import moment from "moment";
 import "../../styles/table.css";
 
 import { holidayType, addList, getList, editLabel, delLabel, } from "../../../service/calendar-holidays";
-import { fomratDate, localStore } from "../../../service/constant";
+import { formatDate, localStore } from "../../../service/constant";
 import { Filtertags, TableModalFilter, tableSorter, tableTitleFilter } from "../../../components/Core/Table/TableFilter";
 
 const { Title } = Typography;
@@ -27,7 +27,7 @@ class CalenerHolidays extends Component {
                 title: "Date",
                 dataIndex: "date",
                 key: "date",
-                render: (text, record) => fomratDate(text),
+                render: (text, record) => formatDate(text),
                 ...tableSorter('date', 'date')
             },
             {
@@ -261,7 +261,7 @@ class CalenerHolidays extends Component {
             this.setState({
                 filterData: data.filter(el => {
                     return el.label && el.label.toLowerCase().includes(value.toLowerCase()) || 
-                    el.date && fomratDate(el.date).toLowerCase().includes(value.toLowerCase())
+                    el.date && formatDate(el.date).toLowerCase().includes(value.toLowerCase())
                 })
             })
         }else{

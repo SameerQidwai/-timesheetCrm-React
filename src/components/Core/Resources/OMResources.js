@@ -6,7 +6,7 @@ import ResModal from "./Modals/ResModal";
 import { getLeadSkills, delLeadSkill, delLeadSkillResource, selectLeadSkillResource } from "../../../service/opportunities";
 
 import moment from "moment"
-import { fomratDate, formatCurrency, localStore } from "../../../service/constant";
+import { formatDate, formatCurrency, localStore } from "../../../service/constant";
 
 const { Item } = Descriptions;
 
@@ -175,9 +175,9 @@ class OMResource extends Component {
                 >
                     <Item label="Title">{desc.title}</Item>
                     <Item label="Value">{ formatCurrency(desc.value)}</Item>
-                    <Item label="Start Date">{desc.startDate ? fomratDate(desc.startDate): null} </Item>
-                    <Item label="End Date">{desc.endDate ? fomratDate(desc.endDate): null}</Item>
-                    <Item label="Bid Date">{desc.bidDate ? fomratDate(desc.bidDate): null}</Item>
+                    <Item label="Start Date">{desc.startDate ? formatDate(desc.startDate): null} </Item>
+                    <Item label="End Date">{desc.endDate ? formatDate(desc.endDate): null}</Item>
+                    <Item label="Bid Date">{desc.bidDate ? formatDate(desc.bidDate): null}</Item>
                     {/* <Item label="Gender">{data.gender}</Item> */}
                 </Descriptions>
                 <Row justify="end">

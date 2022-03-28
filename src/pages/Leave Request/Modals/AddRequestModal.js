@@ -283,7 +283,7 @@ class AddRequestModal extends Component{
         //single hook cal for all the condition
     }
 
-    getApprovingData = () =>{
+    getApprovingData = () =>{ //Need to be nerge with  getSubmittedData Function for code optimizaiton and ro avoid dupication of code...
         const { BasicFields } = this.state;
         const { edit } = this.props;
         // const {id: userId} = localStore()
@@ -401,9 +401,11 @@ class AddRequestModal extends Component{
 
         if(edit){
             editRequest(edit, newVal).then((res) => {
-                if (res) {
+                if (res.success) {
                     this.setState({loading: false})
                     callBack()
+                }else{
+                    this.setState({loading: false})
                 }
             });
         }else{
@@ -412,7 +414,7 @@ class AddRequestModal extends Component{
                 if (res.success) {
                     this.setState({loading: false})
                     callBack()
-                }else if(res.balanceError){
+                }else {
                     this.setState({loading: false})
                 }
             });
