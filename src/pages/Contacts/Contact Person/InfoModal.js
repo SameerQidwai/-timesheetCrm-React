@@ -531,7 +531,7 @@ class InfoModal extends Component {
             {
                 fieldCol: 2,
                 size: "small",
-                Placeholder: <MinusCircleFilled />,
+                Placeholder: <MinusCircleFilled style={{color:"red",margin: 'auto'}}/>,
                 key: item_no,
                 // rules:[{ required: true }],
                 type: "Text",
@@ -623,7 +623,7 @@ class InfoModal extends Component {
             {
                 fieldCol: 2,
                 size: "small",
-                Placeholder: <MinusCircleFilled />,
+                Placeholder: <MinusCircleFilled style={{color:"red",margin: 'auto'}}/>,
                 key: item_no,
                 // rules:[{ required: true }],
                 type: "Text",
