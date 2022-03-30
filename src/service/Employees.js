@@ -61,11 +61,12 @@ export const addList = (data) => {
             return { success, data };
         })
         .catch((err) => {
-            messageAlert.error({ content: err.message, key: 1})
+            const {message} = err?.response?.data
+            messageAlert.error({ content: message, key: 1})
             return {
                 error: "Please login again!",
                 status: false,
-                message: err.message,
+                message: message,
             };
         });
 };
@@ -104,11 +105,12 @@ export const editList = (id, data) => {
             return { success, data };
         })
         .catch((err) => {
-            messageAlert.error({ content: err.message, key: id})
+            const {message} = err?.response?.data
+            messageAlert.error({ content: message, key: id})
             return {
                 error: "Please login again!",
                 status: false,
-                message: err.message,
+                message: message,
             };
         });
 };

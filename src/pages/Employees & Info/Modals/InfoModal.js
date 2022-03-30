@@ -508,13 +508,12 @@ class InfoModal extends Component {
                     onChange: (value) => {
                         const { BillingFields } = this.state
                         if (value === 1){
-                            BillingFields[10].Placeholder = "Hourly Base Salary"
+                            BillingFields[11].Placeholder = "Hourly Base Salary"
                             this.setState({BillingFields})
                         }else{
-                            BillingFields[10].Placeholder = "Annual Base Salary"
+                            BillingFields[11].Placeholder = "Annual Base Salary"
                             this.setState({BillingFields})
                         }
-                        console.log(`this.formRef.current.getFieldsValue()`, this.formRef.current.getFieldsValue())
                     },
                     rules: [ { required: true, message: "Status is Required", }, ],
                     itemStyle: { marginBottom: 10 },
@@ -749,8 +748,9 @@ class InfoModal extends Component {
 
     fetchAll = (edit) =>{
         const { editEmp } = this.props
-        const customUrl = `helpers/contact-persons?organizationId=1&employee=1`
-        Promise.all([ getStates(), getRoles() , edit && this.getRecord(editEmp), getLeavePolicy(), getOrgPersons(customUrl) ])
+        const managerUrl = `helpers/contact-persons?organizationId=1&employee=1`
+        const newConatactUrl = `helpers/contact-persons?organizationId=1&active=0&associated=1`
+        Promise.all([ getStates(), getRoles() , edit ? this.getRecord(editEmp): getOrgPersons(newConatactUrl), getLeavePolicy(), getOrgPersons(managerUrl) ])
         .then(res => {
             const { BasicFields, BillingFields, ManagerFields } = this.state
             BasicFields[15].data = res[0].data;
@@ -810,6 +810,8 @@ class InfoModal extends Component {
             if(res.success){
                 // this.uploadAttachments(res.billing, res.data)
                 callBack(res.data, false)
+            }else{
+                this.setState({ loading: false })
             }
         })
     };
@@ -836,6 +838,8 @@ class InfoModal extends Component {
             if(res.success){
                 // this.uploadAttachments(res.billing, res.data)
                 callBack()
+            }else{
+                this.setState({ loading: false })
             }
         });
     };
