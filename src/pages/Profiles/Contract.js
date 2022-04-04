@@ -25,8 +25,8 @@ const PersonalContract = (props)=> {
         },
         {
             object: "billing",
-            disabled: true,
             fieldCol: 12,
+            disabled: true,
             key: "type",
             size: "small",
             data: [
@@ -36,24 +36,40 @@ const PersonalContract = (props)=> {
             ],
             type: "Select",
             rules: [ { required: true, message: "Status is Required", }, ],
-            itemStyle: { marginBottom: 20 },
+            itemStyle: { marginBottom: 1 },
         },
         {
             object: "billing",
-            disabled: true,
             fieldCol: 12,
             key: "payslipEmail",
+            disabled: true,
             size: "small",
             type: "input",
-            itemStyle: { marginBottom: 20 },
+            // rules: [
+            //     {
+            //         required: true,
+            //         message: "Payment Email is required",
+            //     },
+            // ],
+            itemStyle: { marginBottom: 1 },
         },
         {
-            Placeholder: "Full Work Hours",
+            Placeholder: "Work Hours In A Week",
             rangeMin: true,
-            fieldCol: 12,
+            fieldCol: 6,
             size: "small",
             type: "Text",
             labelAlign: "right",
+            // itemStyle:{marginBottom:'10px'},
+        },
+        {
+            Placeholder: "Work Days In A Week",
+            rangeMin: true,
+            fieldCol: 6,
+            size: "small",
+            type: "Text",
+            labelAlign: "right",
+            // itemStyle:{marginBottom:'10px'},
         },
         {
             Placeholder: "Contract Start Date",
@@ -62,49 +78,49 @@ const PersonalContract = (props)=> {
             size: "small",
             type: "Text",
             labelAlign: "right",
+            // itemStyle:{marginBottom:'10px'},
         },
         
         {
             object: "billing",
-            disabled: true,
             fieldCol: 6,
             key: "noOfHours",
+            disabled: true,
             size: "small",
             type: "InputNumber",
             // shape: " Hours",
             fieldStyle: { width: "100%" },
             rules: [ { required: true, message: "Work Hours is Required", }, ],
-            itemStyle: { marginBottom: 20 },
+            itemStyle: { marginBottom: 1 },
         },
         {
             object: "billing",
-            disabled: true,
             fieldCol: 6,
-            key: "noOfHoursPer",
+            key: "noOfDays",
+            disabled: true,
             size: "small",
-            type: "Select",
+            type: "InputNumber",
             // shape: " Hours",
-            data: [
-                // { label: "Hourly", value: 1 },
-                // { label: "Daily", value: 2 },
-                { label: "Weekly", value: 3 },
-                // { label: "Fortnightly", value: 4 },
-                // { label: "Monthly", value: 5 },
-            ],
+            // data: [
+            //     // { label: "Daily", value: 2 },
+            //     { label: "Weekly", value: 3 },
+            //     // { label: "Fortnightly", value: 4 },
+            //     // { label: "Monthly", value: 5 },
+            // ],
             fieldStyle: { width: "100%" },
-            rules: [ { required: true, message: "Work Hours is Required", }, ],
-            itemStyle: { marginBottom: 20 },
+            rules: [ { required: true, message: "Work Days are Required", }, ],
+            itemStyle: { marginBottom: 10 },
         },
         {
             object: "billing",
-            disabled: true,
             fieldCol: 12,
             key: "startDate",
+            disabled: true,
             size: "small",
             type: "DatePicker",
             fieldStyle: { width: "100%" },
             rules: [ { required: true, message: "Start Date is Required", }, ],
-            itemStyle: { marginBottom: 20 },
+            itemStyle: { marginBottom: 1 },
         },
         {
             Placeholder: "Contract End Date",
@@ -112,6 +128,7 @@ const PersonalContract = (props)=> {
             size: "small",
             type: "Text",
             labelAlign: "right",
+            // itemStyle:{marginBottom:'10px'},
         },
         {
             Placeholder: "Annual Base Salary",
@@ -120,29 +137,30 @@ const PersonalContract = (props)=> {
             size: "small",
             type: "Text",
             labelAlign: "right",
+            // itemStyle:{marginBottom:'10px'},
         },
         {
             object: "billing",
-            disabled: true,
             fieldCol: 12,
             key: "endDate",
+            disabled: true,
             size: "small",
             type: "DatePicker",
             fieldStyle: { width: "100%" },
-            itemStyle: { marginBottom: 20 },
+            itemStyle: { marginBottom: 1 },
         },
         {
             object: "billing",
-            disabled: true,
             fieldCol: 12,
             key: "remunerationAmount",
+            disabled: true,
             size: "small",
             type: "InputNumber",
             shape: "$",
             fieldStyle: { width: "100%" },
             rules: [ { required: true, message: "Salary is Required", }, ],
-            itemStyle: { marginBottom: 20 },
-        },
+            itemStyle: { marginBottom: 1 },
+        },  
         {
             Placeholder: "Pay Frequence",
             rangeMin: true,
@@ -150,6 +168,7 @@ const PersonalContract = (props)=> {
             size: "small",
             type: "Text",
             labelAlign: "right",
+            // itemStyle:{marginBottom:'10px'},
         },
         {
             Placeholder: "Leave Policy",
@@ -158,12 +177,13 @@ const PersonalContract = (props)=> {
             size: "small",
             type: "Text",
             labelAlign: "right",
+            // itemStyle:{marginBottom:'10px'},
         },
         {
             object: "billing",
-            disabled: true,
             fieldCol: 12,
             key: "payFrequency",
+            disabled: true,
             size: "small",
             data: [
                 { label: "Hourly", value: 1 },
@@ -174,13 +194,13 @@ const PersonalContract = (props)=> {
             ],
             type: "Select",
             rules: [ { required: true, message: "Payment Frequncy is required", }, ],
-            itemStyle: { marginBottom: 20 },
+            itemStyle: { marginBottom: 1 },
         },
         {
             object: "billing",
             fieldCol: 12,
-            disabled: true,
             key: "leaveRequestPolicyId",
+            disabled: true,
             size: "small",
             data: [],
             type: "Select",
@@ -193,17 +213,19 @@ const PersonalContract = (props)=> {
             size: "small",
             type: "Text",
             labelAlign: "right",
+            // itemStyle:{marginBottom:'10px'},
         },
         {
             object: "billing",
-            disabled: true,
             fieldCol: 24,
             key: "comments",
+            disabled: true,
             size: "small",
             type: "Textarea",
-            itemStyle: { marginBottom: 20 },
+            itemStyle: { marginBottom: 1 },
         },
     ]);
+
     useEffect(() => {
         setLeavePolicy()
         form.setFieldsValue({billing: props.data})
@@ -214,7 +236,9 @@ const PersonalContract = (props)=> {
         getLeavePolicy().then(res=>{
             if(res.success){
                 const dummy = fields
-                dummy[16].data = res.data
+                const { type } = props.data
+                dummy[17].data = res.data
+                dummy[11].Placeholder = type ===1 ? "Hourly Base Salary" : "Annual Base Salary"
                 setFields([...dummy])
             }
         })

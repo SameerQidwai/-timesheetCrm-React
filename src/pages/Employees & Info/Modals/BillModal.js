@@ -53,6 +53,16 @@ class BillModal extends Component {
                     ],
                     type: "Select",
                     rules: [ { required: true, message: "Status is Required", }, ],
+                    onChange: (value) => {
+                        const { BillingFields } = this.state
+                        if (value === 1){
+                            BillingFields[11].Placeholder = "Hourly Base Salary"
+                            this.setState({BillingFields})
+                        }else{
+                            BillingFields[11].Placeholder = "Annual Base Salary"
+                            this.setState({BillingFields})
+                        }
+                    },
                     itemStyle: { marginBottom: 1 },
                 },
                 {
