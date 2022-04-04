@@ -759,6 +759,8 @@ class InfoModal extends Component {
             ManagerFields[1].data = res[4].data;
                 this.setState({
                     BasicFields,
+                    BillingFields,
+                    ManagerFields,
                     CONTACT: !edit ? res[2].data: [],
                 })
         })
@@ -819,10 +821,13 @@ class InfoModal extends Component {
     getRecord = (id) => {
         return getRecord(id).then(res=>{
             if (res.success){
+                const { BillingFields } = this.state
                 this.formRef.current.setFieldsValue({ basic: res.basic, detail: res.detail, bank: res.bank, kin: res.kin, billing: res.billing, train: res.train,});
+                BillingFields[11].Placeholder = res?.billing?.type ===1 ? "Hourly Base Salary" : "Annual Base Salary"
                 this.setState({
                     fileIds: res.billing.fileId,
-                    fileList: res.billing.file
+                    fileList: res.billing.file,
+                    BillingFields
                 })
                 this.onFundType(res.detail&& res.detail)
                 return true

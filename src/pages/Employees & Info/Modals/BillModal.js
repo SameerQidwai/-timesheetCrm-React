@@ -300,6 +300,7 @@ class BillModal extends Component {
             BillingFields[17].data = res[0].success ? res[0].data:[];
             const {success, data} = res[1]
             if (success){
+                BillingFields[11].Placeholder = data.type ===1 ? "Hourly Base Salary" : "Annual Base Salary"
                 data.startDate = data.startDate && moment(data.startDate)
                 data.endDate = data.endDate && moment(data.endDate)
                 this.formRef.current.setFieldsValue({ billing: data, });
