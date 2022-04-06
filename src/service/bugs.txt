@@ -80,3 +80,34 @@ updating
 xampp
     service mysql stop
     sudo /opt/lampp/lampp start
+
+
+// for deleting Functionality add these function
+// Add function 
+
+handleDelete = (id, index) => {
+    const { data: d, filterData: fd } = this.state
+    fd.splice(index,1) // deleting Index
+    d.splice(index,1) // deleting Index
+    this.setState({ filterData: [...fd], data: [...d] }) //Set the data...
+};
+
+export const delList = (id) => {
+    return axios
+        .delete(url + `/${id}`, {headers:headers()})
+        .then((res) => {
+            const { success, message } = res.data;
+            jwtExpired(message)
+
+            if (success)  setToken(res.headers && res.headers.authorization)
+
+            return {success};
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                status: false,
+                message: err.message,
+            };
+        });
+};
