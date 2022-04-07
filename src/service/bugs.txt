@@ -78,7 +78,7 @@ shortcut
 updating 
     "antd": "^4.15.6",
 xampp
-    service mysql stop
+    sudo service mysql stop
     sudo /opt/lampp/lampp start
 
 

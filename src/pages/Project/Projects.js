@@ -12,6 +12,7 @@ import moment from "moment";
 import { formatDate, formatCurrency, localStore, O_TYPE } from '../../service/constant';
 import { getOrganizations, getPanels, getStates } from '../../service/constant-Apis';
 import { Filtertags, TableModalFilter, tableSorter, tableTitleFilter } from '../../components/Core/Table/TableFilter';
+import { generalDelete } from '../../service/delete-Api\'s';
 const { Title } = Typography
 
 class Projects extends Component {
@@ -79,20 +80,26 @@ class Projects extends Component {
                 key: 'action',
                 align: 'right',
                 width: 115,
-                render: (record) => (
+                render: (value, record, index) => (
                     <Dropdown overlay={
                         <Menu>
-                            {/* <Menu.Item danger>
-                                <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete(record.id)} >
+                            <Menu.Item 
+                                danger
+                                disabled={!this?.state?.permissions?.['DELETE']}
+                            >
+                                <Popconfirm
+                                    title="Sure to delete?" 
+                                    onConfirm={() => this.handleDelete(record.id, index)} 
+                                >
                                     Delete
                                 </Popconfirm>
-                            </Menu.Item > */}
+                            </Menu.Item >
                             <Menu.Item 
                                 onClick={()=>this.setState({
                                     openModal: true,
                                     editPro: record.id
                                 })}
-                                disabled={this.state&& !this.state.permissions['UPDATE']}
+                                disabled={!this?.state?.permissions?.['UPDATE']}
                             >Edit</Menu.Item>
                             <Menu.Item >
                                 <Link to={{ pathname: `/projects/${record.id}/purchase-order`}} className="nav-link">
@@ -354,12 +361,18 @@ class Projects extends Component {
         })
     }
 
-    handleDelete = (id) => {
-        delList(id).then((res) => {
-            if (res.success) {
-                this.getData();
+    handleDelete = (id, index) => {
+        const url = '/projects'
+        const { data, filterData } = this.state
+        const { history } = this.props
+        generalDelete(history, url, id, index, filterData, data).then(res =>{
+            if (res.success){
+                this.setState({
+                    data: res.data,
+                    filterData: res.filterData
+                })
             }
-        });
+        })
     };
 
     callBack =()=>{ // this will work after I get the Object from the form

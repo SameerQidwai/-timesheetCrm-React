@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Row, Col, Menu, Button, Dropdown, Descriptions, Table, Tag, Progress } from "antd";
+import { Row, Col, Menu, Button, Dropdown, Descriptions, Table, Tag, Progress, Popconfirm } from "antd";
 import { SettingOutlined, DownOutlined } from "@ant-design/icons"; //Icons
 import { Link } from 'react-router-dom'
 
@@ -9,6 +9,7 @@ import MileModal from "./MileModal";
 import { formatDate, formatCurrency, localStore } from "../../service/constant";
 import { getMilestones, getProjectDetail } from "../../service/Milestone-Apis";
 import { getRecord } from "../../service/opportunities";
+import { generalDelete } from "../../service/delete-Api's";
 
 const { Item } = Descriptions;
 
@@ -71,6 +72,13 @@ class Milestone extends Component {
                         <Dropdown
                             overlay={
                                 <Menu>
+                                    <Menu.Item danger 
+                                        disabled={!this?.state?.permissions?.['DELETE']}
+                                    >
+                                        <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete(record.id, index)} >
+                                            Delete
+                                        </Popconfirm>
+                                    </Menu.Item >
                                     <Menu.Item
                                         onClick={() => {
                                             this.setState({ infoModal: true, editMile: {...record, rowIndex: index}, });
@@ -115,7 +123,7 @@ class Milestone extends Component {
     }
 
     fetchAll = (id) =>{
-        const { PROJECTS }= JSON.parse(localStore().permissions)
+        const { PROJECTS, OPPORTUNITIES }= JSON.parse(localStore().permissions)
         const customUrl = this.props.match.url
         let crud = this.props.match.url
         crud = crud.split('/')
@@ -132,7 +140,7 @@ class Milestone extends Component {
                 columns: [...columns],
                 proId: id,
                 customUrl, // for temporary bases
-                permissions: PROJECTS
+                permissions: work === 'opportunities'? OPPORTUNITIES: PROJECTS
             })
         })
         .catch(e => {
@@ -145,12 +153,19 @@ class Milestone extends Component {
         this.setState({ infoModal: false, editMile: false});
     };
 
-    handleDelete = (rId) => {
-        const { proId } = this.props.match.params //opputunityId
+    handleDelete = (id, index) => {
+        const { customUrl, data } = this.state
+        const { history } = this.props
+        generalDelete(history, customUrl, id, index, data, false).then(res =>{
+            if (res.success){
+                this.setState({
+                    data: res.data,
+                })
+            }
+        })
     };
 
     callBack = (milestone) => {
-        console.log(milestone);
         const { proId, editMile, data } = this.state
         if (editMile){
             data[editMile.rowIndex]= milestone
