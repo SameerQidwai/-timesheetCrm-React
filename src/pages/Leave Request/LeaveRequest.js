@@ -1,11 +1,12 @@
 import React, {Component} from 'react'
-import { Table, Button, Row, Col, Typography, Menu, Dropdown, Tag, Tooltip, Space} from 'antd'
+import { Table, Button, Row, Col, Typography, Menu, Dropdown, Tag, Tooltip, Space, Popconfirm} from 'antd'
 import { DownOutlined, SettingOutlined, PlusSquareOutlined, AuditOutlined} from '@ant-design/icons';
 import { formatFloat, formatDate, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
 import AddRequestModal from './Modals/AddRequestModal';
 import { getRequests } from '../../service/leaveRequest-Apis';
 import moment from 'moment';
 import LeaveBalance from '../../components/Core/LeaveBalance';
+import { generalDelete } from '../../service/delete-Api\'s';
 const { Title } = Typography
 
 class LeaveRequest extends Component {
@@ -97,9 +98,20 @@ class LeaveRequest extends Component {
                 title: 'Action',
                 key: 'action',
                 align: 'right',
-                render: (record, index) => (
+                render: (value, record, index) => (
                     <Dropdown overlay={
                         <Menu>
+                            <Menu.Item 
+                                danger
+                                disabled={!this?.state?.permissions?.['DELETE'] || record.status ==='AP'}
+                            >
+                                <Popconfirm
+                                    title="Sure to delete?" 
+                                    onConfirm={() => this.handleDelete(record.id, index)} 
+                                >
+                                    Delete
+                                </Popconfirm>
+                            </Menu.Item >
                             <Menu.Item 
                                 disabled={!this?.state?.permissions?.['UPDATE']}
                                 onClick={()=> {
@@ -163,6 +175,19 @@ class LeaveRequest extends Component {
             readOnly: false,
         })
     }
+
+    handleDelete = (id, index) => {
+        const { data } = this.state
+        const { history } = this.props
+        const url = `/leave-requests`
+        generalDelete(history, url, id, index, data, false).then(res =>{
+            if (res.success){
+                this.setState({
+                    data: res.data,
+                })
+            }
+        })
+    };
 
     callBack = (reqObj) => {
         this.getData()
