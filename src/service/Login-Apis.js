@@ -138,7 +138,7 @@ export const getSettings = () => {
                     clearanceExpiryDate: contactPerson.clearanceExpiryDate ? moment(contactPerson.clearanceExpiryDate) : null, 
                     clearanceSponsorId: contactPerson.clearanceSponsorId,
                 }
-                const resourceSkill = contactPerson.standardSkillStandardLevels
+                const resourceSkill = contactPerson?.standardSkillStandardLevels
 
                 setToken(res.headers && res.headers.authorization)
                 return { success, data, basic, detail, kin, bank, billing, sClearance, resourceSkill }

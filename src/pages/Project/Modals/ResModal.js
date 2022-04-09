@@ -241,11 +241,7 @@ class ResModal extends Component {
     getPanelSkills(panelId).then((res) => {
       const { ResourceFields } = this.state;
       ResourceFields[2].data = res.success ? res.data : [];
-      this.setState(
-        {
-          ResourceFields,
-        },
-        () => {
+      this.setState( { ResourceFields, }, () => {
           if (editRex) {
             this.getRecord(res.data);
           }
@@ -275,6 +271,8 @@ class ResModal extends Component {
     addLeadSkill(crud, data, proId).then((res) => {
       if (res.success) {
         callBack();
+      }else{
+        this.setState({ loading: false })
       }
     });
   };
@@ -312,6 +310,8 @@ class ResModal extends Component {
     editLeadSkill(crud, editRex, data).then((res) => {
       if (res.success) {
         callBack();
+      }else{
+        this.setState({ loading: false })
       }
     });
   };

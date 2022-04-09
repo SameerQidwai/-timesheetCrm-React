@@ -307,6 +307,7 @@ class ResModal extends Component {
 
   onFinish = (vake) => {
     // this will work after I get the Object from the form
+    this.setState({ loading: true });
     const { editRex, skillId } = this.props;
     if (editRex) {
       if (skillId) {
@@ -324,45 +325,49 @@ class ResModal extends Component {
   };
 
   addSkill = (data) => {
-    this.setState({ loading: true });
     const { leadId, callBack, crud } = this.props;
     addLeadSkill(crud, data, leadId).then((res) => {
       if (res.success) {
         callBack(res.data);
+      }else{
+        this.setState({ loading: false })
       }
     });
   };
 
   addResourse = (data) => {
-    this.setState({ loading: true });
     const { callBack, leadId, skillId, crud } = this.props;
     addLeadSkillResource(crud, skillId, data).then((res) => {
       if (res.success) {
         callBack(res.data);
+      }else{
+        this.setState({ loading: false })
       }
     });
   };
 
   editSkill = (data) => {
-    this.setState({ loading: true });
     const { editRex, leadId, callBack, crud } = this.props;
     data.id = editRex.id;
     console.log(data);
     editLeadSkill(crud, editRex.id, data).then((res) => {
       if (res.success) {
         callBack(res.data);
+      }else{
+        this.setState({ loading: false })
       }
     });
   };
 
   editResource = (data) => {
-    this.setState({ loading: true });
     const { editRex, callBack, leadId, skillId, crud } = this.props;
     data.id = editRex;
     console.log(data);
     editLeadSkillResource(crud, skillId, editRex.id, data).then((res) => {
       if (res.success) {
         callBack(res.data);
+      }else{
+        this.setState({ loading: false })
       }
     });
   };

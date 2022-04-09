@@ -196,6 +196,8 @@ class MileModal extends Component {
     editMilestone(crud, editMile.id, data).then(res=>{
       if(res.success){
         callBack(res.data)
+      }else{
+        this.setState({ loading: false })
       }
     })
   };

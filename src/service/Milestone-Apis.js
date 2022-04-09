@@ -100,12 +100,12 @@ export const editMilestone = (crud, id, data) => {
             return {success, data: data[0]};
         })
         .catch((err) => {
-            messageAlert.error({ content: err.message, key: data.id})
-            return {
-                error: "Please login again!",
-                status: false,
-                message: err.message,
-            };
+            const {status, data: errData } = err?.response
+            const { message, success } = errData
+            if (status === 400){
+                messageAlert.error({ content: message, duration: 5, key: data.id})
+            }
+            return { error: err.message, status, message, success };
         });
 };
 

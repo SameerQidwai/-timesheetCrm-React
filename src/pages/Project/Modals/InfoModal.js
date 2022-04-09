@@ -543,12 +543,13 @@ class InfoModal extends Component {
 
   editRecord = (data) => {
     const { editPro, callBack } = this.props;
-    console.log(this.props);
     data.id = editPro;
     this.setState({ loading: true, });
     editList(data).then((res) => {
       if (res.success) {
         callBack();
+      }else{
+        this.setState({ loading: false })
       }
     });
   };

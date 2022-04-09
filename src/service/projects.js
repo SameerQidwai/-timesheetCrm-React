@@ -148,12 +148,12 @@ export const editList = (data) => {
             return {success};
         })
         .catch((err) => {
-            messageAlert.error({ content: err.message, key: data.id})
-            return {
-                error: "Please login again!",
-                status: false,
-                message: err.message,
-            };
+            const {status, data: errData } = err?.response
+            const { message, success } = errData
+            if (status === 400){
+                messageAlert.error({ content: message, duration: 5, key: data.id})
+            }
+            return { error: err.message, status, message, success };
         });
 };
 
@@ -170,13 +170,10 @@ export const addLeadSkill = (crud, data, id) => {
         return { success }
     })
     .catch(err=>{
-        messageAlert.error({ content: err.message, key: id})
-        return {
-            error: "Please look into it",
-            status: false,
-            success: false,
-            message: err.message
-        }
+        const {status, data: errData } = err?.response
+            const { message, success } = errData
+                messageAlert.error({ content: message, duration: 5, key: id})
+            return { error: err.message, status, message, success };
     })
 };
 
@@ -248,12 +245,12 @@ export const editLeadSkill = (crud, resId, data) => {
             return {success, data: data[0]};
         })
         .catch((err) => {
-            messageAlert.error({ content: err.message, key: resId})
-            return {
-                error: "Please login again!",
-                status: false,
-                message: err.message,
-            };
+            const {status, data: errData } = err?.response
+            const { message, success } = errData
+            if (status === 400){
+                messageAlert.error({ content: message, duration: 5, key: resId})
+            }
+            return { error: err.message, status, message, success };
         });
 };
 
