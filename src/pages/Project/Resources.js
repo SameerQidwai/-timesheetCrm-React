@@ -291,10 +291,11 @@ class Resources extends Component {
         const { crud, data, filterData } = this.state
         const { history } = this.props
         generalDelete(history, crud, id, index, filterData, data).then(res =>{
+            console.log( id, index);
             if (res.success){
                 this.setState({
-                    data: res.data,
-                    filterData: res.filterData
+                    data: [...res.data],
+                    filterData: [...res.filterData]
                 })
             }
         })

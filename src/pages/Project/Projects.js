@@ -368,8 +368,8 @@ class Projects extends Component {
         generalDelete(history, url, id, index, filterData, data).then(res =>{
             if (res.success){
                 this.setState({
-                    data: res.data,
-                    filterData: res.filterData
+                    data: [...res.data],
+                    filterData: [...res.filterData]
                 })
             }
         })

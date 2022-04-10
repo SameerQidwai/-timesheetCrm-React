@@ -136,7 +136,7 @@ class PurchaseOrder extends Component {
         generalDelete(history, url, id, index, data, false).then(res =>{
             if (res.success){
                 this.setState({
-                    data: res.data,
+                    data: [...res.filterData],
                 })
             }
         })

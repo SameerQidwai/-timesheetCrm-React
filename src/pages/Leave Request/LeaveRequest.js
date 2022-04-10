@@ -183,7 +183,7 @@ class LeaveRequest extends Component {
         generalDelete(history, url, id, index, request, false).then(res =>{
             if (res.success){
                 this.setState({
-                    request: res.data,
+                    request: [...res.filterData],
                 })
             }
         })

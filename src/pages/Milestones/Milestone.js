@@ -159,7 +159,7 @@ class Milestone extends Component {
         generalDelete(history, customUrl, id, index, data, false).then(res =>{
             if (res.success){
                 this.setState({
-                    data: res.data,
+                    data: [...res.filterData],
                 })
             }
         })

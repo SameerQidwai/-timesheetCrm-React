@@ -10,6 +10,7 @@ import { Api, apiErrorRes, headers, jwtExpired, setToken,  } from "./constant";
 // data: remove from data (backup data for filter)
 
 export const generalDelete = (history, url, id, index, filterData, data) => {
+    console.log(id, index);
     messageAlert.loading({ content: 'Loading...', key: id })
     return axios
         .delete( `${Api}${url}/${id}`, {headers:headers()})
@@ -24,7 +25,8 @@ export const generalDelete = (history, url, id, index, filterData, data) => {
                     if (data){ //searching data  to show in filterData
                         data.splice(index,1) // deleting Index
                     }
-                    return {success, data, filterData} //Set the data...
+                    console.log(id, index);
+                    return {success: success, data: data, filterData: filterData} //Set the data...
                 }else{ // if Entitiy is delete from view... 
                     history.goBack()
                     return {success} //Set the data...

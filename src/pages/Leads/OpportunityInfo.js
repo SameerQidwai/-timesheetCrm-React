@@ -76,8 +76,8 @@ class OpportunityInfo extends Component {
         generalDelete(history, crud, id).then(res =>{
             if (res.success){
                 this.setState({
-                    data: res.data,
-                    filterData: res.filterData
+                    data: [...res.data],
+                    filterData: [...res.filterData]
                 })
             }
         })

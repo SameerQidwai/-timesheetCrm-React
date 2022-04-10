@@ -1,8 +1,10 @@
 Update and check 
     delLeadSkillResource // not done
     Purchase Order // whole Not doe
+    Timebase Projext resource not deleting from list
+    generaldeleteApi List delete function (Project)
 
-    Overlapping Milestone??
+    timesheet hours vs resource work hours
 
     Leave
         Corn jobs
