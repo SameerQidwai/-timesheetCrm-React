@@ -32,7 +32,7 @@ export const getRequests = () => {
             if (success) return { success: success, data: data };
         })
         .catch((err) => {
-            const {message} = err.response.data
+            const message = err?.response?.data?.message
             if(message !== 'Leave Requests not found'){
                 messageAlert.error({ content: message, key: 1})
             }
