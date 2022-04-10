@@ -177,13 +177,13 @@ class LeaveRequest extends Component {
     }
 
     handleDelete = (id, index) => {
-        const { data } = this.state
+        const { request } = this.state
         const { history } = this.props
         const url = `/leave-requests`
-        generalDelete(history, url, id, index, data, false).then(res =>{
+        generalDelete(history, url, id, index, request, false).then(res =>{
             if (res.success){
                 this.setState({
-                    data: res.data,
+                    request: res.data,
                 })
             }
         })

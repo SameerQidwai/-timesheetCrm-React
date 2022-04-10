@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Api, headers, jwtExpired, setToken } from "./constant";
+import { Api, apiErrorRes, headers, jwtExpired, setToken } from "./constant";
 import moment from "moment";
 import { message as messageAlert } from "antd";
 
@@ -18,12 +18,7 @@ export const addList = (data) => {
             return {success};
         })
         .catch((err) => {
-            messageAlert.error({ content: err.message, key: 1})
-            return {
-                error: "Please login again!",
-                status: false,
-                message: err.message,
-            };
+            return apiErrorRes(err, 1)
         });
 };
 
@@ -148,12 +143,7 @@ export const editList = (data) => {
             return {success};
         })
         .catch((err) => {
-            const {status, data: errData } = err?.response
-            const { message, success } = errData
-            if (status === 400){
-                messageAlert.error({ content: message, duration: 5, key: data.id})
-            }
-            return { error: err.message, status, message, success };
+            return apiErrorRes(err, data.id, 5)
         });
 };
 
@@ -170,10 +160,7 @@ export const addLeadSkill = (crud, data, id) => {
         return { success }
     })
     .catch(err=>{
-        const {status, data: errData } = err?.response
-            const { message, success } = errData
-                messageAlert.error({ content: message, duration: 5, key: id})
-            return { error: err.message, status, message, success };
+        return apiErrorRes(err, id, 5)
     })
 };
 
@@ -245,12 +232,7 @@ export const editLeadSkill = (crud, resId, data) => {
             return {success, data: data[0]};
         })
         .catch((err) => {
-            const {status, data: errData } = err?.response
-            const { message, success } = errData
-            if (status === 400){
-                messageAlert.error({ content: message, duration: 5, key: resId})
-            }
-            return { error: err.message, status, message, success };
+            return apiErrorRes(err, resId, 5)
         });
 };
 
@@ -286,12 +268,7 @@ export const addLeadSkillResource = (proId, skillId,  data) => {
             return {success, data: data};
         })
         .catch((err) => {
-            messageAlert.error({ content: err.message, key: skillId})
-            return {
-                error: "Please login again!",
-                status: false,
-                message: err.message,
-            };
+            return apiErrorRes(err, skillId, 5)
         });
 };
 
@@ -324,11 +301,7 @@ export const editLeadSkillResource = (proId, skillId, resId, data) => {
             return {success, data};
         })
         .catch((err) => {
-            return {
-                error: "Please login again!",
-                status: false,
-                message: err.message,
-            };
+            return apiErrorRes(err, skillId, 5)
         });
 };
 

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Api, headers, jwtExpired, setToken } from "./constant";
+import { Api, apiErrorRes, headers, jwtExpired, setToken } from "./constant";
 import { message as messageAlert } from "antd";
 import moment from "moment";
 
@@ -17,12 +17,7 @@ export const addList = (data) => {
             return {success};
         })
         .catch((err) => {
-            messageAlert.error({ content: err.message, key: 1})
-            return {
-                error: "Please login again!",
-                status: false,
-                message: err.message,
-            };
+            return apiErrorRes(err, 1, 5)
         });
 };
 
@@ -148,12 +143,7 @@ export const editList = (data) => {
             return {success};
         })
         .catch((err) => {
-            const {status, data: errData } = err?.response
-            const { message, success } = errData
-            if (status === 400){
-                messageAlert.error({ content: message, duration: 5, key: data.id})
-            }
-            return { error: err.message, status, message, success };
+            return apiErrorRes(err, data.id, 5)
         });
 };
 
@@ -170,10 +160,7 @@ export const addLeadSkill = (crud, data, mileId) => {
             return {success, data: data[0]};
         })
         .catch((err) => {
-            const {status, data: errData } = err?.response
-            const { message, success } = errData
-                messageAlert.error({ content: message, duration: 5, key: mileId})
-            return { error: err.message, status, message, success };
+            return apiErrorRes(err, mileId, 5)
         });
 };
 
@@ -229,12 +216,7 @@ export const editLeadSkill = (crud, resId, data) => {
             return {success, data: data && data[0]};
         })
         .catch((err) => {
-            const {status, data: errData } = err?.response
-            const { message, success } = errData
-            if (status === 400){
-                messageAlert.error({ content: message, duration: 5, key: resId})
-            }
-            return { error: err.message, status, message, success };
+            return apiErrorRes(err, resId, 5)
         });
 };
 
@@ -271,10 +253,7 @@ export const addLeadSkillResource = (crud, skillId,  data) => {
             return {success, data: data};
         })
         .catch((err) => {
-            const {status, data: errData } = err?.response
-            const { message, success } = errData
-                messageAlert.error({ content: message, duration: 5, key: skillId})
-            return { error: err.message, status, message, success };
+            return apiErrorRes(err, skillId, 5)
         });
 };
 
@@ -310,12 +289,7 @@ export const editLeadSkillResource = (crud, skillId, resId, data) => {
             return {success, data};
         })
         .catch((err) => {
-            const {status, data: errData } = err?.response
-            const { message, success } = errData
-            if (status === 400){
-                messageAlert.error({ content: message, duration: 5, key: resId})
-            }
-            return { error: err.message, status, message, success };
+            return apiErrorRes(err, resId, 5)
         });
 };
 

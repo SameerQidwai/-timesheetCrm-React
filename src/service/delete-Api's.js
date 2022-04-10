@@ -1,6 +1,6 @@
 import axios from "axios";
 import { message as messageAlert } from "antd";
-import { Api, headers, jwtExpired, setToken,  } from "./constant";
+import { Api, apiErrorRes, headers, jwtExpired, setToken,  } from "./constant";
 
 // history: to change page if necessary
 // url: deleting api from 
@@ -10,7 +10,6 @@ import { Api, headers, jwtExpired, setToken,  } from "./constant";
 // data: remove from data (backup data for filter)
 
 export const generalDelete = (history, url, id, index, filterData, data) => {
-    
     messageAlert.loading({ content: 'Loading...', key: id })
     return axios
         .delete( `${Api}${url}/${id}`, {headers:headers()})
@@ -34,13 +33,6 @@ export const generalDelete = (history, url, id, index, filterData, data) => {
             return {success};
         })
         .catch((err) => {
-            const { message: resMsg } = err?.response?.data
-            messageAlert.error({ content: resMsg, duration: 5, key: id}) 
-            return {
-                error: err.message,
-                status: false,
-                message: err.resMsg,
-                success: false
-            };
+            return apiErrorRes(err, id, 5)
         });
 };

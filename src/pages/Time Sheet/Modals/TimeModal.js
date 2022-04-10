@@ -126,6 +126,8 @@ class TimeModal extends Component {
         addTime(query, data).then(res=>{
             if(res.success){
                 callBack(res.data, true);
+            }else{
+                this.setState({loading: false})
             }
         });
     };

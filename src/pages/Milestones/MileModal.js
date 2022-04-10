@@ -176,6 +176,8 @@ class MileModal extends Component {
     addMilestone(crud, data).then(res=>{
       if(res.success){
         callBack(res.data)
+      }else{
+        this.setState({loading: false})
       }
     })
   };

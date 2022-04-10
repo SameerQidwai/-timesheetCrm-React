@@ -403,21 +403,17 @@ class AddRequestModal extends Component{
 
         if(edit){
             editRequest(edit, newVal).then((res) => {
+                this.setState({loading: false})
                 if (res.success) {
-                    this.setState({loading: false})
                     callBack()
-                }else{
-                    this.setState({loading: false})
                 }
             });
         }else{
             // console.log('newVal: ', newVal)
             addRequest(newVal).then((res) => {
+                this.setState({loading: false})
                 if (res.success) {
-                    this.setState({loading: false})
                     callBack()
-                }else {
-                    this.setState({loading: false})
                 }
             });
         }

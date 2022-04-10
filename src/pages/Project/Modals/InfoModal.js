@@ -523,6 +523,8 @@ class InfoModal extends Component {
     addList(value).then((res) => {
       if (res.success) {
         callBack();
+      }else{
+        this.setState({ loading: false })
       }
     });
   };

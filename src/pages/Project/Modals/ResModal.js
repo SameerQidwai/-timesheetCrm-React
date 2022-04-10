@@ -9,8 +9,8 @@ import FormItems from "../../../components/Core/Forms/FormItems";
 const { TabPane } = Tabs;
 
 class ResModal extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.formRef = React.createRef();
     this.state = {
       editRex: false,
@@ -45,8 +45,7 @@ class ResModal extends Component {
           object: "obj",
           fieldCol: 12,
           key: "panelSkillId",
-  
-          // disabled: true,
+          disabled: props.editRex,
           size: "small",
           rules:[{ required: true, message: 'Skill is Required' }],
           data: [],
@@ -69,7 +68,7 @@ class ResModal extends Component {
           object: "obj",
           fieldCol: 12,
           key: "panelSkillStandardLevelId",
-          // disabled: true,
+          disabled: props.editRex,
           size: "small",
           rules:[{ required: true, message: 'Level is Required' }],
           data: [],
@@ -117,7 +116,7 @@ class ResModal extends Component {
           object: "obj",
           fieldCol: 12,
           key: "contactPersonId",
-          // disabled: true,
+          disabled: props.editRex,
           size: "small",
           rules:[{ required: true, message: 'Resource is Required' }],
           data: [],
@@ -232,7 +231,6 @@ class ResModal extends Component {
   }
 
   componentDidMount = () => {
-    const { editRex, panelId } = this.props;
     this.openModal();
   };
 
