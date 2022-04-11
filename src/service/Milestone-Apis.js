@@ -1,7 +1,7 @@
 import axios from "axios";
 import { message as messageAlert } from "antd";
 
-import { Api, headers, jwtExpired, setToken } from "./constant";
+import { Api, apiErrorRes, headers, jwtExpired, setToken } from "./constant";
 import moment from "moment";
 
 const url = `${Api}/milestones`;
@@ -59,12 +59,7 @@ export const addMilestone = (crud, data) => {
             return {success, data};
         })
         .catch((err) => {
-            messageAlert.error({ content: err.message, key: 1})
-            return {
-                error: "Please login again!",
-                status: false,
-                message: err.message,
-            };
+            return apiErrorRes(err, 1, 5)
         });
 };
 
@@ -100,12 +95,7 @@ export const editMilestone = (crud, id, data) => {
             return {success, data: data[0]};
         })
         .catch((err) => {
-            messageAlert.error({ content: err.message, key: data.id})
-            return {
-                error: "Please login again!",
-                status: false,
-                message: err.message,
-            };
+            return apiErrorRes(err, id, 5)
         });
 };
 

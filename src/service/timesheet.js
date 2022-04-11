@@ -1,7 +1,7 @@
 import { message as messageAlert } from "antd";
 import axios from "axios";
 
-import { Api, headers, jwtExpired, setToken } from "./constant";
+import { Api, apiErrorRes, headers, jwtExpired, setToken } from "./constant";
 
 const url = `${Api}/timesheets/`;
 
@@ -41,12 +41,7 @@ export const addTime = (keys ,data) => {
             return { success }
         })
         .catch((err) => {
-            messageAlert.error({ content: err.message, key: 1})
-            return {
-                error: "Please login again!",
-                status: false,
-                message: err.message,
-            };
+            return apiErrorRes(err, 1, 5)
         });
 };
 
@@ -66,12 +61,7 @@ export const editTime = (entryId ,data) => {
             return { success }
         })
         .catch((err) => {
-            messageAlert.error({ content: err.message, key: 1})
-            return {
-                error: "Please login again!",
-                status: false,
-                message: err.message,
-            };
+            return apiErrorRes(err, 1, 5)
         });
 };
 

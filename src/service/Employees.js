@@ -1,7 +1,7 @@
 import axios from "axios";
 import { message as messageAlert } from "antd";
 
-import { Api, headers, jwtExpired, setToken, thumbUrl } from "./constant";
+import { Api, apiErrorRes, headers, jwtExpired, setToken, thumbUrl } from "./constant";
 import moment from "moment";
 
 const url = `${Api}/employees`;
@@ -61,13 +61,7 @@ export const addList = (data) => {
             return { success, data };
         })
         .catch((err) => {
-            const {message} = err?.response?.data
-            messageAlert.error({ content: message, key: 1})
-            return {
-                error: "Please login again!",
-                status: false,
-                message: message,
-            };
+            return apiErrorRes(err, 1, 5)
         });
 };
 
@@ -105,13 +99,7 @@ export const editList = (id, data) => {
             return { success, data };
         })
         .catch((err) => {
-            const {message} = err?.response?.data
-            messageAlert.error({ content: message, key: id})
-            return {
-                error: "Please login again!",
-                status: false,
-                message: message,
-            };
+            return apiErrorRes(err, id, 5)
         });
 };
 

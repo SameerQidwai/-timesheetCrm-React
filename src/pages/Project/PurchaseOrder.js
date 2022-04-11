@@ -8,6 +8,7 @@ import { getRecord, getOrders, delOrder } from "../../service/projects";
 
 import moment from "moment"
 import { formatDate, formatCurrency, localStore } from "../../service/constant";
+import { generalDelete } from "../../service/delete-Api's";
 
 const { Item } = Descriptions;
 
@@ -49,21 +50,24 @@ class PurchaseOrder extends Component {
                 key: "action",
                 align: "right",
                 width: 115,
-                render: (record) => (
+                render: (value, record, index) => (
                     <Dropdown
                         overlay={
                             <Menu>
-                                <Menu.Item danger>
-                                    <Popconfirm
-                                        title="Sure to delete?"
-                                        onConfirm={() => this.handleDelete(record.id) }
-                                    >
-                                        Delete
-                                    </Popconfirm>
-                                </Menu.Item>
+                                <Menu.Item 
+                                danger
+                                disabled={!this?.state?.permissions?.['DELETE']}
+                            >
+                                <Popconfirm
+                                    title="Sure to delete?" 
+                                    onConfirm={() => this.handleDelete(record.id, index)} 
+                                >
+                                    Delete
+                                </Popconfirm>
+                            </Menu.Item >
                                 <Menu.Item
                                     onClick={() => { this.setState({ openModal: true, editRex: record.id, }); }}
-                                    disabled={this.state&& !this.state.permissions['UPDATE']}
+                                    disabled={!this?.state?.permissions?.['UPDATE']}
                                 >
                                     Edit
                                 </Menu.Item>
@@ -125,13 +129,17 @@ class PurchaseOrder extends Component {
         this.setState({ openModal: false, editRex: false});
     };
 
-    handleDelete = (rId) => {
-        const { ProId } = this.state //opputunityId
-        delOrder(ProId,rId).then((res) => {
-            if (res.success) {
-                this.getRecords(ProId)
+    handleDelete = (id, index) => {
+        const { ProId, data } = this.state
+        const { history } = this.props
+        const url = `/projects/${ProId}/purchaseOrders`
+        generalDelete(history, url, id, index, data, false).then(res =>{
+            if (res.success){
+                this.setState({
+                    data: [...res.filterData],
+                })
             }
-        });
+        })
     };
 
     callBack = () => {

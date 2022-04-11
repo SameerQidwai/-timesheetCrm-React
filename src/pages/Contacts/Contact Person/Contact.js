@@ -68,20 +68,20 @@ class Contact extends Component {
                 key: "action",
                 align: "right",
                 width: 115,
-                render: (record, index) => (
+                render: (value, record, index) => (
                     <Dropdown
                         overlay={
                             <Menu key={index}>
-                                {/* <Menu.Item danger>
+                                <Menu.Item danger>
                                     <Popconfirm
                                         title="Sure to delete?"
                                         onConfirm={() =>
-                                            this.handleDelete(record.id)
+                                            this.handleDelete(record.id, index)
                                         }
                                     >
                                         Delete
                                     </Popconfirm>
-                                </Menu.Item> */}
+                                </Menu.Item>
                                 <Menu.Item
                                     onClick={() => { this.setState({ openModal: true, editCP: record.id }); }}
                                     disabled={this.state&& !this.state.permissions['UPDATE']}
@@ -286,12 +286,12 @@ class Contact extends Component {
         });
     };
 
-    handleDelete = (id) => {
-        delList(id).then((res) => {
-            if (res.success) {
-                this.getData();
-            }
-        });
+    handleDelete = (id, index) => {
+        const url = '/contactpersons'
+       const { data: d, filterData: fd } = this.state
+       fd.splice(index,1) // deleting Index
+       d.splice(index,1) // deleting Index
+       this.setState({ filterData: [...fd], data: [...d] }) //Set the data...
     };
 
     toggelModal = (status) => {

@@ -742,6 +742,8 @@ class InfoModal extends Component {
         editList(values).then((res) => {
             if(res.success){
                 callBack()
+            }else{
+                this.setState({ loading: false })
             }
         });
     };

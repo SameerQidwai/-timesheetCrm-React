@@ -102,12 +102,14 @@ class TimeModal extends Component {
 
     TimeCall = (vake) => {
         // this will work after  getting the Object from level form
-        const {editTime, timeObj } = this.props
+        const {editTime, timeObj, sheetDates } = this.props
+        const { startDate} = sheetDates
         const { obj } = vake;
+        let sYear = startDate.format('YYYY')
         obj.milestoneEntryId = timeObj.milestoneEntryId;
         obj.entryId = timeObj.entryId;
         obj.milestoneId = timeObj.milestoneId
-        obj.date = moment(timeObj.col, 'D/M').format('DD-MM-YYYY')
+        obj.date = moment(`${timeObj.col}/${sYear}`, 'D/M/YYYY').format('DD-MM-YYYY')
         obj.startTime = obj.startTime.format('HH:mm')
         obj.endTime = obj.endTime.format('HH:mm')
         obj.breakHours = obj.breakHours ? moment.duration(obj.breakHours.format('HH:mm')).asHours(): 0
@@ -126,6 +128,8 @@ class TimeModal extends Component {
         addTime(query, data).then(res=>{
             if(res.success){
                 callBack(res.data, true);
+            }else{
+                this.setState({loading: false})
             }
         });
     };

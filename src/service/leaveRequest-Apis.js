@@ -1,6 +1,6 @@
 import axios from "axios";
 import { message as messageAlert } from "antd";
-import { Api, headers, setToken, jwtExpired, thumbUrl } from "./constant";
+import { Api, headers, setToken, jwtExpired, thumbUrl, apiErrorRes } from "./constant";
 
 const url = `${Api}/leave-requests`
 
@@ -18,21 +18,8 @@ export const addRequest = (data) => {
             return {success};
         })
         .catch((err) => {
-            const {message} = err?.response?.data
-            // if (message === 'Balance is less than minimum balance!'){
-                messageAlert.error({ content: message, duration: 120, key: 1, style: { marginTop: '15vh', }}) 
-                return {
-                    balanceError: true,
-                    success: false, 
-                    message
-                }
-            // }
-            // messageAlert.error({ content: message, key: 1})
-            // return {
-            //     error: "Please login again!",
-            //     status: false,
-            //     message: err.message,
-            // };
+            const style = { marginTop: '15vh', }
+            return apiErrorRes(err, 1, 120, style)
         });
 };
 
@@ -45,7 +32,7 @@ export const getRequests = () => {
             if (success) return { success: success, data: data };
         })
         .catch((err) => {
-            const {message} = err.response.data
+            const message = err?.response?.data?.message
             if(message !== 'Leave Requests not found'){
                 messageAlert.error({ content: message, key: 1})
             }
@@ -91,7 +78,7 @@ export const getSingleRequest = (id) => {
             return {success, data }
         })
         .catch((err) => {
-            const {message} = err.response.data
+            const message = err?.response?.data?.message
             messageAlert.error({ content: message, key: id})
             return {
                 error: "Please login again!",
@@ -114,13 +101,8 @@ export const editRequest = (id, data) => {
             return {success, data: data};
         })
         .catch((err) => {
-            const {message} = err.response.data
-            messageAlert.error({ content: message, duration: 10000, key: id, style: { marginTop: '15vh', }}) 
-            return {
-                balanceError: true,
-                success: false, 
-                message
-            }
+            const style = { marginTop: '15vh', }
+            return apiErrorRes(err, id, 120, style)
         });
 };
 
@@ -133,7 +115,7 @@ export const getApprovalRequests = (queries) => {
             if (success) return { success: success, data: data };
         })
         .catch((err) => {
-            const {message} = err.response.data
+            const message = err?.response?.data?.message
             if(message !== 'Leave Requests not found'){
                 messageAlert.error({ content: message, key: 1})
             }
@@ -154,7 +136,7 @@ export const manageLeaveRequests = (manage, data) => {
             if (success) return { success: success, data: data };
         })
         .catch((err) => {
-            const {message} = err.response.data
+            const message = err?.response?.data?.message
             messageAlert.error({ content: message, key: 1})
             return {
                 error: "Please login again!",
@@ -172,7 +154,7 @@ export const manageLeaveRequests = (manage, data) => {
                 if (success) return { success: success, data: data };
             })
             .catch((err) => {
-                const {message} = err?.response?.data
+                const message = err?.response?.data?.message
                 messageAlert.error({ content: message??err.message , key: 1})
                 return {
                     error: "Please login again!",
@@ -190,7 +172,7 @@ export const manageLeaveRequests = (manage, data) => {
                 if (success) return { success: success, data: data };
             })
             .catch((err) => {
-                const {message} = err?.response?.data
+                const message = err?.response?.data?.message
                 messageAlert.error({ content: message??err.message , key: 1})
                 return {
                     error: "Please login again!",

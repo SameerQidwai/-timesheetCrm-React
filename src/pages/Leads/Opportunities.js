@@ -12,6 +12,7 @@ import moment from "moment";
 import { formatDate, formatCurrency, localStore, O_STAGE, O_STATUS, O_TYPE } from '../../service/constant';
 import { Filtertags, TableModalFilter, tableSorter, tableSummaryFilter, tableTitleFilter } from '../../components/Core/Table/TableFilter';
 import { getOrganizations, getPanels, getStates } from '../../service/constant-Apis';
+import { generalDelete } from '../../service/delete-Api\'s';
 const { Title } = Typography
 
 class Opportunities extends Component {
@@ -96,11 +97,17 @@ class Opportunities extends Component {
                 key: 'action',
                 align: 'right',
                 width: 115,
-                render: (record) => (
+                render: (value, record, index) => (
                     <Dropdown overlay={
                         <Menu>
-                            <Menu.Item danger>
-                                <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete(record.id)} >
+                            <Menu.Item 
+                                danger
+                                disabled={!this?.state?.permissions?.['DELETE']}
+                            >
+                                <Popconfirm 
+                                    title="Sure to delete?" 
+                                    onConfirm={() => this.handleDelete(record.id, index)} 
+                                >
                                     Delete
                                 </Popconfirm>
                             </Menu.Item >
@@ -368,11 +375,11 @@ class Opportunities extends Component {
         this.getList()
     }
     
-    resRoute = ()=>{
-        let splitted = this.props.match.url
-        splitted = splitted.split('/', 2)
-        return splitted[1]
-    }
+    // resRoute = ()=>{ // not using this function keeping just incase
+    //     let splitted = this.props.match.url
+    //     splitted = splitted.split('/', 2)
+    //     return splitted[1]
+    // }
 
     getList = () =>{
         const { OPPORTUNITIES }= JSON.parse(localStore().permissions)
@@ -387,12 +394,18 @@ class Opportunities extends Component {
         })
     }
 
-    handleDelete = (id) => {
-        delList(id).then((res) => {
-            if (res.success) {
-                this.getList();
+    handleDelete = (id, index) => {
+        const url = '/opportunities'
+        const { data, filterData } = this.state
+        const { history } = this.props
+        generalDelete(history, url, id, index, filterData, data).then(res =>{
+            if (res.success){
+                this.setState({
+                    data: [...res.data],
+                    filterData: [...res.filterData]
+                })
             }
-        });
+        })
     };
 
     callBack =()=>{ // this will work after I get the Object from the form

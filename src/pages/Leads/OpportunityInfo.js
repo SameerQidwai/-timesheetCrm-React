@@ -16,13 +16,14 @@ import { getRecord, delList, workIsLost } from "../../service/opportunities";
 import moment from "moment"
 import { formatDate, formatCurrency, localStore, O_STATUS } from "../../service/constant";
 import LostModal from "./Modals/LostModal";
+import { generalDelete } from "../../service/delete-Api's";
 
 const { Item } = Descriptions;
 const { TabPane } = Tabs;
 
 class OpportunityInfo extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.status = [ //status of the oportunity 
             {title: "Won", msg: "Opportunity Won!?" , api: 'won'},
             {title: "Lost", msg: "Opportunity Lost!?" , api: 'Lost', key: 'L'},
@@ -70,11 +71,16 @@ class OpportunityInfo extends Component {
     };
 
     handleDelete = (id) => {
-        delList(id).then((res) => {
-            if (res.success) {
-                this.props.history.push('/opportunities')
+        const { history } = this.props
+        const crud = '/opportunities'
+        generalDelete(history, crud, id).then(res =>{
+            if (res.success){
+                this.setState({
+                    data: [...res.data],
+                    filterData: [...res.filterData]
+                })
             }
-        });
+        })
     };
 
     callBack = () => {
@@ -86,6 +92,7 @@ class OpportunityInfo extends Component {
         }
     };
 
+
     render() {
         const { data, infoModal,lostModal, leadId, billing, renderTabs, moveToProject, permissions, basic } = this.state;
         const DescTitle = (
@@ -95,6 +102,17 @@ class OpportunityInfo extends Component {
                     <Dropdown
                         overlay={
                             <Menu>
+                                <Menu.Item 
+                                danger
+                                disabled={!this?.state?.permissions?.['DELETE']}
+                            >
+                                    <Popconfirm 
+                                        title="Sure to delete?" 
+                                        onConfirm={() => this.handleDelete(leadId)} 
+                                    >
+                                        Delete
+                                    </Popconfirm>
+                                </Menu.Item >
                                 {this.status.map(el => <Menu.Item 
                                     key={el.title}
                                     disabled={!permissions['UPDATE']}

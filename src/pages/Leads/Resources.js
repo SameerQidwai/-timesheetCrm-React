@@ -1,5 +1,5 @@
 import React, { Component, useState } from "react";
-import { Row, Col, Menu, Button, Dropdown, Descriptions, Table } from "antd";
+import { Row, Col, Menu, Button, Dropdown, Descriptions, Table, Popconfirm } from "antd";
 import { SettingOutlined, DownOutlined, FilterOutlined } from "@ant-design/icons"; //Icons
 
 import ResModal from "./Modals/ResModal";
@@ -9,6 +9,7 @@ import moment from "moment"
 import { formatDate, formatCurrency, localStore } from "../../service/constant";
 import { Filtertags, TableModalFilter, tableSorter, tableTitleFilter } from "../../components/Core/Table/TableFilter";
 import { getPanelSkills } from "../../service/constant-Apis";
+import { generalDelete } from "../../service/delete-Api's";
 
 const { Item } = Descriptions;
 
@@ -64,11 +65,22 @@ class Resources extends Component {
                     <Dropdown
                         overlay={
                             <Menu>
+                                <Menu.Item 
+                                    danger 
+                                    disabled={!this?.state?.permissions?.['DELETE']}
+                                >
+                                    <Popconfirm
+                                        title="Sure to delete?" 
+                                        onConfirm={() => this.handleDelete(record.id, index)} 
+                                    >
+                                        Delete
+                                    </Popconfirm>
+                                </Menu.Item >
                                 <Menu.Item
                                     onClick={() => {
                                         this.getSkilldEmployee(true,  false,  false, record,  index, record.panelSkillStandardLevelId)
                                     }}
-                                    disabled={this.state&& !this.state.permissions['UPDATE']}
+                                    disabled={!this?.state?.permissions?.['UPDATE']}
                                 >
                                     Edit Position
                                 </Menu.Item>
@@ -77,7 +89,7 @@ class Resources extends Component {
                                         console.log(record);
                                         this.getSkilldEmployee(true,  record.id,  true, false,  index, record.panelSkillStandardLevelId)
                                     }}
-                                    disabled={this.state&& !this.state.permissions['ADD']}
+                                    disabled={!this?.state?.permissions?.['ADD']}
                                 >
                                         Add Resouce
                                 </Menu.Item>
@@ -237,13 +249,17 @@ class Resources extends Component {
         this.setState({ infoModal: false, editRex: false});
     };
 
-    handleDelete = (rId) => {
-        const { leadId } = this.state //opputunityId
-        delLeadSkill(leadId, rId).then((res) => {
-            if (res.success) {
-                this.callBack()
+    handleDelete = (id, index) => {
+        const { crud, data, filterData } = this.state
+        const { history } = this.props
+        generalDelete(history, crud, id, index, filterData, data).then(res =>{
+            if (res.success){
+                this.setState({
+                    data: [...res.data],
+                    filterData: [...res.filterData]
+                })
             }
-        });
+        })
     };
 
     callBack = (value) => {
@@ -400,6 +416,7 @@ class Resources extends Component {
                                 leadId={leadId} 
                                 mileId={mileId}
                                 crud={crud}
+                                history={this.props.history}
                                 panelId={desc.panelId}
                                 callBack={this.callBack}
                                 permissions={permissions}
@@ -478,20 +495,23 @@ function NestedTable(props) {
                 <Dropdown
                     overlay={
                         <Menu>
-                            {/* <Menu.Item danger>
-                                <Popconfirm
-                                    title="Sure to delete?"
-                                    onConfirm={() => handleDelete(text.id) }
+                            <Menu.Item 
+                                    danger 
+                                    disabled={!props?.permissions?.['DELETE']}
                                 >
-                                    Delete
-                                </Popconfirm>
-                            </Menu.Item> */}
+                                    <Popconfirm
+                                        title="Sure to delete?" 
+                                        onConfirm={() => handleDelete(record.id, index)} 
+                                    >
+                                        Delete
+                                    </Popconfirm>
+                                </Menu.Item >
                             <Menu.Item
                                 onClick={()=>{
-                                    setEditRex({...text, tableIndex: index})
+                                    setEditRex({...record, tableIndex: index})
                                     setVisible(true)
                                 }}
-                                disabled={props.permissions&& !props.permissions['UPDATE']}
+                                disabled={!props?.permissions?.['UPDATE']}
                             >
                                 Edit Resource
                             </Menu.Item>
@@ -506,14 +526,14 @@ function NestedTable(props) {
         },
     ];
 
-    const handleDelete = (rId) => {
-        const { leadId, skill } = props
-        delLeadSkillResource(leadId, skill, rId).then((res) => {
-            if (res.success) {
+    const handleDelete = (id, index) => {
+        let {crud, history, skill } = props
+        crud += `/${skill}/allocations`
+        generalDelete(history, crud, id, index, data, false).then(res =>{
+            if (res.success){
                 props.callBack()
-            //     this.props.history.push('/Employees')
             }
-        });
+        })
     };
 
     const onSelectChange = (selected, Rows) =>  {

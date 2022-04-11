@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Row, Col, Menu, Button, Dropdown, Descriptions, Table } from "antd";
+import { Row, Col, Menu, Button, Dropdown, Descriptions, Table, Popconfirm } from "antd";
 import { SettingOutlined, DownOutlined, FilterOutlined } from "@ant-design/icons"; //Icons
 import { Link } from "react-router-dom"; 
 
@@ -10,6 +10,7 @@ import moment from "moment"
 import { formatDate, formatCurrency, localStore } from "../../service/constant";
 import { Filtertags, TableModalFilter, tableSorter, tableTitleFilter } from "../../components/Core/Table/TableFilter";
 import { getPanelSkills } from "../../service/constant-Apis";
+import { generalDelete } from "../../service/delete-Api's";
 
 const { Item } = Descriptions;
 
@@ -76,23 +77,26 @@ class Resources extends Component {
                 key: "action",
                 align: "right",
                 width: 115,
-                render: (record) => (
+                render: (value, record, index) => (
                     <Dropdown
                         overlay={
                             <Menu>
-                                {/* <Menu.Item danger>
-                                    <Popconfirm
-                                        title="Sure to delete?"
-                                        onConfirm={() => this.handleDelete(record.id) }
-                                    >
-                                        Delete
-                                    </Popconfirm>
-                                </Menu.Item> */}
+                                <Menu.Item 
+                                danger
+                                disabled={!this?.state?.permissions?.['DELETE']}
+                            >
+                                <Popconfirm
+                                    title="Sure to delete?" 
+                                    onConfirm={() => this.handleDelete(record.id, index)} 
+                                >
+                                    Delete
+                                </Popconfirm>
+                            </Menu.Item >
                                 <Menu.Item
                                     onClick={() => {
                                         this.setState({ infoModal: true, editRex: record.id, });
                                     }}
-                                    disabled={this.state&& !this.state.permissions['UPDATE']}
+                                    disabled={!this?.state?.permissions?.['UPDATE']}
                                 >
                                     Edit Resource
                                 </Menu.Item>
@@ -128,6 +132,7 @@ class Resources extends Component {
                 'startDate': {type: 'Date', value: null,  label:"Start Date", showInColumn: true},
                 'endDate': {type: 'Date', value: null,  label:"End Date", showInColumn: true, disabled:true},
             },
+            
             filterFields: [
                 {
                   Placeholder: "Skill",
@@ -282,13 +287,18 @@ class Resources extends Component {
         this.setState({ infoModal: false, editRex: false});
     };
 
-    handleDelete = (rId) => {
-        const { proId } = this.props.match.params //opputunityId
-        delLeadSkill(proId,rId).then((res) => {
-            if (res.success) {
-                this.props.history.push('/Employees')
+    handleDelete = (id, index) => {
+        const { crud, data, filterData } = this.state
+        const { history } = this.props
+        generalDelete(history, crud, id, index, filterData, data).then(res =>{
+            console.log( id, index);
+            if (res.success){
+                this.setState({
+                    data: [...res.data],
+                    filterData: [...res.filterData]
+                })
             }
-        });
+        })
     };
 
     callBack = () => {
