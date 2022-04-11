@@ -1,11 +1,11 @@
 import moment from 'moment'
 import { message as messageAlert } from "antd";
-// export const Api = "http://localhost:3301/api/v1";
+export const Api = "http://localhost:3301/api/v1";
 
 // export const Api = "http://onelmcrm.gaamatech.com:8000/api/v1";
 // export const Api = "http://192.168.0.243:3000/api/v1"; // Shahzaib/   
 // export const Api = "http://192.168.43.207:3000/api/v1"; // new Shahzaib/   
-export const Api = "https://97ef-204-157-100-103.ngrok.io/api/v1"; // Shahzaib/ tunnel   
+// export const Api = "https://97ef-204-157-100-103.ngrok.io/api/v1"; // Shahzaib/ tunnel   
 // export const Api = "http://192.168.0.218:3301/api/v1"; // Me
 
 // export const Api = "http://54.91.49.138:8000/api/v1"; //Test 
@@ -105,7 +105,7 @@ export const thumbUrl = (type) =>{
 }
  
 export const apiErrorRes = (err, id, duration, style) =>{
-  const {status, data } = err?.response
+  const {status = false, data = {} } = err?.response
   const { message, success } = data
   messageAlert.error({ 
     content: status === 400? message: 'Something Went Wrong!', 

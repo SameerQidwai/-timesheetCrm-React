@@ -78,7 +78,7 @@ export const getSingleRequest = (id) => {
             return {success, data }
         })
         .catch((err) => {
-            const {message} = err.response.data
+            const message = err?.response?.data?.message
             messageAlert.error({ content: message, key: id})
             return {
                 error: "Please login again!",
@@ -115,7 +115,7 @@ export const getApprovalRequests = (queries) => {
             if (success) return { success: success, data: data };
         })
         .catch((err) => {
-            const {message} = err.response.data
+            const message = err?.response?.data?.message
             if(message !== 'Leave Requests not found'){
                 messageAlert.error({ content: message, key: 1})
             }
@@ -136,7 +136,7 @@ export const manageLeaveRequests = (manage, data) => {
             if (success) return { success: success, data: data };
         })
         .catch((err) => {
-            const {message} = err.response.data
+            const message = err?.response?.data?.message
             messageAlert.error({ content: message, key: 1})
             return {
                 error: "Please login again!",
@@ -154,7 +154,7 @@ export const manageLeaveRequests = (manage, data) => {
                 if (success) return { success: success, data: data };
             })
             .catch((err) => {
-                const {message} = err?.response?.data
+                const message = err?.response?.data?.message
                 messageAlert.error({ content: message??err.message , key: 1})
                 return {
                     error: "Please login again!",
@@ -172,7 +172,7 @@ export const manageLeaveRequests = (manage, data) => {
                 if (success) return { success: success, data: data };
             })
             .catch((err) => {
-                const {message} = err?.response?.data
+                const message = err?.response?.data?.message
                 messageAlert.error({ content: message??err.message , key: 1})
                 return {
                     error: "Please login again!",
