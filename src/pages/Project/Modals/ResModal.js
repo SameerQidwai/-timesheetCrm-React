@@ -5,6 +5,7 @@ import { LoadingOutlined } from "@ant-design/icons"; //Icons
 import { addLeadSkill, getLeadSkill, editLeadSkill, } from "../../../service/projects";
 import { getPanelSkills, getOrgPersons, } from "../../../service/constant-Apis";
 import FormItems from "../../../components/Core/Forms/FormItems";
+import { dateRangeAfter, dateRangeBefore } from "../../../service/constant";
 
 const { TabPane } = Tabs;
 
@@ -163,7 +164,7 @@ class ResModal extends Component {
           fieldStyle: { width: "100%" },
           rangeMax: (current)=>{
               const { obj } = this.formRef.current.getFieldValue();
-              return  obj.startDate && current < obj.startDate
+              return  obj.startDate && current > obj.startDate
           }
         },
         {

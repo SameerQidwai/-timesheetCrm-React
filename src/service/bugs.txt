@@ -1,8 +1,7 @@
 Update and check 
     delLeadSkillResource // not done
     Purchase Order // whole Not doe
-    Timebase Projext resource not deleting from list
-    generaldeleteApi List delete function (Project)
+    make filterModal general put all the fields into that files belongs to any page ( to optimize code)
 
     timesheet hours vs resource work hours
 

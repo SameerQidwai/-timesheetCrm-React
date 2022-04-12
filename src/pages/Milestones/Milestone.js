@@ -20,6 +20,7 @@ class Milestone extends Component {
         this.state = {
             infoModal: false,
             editMile: false,
+            pDates: {},
             proId: false,
             desc: {title: '', organization: {name: ''}, value: '', startDate: '', endDate: ''},
             permissions: {},
@@ -80,9 +81,7 @@ class Milestone extends Component {
                                         </Popconfirm>
                                     </Menu.Item >
                                     <Menu.Item
-                                        onClick={() => {
-                                            this.setState({ infoModal: true, editMile: {...record, rowIndex: index}, });
-                                        }}
+                                        onClick={() => { this.openModal({...record, rowIndex: index}) }}
                                         disabled={this.state && !this.state.permissions['UPDATE']}
                                     >
                                         Edit Milestone
@@ -133,13 +132,13 @@ class Milestone extends Component {
         Promise.all([ getProjectDetail( crud ), getMilestones( customUrl) ])
         .then(res => {
             let { columns } = this.state
-            if (work === 'opportunities') columns.splice(3,1);
+            if (work === 'opportunities'){ columns.splice(3,1);}
             this.setState({
                 desc: res[0].success && res[0].data,
                 data: res[1].success && res[1].data,
                 columns: [...columns],
                 proId: id,
-                customUrl, // for temporary bases
+                customUrl, 
                 permissions: work === 'opportunities'? OPPORTUNITIES: PROJECTS
             })
         })
@@ -148,6 +147,14 @@ class Milestone extends Component {
         })
     }
 
+    openModal = (editObj) =>{
+        const { startDate, endDate } = this.state.desc
+        this.setState({
+            pDates: { startDate, endDate },
+            editMile: editObj,
+            infoModal: true,
+        })
+    }
 
     closeModal = () => {
         this.setState({ infoModal: false, editMile: false});
@@ -180,7 +187,7 @@ class Milestone extends Component {
     };
 
     render() {
-        const { desc, data, infoModal, editMile, proId, permissions, columns, customUrl } = this.state;
+        const { desc, data, infoModal, editMile, proId, permissions, columns, customUrl, pDates } = this.state;
         return (
             <>
                 <Descriptions
@@ -202,7 +209,7 @@ class Milestone extends Component {
                         <Button 
                             type="primary" 
                             size='small'  
-                            onClick={() => {  this.setState({ infoModal: true, editMile: false, }) }}
+                            onClick={() => this.openModal(false) }
                             // disabled={!permissions['ADD']}
                         >Add Milestone</Button> 
                     </Col>
@@ -220,6 +227,7 @@ class Milestone extends Component {
                     <MileModal
                         visible={infoModal}
                         editMile={editMile}
+                        pDates={pDates}
                         proId={proId}
                         crud={customUrl}
                         close={this.closeModal}

@@ -5,11 +5,12 @@ import FormItems from "../../components/Core/Forms/FormItems";
 import { addMilestone, editMilestone, getMilestone } from "../../service/Milestone-Apis";
 
 import moment from "moment";
+import { dateRangeAfter, dateRangeBefore } from "../../service/constant";
 
 
 class MileModal extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.formRef = React.createRef();
 
     this.state = {
@@ -90,8 +91,8 @@ class MileModal extends Component {
             type: "DatePicker",
             fieldStyle: { width: "100%" },
             rangeMin: (current)=>{
-                const { obj } = this.formRef.current.getFieldValue();
-                return  obj.endDate && current > obj.endDate
+              const { obj } = this.formRef.current.getFieldValue();
+              return dateRangeAfter(current, obj.endDate, props.pDates)
             }
           },
           {
@@ -103,8 +104,8 @@ class MileModal extends Component {
             type: "DatePicker",
             fieldStyle: { width: "100%" },
             rangeMax: (current)=>{
-                const { obj } = this.formRef.current.getFieldValue();
-                return  obj.startDate && current < obj.startDate
+              const { obj } = this.formRef.current.getFieldValue();
+              return dateRangeBefore(current, obj.startDate, props.pDates)
             }
           },
           {
