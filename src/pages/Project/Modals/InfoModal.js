@@ -329,6 +329,7 @@ class InfoModal extends Component {
         },
         {
           Placeholder: "End Date",
+          rangeMin: true,
           fieldCol: 12,
           size: "small",
           type: "Text",
@@ -352,6 +353,7 @@ class InfoModal extends Component {
           object: "dates",
           fieldCol: 12,
           key: "endDate",
+          rules: [{ required: true, message: "End Date is Required" }],
           size: "small",
           type: "DatePicker",
           fieldStyle: { width: "100%" },

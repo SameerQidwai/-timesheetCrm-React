@@ -1,12 +1,12 @@
 import moment from 'moment'
 import { message as messageAlert } from "antd";
-export const Api = "http://localhost:3301/api/v1";
+// export const Api = "http://localhost:3301/api/v1";
 
 // export const Api = "http://onelmcrm.gaamatech.com:8000/api/v1";
 // export const Api = "http://192.168.0.243:3000/api/v1"; // Shahzaib/   
 // export const Api = "http://192.168.43.207:3000/api/v1"; // new Shahzaib/   
 // export const Api = "https://97ef-204-157-100-103.ngrok.io/api/v1"; // Shahzaib/ tunnel   
-// export const Api = "http://192.168.0.218:3301/api/v1"; // Me
+export const Api = "http://192.168.0.218:3301/api/v1"; // Me
 
 // export const Api = "http://54.91.49.138:8000/api/v1"; //Test 
 
@@ -114,4 +114,21 @@ export const apiErrorRes = (err, id, duration, style) =>{
     style: style ?? {},
   })
   return { error: err.message, status, message, success };
+}
+
+export const dateRangeAfter = (current, eDate, pDates) =>{
+  if (current){
+    console.log(pDates);
+    const { startDate = undefined, endDate = undefined} = pDates
+            //disable after                           // disable Before                 // disable After
+    return  (eDate && current > eDate) || startDate && current < moment(startDate) || endDate && current > moment(endDate)
+  }
+}
+
+export const dateRangeBefore = (current, sDate, pDates) =>{
+  if (current){
+    const { startDate, endDate } = pDates
+          //disable Before                           // disable Before                  // disable After
+    return  (sDate && current < sDate) || startDate && current < moment(startDate) || endDate && current > moment(endDate)
+  }
 }

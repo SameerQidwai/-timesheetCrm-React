@@ -93,9 +93,7 @@ class Resources extends Component {
                                 </Popconfirm>
                             </Menu.Item >
                                 <Menu.Item
-                                    onClick={() => {
-                                        this.setState({ infoModal: true, editRex: record.id, });
-                                    }}
+                                    onClick={() => this.openModal(record.id)}
                                     disabled={!this?.state?.permissions?.['UPDATE']}
                                 >
                                     Edit Resource
@@ -283,6 +281,15 @@ class Resources extends Component {
         })
     }
 
+    openModal = (id) =>{
+        const { startDate, endDate } = this.state.desc
+        this.setState ({
+            editRex: id, 
+            pDates: {startDate, endDate}, 
+            infoModal: true
+        })
+    }
+
     closeModal = () => {
         this.setState({ infoModal: false, editRex: false});
     };
@@ -427,7 +434,7 @@ class Resources extends Component {
                         <Button 
                             type="primary" 
                             size='small'  
-                            onClick={() => {  this.setState({ infoModal: true, editRex: false, }) }}
+                            onClick={() => this.openModal(false)}
                             disabled={!permissions['ADD']}
                         >Add Resource</Button> 
                     </Col>
