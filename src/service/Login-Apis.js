@@ -1,9 +1,9 @@
 import { message as messageAlert } from "antd";
 import axios from "axios";
-
-import { Api, localStore, headers, setToken, jwtExpired } from "./constant";
 import moment from "moment";
 
+import { Api, localStore, headers, setToken, jwtExpired } from "./constant";
+const url = `${Api}/auth`
 export const login = (data) => {
     return axios
         .post(`${Api}/login`, data)
@@ -49,7 +49,7 @@ export const login = (data) => {
 
 export const upadtePassword = (data) => {
     return axios
-        .patch(`${Api}/password`, data, {headers:headers()})
+        .patch(`${url}/password`, data, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -59,7 +59,8 @@ export const upadtePassword = (data) => {
             return {success, data};
         })
         .catch((err) => {
-                messageAlert.error({ content: err.message, key: 'logout'})
+            const message =  err?.response?.data.message
+                messageAlert.error({ content: message || err.message, key: 'logout'})
             return {
                 error: "Please login again!",
                 status: false,
@@ -70,7 +71,7 @@ export const upadtePassword = (data) => {
 
 export const getSettings = () => {
     return axios
-        .get(`${Api}/auth/settings`, {headers:headers()})
+        .get(`${url}/settings`, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -125,7 +126,6 @@ export const getSettings = () => {
                     endDate: employmentContracts.endDate ? moment(employmentContracts.endDate) : null,
                     type: employmentContracts.type, 
                     noOfHours: employmentContracts.noOfHours, 
-                    noOfDays: employmentContracts.noOfDays, 
                     noOfHoursPer: employmentContracts.noOfHoursPer, 
                     remunerationAmount:employmentContracts.remunerationAmount,
                     remunerationAmountPer: employmentContracts.remunerationAmountPer,  
@@ -138,7 +138,7 @@ export const getSettings = () => {
                     clearanceExpiryDate: contactPerson.clearanceExpiryDate ? moment(contactPerson.clearanceExpiryDate) : null, 
                     clearanceSponsorId: contactPerson.clearanceSponsorId,
                 }
-                const resourceSkill = contactPerson?.standardSkillStandardLevels
+                const resourceSkill = contactPerson.standardSkillStandardLevels
 
                 setToken(res.headers && res.headers.authorization)
                 return { success, data, basic, detail, kin, bank, billing, sClearance, resourceSkill }
@@ -158,7 +158,7 @@ export const getSettings = () => {
 
 export const upadteSettings = (data) => {
     return axios
-        .patch(`${Api}/auth/settings`, data, {headers:headers()})
+        .patch(`${url}/settings`, data, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -178,7 +178,7 @@ export const upadteSettings = (data) => {
 
 export const upadteAddress = (data) => {
     return axios
-        .patch(`${Api}/auth/address`, data, {headers:headers()})
+        .patch(`${url}/address`, data, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
