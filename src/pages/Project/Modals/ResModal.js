@@ -150,8 +150,8 @@ class ResModal extends Component {
           type: "DatePicker",
           fieldStyle: { width: "100%" },
           rangeMin: (current)=>{
-              const { obj } = this.formRef.current.getFieldValue();
-              return  obj.endDate && current > obj.endDate
+            const { obj } = this.formRef.current.getFieldValue();
+            return dateRangeAfter(current, obj.endDate, props.pDates)
           }
         },
         {
@@ -163,8 +163,8 @@ class ResModal extends Component {
           type: "DatePicker",
           fieldStyle: { width: "100%" },
           rangeMax: (current)=>{
-              const { obj } = this.formRef.current.getFieldValue();
-              return  obj.startDate && current > obj.startDate
+            const { obj } = this.formRef.current.getFieldValue();
+            return dateRangeBefore(current, obj.startDate, props.pDates)
           }
         },
         {
