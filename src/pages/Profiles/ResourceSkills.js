@@ -44,10 +44,10 @@ const ResourceSkills = (props) =>{
     ])
 
     useEffect(() => {
+        console.log(props.data);
         getStandardLevels().then(res=>{
             if(res.success){
                 setSkillArray(res.data)
-                console.log('I want standardSkillStandardLevel table Id as well')
                 let levels = {}
                 res.data.forEach(el=>{
                     levels[el.value] = el?.levels
@@ -60,10 +60,9 @@ const ResourceSkills = (props) =>{
 
     const dynamicLevelOptions = (name) =>{
         console.log(isNaN(name))
-        if(!isNaN(name)){{
+        if(name && !isNaN(name)){{
             const {resource} = form.getFieldsValue()
             const levelIndex = resource[name]['standardSkillId']
-            console.log(levelArray[levelIndex]);
             return isNaN(levelIndex) ? [] : levelArray[levelIndex]}
         } 
         return []
@@ -80,27 +79,29 @@ const ResourceSkills = (props) =>{
         >
             <Form.List name={'resource'}>
                 {(fields, { add, remove }) => (<>
-                    <Form.Item style={{textAlign: "right"}}>
-                        <Button size="small" onClick={() => add()} > Add Skill </Button>
+                    <Form.Item style={{marginLeft: "45%", marginBottom: 8}}>
+                        <Button size="small" onClick={() => add()}  > Add Skill </Button>
                     </Form.Item>
                     {fields.map((field, index) => (
                         <span className="ant-row" key={field.key} style={{width: '100%'}}>
-                            <Form.Item
-                                {...field}
-                                label="Skill"
-                                name={[field.name, 'standardSkillId']}
-                            >
-                                <Select 
-                                    style={{ width: '100%' }} 
-                                    size="small"
-                                    options={skillArray}
-                                />
-                            </Form.Item>
+                            <Col span={6}>
+                                <Form.Item
+                                    {...field}
+                                    label="Skill"
+                                    name={[field.name, 'standardSkillId']}
+                                >
+                                    <Select 
+                                        style={{ width: '100%' }} 
+                                        size="small"
+                                        options={skillArray}
+                                    />
+                                </Form.Item>
+                            </Col>
+                            <Col span={6}>
                             <Form.Item
                                 {...field}
                                 label="Level"
-                                name={[field.name, 'standardLevelId']}
-                                wrapperCol={{span: 20}}
+                                name={[field.name, 'id']}
                             >
                                 <Select 
                                     style={{ width: '100%' }} 
@@ -108,7 +109,10 @@ const ResourceSkills = (props) =>{
                                     options={dynamicLevelOptions(field.name)}
                                 />
                             </Form.Item>
-                            <MinusCircleFilled style={{color:"red",margin: 'auto'}} onClick={() => remove(field.name)} />
+                            </Col>
+                            <Col span={'auto'} >
+                                <MinusCircleFilled style={{color:"red",margin: 'auto'}} onClick={() => remove(field.name)} />
+                            </Col>
                         </span>
                     ))}
                 </>)}

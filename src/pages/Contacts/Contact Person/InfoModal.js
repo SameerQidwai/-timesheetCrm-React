@@ -779,7 +779,6 @@ class InfoModal extends Component {
 
     getRecord = (id) => {
         getContactRecord(id).then((res) => {
-            console.log(res.data);
             if (res.success){
                 const {data} = res
                 const { SkillFields, associateFields, skill_data } = this.state
@@ -788,7 +787,6 @@ class InfoModal extends Component {
                 const skillArray = data.standardSkillStandardLevels;
                 const assoArray = data.contactPersonOrganizations
                 let result = skillArray.length < assoArray.length? assoArray.length :skillArray.length; // check the largest length to run loop only once not twice for two array
-                console.log('sameer', result, assoArray.length, skillArray.length);
                 for (let i = 0; i < result; i++) {
                     let skillEl = skillArray[i];
                     let assoEl = assoArray[i]
@@ -813,13 +811,10 @@ class InfoModal extends Component {
                     }
                     
                 }
-                console.log(asso);
                 if (skillArray.length === 0){ // checking if skill is not have any data when getting record to edited and insert an new Empty fields
-                    console.log(skillArray.length, 'skill length null');
                     SkillFields.fields = SkillFields.fields.concat( this.newSkillField(0));
                 }
                 if (assoArray.length === 0){ // checking if assosiation is not have any data when getting record to edited and insert an new Empty fields
-                    console.log(assoArray.length, 'assosiation length null');
                     associateFields.fields = associateFields.fields.concat( this.newAssociateField(0) );
                 }
                 let basic = {
