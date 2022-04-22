@@ -5,7 +5,7 @@ import PersonalContract from './Contract'
 import PasswordUpdate from './PasswordUpdate'
 import OtherDetails from './OtherDetails'
 import SecurityClearance from './SecurityClearance'
-// import ResourceSkills from './ResourceSkills'
+import ResourceSkills from './ResourceSkills'
 
 import { getSettings } from '../../service/Login-Apis'
 import Attachments from '../../components/Core/Attachments'

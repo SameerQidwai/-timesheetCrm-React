@@ -627,15 +627,25 @@ class InfoModal extends Component {
 
     fetchAll = () =>{
         const { editLead, project }= this.props;  
-        const { ManageFields } = this.state;
+        const { ManageFields, DatesFields } = this.state;
         // const dates = {entryDate: moment(new Date())}
         // this.formRef.current.setFieldsValue({ dates: dates, }); 
-        // to set the Default entryDate for new Oppurtunity                              
-        if (project){
+        // to set the Default entryDate for new Oppurtunity  
+
+        // For now doing it for quick insertion
+        if (project){ // will have to open Project Add Modal when optimizing the code
             ManageFields[4].Placeholder = "Project Manager"
             ManageFields[5].key = "projectManagerId"
+            // making some fields required when lead is won
+                DatesFields[0]['rangeMin'] = true            
+                DatesFields[2]['rules'] = [{ required: true, message: "Start Date is Required" }]       
+                DatesFields[1]['rangeMin'] = true            
+                DatesFields[3]['rules'] = [{ required: true, message: "End Date is Required" }]     
+                DatesFields[4]['rangeMin'] = true            
+                DatesFields[5]['rules'] = [{ required: true, message: "Dailty Hours is Required" }]        
             // this.setState ({ManageFields})
         }
+
         // either call this or call that
         const customUrl = `helpers/contact-persons?active=1&employee=1&associated=1&label=1`
         Promise.all([ getPanels(), getOrganizations(), getStates(), getOrgPersons(customUrl), editLead && this.getRecord(editLead), getProjects()])
@@ -654,7 +664,7 @@ class InfoModal extends Component {
             ManageFields[5].data = res[3].success ? res[3].data: [];
             // ManageFields[7].data = res[4].success ? res[4].data: [];
             
-            this.setState({ BasicFields, ManageFields })
+            this.setState({ BasicFields, ManageFields, DatesFields })
         })
         .catch(e => {
             console.log(e);

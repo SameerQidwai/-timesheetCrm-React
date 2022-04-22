@@ -121,6 +121,10 @@ export const tableTitleFilter = (colSpan, filterFunction) =>{ // table filter on
                         const { value } = e.target
                         filterFunction(value)
                     }}
+                    onPressEnter = {(e) =>{
+                        const { value } = e.target
+                        filterFunction(value)
+                    }}
                     allowClear
                 />
             </Col>

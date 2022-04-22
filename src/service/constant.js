@@ -68,7 +68,6 @@ export const jwtExpired = (message) => {
   if (message === 'Authentication Expired or Invalid'){
     const { jwtExpired } = localStore()
     if (jwtExpired){
-      console.log(`jwtExpired`, jwtExpired)
       localStorage.clear()
       window.location.href = '/login'
     }else{

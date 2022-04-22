@@ -21,7 +21,7 @@ function PrivateRoute (props) {
                     setLastActivity(true)
                 }
             }, 60 * 1000)
-    }, [])
+    })
 
 
     const refresh = () => {
@@ -35,10 +35,13 @@ function PrivateRoute (props) {
     const ActivityTimeOut = () =>{
         setLogin(true)
         setLastActivity(false)
+        setLogin(false)
     }
 
 
     const closeLogin = () =>{
+        localStorage.removeItem('jwtExpired')
+        setLogin(true)
         setLogin(false)
     }
 
