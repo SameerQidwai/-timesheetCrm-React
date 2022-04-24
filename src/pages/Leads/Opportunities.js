@@ -31,6 +31,10 @@ class Opportunities extends Component {
                 title: 'Title',
                 dataIndex: 'title',
                 key: 'title',
+                render: (value, record) => (
+                    <Link to={{ pathname: `/opportunities/${record.id}/info`}} className="nav-link"
+                    > {value} </Link>
+                ),
                 ...tableSorter('title', 'string'),
             },
             {

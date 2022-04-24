@@ -4,7 +4,7 @@ import { Route, Switch, Redirect } from "react-router-dom"; // Route Library
 
 import { Layout } from "antd";
 
-import Dashboard from "../../../pages/Dashboard/index";
+import Dashboard from "../../../pages/Home/Dashboard";
 
 import Admin from "../../../pages/Admin/admin-drawer/admin-sidebar";
 import Organizations from "../../../pages/Contacts/Org & Info/Organizations";
@@ -294,7 +294,7 @@ class AdminContent extends Component {
                 {pageLinks.map((el, i) => (
                     <Route exact path={el.link} component={el.component} key={i} />
                 ))}
-                <Redirect to="/profile" />
+                <Redirect to="/dashboard" />
             </Switch>
         );
     }

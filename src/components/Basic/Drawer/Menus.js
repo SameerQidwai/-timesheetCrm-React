@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Menu } from "antd";
 import { Link, withRouter } from "react-router-dom";
 
-import { FieldTimeOutlined, ClockCircleOutlined, CheckCircleOutlined , HomeOutlined, FileOutlined, FileTextOutlined, CalendarOutlined , CarryOutOutlined , SolutionOutlined  } from "@ant-design/icons"; //Icons
+import { ClockCircleOutlined, CheckCircleOutlined , HomeOutlined, CalendarOutlined , CarryOutOutlined , SolutionOutlined, RestOutlined  } from "@ant-design/icons"; //Icons
 
 import "../../Styles/Menus.css";
 import { localStore } from "../../../service/constant";
@@ -52,26 +52,20 @@ const listData = [
         permissions: {module: "TIMESHEETS", key: 'READ'}
     },
     {
-        text: "Time Offs",
-        icon: <FieldTimeOutlined />,
-        link: "/time-off",
-        key: "/time-off",
-    },
-    {
         text: "Timesheets",
-        icon: <FieldTimeOutlined />,
+        icon: <ClockCircleOutlined />,
         key: "TIMESHEETS",
         subMenu: [
             {
                 text: "Timesheet Entry",
-                icon: <CalendarOutlined />,
+                icon: <ClockCircleOutlined />,
                 link: "/time-sheet",
                 key: "TIMESHEETS ENTRY",
                 // permissions: {module: "TIMESHEETS", key: 'READ'}
             },
             {
                 text: "Timesheet Approval",
-                icon: <ScheduleOutlined />,
+                icon: <CheckCircleOutlined />,
                 link: "/time-sheet-approval",
                 key: "TIMESHEETS APPROVAl",
                 // permissions: {module: "TIMESHEETS", key: 'APPROVAL'}
@@ -85,14 +79,14 @@ const listData = [
         subMenu: [
             {
                 text: "Leave Request",
-                icon: <BookOutlined />,
+                icon: <CalendarOutlined />,
                 link: "/leave-request",
                 key: "LEAVE REQUEST",
                 // permissions: {module: "LEAVE_REQUESTS", key: 'READ'}
             },
             {
                 text: "Leave Approval ",
-                icon: <RightSquareOutlined />,
+                icon: <CarryOutOutlined />,
                 link: "/approve-request",
                 key: "APPROVE REQUEST",
                 // permissions: {module: "LEAVE_REQUESTS", key: 'APPROVAL'}

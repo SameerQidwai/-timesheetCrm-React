@@ -22,6 +22,10 @@ class Skills extends Component {
                 title: 'Title',
                 dataIndex: 'title',
                 key: 'title',
+                render: (value, record) => (
+                    <Link to={{ pathname: `/opportunities/${record.id}/info`}} className="nav-link"
+                    > {value} </Link>
+                ),
             },
             {
                 title: 'Organisation Name',

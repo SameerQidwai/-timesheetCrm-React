@@ -10,7 +10,7 @@ const { Password } = Input;
 
 function Login(props) {
     const { state } = useLocation();
-    const { from } = state || { from: { pathname: "/profile" } };
+    const { from } = state || { from: { pathname: "/dashboard" } };
     const [redirectToReferrer, setRedirectToReferrer] = useState(false);
 
     useEffect(() => {
@@ -26,7 +26,7 @@ function Login(props) {
                     if(res.success){
                         localStorage.setItem('pageSize', res.data.recordsPerPage)
                     }
-                    window.location.href="/profile"
+                    window.location.href="/dashboard"
                 })
                 // setRedirectToReferrer(true)
             }

@@ -14,7 +14,7 @@ import InfoModal from "./Modals/InfoModal";
 import { getRecord, delList } from "../../service/projects";
 
 import moment from "moment"
-import { fomratDate, formatCurrency, localStore, O_STATUS } from "../../service/constant";
+import { formatDate, formatCurrency, localStore, O_STATUS } from "../../service/constant";
 import AuthError from "../../components/Core/AuthError";
 
 const { Item } = Descriptions;

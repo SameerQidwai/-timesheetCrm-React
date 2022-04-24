@@ -29,6 +29,12 @@ class Organizations extends Component {
                 dataIndex: "name",
                 key: "name",
                 width: 500,
+                render: (value, record) => (
+                    <Link
+                        to={{ pathname: `/organisations/${record.id}/info`, }}
+                        className="nav-link"
+                    >{value}</Link>
+                ),
                 ...tableSorter('name', 'string'),
             },
             {

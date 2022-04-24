@@ -8,6 +8,7 @@ import "../../Styles/sidebar.css";
 import Menus from "./Menus";
 import Navbar from "../Navbar";
 import PrivateRoute from "../Content/PrivateRoute";
+import { Link } from "react-router-dom";
 
 const { Header, Sider } = Layout;
 
@@ -40,11 +41,15 @@ class Drawers extends Component {
                 >
                     <div className="logo">
                         {/* {!collapsed ? ( */}
+                        <Link
+                            to={'/dashboard'}
+                        >
                             <img
                                 src={!collapsed ? "/tw-logo.png" : "/tw-avatar.png" }
                                 alt="Logo"
                                 style={{ width: "100%" }}
                             />
+                        </Link>
                         
                         {/* <Divider >.</Divider> */}
                     </div>
