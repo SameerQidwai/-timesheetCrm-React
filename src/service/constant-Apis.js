@@ -117,12 +117,11 @@ export const getOrgPersons = (url) =>{
     .get(`${Api}/${url}`, {headers:headers()})
     .then((res) => {
         const { success, data } = res.data;
-        var cps = []
-        // data.map((el) => {
-        //     cps.push({value: el.id, label: el.firstName +' ' +el.lastName, status: 'Employee'})
-        // });
+
+        let sortData = data.sort(( a, b) => a?.label?.toLowerCase().localeCompare(b?.label?.toLowerCase()) )
+
         setToken(res.headers && res.headers.authorization)
-        if (success) return { success: success, data: data };
+        if (success) return { success: success, data: sortData };
     })
     .catch((err) => {
         return {

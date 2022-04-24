@@ -9,13 +9,13 @@ function Dashboard() {
       className='landing-placeholder'
       style={{
         backgroundImage: `url(${"/TW_Landing.png"})`,
-        backgroundPosition: 'center',
-        backgroundSize: "contain",
-        backgroundRepeat: 'no-repeat',
-        backgroundPositionX: 'right'
       }}
     >
-      <Text >Welcome to </Text><Title >timewize</Title>
+      <span 
+        style={{fontFamily: 'P-Grostek', letterSpacing: 2}}
+      > 
+        <Text >Welcome to </Text><Title >timewize</Title>
+      </span>
     </div>
     )
   }
