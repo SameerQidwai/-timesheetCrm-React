@@ -14,7 +14,8 @@ import InfoModal from "./Modals/InfoModal";
 import { getRecord, delList } from "../../service/projects";
 
 import moment from "moment"
-import { formatDate, formatCurrency, localStore, O_STATUS } from "../../service/constant";
+import { fomratDate, formatCurrency, localStore, O_STATUS } from "../../service/constant";
+import AuthError from "../../components/Core/AuthError";
 
 const { Item } = Descriptions;
 const { TabPane } = Tabs;
@@ -29,7 +30,8 @@ class ProjectInfo extends Component {
             basic: {},
             billing: {},
             renderTabs: false,
-            permissions: {}
+            permissions: {},
+            notAuth: false
         };
     }
     componentDidMount = ()=>{
@@ -51,6 +53,8 @@ class ProjectInfo extends Component {
                     renderTabs: true,
                     permissions: PROJECTS
                 })
+            }else if(res.authError){
+                this.setState({ notAuth: true })
             }
         })
     }
@@ -73,7 +77,8 @@ class ProjectInfo extends Component {
     };
 
     render() {
-        const { data, infoModal, leadId, billing, renderTabs, permissions, basic } = this.state;
+        const { data, infoModal, leadId, billing, renderTabs, permissions, basic,notAuth } = this.state;
+        
         const DescTitle = (
             <Row justify="space-between">
                 <Col>Project Basic Information</Col>
@@ -182,6 +187,7 @@ class ProjectInfo extends Component {
                         callBack={this.callBack}
                     />
                 )}
+                {notAuth && <AuthError {...this.props}/>}
             </>
         );
     }

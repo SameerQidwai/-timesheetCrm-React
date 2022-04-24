@@ -12,6 +12,7 @@ import { Filtertags, TableModalFilter, tableSorter, tableTitleFilter } from "../
 import { getPanelSkills } from "../../service/constant-Apis";
 import { generalDelete } from "../../service/delete-Api's";
 import { getMilestone } from "../../service/Milestone-Apis";
+import AuthError from "../../components/Core/AuthError";
 
 const { Item } = Descriptions;
 
@@ -239,6 +240,7 @@ class Resources extends Component {
                   fieldStyle: { width: "100%" },
                 },
             ],
+            notAuth: false
         };
     }
 
@@ -262,7 +264,8 @@ class Resources extends Component {
                 infoModal: false,
                 data: res[2].success? res[2].data : [],
                 filterData: res[2].success? res[2].data : [],
-                permissions: PROJECTS
+                permissions: PROJECTS,
+                notAuth: !res[1].success? true : false 
             })
         })
         .catch(e => {
@@ -404,7 +407,7 @@ class Resources extends Component {
     }
 
     render() {
-        const { proDesc, data, infoModal, editRex, proId, permissions, crud, mileId, filterData, openSearch, searchedColumn, filterFields, pDates } = this.state;
+        const { proDesc, data, infoModal, editRex, proId, permissions, crud, mileId, filterData, openSearch, searchedColumn, filterFields, pDates, notAuth } = this.state;
         return (
             <>
                 <Descriptions
@@ -477,6 +480,7 @@ class Resources extends Component {
                         callBack={this.callBack}
                     />
                 )}
+                {notAuth && <AuthError {...this.props}/>}
             </>
         );
     }

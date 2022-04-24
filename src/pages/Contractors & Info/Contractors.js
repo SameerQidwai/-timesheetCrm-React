@@ -42,9 +42,16 @@ class Contractors extends Component {
             },
             {
                 title: "Organisation",
-                dataIndex: ["contactPersonOrganization", "organization", "name"],
+                dataIndex: ["contactPersonOrganization", "organization"],
                 key: "organization",
-                ...tableSorter('contactPersonOrganization.organization.name', 'string')
+                ...tableSorter('contactPersonOrganization.organization.name', 'string'),
+                render: (value, record) =>{
+                    return value && <Link 
+                        to={{ pathname: `/organisations/${value.id}/info`, }}
+                        className="nav-link"
+                    >
+                        {value.name}</Link> 
+                }
             },
             {
                 title: "Phone",

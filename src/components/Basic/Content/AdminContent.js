@@ -250,10 +250,12 @@ const pageLinks = [
     {
         component: LeaveRequest,
         link: "/leave-request",
+        key: 'LEAVE_REQUESTS'
     },
     {
         component: ApproveRequest,
         link: "/approve-request",
+        key: 'LEAVE_REQUESTS'
     },
     {
         component: Training,

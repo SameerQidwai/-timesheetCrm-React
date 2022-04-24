@@ -324,7 +324,7 @@ export const refreshToken = () =>{
         const { success, message } = res.data;
         jwtExpired(message)
         if (success){
-            messageAlert.success({content: message}, 5)
+            messageAlert.success({content: 'Token Refresh Successfully'}, 5)
             setToken(res.headers && res.headers.authorization)
         }
         return { success: success };

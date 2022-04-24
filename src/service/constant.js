@@ -73,8 +73,6 @@ export const jwtExpired = (message) => {
     }else{
       localStorage.setItem('jwtExpired', true)
     }
-      // localStorage.clear()
-      // window.location.href = '/login'
   }
 }
 

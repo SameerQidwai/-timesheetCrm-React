@@ -57,37 +57,55 @@ const listData = [
         link: "/time-off",
         key: "/time-off",
     },
+    {
+        text: "Timesheets",
+        icon: <FieldTimeOutlined />,
+        key: "TIMESHEETS",
+        subMenu: [
+            {
+                text: "Timesheet Entry",
+                icon: <CalendarOutlined />,
+                link: "/time-sheet",
+                key: "TIMESHEETS ENTRY",
+                // permissions: {module: "TIMESHEETS", key: 'READ'}
+            },
+            {
+                text: "Timesheet Approval",
+                icon: <ScheduleOutlined />,
+                link: "/time-sheet-approval",
+                key: "TIMESHEETS APPROVAl",
+                // permissions: {module: "TIMESHEETS", key: 'APPROVAL'}
+            },
+        ],
+    },
+    {
+        text: "Leaves",
+        icon: <RestOutlined />,
+        key: "LEAVES",
+        subMenu: [
+            {
+                text: "Leave Request",
+                icon: <BookOutlined />,
+                link: "/leave-request",
+                key: "LEAVE REQUEST",
+                // permissions: {module: "LEAVE_REQUESTS", key: 'READ'}
+            },
+            {
+                text: "Leave Approval ",
+                icon: <RightSquareOutlined />,
+                link: "/approve-request",
+                key: "APPROVE REQUEST",
+                // permissions: {module: "LEAVE_REQUESTS", key: 'APPROVAL'}
+            },
+        ],
+    },
     // {
     //     text: "Travels",
     //     icon: <DingdingOutlined />,
     //     link: "/travles",
     //     key: "/travles",
     // },
-    {
-        text: "Approval",
-        icon: <FileTextOutlined />,
-        key: "Reporting",
-        subMenu: [
-            {
-                text: "Report 1",
-                icon: <FileOutlined />,
-                link: "/Report-3",
-                key: "/Report-3",
-            },
-            {
-                text: "Report 2",
-                icon: <FileOutlined />,
-                link: "/Report-1",
-                key: "/Report-1",
-            },
-            {
-                text: "TimeOffs",
-                icon: <FileOutlined />,
-                link: "/Report-2",
-                key: "/Report-2",
-            },
-        ],
-    },
+    
 ];
 
 class Menus extends Component {
@@ -99,6 +117,7 @@ class Menus extends Component {
     }
     componentDidMount = () =>{
         this.getAllowedMenu()
+        console.log('new name');
     }
 
     getAllowedMenu = () =>{
@@ -128,12 +147,15 @@ class Menus extends Component {
     highlightRow(link) {
         const { pathname } = this.props.location
         if (pathname === link ){
-            return 'ant-menu-item-selected'
+            // return 'ant-menu-item-selected'
         }
+    }
+    onSelect = ({ item, key, keyPath, selectedKeys }) => {
+        console.log({item, key, keyPath, selectedKeys});
     }
 
     MenuRender = () => {
-        const { allowedMenu } = this.state
+        const { allowedMenu, select = [] } = this.state
         return allowedMenu.map((item, i) =>
             item.subMenu ? (
                 <SubMenu  key={item.key} icon={item.icon} title={item.text}>
@@ -146,7 +168,7 @@ class Menus extends Component {
                     ))}
                 </SubMenu>
             ) : (
-                <Menu.Item key={item.key} icon={item.icon} className={this.highlightRow(item.link)}>
+                <Menu.Item key={item.key} icon={item.icon} className={this.highlightRow(item.link)} selectedKeys={select} onSelect={this.onSelect}>
                     <Link to={item.link} className="nav-link" >
                         {item.text}
                     </Link>

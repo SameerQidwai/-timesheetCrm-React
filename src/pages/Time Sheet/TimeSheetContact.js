@@ -1,19 +1,20 @@
 import React, { Component } from "react";
-import { Row, Col, Table, Modal, Button, Select, Typography, Popconfirm, DatePicker, Space, Tag, Tooltip, message, Dropdown, Menu, Radio, } from "antd";
+import { Link } from "react-router-dom";
+import { Row, Col, Table, Modal, Button, Select, Typography, Popconfirm, DatePicker, Space, Tag, Tooltip, message, Dropdown, Menu, Radio} from "antd";
 import { DownloadOutlined, SaveOutlined, LoadingOutlined, PlusCircleOutlined, MoreOutlined, DeleteOutlined, EditOutlined, 
     LeftOutlined, RightOutlined,ExclamationCircleOutlined, CheckCircleOutlined, PaperClipOutlined, AuditOutlined } from "@ant-design/icons"; //Icons
-import moment from "moment";
 import TimeModal from "./Modals/TimeModal"
 import AttachModal from "./Modals/AttachModal";
 import {  getList, reviewTimeSheet, getUsers, deleteTime,  } from "../../service/timesheet"
 import { getUserMilestones } from "../../service/constant-Apis";
 import { localStore, Api, thumbUrl, formatDate, STATUS_COLOR, R_STATUS, formatFloat } from "../../service/constant";
-
+    
+import moment from "moment";
 import "../styles/table.css";
 import "../styles/button.css";
 import TimeSheetPDF from "./Modals/TimeSheetPDF";
 
-const { Title, Link } = Typography;
+const { Title, Link: Tlink} = Typography;
 //inTable insert
 
 class TimeSheetContact extends Component {
@@ -64,7 +65,25 @@ class TimeSheetContact extends Component {
                         return <Row gutter={[0, 10]} style={{height: 90}}>
                             <Col span={24}>
                                 <Row justify="space-between">
-                                    <Col span={20}> {record.projectType ===1 ? `${value} \n(${record.milestone})` : `${value}`} </Col>
+                                    {/* <Col span={20}> {record.projectType ===1 ? `${value}
+                                            sdasd   (${record.milestone})` : 
+                                        <Link to={{ pathname: `/projects/${record.id}/info`}} className="nav-link"> {value} </Link>                                
+                                    } </Col> */}
+                                    <Col span={20}> 
+                                        <div>
+                                            <Link to={{ pathname: `/projects/${record.projectId}/info`}} className="nav-link"> {value} </Link> 
+                                        </div>
+                                        {record.projectType ===1 &&
+                                            <div>
+                                                <Link 
+                                                    to={{ pathname: `/projects/${record.projectId}/milestones/${record.milestoneId}/resources`}} 
+                                                    className="nav-link"
+                                                >
+                                                    ({record.milestone})
+                                                </Link>
+                                            </div>
+                                        }
+                                    </Col>
                                     {/* File_name and paperclip to show under project is in comment section line 156*/}
                                     <Col style={{marginLeft: 'auto'}}> 
                                         <Tooltip 
@@ -94,7 +113,7 @@ class TimeSheetContact extends Component {
                             <Col span={24}>
                                 <Row justify="space-between">
                                     {record.attachment &&<Col span={16} >
-                                        <Link
+                                        <Tlink
                                             href={`${Api}/files/${record.attachment.uid}`}
                                             download={record.attachment.name}
                                             target="_blank"
@@ -108,7 +127,7 @@ class TimeSheetContact extends Component {
                                                 >
                                                     {`${record.attachment.name.substr(0,20)}${record.attachment.name.length>19 ?'\u2026':''}`}
                                                 </Tooltip>
-                                        </Link>
+                                        </Tlink>
                                     </Col>}
                                     <Col style={{marginLeft:'auto'}} >
                                         {/* <Space  align="end"> */}
@@ -619,7 +638,7 @@ class TimeSheetContact extends Component {
     render() {
         const { loading, data, isVisible, proVisible, columns, editTime, timeObj, sheetDates, milestones, sMilestone, isAttach, isDownload, eData, USERS, sUser, loginId, sTMilestones, permissions } = this.state
         // delete button disable condition
-        const canDelete = sTMilestones.keys.length<1 && (sUser !== loginId  ||  permissions && permissions['DELETE'] && permissions['DELETE']['ANY'])
+        const canDelete = sTMilestones.keys.length<1 && (sUser !== loginId || !!permissions?.['DELETE']?.['ANY']) //Check this thing please if permission mei koi masla aye
         const {sWeek, startDate, endDate } = this.state.sheetDates
         return (
             <>
@@ -665,7 +684,6 @@ class TimeSheetContact extends Component {
                                         endDate: moment(value ?? moment()).endOf("month")
                                     }
                                 },()=>{
-
                                     this.getSheet()
                                 })
                             }}

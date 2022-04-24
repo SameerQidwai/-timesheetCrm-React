@@ -38,6 +38,11 @@ export const getRecord = (id) => {
             return { success: false}
         })
         .catch((err) => {
+            if (err.response?.data){
+                const { status } = err.response
+                const { message, success } = err.response?.data
+                return { authError: message === "Not Authorized!", status, success, message, };
+            }
             return {
                 error: "Please login again!",
                 status: false,
@@ -111,6 +116,7 @@ export const editList = (id, data) => {
 
 function reStructure(data) {
     const contactPerson = data.contactPersonOrganization ? data.contactPersonOrganization.contactPerson : {}
+    const organization = data.contactPersonOrganization ? data.contactPersonOrganization.organization : {}
     const basic = {
         cpCode: `Sub-00${contactPerson.id}`,
         firstName: contactPerson.firstName,
@@ -123,7 +129,8 @@ function reStructure(data) {
         stateId:contactPerson.stateId,
         username: data.username,
         roleId: data.roleId,
-        lineManagerId: data.lineManagerId
+        lineManagerId: data.lineManagerId,
+        organization: {name: organization.name, id: organization.id}
     }
     const kin = {
         nextOfKinDateOfBirth: data.nextOfKinDateOfBirth? moment(data.nextOfKinDateOfBirth) : null,

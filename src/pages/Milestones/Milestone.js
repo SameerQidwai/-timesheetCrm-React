@@ -92,7 +92,6 @@ class Milestone extends Component {
                                     <Menu.Item>
                                     <Link
                                         to={{
-                                            // pathname:  `/${this.resRoute()}/${this.state&& this.state.proId}/milestones/${record.id}/resources`,
                                             pathname:  `milestones/${record.id}/resources`,
                                         }}
                                         className="nav-link"

@@ -17,6 +17,7 @@ import moment from "moment"
 import { formatDate, formatCurrency, localStore, O_STATUS } from "../../service/constant";
 import LostModal from "./Modals/LostModal";
 import { generalDelete } from "../../service/delete-Api's";
+import AuthError from "../../components/Core/AuthError";
 
 const { SubMenu } = Menu
 const { Item } = Descriptions;
@@ -41,6 +42,7 @@ class OpportunityInfo extends Component {
             renderTabs: false,
             moveToProject: false,
             permissions: {},
+            notAuth: false
         };
     }
     componentDidMount = ()=>{
@@ -63,6 +65,8 @@ class OpportunityInfo extends Component {
                     moveToProject: false,
                     permissions: OPPORTUNITIES
                 })
+            }else if(res.authError){
+                this.setState({ notAuth: true })
             }
         })
     }
@@ -95,7 +99,7 @@ class OpportunityInfo extends Component {
 
 
     render() {
-        const { data, infoModal,lostModal, leadId, billing, renderTabs, moveToProject, permissions, basic } = this.state;
+        const { data, infoModal,lostModal, leadId, billing, renderTabs, moveToProject, permissions, basic, notAuth } = this.state;
         const DescTitle = (
             <Row justify="space-between">
                 <Col>Opportunity Basic Information</Col>
@@ -246,6 +250,7 @@ class OpportunityInfo extends Component {
                         // callBack={this.callBack}
                     />
                 )}
+                {notAuth && <AuthError {...this.props}/>}
             </>
         );
     }
