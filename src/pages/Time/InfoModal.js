@@ -340,7 +340,7 @@ class InfoModal extends Component {
         const { timeFields, loading } = this.setState
         return (
             <Modal
-                title={editOff ? "Edit Time Off" : "Add New Time Off"}
+                title={editOff ? "Edit Time Off" : "Add Time Off"}
                 maskClosable={false}
                 centered
                 visible={visible}

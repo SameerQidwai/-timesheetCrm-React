@@ -625,7 +625,7 @@ class TimeSheetContact extends Component {
             <>
                 <Row justify="space-between">
                     <Col >
-                        <Title level={3}>Timesheet</Title>
+                        <Title level={3}>Timesheet Submission</Title>
                     </Col>
                     <Col >
                         <Select

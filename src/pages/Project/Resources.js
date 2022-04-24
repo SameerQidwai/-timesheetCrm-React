@@ -87,7 +87,7 @@ class Resources extends Component {
                                 disabled={!this?.state?.permissions?.['DELETE']}
                             >
                                 <Popconfirm
-                                    title="Sure to delete?" 
+                                    title="Are you sure, you want to delete?" 
                                     onConfirm={() => this.handleDelete(record.id, index)} 
                                 >
                                     Delete

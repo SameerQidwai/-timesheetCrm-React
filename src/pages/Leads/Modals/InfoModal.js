@@ -31,7 +31,6 @@ class InfoModal extends Component {
                     fieldCol: 12,
                     size: "small",
                     type: "Text",
-                    labelAlign: "right",
                     // itemStyle:{marginBottom:'10px'},
                 },
                 {
@@ -40,7 +39,6 @@ class InfoModal extends Component {
                     fieldCol: 12,
                     size: "small",
                     type: "Text",
-                    labelAlign: "right",
                     // itemStyle:{marginBottom:'10px'},
                 },
                 {
@@ -85,7 +83,6 @@ class InfoModal extends Component {
                     fieldCol: 12,
                     size: "small",
                     type: "Text",
-                    labelAlign: "right",
                     // itemStyle:{marginBottom:'10px'},
                 },
                 {
@@ -94,7 +91,6 @@ class InfoModal extends Component {
                     fieldCol: 12,
                     size: "small",
                     type: "Text",
-                    labelAlign: "right",
                     // itemStyle:{marginBottom:'10px'},
                 },
                 {
@@ -120,7 +116,6 @@ class InfoModal extends Component {
                     fieldCol: 12,
                     size: "small",
                     type: "Text",
-                    labelAlign: "right",
                     // itemStyle:{marginBottom:'10px'},
                 },
                 {
@@ -128,7 +123,6 @@ class InfoModal extends Component {
                     fieldCol: 12,
                     size: "small",
                     type: "Text",
-                    labelAlign: "right",
                     // itemStyle:{marginBottom:'10px'},
                 },
                 {
@@ -156,7 +150,6 @@ class InfoModal extends Component {
                     fieldCol: 12,
                     size: "small",
                     type: "Text",
-                    labelAlign: "right",
                     // itemStyle:{marginBottom:'10px'},
                 },
                 {
@@ -164,7 +157,6 @@ class InfoModal extends Component {
                     fieldCol: 12,
                     size: "small",
                     type: "Text",
-                    labelAlign: "right",
                     // itemStyle:{marginBottom:'10px'},
                 },
                 {
@@ -210,7 +202,6 @@ class InfoModal extends Component {
                     fieldCol: 24,
                     size: "small",
                     type: "Text",
-                    labelAlign: "right",
                     // itemStyle:{marginBottom:'10px'},
                 },
                 {
@@ -233,19 +224,17 @@ class InfoModal extends Component {
 
             tenderFields: [
                 {
-                    Placeholder: "Tender/RFQTS Title",
+                    Placeholder: "Tender Title",
                     fieldCol: 12,
                     size: "small",
                     type: "Text",
-                    labelAlign: "right",
                     // itemStyle:{marginBottom:'10px'},
                 },
                 {
-                    Placeholder: "Tender/RFQTS Number",
+                    Placeholder: "Tender Number",
                     size: "small",
                     fieldCol: 12,
                     type: "Text",
-                    labelAlign: "right",
                     // itemStyle:{marginBottom:'10px'},
                 },
                 {
@@ -273,15 +262,13 @@ class InfoModal extends Component {
                     fieldCol: 12,
                     size: "small",
                     type: "Text",
-                    labelAlign: "right",
                     // itemStyle:{marginBottom:'10px'},
                 },
                 {
-                    Placeholder: "CM",
+                    Placeholder: "Contribution Margin as a %",
                     size: "small",
                     fieldCol: 12,
                     type: "Text",
-                    labelAlign: "right",
                     // itemStyle:{marginBottom:'10px'},
                 },
                 {
@@ -321,19 +308,19 @@ class InfoModal extends Component {
                 },
                 
                 {
-                    Placeholder: "CM",
+                    Placeholder: "Contribution Margin",
                     size: "small",
                     fieldCol: 12,
                     type: "Text",
-                    labelAlign: "right",
                     // itemStyle:{marginBottom:'10px'},
                 },
                 {
-                    Placeholder: "GO",
-                    size: "small",
                     fieldCol: 12,
+                    Placeholder: "Go:",
                     type: "Text",
-                    labelAlign: "right",
+                    size: "small",
+                    tooltip: true,
+                    tooltipTitle: "Likelihood Of Opportunity Going Live",
                     // itemStyle:{marginBottom:'10px'},
                 },
                 {
@@ -367,11 +354,12 @@ class InfoModal extends Component {
                     }
                 },
                 {
-                    Placeholder: "Get",
-                    size: "small",
                     fieldCol: 12,
+                    Placeholder: "Get: ",
+                    size: "small",
                     type: "Text",
-                    labelAlign: "right",
+                    tooltip: true,
+                    tooltipTitle: "Likelihood Of Winning Opportunity",
                     // itemStyle:{marginBottom:'10px'},
                 },
                 {
@@ -379,7 +367,6 @@ class InfoModal extends Component {
                     size: "small",
                     fieldCol: 12,
                     type: "Text",
-                    labelAlign: "right",
                     // itemStyle:{marginBottom:'10px'},
                 },
                 {
@@ -413,11 +400,10 @@ class InfoModal extends Component {
                     fieldStyle: { width: "100%" },
                 },
                 {
-                    Placeholder: "Discounted Value",
+                    Placeholder: "Discounted Value (Forecast Amount)",
                     size: "small",
                     fieldCol: 12,
                     type: "Text",
-                    labelAlign: "right",
                     // itemStyle:{marginBottom:'10px'},
                 },
                 {
@@ -425,7 +411,6 @@ class InfoModal extends Component {
                     size: "small",
                     fieldCol: 12,
                     type: "Text",
-                    labelAlign: "right",
                     // itemStyle:{marginBottom:'10px'},
                 },
                 {
@@ -454,19 +439,17 @@ class InfoModal extends Component {
 
             DatesFields: [
                 {
-                    Placeholder: "Start Date",
+                    Placeholder: "Expected Project Start Date",
                     fieldCol: 12,
                     size: "small",
                     type: "Text",
-                    labelAlign: "right",
                     // itemStyle:{marginBottom:'10px'},
                 },
                 {
-                    Placeholder: "End Date",
+                    Placeholder: "Expected Project End Date",
                     fieldCol: 12,
                     size: "small",
                     type: "Text",
-                    labelAlign: "right",
                     // itemStyle:{marginBottom:'10px'},
                 },
                 {
@@ -507,19 +490,17 @@ class InfoModal extends Component {
                 },
             
                 {
-                    Placeholder: "Daily Hours",
+                    Placeholder: "Work Hours Per Day",
                     fieldCol: 12,
                     size: "small",
                     type: "Text",
-                    labelAlign: "right",
                     // itemStyle:{marginBottom:'10px'},
                 },
                 {
-                    Placeholder: "Bid Date",
+                    Placeholder: "Bid Due Date",
                     fieldCol: 12,
                     size: "small",
                     type: "Text",
-                    labelAlign: "right",
                     // itemStyle:{marginBottom:'10px'},
                 },
                 
@@ -552,7 +533,6 @@ class InfoModal extends Component {
                     fieldCol: 24,
                     size: "small",
                     type: "Text",
-                    labelAlign: "right",
                     // itemStyle:{marginBottom:'10px'},
                 },
                 
@@ -578,14 +558,12 @@ class InfoModal extends Component {
                     fieldCol: 12,
                     size: "small",
                     type: "Text",
-                    labelAlign: "right",
                 },
                 {
                     Placeholder: "Account Manager",
                     fieldCol: 12,
                     size: "small",
                     type: "Text",
-                    labelAlign: "right",
                 },
                 {
                     object: "manage",
@@ -608,7 +586,6 @@ class InfoModal extends Component {
                     fieldCol: 24,
                     size: "small",
                     type: "Text",
-                    labelAlign: "right",
                 },
                 {
                     object: "manage",
@@ -776,7 +753,7 @@ class InfoModal extends Component {
         const { BasicFields, tenderFields, DatesFields, BillingFields, ManageFields, loading } = this.state
         return (
             <Modal
-                title={editLead? "Edit opportunity" : "Add New opportunity"}
+                title={editLead? "Edit opportunity" : "Add opportunity"}
                 maskClosable={false}
                 centered
                 visible={visible}
@@ -798,10 +775,10 @@ class InfoModal extends Component {
                         <TabPane tab="Opportunity Info" key="basic" forceRender className="ant-form ant-form-inline ant-form-small" >
                             <FormItems FormFields={BasicFields} />
                         </TabPane>
-                        <TabPane tab="Tender/RFQTS Info" key="tender" forceRender className="ant-form ant-form-inline ant-form-small" >
+                        <TabPane tab="Tender Info" key="tender" forceRender className="ant-form ant-form-inline ant-form-small" >
                             <FormItems FormFields={tenderFields} />
                         </TabPane>
-                        <TabPane tab="Date Info" key="dates" forceRender className="ant-form ant-form-inline ant-form-small" >
+                        <TabPane tab="Key Dates" key="dates" forceRender className="ant-form ant-form-inline ant-form-small" >
                             <FormItems FormFields={DatesFields} />
                         </TabPane>
                         <TabPane tab="Forecast" key="billing" forceRender className="ant-form ant-form-inline ant-form-small" >

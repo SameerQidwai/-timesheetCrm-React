@@ -376,7 +376,7 @@ class Organizations extends Component {
                             columns={columns}
                             dataSource={filterData}
                             size="small"
-                            sticky
+                            // sticky // this is commeted issue is fixed I don't know why every other place it is working fine
                             // summary={()=>tableSummaryFilter(searchedColumn, this.advancefilter)}
                         />
                     </Col>

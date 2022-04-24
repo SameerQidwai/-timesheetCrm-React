@@ -73,24 +73,21 @@ class Opportunities extends Component {
                 dataIndex: 'bidDate',
                 key: 'bidDate',
                 render: (record) =>(record && formatDate(record)),
-                ...tableSorter('bidDate', 'date'),            },
+                ...tableSorter('bidDate', 'date'),
+            },
             {
                 title: 'Stage',
                 dataIndex: 'stage',
                 key: 'stage',
-                render: (record) =>  O_STAGE[record]
-            },
-            {
-                title: 'Status',
-                dataIndex: 'status',
-                key: 'status',
-                render: (record) => O_STATUS[record] 
+                render: (record) =>  O_STAGE[record],
+                ...tableSorter('stage', 'string'),
             },
             {
                 title: 'Type',
                 dataIndex: 'type',
                 key: 'type',
-                render: (record) => O_TYPE[record] 
+                render: (record) => O_TYPE[record],
+                ...tableSorter('type', 'number'),
             },
             {
                 title: 'Action',
@@ -105,7 +102,7 @@ class Opportunities extends Component {
                                 disabled={!this?.state?.permissions?.['DELETE']}
                             >
                                 <Popconfirm 
-                                    title="Sure to delete?" 
+                                    title="Are you sure, you want to delete?" 
                                     onConfirm={() => this.handleDelete(record.id, index)} 
                                 >
                                     Delete
@@ -249,7 +246,7 @@ class Opportunities extends Component {
                     type: "Text",
                 },
                 {
-                    Placeholder: "Qualified Ops",
+                    Placeholder: "Stage",
                     fieldCol: 12,
                     size: "small",
                     type: "Text",
@@ -267,30 +264,6 @@ class Opportunities extends Component {
                 {
                     object: "obj",
                     fieldCol: 12,
-                    key: "qualifiedOps",
-                    // label: "Qualified Ops",
-                    size: "small",
-                    data: [
-                        { label: "True", value: 'True' },
-                        { label: "False", value: 'False' },
-                    ],
-                    type: "Select",
-                },  
-                {
-                    Placeholder: "Stage",
-                    fieldCol: 12,
-                    size: "small",
-                    type: "Text",
-                },
-                {
-                    Placeholder: "Estimated Value",
-                    fieldCol: 12,
-                    size: "small",
-                    type: "Text",
-                },
-                {
-                    object: "obj",
-                    fieldCol: 12,
                     key: "stage",
                     mode: 'multiple',
                     customValue: (value, option)=> option,
@@ -301,7 +274,19 @@ class Opportunities extends Component {
                         { label: "Bid Submitted", value: 'BS' },
                     ],
                     type: "Select",
-                },       
+                },   
+                {
+                    Placeholder: "Estimated Value",
+                    fieldCol: 12,
+                    size: "small",
+                    type: "Text",
+                },
+                {
+                    Placeholder: "Expected Project Start Date",
+                    fieldCol: 12,
+                    size: "small",
+                    type: "Text",
+                },
                 {
                     object: "obj",
                     fieldCol: 12,
@@ -312,24 +297,24 @@ class Opportunities extends Component {
                     fieldStyle: { width: "100%" },
                 },
                 {
-                    Placeholder: "Start Date",
-                    fieldCol: 12,
-                    size: "small",
-                    type: "Text",
-                },
-                {
-                    Placeholder: "End Date",
-                    fieldCol: 12,
-                    size: "small",
-                    type: "Text",
-                },
-                {
                     object: "obj",
                     fieldCol: 12,
                     key: "startDate",
                     size: "small",
                     type: "RangePicker",
                     fieldStyle: { width: "100%" },
+                },
+                {
+                    Placeholder: "Expected Project End Date",
+                    fieldCol: 12,
+                    size: "small",
+                    type: "Text",
+                },
+                {
+                    Placeholder: "Bid Due Date",
+                    fieldCol: 12,
+                    size: "small",
+                    type: "Text",
                 },
                 {
                     object: "obj",
@@ -340,25 +325,20 @@ class Opportunities extends Component {
                     fieldStyle: { width: "100%" },
                 },
                 {
-                    Placeholder: "Bid Date",
-                    fieldCol: 12,
-                    size: "small",
-                    type: "Text",
-                },
-                {
-                    Placeholder: "Entry Date",
-                    fieldCol: 12,
-                    size: "small",
-                    type: "Text",
-                },
-                {
                     object: "obj",
                     fieldCol: 12,
                     key: "bidDate",
                     size: "small",
                     type: "RangePicker",
                     fieldStyle: { width: "100%" },
-                },                
+                },  
+                {
+                    Placeholder: "Entry Date",
+                    fieldCol: 24,
+                    size: "small",
+                    type: "Text",
+                },
+                              
                 {
                     object: "obj",
                     fieldCol: 12,
@@ -537,8 +517,8 @@ class Opportunities extends Component {
                     <Col>
                         <Title level={4}>Opportunities</Title>
                     </Col>
-                    <Col style={{textAlign:'end'}} span={4} >
-                        <Row justify="space-between">
+                    <Col style={{marginLeft: 'auto'}}>
+                        <Row justify="space-between" gutter={'15'}>
                             <Col>
                                 <Button 
                                     type="default" 
@@ -560,7 +540,7 @@ class Opportunities extends Component {
                                         })
                                     }} 
                                     disabled={!permissions['ADD']}
-                                    ><PlusSquareOutlined /> Opportunity</Button>
+                                    ><PlusSquareOutlined /> Add Opportunity</Button>
                             </Col>
                         </Row>
                     </Col>
@@ -583,7 +563,7 @@ class Opportunities extends Component {
                     </Col>
                 </Row>
                 {openSearch && <TableModalFilter
-                    title={"Search Opportunities"}
+                    title={"Opportunities - filter"}
                     visible={openSearch}
                     filters={searchedColumn}
                     filterFields={filterFields}

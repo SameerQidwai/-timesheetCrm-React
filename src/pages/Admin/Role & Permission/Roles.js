@@ -212,7 +212,7 @@ class Roles extends Component {
                 </Row>
                 {openModal && (
                     <Modal
-                        title={ editRole ? "Edit Role" : "Add New Role" }
+                        title={ editRole ? "Edit Role" : "Add Role" }
                         maskClosable={false}
                         centered
                         visible={openModal}

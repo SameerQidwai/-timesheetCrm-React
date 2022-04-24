@@ -76,7 +76,10 @@ class Milestone extends Component {
                                     <Menu.Item danger 
                                         disabled={!this?.state?.permissions?.['DELETE']}
                                     >
-                                        <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete(record.id, index)} >
+                                        <Popconfirm 
+                                            title="Are you sure, you want to delete?" 
+                                            onConfirm={() => this.handleDelete(record.id, index)} 
+                                        >
                                             Delete
                                         </Popconfirm>
                                     </Menu.Item >

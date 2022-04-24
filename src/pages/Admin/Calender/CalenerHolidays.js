@@ -41,7 +41,7 @@ class CalenerHolidays extends Component {
                             <Menu>
                                 <Menu.Item danger>
                                     <Popconfirm
-                                        title="Sure to delete?"
+                                        title="Are you sure, you want to delete?"
                                         onConfirm={() =>
                                             this.handleDelete(record.id)
                                         }
@@ -371,7 +371,7 @@ class CalenerHolidays extends Component {
 
                 {openModal ? (
                     <Modal
-                        title={ editTimeoff ? "Edit Holiday" : "Add New Holiday" }
+                        title={ editTimeoff ? "Edit Holiday" : "Add Holiday" }
                         maskClosable={false}
                         centered
                         visible={openModal}

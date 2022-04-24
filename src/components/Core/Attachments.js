@@ -106,7 +106,7 @@ class Attachments extends Component {
                         listType= {listType??"picture"}
                         fileList={fileList}
                         customRequest={this.handleUpload}
-                        onRemove= {this.onRemove}
+                        onRemove={this.onRemove}
                         // className="upload-list-inline"
                         style={{ backgroundColor: "rosybrown" }}
                     >

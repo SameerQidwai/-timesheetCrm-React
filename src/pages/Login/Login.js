@@ -4,6 +4,7 @@ import { Row, Col, Typography, Input, Button, Form } from "antd";
 import { login, loggedIn } from '../../service/Login-Apis'
 import { localStore } from "../../service/constant";
 import { getSettings } from "../../service/global-apis";
+import Text from "antd/lib/typography/Text";
 const { Title } = Typography;
 const { Password } = Input;
 
@@ -79,12 +80,13 @@ function Login(props) {
                             <Password />
                         </Form.Item>
 
-                        <Form.Item
-                        // {...tailLayout}
-                        >
+                        <Form.Item >
                             <Button type="primary" htmlType="submit">
                                 Login
                             </Button>
+                        </Form.Item>
+                        <Form.Item noStyle>
+                            <Text type="danger">If you are facing any problem, please contact support@timewize.com.au</Text>
                         </Form.Item>
                     </Form>
                 </Col>

@@ -15,12 +15,16 @@
 }
 
 .logo {
-    height: 32px;
+    /* height: 32px; */
     /* background: rgba(255, 255, 255, 0.2); */
-    margin: 16px;
+    /* margin: 16px; */
     text-align: center;
 }
 
 .site-layout .site-layout-background {
     background: #fff;
+}
+
+aside.ant-layout-sider-light{
+    background: #F6F4F1;
 }

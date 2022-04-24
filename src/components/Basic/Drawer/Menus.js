@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Menu } from "antd";
 import { Link, withRouter } from "react-router-dom";
 
-import { FieldTimeOutlined, CalendarOutlined, ScheduleOutlined, HomeOutlined, FileOutlined, FileTextOutlined, BookOutlined, FileDoneOutlined, RightSquareOutlined } from "@ant-design/icons"; //Icons
+import { FieldTimeOutlined, ClockCircleOutlined, CheckCircleOutlined , HomeOutlined, FileOutlined, FileTextOutlined, CalendarOutlined , CarryOutOutlined , SolutionOutlined  } from "@ant-design/icons"; //Icons
 
 import "../../Styles/Menus.css";
 import { localStore } from "../../../service/constant";
@@ -17,36 +17,36 @@ const listData = [
         key: "/calender",
     },
     {
-        text: "Timesheets",
-        icon: <CalendarOutlined />,
+        text: "Timesheet Submission",
+        icon: <ClockCircleOutlined />,
         link: "/time-sheet",
         key: "TIMESHEETS",
         permissions: {module: "TIMESHEETS", key: 'READ'}
     },
     {
-        text: "Timesheets Approval",
-        icon: <ScheduleOutlined />,
+        text: "Timesheet Approval",
+        icon: <CheckCircleOutlined  />,
         link: "/time-sheet-approval",
         key: "TIMESHEETS APPROVAl",
         permissions: {module: "TIMESHEETS", key: 'APPROVAL'}
     },
     {
-        text: "Leave Request",
-        icon: <BookOutlined />,
+        text: "Leave Requests",
+        icon: <CalendarOutlined  />,
         link: "/leave-request",
         key: "LEAVE REQUEST",
         permissions: {module: "LEAVE_REQUESTS", key: 'READ'}
     },
     {
-        text: "Leave Approval ",
-        icon: <FileDoneOutlined />,
+        text: "Leave Approval",
+        icon: <CarryOutOutlined  />,
         link: "/approve-request",
         key: "APPROVE REQUEST",
         permissions: {module: "LEAVE_REQUESTS", key: 'APPROVAL'}
     },
     {
         text: "Training",
-        icon: <RightSquareOutlined />,
+        icon: <SolutionOutlined  />,
         link: "/training",
         key: "Training",
         permissions: {module: "TIMESHEETS", key: 'READ'}
@@ -136,7 +136,7 @@ class Menus extends Component {
         const { allowedMenu } = this.state
         return allowedMenu.map((item, i) =>
             item.subMenu ? (
-                <SubMenu key={item.key} icon={item.icon} title={item.text}>
+                <SubMenu  key={item.key} icon={item.icon} title={item.text}>
                     {item.subMenu.map((sub, j) => (
                         <Menu.Item key={sub.key} icon={sub.icon} className={this.highlightRow(sub.link)}>
                             <Link to={sub.link} className="nav-link">
@@ -158,7 +158,7 @@ class Menus extends Component {
         const { location } = this.props;
         return (
             <Menu
-                theme="dark"
+                theme="light"
                 mode="inline"
                 defaultSelectedKeys={location.pathname}
             >

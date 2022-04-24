@@ -254,7 +254,7 @@ class Comments extends Component {
                                 }}
                             >
                                 <Popconfirm
-                                    title="You Want to delete comment?"
+                                    title="Are you sure, you want to delete?"
                                     onConfirm={() => {
                                         this.handleDelete(item.id);
                                     }}
