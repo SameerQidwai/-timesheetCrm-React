@@ -13,6 +13,7 @@ import ChildOrg from "./ChildOrg";
 import InfoModal from "./InfoModal";
 
 import { getOrgRecord, delOrg } from "../../../service/Organizations";
+import AuthError from "../../../components/Core/AuthError";
 
 const { Item } = Descriptions;
 const { TabPane } = Tabs;
@@ -27,6 +28,7 @@ class OrgInfo extends Component {
             bank: {},
             basic: {},
             organizationId: false,
+            notAuth: false
         };
     }
     closeModal = () => {
@@ -61,6 +63,8 @@ class OrgInfo extends Component {
                     bank: res.bank ?? {},
                     organizationId: id,
                 })
+            }else if(res.authError){
+                this.setState({ notAuth: true })
             }
         })
     }
@@ -73,7 +77,7 @@ class OrgInfo extends Component {
     };
 
     render() {
-        const { data, bank, infoModal, editOrg, organizationId, basic } = this.state;
+        const { data, bank, infoModal, editOrg, organizationId, basic, notAuth } = this.state;
         const DescTitle = (
             <Row justify="space-between">
                 <Col>{data && data.name}</Col>
@@ -83,7 +87,7 @@ class OrgInfo extends Component {
                             <Menu>
                                 <Menu.Item danger>
                                     <Popconfirm
-                                        title="Sure to delete?"
+                                        title="Are you sure, you want to delete?"
                                         onConfirm={() => this.handleDelete(data.id) }
                                     >
                                         Delete
@@ -160,6 +164,7 @@ class OrgInfo extends Component {
                         callBack={this.callBack}
                     />
                 )}
+                {notAuth && <AuthError {...this.props}/>}
             </>
         );
     }

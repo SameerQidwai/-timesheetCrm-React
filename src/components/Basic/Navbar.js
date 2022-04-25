@@ -16,17 +16,17 @@ const NavItem = [
         key: 'CHILDRENS'
     },
     {
-        text: "Opportunities",
-        link: "/opportunities",
-        key: "OPPORTUNITIES"
-    },
-    {
         text: "Resources",
         items: [
             { text: "Employees", link: "/Employees", key: "USERS"},
             { text: "Sub Contractors", link: "/sub-contractors", key: "USERS"},
         ],
         key: "CHILDRENS"
+    },
+    {
+        text: "Opportunities",
+        link: "/opportunities",
+        key: "OPPORTUNITIES"
     },
     {
         text: "Projects",

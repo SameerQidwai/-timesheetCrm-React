@@ -76,7 +76,10 @@ class Milestone extends Component {
                                     <Menu.Item danger 
                                         disabled={!this?.state?.permissions?.['DELETE']}
                                     >
-                                        <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete(record.id, index)} >
+                                        <Popconfirm 
+                                            title="Are you sure, you want to delete?" 
+                                            onConfirm={() => this.handleDelete(record.id, index)} 
+                                        >
                                             Delete
                                         </Popconfirm>
                                     </Menu.Item >
@@ -89,7 +92,6 @@ class Milestone extends Component {
                                     <Menu.Item>
                                     <Link
                                         to={{
-                                            // pathname:  `/${this.resRoute()}/${this.state&& this.state.proId}/milestones/${record.id}/resources`,
                                             pathname:  `milestones/${record.id}/resources`,
                                         }}
                                         className="nav-link"
@@ -124,6 +126,7 @@ class Milestone extends Component {
     fetchAll = (id) =>{
         const { PROJECTS, OPPORTUNITIES }= JSON.parse(localStore().permissions)
         const customUrl = this.props.match.url
+        console.log(customUrl);
         let crud = this.props.match.url
         crud = crud.split('/')
         let work = crud[1]

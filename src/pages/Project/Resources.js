@@ -11,6 +11,8 @@ import { formatDate, formatCurrency, localStore } from "../../service/constant";
 import { Filtertags, TableModalFilter, tableSorter, tableTitleFilter } from "../../components/Core/Table/TableFilter";
 import { getPanelSkills } from "../../service/constant-Apis";
 import { generalDelete } from "../../service/delete-Api's";
+import { getMilestone } from "../../service/Milestone-Apis";
+import AuthError from "../../components/Core/AuthError";
 
 const { Item } = Descriptions;
 
@@ -86,7 +88,7 @@ class Resources extends Component {
                                 disabled={!this?.state?.permissions?.['DELETE']}
                             >
                                 <Popconfirm
-                                    title="Sure to delete?" 
+                                    title="Are you sure, you want to delete?" 
                                     onConfirm={() => this.handleDelete(record.id, index)} 
                                 >
                                     Delete
@@ -115,7 +117,8 @@ class Resources extends Component {
             proId: false,
             mileId: false,
             crud: false,
-            desc: {title: '', organization: {name: ''}, value: '', startDate: '', endDate: ''},
+            proDesc: {title: '', organization: {name: ''}, value: '', startDate: '', endDate: ''},
+            mileDesc: {title: '', organization: {name: ''}, value: '', startDate: '', endDate: ''},
             permissions: {},
             openSearch: false,
             filterData: [],
@@ -237,6 +240,7 @@ class Resources extends Component {
                   fieldStyle: { width: "100%" },
                 },
             ],
+            notAuth: false
         };
     }
 
@@ -248,18 +252,20 @@ class Resources extends Component {
         const { PROJECTS }= JSON.parse(localStore().permissions)
         const { url } = this.props.match
         const { proId, mileId } = this.props.match.params
-        Promise.all([ getRecord(proId), getLeadSkills(url, id)])
+        Promise.all([ getRecord(proId), getMilestone(mileId),  getLeadSkills(url, id)])
         .then(res => {
             this.setState({
-                desc: res[0].success? res[0].data : {},
+                proDesc: res[0].success? res[0].data : {},
+                mileDesc: res[1].success? res[1].data : {},
                 editRex: false,
                 proId: proId,
                 crud: url,
                 mileId: mileId,
                 infoModal: false,
-                data: res[1].success? res[1].data : [],
-                filterData: res[1].success? res[1].data : [],
-                permissions: PROJECTS
+                data: res[2].success? res[2].data : [],
+                filterData: res[2].success? res[2].data : [],
+                permissions: PROJECTS,
+                notAuth: res?.[2]?.authError 
             })
         })
         .catch(e => {
@@ -282,7 +288,7 @@ class Resources extends Component {
     }
 
     openModal = (id) =>{
-        const { startDate, endDate } = this.state.desc
+        const { startDate, endDate } = this.state.mileDesc
         this.setState ({
             editRex: id, 
             pDates: {startDate, endDate}, 
@@ -388,8 +394,8 @@ class Resources extends Component {
     }
 
     filterModalUseEffect = () =>{
-        const { desc } = this.state
-        Promise.all([getPanelSkills(desc.panelId) ])
+        const { proDesc } = this.state
+        Promise.all([getPanelSkills(proDesc.panelId) ])
         .then(res => {
            const { filterFields } = this.state
            filterFields[2].data = res[0].success ? res[0].data : []
@@ -400,9 +406,8 @@ class Resources extends Component {
         })
     }
 
-
     render() {
-        const { desc, data, infoModal, editRex, proId, permissions, crud, mileId, filterData, openSearch, searchedColumn, filterFields } = this.state;
+        const { proDesc, data, infoModal, editRex, proId, permissions, crud, mileId, filterData, openSearch, searchedColumn, filterFields, pDates, notAuth } = this.state;
         return (
             <>
                 <Descriptions
@@ -410,13 +415,12 @@ class Resources extends Component {
                     size="small"
                     bordered
                     layout="horizontal"
-                    // extra={<Button type="primary">Edit</Button>}
                 >
-                    <Item label="Project Name">{desc.title}</Item>
-                    <Item label="Estimated Value">{ formatCurrency(desc.value ?? 0)}</Item>
-                    <Item label="Organisation">{desc.organizationName ? desc.organization.name :' No Organisation'}</Item>
-                    <Item label="Start date">{desc.startDate ? formatDate(desc.startDate): null} </Item>
-                    <Item label="End Date">{desc.endDate ? formatDate(desc.endDate): null}</Item>
+                    <Item label="Project Name">{proDesc.title}</Item>
+                    <Item label="Estimated Value">{ formatCurrency(proDesc.value ?? 0)}</Item>
+                    <Item label="Organisation">{proDesc.organizationName??' No Organisation'}</Item>
+                    <Item label="Start date">{proDesc.startDate ? formatDate(proDesc.startDate): null} </Item>
+                    <Item label="End Date">{proDesc.endDate ? formatDate(proDesc.endDate): null}</Item>
                     {/* <Item label="Gender">{data.gender}</Item> */}
                 </Descriptions>
                 <Row justify="end" span={4} gutter={[30, 0]}>
@@ -468,13 +472,15 @@ class Resources extends Component {
                         visible={infoModal}
                         editRex={editRex}
                         proId = {proId}
+                        pDates = {pDates}
                         crud={crud}
                         mileId={mileId}
-                        panelId = {desc.panelId}
+                        panelId = {proDesc.panelId}
                         close={this.closeModal}
                         callBack={this.callBack}
                     />
                 )}
+                {notAuth && <AuthError {...this.props}/>}
             </>
         );
     }

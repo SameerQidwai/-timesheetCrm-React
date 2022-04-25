@@ -35,7 +35,7 @@ class Levels extends Component {
                                 </Menu.Item>
                                 <Menu.Item>
                                     <Popconfirm
-                                        title="Sure to delete?"
+                                        title="Are you sure, you want to delete?"
                                         onConfirm={() =>
                                             this.handleDelete(record.id)
                                         }

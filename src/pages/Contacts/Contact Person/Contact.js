@@ -9,6 +9,7 @@ import { GENDER, localStore } from "../../../service/constant";
 import "../../styles/table.css";
 import { Filtertags, TableModalFilter, tableSorter, tableSummaryFilter, tableTitleFilter } from "../../../components/Core/Table/TableFilter";
 import { getOrganizations, getStandardLevels, getStates } from "../../../service/constant-Apis";
+import { generalDelete } from "../../../service/delete-Api's";
 
 const { Title } = Typography;
 
@@ -72,9 +73,12 @@ class Contact extends Component {
                     <Dropdown
                         overlay={
                             <Menu key={index}>
-                                <Menu.Item danger>
+                                <Menu.Item 
+                                    danger
+                                    disabled={!this?.state?.permissions?.['DELETE']}
+                                >
                                     <Popconfirm
-                                        title="Sure to delete?"
+                                        title="Are you sure, you want to delete?"
                                         onConfirm={() =>
                                             this.handleDelete(record.id, index)
                                         }
@@ -86,11 +90,6 @@ class Contact extends Component {
                                     onClick={() => { this.setState({ openModal: true, editCP: record.id }); }}
                                     disabled={this.state&& !this.state.permissions['UPDATE']}
                                 >Edit</Menu.Item>
-                                {/* <Menu.Item> */}
-                                    {/* <Link to={{ pathname: '/admin/calender/holidays' ,query: record.key}} className="nav-link"> */}
-                                    {/* View */}
-                                    {/* </Link> */}
-                                {/* </Menu.Item> */}
                             </Menu>
                         }
                     >
@@ -287,12 +286,20 @@ class Contact extends Component {
     };
 
     handleDelete = (id, index) => {
+        console.log({id, index});
         const url = '/contactpersons'
-       const { data: d, filterData: fd } = this.state
-       fd.splice(index,1) // deleting Index
-       d.splice(index,1) // deleting Index
-       this.setState({ filterData: [...fd], data: [...d] }) //Set the data...
+        const { data, filterData } = this.state
+        const { history } = this.props
+        generalDelete(history, url, id, index, filterData, data).then(res =>{
+            if (res.success){
+                this.setState({
+                    data: [...res.data],
+                    filterData: [...res.filterData]
+                })
+            }
+        })
     };
+
 
     toggelModal = (status) => {
         this.setState({ openModal: status, editCP: false, });

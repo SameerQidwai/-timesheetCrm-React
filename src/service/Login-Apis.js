@@ -12,6 +12,7 @@ export const login = (data) => {
             const { success, data, message } = res.data;
             messageAlert.success({ content: message, key: 'logout'}, 5)
             if (success){
+                // let permissions = { DASHBOARD: {READ: {ANY: true } } }
                 let permissions = {}
                 let role = data.role
                 // data.role = role.roleId

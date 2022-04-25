@@ -6,6 +6,7 @@ import { loggedIn } from "../../../service/Login-Apis";
 import ActivityCounter from "./Modals/ActivityCounter";
 import ActivityLogin from "./Modals/ActivityLogin";
 import { refreshToken } from "../../../service/constant-Apis";
+import '../../Styles/content.css'
 
 const { Content } = Layout;
 
@@ -21,7 +22,7 @@ function PrivateRoute (props) {
                     setLastActivity(true)
                 }
             }, 60 * 1000)
-    }, [])
+    })
 
 
     const refresh = () => {
@@ -35,44 +36,44 @@ function PrivateRoute (props) {
     const ActivityTimeOut = () =>{
         setLogin(true)
         setLastActivity(false)
+        setLogin(false)
     }
 
 
     const closeLogin = () =>{
+        localStorage.removeItem('jwtExpired')
+        setLogin(true)
         setLogin(false)
     }
 
     return (
-        <Content
-            className="site-layout-background"
-            style={{
-                margin: "16px 16px 10px 16px",
-                padding: "24px 24px 10px 24px",
-                minHeight: "88vh",
-            }}
-        >
-           {loggedIn() ==='jwtExpired' || loggedIn() === true ? 
-            <AdminContent /> 
-            :
-            <Redirect to={{ pathname: '/'}} /> }
-            {/* {!stopTime&&restActivity()} */}
+        <div className="site-layour-frame">
+            <Content
+                className="site-layout-background layout-content-custom"
+            >
+            {loggedIn() ==='jwtExpired' || loggedIn() === true ? 
+                <AdminContent /> 
+                :
+                <Redirect to={{ pathname: '/'}} /> }
+                {/* {!stopTime&&restActivity()} */}
 
 
-            {lastActivity && 
-                <ActivityCounter 
-                    visible={lastActivity}
-                    refresh={()=>refresh()} 
-                    timeOut={()=>ActivityTimeOut()}
-                /> 
-            }
+                {lastActivity && 
+                    <ActivityCounter 
+                        visible={lastActivity}
+                        refresh={()=>refresh()} 
+                        timeOut={()=>ActivityTimeOut()}
+                    /> 
+                }
 
-            {loggedIn() ==='jwtExpired'&&
-                <ActivityLogin 
-                    visible={loggedIn() ==='jwtExpired'} 
-                    close={()=>{closeLogin()}}
-                /> 
-            }
-        </Content>
+                {loggedIn() ==='jwtExpired'&&
+                    <ActivityLogin 
+                        visible={loggedIn() ==='jwtExpired'} 
+                        close={()=>{closeLogin()}}
+                    /> 
+                }
+            </Content>
+        </div>
     );
 }
 export default PrivateRoute;

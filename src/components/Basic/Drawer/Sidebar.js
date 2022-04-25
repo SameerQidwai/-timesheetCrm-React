@@ -3,12 +3,12 @@ import { Row, Col, Layout, Avatar } from "antd"; // antd component
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons"; //Icons
 
 import "../../Styles/sidebar.css";
-import logo from "./logo.png";
 
 // import Calender from '../../Calender/Calender' //Custom component
 import Menus from "./Menus";
 import Navbar from "../Navbar";
 import PrivateRoute from "../Content/PrivateRoute";
+import { Link } from "react-router-dom";
 
 const { Header, Sider } = Layout;
 
@@ -35,40 +35,22 @@ class Drawers extends Component {
                     trigger={null}
                     collapsible
                     collapsed={collapsed}
+                    theme="light"
                     // onBreakpoint={()=>this.toggle()}
                     breakpoint="lg"
                 >
                     <div className="logo">
-                        {!collapsed ? (
+                        {/* {!collapsed ? ( */}
+                        <Link
+                            to={'/dashboard'}
+                        >
                             <img
-                                src={logo}
+                                src={!collapsed ? "/tw-logo.png" : "/tw-avatar.png" }
                                 alt="Logo"
-                                style={{ width: "60%" }}
+                                style={{ width: "100%" }}
                             />
-                        ) : (
-                            <>
-                                <Avatar.Group>
-                                    <Avatar
-                                        size="small"
-                                        style={{
-                                            color: "#ffffff",
-                                            backgroundColor: "#2051b6",
-                                        }}
-                                    >
-                                        1
-                                    </Avatar>
-                                    <Avatar
-                                        size="small"
-                                        style={{
-                                            color: "#ffffff",
-                                            backgroundColor: "#2051b6",
-                                        }}
-                                    >
-                                        LM
-                                    </Avatar>
-                                </Avatar.Group>
-                            </>
-                        )}
+                        </Link>
+                        
                         {/* <Divider >.</Divider> */}
                     </div>
                     <Menus />

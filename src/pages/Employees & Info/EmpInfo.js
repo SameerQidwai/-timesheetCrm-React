@@ -16,6 +16,7 @@ import { getRecord, delList } from "../../service/Employees";
 import moment from "moment"
 import LeaveBalance from "../../components/Core/LeaveBalance";
 import { GENDER } from "../../service/constant";
+import AuthError from "../../components/Core/AuthError";
 
 const { Item } = Descriptions;
 const { TabPane } = Tabs;
@@ -27,7 +28,8 @@ class OrgInfo extends Component {
             infoModal: false,
             emp: false,
             data: { },
-            bank: {}
+            bank: {}, 
+            notAuth: false
         };
     }
     componentDidMount = ()=>{
@@ -43,6 +45,8 @@ class OrgInfo extends Component {
                     bank: res.bank,
                     emp: id
                 })
+            }else if(res.authError){
+                this.setState({ notAuth: true })
             }
         })
     }
@@ -65,7 +69,7 @@ class OrgInfo extends Component {
     };
 
     render() {
-        const { data, infoModal, emp, bank } = this.state;
+        const { data, infoModal, emp, bank, notAuth } = this.state;
         const DescTitle = (
             <Row justify="space-between">
                 <Col>Basic Information</Col>
@@ -75,7 +79,7 @@ class OrgInfo extends Component {
                             <Menu>
                                 {/* <Menu.Item danger>
                                     <Popconfirm
-                                        title="Sure to delete?"
+                                        title="Are you sure, you want to delete?"
                                         onConfirm={() => this.handleDelete(emp) }
                                     >
                                         Delete
@@ -155,6 +159,7 @@ class OrgInfo extends Component {
                         callBack={this.callBack}
                     />
                 )}
+                {notAuth && <AuthError {...this.props}/>}
             </>
         );
     }

@@ -11,6 +11,7 @@ import moment from "moment"
 import "../styles/table.css";
 import { formatCurrency, localStore, DURATION, formatDate } from "../../service/constant";
 import { tableSorter, tableTitleFilter } from "../../components/Core/Table/TableFilter";
+import { generalDelete } from "../../service/delete-Api's";
 
 
 const { Title } = Typography;
@@ -59,18 +60,18 @@ class EmpBilling extends Component {
                 key: "action",
                 align: "right",
                 width: 115,
-                render: (record) => (
+                render: (value, record, index) => (
                     <Dropdown
                         overlay={
                             <Menu>
-                                <Menu.Item danger>
+                                {/* <Menu.Item danger>
                                     <Popconfirm
-                                        title="Sure to delete?"
-                                        onConfirm={() => this.handleDelete(record.id) }
+                                        title="Are you sure, you want to delete?"
+                                        onConfirm={() => this.handleDelete(record.id, index) }
                                     >
                                         Delete
                                     </Popconfirm>
-                                </Menu.Item>
+                                </Menu.Item> */}
                                 <Menu.Item
                                     onClick={() => {
                                         this.setState({ billModal: true, editCntrct: record.id, });
@@ -136,11 +137,18 @@ class EmpBilling extends Component {
         this.getList(id)
     };
 
-    handleDelete = (id) => {
-        delList(id).then((res) => {
-            const { id } = this.props.match.params
-            this.getList(id)
-        });
+    handleDelete = (id, index) => {
+        const url = '/sub-contractors-contracts'
+        const { data, filterData } = this.state
+        const { history } = this.props
+        generalDelete(history, url, id, index, filterData, data).then(res =>{
+            if (res.success){
+                this.setState({
+                    data: [...res.data],
+                    filterData: [...res.filterData]
+                })
+            }
+        })
     };
 
     generalFilter = (value) =>{

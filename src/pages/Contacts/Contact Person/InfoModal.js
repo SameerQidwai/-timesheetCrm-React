@@ -717,7 +717,9 @@ class InfoModal extends Component {
         let result = skill ? Object.keys(skill).length / 2 : 0;
         if (skill && Object.keys(skill).length > 0){
             for (let i = 0; i < result; i++) {
-                vars.push(skill[`level${i}`]);
+                if (skill[`level${i}`]){
+                    vars.push(skill[`level${i}`]);
+                }
             }
         }
         this.setState(
@@ -760,7 +762,6 @@ class InfoModal extends Component {
 
     addPerson = (value) => {
         const { callBack } = this.props;
-        console.log(value);
         this.setState({
             basicSubmitted: false,
             associateSubmitted: false,
@@ -770,8 +771,8 @@ class InfoModal extends Component {
             loading: true
         })
         addList(value).then((res) => {
+            this.setState({ loading: false })
             if(res.success){
-                this.setState({ loading: false })
                 callBack()
             }
         });
@@ -779,7 +780,6 @@ class InfoModal extends Component {
 
     getRecord = (id) => {
         getContactRecord(id).then((res) => {
-            console.log(res.data);
             if (res.success){
                 const {data} = res
                 const { SkillFields, associateFields, skill_data } = this.state
@@ -788,7 +788,6 @@ class InfoModal extends Component {
                 const skillArray = data.standardSkillStandardLevels;
                 const assoArray = data.contactPersonOrganizations
                 let result = skillArray.length < assoArray.length? assoArray.length :skillArray.length; // check the largest length to run loop only once not twice for two array
-                console.log('sameer', result, assoArray.length, skillArray.length);
                 for (let i = 0; i < result; i++) {
                     let skillEl = skillArray[i];
                     let assoEl = assoArray[i]
@@ -813,13 +812,10 @@ class InfoModal extends Component {
                     }
                     
                 }
-                console.log(asso);
                 if (skillArray.length === 0){ // checking if skill is not have any data when getting record to edited and insert an new Empty fields
-                    console.log(skillArray.length, 'skill length null');
                     SkillFields.fields = SkillFields.fields.concat( this.newSkillField(0));
                 }
                 if (assoArray.length === 0){ // checking if assosiation is not have any data when getting record to edited and insert an new Empty fields
-                    console.log(assoArray.length, 'assosiation length null');
                     associateFields.fields = associateFields.fields.concat( this.newAssociateField(0) );
                 }
                 let basic = {
@@ -849,7 +845,6 @@ class InfoModal extends Component {
     };
 
     editRecord = (value) => {
-        console.log(value);
         const { editCP, callBack } = this.props;
         value.id = editCP
         this.setState({
@@ -858,13 +853,11 @@ class InfoModal extends Component {
             detailSubmitted: false,
             skillSubmitted: false,
             securitySubmitted: false,
-            loading: true
+            loading: true,
         })
-        console.log(value);
         editList(value).then((res) => {
+            this.setState({ loading: false })
             if(res.success){
-                console.log('hereh');
-                this.setState({ loading: false })
                 callBack()
             }
         });

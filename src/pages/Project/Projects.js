@@ -32,6 +32,10 @@ class Projects extends Component {
                 dataIndex: 'title',
                 key: 'title',
                 width: 400,
+                render: (value, record) => (
+                    <Link to={{ pathname: `/projects/${record.id}/info`}} className="nav-link"
+                    > {value} </Link>
+                ),
                 ...tableSorter('title', 'string'),
             },
             {
@@ -88,7 +92,7 @@ class Projects extends Component {
                                 disabled={!this?.state?.permissions?.['DELETE']}
                             >
                                 <Popconfirm
-                                    title="Sure to delete?" 
+                                    title="Are you sure, you want to delete?" 
                                     onConfirm={() => this.handleDelete(record.id, index)} 
                                 >
                                     Delete
@@ -119,7 +123,7 @@ class Projects extends Component {
                                 <Menu.Item>
                                     <Link
                                         to={{
-                                            pathname: `/projects/${record.id}/milestones/${record.id}/resources`,
+                                            pathname: `/projects/${record.id}/milestones/${record?.milestones?.[0]?.id}/resources`,
                                             // pathname: `/projects/${record.id}/resources`,
                                         }}
                                         className="nav-link"

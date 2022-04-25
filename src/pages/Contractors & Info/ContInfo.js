@@ -12,8 +12,9 @@ import Bank from "../../components/Core/Bank";
 import InfoModal from "./Modals/InfoModal";
 
 import { getRecord, delList } from "../../service/contractors";
-import { localStore } from "../../service/constant";
+import { GENDER, localStore } from "../../service/constant";
 import  moment from "moment";
+import AuthError from "../../components/Core/AuthError";
 
 const { Item } = Descriptions;
 const { TabPane } = Tabs;
@@ -25,7 +26,8 @@ class ContInfo extends Component {
             infoModal: false,
             editCont: false,
             data: { },
-            permissions: {}
+            permissions: {},
+            notAuth: false,
         };
     }
 
@@ -43,6 +45,8 @@ class ContInfo extends Component {
                     editCont: id,
                     permissions: USERS
                 })
+            }else if(res.authError){
+                this.setState({ notAuth: true })
             }
         })
     }
@@ -66,7 +70,7 @@ class ContInfo extends Component {
 
 
     render() {
-        const { data, infoModal, editCont, permissions } = this.state;
+        const { data, infoModal, editCont, permissions, notAuth } = this.state;
         const DescTitle = (
             <Row justify="space-between"> 
                  <Col>Basic Information</Col>
@@ -76,7 +80,7 @@ class ContInfo extends Component {
                             <Menu>
                                 {/* <Menu.Item danger>
                                     <Popconfirm
-                                        title="Sure to delete?"
+                                        title="Are you sure, you want to delete?"
                                         onConfirm={() => this.handleDelete(emp) }
                                     >
                                         Delete
@@ -123,7 +127,14 @@ class ContInfo extends Component {
                     <Item label="Email">{data.email}</Item>
                     <Item label="Address">{data.address}</Item>
                     <Item label="Date Of Birth">{data.dateOfBirth ? moment(data.dateOfBirth).format('DD MM YYYY'): null}</Item>
-                    <Item label="Gender">{data.gender}</Item>
+                    <Item label="Gender">{GENDER[data.gender]}</Item>
+                    {data.organization && <Item label="Organisation">{
+                        <Link 
+                        to={{ pathname: `/organisations/${data.organization.id}/info`, }}
+                        className="nav-link"
+                    >
+                        {data.organization.name}</Link> 
+                    }</Item> }
                 </Descriptions>
                 {editCont && (
                     <Tabs
@@ -150,6 +161,7 @@ class ContInfo extends Component {
                         callBack={this.callBack}
                     />
                 )}
+                {notAuth && <AuthError {...this.props}/>}
             </>
         );
     }

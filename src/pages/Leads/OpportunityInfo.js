@@ -17,7 +17,9 @@ import moment from "moment"
 import { formatDate, formatCurrency, localStore, O_STATUS } from "../../service/constant";
 import LostModal from "./Modals/LostModal";
 import { generalDelete } from "../../service/delete-Api's";
+import AuthError from "../../components/Core/AuthError";
 
+const { SubMenu } = Menu
 const { Item } = Descriptions;
 const { TabPane } = Tabs;
 
@@ -25,10 +27,10 @@ class OpportunityInfo extends Component {
     constructor(props) {
         super(props);
         this.status = [ //status of the oportunity 
-            {title: "Won", msg: "Opportunity Won!?" , api: 'won'},
-            {title: "Lost", msg: "Opportunity Lost!?" , api: 'Lost', key: 'L'},
-            {title: "Not Bid", msg: "Not Bid On Opportunity!?" , api: 'NotBid', key: 'NB'},
-            {title: "Did Not Proceed", msg: "Did Not Proceed?", api: 'NotProceed', key: 'DNP'},
+            {title: "Won", msg: "Opportunity Won?" , api: 'won', color: '#6fac45'},
+            {title: "Lost", msg: "Opportunity Lost?" , api: 'Lost', key: 'L', color:'#c00505' },
+            {title: "Did Not Proceed", msg: "Did Not Proceed?", api: 'NotProceed', key: 'DNP', color: '#78abdb'},
+            {title: "Not Bid", msg: "Not Bid On Opportunity?" , api: 'NotBid', key: 'NB', color: '#8d8888'},
         ]
         this.state = {
             infoModal: false,
@@ -40,6 +42,7 @@ class OpportunityInfo extends Component {
             renderTabs: false,
             moveToProject: false,
             permissions: {},
+            notAuth: false
         };
     }
     componentDidMount = ()=>{
@@ -62,6 +65,8 @@ class OpportunityInfo extends Component {
                     moveToProject: false,
                     permissions: OPPORTUNITIES
                 })
+            }else if(res.authError){
+                this.setState({ notAuth: true })
             }
         })
     }
@@ -94,7 +99,7 @@ class OpportunityInfo extends Component {
 
 
     render() {
-        const { data, infoModal,lostModal, leadId, billing, renderTabs, moveToProject, permissions, basic } = this.state;
+        const { data, infoModal,lostModal, leadId, billing, renderTabs, moveToProject, permissions, basic, notAuth } = this.state;
         const DescTitle = (
             <Row justify="space-between">
                 <Col>Opportunity Basic Information</Col>
@@ -107,32 +112,35 @@ class OpportunityInfo extends Component {
                                 disabled={!this?.state?.permissions?.['DELETE']}
                             >
                                     <Popconfirm 
-                                        title="Sure to delete?" 
+                                        title="Are you sure, you want to delete?" 
                                         onConfirm={() => this.handleDelete(leadId)} 
                                     >
                                         Delete
                                     </Popconfirm>
                                 </Menu.Item >
-                                {this.status.map(el => <Menu.Item 
-                                    key={el.title}
-                                    disabled={!permissions['UPDATE']}
-                                >
-                                    <Popconfirm 
-                                        title={el.msg} 
-                                        onConfirm={() => {
-                                            if (el.title === "Won"){
-                                                this.setState({ infoModal: true, moveToProject: true});
-                                            }else{
-                                                this.setState({lostModal: true, moveToProject: el})
-                                            }
-                                            //new function (...el)
-                                        }}
-                                        okText="Yes"
-                                        cancelText="No" 
+                                <SubMenu title={'Outcomes'}>
+                                    {this.status.map(el => <Menu.Item 
+                                        key={el.title}
+                                        disabled={!permissions['UPDATE']}
+                                        style={{color: el.color}}
                                     >
-                                        {el.title}
-                                    </Popconfirm>
-                                </Menu.Item>)}
+                                        <Popconfirm 
+                                            title={el.msg} 
+                                            onConfirm={() => {
+                                                if (el.title === "Won"){
+                                                    this.setState({ infoModal: true, moveToProject: true});
+                                                }else{
+                                                    this.setState({lostModal: true, moveToProject: el})
+                                                }
+                                                //new function (...el)
+                                            }}
+                                            okText="Yes"
+                                            cancelText="No" 
+                                        >
+                                            {el.title}
+                                        </Popconfirm>
+                                    </Menu.Item>)}
+                                </SubMenu>
                                 <Menu.Item onClick={() => { 
                                         this.setState({ infoModal: true});
                                     }} 
@@ -242,6 +250,7 @@ class OpportunityInfo extends Component {
                         // callBack={this.callBack}
                     />
                 )}
+                {notAuth && <AuthError {...this.props}/>}
             </>
         );
     }

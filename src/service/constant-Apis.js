@@ -45,7 +45,7 @@ export const getStandardLevels = () => {
         });
 };
 
-export const getContactPersons = () =>{
+export const getContactPersons = () =>{ //NOT IN USE
     return axios
     .get(`${Api}/contactpersons`, {headers:headers()})
     .then((res) => {
@@ -66,7 +66,7 @@ export const getContactPersons = () =>{
     });
 }
 
-export const getEmployees = () => {
+export const getEmployees = () => { //NOT IN USE
     return axios
         .get(`${Api}/employees`, {headers:headers()})
         .then((res) => {
@@ -89,7 +89,7 @@ export const getEmployees = () => {
         });
 };
 
-export const getSubContractors = () => {
+export const getSubContractors = () => { //NOT IN USE
     return axios
         .get(`${Api}/sub-contractors`, {headers:headers()})
         .then((res) => {
@@ -117,12 +117,11 @@ export const getOrgPersons = (url) =>{
     .get(`${Api}/${url}`, {headers:headers()})
     .then((res) => {
         const { success, data } = res.data;
-        var cps = []
-        // data.map((el) => {
-        //     cps.push({value: el.id, label: el.firstName +' ' +el.lastName, status: 'Employee'})
-        // });
+
+        // let sortData = data.sort(( a, b) => a?.label?.toLowerCase().localeCompare(b?.label?.toLowerCase()))
+
         setToken(res.headers && res.headers.authorization)
-        if (success) return { success: success, data: data };
+        if (success) return { success: success, data };
     })
     .catch((err) => {
         return {
@@ -133,7 +132,7 @@ export const getOrgPersons = (url) =>{
     });
 }
 
-export const getEmpPersons = (id) =>{
+export const getEmpPersons = (id) =>{ //NOT IN USE
     console.log(id);
     return axios
     .get(`${Api}/employees/get/contact-persons`, {headers:headers()})
@@ -324,7 +323,7 @@ export const refreshToken = () =>{
         const { success, message } = res.data;
         jwtExpired(message)
         if (success){
-            messageAlert.success({content: message}, 5)
+            messageAlert.success({content: 'Token Refresh Successfully'}, 5)
             setToken(res.headers && res.headers.authorization)
         }
         return { success: success };

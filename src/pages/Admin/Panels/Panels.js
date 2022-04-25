@@ -35,7 +35,7 @@ class Panels extends Component {
                             <Menu>
                                 <Menu.Item danger>
                                     <Popconfirm
-                                        title="Sure to delete?"
+                                        title="Are you sure, you want to delete?"
                                         onConfirm={() =>
                                             this.handleDelete(record.id)
                                         }
@@ -237,7 +237,7 @@ class Panels extends Component {
                 </Row>
                 {openModal ? (
                     <Modal
-                        title={ editPanel ? "Edit Panel" : "Add New Panel" }
+                        title={ editPanel ? "Edit Panel" : "Add Panel" }
                         maskClosable={false}
                         centered
                         visible={openModal}

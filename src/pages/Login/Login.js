@@ -4,12 +4,13 @@ import { Row, Col, Typography, Input, Button, Form } from "antd";
 import { login, loggedIn } from '../../service/Login-Apis'
 import { localStore } from "../../service/constant";
 import { getSettings } from "../../service/global-apis";
+import Text from "antd/lib/typography/Text";
 const { Title } = Typography;
 const { Password } = Input;
 
 function Login(props) {
     const { state } = useLocation();
-    const { from } = state || { from: { pathname: "/profile" } };
+    const { from } = state || { from: { pathname: "/dashboard" } };
     const [redirectToReferrer, setRedirectToReferrer] = useState(false);
 
     useEffect(() => {
@@ -25,7 +26,7 @@ function Login(props) {
                     if(res.success){
                         localStorage.setItem('pageSize', res.data.recordsPerPage)
                     }
-                    window.location.href="/profile"
+                    window.location.href="/dashboard"
                 })
                 // setRedirectToReferrer(true)
             }
@@ -79,12 +80,13 @@ function Login(props) {
                             <Password />
                         </Form.Item>
 
-                        <Form.Item
-                        // {...tailLayout}
-                        >
+                        <Form.Item >
                             <Button type="primary" htmlType="submit">
                                 Login
                             </Button>
+                        </Form.Item>
+                        <Form.Item noStyle>
+                            <Text type="danger">If you are facing any problem, please contact support@timewize.com.au</Text>
                         </Form.Item>
                     </Form>
                 </Col>

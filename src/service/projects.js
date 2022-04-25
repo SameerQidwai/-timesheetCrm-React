@@ -103,6 +103,11 @@ export const getRecord = (id) => {
             return { success }
         })
         .catch((err) => {
+            if (err.response?.data){
+                const { status } = err.response
+                const { message, success } = err.response?.data
+                return { authError: message === "Not Authorized!", status, success, message, };
+            }
             return {
                 error: "Please login again!",
                 status: false,
@@ -177,6 +182,11 @@ export const getLeadSkills = (crud, id)=>{
             return { success: success, data: data }
         })
         .catch((err) => {
+            if (err.response?.data){
+                const { status } = err.response
+                const { message, success } = err.response?.data
+                return { authError: message === "Not Authorized!", status, success, message, };
+            }
             return {
                 error: "Please login again!",
                 success: false,

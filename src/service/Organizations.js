@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { Api, headers, jwtExpired, setToken } from "./constant";
+import { Api, apiErrorRes, headers, jwtExpired, setToken } from "./constant";
 import moment from "moment";
 import { message as messageAlert } from "antd";
 
@@ -87,6 +87,11 @@ export const getOrgRecord = (id) => {
             return { success }
         })
         .catch((err) => {
+            if (err.response?.data){
+                const { status } = err.response
+                const { message, success } = err.response?.data
+                return { authError: message === "Not Authorized!", status, success, message, };
+            }
             return {
                 error: "Please login again!",
                 status: false,
@@ -150,11 +155,6 @@ export const editList = (data) => {
             return {success, data};
         })
         .catch((err) => {
-                        messageAlert.error({ content: err.message, key: data.id})
-            return {
-                error: "Please login again!",
-                status: false,
-                message: err.message,
-            };
+            return apiErrorRes(err, data.id, 5)
         });
 };

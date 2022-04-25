@@ -4,6 +4,10 @@ Update and check
     make filterModal general put all the fields into that files belongs to any page ( to optimize code)
 
     timesheet hours vs resource work hours
+    Sidebar position filled 
+
+    create general function for edit and remove data from table
+    "Not Authorized!" Do it in simpler way     
 
     Leave
         Corn jobs

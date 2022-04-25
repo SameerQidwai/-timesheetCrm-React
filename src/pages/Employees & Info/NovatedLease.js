@@ -10,6 +10,7 @@ import { getList, delList } from "../../service/employee-leases";
 import "../styles/table.css";
 import { formatDate, formatCurrency, localStore } from "../../service/constant";
 import { tableSorter, tableTitleFilter } from "../../components/Core/Table/TableFilter";
+import { generalDelete } from "../../service/delete-Api's";
 
 const { Title } = Typography;
 const { Item } = Descriptions;
@@ -57,21 +58,21 @@ class NovatedLease extends Component {
                 dataIndex: "id",
                 align: "right",
                 width: 115,
-                render: (record) => (
+                render: (value, record, index) => (
                     <Dropdown
                         overlay={
                             <Menu>
                                 <Menu.Item danger>
                                     <Popconfirm
-                                        title="Sure to delete?"
-                                        onConfirm={() => this.handleDelete(record) }
+                                        title="Are you sure, you want to delete?"
+                                        onConfirm={() => this.handleDelete(value, index) }
                                     >
                                         Delete
                                     </Popconfirm>
                                 </Menu.Item>
                                 <Menu.Item
                                     onClick={() => {
-                                        this.setState({ infoModal: true, editLease: record, });
+                                        this.setState({ infoModal: true, editLease: value, });
                                     }}
                                 >
                                     Edit
@@ -132,14 +133,21 @@ class NovatedLease extends Component {
         })
     }
 
-    handleDelete = (id) => {
-        console.log(id);
+    handleDelete = (id, index) => {
+        console.log({id, index});
         const { empId } = this.state
-        delList(empId, id).then((res) => {
-            if (res.success) {
-                this.getList();
+        const url = `/employees/${empId}/leases`
+        const { data, filterData } = this.state
+        const { history } = this.props
+        generalDelete(history, url, id, index, filterData, data).then(res =>{
+            console.log(res);
+            if (res.success){
+                this.setState({
+                    data: [...res.data],
+                    filterData: [...res.filterData]
+                })
             }
-        });
+        })
     };
 
     closeModal = () => {

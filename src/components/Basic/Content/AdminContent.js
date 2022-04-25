@@ -4,6 +4,8 @@ import { Route, Switch, Redirect } from "react-router-dom"; // Route Library
 
 import { Layout } from "antd";
 
+import Dashboard from "../../../pages/Home/Dashboard";
+
 import Admin from "../../../pages/Admin/admin-drawer/admin-sidebar";
 import Organizations from "../../../pages/Contacts/Org & Info/Organizations";
 import OrgInfo from "../../../pages/Contacts/Org & Info/OrgInfo";
@@ -50,6 +52,11 @@ const { Content } = Layout;
 
 const pageLinks = [
     // Page link and router
+    {
+        component: Dashboard,
+        link: "/dashboard",
+        key: "DASHBOARD"
+    },
     {
         component: Profile,
         link: "/profile",
@@ -243,10 +250,12 @@ const pageLinks = [
     {
         component: LeaveRequest,
         link: "/leave-request",
+        key: 'LEAVE_REQUESTS'
     },
     {
         component: ApproveRequest,
         link: "/approve-request",
+        key: 'LEAVE_REQUESTS'
     },
     {
         component: Training,
@@ -268,6 +277,7 @@ class AdminContent extends Component {
         const permissions = JSON.parse(localStore().permissions)
         let { allowedRoutes } = this.state
         allowedRoutes[0] = pageLinks[0]
+        allowedRoutes[1] = pageLinks[1]
         pageLinks.map(el=>{
             if(permissions[el.key]&& permissions[el.key]['READ']){
                 allowedRoutes.push(el)
@@ -284,7 +294,7 @@ class AdminContent extends Component {
                 {pageLinks.map((el, i) => (
                     <Route exact path={el.link} component={el.component} key={i} />
                 ))}
-                <Redirect to="/profile" />
+                <Redirect to="/dashboard" />
             </Switch>
         );
     }

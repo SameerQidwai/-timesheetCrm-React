@@ -571,9 +571,9 @@ class InfoModal extends Component {
     addContactor = (data) => {
         const { callBack } = this.props;
         const { sContact, sOrg } = this.state
-        this.setState({ loading: true, })
         console.log(data);
         addList(data).then(res=>{
+            this.setState({ loading: false, })
             if(res.success){
                 callBack();
             }
@@ -596,8 +596,8 @@ class InfoModal extends Component {
 
     editRecord = (value) => {
         const { editCont, callBack } = this.props;
-        this.setState({ loading: true, })
         editList(editCont, value).then((res) => {
+            this.setState({ loading: false, })
             if(res.success){
                 callBack()
             }

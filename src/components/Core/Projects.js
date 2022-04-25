@@ -24,13 +24,23 @@ class Projects extends Component {
                 title: 'Title',
                 dataIndex: 'title',
                 key: 'title',
+                render: (value, record) => (
+                    <Link to={{ pathname: `/projects/${record.id}/info`}} className="nav-link"
+                    > {value} </Link>
+                ),
             },
             {
                 title: 'Organisation Name',
                 dataIndex: 'organization',
                 key: 'organization',
                 width: 300,
-                render: (record) =>{return record && record.name}
+                render: (record) =>{
+                    return record && <Link 
+                        to={{ pathname: `/organisations/${record.id}/info`, }}
+                        className="nav-link"
+                    >
+                        {record.name}</Link> 
+                },
             },
             {
                 title: 'Revenue',
