@@ -717,7 +717,9 @@ class InfoModal extends Component {
         let result = skill ? Object.keys(skill).length / 2 : 0;
         if (skill && Object.keys(skill).length > 0){
             for (let i = 0; i < result; i++) {
-                vars.push(skill[`level${i}`]);
+                if (skill[`level${i}`]){
+                    vars.push(skill[`level${i}`]);
+                }
             }
         }
         this.setState(
@@ -760,7 +762,6 @@ class InfoModal extends Component {
 
     addPerson = (value) => {
         const { callBack } = this.props;
-        console.log(value);
         this.setState({
             basicSubmitted: false,
             associateSubmitted: false,
@@ -770,8 +771,8 @@ class InfoModal extends Component {
             loading: true
         })
         addList(value).then((res) => {
+            this.setState({ loading: false })
             if(res.success){
-                this.setState({ loading: false })
                 callBack()
             }
         });
@@ -844,7 +845,6 @@ class InfoModal extends Component {
     };
 
     editRecord = (value) => {
-        console.log(value);
         const { editCP, callBack } = this.props;
         value.id = editCP
         this.setState({
@@ -853,13 +853,11 @@ class InfoModal extends Component {
             detailSubmitted: false,
             skillSubmitted: false,
             securitySubmitted: false,
-            loading: true
+            loading: true,
         })
-        console.log(value);
         editList(value).then((res) => {
+            this.setState({ loading: false })
             if(res.success){
-                console.log('hereh');
-                this.setState({ loading: false })
                 callBack()
             }
         });

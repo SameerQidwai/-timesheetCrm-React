@@ -177,6 +177,7 @@ class Menus extends Component {
                 theme="light"
                 mode="inline"
                 defaultSelectedKeys={location.pathname}
+                style={{ fontSize: 12}}
             >
                 {this.MenuRender()}
             </Menu>

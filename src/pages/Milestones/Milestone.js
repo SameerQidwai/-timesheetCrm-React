@@ -126,6 +126,7 @@ class Milestone extends Component {
     fetchAll = (id) =>{
         const { PROJECTS, OPPORTUNITIES }= JSON.parse(localStore().permissions)
         const customUrl = this.props.match.url
+        console.log(customUrl);
         let crud = this.props.match.url
         crud = crud.split('/')
         let work = crud[1]

@@ -20,11 +20,13 @@ export const generalDelete = (history, url, id, index, filterData, data) => {
                 messageAlert.success({ content: message, key: id})
                 setToken(res.headers && res.headers.authorization)
                 if (index >= 0) { // if Entity is delete from ListView
-                    filterData.splice(index,1) // deleting Index
+                    // filterData.splice(index,1) // deleting Index
+                    let delFdata = filterData.filter((el,index) => el.id !== id)
+                    let delData = []
                     if (data){ //searching data  to show in filterData
-                        data.splice(index,1) // deleting Index
+                        delData = data.filter((el,index) => el.id !== id) // deleting Index
                     }
-                    return {success: success, data: data, filterData: filterData} //Set the data...
+                    return {success: success, data: delData, filterData: delFdata} //Set the data...
                 }else{ // if Entitiy is delete from view... 
                     history.goBack()
                     return {success} //Set the data...

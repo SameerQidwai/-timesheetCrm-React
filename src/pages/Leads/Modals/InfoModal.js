@@ -604,7 +604,7 @@ class InfoModal extends Component {
 
     fetchAll = () =>{
         const { editLead, project }= this.props;  
-        const { ManageFields, DatesFields } = this.state;
+        const { ManageFields, DatesFields, BasicFields } = this.state;
         // const dates = {entryDate: moment(new Date())}
         // this.formRef.current.setFieldsValue({ dates: dates, }); 
         // to set the Default entryDate for new Oppurtunity  
@@ -619,8 +619,12 @@ class InfoModal extends Component {
                 DatesFields[1]['rangeMin'] = true            
                 DatesFields[3]['rules'] = [{ required: true, message: "End Date is Required" }]     
                 DatesFields[4]['rangeMin'] = true            
-                DatesFields[5]['rules'] = [{ required: true, message: "Dailty Hours is Required" }]        
+                DatesFields[6]['rules'] = [{ required: true, message: "Dailty Hours is Required" }]  
+                //Disable Leave type on edit          
             // this.setState ({ManageFields})
+        }
+        if(editLead){
+            BasicFields[10]['disabled'] = true  
         }
 
         // either call this or call that
@@ -629,7 +633,6 @@ class InfoModal extends Component {
         .then(res => {
             const { BasicFields, ManageFields } = this.state;
             if (res[1].success) {res[1].data[0].disabled = true}
-            console.log(res);
             BasicFields[2].data = res[0].success? res[0].data : [];
             BasicFields[3].data = res[1].success? res[1].data : [];
             BasicFields[11].data = res[2].success? res[2].data : [];

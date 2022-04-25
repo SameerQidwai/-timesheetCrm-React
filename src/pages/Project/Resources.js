@@ -265,7 +265,7 @@ class Resources extends Component {
                 data: res[2].success? res[2].data : [],
                 filterData: res[2].success? res[2].data : [],
                 permissions: PROJECTS,
-                notAuth: !res[1].success? true : false 
+                notAuth: res?.[2]?.authError 
             })
         })
         .catch(e => {

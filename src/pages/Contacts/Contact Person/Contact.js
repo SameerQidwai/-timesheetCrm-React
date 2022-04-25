@@ -286,6 +286,7 @@ class Contact extends Component {
     };
 
     handleDelete = (id, index) => {
+        console.log({id, index});
         const url = '/contactpersons'
         const { data, filterData } = this.state
         const { history } = this.props
