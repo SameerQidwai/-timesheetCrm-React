@@ -9,6 +9,7 @@ import { getList, delOrg } from "../../../service/Organizations";
 import "../../styles/table.css";
 import { localStore } from "../../../service/constant";
 import {  Filtertags, TableModalFilter, tableSorter, tableSummaryFilter, tableTitleFilter } from "../../../components/Core/Table/TableFilter";
+import { generalDelete } from "../../../service/delete-Api's";
 
 const { Title } = Typography;
 
@@ -63,16 +64,21 @@ class Organizations extends Component {
                 key: "action",
                 align: "right",
                 width: 100,
-                render: (record) => ( 
+                render: (value, record, index) => ( 
                     <Dropdown
                         overlay={
                             <Menu>
-                                {/* <Menu.Item danger>
+                                <Menu.Item 
+                                    danger
+                                    disabled={!this?.state?.permissions?.['DELETE']}
+                                >
                                     <Popconfirm
-                                        title="Sure to delete?"
-                                        onConfirm={() => this.handleDelete(record.id) }
-                                    >Delete</Popconfirm>
-                                </Menu.Item> */}
+                                        title="Are you sure, you want to delete?" 
+                                        onConfirm={() => this.handleDelete(record.id, index)} 
+                                    >
+                                        Delete
+                                    </Popconfirm>
+                                </Menu.Item >
                                 <Menu.Item
                                     onClick={() => { this.setState({ infoModal: true, editOrg: record.id }); }}
                                     disabled={this.state&& !this.state.permissions['UPDATE']}
@@ -257,12 +263,18 @@ class Organizations extends Component {
         });
     };
 
-    handleDelete = (id) => {
-        delOrg(id).then((res) => {
-            if (res.success) {
-                this.getData();
+    handleDelete = (id, index) => {
+        const url = '/organizations'
+        const { data, filterData } = this.state
+        const { history } = this.props
+        generalDelete(history, url, id, index, filterData, data).then(res =>{
+            if (res.success){
+                this.setState({
+                    data: [...res.data],
+                    filterData: [...res.filterData]
+                })
             }
-        });
+        })
     };
 
     closeModal = () => {

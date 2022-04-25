@@ -12,6 +12,7 @@ import { localStore } from "../../service/constant";
 import "../styles/table.css";
 import { Filtertags, TableModalFilter, tableSorter, tableSummaryFilter, tableTitleFilter } from "../../components/Core/Table/TableFilter";
 import { getRoles, getStates } from "../../service/constant-Apis";
+import { generalDelete } from "../../service/delete-Api's";
 
 const { Title } = Typography;
 
@@ -55,18 +56,21 @@ class Employees extends Component {
                 key: "action",
                 align: "right",
                 width: 115,
-                render: (record) => (
+                render: (value, record, index) => (
                     <Dropdown
                         overlay={
                             <Menu>
-                                {/* <Menu.Item danger>
+                                <Menu.Item 
+                                    danger
+                                    disabled={!this?.state?.permissions?.['DELETE']}
+                                >
                                     <Popconfirm
-                                        title="Are you sure, you want to delete?"
-                                        onConfirm={() => this.handleDelete(record.id) }
+                                        title="Are you sure, you want to delete?" 
+                                        onConfirm={() => this.handleDelete(record.id, index)} 
                                     >
                                         Delete
                                     </Popconfirm>
-                                </Menu.Item> */}
+                                </Menu.Item >
                                 <Menu.Item
                                     onClick={() => {
                                         this.setState({ infoModal: true, editEmp: record.id, });
@@ -291,12 +295,18 @@ class Employees extends Component {
         })
     }
 
-    handleDelete = (id) => {
-        delList(id).then((res) => {
-            if (res.success) {
-                this.getList();
+    handleDelete = (id, index) => {
+        const url = '/employees'
+        const { data, filterData } = this.state
+        const { history } = this.props
+        generalDelete(history, url, id, index, filterData, data).then(res =>{
+            if (res.success){
+                this.setState({
+                    data: [...res.data],
+                    filterData: [...res.filterData]
+                })
             }
-        });
+        })
     };
 
     closeModal = () => {

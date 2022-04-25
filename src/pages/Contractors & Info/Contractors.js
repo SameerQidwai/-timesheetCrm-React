@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Typography, Dropdown, Button, Table, Menu, Row, Col, } from "antd";
+import { Typography, Dropdown, Button, Table, Menu, Row, Col, Popconfirm, } from "antd";
 import { PlusSquareOutlined, SettingOutlined, FilterOutlined, DownOutlined, } from "@ant-design/icons"; //Icons
 
 import { Link } from "react-router-dom";
@@ -11,6 +11,7 @@ import { localStore } from "../../service/constant";
 import "../styles/table.css";
 import { getOrganizations, getRoles, getStates } from "../../service/constant-Apis";
 import { Filtertags, TableModalFilter, tableSorter, tableSummaryFilter, tableTitleFilter } from "../../components/Core/Table/TableFilter";
+import { generalDelete } from "../../service/delete-Api's";
 
 const { Title } = Typography;
 
@@ -68,18 +69,21 @@ class Contractors extends Component {
                 key: "action",
                 align: "right",
                 width: 115,
-                render: (record) => (
+                render: (value, record, index) => (
                     <Dropdown
                         overlay={
                             <Menu>
-                                {/* <Menu.Item danger>
+                                <Menu.Item 
+                                    danger
+                                    disabled={!this?.state?.permissions?.['DELETE']}
+                                >
                                     <Popconfirm
-                                        title="Are you sure, you want to delete?"
-                                        onConfirm={() => this.handleDelete(record.id) }
+                                        title="Are you sure, you want to delete?" 
+                                        onConfirm={() => this.handleDelete(record.id, index)} 
                                     >
                                         Delete
                                     </Popconfirm>
-                                </Menu.Item> */}
+                                </Menu.Item >
                                 <Menu.Item
                                     onClick={() => {
                                         this.setState({ infoModal: true, editCont: record.id, });
@@ -315,11 +319,18 @@ class Contractors extends Component {
         this.getList()
     };
 
-    handleDelete = (code) => {
-        const dataSource = [...this.state.data];
-        this.setState({
-            data: dataSource.filter((item) => item.code !== code),
-        });
+    handleDelete = (id, index) => {
+        const url = '/sub-contractors'
+        const { data, filterData } = this.state
+        const { history } = this.props
+        generalDelete(history, url, id, index, filterData, data).then(res =>{
+            if (res.success){
+                this.setState({
+                    data: [...res.data],
+                    filterData: [...res.filterData]
+                })
+            }
+        })
     };
 
     closeModal = () => {
