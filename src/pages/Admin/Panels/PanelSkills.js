@@ -576,6 +576,7 @@ class PanelInfo extends Component {
                     columns={this.columns}
                     dataSource={filterData}
                     size="small"
+                    className='fs-small'
                 />
                 {openModal ? (
                     <Modal

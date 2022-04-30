@@ -122,6 +122,7 @@ class Projects extends Component {
                     columns={columns}
                     dataSource={projects}
                     size="small"
+                    className='fs-small'
                 />
             </>
         );

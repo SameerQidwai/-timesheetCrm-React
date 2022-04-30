@@ -167,6 +167,7 @@ class ResourceHistory extends Component {
                     columns={this.columns}
                     dataSource={data}
                     size="small"
+                    className='fs-small'
                 />
                 {infoModal && (
                     <HistModal

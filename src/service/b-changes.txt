@@ -1,0 +1,70 @@
+after Login:    
+        Dasboard landing screen [(image size problem)] [(done)]
+
+Logos
+        onelm -> timeWize [(done)]
+
+order of header menu: slide 2 [(done)]
+
+check all the lables in drawer and on page: slide 2 [(done)]
+
+drawer Icons slide 4 [(done)]
+
+crm fiont : Poppins font  [(???.)] [(fixing)] [( Local working fine, test not so much [(done)])]
+
+COLORS: 
+Sidebar colour: Hex #F6F4F1  [(done)]
+    Sidbar font colr:  black [(done)]
+Site background frames: Hex #F6F4F1 [(done)]
+Selected sidebar page: #FEFEFE [(done)]
+
+Login page:  [(done)]
+    If you are facing any problem, please contact support@timewize.com.au
+
+Opportuninty: (slide 6)
+    Column sorting on all [(done)]
+    what is Status  (remove column) [(done)]
+    HyperLink on all page..  (Hyper link on itself page) [(done)]
+    on Opportuninty View Page:
+        Outcomes [(done)]
+    action Column  if hover menu can be on left side
+    add button [(done)]
+
+    Qualified OPs remove from Search Modal: [(done)]
+
+    Search: slide 7
+        search Opportuninty -> Opportunities - filter [(done)]
+        Stage (ADD – Bid development): (slide 8) [(Backend)] [(done)]
+            filter Modal  [(done)]
+            add Modal [(done)]
+            Project Modal [(done)]
+            filter P MOdal [(done)]
+            Constant [(done)]
+
+    Add: 
+        Add  new {Opportuninty} -> Add  {Opportuninty}  [(done)]
+        Tender Info: (Slide 9)
+            labels [(done)]
+        Dates info: -> key Dates (slides 10)
+            Lables [(done)]
+        Forecast: (slide 11)
+            Lables [(done)]
+            Bid Date -> Bid Due Date [(done)]
+            --Fix together-- 
+                popconfrim [(together)] [(fixing)]
+                    remove (!) [(done)]
+            
+        Profit and Loss (slide 14) (will Take some time...)
+            add column for total
+            lables
+
+        popconfrim Delete text [(done)]
+            Are you sure, you want to delete?
+
+Attachment Delete popconfrim [(Can open Modal, but not popconfrim)] [(fixing)]
+
+Admin Frames.........!!!? [(done)]
+
+low Priority :
+    from every where Qualified OPs [(fixing)]
+    Select Fields as a aphabetially sorted (check it first ) [(known places [(done)] )]

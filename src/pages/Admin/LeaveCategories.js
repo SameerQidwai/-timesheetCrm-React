@@ -3,7 +3,6 @@ import { Table, Menu, Dropdown, Button, Popconfirm, Row, Col, Typography, Modal,
 import { DownOutlined, SettingOutlined, PlusSquareOutlined, LoadingOutlined } from "@ant-design/icons"; //Icons
 
 import Form from "../../components/Core/Forms/Form";
-import "../styles/table.css";
 
 import { getList, addList, editLabel, delLabel } from "../../service/time-off";
 import { localStore } from "../../service/constant";
@@ -228,6 +227,7 @@ class LeaveCategories extends Component {
                             dataSource={filterData}
                             size="small"
                             rowKey={(data) => data.id}
+                            className='fs-small'
                         />
                     </Col>
                 </Row>

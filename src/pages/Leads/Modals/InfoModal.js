@@ -186,6 +186,7 @@ class InfoModal extends Component {
                     data: [
                         { label: "Lead", value: 'L' },
                         { label: "Tender Released", value: 'TR' },
+                        { label: "Bid Development", value: 'BD' },
                         { label: "Bid Submitted", value: 'BS' },
                     ],
                     // rules: [

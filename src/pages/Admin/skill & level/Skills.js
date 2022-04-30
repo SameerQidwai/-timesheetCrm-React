@@ -483,6 +483,7 @@ class Skills extends Component {
                     columns={this.columns}
                     dataSource={filterData}
                     size="small"
+                    className='fs-small'
                 />
                 {isVisible && (
                     <Modal

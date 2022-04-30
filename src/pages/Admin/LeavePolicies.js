@@ -3,7 +3,6 @@ import { Table, Menu, Dropdown, Button, Popconfirm, Row, Col, Typography, Modal,
 import { DownOutlined, SettingOutlined, PlusSquareOutlined, MinusCircleFilled, LoadingOutlined} from "@ant-design/icons"; //Icons
 
 // import Form from "../../components/Core/Form";
-import "../styles/table.css";
 
 import { timeOff, addList, getList, editLabel, delLabel, } from "../../service/time-off-policy";
 import { localStore } from "../../service/constant";
@@ -404,6 +403,7 @@ class LeavePolicies extends Component {
                             columns={columns}
                             dataSource={filterData}
                             size="small"
+                            className='fs-small'
                         />
                     </Col>
                 </Row>

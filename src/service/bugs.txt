@@ -1,3 +1,6 @@
+New bug Found
+    Not closing edit Modal on disable loading after api response in employeegit
+
 Update and check 
     delLeadSkillResource // not done
     Purchase Order // whole Not doe

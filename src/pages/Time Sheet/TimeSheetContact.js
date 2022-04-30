@@ -10,7 +10,6 @@ import { getUserMilestones } from "../../service/constant-Apis";
 import { localStore, Api, thumbUrl, formatDate, STATUS_COLOR, R_STATUS, formatFloat } from "../../service/constant";
     
 import moment from "moment";
-import "../styles/table.css";
 import "../styles/button.css";
 import TimeSheetPDF from "./Modals/TimeSheetPDF";
 

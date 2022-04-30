@@ -181,6 +181,7 @@ class PurchaseOrder extends Component {
                     columns={this.columns}
                     dataSource={data}
                     size="small"
+                    className='fs-small'
                 />
                 {openModal && (
                     <OrderModal

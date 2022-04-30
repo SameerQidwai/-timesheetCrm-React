@@ -4,7 +4,6 @@ import { DownOutlined, SettingOutlined, PlusSquareOutlined, LoadingOutlined} fro
 import { Link } from "react-router-dom";
 
 import Form from "../../../components/Core/Forms/Form";
-import "../../styles/table.css";
 
 import { getList, addList, editLabel } from "../../../service/calender";
 import { localStore } from "../../../service/constant";
@@ -254,6 +253,7 @@ class Calenders extends Component {
                             dataSource={filterData}
                             size="small"
                             rowKey={(data) => data.id}
+                            className='fs-small'
                         />
                     </Col>
                 </Row>

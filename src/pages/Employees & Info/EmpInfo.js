@@ -43,7 +43,8 @@ class OrgInfo extends Component {
                 this.setState({
                     data: res.basic,
                     bank: res.bank,
-                    emp: id
+                    emp: id,
+                    infoModal: false
                 })
             }else if(res.authError){
                 this.setState({ notAuth: true })

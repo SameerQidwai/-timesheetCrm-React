@@ -1,6 +1,6 @@
 import moment from 'moment'
 import { message as messageAlert } from "antd";
-// export const Api = "http://localhost:3301/api/v1";
+export const Api = "http://localhost:3301/api/v1";
 
 // export const Api = "http://onelmcrm.gaamatech.com:8000/api/v1";
 // export const Api = "http://192.168.0.243:3000/api/v1"; // Shahzaib/   
@@ -16,7 +16,7 @@ export const Api = "http://54.91.49.138:8000/api/v1"; //Test
 
 // export const Api = "http://3.239.21.153:8000/api/v1"; //live api  
 
-export const O_STAGE = {L: 'Lead', TR: 'Tender Released', BS: 'Bid Submitted'}
+export const O_STAGE = {L: 'Lead', TR: 'Tender Released', BS: 'Bid Submitted', BD: 'Bid Development'}
 export const O_STATUS = {O: 'Open', L: 'Lost', P: 'Open', NB: 'Not Bid', DNP: 'Did Not Proceed', C: 'Completed'}
 export const R_STATUS = { 'AP' : 'Approved', 'SB' : 'Submitted' , 'R' : 'Rejected','RJ' : 'Rejected' } //Request Status
 export const STATUS_COLOR = { 'AP' : 'green', 'SB' : 'cyan' , 'RJ' : 'red', 'R': 'red' } //Request Status
@@ -127,4 +127,9 @@ export const dateRangeBefore = (current, sDate, pDates) =>{
           //disable Before                           // disable Before                  // disable After
     return  (sDate && current < sDate) || startDate && current < moment(startDate) || endDate && current > moment(endDate)
   }
+}
+
+export const sorting = (data, key) =>{
+  let sortData = data.sort(( a, b) => (a?.[key]?.toLowerCase() ?? '').localeCompare(b?.[key]?.toLowerCase()?? ''))
+  return sortData
 }

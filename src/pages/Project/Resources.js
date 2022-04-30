@@ -456,6 +456,7 @@ class Resources extends Component {
                     columns={this.columns}
                     dataSource={filterData}
                     size="small"
+                    className='fs-small'
                 />
                 {openSearch && <TableModalFilter
                     title={"Search Resources"}

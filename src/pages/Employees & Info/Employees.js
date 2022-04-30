@@ -9,7 +9,6 @@ import InfoModal from "./Modals/InfoModal";
 
 import { getList, delList } from "../../service/Employees";
 import { localStore } from "../../service/constant";
-import "../styles/table.css";
 import { Filtertags, TableModalFilter, tableSorter, tableSummaryFilter, tableTitleFilter } from "../../components/Core/Table/TableFilter";
 import { getRoles, getStates } from "../../service/constant-Apis";
 import { generalDelete } from "../../service/delete-Api's";
@@ -450,6 +449,7 @@ class Employees extends Component {
                             dataSource={filterData}
                             size="small"
                             sticky
+                            className='fs-small'
                             // summary={()=>tableSummaryFilter(searchedColumn, this.advancefilter)}
                         />
                     </Col>

@@ -4,7 +4,6 @@ import { DownOutlined, SettingOutlined, PlusSquareOutlined, LoadingOutlined, Fil
 
 import Form from "../../../components/Core/Forms/Form";
 import moment from "moment";
-import "../../styles/table.css";
 
 import { holidayType, addList, getList, editLabel, delLabel, } from "../../../service/calendar-holidays";
 import { formatDate, localStore } from "../../../service/constant";
@@ -355,6 +354,7 @@ class CalenerHolidays extends Component {
                             dataSource={filterData}
                             size="small"
                             rowKey={(data) => data.id}
+                            className='fs-small'
                         />
                     </Col>
                 </Row>

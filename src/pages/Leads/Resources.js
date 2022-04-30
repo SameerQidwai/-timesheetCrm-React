@@ -420,6 +420,7 @@ class Resources extends Component {
                                 panelId={desc.panelId}
                                 callBack={this.callBack}
                                 permissions={permissions}
+                                className='fs-small'
                             />)
                         },
                         // rowExpandable: record => record.user.length > 0,
@@ -563,6 +564,7 @@ function NestedTable(props) {
             columns={columns} 
             dataSource={props.data} 
             pagination={false}
+            className='fs-small'
             rowSelection={{
                 type: 'radio',
                 selectedRowKeys: selectedRowKeys,

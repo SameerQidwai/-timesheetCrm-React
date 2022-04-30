@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Row, Col, Table, Typography } from "antd";
 import moment from "moment";
 import { isoWeekdayCalc } from 'moment-weekday-calc';
-import "../Styles/table.css"
 import { getRecord } from "../../service/opportunities";
 import { formatCurrency } from "../../service/constant";
 const { Title, Text } = Typography
@@ -26,12 +25,16 @@ class ProfitLoss extends Component {
                         }
                     }
                 },
+                {
+                    title: 'Total',
+                    key: 'total',
+                }
                
             ],
             data:[
                 {key: 'W', label: 'Working Days'},
-                {key: 'R', label: 'Revenue'},
-                {key: 'C', label: '(-) Cos' },
+                {key: 'R', label: 'Revenue \n (discounted value)'},
+                {key: 'C', label: 'Cost of sale/services' },
                 {key: '$', label: 'CM $' },
                 {key: '%', label: 'CM %' },
             ]
@@ -97,6 +100,7 @@ class ProfitLoss extends Component {
                 {
                     title: moment(month).format('MMM YY'),
                     width:100,
+                    align: 'center',
                     dataIndex: moment(month).format('MMM YY'),
                     key: moment(month).format('MMM YY'),
                     render: (record, records) =>{
@@ -135,7 +139,7 @@ class ProfitLoss extends Component {
         const { billing } = this.props
         return (
             <Row justify="center">
-                <Col span={4}>
+                {/* <Col span={4}>
                     <Title level={5} >Rev - Discount Value</Title>
                 </Col>
                 <Col span={5}>
@@ -153,7 +157,7 @@ class ProfitLoss extends Component {
                             <Text>{billing.cmPercentage} %</Text>
                         </Col>
                     </Row>
-                </Col>
+                </Col> */}
                 <Table
                     bordered
                     rowKey= {(data =>data.label)}
@@ -161,7 +165,7 @@ class ProfitLoss extends Component {
                     dataSource={data}
                     size="small"
                     pagination = {false}
-                    className="timeSheet-table"
+                    className="timeSheet-table fs-small"
                 />
             </Row>
         )

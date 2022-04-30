@@ -1,5 +1,5 @@
 .ant-table-container table > thead > tr th {
-    font-weight: 600;
+    font-weight: 600; 
     font-size: medium;
 }
 .ant-table-summary {
@@ -9,6 +9,14 @@
     .ant-table-cell.ant-table-cell-fix-left{
         background-color: #fafafa;
     }
+
+.fs-small div.ant-table.ant-table-small{
+    font-size: small;
+}
+.fs-small div.ant-table-container table > thead > tr th{
+    font-weight: 600 !important; 
+    font-size: small !important;
+}
 
 
 /* .ant-table-wrapper.TimeSheetTable {

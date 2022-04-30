@@ -19,7 +19,6 @@ import {
 
 import InfoModal from "./InfoModal";
 
-import "../styles/table.css";
 
 const { Title } = Typography;
 

@@ -2,10 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Redirect } from "react-router-dom"; // Route Library
 import { Layout } from "antd";
 import AdminContent from './AdminContent'
-import { loggedIn } from "../../../service/Login-Apis";
+import { loggedIn, refreshToken } from "../../../service/Login-Apis";
 import ActivityCounter from "./Modals/ActivityCounter";
 import ActivityLogin from "./Modals/ActivityLogin";
-import { refreshToken } from "../../../service/constant-Apis";
 import '../../Styles/content.css'
 
 const { Content } = Layout;
@@ -29,6 +28,10 @@ function PrivateRoute (props) {
         refreshToken().then(res=>{
             if(res.success){
                 setLastActivity(false)
+            }else{
+                localStorage.clear()
+                setLogin(true)
+                setLogin(false)
             }
         })
     }
