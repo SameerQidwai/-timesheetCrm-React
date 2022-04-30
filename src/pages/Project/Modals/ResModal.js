@@ -76,7 +76,7 @@ class ResModal extends Component {
           type: "Select",
           onChange: (e, value) =>{
             const { ResourceFields } = this.state;
-            const customUrl = `employees/get/by-skills?psslId=${value&&value.value}`
+            const customUrl = `employees/get/by-skills?psslId=${value?.value}&workType=P`
             getOrgPersons(customUrl).then((res) => {
               ResourceFields[7].data = res.success ? res.data : [];
               const { obj, } = this.formRef.current.getFieldsValue(); // const
@@ -284,7 +284,7 @@ class ResModal extends Component {
         const skillIndex = skills.findIndex(
           (skill) => skill.value === resR.data.panelSkillId
         );
-          const customUrl = `employees/get/by-skills?psslId=${resR.data && resR.data.panelSkillStandardLevelId}`
+          const customUrl = `employees/get/by-skills?psslId=${resR?.data?.panelSkillStandardLevelId}&workType=P`
           getOrgPersons(customUrl).then((resP) => {
           const { ResourceFields } = this.state;
           ResourceFields[3].data = skills[skillIndex]

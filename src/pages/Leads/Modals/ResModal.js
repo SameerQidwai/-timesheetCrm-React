@@ -246,7 +246,7 @@ class ResModal extends Component {
 
   fetchRes = () => {
     const { levelId } = this.props
-    const customUrl = `employees/get/by-skills?psslId=${levelId}`
+    const customUrl = `employees/get/by-skills?psslId=${levelId}&workType=O`
     Promise.all([getOrgPersons(customUrl)])
       .then((res) => {
         const data = res[0].success ? res[0].data :[]
