@@ -11,10 +11,8 @@ function Dashboard() {
         backgroundImage: `url(${"/TW_Landing.png"})`,
       }}
     >
-      <span 
-        style={{fontFamily: 'P-Grostek', letterSpacing: 2}}
-      > 
-        <Text >Welcome to </Text><Title >timewize</Title>
+      <span className="p-grostek ls5" > 
+        <Text >Welcome to </Text><Title className='ls10'>timewize</Title>
       </span>
     </div>
     )

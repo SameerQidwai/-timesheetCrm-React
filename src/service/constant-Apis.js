@@ -1,7 +1,7 @@
 import axios from "axios";
 import { message as messageAlert } from "antd";
 
-import { Api, headers, jwtExpired, setToken } from "./constant";
+import { Api, headers, jwtExpired, setToken, sorting } from "./constant";
 
 export const getStates = () => {
     return axios
@@ -13,7 +13,7 @@ export const getStates = () => {
                 states.push({value: el.id, label: el.label})
             });
             setToken(res.headers && res.headers.authorization)
-            if (success) return { success: success, data: states };
+            if (success) return { success: success, data: sorting(states, 'label') };
         })
         .catch((err) => {
             return {
@@ -34,7 +34,7 @@ export const getStandardLevels = () => {
                 standlevel.push({value: el.id, label: el.label,  levels: el.standardSkillStandardLevels.map(lvlEl=>{ return { value:lvlEl.id, label: lvlEl.standardLevel.label}})})
             });
             setToken(res.headers && res.headers.authorization)
-            if (success) return { success: success, data: standlevel };
+            if (success) return { success: success, data: sorting(standlevel, 'label') };
         })
         .catch((err) => {
             return {
@@ -55,7 +55,7 @@ export const getContactPersons = () =>{ //NOT IN USE
             cps.push({value: el.id, label: el.firstName +' ' +el.lastName})
         });
         setToken(res.headers && res.headers.authorization)
-        if (success) return { success: success, data: cps };
+        if (success) return { success: success, data: sorting(cps, 'label') };
     })
     .catch((err) => {
         return {
@@ -77,7 +77,7 @@ export const getEmployees = () => { //NOT IN USE
                     cps.push({value: el.contactPersonOrganization.contactPerson.id, label: el.contactPersonOrganization.contactPerson.firstName +' ' +el.contactPersonOrganization.contactPerson.lastName + '   '+'(Employee)', status: '(Employee)'})
                 });
                 setToken(res.headers && res.headers.authorization)
-                return { success: success, data: cps }
+                return { success: success, data: sorting(cps, 'label') }
             }
         })
         .catch((err) => {
@@ -100,7 +100,7 @@ export const getSubContractors = () => { //NOT IN USE
                     cps.push({value: el.contactPersonOrganization.contactPerson.id, label: el.contactPersonOrganization.contactPerson.firstName +' ' +el.contactPersonOrganization.contactPerson.lastName + '   '+ '(Sub-Contractor)', status: '(Sub-Contractor)'})
                 });
                 setToken(res.headers && res.headers.authorization)
-                return { success: success, data: cps };
+                return { success: success, data: sorting(cps, 'label') };
             }
         })
         .catch((err) => {
@@ -117,11 +117,8 @@ export const getOrgPersons = (url) =>{
     .get(`${Api}/${url}`, {headers:headers()})
     .then((res) => {
         const { success, data } = res.data;
-
-        // let sortData = data.sort(( a, b) => a?.label?.toLowerCase().localeCompare(b?.label?.toLowerCase()))
-
         setToken(res.headers && res.headers.authorization)
-        if (success) return { success: success, data };
+        if (success) return { success: success, data:  sorting(data, 'label') };
     })
     .catch((err) => {
         return {
@@ -133,7 +130,6 @@ export const getOrgPersons = (url) =>{
 }
 
 export const getEmpPersons = (id) =>{ //NOT IN USE
-    console.log(id);
     return axios
     .get(`${Api}/employees/get/contact-persons`, {headers:headers()})
     .then((res) => {
@@ -143,7 +139,7 @@ export const getEmpPersons = (id) =>{ //NOT IN USE
             cps.push({value: el.id, label: el.firstName +' ' +el.lastName})
         });
         setToken(res.headers && res.headers.authorization)
-        if (success) return { success: success, data: cps };
+        if (success) return { success: success, data: sorting(cps, 'label')  };
     })
     .catch((err) => {
         return {
@@ -160,12 +156,11 @@ export const getOrganizations = (id) => {
         .then((res) => {
             const { success, data } = res.data;
             var orgs = []
-            // console.log(data);
             data.map((el) => {
                 orgs.push({value: el.id, label: el.name, disabled: el.id === id && true})
             });
             setToken(res.headers && res.headers.authorization)
-            if (success) return { success: success, data: orgs };
+            if (success) return { success: success, data: sorting(orgs, 'label') };
         })
         .catch((err) => {
             return {
@@ -186,7 +181,7 @@ export const getPanels = () => {
                 panels.push({ value: el.id, label: el.label })
             });
             setToken(res.headers && res.headers.authorization)
-            if (success) return { success: success, data: panels };
+            if (success) return { success: success, data: sorting(panels, 'label') };
         })
         .catch((err) => {
             return {
@@ -207,7 +202,7 @@ export const getPanelSkills = (id) => {
                 panelskill.push({value: el.id, label: el.label,  levels: el.panelSkillStandardLevels.map(lvlEl=>{ return { value:lvlEl.id, label: lvlEl.levelLabel}})})
             });
             setToken(res.headers && res.headers.authorization)
-            if (success) return { success: success, data: panelskill };
+            if (success) return { success: success, data: sorting(panelskill, 'label') };
         })
         .catch((err) => {
             return {
@@ -228,7 +223,7 @@ export const getProjects = () => {
                 data.map((el) => {work.push({ value: el.id, label: el.title}) });
                 setToken(res.headers && res.headers.authorization)
             }
-            return { success: success, data: work };
+            return { success: success, data: sorting(work, 'label') };
         })
         .catch((err) => {
             return {
@@ -247,7 +242,7 @@ export const getUserProjects = (userId, mod) => {
             if (success) {
                 setToken(res.headers && res.headers.authorization)
             }
-            return { success: success, data: data };
+            return { success: success, data: sorting(data, 'label') };
         })
         .catch((err) => {
             return {
@@ -266,7 +261,7 @@ export const getUserMilestones = (userId) => {
             if (success) {
                 setToken(res.headers && res.headers.authorization)
             }
-            return { success: success, data: data };
+            return { success: success, data: sorting(data, 'label') };
         })
         .catch((err) => {
             return {
@@ -285,7 +280,7 @@ export const getSkillLevels = (skill) =>{
             var pros = []
             if (success){
                 setToken(res.headers && res.headers.authorization)
-                return { success: success, data: data };
+                return { success: success, data: sorting(data, 'label') };
             }
         })
         .catch((err) => {
@@ -304,7 +299,7 @@ export const getRoles = () =>{
             const { success, data } = res.data;
             if (success){
                 setToken(res.headers && res.headers.authorization)
-                return { success: success, data: data };
+                return { success: success, data: sorting(data, 'label') };
             }
         })
         .catch((err) => {
@@ -316,34 +311,12 @@ export const getRoles = () =>{
         });
 }
 
-export const refreshToken = () =>{
-    return axios
-    .get(`${Api}/helpers/refresh-token`,{headers:headers()})
-    .then((res) => {
-        const { success, message } = res.data;
-        jwtExpired(message)
-        if (success){
-            messageAlert.success({content: 'Token Refresh Successfully'}, 5)
-            setToken(res.headers && res.headers.authorization)
-        }
-        return { success: success };
-    })
-    .catch((err) => {
-        return {
-            error: "Please login again!",
-            success: false,
-            message: err.message,
-        };
-    });
-}
-
 export const entityProjects = (url) =>{
     return axios
     .get(`${Api}/${url}`, {headers:headers()})
     .then((res) => {
         const { success, data } = res.data;
         setToken(res.headers && res.headers.authorization)
-        console.log(data);
         if (success) return { success: success, data: data };
     })
     .catch((err) => {
@@ -366,7 +339,7 @@ export const getLeavePolicy = () => {
             });
             policies.push({value: 0, label: 'Unpaid'})
             setToken(res.headers && res.headers.authorization)
-            if (success) return { success: success, data: policies };
+            if (success) return { success: success, data: sorting(policies, 'label') };
         })
         .catch((err) => {
             return {
@@ -384,7 +357,6 @@ export const getUserLeaveType = () => {
             const { success, data } = res.data;
             setToken(res.headers && res.headers.authorization)
             if (success){
-                console.log(data);
                 const {holidays, contractDetails, LeaveRequestTypes = []} = data
                 let requestType = [{id: 0, name: 'Unpaid', include_off_days: true}]
                 LeaveRequestTypes.forEach((el,index)=>{
@@ -399,7 +371,6 @@ export const getUserLeaveType = () => {
             };
         })
         .catch((err) => {
-            console.log(err);
             return {
                 error: "Please login again!",
                 success: false,
@@ -414,7 +385,7 @@ export const getLineEmployees = () =>{
     .then((res) => {
         const { success, data } = res.data;
         setToken(res.headers && res.headers.authorization)
-        if (success) return { success: success, data: data };
+        if (success) return { success: success, data: sorting(data, 'label') };
     })
     .catch((err) => {
         return {
@@ -431,7 +402,7 @@ export const getManageProjects = (resourcePermission) =>{
     .then((res) => {
         const { success, data } = res.data;
         setToken(res.headers && res.headers.authorization)
-        if (success) return { success: success, data: data };
+        if (success) return { success: success, data: sorting(data, 'label') };
     })
     .catch((err) => {
         return {
@@ -441,4 +412,3 @@ export const getManageProjects = (resourcePermission) =>{
         };
     });
 }
-

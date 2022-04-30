@@ -15,3 +15,11 @@
 .landing-placeholder h1.ant-typography {
     margin: 2px 30px !important
 }
+
+.ls5 {
+    letter-spacing: 5px;
+}
+
+.ls10 {
+    letter-spacing: 10px;
+}

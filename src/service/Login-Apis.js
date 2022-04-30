@@ -209,3 +209,24 @@ export const loggedIn = () =>{
         return false
     }
 }
+
+export const refreshToken = () =>{
+    return axios
+    .get(`${Api}/helpers/refresh-token`,{headers:headers()})
+    .then((res) => {
+        const { success, message } = res.data;
+        jwtExpired(message)
+        if (success){
+            messageAlert.success({content: 'Token Refresh Successfully'}, 5)
+            setToken(res.headers && res.headers.authorization)
+        }
+        return { success: success };
+    })
+    .catch((err) => {
+        return {
+            error: "Please login again!",
+            success: false,
+            message: err.message,
+        };
+    });
+}
