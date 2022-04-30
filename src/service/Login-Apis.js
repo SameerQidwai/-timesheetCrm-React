@@ -119,19 +119,20 @@ export const getSettings = () => {
                 }
                 const employmentContracts = (data.employmentContracts && data.employmentContracts.length >0) ? data.employmentContracts[0] : {}
                 const billing ={
-                    employeeId: employmentContracts.employeeId,
-                    payslipEmail: employmentContracts.payslipEmail, 
-                    membershipAccountNo: employmentContracts.membershipAccountNo, 
-                    payFrequency: employmentContracts.payFrequency, 
-                    startDate: employmentContracts.startDate ? moment(employmentContracts.startDate) : null, 
-                    endDate: employmentContracts.endDate ? moment(employmentContracts.endDate) : null,
-                    type: employmentContracts.type, 
-                    noOfHours: employmentContracts.noOfHours, 
-                    noOfHoursPer: employmentContracts.noOfHoursPer, 
-                    remunerationAmount:employmentContracts.remunerationAmount,
-                    remunerationAmountPer: employmentContracts.remunerationAmountPer,  
-                    comments: employmentContracts.comments,
-                    leaveRequestPolicyId: employmentContracts.leaveRequestPolicyId ?? 0,
+                    employeeId: employmentContracts?.employeeId,
+                    payslipEmail: employmentContracts?.payslipEmail, 
+                    membershipAccountNo: employmentContracts?.membershipAccountNo, 
+                    payFrequency: employmentContracts?.payFrequency, 
+                    startDate: employmentContracts?.startDate ? moment(employmentContracts?.startDate) : null, 
+                    endDate: employmentContracts?.endDate ? moment(employmentContracts?.endDate) : null,
+                    type: employmentContracts?.type, 
+                    noOfHours: employmentContracts?.noOfHours, 
+                    noOfDays: employmentContracts?.noOfDays, 
+                    noOfHoursPer: employmentContracts?.noOfHoursPer, 
+                    remunerationAmount:employmentContracts?.remunerationAmount,
+                    remunerationAmountPer: employmentContracts?.remunerationAmountPer,  
+                    comments: employmentContracts?.comments,
+                    leaveRequestPolicyId: employmentContracts?.leaveRequestPolicyId ?? 0,
                 }
                 const sClearance = {
                     clearanceLevel: contactPerson.clearanceLevel,
