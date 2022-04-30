@@ -7,7 +7,6 @@ import LeaseModal from "./Modals/LeaseModal";
 import { getRecord as empRecord } from "../../service/Employees";
 import { getList, delList } from "../../service/employee-leases";
 
-import "../styles/table.css";
 import { formatDate, formatCurrency, localStore } from "../../service/constant";
 import { tableSorter, tableTitleFilter } from "../../components/Core/Table/TableFilter";
 import { generalDelete } from "../../service/delete-Api's";
@@ -219,6 +218,7 @@ class NovatedLease extends Component {
                             columns={columns}
                             dataSource={filterData}
                             size="small"
+                            className='fs-small'
                         />
                     </Col>
                 </Row>

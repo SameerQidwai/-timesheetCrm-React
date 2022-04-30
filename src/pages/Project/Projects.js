@@ -7,7 +7,6 @@ import InfoModal from './Modals/InfoModal'
 
 import { getList, delList } from "../../service/projects";
 
-import '../styles/table.css'
 import moment from "moment";
 import { formatDate, formatCurrency, localStore, O_TYPE } from '../../service/constant';
 import { getOrganizations, getPanels, getStates } from '../../service/constant-Apis';
@@ -24,6 +23,7 @@ class Projects extends Component {
                 title: 'Code',
                 dataIndex: 'id',
                 key: 'id',
+                width: '1%',
                 render:(record) =>( `00${record}` ),
                 ...tableSorter('id', 'number', true),
             },
@@ -31,7 +31,7 @@ class Projects extends Component {
                 title: 'Title',
                 dataIndex: 'title',
                 key: 'title',
-                width: 400,
+                width: '30%',
                 render: (value, record) => (
                     <Link to={{ pathname: `/projects/${record.id}/info`}} className="nav-link"
                     > {value} </Link>
@@ -42,7 +42,7 @@ class Projects extends Component {
                 title: 'Organisation Name',
                 dataIndex: 'organization',
                 key: 'organization',
-                width: 200,
+                width: '20%',
                 render: (record) =>{
                     return record && <Link 
                         to={{ pathname: `/organisations/${record.id}/info`, }}
@@ -77,13 +77,14 @@ class Projects extends Component {
                 title: 'Type',
                 dataIndex: 'type',
                 key: 'type',
+                width: '1%',
                 render: (record) => O_TYPE[record] 
             },
             {
-                title: 'Action',
+                title: '...',
                 key: 'action',
-                align: 'right',
-                width: 115,
+                align: 'center',
+                width: '1%',
                 render: (value, record, index) => (
                     <Dropdown overlay={
                         <Menu>
@@ -140,7 +141,7 @@ class Projects extends Component {
                         </Menu>
                     }>
                         <Button size='small'>
-                            <SettingOutlined/> Option <DownOutlined/>
+                            <SettingOutlined/>
                         </Button>
                     </Dropdown>  
                 ),
@@ -543,6 +544,7 @@ class Projects extends Component {
                             columns={this.columns}
                             dataSource={filterData}
                             size='small'
+                            className='fs-small'
                             // sticky
                             // summary={()=>tableSummaryFilter(searchedColumn, this.advancefilter)}
                         />

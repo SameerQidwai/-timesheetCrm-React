@@ -199,6 +199,7 @@ class HolidayTypes extends Component {
                     dataSource={filterData}
                     size="small"
                     rowKey={(data) => data.id}
+                    className='fs-small'
                 />
                 {isVisible && (
                     <Modal

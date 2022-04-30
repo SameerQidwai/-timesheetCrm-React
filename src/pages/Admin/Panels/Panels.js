@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 import Form from "../../../components/Core/Forms/Form";
 import { getList, addList, delLabel, editLabel } from "../../../service/panel";
 
-import "../../styles/table.css";
 import { localStore } from "../../../service/constant";
 import { tableSorter, tableTitleFilter } from "../../../components/Core/Table/TableFilter";
 
@@ -232,6 +231,7 @@ class Panels extends Component {
                             columns={columns}
                             dataSource={filterData}
                             size="small"
+                            className='fs-small'
                         />
                     </Col>
                 </Row>

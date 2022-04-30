@@ -4,6 +4,7 @@ import Layout from './components/Basic/Drawer/Sidebar'
 import Login from './pages/Login/Login'
 
 import './App.css';
+import "./pages/styles/table.css";
 function App() {
   return (
         <Router>

@@ -6,7 +6,6 @@ import AttachModal from "./Modals/AttachModal";
 import {  getList, reviewTimeSheet, getMilestones, getUsersTimesheet  } from "../../service/timesheet"
 import { Api, localStore, R_STATUS, STATUS_COLOR } from "../../service/constant";
 
-import "../styles/table.css";
 import "../styles/button.css";
 import TimeSheetPDF from "./Modals/TimeSheetPDF";
 

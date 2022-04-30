@@ -6,7 +6,6 @@ import { DownOutlined, SettingOutlined, PlusSquareOutlined, FilterOutlined, Uplo
 import InfoModal from "./InfoModal";
 import { getList, delList } from "../../../service/conatct-person";
 import { GENDER, localStore } from "../../../service/constant";
-import "../../styles/table.css";
 import { Filtertags, TableModalFilter, tableSorter, tableSummaryFilter, tableTitleFilter } from "../../../components/Core/Table/TableFilter";
 import { getOrganizations, getStandardLevels, getStates } from "../../../service/constant-Apis";
 import { generalDelete } from "../../../service/delete-Api's";
@@ -447,7 +446,7 @@ class Contact extends Component {
                         <Table
                             title={()=>tableTitleFilter(5, this.generalFilter)}
                             bordered
-                            className="fixed-top"
+                            className="fixed-top fs-small"
                             pagination={{pageSize: localStore().pageSize}}
                             rowKey={(data) => data.id}
                             columns={columns}

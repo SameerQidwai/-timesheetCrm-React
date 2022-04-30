@@ -8,7 +8,6 @@ import InfoModal from "./Modals/InfoModal";
 
 import { getList } from "../../service/contractors";
 import { localStore } from "../../service/constant";
-import "../styles/table.css";
 import { getOrganizations, getRoles, getStates } from "../../service/constant-Apis";
 import { Filtertags, TableModalFilter, tableSorter, tableSummaryFilter, tableTitleFilter } from "../../components/Core/Table/TableFilter";
 import { generalDelete } from "../../service/delete-Api's";
@@ -478,6 +477,7 @@ class Contractors extends Component {
                             dataSource={filterData}
                             size="small"
                             sticky
+                            className='fs-small'
                             // summary={()=>tableSummaryFilter(searchedColumn, this.advancefilter)}
                         />
                     </Col>

@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 import InfoModal from "./InfoModal";
 import { getList, delOrg } from "../../../service/Organizations";
 
-import "../../styles/table.css";
 import { localStore } from "../../../service/constant";
 import {  Filtertags, TableModalFilter, tableSorter, tableSummaryFilter, tableTitleFilter } from "../../../components/Core/Table/TableFilter";
 import { generalDelete } from "../../../service/delete-Api's";
@@ -394,6 +393,7 @@ class Organizations extends Component {
                             columns={columns}
                             dataSource={filterData}
                             size="small"
+                            className='fs-small'
                             // sticky // this is commeted issue is fixed I don't know why every other place it is working fine
                             // summary={()=>tableSummaryFilter(searchedColumn, this.advancefilter)}
                         />

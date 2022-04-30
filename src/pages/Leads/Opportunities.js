@@ -7,7 +7,6 @@ import InfoModal from './Modals/InfoModal'
 
 import { getList, delList } from "../../service/opportunities";
 
-import '../styles/table.css'
 import moment from "moment";
 import { formatDate, formatCurrency, localStore, O_STAGE, O_STATUS, O_TYPE } from '../../service/constant';
 import { Filtertags, TableModalFilter, tableSorter, tableSummaryFilter, tableTitleFilter } from '../../components/Core/Table/TableFilter';
@@ -24,6 +23,7 @@ class Opportunities extends Component {
                 title: 'Code',
                 dataIndex: 'id',
                 key: 'id',
+                width: '1%',
                 render:(record) =>( `00${record}` ),
                 ...tableSorter('id', 'number', true),
             },
@@ -31,6 +31,7 @@ class Opportunities extends Component {
                 title: 'Title',
                 dataIndex: 'title',
                 key: 'title',
+                width: '18%',
                 render: (value, record) => (
                     <Link to={{ pathname: `/opportunities/${record.id}/info`}} className="nav-link"
                     > {value} </Link>
@@ -40,7 +41,8 @@ class Opportunities extends Component {
             {
                 title: 'Organisation Name',
                 dataIndex: 'organization',
-                width: 200,
+                width: '18%',
+                // width: '200',
                 key: 'organization',
                 render: (record) =>{
                     return record && <Link 
@@ -83,6 +85,7 @@ class Opportunities extends Component {
                 title: 'Stage',
                 dataIndex: 'stage',
                 key: 'stage',
+                width: '1%',
                 render: (record) =>  O_STAGE[record],
                 ...tableSorter('stage', 'string'),
             },
@@ -90,14 +93,16 @@ class Opportunities extends Component {
                 title: 'Type',
                 dataIndex: 'type',
                 key: 'type',
+                width: '1%',
                 render: (record) => O_TYPE[record],
                 ...tableSorter('type', 'number'),
             },
             {
-                title: 'Action',
+                title: '...',
                 key: 'action',
-                align: 'right',
-                width: 115,
+                align: 'center',
+                width: '1%',
+                // width: '155',
                 render: (value, record, index) => (
                     <Dropdown overlay={
                         <Menu>
@@ -149,7 +154,7 @@ class Opportunities extends Component {
                         </Menu>
                     }>
                         <Button size='small'>
-                            <SettingOutlined/> Option <DownOutlined/>
+                            <SettingOutlined/> 
                         </Button>
                     </Dropdown>  
                 ),
@@ -562,6 +567,7 @@ class Opportunities extends Component {
                             columns={this.columns}
                             dataSource={filterData}
                             size='small'
+                            className='fs-small'
                             // sticky
                             // summary={()=>tableSummaryFilter(searchedColumn, this.advancefilter)}
                         />

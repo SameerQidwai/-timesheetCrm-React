@@ -131,6 +131,7 @@ class Skills extends Component {
                     columns={columns} 
                     dataSource={data} 
                     size="small"
+                    className='fs-small'
                 />
             </>
         )

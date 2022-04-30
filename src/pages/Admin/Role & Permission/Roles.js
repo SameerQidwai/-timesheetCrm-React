@@ -4,7 +4,6 @@ import {
     DownOutlined, SettingOutlined, PlusSquareOutlined, LoadingOutlined } from "@ant-design/icons"; //Icons
 
 import Form from "../../../components/Core/Forms/Form";
-import "../../styles/table.css";
 import Permission from "./Permission";
 import { addList, delLabel, editLabel, getList } from "../../../service/Roles-Apis";
 import { localStore } from "../../../service/constant";
@@ -207,6 +206,7 @@ class Roles extends Component {
                             columns={columns}
                             dataSource={data}
                             size="small"
+                            className='fs-small'
                         />
                     </Col>
                 </Row>

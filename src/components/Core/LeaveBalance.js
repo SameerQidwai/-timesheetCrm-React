@@ -4,7 +4,6 @@ import { CloseSquareFilled, CheckSquareFilled } from "@ant-design/icons"; //Icon
 import { formatFloat, localStore } from '../../service/constant';
 import { getLeaveBalance, updateLeavebalance } from '../../service/leaveRequest-Apis';
 
-import '../Styles/table.css'
 
 const EditableContext = React.createContext(null);
 
@@ -208,6 +207,7 @@ class LeaveBalance extends Component {
                         columns={columns}
                         dataSource={data}
                         size='small'
+                        className='fs-small'
                     />
                 </Col>
             </Row>

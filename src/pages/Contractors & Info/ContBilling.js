@@ -8,7 +8,6 @@ import { getRecord as subContRecord } from "../../service/contractors"
 import { getList, delList } from "../../service/subContrators-contracts";
 
 import moment from "moment"
-import "../styles/table.css";
 import { formatCurrency, localStore, DURATION, formatDate } from "../../service/constant";
 import { tableSorter, tableTitleFilter } from "../../components/Core/Table/TableFilter";
 import { generalDelete } from "../../service/delete-Api's";
@@ -200,6 +199,7 @@ class EmpBilling extends Component {
                     columns={this.columns}
                     dataSource={filterData}
                     size="small"
+                    className='fs-small'
                 />
 
                  {billModal && (
