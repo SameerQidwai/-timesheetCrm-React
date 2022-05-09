@@ -54,6 +54,11 @@ class EmpBilling extends Component {
                 key: "remunerationAmountPer",
                 render: (record)=> DURATION[record]
             },
+            // {
+            //     title: "Contract Duration",
+            //     key: "duration",
+            //     // render: (record)=> record.endDate && record.startDate && moment.duration(moment(record.endDate).diff(moment(record.startDate))).humanize('days') 
+            // },
             {
                 title: "Action",
                 key: "action",

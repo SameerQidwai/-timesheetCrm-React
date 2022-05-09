@@ -57,7 +57,7 @@ class Contact extends Component {
                 // ...tableFilter('firstName', 'includes')
             },
             {
-                title: "Contact",
+                title: "Phone",
                 dataIndex: "phoneNumber",
                 key: "phoneNumber",
                 width: 150,
@@ -411,7 +411,7 @@ class Contact extends Component {
             <>
                 <Row justify="space-between">
                     <Col>
-                        <Title level={4}>Contact Persons</Title>
+                        <Title level={4}>Contacts</Title>
                     </Col>
                     <Col style={{ textAlign: "end" }} span={12}>
                         <Row justify="end">

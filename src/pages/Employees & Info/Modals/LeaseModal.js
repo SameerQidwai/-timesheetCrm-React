@@ -80,7 +80,7 @@ class LeaseModal extends Component {
                         // itemStyle:{marginBottom:'10px'},
                     },
                     {
-                        Placeholder: "MV Rego Number",
+                        Placeholder: "Vehicle Registration Number",
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -119,7 +119,7 @@ class LeaseModal extends Component {
                         itemStyle: { marginBottom: 10 },
                     },
                     {
-                        Placeholder: "MV Make & Model",
+                        Placeholder: "Vehicle Make And Model",
                         fieldCol: 12,
                         size: "small",
                         type: "Text",

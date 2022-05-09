@@ -34,7 +34,7 @@ class ResModal extends Component {
           // itemStyle:{marginBottom:'10px'},
         },
         {
-          Placeholder: "Effort Rate",
+          Placeholder: "Rate Of Effort",
           rangeMin: true,
           fieldCol: 12,
           size: "small",
@@ -64,7 +64,7 @@ class ResModal extends Component {
           rangeMax: 100,
         },
         {
-          Placeholder: "Buy Cost",
+          Placeholder: "Buy Rate (Hourly)",
           rangeMin: true,
           fieldCol: 12,
           size: "small",
@@ -73,7 +73,7 @@ class ResModal extends Component {
           // itemStyle:{marginBottom:'10px'},
         },
         {
-          Placeholder: "Sale Cost",
+          Placeholder: "Sale Rate (Hourly)",
           rangeMin: true,
           fieldCol: 12,
           size: "small",
@@ -105,7 +105,7 @@ class ResModal extends Component {
   
       SkillFields: [
         {
-          Placeholder: "Title",
+          Placeholder: "Position Title",
           rangeMin: true,
           fieldCol: 12,
           size: "small",
@@ -149,7 +149,7 @@ class ResModal extends Component {
         },
         
         {
-          Placeholder: "Level",
+          Placeholder: "Skill Level",
           rangeMin: true,
           fieldCol: 12,
           size: "small",
@@ -158,7 +158,7 @@ class ResModal extends Component {
           // itemStyle:{marginBottom:'10px'},
         },
         {
-          Placeholder: "Work Hours",
+          Placeholder: "Total Billable Hours",
           rangeMin: true,
           fieldCol: 12,
           size: "small",

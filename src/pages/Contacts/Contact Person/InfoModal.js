@@ -890,7 +890,7 @@ class InfoModal extends Component {
         const { BasicFields, associateFields, SkillFields, SecurityFields, loading } = this.state;
         return (
             <Modal
-                title={editCP ? "Edit Contact Person" : "Add Contact Person"}
+                title={editCP ? "Edit Contact" : "Add Contact"}
                 maskClosable={false}
                 centered
                 visible={visible}

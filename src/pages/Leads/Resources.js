@@ -133,7 +133,7 @@ class Resources extends Component {
                   type: "Text",
                 },
                 {
-                    Placeholder: "Work Hours",
+                    Placeholder: "Total Billable Hours",
                     fieldCol: 12,
                     size: "small",
                     type: "Text",

@@ -43,24 +43,24 @@ class EmpBilling extends Component {
                 ...tableSorter('endDate', 'date'),
             },
             {
-                title: "Job Type",
+                title: "Employment Type",
                 dataIndex: "type",
                 key: "type",
                 render: (record) => JOB_TYPE[record]
             },
             {
-                title: "Rate",
+                title: "Annual Base Salary",
                 dataIndex: "remunerationAmount",
                 key: "remunerationAmount",
                 render: (record)=> `${formatCurrency(record)}`,
                 ...tableSorter('remunerationAmount', 'number'),
             },
-            {
-                title: "Rate Duration",
-                dataIndex: "remunerationAmountPer",
-                key: "remunerationAmountPer",
-                render: (record)=> DURATION[record]
-            },
+            // {
+            //     title: "Rate Duration",
+            //     dataIndex: "remunerationAmountPer",
+            //     key: "remunerationAmountPer",
+            //     render: (record)=> DURATION[record]
+            // },
             {
                 title: "Action",
                 key: "action",
@@ -183,7 +183,7 @@ class EmpBilling extends Component {
         return (
             <>
                 <Descriptions
-                    title={'Contract Information'}
+                    title={'Contract History'}
                     size="small"
                     bordered
                     layout="horizontal"

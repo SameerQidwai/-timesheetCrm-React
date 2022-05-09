@@ -82,7 +82,7 @@ class InfoModal extends Component {
           },
         },
         {
-          Placeholder: "Delegate Contact Person",
+          Placeholder: "Customer Representative",
           fieldCol: 12,
           size: "small",
           type: "Text",
@@ -210,7 +210,7 @@ class InfoModal extends Component {
       
       tenderFields: [
         {
-          Placeholder: "Tender/RFQTS Title",
+          Placeholder: "Tender Title",
           fieldCol: 12,
           size: "small",
           type: "Text",
@@ -218,7 +218,7 @@ class InfoModal extends Component {
           // itemStyle:{marginBottom:'10px'},
         },
         {
-          Placeholder: "Tender/RFQTS Number",
+          Placeholder: "Tender Number",
           size: "small",
           fieldCol: 12,
           type: "Text",
@@ -254,7 +254,7 @@ class InfoModal extends Component {
           // itemStyle:{marginBottom:'10px'},
         },
         {
-          Placeholder: "CM",
+          Placeholder: "Contribution Margin as a %",
           size: "small",
           fieldCol: 12,
           type: "Text",
@@ -296,7 +296,7 @@ class InfoModal extends Component {
           },
         },
         {
-          Placeholder: "CM",
+          Placeholder: "Contribution Margin",
           size: "small",
           fieldCol: 24,
           type: "Text",
@@ -364,7 +364,7 @@ class InfoModal extends Component {
         },
   
         {
-          Placeholder: "Daily Hours",
+          Placeholder: "Work Hours Per Day",
           rangeMin: true,
           fieldCol: 12,
           size: "small",
@@ -585,10 +585,10 @@ class InfoModal extends Component {
               <TabPane tab="Opportunity Info" key="basic" forceRender className="ant-form ant-form-inline ant-form-small" >
                   <FormItems FormFields={BasicFields} />
               </TabPane>
-              <TabPane tab="Tender/RFQTS Info" key="tender" forceRender className="ant-form ant-form-inline ant-form-small" >
+              <TabPane tab="Tender Info" key="tender" forceRender className="ant-form ant-form-inline ant-form-small" >
                   <FormItems FormFields={tenderFields} />
               </TabPane>
-              <TabPane tab="Date Info" key="dates" forceRender className="ant-form ant-form-inline ant-form-small" >
+              <TabPane tab="Key Dates" key="dates" forceRender className="ant-form ant-form-inline ant-form-small" >
                   <FormItems FormFields={DatesFields} />
               </TabPane>
               <TabPane tab="Forecast" key="billing" forceRender className="ant-form ant-form-inline ant-form-small" >

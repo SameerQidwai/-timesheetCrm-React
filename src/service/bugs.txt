@@ -12,6 +12,8 @@ Update and check
     create general function for edit and remove data from table
     "Not Authorized!" Do it in simpler way     
 
+    calander disableing and nested deatil view page...
+    
     Leave
         Corn jobs
             Leave not to be rest at any level because of reports

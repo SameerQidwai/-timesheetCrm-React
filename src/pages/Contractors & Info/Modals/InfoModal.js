@@ -694,7 +694,7 @@ class InfoModal extends Component {
 
         return (
             <Modal
-            title={editCont ? "Edit Contractor" : "Add Contractor"}
+            title={editCont ? "Edit Subcontractor" : "Add Subcontractor"}
             maskClosable={false}
             centered
             visible={visible}

@@ -436,7 +436,7 @@ class Contractors extends Component {
             <>
                 <Row justify="space-between">
                     <Col>
-                        <Title level={4}>Contractors</Title>
+                        <Title level={4}>Subcontractors</Title>
                     </Col>
                     <Col style={{ textAlign: "end" }} span={4}>
                         <Row justify="space-between">
@@ -458,7 +458,7 @@ class Contractors extends Component {
                                     disabled={!permissions['ADD']}
                                 >
                                     <PlusSquareOutlined />
-                                    Contactors
+                                    Subcontactors
                                 </Button>
                             </Col>
                         </Row>
@@ -483,7 +483,7 @@ class Contractors extends Component {
                     </Col>
                 </Row>
                 {openSearch && <TableModalFilter
-                    title={"Search Contractors"}
+                    title={"Search Subcontractors"}
                     visible={openSearch}
                     filters={searchedColumn}
                     filterFields={filterFields}

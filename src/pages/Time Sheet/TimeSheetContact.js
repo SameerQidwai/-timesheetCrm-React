@@ -152,7 +152,7 @@ class TimeSheetContact extends Component {
                     },
                 },
                 {
-                    title: "Total",
+                    title: "Monthly Total",
                     dataIndex: "totalHours",
                     key: "totalHours",
                     fixed: "left",
@@ -540,7 +540,7 @@ class TimeSheetContact extends Component {
                         })
                         //Title of the projct show column for title 
                         return key === 'project' ? <Table.Summary.Cell index={kIndex+1} key={kIndex+1}>
-                            Total Work In A day  
+                            Total Hours 
                         </Table.Summary.Cell > 
                         : // show total and normal background if the column month is same as selected month or the key is totalHours of the month
                             (key === 'totalHours'|| (dateObj && dateObj.isSameOrAfter(startDate)  && dateObj.isSameOrBefore(endDate))) ? 

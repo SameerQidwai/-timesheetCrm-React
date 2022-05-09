@@ -110,13 +110,14 @@ class LeaveBalance extends Component {
                 title: 'Type',
                 dataIndex: 'name',
                 key: 'name',
+                width: '30%'
             },
             {
                 title: 'Accured',
                 dataIndex: 'carryForward',
                 key: 'carryForward',
                 className: 'editable-cell',
-                width: 275,
+                width: '14%',
                 editable: props.editable,
                 render:(text) => formatFloat(text)
             },
@@ -124,18 +125,21 @@ class LeaveBalance extends Component {
                 title: 'Earned YTD',
                 dataIndex: 'earned',
                 key: 'earned',
+                width: '14%',
                 render:(text, record)=> formatFloat(record.balanceHours - record.carryForward + record.used)
             },
             {
                 title: 'Used YTD',
                 dataIndex: 'used',
                 key: 'used',
+                width: '14%',
                 render:(text) => formatFloat(text)
             },
             {
                 title: 'Balance',
                 dataIndex: 'balanceHours',
                 key: 'balanceHours',
+                width: '14%',
                 render:(text) => formatFloat(text)
             },
         ];
@@ -208,6 +212,7 @@ class LeaveBalance extends Component {
                         dataSource={data}
                         size='small'
                         className='fs-small'
+                        tableLayout="fixed"
                     />
                 </Col>
             </Row>

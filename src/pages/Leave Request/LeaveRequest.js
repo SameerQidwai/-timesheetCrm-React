@@ -230,7 +230,7 @@ class LeaveRequest extends Component {
 
                 <Row style={{marginTop: '20px'}} justify="space-between">
                     <Col>
-                        <Title level={4}>My Leave Balance</Title>
+                        <Title level={4}>Leave Balance</Title>
                     </Col>
                     
                     <Col span={24}>

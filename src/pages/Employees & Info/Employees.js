@@ -95,7 +95,7 @@ class Employees extends Component {
                                         }}
                                         className="nav-link"
                                     >
-                                        Contracts
+                                        Contract History
                                     </Link>
                                 </Menu.Item>
                                 <Menu.Item>
@@ -131,11 +131,11 @@ class Employees extends Component {
                 'firstName': {type: 'Input', value: '', label:"First Name",  showInColumn: true},
                 'lastName': { type: 'Input', value: '', label:"Last Name",  showInColumn: true},
                 'phoneNumber': {type: 'Input', value: '', label:"Phone Number",  showInColumn: true},
-                'email': {type: 'Input', value: '',  label:"Email", showInColumn: true},
+                'email': {type: 'Input', value: '',  label:"Personal Email", showInColumn: true},
                 'Action': {type: 'Input', value: '', label:"",  showInColumn: true, disabled:true},
                 'stateId': {type: 'none', multi: true, value: [], label:"State",  showInColumn: false, disabled:false},
                 'gender': {type: 'Select', multi: true, value: [], label:"Gender",  showInColumn: false},
-                'address': {type: 'none', value: '', label:"Address",  showInColumn: false, disabled:false},
+                'address': {type: 'none', value: '', label:"Residential Address",  showInColumn: false, disabled:false},
                 'role': {type: 'none', multi: true, value: [], label:"Role",  showInColumn: false, disabled:false},
             },
 
@@ -182,7 +182,7 @@ class Employees extends Component {
                 {
                     fieldCol: 12, // this is only label 4
                     size: "small",
-                    Placeholder: "Email",
+                    Placeholder: "Personal Email",
                     
                     type: "Text",
                     labelAlign: "left",
@@ -258,7 +258,7 @@ class Employees extends Component {
                     data: [],
                 },
                 {
-                    Placeholder: "Address",
+                    Placeholder: "Residential Address",
                     fieldCol: 24,
                     size: "small",
                     type: "Text",

@@ -17,7 +17,7 @@ class Bank extends Component {
         // data.title = this.props.title;
         return (
             <Descriptions
-                title="Bank Account Detail"
+                // title="Bank Account Detail"
                 size="small"
                 bordered
                 layout="horizontal"

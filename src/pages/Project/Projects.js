@@ -78,7 +78,8 @@ class Projects extends Component {
                 dataIndex: 'type',
                 key: 'type',
                 width: '1%',
-                render: (record) => O_TYPE[record] 
+                render: (record) => O_TYPE[record], 
+                ...tableSorter('type', 'number'),
             },
             {
                 title: '...',
@@ -502,7 +503,7 @@ class Projects extends Component {
             <>
                 <Row justify="space-between">
                     <Col>
-                        <Title level={4}>Project</Title>
+                        <Title level={4}>Projects</Title>
                     </Col>
                     <Col style={{textAlign:'end'}} span={4} >
                         <Row justify="space-between">

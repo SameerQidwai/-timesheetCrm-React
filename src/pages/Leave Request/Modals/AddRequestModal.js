@@ -517,7 +517,7 @@ class AddRequestModal extends Component{
         // For time bring
         return(
             <Modal
-                title={ readOnly ? 'View Request' :  edit ? "Edit Request" : "New Request"}
+                title={ readOnly ? 'View Request' :  edit ? "Edit Leave Request" : "New Leave Request"}
                 maskClosable
                 destroyOnClose={true}
                 visible={visible}

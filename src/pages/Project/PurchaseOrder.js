@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Row, Col, Menu, Button, Dropdown, Descriptions, Table, Popconfirm } from "antd";
+import { Row, Col, Menu, Button, Dropdown, Descriptions, Table, Popconfirm, Typography } from "antd";
 import { SettingOutlined, DownOutlined } from "@ant-design/icons"; //Icons
 import { Link } from "react-router-dom"; 
 
@@ -10,6 +10,7 @@ import moment from "moment"
 import { formatDate, formatCurrency, localStore } from "../../service/constant";
 import { generalDelete } from "../../service/delete-Api's";
 
+const { Title } = Typography
 const { Item } = Descriptions;
 
 class PurchaseOrder extends Component {
@@ -152,7 +153,7 @@ class PurchaseOrder extends Component {
         return (
             <>
                 <Descriptions
-                    // title={DescTitle}
+                    title={"Purchase Orders"}
                     size="small"
                     bordered
                     layout="horizontal"

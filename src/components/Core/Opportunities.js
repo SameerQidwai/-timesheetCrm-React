@@ -41,20 +41,20 @@ class Skills extends Component {
                 },
             },
             {
-                title: 'Revenue',
+                title: 'Estimated Value',
                 dataIndex: 'value',
                 key: 'value',
                 render: (record)=>  `${formatCurrency(record)}` 
             },
             {
-                title: 'Start Date',
+                title: 'Estimated Start Date',
                 dataIndex: 'startDate',
                 key: 'startDate',
                 width: 'fit-content',
                 render: (record) =>(record && formatDate(record))
             },
             {
-                title: 'End Date',
+                title: 'Estimated End Date',
                 dataIndex: 'endDate',
                 key: 'endDtae',
                 render: (record) =>(record && formatDate(record))

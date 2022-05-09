@@ -96,8 +96,18 @@ class OrgInfo extends Component {
                                         }}
                                         className="nav-link"
                                     >
-                                        Contracts
+                                        Contract History
                                     </Link>
+                                <Menu.Item>
+                                    <Link
+                                        to={{
+                                            pathname: `/Employee/${emp}/novated-lease`,
+                                        }}
+                                        className="nav-link"
+                                    >
+                                        Novated Lease
+                                    </Link>
+                            </Menu.Item>
                                 </Menu.Item>
                             </Menu>
                         }

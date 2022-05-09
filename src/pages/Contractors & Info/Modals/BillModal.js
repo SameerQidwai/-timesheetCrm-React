@@ -73,7 +73,7 @@ class BillModal extends Component {
                     labelAlign: "right",
                 },
                 {
-                    Placeholder: `Total Fee`,
+                    Placeholder: `Rate`,
                     rangeMin: true,
                     fieldCol: 12,
                     size: "small",

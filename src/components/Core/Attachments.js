@@ -111,7 +111,7 @@ class Attachments extends Component {
                         style={{ backgroundColor: "rosybrown" }}
                     >
                         <Button type="ghost" loading={loading}>
-                            <UploadOutlined /> Upload new File
+                            <UploadOutlined /> Upload New File
                         </Button>
                     </Upload>
                 </Col>

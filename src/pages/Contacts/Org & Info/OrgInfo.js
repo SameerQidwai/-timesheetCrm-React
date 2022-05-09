@@ -126,7 +126,7 @@ class OrgInfo extends Component {
                     <Item label="Email">{data.email}</Item>
                     <Item label="Address">{data.address}</Item>
                     <Item label="Website">{<Link to={{ pathname: `https://${data.website}` }} target="_blank" >{data.website}</Link>}</Item>
-                    <Item label="EBA">{data.expectedBusinessAmount}</Item>
+                    {/* <Item label="EBA">{data.expectedBusinessAmount}</Item> */}
                     <Item label="Contact Person">{basic ?basic.delegate_contactPerson: null}</Item>
                 </Descriptions>
                 {organizationId &&(
@@ -135,10 +135,10 @@ class OrgInfo extends Component {
                         style={{ marginTop: "50px" }}
                         // defaultActiveKey="comments"
                     >
-                        <TabPane tab="Project" key="project">
+                        <TabPane tab="Projects" key="project">
                             <Projects targetId={organizationId} showColumn={true} customUrl={`helpers/work?type=P&organization=${organizationId}`} />
                         </TabPane>
-                        <TabPane tab="Opportunity" key="opportunity">
+                        <TabPane tab="Opportunities" key="opportunity">
                             <Opportunity targetId={organizationId} showColumn={true} customUrl={`helpers/work?type=O&organization=${organizationId}`}  />
                         </TabPane>
                         {/* <TabPane tab="Sub-organization" key="sub">
@@ -151,7 +151,7 @@ class OrgInfo extends Component {
                             <Comments targetId={organizationId} targetType="ORG" />
                         </TabPane>
                         
-                        <TabPane tab="Bank Account" key="Bank">
+                        <TabPane tab="Bank Details" key="Bank">
                             <Bank targetId={organizationId} title={data.name} bank={bank} />
                         </TabPane>
                     </Tabs>

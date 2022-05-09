@@ -107,6 +107,19 @@ class Permission extends Component {
                     }
                 },
             },
+            {
+                title: 'Unapprove',
+                key: 'UNAPPROVE',
+                dataIndex: 'UNAPPROVE',
+                render: (text, record, rowIndex) => {
+                    {return   <Form.Item noStyle name={[record.key, 'UNAPPROVE']}>{ 
+                            (record.key === "TIMESHEETS" || record.key === "LEAVE_REQUESTS" ) && (
+                            <Checkbox.Group  options={['ANY', 'MANAGE']}  />
+                            )
+                        }</Form.Item>
+                    }
+                },
+            },
         ]
 
         this.state = {
@@ -148,6 +161,10 @@ class Permission extends Component {
                 {
                     key: 'PROFILE',
                     category: "Profile",
+                },
+                {
+                    key: 'UNAPPROVE',
+                    category: "UNAPPROVE",
                 },
             ],
         }
@@ -216,7 +233,7 @@ class Permission extends Component {
                     okText={loading ?<LoadingOutlined /> :"Save"}
                     okButtonProps={{ disabled: loading || isSystem, htmlType: 'submit', form: 'my-form' }}
                     onCancel={()=>{closeModal()}}
-                    width={700}
+                    width={"min-content"}
                 >
                     <Form
                         id={'my-form'}

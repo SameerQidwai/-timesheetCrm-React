@@ -4,11 +4,11 @@ after Login:
 Logos
         onelm -> timeWize [(done)]
 
-order of header menu: slide 2 [(done)]
+order of header menu: slide: 2 [(done)]
 
-check all the lables in drawer and on page: slide 2 [(done)]
+check all the lables in drawer and on page: slide: 2 [(done)]
 
-drawer Icons slide 4 [(done)]
+drawer Icons slide: 4 [(done)]
 
 crm fiont : Poppins font  [(???.)] [(fixing)] [( Local working fine, test not so much [(done)])]
 
@@ -21,7 +21,7 @@ Selected sidebar page: #FEFEFE [(done)]
 Login page:  [(done)]
     If you are facing any problem, please contact support@timewize.com.au
 
-Opportuninty: (slide 6)
+Opportuninty: (slide: 6)
     Column sorting on all [(done)]
     what is Status  (remove column) [(done)]
     HyperLink on all page..  (Hyper link on itself page) [(done)]
@@ -54,7 +54,7 @@ Opportuninty: (slide 6)
                 popconfrim [(together)] [(fixing)]
                     remove (!) [(done)]
             
-        Profit and Loss (slide 14) (will Take some time...)
+        Profit and Loss (slide 14) (will Take some time...)???
             add column for total
             lables
 
@@ -65,6 +65,136 @@ Attachment Delete popconfrim [(Can open Modal, but not popconfrim)] [(fixing)]
 
 Admin Frames.........!!!? [(done)]
 
-low Priority :
+contd... |
+    ==================================
+    Opportuninty view page: (slide: 18) [(fixing)]
+        show all the baic
+     
+    opportunity  [(done)]
+        Search: (slide: 19)
+            "Work Hours" => "Total Billable Hours"
+        Position: (slide: 20)
+            "Work Hours" => "Total Billable Hours" 
+            "Title"  => "Position Title"
+            "Level" => "Skill Level"
+        Resource: (slide: 21)
+            "Effort Rate" => "Rate Of Effort"
+            "Buy Cost" => "Buy Rate (Hourly)"
+            "Sale Cost" => "Sale Rate (Hourly)"
+
+
+    Project 
+        Table (slide: 22) [(done)]
+            Add sorting button to all columns
+            "Title" => "Name"
+        
+        project Status (slide: 22) [(???.)]
+        Search (slide: 23) [(???.)] 
+        Modal [(done)]
+            "Delegate Contact Person" => Customer Representative (slide: 24)
+            "Tender/RFQTS Info" => "Tender Info" (slide: 25) 
+                "Tender/RFQTS Title" => "Tender Title"
+                "Tender/RFQTS Number" => "Tender Number"
+            "Dates Info" => "Key Dates" (slide: 26) 
+                "Daily Hours" => "Work Hours Per Day"
+            Forcast (slide: 27)
+                "CM %" => "Contribution Margin as a %"
+                "CM" => "Contribution Margin"
+        Project Information (slide: 29) [(done)] 
+            project Baisc Infrmation => Project Information 
+            Estimated value => contract Value
+                (Note: I prefer “contract value” over “revenue”. This 
+                figure represents the capped amount of revenue that can be earned – 
+                the amount of revenue realised may be somewhat less than this.)
+
+            Menu [(???.)]
+        Project Resource Modal (slide: 31) [(done)]
+            Work Hours => Total billable hours
+            Buy Cost => Buy Rate (Hourly)
+            Sell Cost => Sell Rate (Hourly)
+        
+        Project Resource: (slide: 32) 
+            show all the baic [(fixing)]
+            Buy Cost => Buy Rate (Hourly) [(done)]
+            Sell Cost => Sell Rate (Hourly) [(done)]
+            
+
+        Purchase Order (slide: 33)
+            show all the baic [(fixing)]
+            show all the baic [(fixing)]
+            SeachBox and Filter [(fixing)] [???.]
+
+            Oder Number [(fixing)] [(backend)]
+            add Attachment [(fixing)] [(backend)] [???.]
+
+        Profit and Loss (slide: 35) (will Take some time...)???
+
+        Timesheet (slide: 38)
+            Timesheet => Timesheet Submission
+            Total Work in A day => Totak Hours
+            Total => Monthly Total
+
+        TimeEntry Modal (slide: 40) [(???.)]
+
+        Organisaition Info (slide: 47) [(done)]
+            EBA = Expected Business amount (Fields was removed)
+            Bank Account => Bank Details
+
+        Opportunities Tab in view (slide: 48) [(done)]
+            Revenue => Estimated Value
+            Start Date => Estimated Start Date
+            Estimated End Date => Estimated Estimated End 
+        
+        Employees (slide: 51) [(???.)] [(done)]
+            add Novated link into employee view
+            Contracts => Contract History
+
+        Employee Modal
+            Personal Details (slide: 52) [(done)]
+                Email => Personal Email
+                Address => Residential Address
+            Superannuation (slide: 53) [(done)]
+                Bank Account Name: Bank Account Holder Name
+            banking/Tax Details (slide: 54) [(done)]
+                Bank Account Name => Bank Account Holder Name
+        
+        Contract Info employee (slide: 55) [(done)]
+            Contract Information => Contract History
+            Job Type => Employment Type
+            Rate => Annual Base Salary
+
+
+            Rate Duration (column deleted)
+        
+        Novated Lease Modal (slide: 56) [(done)]
+            MV Rego Numberl => Vehicle Registration Number
+            MV Make & Model => Vehicle Make And Model
+
+        Contract Info contractor (slide: 59) [(???.)] 
+            Rate Duration => Contract Payment Basis
+                asking in employee to delete the column
+            add column Contract Duration ( add in employee as well)
+
+        Contract Modal contractor (slide: 60)  [(done)]
+            Total Fee: Rate
+
+        Contact person (slide: 61) [(done)]
+            Contact Person => Contact (every where)
+            Table column
+                contact => phone
+    ===================================
+
+low Priority:
     from every where Qualified OPs [(fixing)]
     Select Fields as a aphabetially sorted (check it first ) [(known places [(done)] )]
+
+
+Not done slides 
+    slide 5
+
+Not done task
+    Sentence case
+    table column Problem [(project, opportunity [(done)] )]
+    STILL UX ISSUES outcomes options: (slide: 13)
+    Attachments details (slide: 17)
+    "Time Base" => "Time & Material" (slide: 22)

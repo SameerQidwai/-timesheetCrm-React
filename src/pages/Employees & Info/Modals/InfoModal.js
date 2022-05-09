@@ -122,7 +122,7 @@ class InfoModal extends Component {
                 {
                     fieldCol: 12, // this is only label 4
                     size: "small",
-                    Placeholder: "Email",
+                    Placeholder: "Personal Email",
                     disabled: false,
                     type: "Text",
                     labelAlign: "left",
@@ -206,7 +206,7 @@ class InfoModal extends Component {
                     itemStyle: { marginBottom: 10 },
                 },
                 {
-                    Placeholder: "Address",
+                    Placeholder: "Residential Address",
                     fieldCol: 24,
                     size: "small",
                     type: "Text",
@@ -359,7 +359,7 @@ class InfoModal extends Component {
 
             BankFields: [
                 {
-                    Placeholder: "Bank Account Name",
+                    Placeholder: "Bank Account Holder Name",
                     fieldCol: 12,
                     size: "small",
                     type: "Text",
@@ -962,7 +962,7 @@ class InfoModal extends Component {
                 itemStyle: { marginBottom: 10 },
             },
             {
-                Placeholder: "Bank Account Name",
+                Placeholder: "Bank Account Holder Name",
                 rangeMin: true,
                 fieldCol: 12,
                 size: "small",
@@ -1178,7 +1178,7 @@ class InfoModal extends Component {
                         <TabPane tab="Personal Details" key="basic" forceRender className="ant-form ant-form-inline ant-form-small" >
                             <FormItems FormFields={BasicFields} />
                         </TabPane>
-                        <TabPane tab=" Employment Contracts" key="billing" forceRender className="ant-form ant-form-inline ant-form-small"  >
+                        <TabPane tab=" Employment Contract" key="billing" forceRender className="ant-form ant-form-inline ant-form-small"  >
                             <FormItems FormFields={BillingFields}  />
                             <p style={{marginTop: 10, marginBottom: 2}}>Signed Contract</p>
                                 <Upload

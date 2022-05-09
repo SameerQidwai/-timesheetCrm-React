@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Row, Col, Menu, Button, Dropdown, Descriptions, Table, Popconfirm } from "antd";
-import { SettingOutlined, DownOutlined, FilterOutlined } from "@ant-design/icons"; //Icons
+import { SettingOutlined, DownOutlined, FilterOutlined, PlusSquareOutlined } from "@ant-design/icons"; //Icons
 import { Link } from "react-router-dom"; 
 
 import ResModal from "./Modals/ResModal";
@@ -57,21 +57,17 @@ class Resources extends Component {
                 ...tableSorter('billableHours', 'number'),
             },
             {
-                title: "Buy Cost",
+                title: "Buy Rate (hourly)",
                 dataIndex: ["opportunityResourceAllocations", "0", "buyingRate"],
                 key: "opportunityResourceAllocations",
-                render:(record)=>(
-                    record &&formatCurrency(record)
-                ),
+                render:(record)=>( record &&formatCurrency(record) ),
                 ...tableSorter('opportunityResourceAllocations.0.buyingRate', 'number'),
             },
             {
-                title: "Sale Cost",
+                title: "Sale Rate (hourly)",
                 dataIndex: ["opportunityResourceAllocations", "0", "sellingRate"],
                 key: "opportunityResourceAllocations",
-                render:(record)=>(
-                    record && formatCurrency(record)
-                ),
+                render:(record)=>( record && formatCurrency(record) ),
                 ...tableSorter('opportunityResourceAllocations.0.sellingRate', 'number'),
             },
             {
@@ -142,7 +138,7 @@ class Resources extends Component {
                   type: "Text",
                 },
                 {
-                    Placeholder: "Work Hours",
+                    Placeholder: "Total Billable Hours",
                     fieldCol: 12,
                     size: "small",
                     type: "Text",
@@ -440,7 +436,7 @@ class Resources extends Component {
                             size='small'  
                             onClick={() => this.openModal(false)}
                             disabled={!permissions['ADD']}
-                        >Add Resource</Button> 
+                        ><PlusSquareOutlined /> Add Resource</Button> 
                     </Col>
                     {/* <Col> <Button type="danger" size='small'>Delete Resource</Button></Col> */}
                 </Row>

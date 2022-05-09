@@ -87,7 +87,7 @@ class ResModal extends Component {
           },
         },
         {
-          Placeholder: "Work Hours",
+          Placeholder: "Total Billable Hours",
           fieldCol: 12,
           size: "small",
           type: "Text",

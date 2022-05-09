@@ -375,7 +375,7 @@ class Organizations extends Component {
                                     disabled={!permissions['ADD']}
                                 >
                                     <PlusSquareOutlined />
-                                    Organisations
+                                    Add Organisations
                                 </Button>
                             </Col>
                         </Row>
