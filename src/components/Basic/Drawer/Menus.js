@@ -28,7 +28,7 @@ const listData = [
         icon: <CheckCircleOutlined  />,
         link: "/time-sheet-approval",
         key: "TIMESHEETS APPROVAl",
-        permissions: {module: "TIMESHEETS", key: 'APPROVAL'}
+        permissions: {module: "TIMESHEETS", key: 'APPROVAL,UNAPPROVAL'}
     },
     {
         text: "Leave Requests",
@@ -42,7 +42,7 @@ const listData = [
         icon: <CarryOutOutlined  />,
         link: "/approve-request",
         key: "APPROVE REQUEST",
-        permissions: {module: "LEAVE_REQUESTS", key: 'APPROVAL'}
+        permissions: {module: "LEAVE_REQUESTS", key: 'APPROVAL,UNAPPROVAL'}
     },
     {
         text: "Training",
@@ -123,16 +123,28 @@ class Menus extends Component {
                 if (el.subMenu){
                     const subMenu = []
                     el.subMenu.map(sEl => {
-                        if((sEl.permissions && permissions[sEl.permissions.module]) && permissions[sEl.permissions.module][sEl.permissions.key]){
-                            subMenu.push(sEl)
+                        if(sEl.permissions && permissions?.[sEl.permissions.module]){
+                            const condtion = sEl.permissions.key.split(',')
+                            for (let cond of condtion){
+                                if (permissions[sEl.permissions.module][cond]){
+                                    allowedMenu.push(sEl)
+                                    break;
+                                }
+                            }
                         }
                     })
                     if(subMenu.length> 0){
                         el.subMenu = subMenu
                         allowedMenu.push(el)
                     }
-                }else if((el.permissions && permissions[el.permissions.module]) && permissions[el.permissions.module][el.permissions.key]){
-                    allowedMenu.push(el)
+                }else if(el.permissions && permissions?.[el.permissions.module]){
+                    const condtion = el.permissions.key.split(',')
+                    for (let cond of condtion){
+                        if (permissions[el.permissions.module][cond]){
+                            allowedMenu.push(el)
+                            break;
+                        }
+                    }
                 }
             })
         this.setState({allowedMenu})

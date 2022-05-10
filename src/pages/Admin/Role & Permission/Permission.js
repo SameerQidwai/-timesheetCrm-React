@@ -108,11 +108,11 @@ class Permission extends Component {
                 },
             },
             {
-                title: 'Unapprove',
-                key: 'UNAPPROVE',
-                dataIndex: 'UNAPPROVE',
+                title: 'Unapproval',
+                key: 'UNAPPROVAL',
+                dataIndex: 'UNAPPROVAL',
                 render: (text, record, rowIndex) => {
-                    {return   <Form.Item noStyle name={[record.key, 'UNAPPROVE']}>{ 
+                    {return   <Form.Item noStyle name={[record.key, 'UNAPPROVAL']}>{ 
                             (record.key === "TIMESHEETS" || record.key === "LEAVE_REQUESTS" ) && (
                             <Checkbox.Group  options={['ANY', 'MANAGE']}  />
                             )
@@ -163,8 +163,8 @@ class Permission extends Component {
                     category: "Profile",
                 },
                 {
-                    key: 'UNAPPROVE',
-                    category: "UNAPPROVE",
+                    key: 'UNAPPROVAL',
+                    category: "Unapprove",
                 },
             ],
         }

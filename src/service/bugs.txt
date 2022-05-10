@@ -1,5 +1,9 @@
 New bug Found
     Not closing edit Modal on disable loading after api response in employeegit
+    if permission changes or edit... what to do with the person if he is arleady Loggedin 
+
+    Need to create disable variable if any one of the multiselect already has certain action
+        for now disable if only one is not matched
 
 Update and check 
     delLeadSkillResource // not done

@@ -30,7 +30,6 @@ class TimeSheetProject extends Component {
             loginId: null,
             data: [ ],
             permissions: {},
-            canApprove: false,
             milestones: [], // users Time Sheet
             actionNotes: '',
             sTimesheet: { // selected timesheets 
@@ -152,7 +151,7 @@ class TimeSheetProject extends Component {
 
             this.setState({
                 milestones: res[0].success? res[0].data : [],
-                canApprove: TIMESHEETS['APPROVAL'] && TIMESHEETS['APPROVAL']['ANY'],
+                permissions: TIMESHEETS ?? {},
                 loginId,
             },()=>{
                 this.columns() 
@@ -328,10 +327,25 @@ class TimeSheetProject extends Component {
     }
 
     milestoneSelect = (selectedRowKeys, selectedRows)=>{
+        let cantApprove = true, cantReject = true, cantUnapprove = true
+        selectedRows.forEach(el =>{
+            if (el.status === 'SB'){
+                cantApprove = false
+            }
+            if(el.status === 'SB'){
+                cantReject = false
+            }
+            if(el.status === 'AP'){
+                cantUnapprove = false
+            }
+        })
         this.setState({
             sTimesheet: {
                 timesheet: selectedRows,
                 keys: selectedRowKeys,
+                cantApprove, 
+                cantReject,
+                cantUnapprove 
             }
         })
     }
@@ -342,6 +356,7 @@ class TimeSheetProject extends Component {
     }
 
     multiAction = (stage)=> {
+        console.log(stage);
         const { cMonth } = this.state.sheetDates
         let content = stage !== 'Delete' ? <Row>
             <Col span="24">
@@ -383,7 +398,7 @@ class TimeSheetProject extends Component {
     }
 
     render() {
-        const {  data,   columns,  timeObj,  milestones, sMilestone, isAttach, isDownload, eData, sTimesheet } = this.state
+        const {  data,   columns,  timeObj,  milestones, sMilestone, isAttach, isDownload, eData, sTimesheet, permissions } = this.state
         return (
             <>
                 <Row justify="space-between" >
@@ -446,7 +461,7 @@ class TimeSheetProject extends Component {
                         fixed:true,
                         onChange:(selectedRowKeys, selectedRows)=>{this.milestoneSelect(selectedRowKeys, selectedRows )},
                         getCheckboxProps: (record) => ({
-                            disabled: record.timesheetStatus === 'SV' || record.timesheetStatus === 'AP' ||record.timesheetStatus === 'NC', // Column configuration not to be checked
+                            disabled: (record.timesheetStatus === 'SV' || record.timesheetStatus === 'RJ'  ||record.timesheetStatus === 'NC') || (!permissions['UNAPPROVAL'] && record.timesheetStatus === 'AP'), // Column configuration not to be checked
                           }),
                     }}
                     scroll={{
@@ -463,8 +478,9 @@ class TimeSheetProject extends Component {
                 />
                 <Row justify="end" gutter={[20,200]}>
                     <Col>
+                    {/* || sTimesheet.approved|| sTimesheet.rejected */} {/* ???? whats the hell is this*/}
                         <Button 
-                            disabled={ sTimesheet.keys.length<1 || sTimesheet.approved|| sTimesheet.rejected}
+                            disabled={ sTimesheet.keys.length<1 }
                             onClick={()=>this.openAttachModal()}
                         >
                             Import
@@ -483,7 +499,7 @@ class TimeSheetProject extends Component {
                         <Button 
                             type="primary" 
                             danger
-                            disabled={ sTimesheet.keys.length<1 || sTimesheet.rejected}
+                            disabled={ sTimesheet.keys.length<1 || !permissions['APPROVAL'] || sTimesheet.cantReject}
                             onClick={()=>this.multiAction('Reject')}
                         > 
                             Reject
@@ -492,10 +508,19 @@ class TimeSheetProject extends Component {
                     <Col>
                         <Button
                             className={'success'}
-                            disabled={ sTimesheet.keys.length<1 || sTimesheet.approved}
-                            onClick={()=> this.multiAction('Approve') }
+                            disabled={ sTimesheet.keys.length<1 || !permissions['APPROVAL'] || sTimesheet.cantApprove}
+                            onClick={()=> this.multiAction('Approve')}
                         >
                             Approval
+                        </Button>
+                    </Col>
+                    <Col>
+                        <Button
+                            className={'not-success'}
+                            disabled={ sTimesheet.keys.length<1 || !permissions['UNAPPROVAL'] || sTimesheet.cantUnapprove}
+                            onClick={()=> this.multiAction('Unapprove')}
+                        >
+                            Unapprove
                         </Button>
                     </Col>
                 </Row>

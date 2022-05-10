@@ -86,10 +86,13 @@ class OrgInfo extends Component {
                                         Delete
                                     </Popconfirm>
                                 </Menu.Item> */}
-                                <Menu.Item onClick={() => { this.setState({ infoModal: true, }); }} >
+                                <Menu.Item
+                                    key= "edit" 
+                                    onClick={() => { this.setState({ infoModal: true, }); }} 
+                                >
                                     Edit
                                 </Menu.Item>
-                                <Menu.Item>
+                                <Menu.Item key= "contracts">
                                     <Link
                                         to={{
                                             pathname: `/Employee/${emp}/contracts`,
@@ -98,7 +101,8 @@ class OrgInfo extends Component {
                                     >
                                         Contract History
                                     </Link>
-                                <Menu.Item>
+                                </Menu.Item>
+                                <Menu.Item key="novated-lease">
                                     <Link
                                         to={{
                                             pathname: `/Employee/${emp}/novated-lease`,
@@ -107,7 +111,6 @@ class OrgInfo extends Component {
                                     >
                                         Novated Lease
                                     </Link>
-                            </Menu.Item>
                                 </Menu.Item>
                             </Menu>
                         }

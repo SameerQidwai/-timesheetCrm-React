@@ -55,12 +55,14 @@ const pageLinks = [
     {
         component: Dashboard,
         link: "/dashboard",
-        key: "DASHBOARD"
+        key: "DASHBOARD", 
+        permission: 'ALLOWED'
     },
     {
         component: Profile,
         link: "/profile",
-        key: "PROFILE"
+        key: "PROFILE", 
+        permission: 'ALLOWED'
     },
     {
         component: Calender,
@@ -70,178 +72,213 @@ const pageLinks = [
         component: Admin,
         link: "/admin/global-settings",
         key: 'ADMIN_OPTIONS',
+        permission: 'READ'
     },
     {
         component: Admin,
         link: "/admin/tax-rates",
         key: 'ADMIN_OPTIONS',
+        permission: 'READ'
     },
     {
         component: Admin,
         link: "/admin/calenders/holidays/:id",
         key: 'ADMIN_OPTIONS',
+        permission: 'READ',
     },
     {
         component: Admin,
         link: "/admin/calenders",
-        key: 'ADMIN_OPTIONS'
+        key: 'ADMIN_OPTIONS',
+        permission: 'READ'
     },
     {
         component: Admin,
         link: "/admin/holiday-types",
-        key: 'ADMIN_OPTIONS'
+        key: 'ADMIN_OPTIONS',
+        permission: 'READ'
     },
     {
         component: Admin,
         link: "/admin/leave-categories",
-        key: 'ADMIN_OPTIONS'
+        key: 'ADMIN_OPTIONS',
+        permission: 'READ'
     },
     {
         component: Admin,
         link: "/admin/leave-policies",
-        key: 'ADMIN_OPTIONS'
+        key: 'ADMIN_OPTIONS',
+        permission: 'READ'
     },
     {
         component: Admin,
         link: "/admin/roles",
-        key: 'ADMIN_OPTIONS'
+        key: 'ADMIN_OPTIONS',
+        permission: 'READ'
     },
     {
         component: Admin,
         link: "/admin/standard-levels",
-        key: 'ADMIN_OPTIONS'
+        key: 'ADMIN_OPTIONS',
+        permission: 'READ'
     },
     {
         component: Admin,
         link: "/admin/skills",
-        key: 'ADMIN_OPTIONS'
+        key: 'ADMIN_OPTIONS',
+        permission: 'READ'
     },
     {
         component: Admin,
         link: "/admin/panels",
-        key: 'ADMIN_OPTIONS'
+        key: 'ADMIN_OPTIONS',
+        permission: 'READ'
     },
     {
         component: Admin,
         link: "/admin/panels/skills/:id",
-        key: 'ADMIN_OPTIONS'
+        key: 'ADMIN_OPTIONS',
+        permission: 'READ'
     },
     {
         component: Admin,
         link: "/check",
-        key: 'ADMIN_OPTIONS'
+        key: 'ADMIN_OPTIONS',
+        permission: 'READ'
     },
     {
         component: Organizations,
         link: "/organisations",
-        key: 'ORGANIZATIONS'
+        key: 'ORGANIZATIONS',
+        permission: 'READ'
     },
     {
         component: OrgInfo,
         link: "/organisations/:id/info",
-        key: 'ORGANIZATIONS'
+        key: 'ORGANIZATIONS',
+        permission: 'READ'
     },
     {
         component: Contact,
         link: "/contact",
-        key: 'CONTACT_PERSONS'
+        key: 'CONTACT_PERSONS',
+        permission: 'READ'
     },
     {
         component: Employees,
         link: "/Employees",
-        key: "USERS"
+        key: "USERS",
+        permission: 'READ'
     },
     {
         component: EmpInfo,
         link: "/Employees/:id/info",
-        key: "USERS"
+        key: "USERS",
+        permission: 'READ'
     },
     {
         component: EmpBilling,
         link: "/Employee/:id/contracts",
-        key: "USERS"
+        key: "USERS",
+        permission: 'READ'
     },
     {
         component: NovatedLease,
         link: "/Employee/:id/novated-lease",
-        key: "USERS"
+        key: "USERS",
+        permission: 'READ'
     },
     {
         component: Contractors,
         link: "/sub-contractors",
-        key: "USERS"
+        key: "USERS",
+        permission: 'READ'
     },
     {
         component: ContInfo,
         link: "/sub-contractors/:id/info",
-        key: "USERS"
+        key: "USERS",
+        permission: 'READ'
     },
     {
         component: ContBilling,
         link: "/sub-contractors/:id/contracts",
-        key: "USERS"
+        key: "USERS",
+        permission: 'READ'
     },
     {
         component: Opportunities,
         link: "/opportunities",
-        key: "OPPORTUNITIES"
+        key: "OPPORTUNITIES",
+        permission: 'READ'
     },
     {
         component: OpportunityInfo,
         link: "/opportunities/:proId/info",
-        key: "OPPORTUNITIES"
+        key: "OPPORTUNITIES",
+        permission: 'READ'
     },
     {
         component: Milestone,
         link: "/opportunities/:proId/milestones",
-        key: "OPPORTUNITIES"
+        key: "OPPORTUNITIES",
+        permission: 'READ'
     },
     {
         component: OpportunityResources,
         link: "/opportunities/:proId/milestones/:mileId/resources",
         // link: "/opportunities/:id/resources",
-        key: "OPPORTUNITIES"
+        key: "OPPORTUNITIES",
+        permission: 'READ'
     },
     {
         component: Projects,
         link: "/projects",
-        key: "PROJECTS"
+        key: "PROJECTS",
+        permission: 'READ'
     },
     {
         component: ProjectInfo,
         link: "/projects/:proId/info",
-        key: "PROJECTS"
+        key: "PROJECTS",
+        permission: 'READ'
     },
     {
         component: PurchaseOrder,
         link: "/projects/:proId/purchase-order",
-        key: "PROJECTS"
+        key: "PROJECTS",
+        permission: 'READ'
     },
     {
         component: Milestone,
         link: "/projects/:proId/milestones",
-        key: "PROJECTS"
+        key: "PROJECTS",
+        permission: 'READ'
     },
     {
         component: ProjectResources,
         link: "/projects/:proId/milestones/:mileId/resources",
         // link: "/projects/:id/resources",
-        key: "PROJECTS"
+        key: "PROJECTS",
+        permission: 'READ'
     },
     {
         component: ResourceHistory,
         link: "/projects/:proId/resources/rates/:id",
-        key: "PROJECTS"
+        key: "PROJECTS",
+        permission: 'READ'
     },
     {
         component: TimeSheetContact,
         link: "/time-sheet",
-        key: "TIMESHEETS"
+        key: "TIMESHEETS",
+        permission: 'READ'
     },
     {
         component: TimeSheetProject,
         link: "/time-sheet-approval",
-        key: "TIMESHEETS"
+        key: "TIMESHEETS",
+        permission: 'APPROVAL,UNAPPROVAL'
     },
     {
         component: TimeOff,
@@ -250,16 +287,19 @@ const pageLinks = [
     {
         component: LeaveRequest,
         link: "/leave-request",
-        key: 'LEAVE_REQUESTS'
+        key: 'LEAVE_REQUESTS',
+        permission: 'READ'
     },
     {
         component: ApproveRequest,
         link: "/approve-request",
-        key: 'LEAVE_REQUESTS'
+        key: 'LEAVE_REQUESTS',
+        permission: 'APPROVAL,UNAPPROVAL'
     },
     {
         component: Training,
         link: "/training",
+        permission: 'ALLOWED'
     },
 ];
 
@@ -270,28 +310,39 @@ class AdminContent extends Component {
             allowedRoutes:[]
         }
     }
-    componentDidMount = () =>{
-        this.getPageLink()
-    }
+    // componentDidMount = () =>{
+    //     // this.getPageLink()
+    // }
     getPageLink = () => {
         const permissions = JSON.parse(localStore().permissions)
         let { allowedRoutes } = this.state
-        allowedRoutes[0] = pageLinks[0]
-        allowedRoutes[1] = pageLinks[1]
-        pageLinks.map(el=>{
-            if(permissions[el.key]&& permissions[el.key]['READ']){
+        pageLinks.forEach(el=>{
+            if(el.permission === 'ALLOWED'){
                 allowedRoutes.push(el)
+            }else if(permissions?.[el.key]){
+                let loop = el.permission.split(',')
+                for (let cond of loop){
+                    if (permissions[el.key][cond]){
+                        allowedRoutes.push(el)
+                        break;
+                    }
+                }
             }
        })
-       this.setState({allowedRoutes})
+       if (allowedRoutes.length === 0){
+           this.setState({allowedRoutes})
+       }
+       return allowedRoutes
     };
 
-    render() {
+    render () {
         const { allowedRoutes } = this.state
         return (
             <Switch >
-                {/* {this.getPageLink()} */}
-                {pageLinks.map((el, i) => (
+                {/* on state change it was taking time and page was redirect to dashboard*/}
+                {/* if I am not using state and just a function the loops were running on evey link change*/}
+                {/* this condtion checks if state is set once use the variable insted function*/}
+                {(allowedRoutes.length>0? allowedRoutes : this.getPageLink()).map((el, i) => (
                     <Route exact path={el.link} component={el.component} key={i} />
                 ))}
                 <Redirect to="/dashboard" />

@@ -222,7 +222,6 @@ class TimeSheetContact extends Component {
         if(sUser){
             getList({userId: sUser, startDate: startDate.format('DD-MM-YYYY'), endDate: endDate.format('DD-MM-YYYY')}).then(res=>{
                 // if (res.success){
-                    console.log(res.success);
                     this.setState({
                         timesheet: res.data?? {},
                         data:  res?.data?.milestones ?? [],
@@ -468,7 +467,6 @@ class TimeSheetContact extends Component {
         const query= { userId: sUser, startDate: startDate.format('DD-MM-YYYY'), endDate: endDate.format('DD-MM-YYYY') }
         const data = {milestoneEntries: keys}
         reviewTimeSheet(query, stage, data).then(res=>{
-            const { data } = this.state
             this.getSheet()
         })
     };

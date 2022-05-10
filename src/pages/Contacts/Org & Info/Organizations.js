@@ -255,7 +255,7 @@ class Organizations extends Component {
                     filterData: res.data,
                     infoModal: false,
                     editOrg: false,
-                    permissions: ORGANIZATIONS,
+                    permissions: ORGANIZATIONS?? {},
                     openSearch: false
                 });
             }
@@ -354,8 +354,8 @@ class Organizations extends Component {
                     <Col>
                         <Title level={4}>Organisations</Title>
                     </Col>
-                    <Col style={{ textAlign: "end" }} span={4}>
-                        <Row justify="space-between">
+                    <Col style={{ textAlign: "end" }}>
+                        <Row justify="space-between" gutter={[30]}>
                             <Col>
                                 
                                 <Button 

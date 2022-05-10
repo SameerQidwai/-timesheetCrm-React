@@ -198,10 +198,25 @@ class ApproveRequest extends Component {
     }
 
     requestSelect = (selectedRowKeys, selectedRows)=>{
+        let cantApprove = true, cantReject = true, cantUnapprove = true
+        selectedRows.forEach(el =>{
+            if (el.status === 'SB'){
+                cantApprove = false
+            }
+            if(el.status === 'SB'){
+                cantReject = false
+            }
+            if(el.status === 'AP'){
+                cantUnapprove = false
+            }
+        })
         this.setState({
             sRequest: {
                 request: selectedRows,
-                keys: selectedRowKeys
+                keys: selectedRowKeys,
+                cantApprove,
+                cantReject,
+                cantUnapprove
             }
         })
     }
@@ -283,7 +298,7 @@ class ApproveRequest extends Component {
     }
 
     render(){
-        const { request, filterRequest, sRequest, openModal, readRequest, queryRequest, WORKS, USERS    } = this.state;
+        const { request, filterRequest, sRequest, openModal, readRequest, queryRequest, WORKS, USERS, permissions} = this.state;
         const { startDate, endDate, workId, userId } = queryRequest
         return(
             <>
@@ -375,7 +390,7 @@ class ApproveRequest extends Component {
                                 selectedRowKeys: sRequest.keys,
                                 onChange:(selectedRowKeys, selectedRows)=>{this.requestSelect(selectedRowKeys, selectedRows )},
                                 getCheckboxProps: (record) => ({
-                                    disabled: record.status !== 'SB'
+                                    disabled: (record.status === 'SV' || record.status === 'RJ'  ||record.status === 'NC') || (!permissions['UNAPPROVAL'] && record.status === 'AP')
                                 }),
                             }}
                             scroll={{
@@ -396,7 +411,7 @@ class ApproveRequest extends Component {
                         <Button 
                             type="primary" 
                             danger
-                            disabled={ sRequest.keys.length<1 }
+                            disabled={ sRequest.keys.length<1 || !permissions['APPROVAL'] || sRequest.cantReject}
                             onClick={()=>this.multiAction('leaveRequestsReject')}
                         > 
                             Reject
@@ -404,11 +419,20 @@ class ApproveRequest extends Component {
                     </Col>
                     <Col>
                         <Button 
-                            type="primary"
-                            disabled={ sRequest.keys.length<1}
+                            className="success"
+                            disabled={ sRequest.keys.length<1|| !permissions['APPROVAL'] || sRequest.cantApprove}
                             onClick={()=>this.multiAction('leaveRequestsApprove')}
                         > 
                             Approve
+                        </Button>
+                    </Col>
+                    <Col>
+                        <Button 
+                            className="not-success"
+                            disabled={ sRequest.keys.length<1|| !permissions['UNAPPROVAL'] || sRequest.cantUnapprove}
+                            onClick={()=>this.multiAction('leaveRequestsUnapprove')}
+                        > 
+                            Unapprove
                         </Button>
                     </Col>
                 </Row>
