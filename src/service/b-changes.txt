@@ -67,7 +67,7 @@ Admin Frames.........!!!? [(done)]
 
 contd... |
     ==================================
-    Opportuninty view page: (slide: 18) [(fixing)]
+    Opportuninty view page: (slide: 18) [(done)]
         show all the baic
      
     opportunity  [(done)]
@@ -114,15 +114,14 @@ contd... |
             Sell Cost => Sell Rate (Hourly)
         
         Project Resource: (slide: 32) 
-            show all the baic [(fixing)]
+            show all the baic [(done)]
             Buy Cost => Buy Rate (Hourly) [(done)]
             Sell Cost => Sell Rate (Hourly) [(done)]
             
 
         Purchase Order (slide: 33)
-            show all the baic [(fixing)]
-            show all the baic [(fixing)]
-            SeachBox and Filter [(fixing)] [???.]
+            show all the baic [(done)]
+            SeachBox and Filter [(fixing)] [???.] [half]
 
             Oder Number [(fixing)] [(backend)]
             add Attachment [(fixing)] [(backend)] [???.]

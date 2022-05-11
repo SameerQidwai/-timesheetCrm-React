@@ -1,12 +1,13 @@
 import React, { Component, useState } from "react";
 import { Row, Col, Menu, Button, Dropdown, Descriptions, Table, Popconfirm } from "antd";
 import { SettingOutlined, DownOutlined, FilterOutlined } from "@ant-design/icons"; //Icons
+import { Link } from "react-router-dom"; 
 
 import ResModal from "./Modals/ResModal";
 import { getRecord, getLeadSkills, delLeadSkill, delLeadSkillResource, selectLeadSkillResource } from "../../service/opportunities";
 
 import moment from "moment"
-import { formatDate, formatCurrency, localStore } from "../../service/constant";
+import { formatDate, formatCurrency, localStore, O_STATUS } from "../../service/constant";
 import { Filtertags, TableModalFilter, tableSorter, tableTitleFilter } from "../../components/Core/Table/TableFilter";
 import { getPanelSkills } from "../../service/constant-Apis";
 import { generalDelete } from "../../service/delete-Api's";
@@ -356,6 +357,7 @@ class Resources extends Component {
 
     render() {
         const { desc, filterData, data, infoModal, editRex, leadId, resource , skillId, levelId, permissions, mileId, crud, openSearch, filterFields, searchedColumn} = this.state;
+        console.log(desc);
         return (
             <>
                 <Descriptions
@@ -365,12 +367,28 @@ class Resources extends Component {
                     layout="horizontal"
                     // extra={<Button type="primary">Edit</Button>}
                 >
-                    <Item label="Title">{desc.title}</Item>
-                    <Item label="Value">{ formatCurrency(desc.value)}</Item>
-                    <Item label="Start Date">{desc.startDate ? formatDate(desc.startDate): null} </Item>
+                    <Item label="Project Name">{desc.title}</Item>
+                    <Item label="Estimated Value">{`${formatCurrency(desc.value)}`}</Item>
+                    <Item label="Organisation">{
+                        desc.organization ? 
+                            <Link
+                                to={{
+                                    pathname: `/organizations/info/${desc.organizationId}`,
+                                }}
+                                className="nav-link"
+                            >
+                                {desc.organization.name}
+                            </Link>
+                        : 
+                            'No Organisation'
+                        
+                    }</Item>
+                    <Item label="Delegate Contact"> {desc.ContactName}</Item>
+                    <Item label="Start date">{desc.startDate ? formatDate(desc.startDate): null} </Item>
                     <Item label="End Date">{desc.endDate ? formatDate(desc.endDate): null}</Item>
                     <Item label="Bid Date">{desc.bidDate ? formatDate(desc.bidDate): null}</Item>
-                    {/* <Item label="Gender">{data.gender}</Item> */}
+                    <Item label="Status">{desc.status ? O_STATUS[desc.status]: ''}</Item>
+                    {/* <Item label="Gender">{desc.gender}</Item> */}
                 </Descriptions>
                 <Row justify="end" span={4} gutter={[30, 0]}>
                     <Col>

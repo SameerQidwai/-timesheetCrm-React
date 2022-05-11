@@ -102,7 +102,7 @@ class OpportunityInfo extends Component {
         const { data, infoModal,lostModal, leadId, billing, renderTabs, moveToProject, permissions, basic, notAuth } = this.state;
         const DescTitle = (
             <Row justify="space-between">
-                <Col>Opportunity Basic Information</Col>
+                <Col>Opportunity Information</Col>
                 <Col>
                     <Dropdown
                         overlay={

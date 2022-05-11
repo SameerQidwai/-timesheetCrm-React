@@ -7,8 +7,9 @@ import OrderModal from "./Modals/OrderModal";
 import { getRecord, getOrders, delOrder } from "../../service/projects";
 
 import moment from "moment"
-import { formatDate, formatCurrency, localStore } from "../../service/constant";
+import { formatDate, formatCurrency, localStore, O_STATUS } from "../../service/constant";
 import { generalDelete } from "../../service/delete-Api's";
+import { Filtertags, tableTitleFilter } from "../../components/Core/Table/TableFilter";
 
 const { Title } = Typography
 const { Item } = Descriptions;
@@ -88,6 +89,13 @@ class PurchaseOrder extends Component {
             editRex: false,
             ProId: false,
             desc: {title: 'Service', organization: {name: 'PSO'}, value: '1000.00', startDate: '12 10 2020', endDate: '12 4 2021'},
+            searchedColumn: {
+                'id': {type: 'Input', value: '',  label:"Code", showInColumn: true},
+                'value': {type: 'Input', value: '', label:"Value",  showInColumn: true},
+                'expense': {type: 'Input', value: '', label:"Expense",  showInColumn: true},
+                'issueDate': {type: 'Date', value: null,  label:"Issue Date", showInColumn: true},
+                'expiryDate': {type: 'Date', value: null,  label:"Expiry Date", showInColumn: true, disabled:true},
+            },
         };
     }
 
@@ -106,6 +114,7 @@ class PurchaseOrder extends Component {
                 ProId: id,
                 openModal: false,
                 data: res[1].success? res[1].data : [],
+                filterData: res[1].success? res[1].data : [],
                 permissions: PROJECTS
             })
         })
@@ -148,8 +157,28 @@ class PurchaseOrder extends Component {
         this.getRecords(ProId)
     };
 
+    generalFilter = (value) =>{
+        const { data } = this.state
+        if (value){
+            this.setState({
+                filterData: data.filter(el => {
+                    const { name: organization} = el.organization
+                    return `00${el.id.toString()}`.includes(value) ||
+                    el.value && formatCurrency(el.value).toLowerCase().includes(value.toLowerCase()) ||
+                    el.expense && formatCurrency(el.expense).toLowerCase().includes(value.toLowerCase()) ||
+                    el.issueDate && `${formatDate(el.issueDate)}`.toLowerCase().includes(value.toLowerCase()) ||
+                    el.expiryDate && `${formatDate(el.expiryDate)}`.toLowerCase().includes(value.toLowerCase())
+                })
+            })
+        }else{
+            this.setState({
+                filterData: data
+            })
+        }
+    }
+
     render() {
-        const { desc, data, openModal, editRex, ProId, permissions } = this.state;
+        const { desc, data, openModal, editRex, ProId, permissions, searchedColumn } = this.state;
         return (
             <>
                 <Descriptions
@@ -160,10 +189,26 @@ class PurchaseOrder extends Component {
                     // extra={<Button type="primary">Edit</Button>}
                 >
                     <Item label="Project Name">{desc.title}</Item>
-                    <Item label="Estimated Value">{formatCurrency(desc.value)}</Item>
-                    <Item label="Organisation">{desc.organizationName ? desc.organization.name :' No Organisation'}</Item>
+                    <Item label="Estimated Value">{`${formatCurrency(desc.value)}`}</Item>
+                    <Item label="Organisation">{
+                        desc.organization ? 
+                            <Link
+                                to={{
+                                    pathname: `/organizations/info/${desc.organizationId}`,
+                                }}
+                                className="nav-link"
+                            >
+                                {desc.organization.name}
+                            </Link>
+                        : 
+                            'No Organisation'
+                        
+                    }</Item>
+                    <Item label="Delegate Contact"> {desc.ContactName}</Item>
                     <Item label="Start date">{desc.startDate ? formatDate(desc.startDate): null} </Item>
                     <Item label="End Date">{desc.endDate ? formatDate(desc.endDate): null}</Item>
+                    <Item label="Bid Date">{desc.bidDate ? formatDate(desc.bidDate): null}</Item>
+                    <Item label="Status">{desc.status ? O_STATUS[desc.status]: ''}</Item>
                     {/* <Item label="Gender">{data.gender}</Item> */}
                 </Descriptions>
                 <Row justify="end">
@@ -175,7 +220,12 @@ class PurchaseOrder extends Component {
                     >Add New</Button> </Col>
                     {/* <Col> <Button type="danger" size='small'>Delete Resource</Button></Col> */}
                 </Row>
+                <Filtertags
+                    filters={searchedColumn}
+                    filterFunction={this.advancefilter}
+                />
                 <Table
+                    title={()=>tableTitleFilter(5, this.generalFilter)}
                     bordered
                     pagination={{pageSize: localStore().pageSize}}
                     rowKey={(data) => data.id}
