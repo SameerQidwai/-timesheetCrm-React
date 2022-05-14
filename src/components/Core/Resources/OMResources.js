@@ -1,14 +1,9 @@
 import React, { Component, useState } from "react";
 import { Row, Col, Menu, Button, Dropdown, Descriptions, Table } from "antd";
 import { SettingOutlined, DownOutlined } from "@ant-design/icons"; //Icons
-
-import ResModal from "./Modals/ResModal";
-import { getLeadSkills, delLeadSkill, delLeadSkillResource, selectLeadSkillResource } from "../../../service/opportunities";
-
 import moment from "moment"
 import { formatDate, formatCurrency, localStore } from "../../../service/constant";
 
-const { Item } = Descriptions;
 
 class OMResource extends Component {
     constructor() {
@@ -71,8 +66,6 @@ class OMResource extends Component {
         ];
 
         this.state = {
-            infoModal: false,
-            editRex: false,
             leadId: false,
             data: [],
             desc: {},
@@ -83,122 +76,26 @@ class OMResource extends Component {
         };
     }
 
-    componentDidMount = ()=>{
-        const { id } = this.props.match.params
-        this.fetchAll(id)
-    }
-    
-
-    fetchAll = (id) =>{
-        const { OPPORTUNITIES }= JSON.parse(localStore().permissions)
-        console.log(OPPORTUNITIES);
-        Promise.all([ getRecord(id), getLeadSkills(id)])
-        .then(res => {
-            this.setState({
-                desc: res[0].success? res[0].data : {},
-                editRex: false,
-                infoModal: false,
-                leadId: id,
-                data: res[1].success? res[1].data : [],
-                permissions: OPPORTUNITIES
-            })
-        })
-        .catch(e => {
-            console.log(e);
+    componentDidMount = () => {
+        console.log(this.props.data);
+        const { data, id } = this.props
+        this.setState({
+            data: data.milestones,
+            type: data.type, 
+            leadId: data.id,
         })
     }
-
-    getLeadSkills = (id) =>{
-        getLeadSkills(id).then(res=>{
-            if(res.success){
-                this.setState({
-                    data: res.data,
-                    editRex: false,
-                    infoModal: false,
-                    skillId: false,
-                    levelId: false,
-                    tableIndex:false
-                })
-            }
-        })
-    }
-
-    getSkilldEmployee = (infoModal, skillId, resource, editRex, tableIndex, levelId ) =>{
-        this.setState({ 
-            infoModal:infoModal, 
-            skillId:skillId,
-            levelId: levelId,
-            resource:resource, 
-            editRex:editRex, 
-            tableIndex:tableIndex 
-        })
-    }
-
-    closeModal = () => {
-        this.setState({ infoModal: false, editRex: false});
-    };
-
-    handleDelete = (rId) => {
-        const { leadId } = this.state //opputunityId
-        delLeadSkill(leadId, rId).then((res) => {
-            if (res.success) {
-                this.callBack()
-            }
-        });
-    };
-
-    callBack = (value) => {
-        let { leadId, skillId, editRex, tableIndex } = this.state
-        // // let data = this.state.data;
-        // if (editRex){ // edit skill value
-        //     data[tableIndex] = value
-        // }else if (skillId){ // add new Resource in skill
-        //     data[tableIndex].opportunityResourceAllocations = [...data[tableIndex].opportunityResourceAllocations, value] 
-        // }else{
-        //     data = [...data, value]
-        // }
-        // this.setState({data,editRex: false, infoModal: false, skillId: false})
-        this.getLeadSkills(leadId)
-    };
 
     render() {
-        const { desc, data, infoModal, editRex, leadId, resource , skillId, levelId, permissions} = this.state;
-        console.log(permissions);
+        const { desc, data, leadId, permissions} = this.state;
         return (
-            <>
-                <Descriptions
-                    // title={DescTitle}
-                    size="small"
-                    bordered
-                    layout="horizontal"
-                    // extra={<Button type="primary">Edit</Button>}
-                >
-                    <Item label="Title">{desc.title}</Item>
-                    <Item label="Value">{ formatCurrency(desc.value)}</Item>
-                    <Item label="Start Date">{desc.startDate ? formatDate(desc.startDate): null} </Item>
-                    <Item label="End Date">{desc.endDate ? formatDate(desc.endDate): null}</Item>
-                    <Item label="Bid Date">{desc.bidDate ? formatDate(desc.bidDate): null}</Item>
-                    {/* <Item label="Gender">{data.gender}</Item> */}
-                </Descriptions>
-                <Row justify="end">
-                    <Col> 
-                        <Button 
-                            type="primary" 
-                            size='small'  
-                            onClick={() => { this.setState({ infoModal: true, editRex: false, resource: false, skillId: false }) }}
-                            disabled={permissions&& !permissions['ADD']}
-                            >
-                                Add New
-                        </Button>
-                    </Col>
-                    {/* <Col> <Button type="danger" size='small'>Delete Resource</Button></Col> */}
-                </Row>
                 <Table
                     bordered
                     pagination={{pageSize: localStore().pageSize}}
                     rowKey={(record) => record.id}
                     columns={this.columns}
                     dataSource={data}
+                    size="small"
                     expandable={{
                         expandedRowRender: record => {
                             return (
@@ -214,22 +111,7 @@ class OMResource extends Component {
                         },
                         // rowExpandable: record => record.user.length > 0,
                       }}
-                    size="small"
                 />
-                {infoModal && (
-                    <ResModal
-                        visible={infoModal}
-                        editRex={editRex}
-                        skillId={skillId}
-                        levelId={levelId}
-                        leadId={leadId}
-                        panelId = {desc.panelId}
-                        close={this.closeModal}
-                        callBack={this.callBack}
-                    />
-                )}
-
-            </>
         );
     }
 }
@@ -240,7 +122,6 @@ function NestedTable(props) {
     const [visible, setVisible ] = useState(false)
     const [editRex, setEditRex] = useState(false)
     // const [selectedRowKeys, setSelectedRowKeys] = useState(props.data ? [props.data.findIndex(el => el.isMarkedAsSelected === true)]: [])
-    const [selectedRowKeys, setSelectedRowKeys] = useState((props.data && props.data.findIndex(el => el.isMarkedAsSelected === true)!==-1)? [props.data[props.data.findIndex(el => el.isMarkedAsSelected === true)].id]: [])
     const columns = [
         { 
             
@@ -289,34 +170,6 @@ function NestedTable(props) {
         },
     ];
 
-    const handleDelete = (rId) => {
-        const { leadId, skill } = props
-        delLeadSkillResource(leadId, skill, rId).then((res) => {
-            if (res.success) {
-                props.callBack()
-            //     this.props.history.push('/Employees')
-            }
-        });
-    };
-
-    const onSelectChange = (selected, Rows) =>  {
-        const { leadId, skill } = props
-        setSelectedRowKeys(selected)
-        selectLeadSkillResource(leadId, skill, Rows[0].id).then(res=>{
-            console.log(res);
-        })
-        // [data.findIndex(el => el.isMarkedAsSelected === true)]
-    }
-
-    const callBack = (value) => {
-        setVisible(false)
-        // if (editRex){
-        //     data[editRex.index] = value
-        //     setData(data)
-        // }else{
-            props.callBack()
-        // }
-    };
 
     return <div style={{ paddingRight: 20}}> 
         <Table
@@ -326,22 +179,7 @@ function NestedTable(props) {
             columns={columns} 
             dataSource={props.data} 
             pagination={false}
-            rowSelection={{
-                type: 'radio',
-                selectedRowKeys: selectedRowKeys,
-                onChange: onSelectChange
-            }}
         />
-        {visible && <ResModal
-            visible={visible}
-            editRex={editRex}
-            skillId={props.skill}
-            leadId = {props.leadId}
-            levelId = {props.levelId}
-            panelId = {props.panelId}
-            close={()=>{setVisible(false)}}
-            callBack={callBack}
-        />}
     </div>
 };
 

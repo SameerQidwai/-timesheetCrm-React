@@ -416,15 +416,17 @@ class Resources extends Component {
                 <Filtertags
                     filters={searchedColumn}
                     filterFunction={this.advancefilter}
-                />
+                    />
                 <Table
                     title={()=>tableTitleFilter(5, this.generalFilter)}
                     bordered
                     pagination={{pageSize: localStore().pageSize}}
                     rowKey={(record) => record.id}
                     columns={this.columns}
+                    size="small"
                     dataSource={filterData}
                     expandable={{
+                        rowExpandable: record => record.opportunityResourceAllocations.length > 0,
                         expandedRowRender: record => {
                             return (
                             <NestedTable 
@@ -443,7 +445,6 @@ class Resources extends Component {
                         },
                         // rowExpandable: record => record.user.length > 0,
                       }}
-                    size="small"
                 />
                 {openSearch && <TableModalFilter
                     title={"Search Resources"}

@@ -7,6 +7,7 @@ import Comments from "../../components/Core/Comments";
 // import Travels from "../../components/Core/Travels";
 import Attachments from "../../components/Core/Attachments";
 import Bank from "../../components/Core/Bank";
+import OMResource from "../../components/Core/Resources/OMResources"
 import ProfitLoss from "../../components/Core/ProfitLoss";
 
 import InfoModal from "./Modals/InfoModal";
@@ -16,6 +17,7 @@ import { getRecord, delList } from "../../service/projects";
 import moment from "moment"
 import { formatDate, formatCurrency, localStore, O_STATUS } from "../../service/constant";
 import AuthError from "../../components/Core/AuthError";
+import { FormProvider } from "rc-field-form";
 
 const { Item } = Descriptions;
 const { TabPane } = Tabs;
@@ -26,7 +28,7 @@ class ProjectInfo extends Component {
         this.state = {
             infoModal: false,
             leadId: false,
-            data: { },
+            data: {},
             basic: {},
             billing: {},
             renderTabs: false,
@@ -43,7 +45,6 @@ class ProjectInfo extends Component {
         const { PROJECTS }= JSON.parse(localStore().permissions)
         getRecord(id).then(res=>{
             if(res.success){
-                console.log(res.basic);
                 this.setState({
                     data: res.data,
                     basic: res.basic,
@@ -177,6 +178,9 @@ class ProjectInfo extends Component {
                         <TabPane tab="Projected Profit & Loss" key="profitloss">
                             <ProfitLoss id={leadId} billing={billing} />
                         </TabPane>
+                        {/* <TabPane tab="Resources" key="resources">
+                            <OMResource id={leadId} data={data}/>
+                        </TabPane> */}
                     </Tabs>
                 )}
                 {infoModal && (

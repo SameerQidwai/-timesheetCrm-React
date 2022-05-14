@@ -1,3 +1,5 @@
+UI and Fields Update v0.2.pptx
+************************************
 after Login:    
         Dasboard landing screen [(image size problem)] [(done)]
 
@@ -183,13 +185,18 @@ contd... |
                 contact => phone
     ===================================
 
+
+Project View-02s.pptx
+************************************
+
+
 low Priority:
     from every where Qualified OPs [(fixing)]
     Select Fields as a aphabetially sorted (check it first ) [(known places [(done)] )]
 
 
 Not done slides 
-    slide 5
+    slide 35
 
 Not done task
     Sentence case

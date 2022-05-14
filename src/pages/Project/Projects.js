@@ -396,7 +396,6 @@ class Projects extends Component {
     generalFilter = (value) =>{
         let { data } = this.state
         if (value){
-            console.log('insert');
             this.setState({
                 filterData: data.filter(el => {
                     const { name: organization} = el.organization
@@ -410,7 +409,6 @@ class Projects extends Component {
                 })
             })
         }else{
-            console.log(data.length)
             this.setState({
                 filterData: data
             })
