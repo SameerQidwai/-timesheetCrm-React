@@ -190,7 +190,6 @@ class AddRequestModal extends Component{
         const { data, hoursEntry } = this.state
         data[index].hours = value
         hoursEntry[record.key] = value
-        console.log(hoursEntry);
         this.setState({ 
             data:[...data], 
             hoursEntry: {...hoursEntry}, 
@@ -229,8 +228,8 @@ class AddRequestModal extends Component{
                     
                 if(showDetails ){ balance += hours}
 
-                hoursEntry[date.format('M/D/YYYY')] = hours // setting the hours object before return 
-                return {key: date.format('M/D/YYYY'), date: date, hours: disabled? 0: hours, disabled}
+                hoursEntry[date.format('M/D/YYYY')] = `${hours}` // setting the hours object before return 
+                return {key: date.format('M/D/YYYY'), date: date, hours: disabled? 0: `${hours}`, disabled}
             })
             BasicFields[BasicFields[2].note ? 8: 7].disabled = readOnly // adding an object when select leavetype
                                                                         // and disabling endDate
@@ -478,6 +477,12 @@ class AddRequestModal extends Component{
             };
         })
     }
+
+    checkFunc = (forms) => {
+        const { data } = this.state
+        console.log({forms})
+        console.log({data})
+    }
     //File
     render(){
         const { visible, close, edit, readOnly } = this.props;
@@ -514,6 +519,7 @@ class AddRequestModal extends Component{
                 ),
             },
         ]
+
         // For time bring
         return(
             <Modal
@@ -535,6 +541,7 @@ class AddRequestModal extends Component{
                     size="small"
                     layout="inline"
                     onFinish={this.getFormValues}
+                    // onFinish={this.checkFunc}
                 >
                     <Row className="moz-width">
                         <Col span={12}>
