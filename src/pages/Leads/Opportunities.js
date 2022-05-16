@@ -444,11 +444,11 @@ class Opportunities extends Component {
         }
 
         if (search['id']['value'] || search['title']['value'] ||
-        search['organization']['value'].length>0 || search['revenue']['value'] ||
-        search['startDate']['value']|| search['endDate']['value']||
-        search['bidDate']['value']|| search['entryDate']['value'] ||
-        search['panel']['value'].length>0 || search['stage']['value'].length > 0||
-        search['type']['value'] || search['stateId']['value'].length>0
+            search['organization']['value'].length>0 || search['revenue']['value'] ||
+            search['startDate']['value']|| search['endDate']['value']||
+            search['bidDate']['value']|| search['entryDate']['value'] ||
+            search['panel']['value'].length>0 || search['stage']['value'].length > 0||
+            search['type']['value'] || search['stateId']['value'].length>0
         ){
             const startDate = search['startDate']['value'] ?? [null, null]
             const endDate = search['endDate']['value'] ?? [null, null]

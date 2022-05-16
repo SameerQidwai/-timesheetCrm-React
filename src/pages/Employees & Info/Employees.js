@@ -74,7 +74,7 @@ class Employees extends Component {
                                     onClick={() => {
                                         this.setState({ infoModal: true, editEmp: record.id, });
                                     }}
-                                    disabled={this.state&& !this.state.permissions['UPDATE']}
+                                    disabled={this?.state?.permissions?.['UPDATE']}
                                 >
                                     Edit
                                 </Menu.Item>

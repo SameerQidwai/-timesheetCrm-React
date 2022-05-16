@@ -4,6 +4,8 @@ New bug Found
     Need to create disable variable if any one of the multiselect already has certain action
         for now disable if only one is not matched
 
+    add title field into project resource
+
 Update and check 
     delLeadSkillResource // not done
     Purchase Order // whole Not doe

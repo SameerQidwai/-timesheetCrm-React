@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Row, Col, Menu, Button, Dropdown, Descriptions, Table, Popconfirm, Typography } from "antd";
-import { SettingOutlined, DownOutlined } from "@ant-design/icons"; //Icons
+import { SettingOutlined, DownOutlined, PlusSquareOutlined, FilterOutlined } from "@ant-design/icons"; //Icons
 import { Link } from "react-router-dom"; 
 
 import OrderModal from "./Modals/OrderModal";
@@ -9,7 +9,7 @@ import { getRecord, getOrders, delOrder } from "../../service/projects";
 import moment from "moment"
 import { formatDate, formatCurrency, localStore, O_STATUS } from "../../service/constant";
 import { generalDelete } from "../../service/delete-Api's";
-import { Filtertags, tableTitleFilter } from "../../components/Core/Table/TableFilter";
+import { Filtertags, TableModalFilter, tableTitleFilter } from "../../components/Core/Table/TableFilter";
 
 const { Title } = Typography
 const { Item } = Descriptions;
@@ -88,14 +88,145 @@ class PurchaseOrder extends Component {
             openModal: false,
             editRex: false,
             ProId: false,
+            openSearch: false, 
             desc: {title: 'Service', organization: {name: 'PSO'}, value: '1000.00', startDate: '12 10 2020', endDate: '12 4 2021'},
             searchedColumn: {
                 'id': {type: 'Input', value: '',  label:"Code", showInColumn: true},
-                'value': {type: 'Input', value: '', label:"Value",  showInColumn: true},
-                'expense': {type: 'Input', value: '', label:"Expense",  showInColumn: true},
+                'value1': {type: 'Input', value: null, label:"Value <",  showInColumn: true},
+                'value2': {type: 'Input', value: '', label:"Value >",  showInColumn: true},
+                'expense1': {type: 'Input', value: '', label:"Expense <",  showInColumn: true},
+                'expense2': {type: 'Input', value: '', label:"Expense >",  showInColumn: true},
                 'issueDate': {type: 'Date', value: null,  label:"Issue Date", showInColumn: true},
                 'expiryDate': {type: 'Date', value: null,  label:"Expiry Date", showInColumn: true, disabled:true},
+                'description': {type: 'Input', value: '',  label:"Expiry Date", showInColumn: true, disabled:true},
+                'comment': {type: 'Input', value: '',  label:"Expiry Date", showInColumn: true, disabled:true},
             },
+
+            filterFields: [
+                {
+                    Placeholder: "Issue Date",
+                    fieldCol: 12,
+                    size: "small",
+                    type: "Text",
+                },
+                {
+                    Placeholder: "Expiry Date",
+                    fieldCol: 12,
+                    size: "small",
+                    type: "Text",
+                },
+                {
+                    object: "obj",
+                    fieldCol: 12,
+                    key: 'issueDate',
+                    size: "small",
+                    type: "RangePicker",
+                    fieldStyle: { width: "100%" },
+                }, 
+                {
+                    object: "obj",
+                    fieldCol: 12,
+                    key: 'expiryDate',
+                    size: "small",
+                    type: "RangePicker",
+                    fieldStyle: { width: "100%" },
+                },
+                {
+                    Placeholder: "Value",
+                    fieldCol: 12,
+                    size: "small",
+                    type: "Text",
+                },
+                {
+                    Placeholder: "Expense",
+                    fieldCol: 12,
+                    size: "small",
+                    type: "Text",
+                },
+                {
+                    object: "obj",
+                    fieldCol: 5,
+                    key: 'value1',
+                    size: "small",
+                    shape:"$",
+                    type: "InputNumber",
+                    fieldStyle: { width: "100%" },
+                }, 
+                {
+                    Placeholder: "<",
+                    fieldCol: 1,
+                    size: "small",
+                    type: "Text",
+                    fieldStyle: { textAlign: 'center'}
+                },
+                {
+                    object: "obj",
+                    fieldCol: 5,
+                    key: 'value2',
+                    size: "small",
+                    shape:"$",
+                    type: "InputNumber",
+                    fieldStyle: { width: "100%" },
+                }, 
+                {
+                    Placeholder: ".",
+                    fieldCol: 1,
+                    size: "small",
+                    type: "Text",
+                    fieldStyle: { textAlign: 'center'}
+                },
+                {
+                    object: "obj",
+                    fieldCol: 5,
+                    key: 'expense1',
+                    size: "small",
+                    shape:"$",
+                    type: "InputNumber",
+                    fieldStyle: { width: "100%" },
+                },
+                {
+                    Placeholder: "<",
+                    fieldCol: 1,
+                    size: "small",
+                    type: "Text",
+                },
+                {
+                    object: "obj",
+                    fieldCol: 5,
+                    key: 'expense2',
+                    size: "small",
+                    shape:"$",
+                    type: "InputNumber",
+                    fieldStyle: { width: "100%" },
+                },
+                {
+                    Placeholder: "Description",
+                    fieldCol: 24,
+                    size: "small",
+                    type: "Text",
+                },
+                {
+                    object: "obj",
+                    fieldCol: 24,
+                    key: "description",
+                    size: "small",
+                    type: "Textarea",
+                },
+                {
+                    Placeholder: "Comments",
+                    fieldCol: 24,
+                    size: "small",
+                    type: "Text",
+                },
+                {
+                    object: "obj",
+                    fieldCol: 24,
+                    key: "comment",
+                    size: "small",
+                    type: "Textarea",
+                },
+                
+            ],
         };
     }
 
@@ -162,7 +293,6 @@ class PurchaseOrder extends Component {
         if (value){
             this.setState({
                 filterData: data.filter(el => {
-                    const { name: organization} = el.organization
                     return `00${el.id.toString()}`.includes(value) ||
                     el.value && formatCurrency(el.value).toLowerCase().includes(value.toLowerCase()) ||
                     el.expense && formatCurrency(el.expense).toLowerCase().includes(value.toLowerCase()) ||
@@ -177,8 +307,51 @@ class PurchaseOrder extends Component {
         }
     }
 
+    advancefilter = (value, column, advSearch) =>{
+        let { data, searchedColumn: search }= this.state
+        if(column){
+            search[column]['value'] = value // this will need in column filter
+        }else{
+            search = advSearch
+        }
+        if (search['issueDate']['value'] || search['expiryDate']['value'] ||
+            search['value1']['value'] ||search['value2']['value']
+            || search['expense1']['value'] || search['expense2']['value'] || 
+            search['comment']['value'] || search['description']['value']  
+        ){
+            const issueDate = search['issueDate']['value'] ?? [null, null]
+            const expiryDate = search['expiryDate']['value'] ?? [null, null]
+
+            this.setState({
+                filterData: data.filter(el => { // method one which have mutliple if condition for every multiple search
+                    return (
+                        moment(search['issueDate']['value']? formatDate(el.issueDate,'YYYY-MM-DD'): '2010-10-20')
+                        .isBetween(issueDate[0]?? '2010-10-19',issueDate[1]?? '2010-10-25' , undefined, '[]') &&
+                        moment(search['expiryDate']['value']? formatDate(el.expiryDate,'YYYY-MM-DD'): '2010-10-20')
+                        .isBetween(expiryDate[0]?? '2010-10-19', expiryDate[1]?? '2010-10-25' , undefined, '[]') &&
+                        // (el.value >= 2 )&&
+                        // ((el.value?? Number.NEGATIVE_INFINITY) <= (search['value1']['value'] === '' ? Number.POSITIVE_INFINITY  :Number.POSITIVE_INFINITY))&&
+                        // ((el.value?? Number.POSITIVE_INFINITY) >= (search['value2']['value'] === '' ? Number.NEGATIVE_INFINITY  :Number.NEGATIVE_INFINITY))&&
+                        // ((el.expense?? Number.NEGATIVE_INFINITY) <= (search['expense1']['value'] === '' ? Number.POSITIVE_INFINITY  :Number.POSITIVE_INFINITY))&&
+                        // ((el.expense?? Number.POSITIVE_INFINITY) >= (search['expense2']['value'] === '' ? Number.NEGATIVE_INFINITY  :Number.NEGATIVE_INFINITY)) &&
+                        `${el.comment ?? ''}`.toLowerCase().includes(search['comment']['value'].toLowerCase()) &&
+                        `${el.description ?? ''}`.toLowerCase().includes(search['description']['value'].toLowerCase())
+                    )
+                }),
+                searchedColumn: search,
+                openSearch: false,
+            })
+        }else{
+            this.setState({
+                searchedColumn: search,
+                filterData: data,
+                openSearch: false,
+            })
+        }
+    }
+
     render() {
-        const { desc, data, openModal, editRex, ProId, permissions, searchedColumn } = this.state;
+        const { desc, filterData, openModal, editRex, ProId, permissions, searchedColumn, openSearch, filterFields } = this.state;
         return (
             <>
                 <Descriptions
@@ -211,13 +384,20 @@ class PurchaseOrder extends Component {
                     <Item label="Status">{desc.status ? O_STATUS[desc.status]: ''}</Item>
                     {/* <Item label="Gender">{data.gender}</Item> */}
                 </Descriptions>
-                <Row justify="end">
+                <Row justify="end" gutter={'20'}>
+                    <Col> <Button 
+                        type="default" 
+                        size="small"
+                        onClick={()=>this.setState({openSearch: true})}    
+                    >
+                        <FilterOutlined /> Filter
+                    </Button> </Col>
                     <Col> <Button 
                         type="primary" 
                         size='small' 
                         onClick={() => {  this.setState({ openModal: true, editRex: false, }) }}
                         disabled={permissions && !permissions['ADD']}
-                    >Add New</Button> </Col>
+                    > <PlusSquareOutlined/> Add Purchase Order</Button> </Col>
                     {/* <Col> <Button type="danger" size='small'>Delete Resource</Button></Col> */}
                 </Row>
                 <Filtertags
@@ -230,7 +410,7 @@ class PurchaseOrder extends Component {
                     pagination={{pageSize: localStore().pageSize}}
                     rowKey={(data) => data.id}
                     columns={this.columns}
-                    dataSource={data}
+                    dataSource={filterData}
                     size="small"
                     className='fs-small'
                 />
@@ -243,6 +423,14 @@ class PurchaseOrder extends Component {
                         callBack={this.callBack}
                     />
                 )}
+                {openSearch && <TableModalFilter
+                    title={"Purchase Order - filter"}
+                    visible={openSearch}
+                    filters={searchedColumn}
+                    filterFields={filterFields}
+                    filterFunction={this.advancefilter}
+                    onClose={()=>this.setState({openSearch:false})}
+                />}
             </>
         );
     }

@@ -77,7 +77,6 @@ class OMResource extends Component {
     }
 
     componentDidMount = () => {
-        console.log(this.props.data);
         const { data, id } = this.props
         this.setState({
             data: data.milestones,

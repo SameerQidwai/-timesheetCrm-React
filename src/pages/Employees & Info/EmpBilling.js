@@ -66,19 +66,23 @@ class EmpBilling extends Component {
                 key: "action",
                 align: "right",
                 width: 115,
-                render: (record) => (
+                render: (text, record, index) => (
                     <Dropdown
                         overlay={
                             <Menu>
-                                {/* <Menu.Item danger>
+                                <Menu.Item 
+                                    danger
+                                    disabled={!this?.state?.permissions?.['DELETE']}
+                                >
                                     <Popconfirm
-                                        title="Are you sure, you want to delete?"
-                                        onConfirm={() => this.handleDelete(record.id) }
+                                        title="Are you sure, you want to delete?" 
+                                        onConfirm={() => this.handleDelete(record.id, index)} 
                                     >
                                         Delete
                                     </Popconfirm>
-                                </Menu.Item> */}
+                                </Menu.Item >
                                 <Menu.Item
+                                    disabled={!this?.state?.permissions?.['UPDATE']}
                                     onClick={() => {
                                         this.setState({ billModal: true, editCntrct: record.id, });
                                     }}
@@ -103,6 +107,7 @@ class EmpBilling extends Component {
             editCntrct: false,
             openSearch: false,
             filterData: [],
+            permissions: {}
         }
     }
     componentDidMount = ()=>{
@@ -111,6 +116,7 @@ class EmpBilling extends Component {
     }
 
     fetchAll = (id) =>{
+        const { USERS }= JSON.parse(localStore().permissions)
         Promise.all([ getList(id), empRecord(id) ])
         .then(res => {
             this.setState({
@@ -119,6 +125,7 @@ class EmpBilling extends Component {
                 intro: res[1].basic,
                 billModal: false,
                 editCntrct: false,
+                permissions: USERS
             })
         })
         .catch(e => {
@@ -144,7 +151,7 @@ class EmpBilling extends Component {
     };
 
     handleDelete = (id, index) => {
-        const url = '/sub-contractors'
+        const url = '/employment-contracts'
         const { data, filterData } = this.state
         const { history } = this.props
         generalDelete(history, url, id, index, filterData, data).then(res =>{

@@ -18,6 +18,7 @@ import { formatDate, formatCurrency, localStore, O_STATUS } from "../../service/
 import LostModal from "./Modals/LostModal";
 import { generalDelete } from "../../service/delete-Api's";
 import AuthError from "../../components/Core/AuthError";
+import OMResource from "../../components/Core/Resources/OMResources";
 
 const { SubMenu } = Menu
 const { Item } = Descriptions;
@@ -229,6 +230,9 @@ class OpportunityInfo extends Component {
                         </TabPane> */}
                         <TabPane tab="Projected Profit & Loss" key="profitloss">
                             <ProfitLoss id={leadId} billing={billing} />
+                        </TabPane>
+                        <TabPane tab="Resources" key="resources">
+                            <OMResource id={leadId} data={data}/>
                         </TabPane>
                     </Tabs>
                 )}
