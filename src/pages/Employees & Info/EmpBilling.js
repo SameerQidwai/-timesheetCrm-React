@@ -75,7 +75,7 @@ class EmpBilling extends Component {
                                     disabled={!this?.state?.permissions?.['DELETE']}
                                 >
                                     <Popconfirm
-                                        title="Are you sure, you want to delete?" 
+                                        title="Are you sure you want to delete" 
                                         onConfirm={() => this.handleDelete(record.id, index)} 
                                     >
                                         Delete

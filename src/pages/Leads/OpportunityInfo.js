@@ -113,13 +113,13 @@ class OpportunityInfo extends Component {
                                 disabled={!this?.state?.permissions?.['DELETE']}
                             >
                                     <Popconfirm 
-                                        title="Are you sure, you want to delete?" 
+                                        title="Are you sure you want to delete" 
                                         onConfirm={() => this.handleDelete(leadId)} 
                                     >
                                         Delete
                                     </Popconfirm>
                                 </Menu.Item >
-                                <SubMenu title={'Outcomes'}>
+                                <SubMenu title={'Outcome'}>
                                     {this.status.map(el => <Menu.Item 
                                         key={el.title}
                                         disabled={!permissions['UPDATE']}

@@ -127,7 +127,7 @@ class ResModal extends Component {
           fieldCol: 12,
           key: "title",
           size: "small",
-          rules: [{ required: true, message: "Skill is Required" }],
+          rules: [{ required: true, message: "Title is Required" }],
           type: "Input",
         },
         {

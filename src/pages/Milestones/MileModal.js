@@ -23,7 +23,7 @@ class MileModal extends Component {
       ORGS: [],
       data: {},
 
-      MileFields: [
+      PMileFields: [
           {
             Placeholder: "Title",
             fieldCol: 12,
@@ -144,6 +144,107 @@ class MileModal extends Component {
             type: "Textarea",
         },
       ],
+
+      LMileFields: [
+          {
+            Placeholder: "Title",
+            fieldCol: 12,
+            size: "small",
+            rangeMin: true,
+            type: "Text",
+            labelAlign: "right",
+            // itemStyle:{marginBottom:'10px'},
+          },
+          {
+            Placeholder: "Approved",
+            fieldCol: 12,
+            size: "small",
+            // rangeMin: true,
+            type: "Text",
+            labelAlign: "right",
+            // itemStyle:{marginBottom:'10px'},
+          },
+          {
+            object: "obj",
+            fieldCol: 12,
+            key: "title",
+
+            // disabled: true,
+            size: "small",
+            rules:[{ required: true, message: 'title is Required' }],
+            type: "Input",
+          },
+          {
+            object: "obj",
+            fieldCol: 12,
+            key: "isApproved",
+            size: "small",
+            // rules:[{ required: true, message: 'Buying Rate is Required' }],
+            type: "Select",
+            data: [{label: 'True', value: true}, {label: 'False', value: false}],
+            fieldStyle: { width: "100%" },
+          },
+          {
+            Placeholder: "Start Date",
+            fieldCol: 12,
+            size: "small",
+            rangeMin: true,
+            type: "Text",
+            labelAlign: "right",
+            // itemStyle:{marginBottom:'10px'},
+          },
+          {
+            Placeholder: "End Date",
+            fieldCol: 12,
+            size: "small",
+            rangeMin: true,
+            type: "Text",
+            labelAlign: "right",
+            // itemStyle:{marginBottom:'10px'},
+          },
+          {
+            object: "obj",
+            fieldCol: 12,
+            key: "startDate",
+            size: "small",
+            rules:[{ required: true, message: 'Start Date is Required' }],
+            type: "DatePicker",
+            fieldStyle: { width: "100%" },
+            rangeMin: (current)=>{
+              const { obj } = this.formRef.current.getFieldValue();
+              return dateRangeAfter(current, obj.endDate, props.pDates)
+            }
+          },
+          {
+            object: "obj",
+            fieldCol: 12,
+            key: "endDate",
+            size: "small",
+            rules:[{ required: true, message: 'End Date is Required' }],
+            type: "DatePicker",
+            fieldStyle: { width: "100%" },
+            rangeMax: (current)=>{
+              const { obj } = this.formRef.current.getFieldValue();
+              return dateRangeBefore(current, obj.startDate, props.pDates)
+            }
+          },
+          {
+            Placeholder: "Description",
+            fieldCol: 24,
+            size: "small",
+            // rangeMin: true,
+            type: "Text",
+            labelAlign: "right",
+            // itemStyle:{marginBottom:'10px'},
+          },
+          {
+            object: "obj",
+            fieldCol: 24,
+            key: "description",
+            size: "small",
+            type: "Textarea",
+        },
+      ],
     };
   }
 
@@ -206,8 +307,8 @@ class MileModal extends Component {
   };
 
   render() {
-    const { editMile, visible, close } = this.props;
-    const { MileFields, loading } = this.state;
+    const { editMile, visible, close, work, } = this.props;
+    const { PMileFields, LMileFields ,loading } = this.state;
     return (
       <Modal
         title={editMile ? "Edit Milestone" : "Add Milestone"}
@@ -228,7 +329,7 @@ class MileModal extends Component {
             layout="inline"
             initialValues={{obj:{progress:0}}}
         >
-            <FormItems FormFields={MileFields} />
+            <FormItems FormFields={work === 'opportunities' ? LMileFields :PMileFields} />
         </Form>
       </Modal>
     );

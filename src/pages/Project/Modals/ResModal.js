@@ -25,6 +25,14 @@ class ResModal extends Component {
 
       ResourceFields: [
         {
+          Placeholder: "Position Title",
+          fieldCol: 12,
+          size: "small",
+          type: "Text",
+          labelAlign: "right",
+          // itemStyle:{marginBottom:'10px'},
+        },
+        {
           Placeholder: "Skill",
           fieldCol: 12,
           size: "small",
@@ -34,13 +42,11 @@ class ResModal extends Component {
           // itemStyle:{marginBottom:'10px'},
         },
         {
-          Placeholder: "Level",
+          object: "obj",
           fieldCol: 12,
+          key: "title",
           size: "small",
-          rangeMin: true,
-          type: "Text",
-          labelAlign: "right",
-          // itemStyle:{marginBottom:'10px'},
+          type: "Input",
         },
         {
           object: "obj",
@@ -53,7 +59,7 @@ class ResModal extends Component {
           type: "Select",
           onChange: (e, value) =>{
             const { ResourceFields } = this.state;
-            ResourceFields[3].data = value ? value.levels : [];
+            ResourceFields[6].data = value ? value.levels : [];
             const {
               obj,
             } = this.formRef.current.getFieldsValue(); // const
@@ -64,6 +70,24 @@ class ResModal extends Component {
             });
             this.setState({ ResourceFields });
           },
+        },
+        {
+          Placeholder: "Level",
+          fieldCol: 12,
+          size: "small",
+          rangeMin: true,
+          type: "Text",
+          labelAlign: "right",
+          // itemStyle:{marginBottom:'10px'},
+        },
+        {
+          Placeholder: "Total Billable Hours",
+          fieldCol: 12,
+          size: "small",
+          type: "Text",
+          rangeMin: true,
+          labelAlign: "right",
+          // itemStyle:{marginBottom:'10px'},
         },
         {
           object: "obj",
@@ -78,31 +102,13 @@ class ResModal extends Component {
             const { ResourceFields } = this.state;
             const customUrl = `employees/get/by-skills?psslId=${value?.value}&workType=P`
             getOrgPersons(customUrl).then((res) => {
-              ResourceFields[7].data = res.success ? res.data : [];
+              ResourceFields[10].data = res.success ? res.data : [];
               const { obj, } = this.formRef.current.getFieldsValue(); // const
               obj["contactPersonId"] = undefined;
               this.formRef.current.setFieldsValue({ obj, });
               this.setState({ ResourceFields });
             });
           },
-        },
-        {
-          Placeholder: "Total Billable Hours",
-          fieldCol: 12,
-          size: "small",
-          type: "Text",
-          rangeMin: true,
-          labelAlign: "right",
-          // itemStyle:{marginBottom:'10px'},
-        },
-        {
-          Placeholder: "Resource",
-          fieldCol: 12,
-          rangeMin: true,
-          size: "small",
-          type: "Text",
-          labelAlign: "right",
-          // itemStyle:{marginBottom:'10px'},
         },
         {
           object: "obj",
@@ -114,14 +120,13 @@ class ResModal extends Component {
           fieldStyle: { width: "100%" },
         },
         {
-          object: "obj",
+          Placeholder: "Resource",
           fieldCol: 12,
-          key: "contactPersonId",
-          disabled: props.editRex,
+          rangeMin: true,
           size: "small",
-          rules:[{ required: true, message: 'Resource is Required' }],
-          data: [],
-          type: "Select",
+          type: "Text",
+          labelAlign: "right",
+          // itemStyle:{marginBottom:'10px'},
         },
         {
           Placeholder: "Start Date",
@@ -133,13 +138,14 @@ class ResModal extends Component {
           // itemStyle:{marginBottom:'10px'},
         },
         {
-          Placeholder: "End Date",
+          object: "obj",
           fieldCol: 12,
+          key: "contactPersonId",
+          disabled: props.editRex,
           size: "small",
-          rangeMin: true,
-          type: "Text",
-          labelAlign: "right",
-          // itemStyle:{marginBottom:'10px'},
+          rules:[{ required: true, message: 'Resource is Required' }],
+          data: [],
+          type: "Select",
         },
         {
           object: "obj",
@@ -155,17 +161,13 @@ class ResModal extends Component {
           }
         },
         {
-          object: "obj",
+          Placeholder: "End Date",
           fieldCol: 12,
-          key: "endDate",
           size: "small",
-          rules:[{ required: true, message: 'End Date is Required' }],
-          type: "DatePicker",
-          fieldStyle: { width: "100%" },
-          rangeMax: (current)=>{
-            const { obj } = this.formRef.current.getFieldValue();
-            return dateRangeBefore(current, obj.startDate, props.pDates)
-          }
+          rangeMin: true,
+          type: "Text",
+          labelAlign: "right",
+          // itemStyle:{marginBottom:'10px'},
         },
         {
           Placeholder: "Effort Rate",
@@ -177,13 +179,17 @@ class ResModal extends Component {
           // itemStyle:{marginBottom:'10px'},
         },
         {
-          Placeholder: "Buy Cost",
+          object: "obj",
           fieldCol: 12,
+          key: "endDate",
           size: "small",
-          rangeMin: true,
-          type: "Text",
-          labelAlign: "right",
-          // itemStyle:{marginBottom:'10px'},
+          rules:[{ required: true, message: 'End Date is Required' }],
+          type: "DatePicker",
+          fieldStyle: { width: "100%" },
+          rangeMax: (current)=>{
+            const { obj } = this.formRef.current.getFieldValue();
+            return dateRangeBefore(current, obj.startDate, props.pDates)
+          }
         },
         {
           object: "obj",
@@ -198,6 +204,24 @@ class ResModal extends Component {
           rangeMax: 100,
         },
         {
+          Placeholder: "Buy Cost",
+          fieldCol: 12,
+          size: "small",
+          rangeMin: true,
+          type: "Text",
+          labelAlign: "right",
+          // itemStyle:{marginBottom:'10px'},
+        },
+        {
+          Placeholder: "Sale Cost",
+          fieldCol: 12,
+          rangeMin: true,
+          size: "small",
+          type: "Text",
+          labelAlign: "right",
+          // itemStyle:{marginBottom:'10px'},
+        },
+        {
           object: "obj",
           fieldCol: 12,
           key: "buyingRate",
@@ -206,15 +230,6 @@ class ResModal extends Component {
           rules:[{ required: true, message: 'Buying Rate is Required' }],
           type: "InputNumber",
           fieldStyle: { width: "100%" },
-        },
-        {
-          Placeholder: "Sale Cost",
-          fieldCol: 24,
-          rangeMin: true,
-          size: "small",
-          type: "Text",
-          labelAlign: "right",
-          // itemStyle:{marginBottom:'10px'},
         },
         {
           object: "obj",
@@ -239,7 +254,7 @@ class ResModal extends Component {
     const { editRex, panelId } = this.props;
     getPanelSkills(panelId).then((res) => {
       const { ResourceFields } = this.state;
-      ResourceFields[2].data = res.success ? res.data : [];
+      ResourceFields[3].data = res.success ? res.data : [];
       this.setState( { ResourceFields, }, () => {
           if (editRex) {
             this.getRecord(res.data);
@@ -287,10 +302,10 @@ class ResModal extends Component {
           const customUrl = `employees/get/by-skills?psslId=${resR?.data?.panelSkillStandardLevelId}&workType=P`
           getOrgPersons(customUrl).then((resP) => {
           const { ResourceFields } = this.state;
-          ResourceFields[3].data = skills[skillIndex]
+          ResourceFields[6].data = skills[skillIndex]
             ? skills[skillIndex].levels
             : [];
-          ResourceFields[7].data = resP.success ? resP.data : [];
+          ResourceFields[10].data = resP.success ? resP.data : [];
           this.formRef.current.setFieldsValue({
             obj: resR.data,
           });

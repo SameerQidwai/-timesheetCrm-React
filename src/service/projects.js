@@ -204,6 +204,7 @@ export const getLeadSkill = (crud, resId) => {
             if (success){
                 let obj = {
                     panelSkillId:  data.panelSkillId,
+                    title:  data.title,
                     panelSkillStandardLevelId:  data.panelSkillStandardLevelId,
                     billableHours: data.billableHours,
                     startDate: data.startDate && moment(data.startDate),

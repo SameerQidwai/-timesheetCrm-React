@@ -61,7 +61,7 @@ class PurchaseOrder extends Component {
                                 disabled={!this?.state?.permissions?.['DELETE']}
                             >
                                 <Popconfirm
-                                    title="Are you sure, you want to delete?" 
+                                    title="Are you sure you want to delete" 
                                     onConfirm={() => this.handleDelete(record.id, index)} 
                                 >
                                     Delete
@@ -385,13 +385,13 @@ class PurchaseOrder extends Component {
                     {/* <Item label="Gender">{data.gender}</Item> */}
                 </Descriptions>
                 <Row justify="end" gutter={'20'}>
-                    <Col> <Button 
+                    {/* <Col> <Button 
                         type="default" 
                         size="small"
                         onClick={()=>this.setState({openSearch: true})}    
                     >
                         <FilterOutlined /> Filter
-                    </Button> </Col>
+                    </Button> </Col> */}
                     <Col> <Button 
                         type="primary" 
                         size='small' 
