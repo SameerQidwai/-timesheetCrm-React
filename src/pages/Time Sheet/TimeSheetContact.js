@@ -528,7 +528,7 @@ class TimeSheetContact extends Component {
                     {columns.map(({key, dateObj}, kIndex)=>{
                         let value = 0
                         data.map((rowData, index) =>{ //calculation for total hours and actual hours for footer to show
-                            if(key !== 'project' ){
+                            if(key !== 'project' && !rowData['leaveRequest']){
                                 if(key === 'totalHours'){
                                     value += data[index]['totalHours'] ?? 0 
                                 }else{
@@ -590,7 +590,7 @@ class TimeSheetContact extends Component {
             content += `${project}, ` 
         })
         const modal = Modal.confirm({
-          title: `${stage} Timesheet For the month of ${cMonth.format('MMM YYYY')}`,
+          title: `Do you wish to ${stage} timesheet for the month of ${cMonth.format('MMM YYYY')}`,
           icon: stage=== 'Delete' ? <ExclamationCircleOutlined /> : <CheckCircleOutlined />,
           content: content,
           okButtonProps: {danger: stage === 'Delete'??true},

@@ -86,7 +86,7 @@ function Login(props) {
                             </Button>
                         </Form.Item>
                         <Form.Item noStyle>
-                            <Text type="danger">If you are facing any problem, please contact support@timewize.com.au</Text>
+                            <Text type="danger">If you are experiencing any problems, please contact support@timewize.com.au</Text>
                         </Form.Item>
                     </Form>
                 </Col>

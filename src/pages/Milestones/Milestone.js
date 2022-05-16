@@ -77,7 +77,7 @@ class Milestone extends Component {
                                         disabled={!this?.state?.permissions?.['DELETE']}
                                     >
                                         <Popconfirm 
-                                            title="Are you sure, you want to delete?" 
+                                            title="Are you sure you want to delete" 
                                             onConfirm={() => this.handleDelete(record.id, index)} 
                                         >
                                             Delete
@@ -141,7 +141,8 @@ class Milestone extends Component {
                 data: res[1].success && res[1].data,
                 columns: [...columns],
                 proId: id,
-                customUrl, 
+                customUrl,
+                work,
                 permissions: work === 'opportunities'? OPPORTUNITIES: PROJECTS
             })
         })
@@ -190,7 +191,7 @@ class Milestone extends Component {
     };
 
     render() {
-        const { desc, data, infoModal, editMile, proId, permissions, columns, customUrl, pDates } = this.state;
+        const { desc, data, infoModal, editMile, proId, permissions, columns, customUrl, pDates, work } = this.state;
         return (
             <>
                 <Descriptions
@@ -234,6 +235,7 @@ class Milestone extends Component {
                         pDates={pDates}
                         proId={proId}
                         crud={customUrl}
+                        work={work}
                         close={this.closeModal}
                         callBack={this.callBack}
                     />

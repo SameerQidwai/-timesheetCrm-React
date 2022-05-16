@@ -375,7 +375,7 @@ class TimeSheetProject extends Component {
             </Col>
         </Row> : ''
         modal = Modal.confirm({
-          title: `${stage} Timesheet For the month of ${cMonth.format('MMM YYYY')}`,
+          title: `${stage} timesheet for the month of ${cMonth.format('MMM YYYY')}`,
           width: 520,
           icon: stage=== 'Reject' ? <ExclamationCircleOutlined /> : <CheckCircleOutlined />,
           content: content,

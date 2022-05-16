@@ -111,7 +111,7 @@ class Opportunities extends Component {
                                 disabled={!this?.state?.permissions?.['DELETE']}
                             >
                                 <Popconfirm 
-                                    title="Are you sure, you want to delete?" 
+                                    title="Are you sure you want to delete" 
                                     onConfirm={() => this.handleDelete(record.id, index)} 
                                 >
                                     Delete
@@ -179,7 +179,7 @@ class Opportunities extends Component {
                 'bidDate': {type: 'Date', value: null,  label:"Bid Date", showInColumn: true, disabled:true},
                 'entryDate': {type: 'Date', value: null,  label:"Entry Date", showInColumn: true, disabled:true},
                 'stage': { type: 'Select', multi: true, value: [], label:"stage",  showInColumn: true},
-                'status': { type: 'Select', value: [], label:"Status",  showInColumn: true},
+                'status': { type: 'Select', multi: true, value: [], label:"Status",  showInColumn: true},
                 'type': { type: 'Select', value: "", label:"Type",  showInColumn: true},
                 'Action': {type: 'Input', value: '', label:"",  showInColumn: true, disabled:true},
                 'stateId': {type: 'none', multi: true, value: [], label:"State",  showInColumn: false, disabled:false},
@@ -292,11 +292,12 @@ class Opportunities extends Component {
                     type: "Text",
                 },
                 {
-                    Placeholder: "Expected Project Start Date",
+                    Placeholder: "Status",
                     fieldCol: 12,
                     size: "small",
                     type: "Text",
                 },
+                
                 {
                     object: "obj",
                     fieldCol: 12,
@@ -309,10 +310,23 @@ class Opportunities extends Component {
                 {
                     object: "obj",
                     fieldCol: 12,
-                    key: "startDate",
+                    key: "status",
+                    mode: 'multiple',
+                    customValue: (value, option)=> option,
                     size: "small",
-                    type: "RangePicker",
-                    fieldStyle: { width: "100%" },
+                    data: [
+                        { label: "Open", value: 'O' },
+                        { label: "Lost", value: 'L' },
+                        { label: "Did Not Proceed", value: 'DNP' },
+                        { label: "Not Bid", value: 'NB' },
+                    ],
+                    type: "Select",
+                },   
+                {
+                    Placeholder: "Expected Project Start Date",
+                    fieldCol: 12,
+                    size: "small",
+                    type: "Text",
                 },
                 {
                     Placeholder: "Expected Project End Date",
@@ -321,10 +335,12 @@ class Opportunities extends Component {
                     type: "Text",
                 },
                 {
-                    Placeholder: "Bid Due Date",
+                    object: "obj",
                     fieldCol: 12,
+                    key: "startDate",
                     size: "small",
-                    type: "Text",
+                    type: "RangePicker",
+                    fieldStyle: { width: "100%" },
                 },
                 {
                     object: "obj",
@@ -335,20 +351,25 @@ class Opportunities extends Component {
                     fieldStyle: { width: "100%" },
                 },
                 {
+                    Placeholder: "Bid Due Date",
+                    fieldCol: 12,
+                    size: "small",
+                    type: "Text",
+                },
+                {
+                    Placeholder: "Entry Date",
+                    fieldCol: 12,
+                    size: "small",
+                    type: "Text",
+                },
+                {
                     object: "obj",
                     fieldCol: 12,
                     key: "bidDate",
                     size: "small",
                     type: "RangePicker",
                     fieldStyle: { width: "100%" },
-                },  
-                {
-                    Placeholder: "Entry Date",
-                    fieldCol: 24,
-                    size: "small",
-                    type: "Text",
-                },
-                              
+                },                                
                 {
                     object: "obj",
                     fieldCol: 12,
@@ -423,7 +444,7 @@ class Opportunities extends Component {
                     el.endDate && `${formatDate(el.endDate)}`.toLowerCase().includes(value.toLowerCase()) ||
                     el.bidDate && `${formatDate(el.bidDate)}`.toLowerCase().includes(value.toLowerCase()) ||
                     el.stage && `${O_STAGE[el.stage]}`.toLowerCase().includes(value.toLowerCase()) ||
-                    el.status && `${O_STATUS[el.status]}`.toLowerCase().includes(value.toLowerCase()) ||
+                    // el.status && `${O_STATUS[el.status]}`.toLowerCase().includes(value.toLowerCase()) ||
                     el.type && `${O_TYPE[el.type]}`.toLowerCase().includes(value.toLowerCase()) ||
                     el.phoneNumber && el.phoneNumber.startsWith(value)
                 })
@@ -442,13 +463,13 @@ class Opportunities extends Component {
         }else{
             search = advSearch
         }
-
         if (search['id']['value'] || search['title']['value'] ||
         search['organization']['value'].length>0 || search['revenue']['value'] ||
-        search['startDate']['value']|| search['endDate']['value']||
-        search['bidDate']['value']|| search['entryDate']['value'] ||
-        search['panel']['value'].length>0 || search['stage']['value'].length > 0||
-        search['type']['value'] || search['stateId']['value'].length>0
+            search['startDate']['value']|| search['endDate']['value']||
+            search['bidDate']['value']|| search['entryDate']['value'] ||
+            search['panel']['value'].length>0 || search['stage']['value'].length > 0
+            || search['status']['value'].length > 0|| search['type']['value'] || 
+            search['stateId']['value'].length>0
         ){
             const startDate = search['startDate']['value'] ?? [null, null]
             const endDate = search['endDate']['value'] ?? [null, null]

@@ -80,7 +80,7 @@ class ContInfo extends Component {
                             <Menu>
                                 {/* <Menu.Item danger>
                                     <Popconfirm
-                                        title="Are you sure, you want to delete?"
+                                        title="Are you sure you want to delete"
                                         onConfirm={() => this.handleDelete(emp) }
                                     >
                                         Delete

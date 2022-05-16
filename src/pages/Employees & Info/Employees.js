@@ -64,7 +64,7 @@ class Employees extends Component {
                                     disabled={!this?.state?.permissions?.['DELETE']}
                                 >
                                     <Popconfirm
-                                        title="Are you sure, you want to delete?" 
+                                        title="Are you sure you want to delete" 
                                         onConfirm={() => this.handleDelete(record.id, index)} 
                                     >
                                         Delete
@@ -74,7 +74,7 @@ class Employees extends Component {
                                     onClick={() => {
                                         this.setState({ infoModal: true, editEmp: record.id, });
                                     }}
-                                    disabled={this.state&& !this.state.permissions['UPDATE']}
+                                    disabled={this?.state?.permissions?.['UPDATE']}
                                 >
                                     Edit
                                 </Menu.Item>
