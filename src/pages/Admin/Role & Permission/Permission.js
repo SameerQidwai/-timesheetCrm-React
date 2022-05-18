@@ -162,10 +162,10 @@ class Permission extends Component {
                     key: 'PROFILE',
                     category: "Profile",
                 },
-                {
-                    key: 'UNAPPROVAL',
-                    category: "Unapprove",
-                },
+                // {
+                //     key: 'UNAPPROVAL',
+                //     category: "Unapprove",
+                // },
             ],
         }
     }
