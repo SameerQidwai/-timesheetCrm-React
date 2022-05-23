@@ -298,9 +298,9 @@ export const editLeadSkillResource = (crud, skillId, resId, data) => {
         });
 };
 
-export const getCompleteResource = (crud,opportunityId, ) => {
+export const getHierarchy = (opportunityId) => {
     return axios
-        .get(`${url}/${opportunityId}${crud}`, {headers:headers()})
+        .get(`${url}/${opportunityId}/hierarchy`, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)

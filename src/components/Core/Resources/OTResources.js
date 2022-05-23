@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import moment from "moment"
 import { formatDate, formatCurrency, localStore } from "../../../service/constant";
 import { tableSorter } from "../Table/TableFilter";
-import { getCompleteResource } from "../../../service/opportunities";
+import { getHierarchy } from "../../../service/opportunities";
 
 const positionColumns = (milestoneId) => [
     {
@@ -116,8 +116,7 @@ class OTResources extends Component {
 
     componentDidMount = () => {
         const { id } = this.props
-        const crud = '/milestones/resources/allocations'
-        getCompleteResource(crud, id).then(res=>{
+        getHierarchy(id).then(res=>{
             if (res){
                 const {success, data } = res
                 //inserting Link to redirect to positions
@@ -143,7 +142,7 @@ class OTResources extends Component {
                     dataSource={data}
                     size="small"
                     expandable={{
-                        // rowExpandable: record => record.opportunityResourceAllocations.length > 0,
+                        rowExpandable: record => record?.opportunityResourceAllocations?.length > 0,
                         expandedRowRender: record => {
                             return (
                             <NestedTable 

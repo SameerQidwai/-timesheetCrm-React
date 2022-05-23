@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import moment from "moment"
 import { formatDate, formatCurrency, localStore } from "../../../service/constant";
 import { tableSorter } from "../Table/TableFilter";
-import { getCompleteResource } from "../../../service/opportunities";
+import { getHierarchy } from "../../../service/opportunities";
 
 const milestoneColmuns = [
     {
@@ -258,8 +258,7 @@ class OMResources extends Component {
 
     componentDidMount = () => {
         const { id } = this.props
-        const crud = '/milestones/resources/allocations'
-        getCompleteResource(crud, id).then(res=>{
+        getHierarchy(id).then(res=>{
             if (res){
                 const {success, data } = res
                 this.setState({

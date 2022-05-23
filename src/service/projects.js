@@ -195,9 +195,9 @@ export const getLeadSkills = (crud, id)=>{
         });
 };
 
-export const getCompleteResource = (crud,projectId, ) => {
+export const getHierarchy = (projectId) => {
     return axios
-        .get(`${url}/${projectId}${crud}`, {headers:headers()})
+        .get(`${url}/${projectId}/hierarchy`, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)

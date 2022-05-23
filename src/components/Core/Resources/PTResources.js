@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import moment from "moment"
 import { formatDate, formatCurrency, localStore } from "../../../service/constant";
 import { tableSorter } from "../Table/TableFilter";
-import { getCompleteResource } from "../../../service/projects";
+import { getHierarchy } from "../../../service/projects";
 
 
 
@@ -30,12 +30,12 @@ const resourceColumn = (milestoneId) => [
     },
     {
         title: "Employee Name",
-        dataIndex: ["opportunityResourceAllocations", "0", "contactPerson"],
+        dataIndex: "contactPerson",
         key: "contactPerson",
         render: (record)=>(
             `${record?.firstName} ${record?.lastName}`
         ),
-        ...tableSorter('opportunityResourceAllocations.0.contactPerson', 'string'),
+        ...tableSorter('contactPerson', 'string'),
     },
     {
         title: "Billable Hours",
@@ -46,17 +46,17 @@ const resourceColumn = (milestoneId) => [
     },
     {
         title: "Buy Rate (hourly)",
-        dataIndex: ["opportunityResourceAllocations", "0", "buyingRate"],
-        key: "opportunityResourceAllocations",
+        dataIndex: "buyingRate",
+        key: "buyingRate",
         render:(record)=>( record &&formatCurrency(record) ),
-        ...tableSorter('opportunityResourceAllocations.0.buyingRate', 'number'),
+        ...tableSorter('buyingRate', 'number'),
     },
     {
         title: "Sale Rate (hourly)",
-        dataIndex: ["opportunityResourceAllocations", "0", "sellingRate"],
-        key: "opportunityResourceAllocations",
+        dataIndex: "sellingRate",
+        key: "sellingRate",
         render:(record)=>( record && formatCurrency(record) ),
-        ...tableSorter('opportunityResourceAllocations.0.sellingRate', 'number'),
+        ...tableSorter('sellingRate', 'number'),
     },
     {
         title: "Action",
@@ -105,8 +105,7 @@ class PTResources extends Component {
 
     componentDidMount = () => {
         const { id } = this.props
-        const crud = '/milestones/resources/allocations'
-        getCompleteResource(crud, id).then(res=>{
+        getHierarchy(id).then(res=>{
             if (res){
                 const {success, data } = res
                 //inserting Link to redirect to positions

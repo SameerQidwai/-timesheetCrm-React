@@ -1,6 +1,8 @@
 New bug Found
     if permission changes or edit... what to do with the person if he is arleady Loggedin 
 
+    Dates disable everywhere ref => to opportuity milestone start and end date
+
     Need to create disable variable if any one of the multiselect already has certain action
         for now disable if only one is not matched
 

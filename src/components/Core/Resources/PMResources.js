@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import moment from "moment"
 import { formatDate, formatCurrency, localStore } from "../../../service/constant";
 import { tableSorter } from "../Table/TableFilter";
-import { getCompleteResource } from "../../../service/projects";
+import { getHierarchy } from "../../../service/projects";
 
 const milestoneColmuns = [
     {
@@ -98,12 +98,12 @@ const positionColumns = [
     },
     {
         title: "Employee Name",
-        dataIndex: ["opportunityResourceAllocations", "0", "contactPerson"],
+        dataIndex: "contactPerson",
         key: "contactPerson",
         render: (record)=>(
             `${record?.firstName} ${record?.lastName}`
         ),
-        ...tableSorter('opportunityResourceAllocations.0.contactPerson', 'string'),
+        ...tableSorter('contactPerson', 'string'),
     },
     {
         title: "Billable Hours",
@@ -114,17 +114,17 @@ const positionColumns = [
     },
     {
         title: "Buy Rate (hourly)",
-        dataIndex: ["opportunityResourceAllocations", "0", "buyingRate"],
-        key: "opportunityResourceAllocations",
+        dataIndex: "buyingRate",
+        key: "buyingRate",
         render:(record)=>( record &&formatCurrency(record) ),
-        ...tableSorter('opportunityResourceAllocations.0.buyingRate', 'number'),
+        ...tableSorter('buyingRate', 'number'),
     },
     {
         title: "Sale Rate (hourly)",
-        dataIndex: ["opportunityResourceAllocations", "0", "sellingRate"],
-        key: "opportunityResourceAllocations",
+        dataIndex: "sellingRate",
+        key: "sellingRate",
         render:(record)=>( record && formatCurrency(record) ),
-        ...tableSorter('opportunityResourceAllocations.0.sellingRate', 'number'),
+        ...tableSorter('sellingRate', 'number'),
     },
 ];
 
@@ -146,8 +146,7 @@ class PMResources extends Component {
 
     componentDidMount = () => {
         const { id } = this.props
-        const crud = '/milestones/resources/allocations'
-        getCompleteResource(crud, id).then(res=>{
+        getHierarchy(id).then(res=>{
             if (res){
                 const {success, data } = res
                 console.log(data);
@@ -178,7 +177,6 @@ class PMResources extends Component {
                             <NestedTable 
                                 data={record.opportunityResources} 
                                 columns={positionColumns}
-                                key={record.id}
                                 expandable={true}
                                 checked={false}
                             />)
@@ -190,14 +188,14 @@ class PMResources extends Component {
     }
 }
 
-function NestedTable({key, columns, data, expandable,checked}) {
+function NestedTable({ columns, data }) {
     // const [data, setData] = useState(data);
 
     return <div style={{ paddingRight: 20}}> 
         <Table
             bordered
             size="small"
-            rowKey={(record) => record.id} 
+            rowKey={(record) => record.allocationId} 
             columns={columns} 
             dataSource={data} 
             pagination={false}
