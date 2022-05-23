@@ -298,6 +298,25 @@ export const editLeadSkillResource = (crud, skillId, resId, data) => {
         });
 };
 
+export const getCompleteResource = (crud,opportunityId, ) => {
+    return axios
+        .get(`${url}/${opportunityId}${crud}`, {headers:headers()})
+        .then((res) => {
+            const { success, data, message } = res.data;
+            jwtExpired(message)
+            setToken(res.headers && res.headers.authorization)
+            return {success, data}
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                status: false,
+                message: err.message,
+            };
+        });
+};
+
+
 export const delLeadSkillResource = (oppId, skillId, resId,) => {
     return axios
         .delete(url + `/${oppId}/resources/${skillId}/allocations/${resId}`, {headers:headers()})

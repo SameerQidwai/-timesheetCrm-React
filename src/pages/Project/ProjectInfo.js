@@ -7,7 +7,6 @@ import Comments from "../../components/Core/Comments";
 // import Travels from "../../components/Core/Travels";
 import Attachments from "../../components/Core/Attachments";
 import Bank from "../../components/Core/Bank";
-import OMResource from "../../components/Core/Resources/OMResources"
 import ProfitLoss from "../../components/Core/ProfitLoss";
 
 import InfoModal from "./Modals/InfoModal";
@@ -17,7 +16,8 @@ import { getRecord, delList } from "../../service/projects";
 import moment from "moment"
 import { formatDate, formatCurrency, localStore, O_STATUS } from "../../service/constant";
 import AuthError from "../../components/Core/AuthError";
-import { FormProvider } from "rc-field-form";
+import PMResources from "../../components/Core/Resources/PMResources";
+import PTResources from "../../components/Core/Resources/PTResources";
 
 const { Item } = Descriptions;
 const { TabPane } = Tabs;
@@ -178,9 +178,13 @@ class ProjectInfo extends Component {
                         <TabPane tab="Projected Profit & Loss" key="profitloss">
                             <ProfitLoss id={leadId} billing={billing} />
                         </TabPane>
-                        {/* <TabPane tab="Resources" key="resources">
-                            <OMResource id={leadId} data={data}/>
-                        </TabPane> */}
+                        <TabPane tab="Resources" key="resources">
+                            { basic.type === 1 ?
+                                <PMResources id={leadId} data={data}/> 
+                                : // Need to create these both component as one
+                                <PTResources id={leadId} data={data}/>
+                            }
+                        </TabPane>
                     </Tabs>
                 )}
                 {infoModal && (

@@ -5,79 +5,9 @@ import { Link } from 'react-router-dom'
 import moment from "moment"
 import { formatDate, formatCurrency, localStore } from "../../../service/constant";
 import { tableSorter } from "../Table/TableFilter";
-import { getCompleteResource } from "../../../service/projects";
+import { getCompleteResource } from "../../../service/opportunities";
 
-const milestoneColmuns = [
-    {
-        title: "Title",
-        dataIndex: "title",
-        key: "title",
-        render:(text, record) => (
-            <Link
-                to={{
-                    pathname:  `milestones/${record.id}/resources`,
-                }}
-                className="nav-link"
-            >
-                {text}
-            </Link>
-        ),
-        ...tableSorter('title', 'string'),
-    },
-    {
-        title: "Start Date",
-        dataIndex: "startDate",
-        key: "startDate",
-        render: (record) =>(record && formatDate(record)),
-        ...tableSorter('startDate', 'date'),
-    },
-    {
-        title: "End Date",
-        dataIndex: "endDate",
-        key: "endDate",
-        render: (record) =>(record && formatDate(record)),
-        ...tableSorter('endDate', 'date'),
-    },
-    {
-        title: "Approved",
-        dataIndex: "isApproved",
-        key: "isApproved",
-        align: "right",
-        render: (record) =>  <Tag color={record? 'green': 'volcano'} key={record}>
-            {record? 'TRUE': 'FALSE'}
-        </Tag>
-    },
-    {
-        title: "Action",
-        key: "action",
-        align: "right",
-        width: 115,
-        render: (value, record, index) => (
-            <Dropdown
-                overlay={
-                    <Menu>
-                        <Menu.Item>
-                            <Link
-                                to={{
-                                    pathname:  `milestones/${record.id}/resources`,
-                                }}
-                                className="nav-link"
-                            >
-                                Milestone
-                            </Link>
-                        </Menu.Item>
-                    </Menu>
-                }
-            >
-                <Button size="small">
-                    <SettingOutlined /> Option <DownOutlined />
-                </Button>
-            </Dropdown>
-        ),
-    },
-];
-
-const positionColumns = [
+const positionColumns = (milestoneId) => [
     {
         title: "Title",
         dataIndex: "title",
@@ -97,39 +27,79 @@ const positionColumns = [
         ...tableSorter('panelSkillStandardLevel.levelLabel', 'string'),
     },
     {
-        title: "Employee Name",
-        dataIndex: ["opportunityResourceAllocations", "0", "contactPerson"],
-        key: "contactPerson",
-        render: (record)=>(
-            `${record?.firstName} ${record?.lastName}`
-        ),
-        ...tableSorter('opportunityResourceAllocations.0.contactPerson', 'string'),
+        title: "Start Date",
+        dataIndex: "startDate",
+        key: "startDate",
+        render: (record)=> record && formatDate(record),
+        ...tableSorter('startDate', 'Date'),
     },
     {
-        title: "Billable Hours",
+        title: "End Date",
+        dataIndex: "endDate",
+        key: "endDate",
+        render: (record)=> record && formatDate(record),
+        ...tableSorter('endDate', 'Date'),
+    },
+    {
+        title: "Total Hours",
         dataIndex: "billableHours",
         key: "billableHours",
-        sorter: (a, b) => a.billableHours - b.billableHours,
         ...tableSorter('billableHours', 'number'),
     },
+   
     {
-        title: "Buy Rate (hourly)",
-        dataIndex: ["opportunityResourceAllocations", "0", "buyingRate"],
-        key: "opportunityResourceAllocations",
-        render:(record)=>( record &&formatCurrency(record) ),
-        ...tableSorter('opportunityResourceAllocations.0.buyingRate', 'number'),
-    },
-    {
-        title: "Sale Rate (hourly)",
-        dataIndex: ["opportunityResourceAllocations", "0", "sellingRate"],
-        key: "opportunityResourceAllocations",
-        render:(record)=>( record && formatCurrency(record) ),
-        ...tableSorter('opportunityResourceAllocations.0.sellingRate', 'number'),
+        title: "Action",
+        key: "action",
+        align: "right",
+        width: 115,
+        render: (text, record, index) => (
+            <Dropdown
+                overlay={
+                    <Menu>
+                        <Menu.Item>
+                            <Link
+                                to={{
+                                    pathname:  `milestones/${milestoneId}/resources`,
+                                }}
+                                className="nav-link"
+                            >
+                                Milestone
+                            </Link>
+                        </Menu.Item>
+                    </Menu>
+                }
+            >
+                <Button size="small">
+                    <SettingOutlined /> Option <DownOutlined />
+                </Button>
+            </Dropdown>
+        ),
     },
 ];
 
+const resourceColumn = [
+    { 
+            
+        title: 'Name', 
+        dataIndex: 'contactPerson', 
+        key: 'contactPerson' ,
+        render: (record) =>(record &&`${record.firstName} ${record.lastName}`)
+    },
+    { 
+        title: 'Buy Cost (hourly)', 
+        dataIndex: 'buyingRate', 
+        key: 'buyingRate', 
+        render: (record)=> `${formatCurrency(record)}` 
+    },
+    {  
+        title: 'Sale Cost (hourly)', 
+        dataIndex: 'sellingRate', 
+        key: 'sellingRate', 
+        render: (record)=> `${formatCurrency(record)}`
+    },
+]
 
-class PMResources extends Component {
+class OTResources extends Component {
     constructor() {
         super();
 
@@ -150,10 +120,11 @@ class PMResources extends Component {
         getCompleteResource(crud, id).then(res=>{
             if (res){
                 const {success, data } = res
-                console.log(data);
+                //inserting Link to redirect to positions
                 this.setState({
                     leadId: id, 
-                    data: success ? data : []
+                    data: success ? data[0].opportunityResources : [], 
+                    milestoneId: success && data?.[0]?.id
                 })
             }
         })
@@ -162,25 +133,23 @@ class PMResources extends Component {
 
 
     render() {
-        const { desc, data, leadId, permissions} = this.state;
+        const { desc, data, leadId, permissions,milestoneId} = this.state;
         return ( //will remove it in near future will be using NestedTable Function here as well 
                 <Table
                     bordered
                     pagination={{pageSize: localStore().pageSize}}
                     rowKey={(record) => record.id}
-                    columns={milestoneColmuns}
+                    columns={positionColumns(milestoneId)}
                     dataSource={data}
                     size="small"
                     expandable={{
-                        rowExpandable: record => record?.opportunityResources?.length > 0,
+                        // rowExpandable: record => record.opportunityResourceAllocations.length > 0,
                         expandedRowRender: record => {
                             return (
                             <NestedTable 
-                                data={record.opportunityResources} 
-                                columns={positionColumns}
+                                data={record.opportunityResourceAllocations} 
+                                columns={resourceColumn}
                                 key={record.id}
-                                expandable={true}
-                                checked={false}
                             />)
                         },
                         // rowExpandable: record => record.user.length > 0,
@@ -192,18 +161,38 @@ class PMResources extends Component {
 
 function NestedTable({key, columns, data, expandable,checked}) {
     // const [data, setData] = useState(data);
+    const [selectedRowKeys, setSelectedRowKeys] = useState(
+        data ? //checking data
+            data.length === 1 ? //checking if data length is one
+                [data[0].id] // this must be selected
+            // console.log(data)
+            : data.findIndex(el => el.isMarkedAsSelected === true)!==-1 ? // otherwise check if anyone is selected
+                [data[data.findIndex(el => el.isMarkedAsSelected)].id] // get the selected resource
+            :
+                []
+        :   
+            []
+        )
 
     return <div style={{ paddingRight: 20}}> 
         <Table
             bordered
+            // key={key}
             size="small"
             rowKey={(record) => record.id} 
             columns={columns} 
             dataSource={data} 
             pagination={false}
+            rowSelection={{
+                type: 'radio',
+                selectedRowKeys: selectedRowKeys,
+                getCheckboxProps: (record) => ({
+                    disabled: true
+                  })
+            }}
         />
     </div>
 };
 
 
-export default PMResources;
+export default OTResources;

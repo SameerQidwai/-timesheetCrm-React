@@ -19,6 +19,7 @@ import LostModal from "./Modals/LostModal";
 import { generalDelete } from "../../service/delete-Api's";
 import AuthError from "../../components/Core/AuthError";
 import OMResource from "../../components/Core/Resources/OMResources";
+import OTResources from "../../components/Core/Resources/OTResources";
 
 const { SubMenu } = Menu
 const { Item } = Descriptions;
@@ -232,7 +233,11 @@ class OpportunityInfo extends Component {
                             <ProfitLoss id={leadId} billing={billing} />
                         </TabPane>
                         <TabPane tab="Resources" key="resources">
-                            <OMResource id={leadId} data={data}/>
+                            { basic.type === 1 ?
+                                <OMResource id={leadId} data={data}/> 
+                                : // Need to create these both component as one
+                                <OTResources id={leadId} data={data}/>
+                            }
                         </TabPane>
                     </Tabs>
                 )}
