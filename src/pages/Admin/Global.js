@@ -48,7 +48,7 @@ function GlobalVars(props) {
     {
         object: "gst",
         fieldCol: 3,
-        key: "rate",
+        key: "value",
         size: "small",
         shape: '%',
         type: "InputNumber",
@@ -85,7 +85,7 @@ function GlobalVars(props) {
     {
         object: "superannuation",
         fieldCol: 3,
-        key: "rate",
+        key: "value",
         size: "small",
         shape: '%',
         type: "InputNumber",
@@ -209,7 +209,7 @@ function GlobalVars(props) {
         {
             object: key,
             fieldCol: 3,
-            key: "rate",
+            key: "value",
             size: "small",
             shape: '%',
             type: "InputNumber",
@@ -265,8 +265,10 @@ function GlobalVars(props) {
 
     const onFinish = (childData) =>{
         delete childData['undefined']
-        const value = childData.global
-        upadteSettings(value).then(res=>{
+        // const value = childData.global
+        const variable = childData
+        console.log(variable);
+        upadteSettings(variable).then(res=>{
             if(res.success){
                 // localStorage.setItem('pageSize', res.data.recordsPerPage)
             }
@@ -284,7 +286,7 @@ function GlobalVars(props) {
             layout="inline"
             style={{padding: '20px 50px 20px 50px'}}
         >
-            {/* <FormItems FormFields={rateFields} />  */}
+            <FormItems FormFields={rateFields} /> 
             {/* Globa; Rate and Variables commented */}
             <FormItems FormFields={otherFields} />
         </Form>

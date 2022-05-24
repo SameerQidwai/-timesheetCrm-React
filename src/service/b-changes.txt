@@ -202,5 +202,12 @@ Not done task
     Sentence case
     table column Problem [(project, opportunity [(done)] )]
     STILL UX ISSUES outcomes options: (slide: 13)
-    Attachments details (slide: 17)
     "Time Base" => "Time & Material" (slide: 22)
+
+Not doing it
+    Attachments details (slide: 17)
+
+
+confusing....
+
+crm fiont : Poppins font  [(???.)] [(fixing)] [( Local working fine, test not so much [(done)])]
