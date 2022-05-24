@@ -298,6 +298,25 @@ export const editLeadSkillResource = (crud, skillId, resId, data) => {
         });
 };
 
+export const getHierarchy = (opportunityId) => {
+    return axios
+        .get(`${url}/${opportunityId}/hierarchy`, {headers:headers()})
+        .then((res) => {
+            const { success, data, message } = res.data;
+            jwtExpired(message)
+            setToken(res.headers && res.headers.authorization)
+            return {success, data}
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                status: false,
+                message: err.message,
+            };
+        });
+};
+
+
 export const delLeadSkillResource = (oppId, skillId, resId,) => {
     return axios
         .delete(url + `/${oppId}/resources/${skillId}/allocations/${resId}`, {headers:headers()})
@@ -348,12 +367,7 @@ export const workIsLost = (oppId, data) => {
             return {success};
         })
         .catch((err) => {
-            
-            return {
-                error: "Please login again!",
-                status: false,
-                message: err.message,
-            };
+            return apiErrorRes(err, oppId, 5)
         });
 };
 
@@ -370,11 +384,6 @@ export const workWon = (oppId, data) => {
             return {success};
         })
         .catch((err) => {
-            messageAlert.error({ content: err.message, key: oppId})
-            return {
-                error: "Please login again!",
-                status: false,
-                message: err.message,
-            };
+            return apiErrorRes(err, oppId, 5)
         });
 };

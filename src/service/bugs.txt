@@ -1,11 +1,18 @@
 New bug Found
     if permission changes or edit... what to do with the person if he is arleady Loggedin 
 
+    Dates disable everywhere ref => to opportuity milestone start and end date
+
     Need to create disable variable if any one of the multiselect already has certain action
         for now disable if only one is not matched
 
-    add title field into project resource
     skill update in contact person is not wokring like changing the skill on same field or it's level
+
+    need to create only one or two resource component... generalize them for further use... 
+            {PMResources, OTResources, PTResources, OMResources}
+                make these four component into one or two only....
+    
+     in fields 5px every modal
 
 Update and check 
     delLeadSkillResource // not done

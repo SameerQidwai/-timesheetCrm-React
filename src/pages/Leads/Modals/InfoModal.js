@@ -654,9 +654,9 @@ class InfoModal extends Component {
 
     onFinish = (vake) => { 
         // this will work after  got  Object from the skill from
+        this.setState({ loading: true })
         const { basic, tender, dates, billing, manage } = vake
         const { editLead } = this.props
-
         const form_value = {
             panelId: basic.panelId ?? null,
             organizationId: basic.organizationId ?? null,
@@ -698,6 +698,8 @@ class InfoModal extends Component {
         addList(values).then((res) => {
             if(res.success){
                 callBack()
+            }else{
+                this.setState({ loading: false })
             }
         });
     };
@@ -729,7 +731,6 @@ class InfoModal extends Component {
     editRecord = (values) => {
         const { editLead, callBack } = this.props;
         values.id = editLead
-        this.setState({ loading: true })
         editList(values).then((res) => {
             if(res.success){
                 callBack()
@@ -742,12 +743,11 @@ class InfoModal extends Component {
     workWon = (values) =>{
         const { editLead, callBack } = this.props;
         console.log('workWon');
-        this.setState({
-            loading: true
-        })
         workWon(editLead, values).then((res) => {
             if(res.success){
                 callBack()
+            }else{
+                this.setState({ loading: false })
             }
         });
     }
