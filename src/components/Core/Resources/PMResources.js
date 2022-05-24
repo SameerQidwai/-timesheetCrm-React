@@ -1,8 +1,7 @@
-import React, { Component, useEffect, useState } from "react";
-import { Row, Col, Menu, Button, Dropdown, Descriptions, Table, Tag, Popconfirm } from "antd";
+import React, { Component } from "react";
+import { Menu, Button, Dropdown,  Table, Tag} from "antd";
 import { SettingOutlined, DownOutlined } from "@ant-design/icons"; //Icons
 import { Link } from 'react-router-dom'
-import moment from "moment"
 import { formatDate, formatCurrency, localStore } from "../../../service/constant";
 import { tableSorter } from "../Table/TableFilter";
 import { getHierarchy } from "../../../service/projects";
@@ -103,7 +102,7 @@ const positionColumns = [
         render: (record)=>(
             `${record?.firstName} ${record?.lastName}`
         ),
-        ...tableSorter('contactPerson', 'string'),
+        ...tableSorter('contactPerson.firstName', 'string'),
     },
     {
         title: "Billable Hours",

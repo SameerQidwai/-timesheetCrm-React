@@ -1,8 +1,7 @@
-import React, { Component, useEffect, useState } from "react";
-import { Row, Col, Menu, Button, Dropdown, Descriptions, Table, Tag, Popconfirm } from "antd";
+import React, { Component, useState } from "react";
+import { Menu, Button, Dropdown, Table} from "antd";
 import { SettingOutlined, DownOutlined } from "@ant-design/icons"; //Icons
 import { Link } from 'react-router-dom'
-import moment from "moment"
 import { formatDate, formatCurrency, localStore } from "../../../service/constant";
 import { tableSorter } from "../Table/TableFilter";
 import { getHierarchy } from "../../../service/opportunities";
@@ -158,7 +157,7 @@ class OTResources extends Component {
     }
 }
 
-function NestedTable({key, columns, data, expandable,checked}) {
+function NestedTable({columns, data}) {
     // const [data, setData] = useState(data);
     const [selectedRowKeys, setSelectedRowKeys] = useState(
         data ? //checking data
@@ -187,7 +186,7 @@ function NestedTable({key, columns, data, expandable,checked}) {
                 selectedRowKeys: selectedRowKeys,
                 getCheckboxProps: (record) => ({
                     disabled: true
-                  })
+                })
             }}
         />
     </div>
