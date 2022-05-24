@@ -511,7 +511,7 @@ class TimeSheetProject extends Component {
                             disabled={ sTimesheet.keys.length<1 || !permissions['APPROVAL'] || sTimesheet.cantApprove}
                             onClick={()=> this.multiAction('Approve')}
                         >
-                            Approval
+                            Approve
                         </Button>
                     </Col>
                     <Col>

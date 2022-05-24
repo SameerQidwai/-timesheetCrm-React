@@ -436,7 +436,7 @@ class Contractors extends Component {
             <>
                 <Row justify="space-between">
                     <Col>
-                        <Title level={4}>Subcontractors</Title>
+                        <Title level={4}>Sub Contractors</Title>
                     </Col>
                     <Col style={{ textAlign: "end" }} span={4}>
                         <Row justify="space-between">
