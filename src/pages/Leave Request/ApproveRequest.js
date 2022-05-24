@@ -304,7 +304,7 @@ class ApproveRequest extends Component {
             <>
                 <Row justify="space-between">
                     <Col >
-                        <Title level={3}>APPROVE REQUESTS</Title>
+                        <Title level={3}>Approve Requests</Title>
                     </Col>
                     <Col>
                         <Select

@@ -199,7 +199,7 @@ class LeaveRequest extends Component {
             <>
                 <Row justify="space-between">
                     <Col>
-                        <Title level={4}>LEAVE REQUESTS</Title>
+                        <Title level={4}>Leave Requests</Title>
                     </Col>
                     <Col style={{marginLeft: 'auto'}} >
                         <Button 
