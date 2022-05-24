@@ -49,7 +49,7 @@ class EmpBilling extends Component {
                 render: (record) => JOB_TYPE[record]
             },
             {
-                title: "Annual Base Salary",
+                title: "Base Remuneration",
                 dataIndex: "remunerationAmount",
                 key: "remunerationAmount",
                 render: (record)=> `${formatCurrency(record)}`,

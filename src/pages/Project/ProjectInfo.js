@@ -151,7 +151,7 @@ class ProjectInfo extends Component {
                         
                     }</Item>
                     <Item label="Delegate Contact"> {basic ?basic.ContactName: null}</Item>
-                    <Item label="Start date">{data.startDate ? formatDate(data.startDate): null} </Item>
+                    <Item label="Start Date">{data.startDate ? formatDate(data.startDate): null} </Item>
                     <Item label="End Date">{data.endDate ? formatDate(data.endDate): null}</Item>
                     <Item label="Bid Date">{data.bidDate ? formatDate(data.bidDate): null}</Item>
                     <Item label="Status">{basic.status ? O_STATUS[basic.status]: ''}</Item>

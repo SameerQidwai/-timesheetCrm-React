@@ -11,6 +11,8 @@ New bug Found
     need to create only one or two resource component... generalize them for further use... 
             {PMResources, OTResources, PTResources, OMResources}
                 make these four component into one or two only....
+    
+     in fields 5px every modal
 
 Update and check 
     delLeadSkillResource // not done

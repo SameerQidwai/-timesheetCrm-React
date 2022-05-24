@@ -415,7 +415,7 @@ class Resources extends Component {
                     <Item label="Project Name">{proDesc.title}</Item>
                     <Item label="Estimated Value">{ formatCurrency(proDesc.value ?? 0)}</Item>
                     <Item label="Organisation">{proDesc.organizationName??' No Organisation'}</Item>
-                    <Item label="Start date">{proDesc.startDate ? formatDate(proDesc.startDate): null} </Item>
+                    <Item label="Start Date">{proDesc.startDate ? formatDate(proDesc.startDate): null} </Item>
                     <Item label="End Date">{proDesc.endDate ? formatDate(proDesc.endDate): null}</Item>
                     {/* <Item label="Gender">{data.gender}</Item> */}
                 </Descriptions>

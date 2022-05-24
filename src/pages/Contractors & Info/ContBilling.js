@@ -49,7 +49,7 @@ class EmpBilling extends Component {
                 ...tableSorter('remunerationAmount', 'number'),
             },
             {
-                title: "Rate Duration",
+                title: "Contract Payment Basis",
                 dataIndex: "remunerationAmountPer",
                 key: "remunerationAmountPer",
                 render: (record)=> DURATION[record]

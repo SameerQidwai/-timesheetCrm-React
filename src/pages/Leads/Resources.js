@@ -384,7 +384,7 @@ class Resources extends Component {
                         
                     }</Item>
                     <Item label="Delegate Contact"> {desc.ContactName}</Item>
-                    <Item label="Start date">{desc.startDate ? formatDate(desc.startDate): null} </Item>
+                    <Item label="Start Date">{desc.startDate ? formatDate(desc.startDate): null} </Item>
                     <Item label="End Date">{desc.endDate ? formatDate(desc.endDate): null}</Item>
                     <Item label="Bid Date">{desc.bidDate ? formatDate(desc.bidDate): null}</Item>
                     <Item label="Status">{desc.status ? O_STATUS[desc.status]: ''}</Item>

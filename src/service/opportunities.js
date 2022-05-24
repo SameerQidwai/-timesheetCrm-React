@@ -367,12 +367,7 @@ export const workIsLost = (oppId, data) => {
             return {success};
         })
         .catch((err) => {
-            
-            return {
-                error: "Please login again!",
-                status: false,
-                message: err.message,
-            };
+            return apiErrorRes(err, oppId, 5)
         });
 };
 
@@ -389,11 +384,6 @@ export const workWon = (oppId, data) => {
             return {success};
         })
         .catch((err) => {
-            messageAlert.error({ content: err.message, key: oppId})
-            return {
-                error: "Please login again!",
-                status: false,
-                message: err.message,
-            };
+            return apiErrorRes(err, oppId, 5)
         });
 };

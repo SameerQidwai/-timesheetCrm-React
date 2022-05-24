@@ -165,7 +165,7 @@ class TimeModal extends Component {
         return (
             <Modal
                 title={<Row>
-                        <Col flex={1}> {editTime ? "Edit Timesheet Entry" : "Add Timesheet Entry"} </Col>
+                        <Col flex={1}> {editTime ? "Edit Entry" : "Add Entry"} </Col>
                         <Col flex={4} ><b> {timeObj.title} </b></Col>
                     </Row>}
                 maskClosable={false}
