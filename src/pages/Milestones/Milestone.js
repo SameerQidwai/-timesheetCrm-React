@@ -204,7 +204,7 @@ class Milestone extends Component {
         return (
             <>
                 <Descriptions
-                    // title={DescTitle}
+                    title={'Project Details'}
                     size="small"
                     bordered
                     layout="horizontal"

@@ -117,7 +117,7 @@ export const dateRangeAfter = (current, eDate, pDates) =>{
   if (current){
     const { startDate = undefined, endDate = undefined} = pDates
             //disable after                           // disable Before                 // disable After
-    return  (eDate && current > eDate) || startDate && current < moment(startDate) || endDate && current > moment(endDate)
+    return  (eDate && current >= eDate) || startDate && current <= moment(startDate) || endDate && current >= moment(endDate)
   }
 }
 
@@ -125,7 +125,7 @@ export const dateRangeBefore = (current, sDate, pDates) =>{
   if (current){
     const { startDate, endDate } = pDates
           //disable Before                           // disable Before                  // disable After
-    return  (sDate && current < sDate) || startDate && current < moment(startDate) || endDate && current > moment(endDate)
+    return  (sDate && current <= sDate) || startDate && current <= moment(startDate) || endDate && current >= moment(endDate)
   }
 }
 

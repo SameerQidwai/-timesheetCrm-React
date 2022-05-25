@@ -6,7 +6,7 @@ import moment from "moment";
 
 const url = `${Api}/milestones`;
 
-export const getMilestones = (crud ) => {
+export const getMilestones = (crud) => {
     return axios
     // /${id}
         .get(`${Api}${crud}`, {headers:headers()})
@@ -24,9 +24,9 @@ export const getMilestones = (crud ) => {
         });
 };
 
-export const getMilestone = (id) => {
+export const getMilestone = (crud, id) => {
     return axios
-        .get(`${url}/${id}`, {headers:headers()})
+        .get(`${Api}${crud}/${id}`, {headers:headers()})
         .then((res) => {
             const { success, data } = res.data;
             setToken(res.headers && res.headers.authorization)

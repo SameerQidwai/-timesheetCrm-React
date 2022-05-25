@@ -20,6 +20,11 @@ class PurchaseOrder extends Component {
         const { proId } = props.match.params
         this.columns = [
             {
+                title: "Order Number",
+                dataIndex: "orderNo",
+                key: "orderNo",
+            },
+            {
                 title: "Issue Date",
                 dataIndex: "issueDate",
                 key: "issueDate",
@@ -259,6 +264,7 @@ class PurchaseOrder extends Component {
             if(res.success){
                 this.setState({
                     data: res.success? res.data : [],
+                    filterData: res.success? res.data : [],
                     editRex: false,
                     openModal: false
                 })
@@ -285,6 +291,7 @@ class PurchaseOrder extends Component {
 
     callBack = () => {
         const { ProId } = this.state
+        console.log(ProId);
         this.getRecords(ProId)
     };
 
