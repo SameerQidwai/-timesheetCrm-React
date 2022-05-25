@@ -14,62 +14,11 @@ New bug Found
     
      in fields 5px every modal
 
-Update and check 
-    delLeadSkillResource // not done
-    Purchase Order // whole Not doe
-    make filterModal general put all the fields into that files belongs to any page ( to optimize code)
 
-    timesheet hours vs resource work hours
-    Sidebar position filled 
-
-    create general function for edit and remove data from table
-    "Not Authorized!" Do it in simpler way     
-
-    calander disableing and nested deatil view page...
-    
-    Leave
-        Corn jobs
-            Leave not to be rest at any level because of reports
-            Admin Panel corn job when to run
-            Monthly Rest 
-        
-    Leave Requets ERRORs
-        // Error on index leave request api,
-        // I am also unable to submit leave application for the date when my leave application has already been rejected ...
-        // if I am selecting single date...(Rejected already for the leave request) 
-            (so my concern is single date might not be checking if leave request already submitted or not)
-                dateEroro
-        // status condition. (from backend)
-
-        // I am unable to check edit leave
-
-        //
-            (concern that you are also checking this editing Leave request so it will also throw error)
-    backend: [
-        Leave_request not adding again when rejected,
-        Backend unknown Errors and showing...
-    ]
-   
-
-update
-    work can't surpass dates milestone dates
-        milestone can't surpass dates resouces dates
-            resource can't surpass dats of timesheet entry
-
-            ???<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>????
-                Create component for Modal attachment 
-            ???<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>????
+     Suggestion:
+        do not save Leave_request where it is 0 and render into ui when you are getting dates back
 
 Tagrget
-    
-    Opportunity and Project
-        Status all view
-        if I change delegate_contact_person on won.. gives error 500
-        I am not getting MilstoneId if type is (2 or Tm)
-
-    Links
-    Update (backend)
-    Time Off
     Expense
     
 
@@ -77,11 +26,6 @@ New Things
     Resource Allocation
         Suggestion of buycost and sale cost
 
-
-Changes not allowing
-    Oppotunity and Project changes panel should not be allowed if resource added
-    Resource
-        Skill won't be change when allocation is added
 
 shortcut 
     class component
@@ -108,34 +52,3 @@ updating
 xampp
     sudo service mysql stop
     sudo /opt/lampp/lampp start
-
-
-// for deleting Functionality add these function
-// Add function 
-
-handleDelete = (id, index) => {
-    const { data: d, filterData: fd } = this.state
-    fd.splice(index,1) // deleting Index
-    d.splice(index,1) // deleting Index
-    this.setState({ filterData: [...fd], data: [...d] }) //Set the data...
-};
-
-export const delList = (id) => {
-    return axios
-        .delete(url + `/${id}`, {headers:headers()})
-        .then((res) => {
-            const { success, message } = res.data;
-            jwtExpired(message)
-
-            if (success)  setToken(res.headers && res.headers.authorization)
-
-            return {success};
-        })
-        .catch((err) => {
-            return {
-                error: "Please login again!",
-                status: false,
-                message: err.message,
-            };
-        });
-};

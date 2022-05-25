@@ -229,7 +229,7 @@ class AddRequestModal extends Component{
                 if(showDetails ){ balance += hours}
 
                 hoursEntry[date.format('M/D/YYYY')] = `${hours}` // setting the hours object before return 
-                return {key: date.format('M/D/YYYY'), date: date, hours: disabled? 0: `${hours}`, disabled}
+                return {key: date.format('M/D/YYYY'), date: date.format('YYYY-MM-DD'), hours: disabled? 0: `${hours}`, disabled}
             })
             BasicFields[BasicFields[2].note ? 8: 7].disabled = readOnly // adding an object when select leavetype
                                                                         // and disabling endDate
@@ -392,6 +392,7 @@ class AddRequestModal extends Component{
         const { dates } = val;
         const { edit, callBack } = this.props
         const { data, fileIds } = this.state
+        console.log(data)
         const newVal = {
                 description: dates.description ?? '',
                 typeId: dates.typeId || 0,
