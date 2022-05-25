@@ -111,6 +111,7 @@ class Resources extends Component {
             leadId: false,
             data: [],
             desc: {},
+            mileDesc: {},
             skillId: false,
             levelId: false,
             crud: false,
@@ -186,7 +187,7 @@ class Resources extends Component {
                   fieldStyle: { width: "100%" },
                 },
                 
-              ],
+            ],
         };
     }
 
@@ -203,6 +204,8 @@ class Resources extends Component {
         .then(res => {
             this.setState({
                 desc: res[0].success? res[0].data : {},
+                mileDesc: res[0]?.success && res[0]?.data?.milestones ? 
+                    res[0]?.data?.milestones.filter(el => el.id == mileId)[0] : {},
                 editRex: false,
                 infoModal: false,
                 leadId: proId,
@@ -356,7 +359,7 @@ class Resources extends Component {
     }
 
     render() {
-        const { desc, filterData, data, infoModal, editRex, leadId, resource , skillId, levelId, permissions, mileId, crud, openSearch, filterFields, searchedColumn} = this.state;
+        const { desc, filterData, data, infoModal, editRex, leadId, resource , skillId, levelId, permissions, mileId, crud, openSearch, filterFields, searchedColumn, mileDesc} = this.state;
         console.log(desc);
         return (
             <>
@@ -388,8 +391,20 @@ class Resources extends Component {
                     <Item label="End Date">{desc.endDate ? formatDate(desc.endDate): null}</Item>
                     <Item label="Bid Date">{desc.bidDate ? formatDate(desc.bidDate): null}</Item>
                     <Item label="Status">{desc.status ? O_STATUS[desc.status]: ''}</Item>
-                    {/* <Item label="Gender">{desc.gender}</Item> */}
                 </Descriptions>
+                {desc.type===1 &&<Descriptions
+                    style={{marginTop: 15}}
+                    title={'Milestone Details'}
+                    size="small"
+                    bordered
+                    layout="horizontal"
+                >
+                    <Item label="Milestone Name">{mileDesc.title}</Item>
+                    <Item label="Start Date">{mileDesc.startDate ? formatDate(mileDesc.startDate): null} </Item>
+                    <Item label="End Date">{mileDesc.endDate ? formatDate(mileDesc.endDate): null}</Item>
+                    <Item label="Progress">{mileDesc.progress} %</Item>
+                    <Item label="Approved">{mileDesc.isApproved ? 'True' : 'False'}</Item>
+                </Descriptions>}
                 <Row justify="end" span={4} gutter={[30, 0]}>
                     <Col>
                         <Button 

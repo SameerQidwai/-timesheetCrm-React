@@ -178,7 +178,6 @@ export const getLeadSkills = (crud, id)=>{
             if (success) {
                 setToken(res.headers && res.headers.authorization)
             };
-            console.log(res);
             return { success: success, data: data }
         })
         .catch((err) => {

@@ -231,8 +231,8 @@ class Projects extends Component {
                     fieldCol: 12,
                     key: "type",
                     size: "small",
-                    data: [{label: 'MILESTONE BASE', value: '1'},
-                        {label: 'TIME BASE', value: '2'}],
+                    data: [{label: 'Milestone', value: '1'},
+                        {label: 'Time & Materials', value: '2'}],
                     type: "Select",
                 },
                 {

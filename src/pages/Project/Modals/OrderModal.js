@@ -32,6 +32,15 @@ class OrderModal extends Component {
                 size: "middle",
                 fields: [
                     {
+                        Placeholder: "Order Number",
+                        fieldCol: 12,
+                        size: "small",
+                        rangeMin: true,
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
+                    {
                         Placeholder: "Issue Date",
                         fieldCol: 12,
                         size: "small",
@@ -41,14 +50,13 @@ class OrderModal extends Component {
                         // itemStyle:{marginBottom:'10px'},
                     },
                     {
-                        Placeholder: "Expiry Date",
+                        object: "obj",
                         fieldCol: 12,
-                        rangeMin: true,
+                        key: 'orderNo',
                         size: "small",
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
-                    },
+                        rules:[{ required: true, message: 'Order Number is Required' }],
+                        type: "Input",
+                    }, 
                     {
                         object: "obj",
                         fieldCol: 12,
@@ -59,13 +67,13 @@ class OrderModal extends Component {
                         fieldStyle: { width: "100%" },
                     }, 
                     {
-                        object: "obj",
+                        Placeholder: "Expiry Date",
                         fieldCol: 12,
-                        key: 'expiryDate',
+                        rangeMin: true,
                         size: "small",
-                        rules:[{ required: true, message: 'Expiry Date is Required' }],
-                        type: "DatePicker",
-                        fieldStyle: { width: "100%" },
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
                     },
                     {
                         Placeholder: "Value",
@@ -77,13 +85,13 @@ class OrderModal extends Component {
                         // itemStyle:{marginBottom:'10px'},
                     },
                     {
-                        Placeholder: "Expense",
+                        object: "obj",
                         fieldCol: 12,
+                        key: 'expiryDate',
                         size: "small",
-                        rangeMin: true,
-                        type: "Text",
-                        labelAlign: "right",
-                        // itemStyle:{marginBottom:'10px'},
+                        rules:[{ required: true, message: 'Expiry Date is Required' }],
+                        type: "DatePicker",
+                        fieldStyle: { width: "100%" },
                     },
                     {
                         object: "obj",
@@ -95,6 +103,15 @@ class OrderModal extends Component {
                         type: "InputNumber",
                         fieldStyle: { width: "100%" },
                     }, 
+                    {
+                        Placeholder: "Expense",
+                        fieldCol: 24,
+                        size: "small",
+                        rangeMin: true,
+                        type: "Text",
+                        labelAlign: "right",
+                        // itemStyle:{marginBottom:'10px'},
+                    },
                     {
                         object: "obj",
                         fieldCol: 12,
@@ -173,6 +190,7 @@ class OrderModal extends Component {
         const { ProId, callBack } = this.props
         console.log(ProId, data);
         addOrder(ProId, data).then(res=>{
+            console.log(res);
             if(res.success){
                 callBack()
             }

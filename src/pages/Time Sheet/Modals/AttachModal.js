@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
-import { Modal, Upload, message, Button, Row, Col } from "antd";
-import { UploadOutlined, LoadingOutlined,InboxOutlined } from "@ant-design/icons";
+import { Modal, Row, Col } from "antd";
+import { LoadingOutlined,InboxOutlined } from "@ant-design/icons";
 import '../../styles/upload.css'
 import TextArea from 'antd/lib/input/TextArea';
 import Dragger from 'antd/lib/upload/Dragger';
-import { Api, localStore } from "../../../service/constant";
 import { addFiles, getAttachments } from "../../../service/Attachment-Apis";
 import { addMilestoneTimesheetNote } from "../../../service/timesheet";
 

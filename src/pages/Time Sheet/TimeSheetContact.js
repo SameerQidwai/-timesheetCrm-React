@@ -585,12 +585,15 @@ class TimeSheetContact extends Component {
     multiAction = (stage)=> {
         const {milestones, keys } = this.state.sTMilestones
         const { cMonth } = this.state.sheetDates
-        let content = ''
-        milestones.forEach(({project}) => {
-            content += `${project}, ` 
-        })
+        let content = <div>{ 
+            milestones.map(({project, milestone, projectType}, index) =>(
+                <div key={index}>
+                    {project}{projectType ===1 && ` (${milestone})` }{milestones.length -1 > index && ','  }  
+                </div> 
+            )) 
+        }</div>
         const modal = Modal.confirm({
-          title: `Do you wish to ${stage} timesheet for the month of ${cMonth.format('MMM YYYY')}`,
+          title: `Do you wish to ${stage} timesheet for the month of ${cMonth.format('MMM YYYY')} ?`,
           icon: stage=== 'Delete' ? <ExclamationCircleOutlined /> : <CheckCircleOutlined />,
           content: content,
           okButtonProps: {danger: stage === 'Delete'??true},
@@ -724,7 +727,8 @@ class TimeSheetContact extends Component {
                     rowSelection={{ //multiple select commented
                         onChange:(selectedRowKeys, selectedRows)=>{this.milestoneSelect(selectedRowKeys, selectedRows )},
                         getCheckboxProps: (record) => ({
-                            disabled: record.status === 'SB' || record.status === 'AP' , // Column configuration not to be checked
+                            disabled: record.status === 'SB' || record.status === 'AP' || record.leaveRequest, 
+                            // Column configuration not to be checked
                           })
                     }}
                     scroll={{

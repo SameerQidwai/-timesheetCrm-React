@@ -113,8 +113,8 @@ class Resources extends Component {
             proId: false,
             mileId: false,
             crud: false,
-            proDesc: {title: '', organization: {name: ''}, value: '', startDate: '', endDate: ''},
-            mileDesc: {title: '', organization: {name: ''}, value: '', startDate: '', endDate: ''},
+            proDesc: {},
+            mileDesc: {},
             permissions: {},
             openSearch: false,
             filterData: [],
@@ -248,20 +248,21 @@ class Resources extends Component {
         const { PROJECTS }= JSON.parse(localStore().permissions)
         const { url } = this.props.match
         const { proId, mileId } = this.props.match.params
-        Promise.all([ getRecord(proId), getMilestone(mileId),  getLeadSkills(url, id)])
+        Promise.all([ getRecord(proId),  getLeadSkills(url, id)])
         .then(res => {
             this.setState({
-                proDesc: res[0].success? res[0].data : {},
-                mileDesc: res[1].success? res[1].data : {},
+                proDesc: res[0]?.success? res[0].data : {},
+                mileDesc: res[0]?.success && res[0]?.data?.milestones ? 
+                    res[0]?.data?.milestones.filter(el => el.id == mileId)[0] : {},
                 editRex: false,
                 proId: proId,
                 crud: url,
                 mileId: mileId,
                 infoModal: false,
-                data: res[2].success? res[2].data : [],
-                filterData: res[2].success? res[2].data : [],
+                data: res[1]?.success? res[1].data : [],
+                filterData: res[1]?.success? res[1].data : [],
                 permissions: PROJECTS,
-                notAuth: res?.[2]?.authError 
+                notAuth: res?.[1]?.authError 
             })
         })
         .catch(e => {
@@ -403,22 +404,47 @@ class Resources extends Component {
     }
 
     render() {
-        const { proDesc, data, infoModal, editRex, proId, permissions, crud, mileId, filterData, openSearch, searchedColumn, filterFields, pDates, notAuth } = this.state;
+        const { proDesc, data, infoModal, editRex, proId, permissions, crud, mileId, filterData, openSearch, searchedColumn, filterFields, pDates, notAuth, mileDesc } = this.state;
         return (
             <>
                 <Descriptions
-                    // title={DescTitle}
+                    title={'Project Details'}
                     size="small"
                     bordered
                     layout="horizontal"
                 >
                     <Item label="Project Name">{proDesc.title}</Item>
                     <Item label="Estimated Value">{ formatCurrency(proDesc.value ?? 0)}</Item>
-                    <Item label="Organisation">{proDesc.organizationName??' No Organisation'}</Item>
+                    <Item label="Organisation">{
+                        proDesc.organization ? 
+                            <Link
+                                to={{
+                                    pathname: `/organizations/info/${proDesc.organizationId}`,
+                                }}
+                                className="nav-link"
+                            >
+                                {proDesc.organization.name}
+                            </Link>
+                        : 
+                            'No Organisation'
+                        
+                    }</Item>
                     <Item label="Start Date">{proDesc.startDate ? formatDate(proDesc.startDate): null} </Item>
                     <Item label="End Date">{proDesc.endDate ? formatDate(proDesc.endDate): null}</Item>
-                    {/* <Item label="Gender">{data.gender}</Item> */}
                 </Descriptions>
+                {proDesc.type===1 &&<Descriptions
+                    style={{marginTop: 15}}
+                    title={'Milestone Details'}
+                    size="small"
+                    bordered
+                    layout="horizontal"
+                >
+                    <Item label="Milestone Name">{mileDesc.title}</Item>
+                    <Item label="Start Date">{mileDesc.startDate ? formatDate(mileDesc.startDate): null} </Item>
+                    <Item label="End Date">{mileDesc.endDate ? formatDate(mileDesc.endDate): null}</Item>
+                    <Item label="Progress">{mileDesc.progress} %</Item>
+                    <Item label="Approved">{mileDesc.isApproved ? 'True' : 'False'}</Item>
+                </Descriptions>}
                 <Row justify="end" span={4} gutter={[30, 0]}>
                     <Col>
                         <Button 
