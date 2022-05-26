@@ -807,10 +807,12 @@ class TimeSheetContact extends Component {
                             if(findMilestone >=0){
                                 message.error({ content: 'Project TimeSheet is already created...!'}, 5)
                             }else{
-                                data.push({
+                                const findLeaveRequest = data.findIndex(el=>el.leaveRequest)
+                                const index = findLeaveRequest === -1 ? data.length : findLeaveRequest
+                                data.splice(index, 0, {
                                     milestoneId: sMilestone.value,
                                     project: sMilestone.label,
-                                })
+                                });
                             }
                             this.setState({ proVisible: false, data: [...data], sMilestone:{} });
                         }}

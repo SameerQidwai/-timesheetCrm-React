@@ -360,11 +360,10 @@ class Resources extends Component {
 
     render() {
         const { desc, filterData, data, infoModal, editRex, leadId, resource , skillId, levelId, permissions, mileId, crud, openSearch, filterFields, searchedColumn, mileDesc} = this.state;
-        console.log(desc);
         return (
             <>
                 <Descriptions
-                    // title={DescTitle}
+                    title={'Opportunity Details'}
                     size="small"
                     bordered
                     layout="horizontal"
