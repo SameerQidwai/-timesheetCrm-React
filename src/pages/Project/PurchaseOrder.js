@@ -75,7 +75,7 @@ class PurchaseOrder extends Component {
                             </Menu.Item >
                                 <Menu.Item
                                     key={0}
-                                    onClick={() => { this.setState({ openModal: true, editRex: record.id, }); }}
+                                    onClick={() => { this.openModal(true, record.id, index) }}
                                     disabled={!this?.state?.permissions?.['UPDATE']}
                                 >
                                     Edit
@@ -95,6 +95,7 @@ class PurchaseOrder extends Component {
             openModal: false,
             editRex: false,
             ProId: false,
+            tableIndex: false,
             openSearch: false, 
             desc: {title: 'Service', organization: {name: 'PSO'}, value: '1000.00', startDate: '12 10 2020', endDate: '12 4 2021'},
             searchedColumn: {
@@ -274,27 +275,46 @@ class PurchaseOrder extends Component {
         })
     }
 
+    openModal = (open, recordId, index) =>{
+        this.setState({
+            openModal: open, 
+            editRex: recordId,
+            tableIndex: index
+        })
+    }
+
     closeModal = () => {
-        this.setState({ openModal: false, editRex: false});
+        this.setState({ openModal: false, editRex: false, tableIndex: false});
     };
 
     handleDelete = (id, index) => {
-        const { ProId, data } = this.state
+        const { ProId, data,filterData } = this.state
         const { history } = this.props
         const url = `/projects/${ProId}/purchaseOrders`
-        generalDelete(history, url, id, index, data, false).then(res =>{
+        generalDelete(history, url, id, index, filterData, data).then(res =>{
             if (res.success){
                 this.setState({
-                    data: [...res.filterData],
+                    data: [...res.data],
+                    filterData: [...res.filterData]
                 })
             }
         })
     };
 
-    callBack = () => {
-        const { ProId } = this.state
-        console.log(ProId);
-        this.getRecords(ProId)
+    callBack = (record) => {
+        let { tableIndex, data } = this.state
+        if(tableIndex){
+            data[tableIndex] = record
+        }else{
+            data.push(record)
+        }
+        this.setState({
+            data: data,
+            filterData: [...data],
+            openModal: false, 
+            editRex: false, 
+            tableIndex: false
+        })
     };
 
     generalFilter = (value) =>{
@@ -404,7 +424,7 @@ class PurchaseOrder extends Component {
                     <Col> <Button 
                         type="primary" 
                         size='small' 
-                        onClick={() => {  this.setState({ openModal: true, editRex: false, }) }}
+                        onClick={() => {  this.openModal(true, false, false) }}
                         disabled={permissions && !permissions['ADD']}
                     > <PlusSquareOutlined/> Add Purchase Order</Button> </Col>
                     {/* <Col> <Button type="danger" size='small'>Delete Resource</Button></Col> */}
