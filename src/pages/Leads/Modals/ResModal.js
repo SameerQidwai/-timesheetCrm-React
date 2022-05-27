@@ -6,12 +6,13 @@ import FormItems from "../../../components/Core/Forms/FormItems";
 
 import { addLeadSkill, editLeadSkill, addLeadSkillResource, editLeadSkillResource, } from "../../../service/opportunities";
 import { getPanelSkills, getOrgPersons, } from "../../../service/constant-Apis";
+import { dateRangeAfter, dateRangeBefore } from "../../../service/constant";
 
 const { TabPane } = Tabs;
 
 class ResModal extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.formRef = React.createRef();
     this.state = {
       editRex: false,
@@ -214,8 +215,8 @@ class ResModal extends Component {
           type: "DatePicker",
           fieldStyle: { width: "100%" },
           rangeMin: (current)=>{
-              const { obj } = this.formRef.current.getFieldValue();
-              return   obj.endDate && current > obj.endDate
+            const { obj } = this.formRef.current.getFieldValue();
+            return dateRangeAfter(current, obj?.endDate, props.pDates)
           }
         },
         {
@@ -227,16 +228,15 @@ class ResModal extends Component {
           type: "DatePicker",
           fieldStyle: { width: "100%" },
           rangeMax: (current)=>{
-              const { obj } = this.formRef.current.getFieldValue();
-              return  obj.startDate && current < obj.startDate
+            const { obj } = this.formRef.current.getFieldValue();
+            return dateRangeBefore(current, obj?.startDate, props.pDates)
           }
         },
       ],
     };
   }
   componentDidMount = () => {
-    const { skillId, editRex } = this.props;
-    console.log(editRex);
+    const { skillId } = this.props;
     if (skillId) {
       this.fetchRes();
     } else {
