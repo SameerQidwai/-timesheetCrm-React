@@ -13,14 +13,23 @@ const { Content } = Layout;
 function PrivateRoute (props) {
     const [ lastActivity, setLastActivity ] = useState(false)
     const [login, setLogin ] =useState(false)
+    const [openLogin, setOpenLogin ] =useState(false)
 
     useEffect(() => {
+        // gotta do it to check right after the page is refreshed
+        let lastApiCalled = localStorage.getItem('jwtTimer')
+        if (new Date().getTime() - parseInt(lastApiCalled) > 60*60*1000 ){
+            localStorage.setItem('jwtExpired', true)
+            setOpenLogin(true)
+        }else{
             setInterval(() => {
-                const lastApiCalledAt = localStorage.getItem('jwtTimer')
+                // gotta do it to check every min
+                let lastApiCalledAt = localStorage.getItem('jwtTimer')
                 if (new Date().getTime() - parseInt(lastApiCalledAt) > 55*60*1000 && loggedIn() !=='jwtExpired'){
                     setLastActivity(true)
                 }
             }, 60 * 1000)
+        }
     })
 
 
@@ -31,6 +40,7 @@ function PrivateRoute (props) {
             }else{
                 localStorage.clear()
                 setLogin(true)
+                setOpenLogin(false)
                 setLogin(false)
             }
         })
@@ -39,6 +49,7 @@ function PrivateRoute (props) {
     const ActivityTimeOut = () =>{
         setLogin(true)
         setLastActivity(false)
+        setOpenLogin(false)
         setLogin(false)
     }
 
@@ -46,6 +57,7 @@ function PrivateRoute (props) {
     const closeLogin = () =>{
         localStorage.removeItem('jwtExpired')
         setLogin(true)
+        setOpenLogin(false)
         setLogin(false)
     }
 
@@ -71,7 +83,7 @@ function PrivateRoute (props) {
 
                 {loggedIn() ==='jwtExpired'&&
                     <ActivityLogin 
-                        visible={loggedIn() ==='jwtExpired'} 
+                        visible={loggedIn() ==='jwtExpired' || openLogin} 
                         close={()=>{closeLogin()}}
                     /> 
                 }

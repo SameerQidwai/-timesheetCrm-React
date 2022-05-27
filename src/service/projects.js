@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Api, apiErrorRes, headers, jwtExpired, setToken } from "./constant";
+import { Api, apiErrorRes, headers, jwtExpired, setToken, thumbUrl } from "./constant";
 import moment from "moment";
 import { message as messageAlert } from "antd";
 
@@ -439,15 +439,27 @@ export const getOrder = (proId,id) => {
     return axios
         .get(url + `/${proId}/purchaseOrders/${id}`, {headers:headers()})
         .then((res) => {
-            const { success, data, message } = res.data;
+            let { success, data, message } = res.data;
             jwtExpired(message)
             if (success) {
-               const obj = {...data,
-                    issueDate: data.issueDate ? moment(data.issueDate): null,
-                    expiryDate: data.expiryDate ? moment(data.expiryDate): null
+                data = {
+                    ...data,
+                    issueDate: data.issueDate && moment(data.issueDate),
+                    expiryDate: data.expiryDate && moment(data.expiryDate),
+                    file: data.fileId ? [{
+                        id: data.file.id,
+                        createdAt: data.file.createdAt,
+                        fileId: data.file.id,
+                        uid: data.file.uniqueName,
+                        name: data.file.originalName,
+                        type: data.file.type,
+                        url: `${Api}/files/${data.file.uniqueName}`,
+                        thumbUrl: thumbUrl(data.file.type)
+                    }] : []
                 }
+
                 setToken(res.headers && res.headers.authorization)
-                return {success, data: obj };
+                return {success, data: data };
             }
             return { success }
         })

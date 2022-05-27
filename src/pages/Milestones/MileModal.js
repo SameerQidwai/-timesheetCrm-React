@@ -104,7 +104,7 @@ class MileModal extends Component {
             type: "DatePicker",
             fieldStyle: { width: "100%" },
             rangeMax: (current)=>{
-              const { obj } = this.formRef.current.getFieldValue();
+              const { obj } = this.formRef.current.getFieldValue();              
               return dateRangeBefore(current, obj.startDate, props.pDates)
             }
           },

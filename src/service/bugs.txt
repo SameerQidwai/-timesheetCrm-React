@@ -8,9 +8,7 @@ New bug Found
     skill update in contact person is not wokring like changing the skill on same field or it's level
 
     Dates disable everywhere ref => to opportuity milestone start and end date (probably in resourcs of P and O )
-    
-    add new project in timesheet above Leave_request
-    
+        
     in fields 5px every modal
 
 

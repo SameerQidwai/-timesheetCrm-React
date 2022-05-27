@@ -62,6 +62,7 @@ class PurchaseOrder extends Component {
                         overlay={
                             <Menu>
                                 <Menu.Item 
+                                key={1}
                                 danger
                                 disabled={!this?.state?.permissions?.['DELETE']}
                             >
@@ -73,6 +74,7 @@ class PurchaseOrder extends Component {
                                 </Popconfirm>
                             </Menu.Item >
                                 <Menu.Item
+                                    key={0}
                                     onClick={() => { this.setState({ openModal: true, editRex: record.id, }); }}
                                     disabled={!this?.state?.permissions?.['UPDATE']}
                                 >
