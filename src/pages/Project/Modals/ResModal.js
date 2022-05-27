@@ -65,9 +65,7 @@ class ResModal extends Component {
             } = this.formRef.current.getFieldsValue(); // const
             obj["panelSkillStandardLevelId"] = undefined;
             obj["contactPersonId"] = undefined;
-            this.formRef.current.setFieldsValue({
-              obj,
-            });
+            this.formRef.current.setFieldsValue({ obj, });
             this.setState({ ResourceFields });
           },
         },
@@ -157,7 +155,7 @@ class ResModal extends Component {
           fieldStyle: { width: "100%" },
           rangeMin: (current)=>{
             const { obj } = this.formRef.current.getFieldValue();
-            return dateRangeAfter(current, obj.endDate, props.pDates)
+            return dateRangeAfter(current, obj?.endDate, props.pDates)
           }
         },
         {
@@ -188,7 +186,7 @@ class ResModal extends Component {
           fieldStyle: { width: "100%" },
           rangeMax: (current)=>{
             const { obj } = this.formRef.current.getFieldValue();
-            return dateRangeBefore(current, obj.startDate, props.pDates)
+            return dateRangeBefore(current, obj?.startDate, props.pDates)
           }
         },
         {
@@ -351,7 +349,8 @@ class ResModal extends Component {
             scrollToFirstError={true}
             size="small"
             layout="inline"
-            initialValues={{obj: {startDate: null}}}
+            initialValues={{obj: {effortRate: 100}}}
+
         >
           <FormItems FormFields={ResourceFields} />
         </Form>

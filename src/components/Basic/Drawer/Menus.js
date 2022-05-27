@@ -161,7 +161,7 @@ class Menus extends Component {
     }
 
     MenuRender = () => {
-        const { allowedMenu, select = [] } = this.state
+        const { allowedMenu } = this.state
         return allowedMenu.map((item, i) =>
             item.subMenu ? (
                 <SubMenu  key={item.key} icon={item.icon} title={item.text}>
@@ -174,7 +174,7 @@ class Menus extends Component {
                     ))}
                 </SubMenu>
             ) : (
-                <Menu.Item key={item.key} icon={item.icon} className={this.highlightRow(item.link)} selectedKeys={select} onSelect={this.onSelect}>
+                <Menu.Item key={item.key} icon={item.icon} className={this.highlightRow(item.link)} onSelect={this.onSelect}>
                     <Link to={item.link} className="nav-link" >
                         {item.text}
                     </Link>

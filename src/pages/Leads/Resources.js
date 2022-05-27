@@ -87,7 +87,6 @@ class Resources extends Component {
                                 </Menu.Item>
                                 <Menu.Item 
                                     onClick={() => {
-                                        console.log(record);
                                         this.getSkilldEmployee(true,  record.id,  true, false,  index, record.panelSkillStandardLevelId)
                                     }}
                                     disabled={!this?.state?.permissions?.['ADD']}
@@ -239,7 +238,9 @@ class Resources extends Component {
     }
 
     getSkilldEmployee = (infoModal, skillId, resource, editRex, tableIndex, levelId ) =>{
-        this.setState({ 
+        const { startDate, endDate } = this.state.mileDesc
+        this.setState({
+            pDates: {startDate, endDate}, 
             infoModal:infoModal, 
             skillId:skillId,
             levelId: levelId,
@@ -359,7 +360,7 @@ class Resources extends Component {
     }
 
     render() {
-        const { desc, filterData, data, infoModal, editRex, leadId, resource , skillId, levelId, permissions, mileId, crud, openSearch, filterFields, searchedColumn, mileDesc} = this.state;
+        const { desc, filterData, data, infoModal, editRex, leadId, resource , skillId, levelId, permissions, mileId, crud, openSearch, filterFields, searchedColumn, mileDesc, pDates} = this.state;
         return (
             <>
                 <Descriptions
@@ -419,7 +420,7 @@ class Resources extends Component {
                         <Button 
                             type="primary" 
                             size='small'  
-                            onClick={() => { this.setState({ infoModal: true, editRex: false, resource: false, skillId: false }) }}
+                            onClick={() => { this.getSkilldEmployee(true, false, false, false, false, false ) }}
                             disabled={permissions&& !permissions['ADD']}
                             >
                                 Add Position
@@ -478,6 +479,7 @@ class Resources extends Component {
                         levelId={levelId}
                         leadId={leadId}
                         mileId={mileId}
+                        pDates={pDates}
                         crud={crud}
                         panelId = {desc.panelId}
                         close={this.closeModal}
