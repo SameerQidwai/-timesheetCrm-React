@@ -174,9 +174,8 @@ class OrderModal extends Component {
         const { ProId, callBack } = this.props
         console.log(ProId, data);
         addOrder(ProId, data).then(res=>{
-            console.log(res);
             if(res.success){
-                callBack()
+                callBack(res.data)
             }
         })
     }
@@ -205,7 +204,7 @@ class OrderModal extends Component {
         data.id = editRex
         editOrder(ProId, editRex, data).then((res) => {
             if(res.success){
-                callBack()
+                callBack(res.data)
             }
         });
     };
@@ -256,7 +255,7 @@ class OrderModal extends Component {
                 maskClosable={false}
                 centered
                 visible={visible}
-                okButtonProps={{ readOnly: loading, htmlType: 'submit', form: 'my-form'  }}
+                okButtonProps={{ disabled: loading, htmlType: 'submit', form: 'my-form'  }}
                 okText={loading ?<LoadingOutlined /> :"Save"}
                 onCancel={close}
                 width={900}

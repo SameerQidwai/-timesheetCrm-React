@@ -569,7 +569,7 @@ class InfoModal extends Component {
         maskClosable={false}
         centered
         visible={visible}
-        okButtonProps={{ readOnly: loading, htmlType: 'submit', form: 'my-form'  }}
+        okButtonProps={{ disabled: loading, htmlType: 'submit', form: 'my-form'  }}
         okText={loading ? <LoadingOutlined /> : "Save"}
         onCancel={close}
         width={750}

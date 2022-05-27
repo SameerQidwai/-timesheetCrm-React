@@ -376,20 +376,15 @@ export const addOrder = (proId, data) => {
     return axios
         .post(url + `/${proId}/purchaseOrders`, data, {headers:headers()})
         .then((res) => {
-            const { success , message} = res.data;
+            const { success , message, data} = res.data;
             jwtExpired(message)
             messageAlert.success({ content: message, key: proId})
             if (success) 
                 setToken(res.headers && res.headers.authorization)
-            return {success};
+            return {success, data};
         })
         .catch((err) => {
-            messageAlert.error({ content: err.message, key: proId})
-            return {
-                error: "Please login again!",
-                status: false,
-                message: err.message,
-            };
+            return apiErrorRes(err, proId, 5)
         });
 };
 
@@ -418,20 +413,15 @@ export const editOrder = (proId, id, data) => {
     return axios
         .put(url + `/${proId}/purchaseOrders/${id}`, data, {headers:headers()})
         .then((res) => {
-            const { success , message} = res.data;
+            const { success , message, data} = res.data;
             jwtExpired(message)
             messageAlert.success({ content: message, key: id})
             if (success) 
                 setToken(res.headers && res.headers.authorization)
-            return {success};
+            return {success, data};
         })
         .catch((err) => {
-            messageAlert.error({ content: err.message, key: id})
-            return {
-                error: "Please login again!",
-                status: false,
-                message: err.message,
-            };
+            return apiErrorRes(err, id, 5)
         });
 };
 
@@ -484,10 +474,6 @@ export const delOrder = (proId,id) => {
             return {success};
         })
         .catch((err) => {
-            return {
-                error: "Please login again!",
-                status: false,
-                message: err.message,
-            };
+            return apiErrorRes(err, id, 5)
         });
 };
