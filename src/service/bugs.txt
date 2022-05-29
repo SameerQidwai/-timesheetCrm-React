@@ -12,6 +12,15 @@ New bug Found
             {PMResources, OTResources, PTResources, OMResources}
                 make these four component into one or two only....
 
+    global vairbale anything can be null
+    global variable updating array
+    global varaibale index
+    
+    cost-calcuator
+        relation between variable and values
+
+    post Gloal APi post action
+
 Update and check 
     delLeadSkillResource // not done
     Purchase Order // whole Not doe

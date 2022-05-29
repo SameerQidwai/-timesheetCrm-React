@@ -17,6 +17,7 @@ import moment from "moment"
 import LeaveBalance from "../../components/Core/LeaveBalance";
 import { GENDER } from "../../service/constant";
 import AuthError from "../../components/Core/AuthError";
+import BaseCalculator from "../../components/Core/BaseCalculator";
 
 const { Item } = Descriptions;
 const { TabPane } = Tabs;
@@ -143,7 +144,7 @@ class OrgInfo extends Component {
                     <Tabs
                         type="card"
                         style={{ marginTop: "50px" }}
-                        // defaultActiveKey="5"
+                        defaultActiveKey="cost-calculator"
                     >
                         <TabPane tab="Project" key="project">
                         <Projects targetId={emp} customUrl={`helpers/work?type=P&employee=${emp}`} />
@@ -162,6 +163,9 @@ class OrgInfo extends Component {
                         </TabPane>
                         <TabPane tab="Leave Balance" key="leaveBalance">
                             <LeaveBalance empId={emp} editable={true}/>
+                        </TabPane>
+                        <TabPane tab="Cost Calculator" key="cost-calculator">
+                            <BaseCalculator empId={emp} />
                         </TabPane>
                     </Tabs>
                 )}
