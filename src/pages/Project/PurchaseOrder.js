@@ -291,6 +291,7 @@ class PurchaseOrder extends Component {
         const { ProId, data,filterData } = this.state
         const { history } = this.props
         const url = `/projects/${ProId}/purchaseOrders`
+        console.log(id, index);
         generalDelete(history, url, id, index, filterData, data).then(res =>{
             if (res.success){
                 this.setState({
@@ -303,7 +304,7 @@ class PurchaseOrder extends Component {
 
     callBack = (record) => {
         let { tableIndex, data } = this.state
-        if(tableIndex){
+        if(tableIndex >= 0){
             data[tableIndex] = record
         }else{
             data.push(record)
