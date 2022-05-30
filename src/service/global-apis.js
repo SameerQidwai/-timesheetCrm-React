@@ -1,7 +1,8 @@
-import { message as messageAlert } from "antd";
 import axios from "axios";
+import { message as messageAlert } from "antd";
 
 import { Api, headers, jwtExpired, setToken } from "./constant";
+import moment from 'moment'
 
 const global_url = `${Api}/global-setting`;
 const var_url = `${Api}/global-variables`;
@@ -52,8 +53,14 @@ export const getVariables = () => {
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
-            if (success) setToken(res.headers && res.headers.authorization)
-            return { success, data };
+            setToken(res.headers && res.headers.authorization)
+            let variables= {}
+            if (success) {
+                for (var {variable, globalVariableId, value, startDate, endDate} of data){
+                    variables[variable?.name] = {globalVariableId, value, startDate: moment(startDate), endDate: moment(endDate)}
+                }
+            }
+            return { success, data: variables };
         })
         .catch((err) => {
             return {

@@ -21,74 +21,6 @@ New bug Found
 
     post Gloal APi post action
 
-Update and check 
-    delLeadSkillResource // not done
-    Purchase Order // whole Not doe
-    make filterModal general put all the fields into that files belongs to any page ( to optimize code)
-
-    timesheet hours vs resource work hours
-    Sidebar position filled 
-
-    create general function for edit and remove data from table
-    "Not Authorized!" Do it in simpler way     
-
-    calander disableing and nested deatil view page...
-    
-    Leave
-        Corn jobs
-            Leave not to be rest at any level because of reports
-            Admin Panel corn job when to run
-            Monthly Rest 
-        
-    Leave Requets ERRORs
-        // Error on index leave request api,
-        // I am also unable to submit leave application for the date when my leave application has already been rejected ...
-        // if I am selecting single date...(Rejected already for the leave request) 
-            (so my concern is single date might not be checking if leave request already submitted or not)
-                dateEroro
-        // status condition. (from backend)
-
-        // I am unable to check edit leave
-
-        //
-            (concern that you are also checking this editing Leave request so it will also throw error)
-    backend: [
-        Leave_request not adding again when rejected,
-        Backend unknown Errors and showing...
-    ]
-   
-
-update
-    work can't surpass dates milestone dates
-        milestone can't surpass dates resouces dates
-            resource can't surpass dats of timesheet entry
-
-            ???<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>????
-                Create component for Modal attachment 
-            ???<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>????
-
-Tagrget
-    
-    Opportunity and Project
-        Status all view
-        if I change delegate_contact_person on won.. gives error 500
-        I am not getting MilstoneId if type is (2 or Tm)
-
-    Links
-    Update (backend)
-    Time Off
-    Expense
-    
-
-New Things
-    Resource Allocation
-        Suggestion of buycost and sale cost
-
-
-Changes not allowing
-    Oppotunity and Project changes panel should not be allowed if resource added
-    Resource
-        Skill won't be change when allocation is added
 
 shortcut 
     class component
@@ -116,33 +48,40 @@ xampp
     sudo service mysql stop
     sudo /opt/lampp/lampp start
 
+// for table in BaseCalculator
+const tableColumn = [
+    {
+        title: 'label',
+        dataIndex: 'label',
+        key: 'label',
+        render: (text, record) => <div>{text}</div>,
+        onCell: (record, index) => ({
+            colSpan: record.colSpan,
+        }),
+    }
+]
+const tableBody = (contract, golobalVariables, holidays) => {
+    let body = [
+        {label: 'Annual Base Salary', value: contract?.remunerationAmount, colLableSpan: 2},
+        {label: 'Daily Hours', value: formatFloat(contract?.dailyHours), colLableSpan: 2},
+        {label: `Weekly Hours - (${contract?.dailyHours} * ${contract?.noOfDays} days)`, value: formatFloat(contract?.noOfHours), colLableSpan: 2},
+        {label: `Billable Days per annum`, value: contract?.workDaysPerAnum, colLableSpan: 2},
+        {label: `Hourly Base Rate - (${formatCurrency(contract?.remunerationAmount)}/${contract?.workDaysPerAnum}/${contract?.dailyHours})`, value: contract?.hourlyBaseRate, colLableSpan: 2},
+    ]
 
-// for deleting Functionality add these function
-// Add function 
+    golobalVariables.forEach((el, index)=> {
+        body.push( {label: STATES[el.name]? `Payroll Tax - ${STATES[el.name]}` : el.name, value: el.value, amount: el.amount} )
+    })
 
-handleDelete = (id, index) => {
-    const { data: d, filterData: fd } = this.state
-    fd.splice(index,1) // deleting Index
-    d.splice(index,1) // deleting Index
-    this.setState({ filterData: [...fd], data: [...d] }) //Set the data...
-};
+    body.push(
+        {label: 'Adjustment', value: <Inputnumber
+            value={adjustment}
+            shape="$"
+            onChange={onChangeAdjustment}
+        />, colLableSpan: 2},
+        {label: 'Employee Hourly Buy Rate', value: formatCurrency(variableCount), colLableSpan: 2},
+        {label: 'Daily Billable Hours', value: formatFloat(contract?.dailyHours)},
+        {label: 'Employee Daily Buy Rate', value: formatFloat(contract?.dailyHours * variableCount), colLableSpan: 2},
+    )
+}
 
-export const delList = (id) => {
-    return axios
-        .delete(url + `/${id}`, {headers:headers()})
-        .then((res) => {
-            const { success, message } = res.data;
-            jwtExpired(message)
-
-            if (success)  setToken(res.headers && res.headers.authorization)
-
-            return {success};
-        })
-        .catch((err) => {
-            return {
-                error: "Please login again!",
-                status: false,
-                message: err.message,
-            };
-        });
-};

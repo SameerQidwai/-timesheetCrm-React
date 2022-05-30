@@ -203,12 +203,11 @@ function GlobalVars(props) {
     const fetchAll = ()=>{
         Promise.all([getStates(), getleaveRequestTypes(), getSettings(), getVariables()]).then(res=>{
             if(res[2].success){
-                form.setFieldsValue({settings: res[2].data});
+                form.setFieldsValue({settings: res[2].data, ...res[3].data});
             }
             let states = res[0].success ? res[0].data : []
             let leavetypes = res[1].success ? res[1].data : []
-            let category = [...states, ...leavetypes]
-            addStateFields(category) 
+            addStateFields([...states, ...leavetypes]) 
         })
         .catch(err => console.log(err))
     }
@@ -280,16 +279,10 @@ function GlobalVars(props) {
             }
           });
         Promise.all([upadteSettings(settings), upadteVariables(variable)]).then(res=>{
-           console.log(res);
+            form.setFieldsValue({settings: res[0].data})
         })
         .catch(err => console.log(err))
     }
-        // upadteSettings(variable).then(res=>{
-        //     if(res.success){
-        //         // localStorage.setItem('pageSize', res.data.recordsPerPage)
-        //     }
-        // })
-
 
     return (
         <>

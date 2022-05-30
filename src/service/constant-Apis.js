@@ -8,7 +8,6 @@ export const getStates = () => {
         .get(`${Api}/states`,{headers:headers()})
         .then((res) => {
             const { success, data } = res.data;
-            console.log(data);
             var states = []
             data.map((el) => {
                 states.push({value: el.id, label: el.label})
