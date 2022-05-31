@@ -1,0 +1,58 @@
+{
+  "_from": "@fontsource/poppins@^4.5.5",
+  "_id": "@fontsource/poppins@4.5.8",
+  "_inBundle": false,
+  "_integrity": "sha512-HE9yLDxYJEcxooVrYvvEhtyxaYU32hQIx1+npKegVefceE0l0zi0ePqKWWxYxkFpyy6WuZSQ+9rai3INnYKEJA==",
+  "_location": "/@fontsource/poppins",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "range",
+    "registry": true,
+    "raw": "@fontsource/poppins@^4.5.5",
+    "name": "@fontsource/poppins",
+    "escapedName": "@fontsource%2fpoppins",
+    "scope": "@fontsource",
+    "rawSpec": "^4.5.5",
+    "saveSpec": null,
+    "fetchSpec": "^4.5.5"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/@fontsource/poppins/-/poppins-4.5.8.tgz",
+  "_shasum": "65ce9b32f31bda5a25c23001bcebf1c66e440320",
+  "_spec": "@fontsource/poppins@^4.5.5",
+  "_where": "/home/sudoware/Desktop/Projects/onelm/onelm-frontend",
+  "author": {
+    "name": "Lotus",
+    "email": "declininglotus@gmail.com"
+  },
+  "bugs": {
+    "url": "https://github.com/fontsource/fontsource/issues"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
+  "description": "Self-host the Poppins font in a neatly bundled NPM package.",
+  "homepage": "https://github.com/fontsource/fontsource/tree/main/fonts/google/poppins#readme",
+  "keywords": [
+    "fontsource",
+    "font",
+    "font family",
+    "google fonts",
+    "Poppins",
+    "poppins"
+  ],
+  "license": "MIT",
+  "main": "index.css",
+  "name": "@fontsource/poppins",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fontsource/fontsource.git",
+    "directory": "fonts/google/poppins"
+  },
+  "version": "4.5.8"
+}
