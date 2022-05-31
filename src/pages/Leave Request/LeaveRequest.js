@@ -224,6 +224,7 @@ class LeaveRequest extends Component {
                             columns={this.requestColumns}
                             dataSource={request}
                             size='small'
+                            className='fs-small'
                         />
                     </Col>
                 </Row>

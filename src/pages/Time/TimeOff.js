@@ -284,6 +284,7 @@ class TimeOff extends Component {
                                     columns={this.columns}
                                     dataSource={data}
                                     size="small"
+                                    className='fs-small'
                                 />
                             </Col>
                         </Row>
@@ -299,6 +300,7 @@ class TimeOff extends Component {
                                     columns={this.col_Status}
                                     dataSource={data_status}
                                     size="small"
+                                    className='fs-small'
                                 />
                             </Col>
                         </Row>

@@ -17,7 +17,7 @@ const Profile = ()=>{
     const [contract, setContract] = useState(false)
     const [details, setDetails] = useState(false)
     const [clearance, setClearance] = useState(false)
-    const [resourceSkill, setresourceSkill] = useState(false)
+    const [resourceSkill, setResourceSkill] = useState(false)
     const loginType = JSON.parse(localStore().role).type
 
     useEffect(() => {
@@ -36,7 +36,7 @@ const Profile = ()=>{
                     // train:res.train, 
                 })
                 setClearance(res.sClearance)
-                setresourceSkill(res.resourceSkill)
+                setResourceSkill(res.resourceSkill)
             }
         })
     }
@@ -51,7 +51,7 @@ const Profile = ()=>{
             <TabPane tab="Other Details" key="others"> {details && <OtherDetails  data={details}/>} </TabPane>
             <TabPane tab="Security Clearance" key="security"> {details && <SecurityClearance  data={clearance}/>} </TabPane>
             <TabPane tab="Password" key="password "> <PasswordUpdate/> </TabPane>
-            {/* <TabPane tab="SKills" key="skills"> <ResourceSkills  data={resourceSkill} /> </TabPane> */}
+            {/* <TabPane tab="Skills" key="skills"> <ResourceSkills  data={resourceSkill} /> </TabPane> */}
             <TabPane tab="Attachments" key="attachments"> <Attachments targetType="emp" targetId={localStore().id}  /> </TabPane>
         </Tabs>
     )

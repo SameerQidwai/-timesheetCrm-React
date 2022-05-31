@@ -245,6 +245,7 @@ class Permission extends Component {
                         <Table
                             bordered
                             size='small' 
+                            className='fs-small'
                             rowKey="key" 
                             columns={this.Columns} 
                             dataSource={Rows} 

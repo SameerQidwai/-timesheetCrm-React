@@ -55,7 +55,7 @@ class ChildOrg extends Component {
     }
     render() {
         const { data } = this.state;
-        return <Table bordered columns={this.columns} dataSource={data} size="small" />;
+        return <Table bordered columns={this.columns} dataSource={data} size="small" className='fs-small' />;
     }
 }
 

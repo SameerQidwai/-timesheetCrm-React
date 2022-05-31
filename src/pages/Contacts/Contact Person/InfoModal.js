@@ -18,56 +18,6 @@ class InfoModal extends Component {
         this.skillRef = React.createRef();
         this.securityRef = React.createRef();
 
-        this.priority_data = [
-            {
-                value: 1,
-                label: "Superstar",
-            },
-            {
-                value: 2,
-                label: "Senior",
-            },
-            {
-                value: 3,
-                label: "Middle",
-            },
-            {
-                value: 4,
-                label: "Junior",
-            },
-            {
-                value: 5,
-                label: "Trainee",
-            },
-            {
-                value: 6,
-                label: "Internee",
-            },
-        ];
-
-        // this.skill_data = [
-        //     {
-        //         value: 1,
-        //         label: "Superstar",
-        //     },
-        //     {
-        //         value: 2,
-        //         label: "Senior",
-        //     },
-        //     {
-        //         value: 3,
-        //         label: "Middle",
-        //     },
-        //     {
-        //         value: 4,
-        //         label: "Junior",
-        //     },
-        //     {
-        //         value: 5,
-        //         label: "Trainee",
-        //     },
-        // ];
-
         this.state = {
             editCP: false,
             basicSubmitted: false,
@@ -494,7 +444,7 @@ class InfoModal extends Component {
                 //         message: "skill is required",
                 //     },
                 // ],
-                onChange: function func(e, value) {
+                onChange: (e, value) =>{
                    const { SkillFields } = this.state
                     SkillFields.fields.map(el=>{
                         if (el.key ===splice_key[1]){
@@ -504,11 +454,11 @@ class InfoModal extends Component {
                            return el
                        }
                    })
-                    const { skill } = this.skillRef.current.refs.skill_form.getFieldsValue() // const
-                    delete skill[splice_key[1]];
-                    this.skillRef.current.refs.skill_form.setFieldsValue({ skill, })
+                    let { skill } = this.skillRef.current.refs.skill_form.getFieldsValue() // const
+                    skill[splice_key[1]] = undefined
+                    this.skillRef.current.refs.skill_form.setFieldsValue({ skill})
                    this.setState({SkillFields})
-                }.bind(this),
+                },
             },
             {
                 object: "skill",
@@ -521,12 +471,6 @@ class InfoModal extends Component {
                 type: "Select",
                 labelAlign: "left",
                 itemStyle: { marginBottom: "5px" },
-                // rules: [
-                //     {
-                //         required: true,
-                //         message: "skill is required",
-                //     },
-                // ],
             },
             {
                 fieldCol: 2,
@@ -541,7 +485,7 @@ class InfoModal extends Component {
                 fieldStyle: {
                     cursor: "pointer",
                 },
-                onClick: function func(value, e) {
+                onClick:(value, e) =>{
                     const { SkillFields } = this.state;
                     SkillFields.fields = SkillFields.fields.filter((obj) => {
                         return (
@@ -551,12 +495,12 @@ class InfoModal extends Component {
                         );
                     });
                     const {skill} = this.skillRef.current.refs.skill_form.getFieldsValue() // const
-                    delete skill[splice_key[0]];
-                    delete skill[splice_key[1]];
-                    delete skill[splice_key[2]];
+                    skill[splice_key[0]] = undefined
+                    skill[splice_key[1]] = undefined
+                    skill[splice_key[2]] = undefined
                     this.skillRef.current.refs.skill_form.setFieldsValue({ skill, })
                     this.setState({ SkillFields, });
-                }.bind(this),
+                },
             },
         ];
     };
@@ -711,15 +655,12 @@ class InfoModal extends Component {
 
     SkillCall = (vake) => {
         // this will work after I get the Object from the form
-
         const { skill } = vake;
         const vars = [];
-        let result = skill ? Object.keys(skill).length / 2 : 0;
-        if (skill && Object.keys(skill).length > 0){
-            for (let i = 0; i < result; i++) {
-                if (skill[`level${i}`]){
-                    vars.push(skill[`level${i}`]);
-                }
+
+        for (const [key, value] of Object.entries(skill)) {
+            if (key.includes('level') && value){
+                vars.push(value)
             }
         }
         this.setState(

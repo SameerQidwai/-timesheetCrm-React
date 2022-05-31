@@ -140,6 +140,7 @@ class OTResources extends Component {
                     columns={positionColumns(milestoneId)}
                     dataSource={data}
                     size="small"
+                    className='fs-small'
                     expandable={{
                         rowExpandable: record => record?.opportunityResourceAllocations?.length > 0,
                         expandedRowRender: record => {
@@ -177,6 +178,7 @@ function NestedTable({columns, data}) {
             bordered
             // key={key}
             size="small"
+            className='fs-small'
             rowKey={(record) => record.id} 
             columns={columns} 
             dataSource={data} 

@@ -210,6 +210,7 @@ class Travels extends Component {
                             columns={columns}
                             dataSource={data}
                             size="small"
+                            className='fs-small'
                         />
                     </Col>
                 </Row>

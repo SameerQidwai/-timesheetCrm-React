@@ -129,6 +129,7 @@ class PTResources extends Component {
                     columns={resourceColumn(milestoneId)}
                     dataSource={data}
                     size="small"
+                    className='fs-small'
                 />
         );
     }

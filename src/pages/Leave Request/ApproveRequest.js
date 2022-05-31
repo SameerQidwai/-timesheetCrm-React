@@ -403,6 +403,7 @@ class ApproveRequest extends Component {
                             columns={this.requestColumns}
                             dataSource={filterRequest}
                             size='small'
+                            className='fs-small'
                         />
                     </Col>
                 </Row>
