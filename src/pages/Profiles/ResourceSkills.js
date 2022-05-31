@@ -8,6 +8,8 @@ const ResourceSkills = (props) =>{
     const [form] = Form.useForm();
     const [skillArray, setSkillArray] = useState([])
     const [levelArray, setLevelArray] = useState({})
+    const [reload, setReload] = useState({})
+
     const [fields, setFields] = useState([
         {
             object: "skill",
@@ -59,10 +61,11 @@ const ResourceSkills = (props) =>{
     },[])
 
     const dynamicLevelOptions = (name) =>{
-        console.log(isNaN(name))
-        if(name && !isNaN(name)){{
+        console.log(isNaN(name), name)
+        if(!isNaN(name)){{
             const {resource} = form.getFieldsValue()
-            const levelIndex = resource[name]['standardSkillId']
+            const levelIndex = resource?.[name]?.['standardSkillId']
+            console.log(levelArray[levelIndex]);
             return isNaN(levelIndex) ? [] : levelArray[levelIndex]}
         } 
         return []
@@ -75,29 +78,32 @@ const ResourceSkills = (props) =>{
             scrollToFirstError={true}
             size="small"
             layout="inline"
-            style={{padding: 50, paddingTop:20}}
+            style={{padding: 50, paddingTop:20, textAlign: 'center'}}
         >
             <Form.List name={'resource'}>
                 {(fields, { add, remove }) => (<>
-                    <Form.Item style={{marginLeft: "45%", marginBottom: 8}}>
+                    <Form.Item style={{margin: "0px 20px 10px auto", }}>
                         <Button size="small" onClick={() => add()}  > Add Skill </Button>
                     </Form.Item>
                     {fields.map((field, index) => (
-                        <span className="ant-row" key={field.key} style={{width: '100%'}}>
-                            <Col span={6}>
+                        <span className="ant-row" key={field.key} style={{width: '100%', marginBottom: 10}}>
+                            <Col span={11}>
                                 <Form.Item
                                     {...field}
                                     label="Skill"
                                     name={[field.name, 'standardSkillId']}
+                                    
                                 >
                                     <Select 
                                         style={{ width: '100%' }} 
                                         size="small"
                                         options={skillArray}
+                                        onChange={()=>setReload(!reload)}
+                                        disabled={field.name < props.data.length}
                                     />
                                 </Form.Item>
                             </Col>
-                            <Col span={6}>
+                            <Col span={11}>
                             <Form.Item
                                 {...field}
                                 label="Level"
@@ -106,15 +112,20 @@ const ResourceSkills = (props) =>{
                                 <Select 
                                     style={{ width: '100%' }} 
                                     size="small" 
+                                    disabled={field.name < props.data.length}
                                     options={dynamicLevelOptions(field.name)}
+
                                 />
                             </Form.Item>
                             </Col>
                             <Col span={'auto'} >
-                                <MinusCircleFilled style={{color:"red",margin: 'auto'}} onClick={() => remove(field.name)} />
+                                <MinusCircleFilled style={{color:`${field.name < props.data.length? "grey" :"red"}`,margin: 'auto'}} onClick={() => {if(field.name > props.data.length -1)remove(field.name)}} />
                             </Col>
                         </span>
                     ))}
+                     <Form.Item style={{marginTop: 8}}>
+                        <Button size="small" type="primary"> Add New Skill </Button>
+                    </Form.Item>
                 </>)}
             </Form.List>
         </Form>

@@ -126,7 +126,7 @@ const TimeSheetPDF = (props) => {
                             </Row>
                             <Table 
                                 rowClassName={(record) => (record.day==='Sunday' ||record.day==='Saturday')? 'weekendClass' :'weekClass'}
-                                className='cellSize'
+                                className='cellSize fs-small'
                                 rowKey={(data) => data.id}
                                 bordered 
                                 size="small"

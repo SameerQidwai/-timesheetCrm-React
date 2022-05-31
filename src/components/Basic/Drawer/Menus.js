@@ -111,7 +111,6 @@ class Menus extends Component {
     }
     componentDidMount = () =>{
         this.getAllowedMenu()
-        console.log('new name');
     }
 
     getAllowedMenu = () =>{

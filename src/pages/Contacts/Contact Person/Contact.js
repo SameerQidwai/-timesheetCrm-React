@@ -73,6 +73,7 @@ class Contact extends Component {
                         overlay={
                             <Menu key={index}>
                                 <Menu.Item 
+                                    key="delete"
                                     danger
                                     disabled={!this?.state?.permissions?.['DELETE']}
                                 >
@@ -86,6 +87,7 @@ class Contact extends Component {
                                     </Popconfirm>
                                 </Menu.Item>
                                 <Menu.Item
+                                    key="update"
                                     onClick={() => { this.setState({ openModal: true, editCP: record.id }); }}
                                     disabled={this.state&& !this.state.permissions['UPDATE']}
                                 >Edit</Menu.Item>

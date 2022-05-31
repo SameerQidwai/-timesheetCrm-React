@@ -96,6 +96,7 @@ class Travels extends Component {
                     columns={this.columns}
                     dataSource={flights}
                     size="small"
+                    className='fs-small'
                 />
             </>
         );

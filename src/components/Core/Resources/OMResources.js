@@ -281,6 +281,7 @@ class OMResources extends Component {
                     columns={milestoneColmuns}
                     dataSource={data}
                     size="small"
+                    className='fs-small'
                     expandable={{
                         rowExpandable: record => record?.opportunityResources?.length > 0,
                         expandedRowRender: record => {
@@ -324,6 +325,7 @@ function NestedTable({key, columns, data, expandable,checked}) {
             bordered
             // key={key}
             size="small"
+            className='fs-small'
             rowKey={(record) => record.id} 
             columns={columns} 
             dataSource={data} 

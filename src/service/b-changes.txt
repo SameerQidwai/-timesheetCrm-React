@@ -208,3 +208,6 @@ Not done task
 for later
     Contract Info contractor (slide: 59) [(???.)]  
         add column Contract Duration ( add in employee as well)
+
+
+https error 

@@ -169,6 +169,7 @@ class PMResources extends Component {
                     columns={milestoneColmuns}
                     dataSource={data}
                     size="small"
+                    className='fs-small'
                     expandable={{
                         rowExpandable: record => record?.opportunityResources?.length > 0,
                         expandedRowRender: record => {
@@ -194,6 +195,7 @@ function NestedTable({ columns, data }) {
         <Table
             bordered
             size="small"
+            className='fs-small'
             rowKey={(record) => record.allocationId} 
             columns={columns} 
             dataSource={data} 

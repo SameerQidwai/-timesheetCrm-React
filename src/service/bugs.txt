@@ -1,18 +1,28 @@
 New bug Found
     if permission changes or edit... what to do with the person if he is arleady Loggedin 
 
-
-    Need to create disable variable if any one of the multiselect already has certain action
-        for now disable if only one is not matched
-
     skill update in contact person is not wokring like changing the skill on same field or it's level
 
     Dates disable everywhere ref => to opportuity milestone start and end date (probably in resourcs of P and O )
         
     in fields 5px every modal
 
+    logon on login 
 
-     Suggestion:
+    unselect sideMenu on change link
+
+    change fincial year as per in global if included
+
+    change panelSkill Callback2 function as contactPerson/infoModal SkillCall function
+    change contactPerson/infoModal AssociateCall  function as contactPerson/infoModal SkillCall function
+    change admin/skill skillCall  function as contactPerson/infoModal SkillCall function
+
+    must do: 
+        multiple add in global variable
+        muliple add in addSkill from profile
+
+
+    Suggestion:
         do not save Leave_request where it is 0 and render into ui when you are getting dates back
 
         need to create only one or two resource component... generalize them for further use... 
