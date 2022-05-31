@@ -84,7 +84,8 @@ const BaseCalculator = (props) =>{
                     <Col span={16}  className="label my-10" >
                         {`Hourly Base Rate - (${formatCurrency(contract?.remunerationAmount)}/${contract?.workDaysPerAnum}/${contract?.dailyHours})`}
                     </Col>
-                    <Col span={8}  className="item my-10" >{formatCurrency(contract?.hourlyBaseRate)}</Col>
+                    <Col span={5}  className="item my-10" ><Typography.Text underline strong >Applicable</Typography.Text></Col>
+                    <Col span={3}  className="item my-10" >{formatCurrency(contract?.hourlyBaseRate)}</Col>
                     {variables.map((el, index)=>  <Col span={24} key={index}>
                         <Row>
                             <Col span={12} className="label">
