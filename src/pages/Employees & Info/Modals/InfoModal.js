@@ -571,6 +571,8 @@ class InfoModal extends Component {
                     key: "noOfDays",
                     size: "small",
                     type: "InputNumber",
+                    rangeMin: 1,
+                    rangeMax: 5,
                     // shape: " Hours",
                     // data: [
                     //     // { label: "Daily", value: 2 },
@@ -806,14 +808,11 @@ class InfoModal extends Component {
         const { sContact } = this.state
         data.contactPersonId = sContact
         // value.key = rows; // get new key
-        this.setState({ loading: true })
         addList(data).then(res=>{
-            console.log(res);
+            this.setState({ loading: false })
             if(res.success){
                 // this.uploadAttachments(res.billing, res.data)
                 callBack(res.data, false)
-            }else{
-                this.setState({ loading: false })
             }
         })
     };
@@ -838,13 +837,12 @@ class InfoModal extends Component {
     editRecord = (value) => {
         const { editEmp, callBack } = this.props;
 
-        this.setState({ loading: true })
+        
         editList(editEmp, value).then((res) => {
+            this.setState({ loading: false })
             if(res.success){
                 // this.uploadAttachments(res.billing, res.data)
                 callBack()
-            }else{
-                this.setState({ loading: false })
             }
         });
     };

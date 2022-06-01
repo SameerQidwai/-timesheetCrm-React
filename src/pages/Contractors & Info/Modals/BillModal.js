@@ -149,6 +149,8 @@ class BillModal extends Component {
                     key: "noOfDays",
                     size: "small",
                     type: "InputNumber",
+                    rangeMin: 1,
+                    rangeMax: 5,
                     // shape: " Hours",
                     // data: [
                     //     // { label: "Daily", value: 2 },
@@ -188,6 +190,7 @@ class BillModal extends Component {
 
     onFinish = (vake) => {
         // this will work after  getting the Object from level form
+        this.setState({loading: true})
         const { fileIds } = this.state
         const {editCntrct, editEmp} = this.props
         const { billing } = vake;
@@ -207,10 +210,10 @@ class BillModal extends Component {
     };
 
     addContract = (data) => {
-        this.setState({loading: true})
         console.log(data);
         const { callBack } = this.props;
         addList(data).then(res=>{
+            this.setState({loading: false})
             console.log(res);
             if(res.success){
                 callBack();
@@ -235,9 +238,9 @@ class BillModal extends Component {
     };
 
     editRecord = (data) => {
-        this.setState({loading: true})
         const { editCntrct, callBack } = this.props;
         editList(editCntrct, data).then((res) => {
+            this.setState({loading: false})
             if(res.success){
                 callBack()
             }
