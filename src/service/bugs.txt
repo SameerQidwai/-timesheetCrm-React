@@ -1,8 +1,6 @@
 New bug Found
     if permission changes or edit... what to do with the person if he is arleady Loggedin 
 
-    skill update in contact person is not wokring like changing the skill on same field or it's level
-
     Dates disable everywhere ref => to opportuity milestone start and end date (probably in resourcs of P and O )
         
     in fields 5px every modal
