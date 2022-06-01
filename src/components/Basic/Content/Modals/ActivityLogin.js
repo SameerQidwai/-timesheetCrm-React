@@ -32,14 +32,15 @@ function ActivityLogin(props) {
                 centered
                 visible={props.visible}
                 okText={"Login"}
-                onOk={()=>{form.submit()}}
-                // okButtonProps={{ htmlType: 'submit', form: 'my-form' }}
+                // onOk={()=>{form.submit()}}
+                okButtonProps={{ htmlType: 'submit', form: 'my-form' }}
                 cancelText={"Cancel"}
                 onCancel={()=> {setLogout(true) 
                     localStorage.clear()}}
             >
                 <Title level={4} style={{textAlign: 'center'}}>Login</Title>
                     <Form
+                        id={'my-form'}
                         form={form}
                         // {...{ wrapperCol: 24 }}
                         onFinish={loginFunc}
