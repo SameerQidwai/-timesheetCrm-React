@@ -4,7 +4,7 @@
 
 }
 
-@import url('../node_modules/@fontsource/poppins');
+@import url('../node_modules/@fontsource/poppins/index.css');
 /* @import url('./fonts/poppins/index.css'); */
 body {
   margin: 0;
