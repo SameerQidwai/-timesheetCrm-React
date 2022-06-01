@@ -81,12 +81,12 @@ function PrivateRoute (props) {
                     /> 
                 }
 
-                {loggedIn() ==='jwtExpired'&&
+                {/* {loggedIn() ==='jwtExpired'&& */} {/** if activity login do something fuzzy uncomment this */}
                     <ActivityLogin 
                         visible={loggedIn() ==='jwtExpired' || openLogin} 
                         close={()=>{closeLogin()}}
                     /> 
-                }
+                {/* } */}
             </Content>
         </div>
     );

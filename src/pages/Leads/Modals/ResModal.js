@@ -6,7 +6,7 @@ import FormItems from "../../../components/Core/Forms/FormItems";
 
 import { addLeadSkill, editLeadSkill, addLeadSkillResource, editLeadSkillResource, } from "../../../service/opportunities";
 import { getPanelSkills, getOrgPersons, } from "../../../service/constant-Apis";
-import { dateRangeAfter, dateRangeBefore } from "../../../service/constant";
+import { dateRange, dateRangeAfter, dateRangeBefore } from "../../../service/constant";
 
 const { TabPane } = Tabs;
 
@@ -217,6 +217,7 @@ class ResModal extends Component {
           rangeMin: (current)=>{
             const { obj } = this.formRef.current.getFieldValue();
             return dateRangeAfter(current, obj?.endDate, props.pDates)
+            // return dateRange(current, obj?.endDate, true, props.pDates)
           }
         },
         {
@@ -230,6 +231,7 @@ class ResModal extends Component {
           rangeMax: (current)=>{
             const { obj } = this.formRef.current.getFieldValue();
             return dateRangeBefore(current, obj?.startDate, props.pDates)
+            // return dateRange(current, obj?.startDate, false, props.pDates)
           }
         },
       ],

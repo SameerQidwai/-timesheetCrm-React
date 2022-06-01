@@ -1,6 +1,6 @@
 import moment from 'moment'
 import { message as messageAlert } from "antd";
-// export const Api = "http://localhost:3301/api/v1";
+export const Api = "http://localhost:3301/api/v1";
 
 // export const Api = "http://onelmcrm.gaamatech.com:8000/api/v1";
 // export const Api = "http://192.168.0.243:3000/api/v1"; // Shahzaib/   
@@ -8,7 +8,7 @@ import { message as messageAlert } from "antd";
 // export const Api = "https://6e21-115-186-75-92.ngrok.io/api/v1"; // Shahzaib/ tunnel   
 // export const Api = "http://192.168.0.218:3301/api/v1"; // Me
 
-export const Api = "http://54.91.49.138:8000/api/v1"; //Test 
+// export const Api = "http://54.91.49.138:8000/api/v1"; //Test 
 
 // export const Api = "http://192.168.0.110:3301/api/v1"; // TrunRajPal Home
 // export const Api = "http://192.168.0.244:3301/api/v1"; // TrunRajPal Office
@@ -113,19 +113,37 @@ export const apiErrorRes = (err, id, duration, style) =>{
   return { error: err.message, status, message, success };
 }
 
+export const dateRange = (current, selectedDate, isStartDate, pDates) =>{
+  if (current){
+    const startDate = pDates?.startDate ?? moment.subtract(10, 'years') 
+    const endDate =  pDates?.endDate ?? moment.add(10, 'years')
+
+    return (
+      (isStartDate && selectedDate) ? //checking if ut call from startDate 
+        (current >= selectedDate)   //disable after      
+      : //checking if it call from startDate
+        (current <= selectedDate) ) //disable Before  
+      || 
+                        // disable Before, // disable After
+    (!current.isBetween(moment(startDate), moment(endDate), 'day', '[]'))
+  }
+}
+
 export const dateRangeAfter = (current, eDate, pDates) =>{
   if (current){
-    const { startDate = undefined, endDate = undefined} = pDates
-            //disable after                           // disable Before                 // disable After
-    return  (eDate && current >= eDate) || (startDate && current <= moment(startDate)) || endDate && current >= (moment(endDate))
+    const startDate = pDates?.startDate ?? moment.subtract(10, 'years') 
+    const endDate =  pDates?.endDate ?? moment.add(10, 'years')
+            //disable after                                     // disable Before, // disable After
+    return  (eDate && current >= eDate) || (!current.isBetween(moment(startDate), moment(endDate), 'day', '[]'))
   }
 }
 
 export const dateRangeBefore = (current, sDate, pDates) =>{
   if (current){
-    const { startDate, endDate } = pDates
-          //disable Before                           // disable Before                  // disable After
-    return  (sDate && current <= sDate) || (startDate && current <= moment(startDate)) || (endDate && current >= moment(endDate))
+    const startDate = pDates?.startDate ?? moment.subtract(10, 'years') 
+    const endDate =  pDates?.endDate ?? moment.add(10, 'years')
+          //disable Before                                      // disable Before, // disable After
+    return  (sDate && current <= sDate) || (!current.isBetween(moment(startDate), moment(endDate), 'day', '[]'))
   }
 }
 

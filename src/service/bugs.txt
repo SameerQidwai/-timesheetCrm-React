@@ -1,7 +1,7 @@
 New bug Found
-    if permission changes or edit... what to do with the person if he is arleady Loggedin 
+    https error !important
 
-    skill update in contact person is not wokring like changing the skill on same field or it's level
+    if permission changes or edit... what to do with the person if he is arleady Loggedin 
 
     Dates disable everywhere ref => to opportuity milestone start and end date (probably in resourcs of P and O )
         
@@ -21,8 +21,10 @@ New bug Found
         multiple add in global variable
         muliple add in addSkill from profile
 
-
     Suggestion:
+
+        change dateRangeAfter and dateRangeBefore functions with dateRange every range checking
+
         do not save Leave_request where it is 0 and render into ui when you are getting dates back
 
         need to create only one or two resource component... generalize them for further use... 
