@@ -283,7 +283,8 @@ function GlobalVars(props) {
             }
           });
         Promise.all([upadteSettings(settings), upadteVariables({variables: variable})]).then(res=>{
-            form.setFieldsValue({settings: res[0].data})
+            
+            // form.setFieldsValue({settings: res[0].data})
         })
         .catch(err => console.log(err))
     }

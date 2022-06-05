@@ -41,12 +41,12 @@ const ResourceSkills = (props) =>{
         let resource = value?.resource ?? {}
           let addNewSkill = []
         Object.entries(resource).forEach(([key, value]) => {
-            if (value['id']){
+            if (!value['standardLevelId'] && value['id']){
                 addNewSkill.push(value['id'])
             }
           });
 
-        addNewSill(addNewSkill).then(res=>{
+        addNewSill({standardSkillStandardLevelIds: addNewSkill}).then(res=>{
             if(res.success){
                 setDisable(res.data.length)
                 setSaveDisabled(true)
