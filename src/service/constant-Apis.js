@@ -23,6 +23,25 @@ export const getStates = () => {
             };
         });
 };
+export const getleaveRequestTypes = () => {
+    return axios
+        .get(`${Api}/leave-request-types`,{headers:headers()})
+        .then((res) => {
+            const { success, data } = res.data;
+            let types = data.map((el) => {
+               return {value: el.id, label: el.label}
+            });
+            setToken(res.headers && res.headers.authorization)
+            if (success) return { success: success, data: sorting(types, 'label') };
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                success: false,
+                message: err.message,
+            };
+        });
+};
 
 export const getStandardLevels = () => {
     return axios

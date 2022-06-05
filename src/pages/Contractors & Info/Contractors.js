@@ -64,10 +64,10 @@ class Contractors extends Component {
                 key: "email",
             },
             {
-                title: "Action",
+                title: "...",
                 key: "action",
-                align: "right",
-                width: 115,
+                align: "center",
+                width: '1%',
                 render: (value, record, index) => (
                     <Dropdown
                         overlay={
@@ -115,7 +115,7 @@ class Contractors extends Component {
                         }
                     >
                         <Button size="small">
-                            <SettingOutlined /> Option <DownOutlined />
+                            <SettingOutlined />
                         </Button>
                     </Dropdown>
                 ),
@@ -438,10 +438,10 @@ class Contractors extends Component {
                     <Col>
                         <Title level={4}>Sub Contractors</Title>
                     </Col>
-                    <Col style={{ textAlign: "end" }} span={4}>
-                        <Row justify="space-between">
+                    <Col >
+                        <Row justify="space-between" gutter={17}>
                             <Col>
-                            <Button 
+                                <Button 
                                     type="default" 
                                     size="small"
                                     onClick={()=>this.setState({openSearch: true})}    
@@ -476,7 +476,7 @@ class Contractors extends Component {
                             columns={columns}
                             dataSource={filterData}
                             size="small"
-                            sticky
+                            // sticky
                             className='fs-small'
                             // summary={()=>tableSummaryFilter(searchedColumn, this.advancefilter)}
                         />

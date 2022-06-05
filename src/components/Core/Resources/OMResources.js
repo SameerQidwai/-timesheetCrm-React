@@ -48,10 +48,10 @@ const milestoneColmuns = [
         </Tag>
     },
     {
-        title: "Action",
+        title: "...",
         key: "action",
-        align: "right",
-        width: 115,
+        align: "center",
+        width: '1%',
         render: (value, record, index) => (
             <Dropdown
                 overlay={
@@ -86,7 +86,7 @@ const milestoneColmuns = [
                 }
             >
                 <Button size="small">
-                    <SettingOutlined /> Option <DownOutlined />
+                    <SettingOutlined />
                 </Button>
             </Dropdown>
         ),

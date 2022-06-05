@@ -7,6 +7,7 @@ import { addList, getRecord, editList } from "../../../service/contractors";
 import { getContactRecord } from "../../../service/conatct-person";
 import { getOrganizations, getOrgPersons, getRoles, getStates } from "../../../service/constant-Apis";
 import { addFiles } from "../../../service/Attachment-Apis";
+import { DURATION } from "../../../service/constant";
 
 const { TabPane } = Tabs;
 
@@ -533,12 +534,15 @@ class InfoModal extends Component {
         const getManagerUrl = `helpers/contact-persons?organizationId=1`
         Promise.all([ getStates(), getRoles(), edit ? this.getRecord(edit) : getOrganizations(), getOrgPersons(getManagerUrl)])
         .then(res => {
-            const { BasicFields, ManagerFields } = this.state
+            const { BasicFields, ManagerFields, BillingFields } = this.state
             BasicFields[15].data = res[0].data;
             BasicFields[17].data = res[1].data;
             ManagerFields[1].data = res[3].data;
+            BillingFields[5].Placeholder = edit &&`Total Fee ${DURATION[res[2].paymentBase]}`
                 this.setState({
                     BasicFields,
+                    ManagerFields,
+                    BillingFields,
                     sUsername: edit ? res[2].username: null,
                     ORGS: !edit ? res[2].data.filter((item) => item.value !== 1): [],
                 })
@@ -589,7 +593,7 @@ class InfoModal extends Component {
                     fileIds: billing.fileId,
                     fileList: billing.file
                 })
-                return {username: basic.username}
+                return {username: basic.username, paymentBase: billing.remunerationAmountPer}
             }
         })
     };

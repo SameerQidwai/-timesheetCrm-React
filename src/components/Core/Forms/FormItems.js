@@ -16,6 +16,26 @@ const normFile = (e) => {
     return e && e.fileList;
 };
 
+export const formatter = (value, shape)=>{
+    if (shape === "$"){
+        return `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+    }else if(shape === 'ABN'){ //17 136 900 313
+        return `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+    }else{
+        return shape ? `${value}${shape}` : `${value}`
+    }
+}
+
+export const parser = (value, shape) =>{
+    if(shape === "$"){
+        return value.replace(/\$\s?|(,*)/g, '')
+    }else if(shape === 'ABN'){
+        return value.replace(/\$\s?|(\s*)/g, '')
+    }else{
+        return shape ? value.replace(shape, "") : value
+    }
+}
+
 class FormItems extends Component {
     constructor(props) {
         super(props);
@@ -38,26 +58,6 @@ class FormItems extends Component {
         );
         return false;
     };
-
-    formatter = (value, shape)=>{
-        if (shape === "$"){
-            return `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-        }else if(shape === 'ABN'){ //17 136 900 313
-            return `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
-        }else{
-            return shape ? `${value}${shape}` : `${value}`
-        }
-    }
-
-    parser = (value, shape) =>{
-        if(shape === "$"){
-            return value.replace(/\$\s?|(,*)/g, '')
-        }else if(shape === 'ABN'){
-            return value.replace(/\$\s?|(\s*)/g, '')
-        }else{
-            return shape ? value.replace(shape, "") : value
-        }
-    }
 
 
     onFinish = (value) => {
@@ -154,8 +154,8 @@ class FormItems extends Component {
                         min={min}
                         max={max}
                         size={size}
-                        formatter={(value) => this.formatter(value, shape) }
-                        parser={(value) => this.parser(value, shape) }
+                        formatter={(value) => formatter(value, shape) }
+                        parser={(value) => parser(value, shape) }
                         style={style}
                         onBlur={onBlur}
                         onChange={onChange}

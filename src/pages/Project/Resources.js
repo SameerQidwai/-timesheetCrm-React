@@ -71,10 +71,10 @@ class Resources extends Component {
                 ...tableSorter('opportunityResourceAllocations.0.sellingRate', 'number'),
             },
             {
-                title: "Action",
+                title: "...",
                 key: "action",
-                align: "right",
-                width: 115,
+                align: "center",
+                width: '1%',
                 render: (value, record, index) => (
                     <Dropdown
                         overlay={
@@ -100,7 +100,7 @@ class Resources extends Component {
                         }
                     >
                         <Button size="small">
-                            <SettingOutlined /> Option <DownOutlined />
+                            <SettingOutlined />
                         </Button>
                     </Dropdown>
                 ),

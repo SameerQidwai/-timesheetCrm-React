@@ -1,0 +1,53 @@
+
+
+.buy-sell-calculator .bold{
+    font-weight: bold;
+}
+.buy-cost.calculator {
+    padding: 0px 10px;
+    border: 1px solid black;
+}
+.buy-cost.calculator .item{
+    text-align: end;
+    /* border: 1px solid black; */
+}
+.buy-cost.calculator .label{
+    /* text-align: end; */
+    /* border: 1px solid black; */
+}
+
+.buy-cost.calculator .total-cost{
+    background-color: #ffc000;
+}
+
+
+
+.sell-cost {
+    padding: 0px 10px;
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.my-10{
+    margin: 10px 0
+}
+.mb-10{
+    margin-bottom: 10px;
+}
+.my-20{
+    margin: 20px 0
+}
+.my-30{
+    margin: 30px 0
+}
+
+.mouse-pointer{
+    cursor: pointer ;
+}
+
+
+.mouse-pointer:hover{
+    background-color: #e3e2e0;
+}

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Row, Button, Space, Popconfirm, Divider, Form } from "antd";
 import { getSettings, upadteSettings } from "../../service/global-apis"
 import FormItems from "../../components/Core/Forms/FormItems";
+import { getleaveRequestTypes, getStates } from '../../service/constant-Apis';
 
 let states = ['ACT','NSW','VIC','QLD','SA','WA','NT','TSA']
 
@@ -148,8 +149,15 @@ function GlobalVars(props) {
     }
 
     useEffect(() => {
-        addStateFields()
+        // addStateFields()
+        fetchAll()
     }, [])
+
+    const fetchAll = ()=>{
+        Promise.all([getStates(), getleaveRequestTypes()]).then(res=>{
+            console.log(res[1]);
+        }).catch(err => console.log(err))
+    }
 
     const addStateFields = () =>{
         let newFields = []
