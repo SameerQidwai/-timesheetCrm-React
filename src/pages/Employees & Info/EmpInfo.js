@@ -158,7 +158,7 @@ class OrgInfo extends Component {
                     <Tabs
                         type="card"
                         style={{ marginTop: "50px" }}
-                        defaultActiveKey="cost-calculator"
+                        // defaultActiveKey="cost-calculator"
                     >
                         <TabPane tab="Project" key="project">
                         <Projects targetId={emp} customUrl={`helpers/work?type=P&employee=${emp}`} />
