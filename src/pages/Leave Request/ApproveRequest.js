@@ -85,10 +85,10 @@ class ApproveRequest extends Component {
                 ...tableSorter('totalHours', 'number'),
             },
             {
-                title: 'Action',
+                title: '...',
                 key: 'action',
-                align: 'right',
-                width: 110,
+                align: 'center',
+                width: '1%',
                 render: (record) => (
                     <Dropdown overlay={
                         <Menu>
@@ -108,7 +108,7 @@ class ApproveRequest extends Component {
                         </Menu>
                     }>
                         <Button size='small'>
-                            <SettingOutlined/> Option <DownOutlined/>
+                            <SettingOutlined/>
                         </Button>
                     </Dropdown>  
                 ),

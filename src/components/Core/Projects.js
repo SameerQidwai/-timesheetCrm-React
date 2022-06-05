@@ -16,6 +16,7 @@ class Projects extends Component {
                 title: 'Code',
                 dataIndex: 'id',
                 key: 'id',
+                wdith: 115,
                 render:(record) =>(
                     `00${record}`
                 ),
@@ -61,10 +62,10 @@ class Projects extends Component {
                 render: (record) =>(record &&  formatDate(record))
             },
             {
-                title: 'Action',
+                title: '...',
                 key: 'action',
-                align: 'right',
-                width: 115,
+                align: 'center',
+                width: '1%',
                 render: (record) => (
                     <Dropdown overlay={
                         <Menu>
@@ -78,7 +79,7 @@ class Projects extends Component {
                         </Menu>
                     }>
                         <Button size='small'>
-                            <SettingOutlined/> Option <DownOutlined/>
+                            <SettingOutlined/>
                         </Button>
                     </Dropdown>  
                 ),

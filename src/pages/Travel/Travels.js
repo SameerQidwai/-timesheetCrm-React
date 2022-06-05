@@ -56,10 +56,10 @@ class Travels extends Component {
                 key: "status",
             },
             {
-                title: "Action",
+                title: "...",
                 key: "action",
-                align: "right",
-                width: 115,
+                align: "center",
+                width: '1%',
                 render: (record) => (
                     <Dropdown
                         overlay={
@@ -98,7 +98,7 @@ class Travels extends Component {
                         }
                     >
                         <Button size="small">
-                            <SettingOutlined /> Option <DownOutlined />
+                            <SettingOutlined />
                         </Button>
                     </Dropdown>
                 ),

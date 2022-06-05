@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Col, Descriptions, InputNumber, Row, Typography } from "antd";
+import { Col, Dropdown, InputNumber, Menu, Row, Typography } from "antd";
 
-import { buyCost } from "../../service/Employees";
-import { formatCurrency, formatFloat, STATES } from "../../service/constant";
-import '../Styles/buycost.css'
+import { buyCost } from "../../../service/Employees";
 import moment from "moment";
 import 'moment-weekday-calc';
-import { formatter, parser } from "./Forms/FormItems";
+import { formatter, parser } from "../Forms/FormItems";
+import { formatCurrency, formatFloat, JOB_TYPE, STATES } from "../../../service/constant";
 
-const { Item } = Descriptions
+import '../../Styles/buycost.css'
 
-const BaseCalculator = (props) =>{
+
+const EmployeeCalculator = (props) =>{
     const [contract, setContract] = useState({})
     const [variables, setVariables] = useState([])
     const [holidays, setHolidays] = useState([])
@@ -18,7 +18,13 @@ const BaseCalculator = (props) =>{
     const [margin, setMargin] = useState([20, 25, 30, 40])
     const [adjustment, setAdjustment] = useState(0)
     useEffect(() => {
-      buyCost(props.empId).then(res=>{
+        let fiscalYear = {}
+        if (parseInt(moment().format('M'))  < 7){
+            fiscalYear = {start: moment().subtract(1, 'y').format('YYYY'), end: moment().format('YYYY')}
+        }else{
+            fiscalYear = {start:moment().format('YYYY'), end: moment().add(1, 'y').format('YYYY')}
+        }
+        buyCost(props.empId).then(res=>{
             if(res.success){
                 let {contract, golobalVariables, holidays} = res.data
                 let weekdays = []
@@ -26,25 +32,30 @@ const BaseCalculator = (props) =>{
                     weekdays.push(i+1);
                 }
                 let workdays = moment().isoWeekdayCalc({  
-                    rangeStart: `1 Jul ${moment().format('YYYY')}`,  
-                    rangeEnd: `31 Jun ${moment().add(1, 'y').format('YYYY')}`,  
+                    rangeStart: `1 July ${fiscalYear['start']}`,  
+                    rangeEnd: `30 June ${fiscalYear['end']}`,
                     weekdays: weekdays,  
                     exclusions: holidays,
                 }) 
                 contract.workDaysPerAnum = workdays
                 contract.dailyHours = contract?.noOfHours / contract?.noOfDays
-                contract.hourlyBaseRate = contract?.remunerationAmount / workdays / contract?.dailyHours
+                contract.hourlyBaseRate = (contract.type=== 1 ? 
+                    contract?.remunerationAmount : 
+                    (contract?.remunerationAmount / workdays / contract?.dailyHours)
+                )
+
                 let count = 0
                 golobalVariables = golobalVariables.map((el, index)=> {
                     if (index === 0){
                         el.amount = contract?.hourlyBaseRate * el.value/100
                     }else{
-                        el.amount = ((contract?.hourlyBaseRate + golobalVariables[0].value) * el.value )/100
+                        el.amount = ((contract?.hourlyBaseRate + golobalVariables[0].amount) * el.value )/100
                     }
+                    el.apply = 'Yes'
                     count += el.amount
                     return el
                 })
-                setVariableCount(count)
+                setVariableCount(count + contract.hourlyBaseRate)
                 setContract(contract)
                 setVariables(golobalVariables)
                 setHolidays(holidays)
@@ -57,35 +68,55 @@ const BaseCalculator = (props) =>{
 
     const onChangeAdjustment = (value) =>{
         setAdjustment(value)
-        setVariableCount(variableCount + (value??0))
     }
 
     const onChangeMargin = (value, index) =>{
         margin[index] = (value ?? 0)
         setMargin([...margin])
     }
-    
+
+    const onAplicable = (value, index) =>{
+        let changeVariables = variables 
+        changeVariables[index]['apply'] = value
+        let count = 0
+        changeVariables = changeVariables.map((el, index)=> {
+            if (index === 0){// if applicable              // caluclation                     
+                el.amount = el.apply === 'Yes' ? (contract?.hourlyBaseRate * el.value/100) : 0
+            }else{           // if applicable              // caluclation             
+                el.amount = el.apply === 'Yes' ? (((contract?.hourlyBaseRate + changeVariables[0].amount) * el.value )/100) : 0
+            }
+            count += el.amount
+            return el
+        })
+        setVariableCount(count + contract.hourlyBaseRate)
+        setVariables([...changeVariables])
+    }
+
     return ( 
         <Row className="buy-sell-calculator">
             <Col span={12} className="buy-cost calculator">
                 <Row> 
                     <Col span={24} className="mb-10">
                         <Typography.Title level={5}>Buy Rate Calculator - Employee</Typography.Title>
-                    </Col>
-                    <Col span={16} className="label">Annual Base Salary</Col>
+                    </Col>                 {/**for casual type emp we already set hourly base salary */}
+                    <Col span={16} className="label">{contract.type=== 1 ? 'Hourly Base Salary' :'Annual Base Salary'}</Col>
                     <Col span={8} className="item">{formatCurrency(contract?.remunerationAmount)}</Col>
                     <Col span={16}  className="label">Daily Hours</Col>
                     <Col span={8}  className="item">{formatFloat(contract?.dailyHours)}</Col>
-                    <Col span={16}  className="label">{`Weekly Hours - (${contract?.dailyHours} * ${contract?.noOfDays} days)`}</Col>
+                    <Col span={16}  className="label">{`Weekly Hours - (${formatFloat(contract?.dailyHours)} * ${contract?.noOfDays} days)`}</Col>
                     <Col span={8}  className="item">{contract?.noOfHours}</Col>
                     {/* we are saving noOfHOurs in week in our databse so no need to show here */}
                     <Col span={16}  className="label">Billable Days per annum</Col>
                     <Col span={8}  className="item">{contract?.workDaysPerAnum}</Col>
-                    <Col span={16}  className="label my-10" >
-                        {`Hourly Base Rate - (${formatCurrency(contract?.remunerationAmount)}/${contract?.workDaysPerAnum}/${contract?.dailyHours})`}
-                    </Col>
-                    <Col span={5}  className="item my-10" ><Typography.Text underline strong >Applicable</Typography.Text></Col>
-                    <Col span={3}  className="item my-10" >{formatCurrency(contract?.hourlyBaseRate)}</Col>
+                    {/**for casual type emp we already set hourly base salary */}
+                    <Col span={16}  className="label my-10" >{
+                    contract.type=== 1 ?
+                        'Hourly Base Rate' :
+                        `Hourly Base Rate - (${formatCurrency(contract?.remunerationAmount)}/${contract?.workDaysPerAnum}/${contract?.dailyHours})`
+                    }</Col>
+                    <Col span={8}  className="item my-10" >{formatCurrency(contract?.hourlyBaseRate)}</Col>
+                    <Col span={5} offset={16} className="item"><Typography.Text underline strong >Applicable</Typography.Text></Col>
+
                     {variables.map((el, index)=>  <Col span={24} key={index}>
                         <Row>
                             <Col span={12} className="label">
@@ -94,8 +125,28 @@ const BaseCalculator = (props) =>{
                                 :
                                     el.name}
                             </Col>
-                            <Col span={6} className="item">{`${el.value}%`}</Col>
-                            <Col span={6} className="item">{ formatCurrency(el.amount) }</Col>
+                            <Col span={4} className="item">{`${el.value}%`}</Col>
+                            <Col span={4} className="item">
+                                <Dropdown
+                                    trigger={['click']}
+                                    overlay={
+                                        <Menu
+                                            style={{backgroundColor: '#f6f4f1'}}
+                                            onClick={(event)=>{onAplicable(event?.key,index)}}
+                                        >
+                                            <Menu.Item key={'Yes'}>
+                                                Yes
+                                            </Menu.Item>
+                                            <Menu.Item key={'No'}>
+                                                No
+                                            </Menu.Item>
+                                        </Menu>
+                                    }
+                                >
+                                    <span className="mouse-pointer">{el.apply}</span>
+                                </Dropdown>
+                            </Col>
+                            <Col span={4} className="item">{ formatCurrency(el.amount) }</Col>
                         </Row>
                     </Col>)}
                     <Col span={16} className="label my-30">Adjustment</Col>
@@ -107,11 +158,11 @@ const BaseCalculator = (props) =>{
                         />
                     </Col>
                     <Col span={16} className="label bold my-20"> Employee Hourly Buy Rate</Col>
-                    <Col span={8} className="item bold my-20"> {formatCurrency(variableCount)}</Col>
+                    <Col span={8} className="item bold my-20"> {formatCurrency(variableCount + adjustment)}</Col>
                     <Col span={12} className="label">Daily Billable Hours</Col>
                     <Col span={6}  className="item bold"> {formatFloat(contract?.dailyHours)}</Col>
                     <Col span={16} className="label bold"> Employee Daily Buy Rate</Col>
-                    <Col span={8} className="item bold"> {formatCurrency(contract?.dailyHours * variableCount)}</Col>
+                    <Col span={8} className="item bold total-cost"> {formatCurrency(contract?.dailyHours * (variableCount + adjustment))}</Col>
                 </Row>
             </Col>
             <Col span={12} className="sell-cost">
@@ -133,7 +184,7 @@ const BaseCalculator = (props) =>{
                 <Row align="bottom"> 
                     <Col span={8} className="label bold">Employee Daily Sell Rate</Col>
                     {margin.map((el,index)=> <Col span={4} className="bold" key={index}>
-                        {formatCurrency((contract?.dailyHours * variableCount)/(1- (el/100)))}
+                        {formatCurrency((contract?.dailyHours * (variableCount + adjustment))/(1- (el/100)))}
                     </Col>)}
                 </Row>
             </Col>
@@ -153,4 +204,4 @@ function Inputnumber({value, shape, onChange, min, max}) {
 />
 }
 
-export default BaseCalculator
+export default EmployeeCalculator

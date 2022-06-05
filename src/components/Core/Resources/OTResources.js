@@ -47,10 +47,10 @@ const positionColumns = (milestoneId) => [
     },
    
     {
-        title: "Action",
+        title: "...",
         key: "action",
-        align: "right",
-        width: 115,
+        align: "center",
+        width: '1%',
         render: (text, record, index) => (
             <Dropdown
                 overlay={
@@ -69,7 +69,7 @@ const positionColumns = (milestoneId) => [
                 }
             >
                 <Button size="small">
-                    <SettingOutlined /> Option <DownOutlined />
+                    <SettingOutlined />
                 </Button>
             </Dropdown>
         ),

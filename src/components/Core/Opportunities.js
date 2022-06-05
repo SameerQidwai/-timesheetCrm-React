@@ -6,7 +6,7 @@ import moment from 'moment'
 import { formatDate, formatCurrency, localStore } from '../../service/constant';
 import { entityProjects } from "../../service/constant-Apis";
 
-class Skills extends Component {
+class Opportunities extends Component {
     constructor (){
         super()
         this.columns = [
@@ -14,6 +14,7 @@ class Skills extends Component {
                 title: 'Code',
                 dataIndex: 'id',
                 key: 'id',
+                wdith: 115,
                 render:(record) =>(
                     `00${record}`
                 ),
@@ -72,10 +73,10 @@ class Skills extends Component {
                 render: (record) =>(record )
             },
             {
-                title: 'Action',
+                title: '...',
                 key: 'action',
-                align: 'right',
-                width: 115,
+                align: 'center',
+                width: '1%',
                 render: (record) => (
                     <Dropdown overlay={
                         <Menu>
@@ -89,7 +90,7 @@ class Skills extends Component {
                         </Menu>
                     }>
                         <Button size='small'>
-                            <SettingOutlined/> Option <DownOutlined/>
+                            <SettingOutlined/>
                         </Button>
                     </Dropdown>  
                 ),
@@ -138,4 +139,4 @@ class Skills extends Component {
     }
 }
 
-export default Skills
+export default Opportunities

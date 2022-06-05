@@ -205,9 +205,11 @@ function GlobalVars(props) {
             if(res[2].success){
                 form.setFieldsValue({settings: res[2].data, ...res[3].data});
             }
+            let workCover = {value: 'workCover', label:'WorkCover'}
+            let publicHoildays = {value: 'publicHoildays', label:'Public Hoildays'}
             let states = res[0].success ? res[0].data : []
             let leavetypes = res[1].success ? res[1].data : []
-            addStateFields([...states, ...leavetypes]) 
+            addStateFields([...states, workCover, ...leavetypes, publicHoildays]) 
         })
         .catch(err => console.log(err))
     }
@@ -273,9 +275,11 @@ function GlobalVars(props) {
         const settings = childData.settings
         delete childData.settings
         let variable = {}
+        // let variable = []
         Object.entries(childData).map( ([key, val]) => {
             if (val.value){
                 variable = {...val, name: key}
+                // variable.push({...val, name: key})
             }
           });
         Promise.all([upadteSettings(settings), upadteVariables(variable)]).then(res=>{
