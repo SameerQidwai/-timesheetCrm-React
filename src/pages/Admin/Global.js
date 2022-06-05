@@ -274,15 +274,15 @@ function GlobalVars(props) {
         delete childData['undefined']
         const settings = childData.settings
         delete childData.settings
-        let variable = {}
-        // let variable = []
+        // let variable = {}
+        let variable = []
         Object.entries(childData).map( ([key, val]) => {
             if (val.value){
-                variable = {...val, name: key}
-                // variable.push({...val, name: key})
+                // variable = {...val, name: key}
+                variable.push({...val, name: key})
             }
           });
-        Promise.all([upadteSettings(settings), upadteVariables(variable)]).then(res=>{
+        Promise.all([upadteSettings(settings), upadteVariables({variables: variable})]).then(res=>{
             form.setFieldsValue({settings: res[0].data})
         })
         .catch(err => console.log(err))
