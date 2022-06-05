@@ -10,41 +10,6 @@ const ResourceSkills = (props) =>{
     const [levelArray, setLevelArray] = useState({})
     const [reload, setReload] = useState({})
 
-    const [fields, setFields] = useState([
-        {
-            object: "skill",
-            fieldCol: 11,
-            layout: { wrapperCol: { span: 23 } },
-            key: 'skill',
-            size: "small",
-            type: "Select",
-            labelAlign: "left",
-            onChange: (e, value) => {
-            //    const { SkillFields } = this.state
-            //     SkillFields.fields.map(el=>{
-            //         if (el.key ===splice_key[1]){
-            //             el.data = value? value.levels: []
-            //             return el
-            //        }else{
-            //            return el
-            //        }
-            //    })
-            //    this.setState({SkillFields})
-            },
-        },
-        {
-            object: "skill",
-            fieldCol: 11,
-            layout: { wrapperCol: { span: 20 } },
-            key: 'level',
-            size: "small",
-            // rules:[{ required: true }],
-            type: "Select",
-            labelAlign: "left",
-            itemStyle: { marginBottom: "5px" },
-        },
-    ])
-
     useEffect(() => {
         console.log(props.data);
         getStandardLevels().then(res=>{
@@ -61,14 +26,38 @@ const ResourceSkills = (props) =>{
     },[])
 
     const dynamicLevelOptions = (name) =>{
-        console.log(isNaN(name), name)
         if(!isNaN(name)){{
             const {resource} = form.getFieldsValue()
             const levelIndex = resource?.[name]?.['standardSkillId']
-            console.log(levelArray[levelIndex]);
             return isNaN(levelIndex) ? [] : levelArray[levelIndex]}
         } 
         return []
+    }
+
+    const onFinish=(value) =>{
+        let resource = value?.resource ?? {}
+        // let oldSkill = []
+        // Object.entries(resource).forEach(([key, value]) => {
+        //     if (value['standardLevelId'] && value['id']){
+        //         oldSkill.push(value['id'])
+        //     }
+        // });
+        
+        let addNewSkill = []
+        Object.entries(resource).forEach(([key, value]) => {
+            if (!value['standardLevelId'] && value['id']){
+                addNewSkill.push(value['id'])
+            }
+          });
+        //   let compelete = []
+        // Object.entries(resource).forEach(([key, value]) => {
+        //     if (value['id']){
+        //         compelete.push(value['id'])
+        //     }
+        //   });
+        //   console.log('these are old skills that are already were added', oldSkill,);
+          console.log('these are new skills added', addNewSkill,);
+        //   console.log('this is whole array', compelete);
     }
 
     return (
@@ -79,6 +68,7 @@ const ResourceSkills = (props) =>{
             size="small"
             layout="inline"
             style={{padding: 50, paddingTop:20, textAlign: 'center'}}
+            onFinish={onFinish}
         >
             <Form.List name={'resource'}>
                 {(fields, { add, remove }) => (<>
@@ -124,7 +114,7 @@ const ResourceSkills = (props) =>{
                         </span>
                     ))}
                      <Form.Item style={{marginTop: 8}}>
-                        <Button size="small" type="primary"> Add New Skill </Button>
+                        <Button size="small" type="primary" htmlType="submit"> Add New Skill </Button>
                     </Form.Item>
                 </>)}
             </Form.List>
