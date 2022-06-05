@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Col, Form, Row, Select, Space } from 'antd';
-import { MinusCircleFilled } from "@ant-design/icons"; //Icons
+import { MinusCircleFilled, PlusSquareFilled } from "@ant-design/icons"; //Icons
 import { getStandardLevels } from '../../service/constant-Apis';
+import { addNewSill } from '../../service/Login-Apis';
 
 
 const ResourceSkills = (props) =>{
@@ -9,9 +10,10 @@ const ResourceSkills = (props) =>{
     const [skillArray, setSkillArray] = useState([])
     const [levelArray, setLevelArray] = useState({})
     const [reload, setReload] = useState({})
+    const [disable, setDisable] =useState(0)
+    const [saveDisabled, setSaveDisabled] =useState(true)
 
     useEffect(() => {
-        console.log(props.data);
         getStandardLevels().then(res=>{
             if(res.success){
                 setSkillArray(res.data)
@@ -20,6 +22,7 @@ const ResourceSkills = (props) =>{
                     levels[el.value] = el?.levels
                 })
                 setLevelArray(levels)
+                setDisable(props.data.length)
                 form.setFieldsValue({resource: props.data})
             }
         })
@@ -36,28 +39,19 @@ const ResourceSkills = (props) =>{
 
     const onFinish=(value) =>{
         let resource = value?.resource ?? {}
-        // let oldSkill = []
-        // Object.entries(resource).forEach(([key, value]) => {
-        //     if (value['standardLevelId'] && value['id']){
-        //         oldSkill.push(value['id'])
-        //     }
-        // });
-        
-        let addNewSkill = []
+          let addNewSkill = []
         Object.entries(resource).forEach(([key, value]) => {
-            if (!value['standardLevelId'] && value['id']){
+            if (value['id']){
                 addNewSkill.push(value['id'])
             }
           });
-        //   let compelete = []
-        // Object.entries(resource).forEach(([key, value]) => {
-        //     if (value['id']){
-        //         compelete.push(value['id'])
-        //     }
-        //   });
-        //   console.log('these are old skills that are already were added', oldSkill,);
-          console.log('these are new skills added', addNewSkill,);
-        //   console.log('this is whole array', compelete);
+
+        addNewSill(addNewSkill).then(res=>{
+            if(res.success){
+                setDisable(res.data.length)
+                setSaveDisabled(true)
+            }
+        })
     }
 
     return (
@@ -67,13 +61,14 @@ const ResourceSkills = (props) =>{
             scrollToFirstError={true}
             size="small"
             layout="inline"
+            onFieldsChange={()=> setSaveDisabled(false)}
             style={{padding: 50, paddingTop:20, textAlign: 'center'}}
             onFinish={onFinish}
         >
             <Form.List name={'resource'}>
                 {(fields, { add, remove }) => (<>
                     <Form.Item style={{margin: "0px 20px 10px auto", }}>
-                        <Button size="small" onClick={() => add()}  > Add Skill </Button>
+                        <Button size="small" onClick={() => add()} type='primary' > <PlusSquareFilled /> Insert Skill</Button>
                     </Form.Item>
                     {fields.map((field, index) => (
                         <span className="ant-row" key={field.key} style={{width: '100%', marginBottom: 10}}>
@@ -89,7 +84,7 @@ const ResourceSkills = (props) =>{
                                         size="small"
                                         options={skillArray}
                                         onChange={()=>setReload(!reload)}
-                                        disabled={field.name < props.data.length}
+                                        disabled={field.name < disable}
                                     />
                                 </Form.Item>
                             </Col>
@@ -102,19 +97,31 @@ const ResourceSkills = (props) =>{
                                 <Select 
                                     style={{ width: '100%' }} 
                                     size="small" 
-                                    disabled={field.name < props.data.length}
+                                    disabled={field.name < disable}
                                     options={dynamicLevelOptions(field.name)}
 
                                 />
                             </Form.Item>
                             </Col>
                             <Col span={'auto'} >
-                                <MinusCircleFilled style={{color:`${field.name < props.data.length? "grey" :"red"}`,margin: 'auto'}} onClick={() => {if(field.name > props.data.length -1)remove(field.name)}} />
+                                <MinusCircleFilled 
+                                    style={{color:`${field.name < disable? "grey" :"red"}`,margin: 'auto'}} 
+                                    onClick={() => {
+                                        if(field.name > disable -1){
+                                            remove(field.name)
+                                        }
+                                    }} 
+                                />
                             </Col>
                         </span>
                     ))}
                      <Form.Item style={{marginTop: 8}}>
-                        <Button size="small" type="primary" htmlType="submit"> Add New Skill </Button>
+                        <Button 
+                            size="small" 
+                            type="primary" 
+                            htmlType="submit"
+                            disabled={saveDisabled}
+                        > Save  </Button>
                     </Form.Item>
                 </>)}
             </Form.List>
