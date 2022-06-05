@@ -52,11 +52,11 @@ class NovatedLease extends Component {
                 ...tableSorter('endDate', 'date'),
             },
             {
-                title: "Action",
+                title: "...",
                 key: "id",
                 dataIndex: "id",
-                align: "right",
-                width: 115,
+                align: "center",
+                width: '1%',
                 render: (value, record, index) => (
                     <Dropdown
                         overlay={
@@ -80,7 +80,7 @@ class NovatedLease extends Component {
                         }
                     >
                         <Button size="small">
-                            <SettingOutlined /> Option <DownOutlined />
+                            <SettingOutlined />
                         </Button>
                     </Dropdown>
                 ),

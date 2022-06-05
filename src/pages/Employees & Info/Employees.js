@@ -23,6 +23,7 @@ class Employees extends Component {
                 title: "Code",
                 dataIndex: ["contactPersonOrganization", "contactPersonId"],
                 key: "contactPersonId",
+                wdith: 115,
                 render: (record) => {
                     return `Emp-00${ record }`
                 },
@@ -51,10 +52,10 @@ class Employees extends Component {
                 key: "email",
             },
             {
-                title: "Action",
+                title: "...",
                 key: "action",
-                align: "right",
-                width: 115,
+                align: "center",
+                width: '1%',
                 render: (value, record, index) => (
                     <Dropdown
                         overlay={
@@ -112,7 +113,7 @@ class Employees extends Component {
                         }
                     >
                         <Button size="small">
-                            <SettingOutlined /> Option <DownOutlined />
+                            <SettingOutlined />
                         </Button>
                     </Dropdown>
                 ),
@@ -410,8 +411,8 @@ class Employees extends Component {
                     <Col>
                         <Title level={4}>Employees</Title>
                     </Col>
-                    <Col style={{ textAlign: "end" }} span={4}>
-                        <Row justify="space-between">
+                    <Col >
+                        <Row justify="space-between" gutter={17}>
                             <Col>
                                 <Button 
                                     type="default" 
@@ -448,7 +449,7 @@ class Employees extends Component {
                             columns={columns}
                             dataSource={filterData}
                             size="small"
-                            sticky
+                            // sticky
                             className='fs-small'
                             // summary={()=>tableSummaryFilter(searchedColumn, this.advancefilter)}
                         />

@@ -64,10 +64,10 @@ class Contact extends Component {
                 // ...tableFilter('firstName', 'startsWith')
             },
             {
-                title: "Action",
-                key: "action",
-                align: "right",
-                width: 115,
+                title: '...',
+                key: 'action',
+                align: 'center',
+                width: '1%',
                 render: (value, record, index) => (
                     <Dropdown
                         overlay={
@@ -95,7 +95,7 @@ class Contact extends Component {
                         }
                     >
                         <Button size="small">
-                            <SettingOutlined /> Option <DownOutlined />
+                            <SettingOutlined />
                         </Button>
                     </Dropdown>
                 ),
@@ -454,7 +454,7 @@ class Contact extends Component {
                             columns={columns}
                             dataSource={filterData}
                             size="small"
-                            sticky
+                            // sticky
                             // summary={()=>tableSummaryFilter(searchedColumn, this.advancefilter)}
                         />
                     </Col>

@@ -51,7 +51,7 @@ const Profile = ()=>{
             <TabPane tab="Other Details" key="others"> {details && <OtherDetails  data={details}/>} </TabPane>
             <TabPane tab="Security Clearance" key="security"> {details && <SecurityClearance  data={clearance}/>} </TabPane>
             <TabPane tab="Password" key="password "> <PasswordUpdate/> </TabPane>
-            {/* <TabPane tab="Skills" key="skills"> <ResourceSkills  data={resourceSkill} /> </TabPane> */}
+            <TabPane tab="Skills" key="skills"> <ResourceSkills  data={resourceSkill} /> </TabPane>
             <TabPane tab="Attachments" key="attachments"> <Attachments targetType="emp" targetId={localStore().id}  /> </TabPane>
         </Tabs>
     )

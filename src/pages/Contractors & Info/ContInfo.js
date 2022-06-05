@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Row, Col, Menu, Tabs, Button, Dropdown, Descriptions, } from "antd";
+import { Row, Col, Menu, Tabs, Button, Dropdown, Descriptions, Popconfirm, } from "antd";
 import { SettingOutlined, DownOutlined } from "@ant-design/icons"; //Icons
 import { Link } from "react-router-dom"; 
 
@@ -7,7 +7,8 @@ import Comments from "../../components/Core/Comments";
 import Projects from "../../components/Core/Projects";
 // import Travels from "../../components/Core/Travels";
 import Attachments from "../../components/Core/Attachments";
-import Bank from "../../components/Core/Bank";
+import ContractorCalculator from "../../components/Core/Cost Calculator/ContractorCalculator"
+// import Bank from "../../components/Core/Bank";
 
 import InfoModal from "./Modals/InfoModal";
 
@@ -15,6 +16,7 @@ import { getRecord, delList } from "../../service/contractors";
 import { GENDER, localStore } from "../../service/constant";
 import  moment from "moment";
 import AuthError from "../../components/Core/AuthError";
+import { generalDelete } from "../../service/delete-Api's";
 
 const { Item } = Descriptions;
 const { TabPane } = Tabs;
@@ -43,7 +45,8 @@ class ContInfo extends Component {
                 this.setState({
                     data: res.basic,
                     editCont: id,
-                    permissions: USERS
+                    permissions: USERS,
+                    infoModal: false
                 })
             }else if(res.authError){
                 this.setState({ notAuth: true })
@@ -56,11 +59,13 @@ class ContInfo extends Component {
     };
 
     handleDelete = (id) => {
-        delList(id).then((res) => {
-            if (res.success) {
-                this.props.history.push('/sub-contractors')
+        const url = '/sub-contractors'
+        const { history } = this.props
+        generalDelete(history, url, id).then(res =>{
+            if (res.success){
+                //wil not work
             }
-        });
+        })
     };
 
     callBack = () => {
@@ -78,21 +83,28 @@ class ContInfo extends Component {
                     <Dropdown
                         overlay={
                             <Menu>
-                                {/* <Menu.Item danger>
+                                <Menu.Item 
+                                    key="delete"
+                                    danger
+                                    disabled={!permissions?.['DELETE']}
+                                >
                                     <Popconfirm
-                                        title="Are you sure you want to delete"
-                                        onConfirm={() => this.handleDelete(emp) }
+                                        title="Are you sure you want to delete" 
+                                        onConfirm={() => this.handleDelete(editCont)} 
                                     >
                                         Delete
                                     </Popconfirm>
-                                </Menu.Item> */}
+                                </Menu.Item >
                                 <Menu.Item 
+                                    key="edit"
                                     onClick={() => { this.setState({ infoModal: true }); }} 
-                                    disabled={permissions['UPDATE']}
+                                    disabled={!permissions?.['UPDATE']}
                                 >
                                     Edit
                                 </Menu.Item>
-                                <Menu.Item>
+                                <Menu.Item 
+                                    key='contract'
+                                >
                                     <Link
                                         to={{
                                             pathname: `/sub-contractors/${editCont}/contracts`,
@@ -150,6 +162,9 @@ class ContInfo extends Component {
                         </TabPane>
                         <TabPane  tab="Attachments" key="attachments">
                             <Attachments targetType="CON" targetId={editCont}/>
+                        </TabPane>
+                        <TabPane tab="Cost Calculator" key="cost-calculator">
+                            <ContractorCalculator conId={editCont}/>
                         </TabPane>
                     </Tabs>
                 )}

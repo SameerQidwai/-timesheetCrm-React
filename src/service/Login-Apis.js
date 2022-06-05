@@ -177,6 +177,25 @@ export const upadteSettings = (data) => {
             };
         });
 };
+export const addNewSill = (data) => {
+    return axios
+        .post(`${url}/addSkill`, data, {headers:headers()})
+        .then((res) => {
+            const { success, data, message } = res.data;
+            jwtExpired(message)
+            messageAlert.success({ content: message, key: 'logout'})
+            if (success) setToken(res.headers && res.headers.authorization)
+            return {success, data};
+        })
+        .catch((err) => {
+                messageAlert.error({ content: err.message, key: 'logout'})
+            return {
+                error: "Please login again!",
+                status: false,
+                message: err.message,
+            };
+        });
+};
 
 export const upadteAddress = (data) => {
     return axios

@@ -58,10 +58,10 @@ const resourceColumn = (milestoneId) => [
         ...tableSorter('sellingRate', 'number'),
     },
     {
-        title: "Action",
+        title: "...",
         key: "action",
         align: "right",
-        width: 115,
+        width: '1%',
         render: (value, record, index) => (
             <Dropdown
                 overlay={
@@ -80,7 +80,7 @@ const resourceColumn = (milestoneId) => [
                 }
             >
                 <Button size="small">
-                    <SettingOutlined /> Option <DownOutlined />
+                    <SettingOutlined />
                 </Button>
             </Dropdown>
         ),

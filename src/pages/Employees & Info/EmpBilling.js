@@ -25,6 +25,7 @@ class EmpBilling extends Component {
                 title: "Code",
                 dataIndex: "id",
                 key: "id",
+                wdith: 115,
                 render: (record) => `00${record}`,
                 ...tableSorter('id', 'number', true),
             },
@@ -62,10 +63,10 @@ class EmpBilling extends Component {
             //     render: (record)=> DURATION[record]
             // },
             {
-                title: "Action",
+                title: "...",
                 key: "action",
-                align: "right",
-                width: 115,
+                align: "center",
+                width: '1%',
                 render: (text, record, index) => (
                     <Dropdown
                         overlay={
@@ -93,7 +94,7 @@ class EmpBilling extends Component {
                         }
                     >
                         <Button size="small">
-                            <SettingOutlined /> Option <DownOutlined />
+                            <SettingOutlined />
                         </Button>
                     </Dropdown>
                 ),

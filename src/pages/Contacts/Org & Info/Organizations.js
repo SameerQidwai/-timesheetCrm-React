@@ -59,10 +59,10 @@ class Organizations extends Component {
                 ...tableSorter('parentOrganization.name', 'string'),
             },
             {
-                title: "Action",
+                title: "...",
                 key: "action",
-                align: "right",
-                width: 100,
+                align: "center",
+                width: '1%',
                 render: (value, record, index) => ( 
                     <Dropdown
                         overlay={
@@ -92,7 +92,7 @@ class Organizations extends Component {
                         }
                     >
                         <Button size="small">
-                            <SettingOutlined /> Option <DownOutlined />
+                            <SettingOutlined />
                         </Button>
                     </Dropdown>
                 ),

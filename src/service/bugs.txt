@@ -33,11 +33,14 @@ New bug Found
 
 Tagrget
     Expense
+    global vairbale anything can be null
+    global variable updating array
+    global varaibale index
     
+    cost-calcuator
+        relation between variable and values
 
-New Things
-    Resource Allocation
-        Suggestion of buycost and sale cost
+    post Gloal APi post action
 
 
 shortcut 

@@ -53,10 +53,10 @@ class PurchaseOrder extends Component {
                 sorter: (a, b) => a.expense - b.expense,
             },
             {
-                title: "Action",
+                title: "...",
                 key: "action",
-                align: "right",
-                width: 115,
+                align: "center",
+                width: '1%',
                 render: (value, record, index) => (
                     <Dropdown
                         overlay={
@@ -84,7 +84,7 @@ class PurchaseOrder extends Component {
                         }
                     >
                         <Button size="small">
-                            <SettingOutlined /> Option <DownOutlined />
+                            <SettingOutlined />
                         </Button>
                     </Dropdown>
                 ),

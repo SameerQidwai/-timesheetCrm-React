@@ -15,8 +15,10 @@ import { getRecord, delList } from "../../service/Employees";
 
 import moment from "moment"
 import LeaveBalance from "../../components/Core/LeaveBalance";
-import { GENDER } from "../../service/constant";
+import { GENDER, JOB_TYPE, localStore } from "../../service/constant";
 import AuthError from "../../components/Core/AuthError";
+import EmployeeCalculator from "../../components/Core/Cost Calculator/EmployeeCalculator";
+import { generalDelete } from "../../service/delete-Api's";
 
 const { Item } = Descriptions;
 const { TabPane } = Tabs;
@@ -29,6 +31,8 @@ class OrgInfo extends Component {
             emp: false,
             data: { },
             bank: {}, 
+            contract:{},
+            permissions: {},
             notAuth: false
         };
     }
@@ -38,11 +42,14 @@ class OrgInfo extends Component {
     }
 
     getRecord = (id) =>{
+        const { USERS }= JSON.parse(localStore().permissions)
         getRecord(id).then(res=>{
             if(res.success){
                 this.setState({
                     data: res.basic,
+                    contract: res.billing,
                     bank: res.bank,
+                    permissions: USERS,
                     emp: id,
                     infoModal: false
                 })
@@ -57,11 +64,13 @@ class OrgInfo extends Component {
     };
 
     handleDelete = (id) => {
-        delList(id).then((res) => {
-            if (res.success) {
-                this.props.history.push('/Employees')
+        const url = '/employees'
+        const { history } = this.props
+        generalDelete(history, url, id).then(res =>{
+            if (res.success){
+               // will not run
             }
-        });
+        })
     };
 
     callBack = () => {
@@ -70,7 +79,7 @@ class OrgInfo extends Component {
     };
 
     render() {
-        const { data, infoModal, emp, bank, notAuth } = this.state;
+        const { data, infoModal, emp, bank, notAuth, contract, permissions } = this.state;
         const DescTitle = (
             <Row justify="space-between">
                 <Col>Basic Information</Col>
@@ -78,16 +87,21 @@ class OrgInfo extends Component {
                     <Dropdown
                         overlay={
                             <Menu>
-                                {/* <Menu.Item danger>
+                                <Menu.Item 
+                                    key= "delete" 
+                                    danger
+                                    disabled={!permissions?.['DELETE']}
+                                >
                                     <Popconfirm
-                                        title="Are you sure you want to delete"
-                                        onConfirm={() => this.handleDelete(emp) }
+                                        title="Are you sure you want to delete" 
+                                        onConfirm={() => this.handleDelete(emp)} 
                                     >
                                         Delete
                                     </Popconfirm>
-                                </Menu.Item> */}
+                                </Menu.Item >
                                 <Menu.Item
                                     key= "edit" 
+                                    disabled={!permissions?.['UPDATE']}
                                     onClick={() => { this.setState({ infoModal: true, }); }} 
                                 >
                                     Edit
@@ -138,12 +152,13 @@ class OrgInfo extends Component {
                     <Item label="Address">{data.address}</Item>
                     <Item label="Date Of Birth">{data.dateOfBirth ? moment(data.dateOfBirth).format('DD MM YYYY'): null}</Item>
                     <Item label="Gender">{GENDER[data.gender]}</Item>
+                    <Item label="Employment Status">{JOB_TYPE[contract?.type]}</Item>
                 </Descriptions>
                {emp &&( 
                     <Tabs
                         type="card"
                         style={{ marginTop: "50px" }}
-                        // defaultActiveKey="5"
+                        // defaultActiveKey="cost-calculator"
                     >
                         <TabPane tab="Project" key="project">
                         <Projects targetId={emp} customUrl={`helpers/work?type=P&employee=${emp}`} />
@@ -162,6 +177,9 @@ class OrgInfo extends Component {
                         </TabPane>
                         <TabPane tab="Leave Balance" key="leaveBalance">
                             <LeaveBalance empId={emp} editable={true}/>
+                        </TabPane>
+                        <TabPane tab="Cost Calculator" key="cost-calculator">
+                            <EmployeeCalculator empId={emp} />
                         </TabPane>
                     </Tabs>
                 )}

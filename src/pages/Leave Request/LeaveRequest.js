@@ -95,9 +95,10 @@ class LeaveRequest extends Component {
                 }
             },
             {
-                title: 'Action',
+                title: '...',
                 key: 'action',
-                align: 'right',
+                align: 'center',
+                width: '1%',
                 render: (value, record, index) => (
                     <Dropdown overlay={
                         <Menu>
@@ -131,7 +132,7 @@ class LeaveRequest extends Component {
                         </Menu>
                     }> 
                         <Button size='small'>
-                            <SettingOutlined/> Option <DownOutlined/>
+                            <SettingOutlined/>
                         </Button>
                     </Dropdown>  
                 ),
@@ -216,7 +217,7 @@ class LeaveRequest extends Component {
                     </Col>
                     <Col span={24}>
                         <Table
-                            sticky
+                            // sticky
                             bordered
                             style={{maxHeight: '40vh', overflowY: 'scroll'}}
                             pagination={{pageSize: localStore().pageSize}}

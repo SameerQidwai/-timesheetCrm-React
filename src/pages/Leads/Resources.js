@@ -58,10 +58,10 @@ class Resources extends Component {
             },
            
             {
-                title: "Action",
+                title: "...",
                 key: "action",
-                align: "right",
-                width: 115,
+                align: "center",
+                width: '1%',
                 render: (text, record, index) => (
                     <Dropdown
                         overlay={
@@ -97,7 +97,7 @@ class Resources extends Component {
                         }
                     >
                         <Button size="small">
-                            <SettingOutlined /> Option <DownOutlined />
+                            <SettingOutlined />
                         </Button>
                     </Dropdown>
                 ),
@@ -523,10 +523,10 @@ function NestedTable(props) {
         { title: 'Sale Cost (hourly)', dataIndex: 'sellingRate', key: 'sellingRate', render: (record)=> `${formatCurrency(record)}`},
         // { title: 'Billable Hours', dataIndex: 'hours', key: 'hours' },
         {
-            title: "Action",
+            title: "...",
             key: "action",
-            align: "right",
-            width: 115,
+            align: "center",
+            width: '1%',
             render: (text, record, index) => (
                 <Dropdown
                     overlay={
@@ -555,7 +555,7 @@ function NestedTable(props) {
                     }
                 >
                     <Button size="small">
-                        <SettingOutlined /> Option <DownOutlined />
+                        <SettingOutlined />
                     </Button>
                 </Dropdown>
             ),

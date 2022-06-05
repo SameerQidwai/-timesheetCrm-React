@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { Row, Button, Space, Popconfirm, Divider, Form } from "antd";
-import { getSettings, upadteSettings } from "../../service/global-apis"
+import { getSettings, getVariables, upadteSettings, upadteVariables } from "../../service/global-apis"
 import FormItems from "../../components/Core/Forms/FormItems";
-
-let states = ['ACT','NSW','VIC','QLD','SA','WA','NT','TSA']
+import { getleaveRequestTypes, getStates } from '../../service/constant-Apis';
+import { STATES } from '../../service/constant';
 
 function GlobalVars(props) {
     const [form] = Form.useForm();
@@ -46,25 +46,25 @@ function GlobalVars(props) {
         itemStyle:{textAlign: 'center'}, 
     },
     {
-        object: "gst",
+        object: "GST",
         fieldCol: 3,
-        key: "rate",
+        key: "value",
         size: "small",
         shape: '%',
         type: "InputNumber",
     },
     {
-        object: "gst",
+        object: "GST",
         fieldCol: 5,
-        key: "date",
+        key: "startDate",
         size: "small",
         shape: '%',
         type: "DatePicker",
     },
     {
-        object: "gst",
-        fieldCol: 4,
-        key: "finish",
+        object: "GST",
+        fieldCol: 5,
+        key: "endDate",
         size: "small",
         shape: '%',
         type: "DatePicker",
@@ -83,25 +83,25 @@ function GlobalVars(props) {
         itemStyle:{textAlign: 'center'}, 
     },
     {
-        object: "superannuation",
+        object: "Superannuation",
         fieldCol: 3,
-        key: "rate",
+        key: "value",
         size: "small",
         shape: '%',
         type: "InputNumber",
     },
     {
-        object: "superannuation",
+        object: "Superannuation",
         fieldCol: 5,
-        key: "date",
+        key: "startDate",
         size: "small",
         shape: '%',
         type: "DatePicker",
     },
     {
-        object: "superannuation",
-        fieldCol: 4,
-        key: "finish",
+        object: "Superannuation",
+        fieldCol: 5,
+        key: "endDate",
         size: "small",
         shape: '%',
         type: "DatePicker",
@@ -131,7 +131,7 @@ function GlobalVars(props) {
             labelAlign: "right",
         },
         {
-            object: "global",
+            object: "settings",
             fieldCol: 20,
             key: "recordsPerPage",
             size: "small",
@@ -151,7 +151,7 @@ function GlobalVars(props) {
             labelAlign: "left",
         },
         {
-            object: "global",
+            object: "settings",
             fieldCol: 20,
             key: "displayEmail",
             Placeholder: "Display Name In Email",
@@ -172,7 +172,7 @@ function GlobalVars(props) {
             labelAlign: "left",
         },
         {
-            object: "global",
+            object: "settings",
             fieldCol: 20,
             key: "fromEmail",
             Placeholder: "From Email Address",
@@ -195,21 +195,36 @@ function GlobalVars(props) {
     ]
 
     useEffect(() => {
-        getApi()
-        addStateFields() 
+        // getApi()
+        fetchAll()
+        // addStateFields() 
     }, [])
+
+    const fetchAll = ()=>{
+        Promise.all([getStates(), getleaveRequestTypes(), getSettings(), getVariables()]).then(res=>{
+            if(res[2].success){
+                form.setFieldsValue({settings: res[2].data, ...res[3].data});
+            }
+            let workCover = {value: 'workCover', label:'WorkCover'}
+            let publicHoildays = {value: 'publicHoildays', label:'Public Hoildays'}
+            let states = res[0].success ? res[0].data : []
+            let leavetypes = res[1].success ? res[1].data : []
+            addStateFields([...states, workCover, ...leavetypes, publicHoildays]) 
+        })
+        .catch(err => console.log(err))
+    }
 
     const stateFileds = (key) =>{
         return [{
             fieldCol: 4,
-            Placeholder: key,
+            Placeholder: STATES[key]?? key,
             type: "Text",
             itemStyle:{textAlign: 'right', paddingRight: '15%', marginBottom: 10}, 
         },
         {
             object: key,
             fieldCol: 3,
-            key: "rate",
+            key: "value",
             size: "small",
             shape: '%',
             type: "InputNumber",
@@ -217,7 +232,7 @@ function GlobalVars(props) {
         {
             object: key,
             fieldCol: 5,
-            key: "date",
+            key: "startDate",
             size: "small",
             shape: '%',
             type: "DatePicker",
@@ -225,28 +240,20 @@ function GlobalVars(props) {
         {
             object: key,
             fieldCol: 10,
-            key: "finish",
+            key: "endDate",
             size: "small",
             shape: '%',
             type: "DatePicker",
         },]
     }
 
-    const getApi = () =>{
-        getSettings().then(res=>{
-            if(res.success){
-                form.setFieldsValue({global: res.data});
-            }
-        })
-    }
-
-    const addStateFields = () =>{
+    const addStateFields = (lables) =>{
         let newFields = []
-        for (const state of states) {
-            newFields.push(...stateFileds(state))
+        for (const {label} of lables) {
+            newFields.push(...stateFileds(label))
         }
 
-        if (states.length>0){
+        if (lables.length>0){
             setRateFields(prevFields => {
                 return [
                     ...prevFields,
@@ -265,12 +272,21 @@ function GlobalVars(props) {
 
     const onFinish = (childData) =>{
         delete childData['undefined']
-        const value = childData.global
-        upadteSettings(value).then(res=>{
-            if(res.success){
-                // localStorage.setItem('pageSize', res.data.recordsPerPage)
+        const settings = childData.settings
+        delete childData.settings
+        // let variable = {}
+        let variable = []
+        Object.entries(childData).map( ([key, val]) => {
+            if (val.value){
+                // variable = {...val, name: key}
+                variable.push({...val, name: key})
             }
+          });
+        Promise.all([upadteSettings(settings), upadteVariables({variables: variable})]).then(res=>{
+            
+            // form.setFieldsValue({settings: res[0].data})
         })
+        .catch(err => console.log(err))
     }
 
     return (
@@ -284,7 +300,7 @@ function GlobalVars(props) {
             layout="inline"
             style={{padding: '20px 50px 20px 50px'}}
         >
-            {/* <FormItems FormFields={rateFields} />  */}
+            <FormItems FormFields={rateFields} /> 
             {/* Globa; Rate and Variables commented */}
             <FormItems FormFields={otherFields} />
         </Form>
