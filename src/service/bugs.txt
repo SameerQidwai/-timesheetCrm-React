@@ -1,4 +1,7 @@
 New bug Found
+
+    add link in resources
+
     https error !important
 
     if permission changes or edit... what to do with the person if he is arleady Loggedin 
