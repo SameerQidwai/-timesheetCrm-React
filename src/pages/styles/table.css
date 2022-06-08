@@ -17,7 +17,9 @@
     font-weight: 600 !important; 
     font-size: small !important;
 }
-
+.full-width{
+    width: 100% !important;
+}
 
 /* .ant-table-wrapper.TimeSheetTable {
     height: 75vh;

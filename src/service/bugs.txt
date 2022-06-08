@@ -1,12 +1,14 @@
 New bug Found
 
+    Expected CM in cost Calculator
+
+    Panel not editable
+
     add link in resources
 
     https error !important
 
     if permission changes or edit... what to do with the person if he is arleady Loggedin 
-
-    Dates disable everywhere ref => to opportuity milestone start and end date (probably in resourcs of P and O )
         
     in fields 5px every modal
 
@@ -26,6 +28,8 @@ New bug Found
 
     Suggestion:
 
+        standard skill name in dialof box opportuninty
+
         change dateRangeAfter and dateRangeBefore functions with dateRange every range checking
 
         do not save Leave_request where it is 0 and render into ui when you are getting dates back
@@ -36,15 +40,6 @@ New bug Found
 
 Tagrget
     Expense
-    global vairbale anything can be null
-    global variable updating array
-    global varaibale index
-    
-    cost-calcuator
-        relation between variable and values
-
-    post Gloal APi post action
-
 
 shortcut 
     class component

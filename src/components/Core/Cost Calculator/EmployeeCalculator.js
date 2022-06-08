@@ -5,7 +5,7 @@ import { buyCost } from "../../../service/Employees";
 import moment from "moment";
 import 'moment-weekday-calc';
 import { formatter, parser } from "../Forms/FormItems";
-import { formatCurrency, formatFloat, JOB_TYPE, STATES } from "../../../service/constant";
+import { formatCurrency, formatFloat, getFiscalYear, JOB_TYPE, STATES } from "../../../service/constant";
 
 import '../../Styles/buycost.css'
 
@@ -18,12 +18,8 @@ const EmployeeCalculator = (props) =>{
     const [margin, setMargin] = useState([20, 25, 30, 40])
     const [adjustment, setAdjustment] = useState(0)
     useEffect(() => {
-        let fiscalYear = {}
-        if (parseInt(moment().format('M'))  < 7){
-            fiscalYear = {start: moment().subtract(1, 'y').format('YYYY'), end: moment().format('YYYY')}
-        }else{
-            fiscalYear = {start:moment().format('YYYY'), end: moment().add(1, 'y').format('YYYY')}
-        }
+        let fiscalYear = getFiscalYear('years')
+        
         buyCost(props.empId).then(res=>{
             if(res.success){
                 let {contract, golobalVariables, holidays} = res.data
