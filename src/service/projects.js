@@ -62,7 +62,7 @@ export const getRecord = (id) => {
                     // value: data.value? data.value: 0,
                     title: data.title,
                     stateId: data.stateId,
-                    linkedWorkId: data.linkedWorkId
+                    linkedWorkId: data.linkedWorkId,
                 }
                 const tender = {
                     tender: data.tender,

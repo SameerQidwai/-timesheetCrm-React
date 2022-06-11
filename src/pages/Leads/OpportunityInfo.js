@@ -161,7 +161,7 @@ class OpportunityInfo extends Component {
                                 <Menu.Item>
                                     <Link
                                         to={{
-                                            pathname: `/opportunities/${leadId}/milestones/${basic.mileId}/resources`
+                                            pathname: `/opportunities/${leadId}/milestones/${data?.milestones?.[0]?.id}/resources`
                                         }}
                                         className="nav-link"
                                     >

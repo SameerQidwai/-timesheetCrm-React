@@ -18,6 +18,7 @@ import { formatDate, formatCurrency, localStore, O_STATUS } from "../../service/
 import AuthError from "../../components/Core/AuthError";
 import PMResources from "../../components/Core/Resources/PMResources";
 import PTResources from "../../components/Core/Resources/PTResources";
+import { generalDelete } from "../../service/delete-Api's";
 
 const { Item } = Descriptions;
 const { TabPane } = Tabs;
@@ -65,11 +66,13 @@ class ProjectInfo extends Component {
     };
 
     handleDelete = (id) => {
-        delList(id).then((res) => {
-            if (res.success) {
-                this.props.history.push('/Employees')
+        const url = '/projects'
+        const { history } = this.props
+        generalDelete(history, url, id).then(res =>{
+            if (res.success){
+               // will not run
             }
-        });
+        })
     };
 
     callBack = () => {
@@ -87,34 +90,56 @@ class ProjectInfo extends Component {
                     <Dropdown
                         overlay={
                             <Menu>
-                                <Menu.Item 
+                                <Menu.Item  
+                                    key={'delete'}
+                                    danger
+                                    disabled={!permissions?.['DELETE']}
+                                >
+                                    <Popconfirm
+                                        title="Are you sure you want to delete" 
+                                        onConfirm={() => this.handleDelete(leadId)} 
+                                    >
+                                        Delete
+                                    </Popconfirm>
+                                </Menu.Item >
+                                <Menu.Item  
+                                    key={'edit'}
                                     onClick={() => { 
                                         this.setState({ infoModal: true});
                                     }}
-                                    disabled={!permissions['UPDATE']}
-                                    > Edit </Menu.Item>
+                                    disabled={!permissions?.['UPDATE']}
+                                > 
+                                    Edit 
+                                </Menu.Item>
+                                <Menu.Item  
+                                    key={'order'}>
+                                    <Link to={{ pathname: `/projects/${leadId}/purchase-order`}} className="nav-link">
+                                        Purchase Order
+                                    </Link>
+                                </Menu.Item >
                                 {(basic && basic.type) === 1 ?  //if condition
-                                <Menu.Item> 
-                                    <Link
-                                        to={{ pathname: `/projects/${leadId}/milestones`, }}
-                                        className="nav-link"
-                                    >
-                                        Milestones
-                                    </Link>
-                                </Menu.Item>
-                                 : //else condition
-                                <Menu.Item>
-                                    <Link
-                                        to={{
-                                            pathname: `/projects/${leadId}/milestones/${leadId}/resources`,
-                                            // pathname: `/projects/${record.id}/resources`,
-                                        }}
-                                        className="nav-link"
-                                    >
-                                        Postions
-                                    </Link>
-                                </Menu.Item>
-                            }
+                                    <Menu.Item 
+                                        key={'milestone'}> 
+                                        <Link
+                                            to={{ pathname: `/projects/${leadId}/milestones`, }}
+                                            className="nav-link"
+                                        >
+                                            Milestones
+                                        </Link>
+                                    </Menu.Item>
+                                    : //else condition
+                                    <Menu.Item 
+                                        key={'position'}>
+                                        <Link
+                                            to={{
+                                                pathname: `/projects/${leadId}/milestones/${data?.milestones?.[0]?.id}/resources`,
+                                            }}
+                                            className="nav-link"
+                                        >
+                                            Postions
+                                        </Link>
+                                    </Menu.Item>
+                                }
                             </Menu>
                         }
                     >
