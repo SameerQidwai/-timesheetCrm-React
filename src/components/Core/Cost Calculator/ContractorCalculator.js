@@ -135,8 +135,8 @@ const ContractorCalculator = (props) =>{
                     </Col>
                     <Col span={16} className="label bold my-20"> Contractor Hourly Buy Rate</Col>
                     <Col span={8} className="item bold my-20"> {formatCurrency(variableCount + adjustment)}</Col>
-                    <Col span={12} className="label">Daily Billable Hours</Col>
-                    <Col span={6}  className="item bold"> 
+                    <Col span={12} className="label mb-10">Daily Billable Hours</Col>
+                    <Col span={6}  className="item bold mb-10"> 
                         <Inputnumber
                             value={expectedDailyHours}
                             shape="$"
@@ -144,7 +144,7 @@ const ContractorCalculator = (props) =>{
                         />
                     </Col>
                     <Col span={16} className="label bold"> Contractor Daily Buy Rate</Col>
-                    <Col span={8} className="item bold total-cost"> {formatCurrency(expectedDailyHours * (variableCount + adjustment))}</Col>
+                    <Col span={8} className="item bold total-cost pr-5"> {formatCurrency(expectedDailyHours * (variableCount + adjustment))}</Col>
                 </Row>
             </Col>
             <Col span={12} className="sell-cost">

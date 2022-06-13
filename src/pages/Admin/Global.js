@@ -206,10 +206,10 @@ function GlobalVars(props) {
                 form.setFieldsValue({settings: res[2].data, ...res[3].data});
             }
             let workCover = {value: 'workCover', label:'WorkCover'}
-            let publicHoildays = {value: 'publicHoildays', label:'Public Hoildays'}
+            let publicHolidays = {value: 'publicHoildays', label:'Public Holidays'}
             let states = res[0].success ? res[0].data : []
             let leavetypes = res[1].success ? res[1].data : []
-            addStateFields([...states, workCover, ...leavetypes, publicHoildays]) 
+            addStateFields([...states, workCover, ...leavetypes, publicHolidays]) 
         })
         .catch(err => console.log(err))
     }

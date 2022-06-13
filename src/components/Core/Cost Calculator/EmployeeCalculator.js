@@ -41,26 +41,26 @@ const EmployeeCalculator = (props) =>{
                 /**will remove isoWeekdayCalc later  and put constant workDaysPerAnum*/
 
                 contract.workDaysPerAnum = workdays
-                contract.dailyHours = contract?.noOfHours / contract?.noOfDays
-                contract.hourlyBaseRate = (contract.type=== 1 ? 
-                    contract?.remunerationAmount : 
-                    (contract?.remunerationAmount / 52 / contract?.noOfHours)
-                ) /** hourlyBaseRate expression Annual hours / 52 * weekly hours  */
+                // contract.dailyHours = contract?.noOfHours / contract?.noOfDays
+                // contract.hourlyBaseRate = (contract.type=== 1 ? 
+                //     contract?.remunerationAmount : 
+                //     (contract?.remunerationAmount / 52 / contract?.noOfHours)
+                // ) /** hourlyBaseRate expression Annual hours / 52 * weekly hours  */
                     /** 52 is a number of weeks in a year, noOfHours are weekly our  */
                 let count = 0
-                // golobalVariables = golobalVariables.map((el, index)=> {
-                //     if (index === 0){
-                //         el.amount = contract?.hourlyBaseRate * el?.value/100
-                //     }else{
-                //         el.amount = ((contract?.hourlyBaseRate + golobalVariables?.[0].amount) * el.value )/100
-                //     }
-                //     el.apply = 'Yes'
-                //     count += el.amount
-                //     return el
-                // })
+                golobalVariables = golobalVariables.map((el, index)=> {
+                    if (index === 0){
+                        el.amount = contract?.hourlyBaseRate * el?.value/100
+                    }else{
+                        el.amount = ((contract?.hourlyBaseRate + golobalVariables?.[0].amount) * el.value )/100
+                    }
+                    el.apply = 'Yes'
+                    count += el.amount
+                    return el
+                })
                 setVariableCount(count + contract.hourlyBaseRate)
                 setContract(contract)
-                setVariables([])
+                setVariables(golobalVariables)
                 setHolidays(holidays)
             }
       })

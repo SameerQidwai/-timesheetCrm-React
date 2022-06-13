@@ -6,6 +6,7 @@ import FormItems from "../../../components/Core/Forms/FormItems";
 
 import { addList, getRecord, editList, workWon } from "../../../service/opportunities";
 import { getOrganizations, getStates, getOrgPersons, getPanels, getProjects } from "../../../service/constant-Apis";
+import { dateWithoutUtc } from "../../../service/constant";
 
 const { TabPane } = Tabs;
 
@@ -658,8 +659,9 @@ class InfoModal extends Component {
     onFinish = (vake) => { 
         // this will work after  got  Object from the skill from
         this.setState({ loading: true })
-        const { basic, tender, dates, billing, manage } = vake
+        let { basic, tender, dates, billing, manage } = vake
         const { editLead } = this.props
+
         const form_value = {
             panelId: basic.panelId ?? null,
             organizationId: basic.organizationId ?? null,
@@ -684,9 +686,11 @@ class InfoModal extends Component {
             opportunityManagerId: manage.opportunityManagerId ?? null,
             projectManagerId: manage.projectManagerId ?? null,
 
-            ...dates
+            startDate: dateWithoutUtc(dates.startDate),
+            endDate: dateWithoutUtc(dates.endDate),
+            bidDate: dateWithoutUtc(dates.bidDate),
+            entryDate: dateWithoutUtc(dates.entryDate),
         }
-        console.log({startDate: moment(dates.startDate).format('MMMM Do YYYY, h:mm:ss A z'), endDate: moment(dates.endDate).format('MMMM Do YYYY, h:mm:ss A z')})
         if (!editLead) {
                 
             this.addOpportunity(form_value); //add skill
@@ -721,7 +725,6 @@ class InfoModal extends Component {
             if (res.success){
                 const { basic, tender, billing, dates, manage } = res
                 this.formRef.current.setFieldsValue({ basic: basic, tender: tender, billing: billing, dates: dates, manage: manage });
-                console.log({startDate: moment(dates.startDate).format('MMMM Do YYYY, h:mm:ss A z'), endDate: moment(dates.endDate).format('MMMM Do YYYY, h:mm:ss A z')})
                 const customUrl = `helpers/contact-persons?organizationId=${basic.organizationId}&associated=1` 
                 return getOrgPersons(customUrl).then(resp=>{
                     return {success: resp.success, data: resp.data}
