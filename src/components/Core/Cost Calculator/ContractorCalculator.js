@@ -16,6 +16,7 @@ const ContractorCalculator = (props) =>{
     const [variableCount, setVariableCount] = useState(0)
     const [margin, setMargin] = useState([20, 25, 30, 40])
     const [adjustment, setAdjustment] = useState(0)
+    const [expectedDailyHours, setExpectedDailyHours ] = useState(8.00)
     useEffect(() => {
       buyCost(props.conId).then(res=>{
             if(res.success){
@@ -85,7 +86,7 @@ const ContractorCalculator = (props) =>{
             <Col span={12} className="buy-cost calculator">
                 <Row> 
                     <Col span={24} className="mb-10">
-                        <Typography.Title level={5}>Buy Rate Calculator - Contract</Typography.Title>
+                        <Typography.Title level={5}>Buy Rate Calculator - Contractor</Typography.Title>
                     </Col>
                     <Col span={16} className="label">Daily Hours</Col>
                     <Col span={8} className="item">{formatFloat(contract?.dailyHours)}</Col>
@@ -135,9 +136,15 @@ const ContractorCalculator = (props) =>{
                     <Col span={16} className="label bold my-20"> Contractor Hourly Buy Rate</Col>
                     <Col span={8} className="item bold my-20"> {formatCurrency(variableCount + adjustment)}</Col>
                     <Col span={12} className="label">Daily Billable Hours</Col>
-                    <Col span={6}  className="item bold"> {formatFloat(contract?.dailyHours)}</Col>
+                    <Col span={6}  className="item bold"> 
+                        <Inputnumber
+                            value={expectedDailyHours}
+                            shape="$"
+                            onChange={(value)=>{setExpectedDailyHours(value??0)}}
+                        />
+                    </Col>
                     <Col span={16} className="label bold"> Contractor Daily Buy Rate</Col>
-                    <Col span={8} className="item bold total-cost"> {formatCurrency(contract?.dailyHours * (variableCount + adjustment))}</Col>
+                    <Col span={8} className="item bold total-cost"> {formatCurrency(expectedDailyHours * (variableCount + adjustment))}</Col>
                 </Row>
             </Col>
             <Col span={12} className="sell-cost">
@@ -159,7 +166,7 @@ const ContractorCalculator = (props) =>{
                 <Row align="bottom"> 
                     <Col span={8} className="label bold">Contractor Daily Sell Rate</Col>
                     {margin.map((el,index)=> <Col span={4} className="bold" key={index}>
-                        {formatCurrency((contract?.dailyHours * (variableCount + adjustment))/(1- (el/100)))}
+                        {formatCurrency((expectedDailyHours * (variableCount + adjustment))/(1- (el/100)))}
                     </Col>)}
                 </Row>
             </Col>

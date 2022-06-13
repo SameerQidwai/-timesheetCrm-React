@@ -602,6 +602,7 @@ class InfoModal extends Component {
         };
     }
     componentDidMount = () =>{
+        // const date = moment().format('MMMM Do YYYY, h:mm:ss A z')
         this.fetchAll()
     }
 
@@ -685,7 +686,7 @@ class InfoModal extends Component {
 
             ...dates
         }
-
+        console.log({startDate: moment(dates.startDate).format('MMMM Do YYYY, h:mm:ss A z'), endDate: moment(dates.endDate).format('MMMM Do YYYY, h:mm:ss A z')})
         if (!editLead) {
                 
             this.addOpportunity(form_value); //add skill
@@ -720,7 +721,7 @@ class InfoModal extends Component {
             if (res.success){
                 const { basic, tender, billing, dates, manage } = res
                 this.formRef.current.setFieldsValue({ basic: basic, tender: tender, billing: billing, dates: dates, manage: manage });
-
+                console.log({startDate: moment(dates.startDate).format('MMMM Do YYYY, h:mm:ss A z'), endDate: moment(dates.endDate).format('MMMM Do YYYY, h:mm:ss A z')})
                 const customUrl = `helpers/contact-persons?organizationId=${basic.organizationId}&associated=1` 
                 return getOrgPersons(customUrl).then(resp=>{
                     return {success: resp.success, data: resp.data}

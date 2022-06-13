@@ -106,7 +106,8 @@ class Opportunities extends Component {
                 render: (value, record, index) => (
                     <Dropdown overlay={
                         <Menu>
-                            <Menu.Item 
+                            <Menu.Item
+                                key="delete"
                                 danger
                                 disabled={!this?.state?.permissions?.['DELETE']}
                             >
@@ -118,6 +119,7 @@ class Opportunities extends Component {
                                 </Popconfirm>
                             </Menu.Item >
                             <Menu.Item 
+                                key="edit"
                                 onClick={()=>this.setState({
                                     openModal: true,
                                     editLead: record.id
@@ -125,7 +127,7 @@ class Opportunities extends Component {
                                 disabled={this.state&& !this.state.permissions['UPDATE']}
                             >Edit</Menu.Item>
                             {record.type === 1 ?  //if condition
-                                <Menu.Item> 
+                                <Menu.Item key="milestone"> 
                                     <Link
                                         to={{ pathname: `/opportunities/${record.id}/milestones`, }}
                                         className="nav-link"
@@ -134,7 +136,9 @@ class Opportunities extends Component {
                                     </Link>
                                 </Menu.Item>
                                  : //else condition
-                                <Menu.Item>
+                                <Menu.Item
+                                    key="position"
+                                >
                                     <Link
                                         to={{
                                             // pathname: `/opportunities/${record.id}/milestones/${record.id}/resources`,
@@ -146,7 +150,9 @@ class Opportunities extends Component {
                                     </Link>
                                 </Menu.Item>
                             }
-                            <Menu.Item >
+                            <Menu.Item 
+                                key="view"
+                            >
                                 <Link to={{ pathname: `/opportunities/${record.id}/info`}} className="nav-link">
                                     View
                                 </Link>
