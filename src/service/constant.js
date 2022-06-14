@@ -50,7 +50,7 @@ export const formatDate = (date, format) =>{
 }
 
 export const dateWithoutUtc = (date) =>{
-  return date && moment(date).utcOffset(0, true).format()
+  return date && moment(date).startOf('day').utcOffset(0, true).format()
 }
 
 export const formatFloat = (number) =>{
