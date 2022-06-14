@@ -5,7 +5,7 @@ export const Api = "http://localhost:3301/api/v1";
 // export const Api = "http://onelmcrm.gaamatech.com:8000/api/v1";
 // export const Api = "http://192.168.0.243:3000/api/v1"; // Shahzaib/   
 // export const Api = "http://192.168.43.207:3000/api/v1"; // new Shahzaib/   
-// export const Api = "https://6e21-115-186-75-92.ngrok.io/api/v1"; // Shahzaib/ tunnel   
+// export const Api = "https://2c13-111-88-189-227.ngrok.io/api/v1"; // Shahzaib/ tunnel   
 // export const Api = "http://192.168.0.218:3301/api/v1"; // Me
 
 // export const Api = "http://54.91.49.138:8000/api/v1"; //Test 
@@ -46,11 +46,20 @@ export const formatCurrency = (amount) => {
 
 
 export const formatDate = (date, format) =>{
-  return date && moment(date).format(format ??'ddd DD MMM yyyy')
+  // return date && moment(date).format(format ??'ddd DD MMM yyyy')
+  return date && moment.utc(date).format(format ??'ddd DD MMM yyyy')
 }
 
-export const dateWithoutUtc = (date) =>{
-  return date && moment(date).startOf('day').utcOffset(0, true).format()
+export const dateWithoutUtc = (date, format) =>{
+  return date && (format ? 
+      moment(date).utcOffset(0, true).format()
+      :
+      moment.utc(date)
+    )
+}
+
+export const momentWithoutUtc = (date) =>{
+  return date && moment.utc(date)
 }
 
 export const formatFloat = (number) =>{

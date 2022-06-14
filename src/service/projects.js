@@ -1,6 +1,6 @@
 import axios from "axios";
-import { Api, apiErrorRes, headers, jwtExpired, setToken, thumbUrl } from "./constant";
-import moment from "moment";
+import { Api, apiErrorRes, headers, jwtExpired, momentWithoutUtc, setToken, thumbUrl } from "./constant";
+// import momentWithoutUtc from "momentWithoutUtc";
 import { message as messageAlert } from "antd";
 
 const url = `${Api}/projects`;
@@ -74,9 +74,9 @@ export const getRecord = (id) => {
                     getPercentage: data.getPercentage ?? 0,
                     goPercentage: data.goPercentage ?? 0,
                     // these Four keys are for Profit and lost
-                    totalMonths: (data.startDate && data.endDate) ? Math.round(moment(data.endDate).diff(moment(data.startDate), 'months', true)) : 0, 
-                    endDate: data.endDate ? moment(data.endDate): null,
-                    startDate: data.startDate ? moment(data.startDate): null,
+                    totalMonths: (data.startDate && data.endDate) ? Math.round(momentWithoutUtc(data.endDate).diff(momentWithoutUtc(data.startDate), 'months', true)) : 0, 
+                    endDate: data.endDate ? momentWithoutUtc(data.endDate): null,
+                    startDate: data.startDate ? momentWithoutUtc(data.startDate): null,
                     value: data.value? data.value: 0,
                 }
                 billing.goget = (billing.getPercentage* billing.goPercentage)/100
@@ -84,11 +84,11 @@ export const getRecord = (id) => {
                 billing.upside = (data.value - billing.discount)
                 
                 const dates = {
-                    entryDate: data.entryDate && moment(data.entryDate),
-                    startDate: data.startDate && moment(data.startDate),
+                    entryDate: data.entryDate && momentWithoutUtc(data.entryDate),
+                    startDate: data.startDate && momentWithoutUtc(data.startDate),
                     hoursPerDay: data.hoursPerDay,
-                    endDate: data.endDate && moment(data.endDate),
-                    bidDate: data.bidDate && moment(data.bidDate)
+                    endDate: data.endDate && momentWithoutUtc(data.endDate),
+                    bidDate: data.bidDate && momentWithoutUtc(data.bidDate)
                 }
                 const manage = {
                     accountDirectorId: data.accountDirectorId,
@@ -224,8 +224,8 @@ export const getLeadSkill = (crud, resId) => {
                     title:  data.title,
                     panelSkillStandardLevelId:  data.panelSkillStandardLevelId,
                     billableHours: data.billableHours,
-                    startDate: data.startDate && moment(data.startDate),
-                    endDate: data.endDate && moment(data.endDate),
+                    startDate: data.startDate && momentWithoutUtc(data.startDate),
+                    endDate: data.endDate && momentWithoutUtc(data.endDate),
                     contactPersonId:  data.opportunityResourceAllocations[0] && data.opportunityResourceAllocations[0].contactPersonId,
                     buyingRate:  data.opportunityResourceAllocations && data.opportunityResourceAllocations[0].buyingRate,
                     sellingRate:  data.opportunityResourceAllocations && data.opportunityResourceAllocations[0].sellingRate,
@@ -434,8 +434,8 @@ export const getOrder = (proId,id) => {
             if (success) {
                 data = {
                     ...data,
-                    issueDate: data.issueDate && moment(data.issueDate),
-                    expiryDate: data.expiryDate && moment(data.expiryDate),
+                    issueDate: data.issueDate && momentWithoutUtc(data.issueDate),
+                    expiryDate: data.expiryDate && momentWithoutUtc(data.expiryDate),
                     file: data.fileId ? [{
                         id: data.file.id,
                         createdAt: data.file.createdAt,

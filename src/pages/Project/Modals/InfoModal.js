@@ -6,6 +6,7 @@ import FormItems from "../../../components/Core/Forms/FormItems";
 
 import { addList, getRecord, editList } from "../../../service/projects";
 import { getOrganizations, getStates, getOrgPersons, getPanels, getProjects, } from "../../../service/constant-Apis";
+import { dateWithoutUtc } from "../../../service/constant";
 
 const { TabPane } = Tabs;
 
@@ -509,8 +510,13 @@ class InfoModal extends Component {
         accountManagerId: manage.accountManagerId ?? null,
         projectManagerId: manage.projectManagerId ?? null, 
 
-        ...dates
+        startDate: dateWithoutUtc(dates.startDate, true),
+        endDate: dateWithoutUtc(dates.endDate, true),
+        bidDate: dateWithoutUtc(dates.bidDate, true),
+        entryDate: dateWithoutUtc(dates.entryDate, true),
     }
+    console.log({startDate: dateWithoutUtc(dates.startDate),
+        endDate: dateWithoutUtc(dates.endDate),})
 
     if (!editPro) {
             
