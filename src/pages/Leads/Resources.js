@@ -40,14 +40,14 @@ class Resources extends Component {
                 title: "Start Date",
                 dataIndex: "startDate",
                 key: "startDate",
-                render: (record)=> record && formatDate(record),
+                render: (record)=> record && formatDate(record, true, true),
                 ...tableSorter('startDate', 'Date'),
             },
             {
                 title: "End Date",
                 dataIndex: "endDate",
                 key: "endDate",
-                render: (record)=> record && formatDate(record),
+                render: (record)=> record && formatDate(record, true, true),
                 ...tableSorter('endDate', 'Date'),
             },
             {
@@ -291,8 +291,8 @@ class Resources extends Component {
                     return el.title && el.title.toLowerCase().includes(value.toLowerCase()) ||
                     `${skill ?? ''}`.toLowerCase().includes(value.toLowerCase()) ||
                     `${skillLevel ?? ''}`.toLowerCase().includes(value.toLowerCase()) ||
-                    el.startDate && `${formatDate(el.startDate)}`.toLowerCase().includes(value.toLowerCase()) ||
-                    el.endDate && `${formatDate(el.endDate)}`.toLowerCase().includes(value.toLowerCase()) ||
+                    el.startDate && `${formatDate(el.startDate, true, true)}`.toLowerCase().includes(value.toLowerCase()) ||
+                    el.endDate && `${formatDate(el.endDate, true, true)}`.toLowerCase().includes(value.toLowerCase()) ||
                     `${el.billableHours ?? ''}`.toLowerCase().includes(value.toLowerCase()) 
                 })
             })
@@ -315,8 +315,10 @@ class Resources extends Component {
             search['billableHours']['value'] || search['startDate']['value'] || 
             search['endDate']['value'] 
         ){
-            const startDate = search['startDate']['value'] ?? [null, null]
-            const endDate = search['endDate']['value'] ?? [null, null]
+            const dummyDate = ['2010-10-19', '2010-10-25']
+            
+            const startDate = search['startDate']['value'] ?? dummyDate
+            const endDate = search['endDate']['value'] ?? dummyDate
             this.setState({
                 filterData: data.filter(el => { // method one which have mutliple if condition for every multiple search
 
@@ -327,11 +329,11 @@ class Resources extends Component {
                         .some(s => (search['skill']['value'].length > 0 ? [el.panelSkillId]: [',']).includes(s.value)) &&
 
                         //Start Date Filter
-                        moment(search['startDate']['value']? moment(el.startDate).format('YYYY-MM-DD'): '2010-10-20')
-                        .isBetween(startDate[0]?? '2010-10-19',startDate[1]?? '2010-10-25' , undefined, '[]') &&
+                        moment(search['startDate']['value']? formatDate(el.startDate, true, 'YYYY-MM-DD'): '2010-10-20')
+                        .isBetween(startDate[0],startDate[1] , undefined, '[]') &&
                         //End Date Filter
-                        moment(search['endDate']['value']? moment(el.endDate).format('YYYY-MM-DD'): '2010-10-20')
-                        .isBetween(endDate[0]?? '2010-10-19', endDate[1]?? '2010-10-25' , undefined, '[]') 
+                        moment(search['endDate']['value']? formatDate(el.endDate, true, 'YYYY-MM-DD'): '2010-10-20')
+                        .isBetween(endDate[0], endDate[1] , undefined, '[]') 
                    
                 }),
                 searchedColumn: search,
@@ -387,9 +389,9 @@ class Resources extends Component {
                         
                     }</Item>
                     <Item label="Delegate Contact"> {desc.ContactName}</Item>
-                    <Item label="Start Date">{desc.startDate ? formatDate(desc.startDate): null} </Item>
-                    <Item label="End Date">{desc.endDate ? formatDate(desc.endDate): null}</Item>
-                    <Item label="Bid Date">{desc.bidDate ? formatDate(desc.bidDate): null}</Item>
+                    <Item label="Start Date">{formatDate(desc.startDate, true, true)} </Item>
+                    <Item label="End Date">{formatDate(desc.endDate, true, true)}</Item>
+                    <Item label="Bid Date">{formatDate(desc.bidDate, true, true)}</Item>
                     <Item label="Status">{desc.status ? O_STATUS[desc.status]: ''}</Item>
                 </Descriptions>
                 {desc.type===1 &&<Descriptions
@@ -400,8 +402,8 @@ class Resources extends Component {
                     layout="horizontal"
                 >
                     <Item label="Milestone Name">{mileDesc.title}</Item>
-                    <Item label="Start Date">{mileDesc.startDate ? formatDate(mileDesc.startDate): null} </Item>
-                    <Item label="End Date">{mileDesc.endDate ? formatDate(mileDesc.endDate): null}</Item>
+                    <Item label="Start Date">{formatDate(mileDesc.startDate, true, true)} </Item>
+                    <Item label="End Date">{formatDate(mileDesc.endDate, true, true)}</Item>
                     <Item label="Progress">{mileDesc.progress} %</Item>
                     <Item label="Approved">{mileDesc.isApproved ? 'True' : 'False'}</Item>
                 </Descriptions>}

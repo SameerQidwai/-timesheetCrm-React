@@ -4,12 +4,7 @@ import { Row, Col, Comment, Tooltip, Avatar, Popconfirm, Form, Input, List, Uplo
 
 import moment from "moment";
 
-import {
-    DeleteOutlined,
-    DeleteFilled,
-    SendOutlined,
-    PaperClipOutlined,
-} from "@ant-design/icons";
+import { DeleteOutlined, DeleteFilled, SendOutlined, PaperClipOutlined, } from "@ant-design/icons";
 
 import { addFiles } from "../../service/Attachment-Apis";
 import { getComments, addComment, delComments, } from "../../service/comment-Apis";
@@ -96,7 +91,6 @@ class Comments extends Component {
                 content: value,
                 files: fileList,
                 attachments: fileIds,
-                // date: moment().format(),
             };
             const { targetType, targetId } = this.props;
             addComment(targetType, targetId, comment).then((res) => {

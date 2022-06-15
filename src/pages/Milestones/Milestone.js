@@ -46,14 +46,14 @@ class Milestone extends Component {
                     title: "Start Date",
                     dataIndex: "startDate",
                     key: "startDate",
-                    render: (record) =>(record && formatDate(record)),
+                    render: (record) =>(formatDate(record, true, true)),
                     sorter: (a, b) => moment(a.startDate).unix() - moment(b.startDate).unix()
                 },
                 {
                     title: "End Date",
                     dataIndex: "endDate",
                     key: "endDate",
-                    render: (record) =>(record && formatDate(record)),
+                    render: (record) =>(formatDate(record, true, true)),
                     sorter: (a, b) => moment(a.endDate).unix() - moment(b.endDate).unix()
                 },
                 {
@@ -212,9 +212,9 @@ class Milestone extends Component {
                 >
                     <Item label="Title">{desc.title}</Item>
                     <Item label="Value">{ formatCurrency(desc.value)}</Item>
-                    <Item label="Start Date">{desc.startDate ? formatDate(desc.startDate): null} </Item>
-                    <Item label="End Date">{desc.endDate ? formatDate(desc.endDate): null}</Item>
-                    <Item label="Bid Date">{desc.bidDate ? formatDate(desc.bidDate): null}</Item>
+                    <Item label="Start Date">{formatDate(desc.startDate, true, true)} </Item>
+                    <Item label="End Date">{formatDate(desc.endDate, true, true)}</Item>
+                    <Item label="Bid Date">{formatDate(desc.bidDate, true, true)}</Item>
                     {/* <Item label="Gender">{data.gender}</Item> */}
                 </Descriptions>
                 <Row justify="end">

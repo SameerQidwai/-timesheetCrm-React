@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import { Typography, Dropdown, Button, Table, Menu, Row, Col, Descriptions, Popconfirm, } from "antd";
-import { PlusSquareOutlined, SettingOutlined, DownOutlined, } from "@ant-design/icons"; //Icons
-import moment from 'moment'
+import { PlusSquareOutlined, SettingOutlined, } from "@ant-design/icons"; //Icons
 import LeaseModal from "./Modals/LeaseModal";
 
 import { getRecord as empRecord } from "../../service/Employees";
-import { getList, delList } from "../../service/employee-leases";
+import { getList } from "../../service/employee-leases";
 
 import { formatDate, formatCurrency, localStore } from "../../service/constant";
 import { tableSorter, tableTitleFilter } from "../../components/Core/Table/TableFilter";
@@ -41,14 +40,14 @@ class NovatedLease extends Component {
                 title: "Start Date",
                 dataIndex: "startDate",
                 key: "startDate",
-                render: (record) =>( record && formatDate(record)),
+                render: (record) =>( record && formatDate(record, true, true)),
                 ...tableSorter('startDate', 'date'),
             },
             {
                 title: "End Date",
                 dataIndex: "endDate",
                 key: "endDate",
-                render: (record) =>( record && formatDate(record)),
+                render: (record) =>( record && formatDate(record, true, true)),
                 ...tableSorter('endDate', 'date'),
             },
             {
@@ -164,8 +163,8 @@ class NovatedLease extends Component {
                 filterData: data.filter(el => {
                     return `${el.companyName ?? ''}`.toLowerCase().includes(value.toLowerCase()) ||
                     `${el.financerName ?? ''}`.toLowerCase().includes(value.toLowerCase()) ||
-                    el.startDate && `${formatDate(el.startDate)}`.toLowerCase().includes(value.toLowerCase()) ||
-                    el.endDate && `${formatDate(el.endDate)}`.toLowerCase().includes(value.toLowerCase()) ||
+                    el.startDate && `${formatDate(el.startDate, true, true)}`.toLowerCase().includes(value.toLowerCase()) ||
+                    el.endDate && `${formatDate(el.endDate, true, true)}`.toLowerCase().includes(value.toLowerCase()) ||
                     `${el.financedAmount ?? ''}`.toLowerCase().includes(value.toLowerCase()) 
                 })
             })
@@ -192,7 +191,7 @@ class NovatedLease extends Component {
                     <Item label="Phone">{employee.phoneNumber} </Item>
                     <Item label="Email">{employee.email}</Item>
                     <Item label="Address">{employee.address}</Item>
-                    <Item label="Date Of Birth">{employee.dateOfBirth ? moment(employee.dateOfBirth).format('DD MM YYYY'): null}</Item>
+                    <Item label="Date Of Birth">{formatDate(employee.dateOfBirth, true, true)}</Item>
                     <Item label="Gender">{employee.gender}</Item>
                 </Descriptions>
                 <Row justify="space-between" style={{paddingTop: 30}}>

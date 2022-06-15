@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import { Row, Col, Table, Typography } from "antd";
-import moment from "moment";
 import { getRecord } from "../../service/opportunities";
-import { formatCurrency, formatFloat, getFiscalYear } from "../../service/constant";
+import { formatCurrency, formatDate, formatFloat, getFiscalYear } from "../../service/constant";
 import 'moment-weekday-calc';
 const { Title, Text } = Typography
 
@@ -27,7 +26,7 @@ class ProfitLoss extends Component {
     }
 
     getWeekdays = (startDate, endDate) =>{
-        return moment().isoWeekdayCalc({  
+        return formatDate().isoWeekdayCalc({  
             rangeStart: startDate,
             rangeEnd: endDate,
             weekdays: [1,2,3,4,5],  
@@ -40,29 +39,29 @@ class ProfitLoss extends Component {
         let { data, fiscalYear } = this.state
         const { billing } = this.props
         const len = billing.totalMonths>0 ? billing.totalMonths : 0
-        let startDate = moment(billing.startDate)
-        let endDate = moment(billing.endDate)
+        let startDate = formatDate(billing.startDate)
+        let endDate = formatDate(billing.endDate)
         let noOfDays = 0
         
         for (var i =1; i<=len; i++){
 
-            startDate = i===1 ? billing.startDate : moment(startDate).set('date', 1); 
-            endDate = i===len ? billing.endDate: moment(startDate).endOf('month');
+            startDate = i===1 ? billing.startDate : formatDate(startDate).set('date', 1); 
+            endDate = i===len ? billing.endDate: formatDate(startDate).endOf('month');
             const workDays = this.getWeekdays(startDate, endDate)
             noOfDays = noOfDays + workDays
-            let key = moment(startDate).format('MMM YY')
+            let key = formatDate(startDate).format('MMM YY')
             data[0][key]= workDays
-            startDate = moment(startDate).add(1, 'months')
+            startDate = formatDate(startDate).add(1, 'months')
         }
         let revenue = (billing.discount / noOfDays)
         let cm = (revenue * billing.cmPercentage /100 )
         let cos = (revenue - cm)
 
         for (var i =1; i<= len; i++){
-            startDate = i===1 ? billing.startDate  : moment(startDate).set('date', 1); 
-            endDate = i===len ? billing.endDate: moment(startDate).endOf('month');
+            startDate = i===1 ? billing.startDate  : formatDate(startDate).set('date', 1); 
+            endDate = i===len ? billing.endDate: formatDate(startDate).endOf('month');
             // let workDays = this.getWeekdays(startDate, endDate)
-            let key = moment(startDate).format('MMM YY')
+            let key = formatDate(startDate).format('MMM YY')
             let workDays = data[0][key]
             data[1][key] = revenue * workDays
             data[2][key] = cos * workDays
@@ -70,7 +69,7 @@ class ProfitLoss extends Component {
             data[4][key] = billing.cmPercentage
             
             //Total of every row with in financial year... 
-            if (startDate.isBetween(moment(fiscalYear['start']), moment(fiscalYear['end']), 'month', '[]')){
+            if (startDate.isBetween(formatDate(fiscalYear['start']), formatDate(fiscalYear['end']), 'month', '[]')){
                 data[0]['total'] += data[0][key] // this is wrong I know
                 data[1]['total'] += revenue * workDays
                 data[2]['total'] += cos * workDays
@@ -79,7 +78,7 @@ class ProfitLoss extends Component {
             }
             // Total of every row with in financial year... 
 
-            startDate = moment(startDate).add(1, 'months')
+            startDate = formatDate(startDate).add(1, 'months')
         }
         this.setState({data},()=>{
             this.Columns()
@@ -95,17 +94,17 @@ class ProfitLoss extends Component {
         const len = 16
         let array = []
         for (
-                var month = moment(fiscalYear['start']) ; // defination
-                month.isSameOrBefore(moment(fiscalYear['end']));  //condition
+                var month = formatDate(fiscalYear['start']) ; // defination
+                month.isSameOrBefore(formatDate(fiscalYear['end']));  //condition
                 month.add(1, 'months') //itrerater
             ){
             array.push(
                 {
-                    title: moment(month).format('MMM YY'),
+                    title: formatDate(month).format('MMM YY'),
                     // width:100,
                     align: 'center',
-                    dataIndex: moment(month).format('MMM YY'),
-                    key: moment(month).format('MMM YY'),
+                    dataIndex: formatDate(month).format('MMM YY'),
+                    key: formatDate(month).format('MMM YY'),
                     render: (record, records) =>{
                         if (record){
                             if (records.key === 'W') {

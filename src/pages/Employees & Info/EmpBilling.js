@@ -5,9 +5,8 @@ import { PlusSquareOutlined, SettingOutlined, FilterOutlined, DownOutlined, } fr
 
 import BillModal from "./Modals/BillModal";
 import { getRecord as empRecord } from "../../service/Employees"
-import { getList, delList } from "../../service/employee-contracts";
+import { getList } from "../../service/employee-contracts";
 
-import moment from "moment"
 import { formatCurrency, localStore, JOB_TYPE, DURATION, formatDate } from "../../service/constant";
 import { tableSorter, tableTitleFilter } from "../../components/Core/Table/TableFilter";
 import { generalDelete } from "../../service/delete-Api's";
@@ -33,14 +32,14 @@ class EmpBilling extends Component {
                 title: "Start Date",
                 dataIndex: "startDate",
                 key: "startDate",
-                render:(record)=> record && formatDate(record),
+                render:(record)=> record && formatDate(record, true, true),
                 ...tableSorter('startDate', 'date'),
             },
             {
                 title: "End Date",
                 dataIndex: "endDate",
                 key: "endDate",
-                render:(record)=> record && formatDate(record),
+                render:(record)=> record && formatDate(record, true, true),
                 ...tableSorter('endDate', 'date'),
             },
             {
@@ -171,8 +170,8 @@ class EmpBilling extends Component {
             this.setState({
                 filterData: data.filter(el => {
                     return `00${el.id}`.includes(value)||
-                    el.startDate && `${formatDate(el.startDate)}`.toLowerCase().includes(value.toLowerCase()) ||
-                    el.endDate && `${formatDate(el.endDate)}`.toLowerCase().includes(value.toLowerCase()) ||
+                    el.startDate && `${formatDate(el.startDate, true, true)}`.toLowerCase().includes(value.toLowerCase()) ||
+                    el.endDate && `${formatDate(el.endDate, true, true)}`.toLowerCase().includes(value.toLowerCase()) ||
                     `${formatCurrency(el.remunerationAmount) ?? ''}`.toLowerCase().includes(value.toLowerCase()) ||
                     `${DURATION[el.remunerationAmountPer] ?? ''}`.toLowerCase().includes(value.toLowerCase()) ||
                     `${JOB_TYPE[el.remunerationAmountPer] ?? ''}`.toLowerCase().includes(value.toLowerCase()) 

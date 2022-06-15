@@ -1,13 +1,12 @@
 import React, { Component } from "react";
 import { Popconfirm, Typography, Dropdown, Button, Table, Menu, Descriptions } from "antd";
 
-import { PlusSquareOutlined, SettingOutlined, DownOutlined, } from "@ant-design/icons"; //Icons
+import { PlusSquareOutlined, SettingOutlined, } from "@ant-design/icons"; //Icons
 
 import BillModal from "./Modals/BillModal";
 import { getRecord as subContRecord } from "../../service/contractors"
-import { getList, delList } from "../../service/subContrators-contracts";
+import { getList } from "../../service/subContrators-contracts";
 
-import moment from "moment"
 import { formatCurrency, localStore, DURATION, formatDate } from "../../service/constant";
 import { tableSorter, tableTitleFilter } from "../../components/Core/Table/TableFilter";
 import { generalDelete } from "../../service/delete-Api's";
@@ -32,14 +31,14 @@ class EmpBilling extends Component {
                 title: "Start Date",
                 dataIndex: "startDate",
                 key: "startDate",
-                render:(record)=> record && formatDate(record),
+                render:(record)=> record && formatDate(record, true, true),
                 ...tableSorter('startDate', 'date'),
             },
             {
                 title: "End Date",
                 dataIndex: "endDate",
                 key: "endDate",
-                render:(record)=> record && formatDate(record),
+                render:(record)=> record && formatDate(record, true, true),
                 ...tableSorter('endDate', 'date'),
             },
             {
@@ -162,8 +161,8 @@ class EmpBilling extends Component {
             this.setState({
                 filterData: data.filter(el => {
                     return `00${el.id}`.includes(value)||
-                    el.startDate && `${formatDate(el.startDate)}`.toLowerCase().includes(value.toLowerCase()) ||
-                    el.endDate && `${formatDate(el.endDate)}`.toLowerCase().includes(value.toLowerCase()) ||
+                    el.startDate && `${formatDate(el.startDate, true, true)}`.toLowerCase().includes(value.toLowerCase()) ||
+                    el.endDate && `${formatDate(el.endDate, true, true)}`.toLowerCase().includes(value.toLowerCase()) ||
                     `${formatCurrency(el.remunerationAmount) ?? ''}`.toLowerCase().includes(value.toLowerCase()) ||
                     `${DURATION[el.remunerationAmountPer] ?? ''}`.toLowerCase().includes(value.toLowerCase())                })
             })

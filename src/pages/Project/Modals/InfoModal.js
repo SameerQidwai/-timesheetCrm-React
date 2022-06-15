@@ -1,12 +1,11 @@
 import React, { Component } from "react";
 import { Modal, Tabs, Form } from "antd";
 import { LoadingOutlined } from "@ant-design/icons"; //Icons
-import moment from "moment";
 import FormItems from "../../../components/Core/Forms/FormItems";
 
 import { addList, getRecord, editList } from "../../../service/projects";
 import { getOrganizations, getStates, getOrgPersons, getPanels, getProjects, } from "../../../service/constant-Apis";
-import { dateWithoutUtc } from "../../../service/constant";
+import { formatDate } from "../../../service/constant";
 
 const { TabPane } = Tabs;
 
@@ -510,13 +509,11 @@ class InfoModal extends Component {
         accountManagerId: manage.accountManagerId ?? null,
         projectManagerId: manage.projectManagerId ?? null, 
 
-        startDate: dateWithoutUtc(dates.startDate, true),
-        endDate: dateWithoutUtc(dates.endDate, true),
-        bidDate: dateWithoutUtc(dates.bidDate, true),
-        entryDate: dateWithoutUtc(dates.entryDate, true),
+        startDate: formatDate(dates.startDate, true),
+        endDate: formatDate(dates.endDate, true),
+        bidDate: formatDate(dates.bidDate, true),
+        entryDate: formatDate(dates.entryDate, true),
     }
-    console.log({startDate: dateWithoutUtc(dates.startDate),
-        endDate: dateWithoutUtc(dates.endDate),})
 
     if (!editPro) {
             
@@ -587,7 +584,7 @@ class InfoModal extends Component {
           scrollToFirstError={true}
           size="small"
           layout="inline"
-          initialValues={ { dates:{ entryDate: moment(new Date()) } } }
+          initialValues={ { dates:{ entryDate: formatDate(new Date()) } } }
         >
           <Tabs type="card">
               <TabPane tab="Opportunity Info" key="basic" forceRender className="ant-form ant-form-inline ant-form-small" >

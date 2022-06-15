@@ -2,11 +2,11 @@ import React, { Component } from "react";
 import { Modal, Tabs } from "antd";
 import Draggable from 'react-draggable';
 
-import { UploadOutlined, LoadingOutlined } from "@ant-design/icons"; //Icons
-import moment from "moment";
+import { LoadingOutlined } from "@ant-design/icons"; //Icons
 import Form from "../../../components/Core/Forms/Form";
 import { addList, getOrgRecord, editList } from "../../../service/Organizations";
 import { getOrganizations, getOrgPersons } from "../../../service/constant-Apis";
+import { formatDate } from "../../../service/constant";
 
 const { TabPane } = Tabs;
 
@@ -926,9 +926,9 @@ class InfoModal extends Component {
                         piSumInsured: vake.SumIns_PI? vake.SumIns_PI : 0,
                         plSumInsured: vake.SumIns_PL? vake.SumIns_PL : 0,
                         wcSumInsured: vake.SumIns_WC? vake.SumIns_WC : 0,
-                        piInsuranceExpiry: vake.expiry_PI? vake.expiry_PI : null,
-                        plInsuranceExpiry: vake.expiry_PL? vake.expiry_PL : null,
-                        wcInsuranceExpiry: vake.expiry_WC? vake.expiry_WC : null,
+                        piInsuranceExpiry: formatDate(vake.expiry_PI, true),
+                        plInsuranceExpiry: formatDate(vake.expiry_PL, true),
+                        wcInsuranceExpiry: formatDate(vake.expiry_WC, true),
                     },
                 },
                 insuredSubmitted: true, // level form submitted

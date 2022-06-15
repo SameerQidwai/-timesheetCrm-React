@@ -326,8 +326,8 @@ class PurchaseOrder extends Component {
                     return `00${el.id.toString()}`.includes(value) ||
                     el.value && formatCurrency(el.value).toLowerCase().includes(value.toLowerCase()) ||
                     el.expense && formatCurrency(el.expense).toLowerCase().includes(value.toLowerCase()) ||
-                    el.issueDate && `${formatDate(el.issueDate)}`.toLowerCase().includes(value.toLowerCase()) ||
-                    el.expiryDate && `${formatDate(el.expiryDate)}`.toLowerCase().includes(value.toLowerCase())
+                    el.issueDate && `${formatDate(el.issueDate, true, true)}`.toLowerCase().includes(value.toLowerCase()) ||
+                    el.expiryDate && `${formatDate(el.expiryDate, true, true)}`.toLowerCase().includes(value.toLowerCase())
                 })
             })
         }else{
@@ -355,9 +355,9 @@ class PurchaseOrder extends Component {
             this.setState({
                 filterData: data.filter(el => { // method one which have mutliple if condition for every multiple search
                     return (
-                        moment(search['issueDate']['value']? formatDate(el.issueDate,'YYYY-MM-DD'): '2010-10-20')
+                        moment(search['issueDate']['value']? formatDate(el.issueDate, true, 'YYYY-MM-DD'): '2010-10-20')
                         .isBetween(issueDate[0]?? '2010-10-19',issueDate[1]?? '2010-10-25' , undefined, '[]') &&
-                        moment(search['expiryDate']['value']? formatDate(el.expiryDate,'YYYY-MM-DD'): '2010-10-20')
+                        moment(search['expiryDate']['value']? formatDate(el.expiryDate, true, 'YYYY-MM-DD'): '2010-10-20')
                         .isBetween(expiryDate[0]?? '2010-10-19', expiryDate[1]?? '2010-10-25' , undefined, '[]') &&
                         // (el.value >= 2 )&&
                         // ((el.value?? Number.NEGATIVE_INFINITY) <= (search['value1']['value'] === '' ? Number.POSITIVE_INFINITY  :Number.POSITIVE_INFINITY))&&
@@ -408,9 +408,9 @@ class PurchaseOrder extends Component {
                         
                     }</Item>
                     <Item label="Delegate Contact"> {desc.ContactName}</Item>
-                    <Item label="Start Date">{desc.startDate ? formatDate(desc.startDate): null} </Item>
-                    <Item label="End Date">{desc.endDate ? formatDate(desc.endDate): null}</Item>
-                    <Item label="Bid Date">{desc.bidDate ? formatDate(desc.bidDate): null}</Item>
+                    <Item label="Start Date">{formatDate(desc.startDate, true, true)} </Item>
+                    <Item label="End Date">{formatDate(desc.endDate, true, true)}</Item>
+                    <Item label="Bid Date">{formatDate(desc.bidDate, true, true)}</Item>
                     <Item label="Status">{desc.status ? O_STATUS[desc.status]: ''}</Item>
                     {/* <Item label="Gender">{data.gender}</Item> */}
                 </Descriptions>

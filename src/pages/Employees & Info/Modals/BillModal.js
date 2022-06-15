@@ -4,10 +4,10 @@ import { LoadingOutlined, PlusOutlined } from "@ant-design/icons"; //Icons
 
 import FormItems from "../../../components/Core/Forms/FormItems";
 
-import moment from "moment";
 import { addList, editList, getRecord } from "../../../service/employee-contracts";
 import { addAttachments, addFiles } from "../../../service/Attachment-Apis";
 import { getLeavePolicy } from "../../../service/constant-Apis";
+import { formatDate } from "../../../service/constant";
 
 class BillModal extends Component {
     constructor() {
@@ -268,27 +268,23 @@ class BillModal extends Component {
         const { billing } = vake;
         billing.noOfHoursPer = 1; 
         billing.type === 1 ? billing.remunerationAmountPer = 1 : billing.remunerationAmountPer = 7;
-        billing.startDate = billing.startDate ? moment(billing.startDate).valueOf(): null;
-        billing.endDate = billing.endDate ? moment(billing.endDate).valueOf(): null;
+        billing.startDate = formatDate(billing.startDate, true);
+        billing.endDate = formatDate(billing.endDate, true);
         billing.employeeId = editEmp;
         billing.fileId = fileIds;
         billing.leaveRequestPolicyId = billing.leaveRequestPolicyId || null; 
 
         if (!editCntrct) {
-            console.log("emes");
             this.addContract(billing); //add skill
         } else {
-            console.log("edit");
             this.editRecord(billing); //edit skill
         }
     };
 
     addContract = (data) => {
         const { callBack } = this.props;
-        console.log(data);
         addList(data).then(res=>{
             this.setState({loading: false})
-            console.log(res);
             if(res.success){
                 callBack();
             }
@@ -304,8 +300,8 @@ class BillModal extends Component {
             const {success, data} = res[1]
             if (success){
                 BillingFields[11].Placeholder = data.type ===1 ? "Hourly Base Salary" : "Annual Base Salary"
-                data.startDate = data.startDate && moment(data.startDate)
-                data.endDate = data.endDate && moment(data.endDate)
+                data.startDate =  formatDate(data.startDate)
+                data.endDate =  formatDate(data.endDate)
                 this.formRef.current.setFieldsValue({ billing: data, });
             }
             this.setState({
@@ -389,7 +385,7 @@ class BillModal extends Component {
                     scrollToFirstError={true}
                     size="small"
                     layout="inline"
-                    initialValues={ { billing:{ entryDate: moment(new Date()) } } }
+                    initialValues={ { billing:{ entryDate: formatDate(new Date()) } } }
                 >
 
                     <FormItems  FormFields={BillingFields} />

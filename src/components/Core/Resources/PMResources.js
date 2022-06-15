@@ -27,14 +27,14 @@ const milestoneColmuns = [
         title: "Start Date",
         dataIndex: "startDate",
         key: "startDate",
-        render: (record) =>(record && formatDate(record)),
+        render: (record) =>(record && formatDate(record, true, true)),
         ...tableSorter('startDate', 'date'),
     },
     {
         title: "End Date",
         dataIndex: "endDate",
         key: "endDate",
-        render: (record) =>(record && formatDate(record)),
+        render: (record) =>(record && formatDate(record, true, true)),
         ...tableSorter('endDate', 'date'),
     },
     {

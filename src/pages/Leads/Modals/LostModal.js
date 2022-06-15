@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Modal, Tabs, Form } from "antd";
 import { LoadingOutlined } from "@ant-design/icons"; //Icons
-import moment from "moment";
 import FormItems from "../../../components/Core/Forms/FormItems";
 
 import { workIsLost } from "../../../service/opportunities";

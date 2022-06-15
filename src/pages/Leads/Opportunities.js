@@ -64,21 +64,21 @@ class Opportunities extends Component {
                 title: 'Start Date',
                 dataIndex: 'startDate',
                 key: 'startDate',
-                render: (record) =>(record && formatDate(record)),
+                render: (record) =>(record && formatDate(record, true, true)),
                 ...tableSorter('startDate', 'date'),
             },
             {
                 title: 'End Date',
                 dataIndex: 'endDate',
                 key: 'endDtae',
-                render: (record) =>(record && formatDate(record)),
+                render: (record) =>(record && formatDate(record, true, true)),
                 ...tableSorter('endDate', 'date'),
             },
             {
                 title: 'Bid Date',
                 dataIndex: 'bidDate',
                 key: 'bidDate',
-                render: (record) =>(record && formatDate(record)),
+                render: (record) =>(record && formatDate(record, true, true)),
                 ...tableSorter('bidDate', 'date'),
             },
             {
@@ -446,9 +446,9 @@ class Opportunities extends Component {
                     el.title && el.title.toLowerCase().includes(value.toLowerCase()) || 
                     organization && organization.toLowerCase().includes(value.toLowerCase()) ||
                     el.value && formatCurrency(el.value).toLowerCase().includes(value.toLowerCase()) ||
-                    el.startDate && `${formatDate(el.startDate)}`.toLowerCase().includes(value.toLowerCase()) ||
-                    el.endDate && `${formatDate(el.endDate)}`.toLowerCase().includes(value.toLowerCase()) ||
-                    el.bidDate && `${formatDate(el.bidDate)}`.toLowerCase().includes(value.toLowerCase()) ||
+                    el.startDate && `${formatDate(el.startDate, true, true)}`.toLowerCase().includes(value.toLowerCase()) ||
+                    el.endDate && `${formatDate(el.endDate, true, true)}`.toLowerCase().includes(value.toLowerCase()) ||
+                    el.bidDate && `${formatDate(el.bidDate, true, true)}`.toLowerCase().includes(value.toLowerCase()) ||
                     el.stage && `${O_STAGE[el.stage]}`.toLowerCase().includes(value.toLowerCase()) ||
                     // el.status && `${O_STATUS[el.status]}`.toLowerCase().includes(value.toLowerCase()) ||
                     el.type && `${O_TYPE[el.type]}`.toLowerCase().includes(value.toLowerCase()) ||
@@ -477,10 +477,10 @@ class Opportunities extends Component {
             || search['status']['value'].length > 0|| search['type']['value'] || 
             search['stateId']['value'].length>0
         ){
-            const startDate = search['startDate']['value'] ?? [null, null]
-            const endDate = search['endDate']['value'] ?? [null, null]
-            const bidDate = search['bidDate']['value'] ?? [null, null]
-            const entryDate = search['entryDate']['value'] ?? [null, null]
+            const startDate = search['startDate']['value'] ?? ['2010-10-19', '2010-10-25']
+            const endDate = search['endDate']['value'] ?? ['2010-10-19', '2010-10-25']
+            const bidDate = search['bidDate']['value'] ?? ['2010-10-19', '2010-10-25']
+            const entryDate = search['entryDate']['value'] ?? ['2010-10-19', '2010-10-25']
             this.setState({
                 filterData: data.filter(el => { // method one which have mutliple if condition for every multiple search
                     const { id: organization} = el.organization
@@ -507,17 +507,17 @@ class Opportunities extends Component {
                         .some(s => (search['panel']['value'].length > 0 ? [el.panelId]: [',']).includes(s.value)) &&
 
                         //Start Date Filter
-                        moment(search['startDate']['value']? moment(el.startDate).format('YYYY-MM-DD'): '2010-10-20')
-                        .isBetween(startDate[0]?? '2010-10-19',startDate[1]?? '2010-10-25' , undefined, '[]') &&
+                        moment(search['startDate']['value']? formatDate(el.startDate, true, 'YYYY-MM-DD') : '2010-10-20')
+                        .isBetween(startDate[0],startDate[1] , undefined, '[]') &&
                         //End Date Filter
-                        moment(search['endDate']['value']? moment(el.endDate).format('YYYY-MM-DD'): '2010-10-20')
-                        .isBetween(endDate[0]?? '2010-10-19', endDate[1]?? '2010-10-25' , undefined, '[]') &&
+                        moment(search['endDate']['value']? formatDate(el.endDate, true, 'YYYY-MM-DD') : '2010-10-20')
+                        .isBetween(endDate[0], endDate[1] , undefined, '[]') &&
                         //Bid Date Filter
-                        moment(search['bidDate']['value']? moment(el.bidDate).format('YYYY-MM-DD'): '2010-10-20')
-                        .isBetween(bidDate[0]?? '2010-10-19', bidDate[1]?? '2010-10-25' , undefined, '[]') &&
+                        moment(search['bidDate']['value']? formatDate(el.bidDate, true, 'YYYY-MM-DD') : '2010-10-20')
+                        .isBetween(bidDate[0], bidDate[1] , undefined, '[]') &&
                         //Entry Date Filter
-                        moment(search['entryDate']['value']? moment(el.entryDate).format('YYYY-MM-DD'): '2010-10-20')
-                        .isBetween(entryDate[0]?? '2010-10-19', entryDate[1]?? '2010-10-25' , undefined, '[]') 
+                        moment(search['entryDate']['value']? formatDate(el.entryDate, true, 'YYYY-MM-DD') : '2010-10-20')
+                        .isBetween(entryDate[0], entryDate[1] , undefined, '[]') 
                    
                 }),
                 searchedColumn: search,

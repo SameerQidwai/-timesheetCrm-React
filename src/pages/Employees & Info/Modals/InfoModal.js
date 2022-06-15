@@ -3,12 +3,13 @@ import { Modal, Tabs, Row, Col, Button, Input, Select, Form, Upload, Typography 
 import { LoadingOutlined, UploadOutlined,PlusOutlined } from "@ant-design/icons"; //Icons
 
 import FormItems from "../../../components/Core/Forms/FormItems";
-import moment from "moment";
 
 import { getEmpPersons, getLeavePolicy, getOrgPersons, getRoles, getStates } from "../../../service/constant-Apis";
 import { getContactRecord } from "../../../service/conatct-person";
 import { addList, getRecord, editList } from "../../../service/Employees";
 import { addAttachments, addFiles } from "../../../service/Attachment-Apis";
+import { formatDate } from "../../../service/constant";
+
 const { TabPane } = Tabs;
 
 class InfoModal extends Component {
@@ -626,7 +627,6 @@ class InfoModal extends Component {
                     rangeMax: (current)=>{
                         const { billing } = this.formRef.current.getFieldValue();
                         return  billing.startDate && current < billing.startDate
-                        // return  null
                     }
                 },
                 {
@@ -853,7 +853,7 @@ class InfoModal extends Component {
                 if(res.success){
                     console.log(res.data);
                     res.data.cpCode = `Emp-00${res.data.id}`
-                    res.data.dateOfBirth = res.data.dateOfBirth && moment(res.data.dateOfBirth) 
+                    res.data.dateOfBirth = formatDate(res.data.dateOfBirth) 
                     this.formRef.current.setFieldsValue({ basic: res.data, });
                     this.setState({sContact: value})
                 }
@@ -1034,34 +1034,33 @@ class InfoModal extends Component {
     onFinish = (formValues) =>{
         const { fileIds } = this.state
         this.setState({loading: true})
-        if (formValues.billing.type ){
-            formValues.billing.type === 1 ? formValues.billing.remunerationAmountPer = 1 : formValues.billing.remunerationAmountPer = 7
-        }
-        formValues.basic.lineManagerId =  formValues.basic?.lineManagerId ?? null
-        formValues.detail.superannuationType =  formValues.detail?.superannuationType ?? null
+        let {basic, detail, kin, bank, billing} = formValues
+        
         const values  = {
-            ...formValues.basic, 
-            ...formValues.detail,
-            ...formValues.kin, 
-            ...{
-                bankName: formValues.bank.bankName ?? '',
-                bankAccountNo: formValues.bank.bankAccountNo?? '',
-                bankBsb: formValues.bank.bankBsb?? '',
-                tfn: formValues.bank.tfn ?? '',
-                taxFreeThreshold: formValues.bank.taxFreeThreshold,
-                helpHECS: formValues.bank.helpHECS,
-            },
+            ...basic,
+            ...detail,
+            ...kin, 
             latestEmploymentContract: {
-                ...formValues.billing,
+                ...billing,
                 fileId: fileIds,
-                leaveRequestPolicyId: formValues.billing.leaveRequestPolicyId || null, 
-            },  
+                startDate: formatDate(billing.startDate, true),
+                endDate: formatDate(billing.endDate, true),
+                leaveRequestPolicyId: billing.leaveRequestPolicyId || null, 
+                type: billing.type && (billing.type === 1 ? billing.remunerationAmountPer = 1 : billing.remunerationAmountPer = 7)
+            }, 
+            dateOfBirth: formatDate(basic.dateOfBirth, true),
+            lineManagerId:  basic?.lineManagerId ?? null,
+            superannuationType: detail?.superannuationType ?? null,
+            bankName: bank.bankName ?? '',
+            bankAccountNo: bank.bankAccountNo?? '',
+            bankBsb: bank.bankBsb?? '',
+            tfn: bank.tfn ?? '',
+            taxFreeThreshold: bank.taxFreeThreshold,
+            helpHECS: bank.helpHECS,
         } 
         if (!this.props.editEmp) {
-            console.log("emes");
             this.addEmployee(values); //add skill
         } else {
-            console.log("edit");
             this.editRecord(values); //edit skill
         }
     }

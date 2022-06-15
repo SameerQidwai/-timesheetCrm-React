@@ -66,3 +66,20 @@ updating
 xampp
     sudo service mysql stop
     sudo /opt/lampp/lampp start
+
+
+
+comments.js not done
+tableFilter.js not done
+filters on each page not done
+isoWeekdayCalc not done
+addRequestModal  not done
+
+check props that you are sending idiot
+check. function afters
+
+/***Check */
+LeaseModal.js
+
+/** Delete functaionalty */
+contBilling.js

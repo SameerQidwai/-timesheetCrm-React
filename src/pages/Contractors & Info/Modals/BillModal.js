@@ -2,9 +2,8 @@ import React, { Component } from "react";
 import { Modal, Upload, Form } from "antd";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons"; //Icons
 import FormItems from "../../../components/Core/Forms/FormItems";
-import { headers } from "../../../service/constant";
+import { formatDate, headers } from "../../../service/constant";
 
-import moment from "moment";
 import { addList, editList, getRecord } from "../../../service/subContrators-contracts";
 import { addFiles } from "../../../service/Attachment-Apis";
 
@@ -195,8 +194,8 @@ class BillModal extends Component {
         const {editCntrct, editEmp} = this.props
         const { billing } = vake;
         // billing.noOfHoursPer = 1; 
-        billing.startDate = billing.startDate ? moment(billing.startDate).valueOf(): null
-        billing.endDate = billing.endDate ? moment(billing.endDate).valueOf(): null
+        billing.startDate = formatDate(billing.startDate, true)
+        billing.endDate = formatDate(billing.endDate, true)
         billing.subContractorId = editEmp;
         billing.fileId = fileIds
 
@@ -226,8 +225,8 @@ class BillModal extends Component {
             const {success, data} = res
             console.log(res);
             if (success){
-                data.startDate = data.startDate && moment(data.startDate)
-                data.endDate = data.endDate && moment(data.endDate)
+                data.startDate = formatDate(data.startDate)
+                data.endDate =  formatDate(data.endDate)
                 this.formRef.current.setFieldsValue({ billing: data, });
                 this.setState({
                     fileIds: data.fileId,
@@ -310,7 +309,7 @@ class BillModal extends Component {
                     scrollToFirstError={true}
                     size="small"
                     layout="inline"
-                    initialValues={ { billing:{ entryDate: moment(new Date()) } } }
+                    initialValues={ { billing:{ entryDate: formatDate(new Date()) } } }
                 >
 
                     <FormItems  FormFields={BillingFields} />

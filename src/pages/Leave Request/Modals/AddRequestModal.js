@@ -6,7 +6,7 @@ import { addFiles } from "../../../service/Attachment-Apis";
 import { getUserProjects, getUserLeaveType} from "../../../service/constant-Apis";
 import { addRequest, editRequest, getSingleRequest } from "../../../service/leaveRequest-Apis";
 import moment from 'moment'
-import { formatFloat, localStore } from "../../../service/constant";
+import { formatDate, formatFloat, localStore } from "../../../service/constant";
 
 import "../styles.css"
 
@@ -24,7 +24,7 @@ class AddRequestModal extends Component{
                 dataIndex: 'date',
                 key: 'date',
                 render:(text, records) =>(<Row justify="space-between" >
-                    <Col> {moment(text).format('ddd DD MMM yyyy')} </Col>
+                    <Col> {formatDate(text, true, true)} </Col>
                     <Col style={{marginLeft: 'auto', color: 'red'}} >{records.disabled}</Col>
                 </Row>
                 ),
@@ -34,7 +34,7 @@ class AddRequestModal extends Component{
                 dataIndex: 'hours',
                 key: 'hours',
                 render:(text, records, index) =>(
-                    <Form.Item noStyle name={['hours', moment(records.date).format('M/D/YYYY')]}>
+                    <Form.Item noStyle name={['hours', formatDate(records.date, true, 'M/D/YYYY')]}>
                         <InputNumber
                             placeholder= "Hours"
                             size="small" 

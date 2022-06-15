@@ -1,7 +1,6 @@
 import axios from "axios";
-import { Api, apiErrorRes, headers, jwtExpired, setToken } from "./constant";
+import { Api, apiErrorRes, formatDate, headers, jwtExpired, setToken } from "./constant";
 import { message as messageAlert } from "antd";
-import moment from "moment";
 
 const url = `${Api}/opportunities`;
 
@@ -75,9 +74,9 @@ export const getRecord = (id) => {
                     getPercentage: data.getPercentage ? data.getPercentage: 0,
                     goPercentage: data.goPercentage? data.goPercentage: 0,
                     // these Four keys are for Profit and lost
-                    totalMonths: (data.startDate && data.endDate) ? Math.ceil(moment(data.endDate).diff(moment(data.startDate), 'months', true)) : 0, 
-                    endDate: data.endDate ? moment(data.endDate): null,
-                    startDate: data.startDate ? moment(data.startDate): null,
+                    totalMonths: (data.startDate && data.endDate) ? Math.ceil(formatDate(data.endDate).diff(formatDate(data.startDate), 'months', true)) : 0, 
+                    endDate:  formatDate(data.endDate),
+                    startDate: formatDate(data.startDate),
                     value: data.value? data.value: 0,
                 }
                 billing.goget = (billing.getPercentage* billing.goPercentage)/100
@@ -85,11 +84,11 @@ export const getRecord = (id) => {
                 billing.upside = (data.value - billing.discount)
                 
                 const dates = {
-                    entryDate: data.entryDate && moment(data.entryDate),
-                    startDate: data.startDate && moment(data.startDate),
                     hoursPerDay: data.hoursPerDay,
-                    endDate: data.endDate && moment(data.endDate),
-                    bidDate: data.bidDate && moment(data.bidDate)
+                    entryDate: formatDate(data.entryDate),
+                    startDate: formatDate(data.startDate),
+                    endDate: formatDate(data.endDate),
+                    bidDate: formatDate(data.bidDate)
                 }
                 const manage = {
                     accountDirectorId: data.accountDirectorId,

@@ -1,6 +1,6 @@
 import moment from 'moment'
 import { message as messageAlert } from "antd";
-export const Api = "http://localhost:3301/api/v1";
+// export const Api = "http://localhost:3301/api/v1";
 
 // export const Api = "http://onelmcrm.gaamatech.com:8000/api/v1";
 // export const Api = "http://192.168.0.243:3000/api/v1"; // Shahzaib/   
@@ -8,7 +8,7 @@ export const Api = "http://localhost:3301/api/v1";
 // export const Api = "https://2c13-111-88-189-227.ngrok.io/api/v1"; // Shahzaib/ tunnel   
 // export const Api = "http://192.168.0.218:3301/api/v1"; // Me
 
-// export const Api = "http://54.91.49.138:8000/api/v1"; //Test 
+export const Api = "http://54.91.49.138:8000/api/v1"; //Test 
 
 // export const Api = "http://192.168.0.110:3301/api/v1"; // TrunRajPal Home
 // export const Api = "http://192.168.0.244:3301/api/v1"; // TrunRajPal Office
@@ -45,15 +45,19 @@ export const formatCurrency = (amount) => {
 }; //end
 
 
-export const formatDate = (date, format) =>{
-  // return date && moment(date).format(format ??'ddd DD MMM yyyy')
-  return date && moment.utc(date).format(format ??'ddd DD MMM yyyy')
-}
+// export const formatDate = (date, format) =>{
+//   // return date && moment(date).format(format ??'ddd DD MMM yyyy')
+//   return date && moment.utc(date).format(format ??'ddd DD MMM yyyy')
+// }
 
-export const dateWithoutUtc = (date, format) =>{
-  return date && (format ? 
-      moment(date).utcOffset(0, true).format()
-      :
+export const formatDate = (date, string, format) =>{
+  return date && ( // check if date is not null or undefined
+    string ? // check if request is for string date or object
+      format? // check if format is given
+        moment.utc(date).format(format === true ?'ddd DD MMM yyyy': format)
+      :                          // check if format is true return default format or prop format         
+        moment(date).utcOffset(0, true).format()
+    :
       moment.utc(date)
     )
 }

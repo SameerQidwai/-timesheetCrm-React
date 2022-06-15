@@ -1,13 +1,12 @@
 import React, { Component } from "react";
 import { Modal, Tabs, Row, Col, Select, Input, Form, Upload } from "antd";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons"; //Icons
-import moment from "moment";
 import FormItems from "../../../components/Core/Forms/FormItems";
 import { addList, getRecord, editList } from "../../../service/contractors";
 import { getContactRecord } from "../../../service/conatct-person";
 import { getOrganizations, getOrgPersons, getRoles, getStates } from "../../../service/constant-Apis";
 import { addFiles } from "../../../service/Attachment-Apis";
-import { DURATION } from "../../../service/constant";
+import { DURATION, formatDate } from "../../../service/constant";
 
 const { TabPane } = Tabs;
 
@@ -558,11 +557,18 @@ class InfoModal extends Component {
         this.setState({loading: true})
         const { fileIds } = this.state
         const { basic, billing, kin } = formValues
-        billing.fileId = fileIds
+        
+        
         const values  = {
             ...basic,
+            dateOfBirth: formatDate(basic.dateOfBirth, true),
             ...kin,
-            latestContract: billing,
+            latestContract: {
+                ...billing,
+                fileId: fileIds,
+                startDate: formatDate(billing.startDate, true),
+                endDate:formatDate(billing.endDate, true)
+            },
         } 
 
         if (!editCont) {
@@ -628,7 +634,7 @@ class InfoModal extends Component {
         getContactRecord(value).then(res=>{
             if(res.success){
                 res.data.cpCode = `Con-00${res.data.id}`
-                res.data.dateOfBirth = res.data.dateOfBirth && moment(res.data.dateOfBirth) 
+                res.data.dateOfBirth = formatDate(res.data.dateOfBirth) 
                 this.formRef.current.setFieldsValue({ basic: res.data, });
                 this.setState({sContact: value})
             }

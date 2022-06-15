@@ -50,13 +50,13 @@ class LeaveRequest extends Component {
                 title: 'Start Date',
                 dataIndex: 'startDate',
                 key: 'startDate',
-                render:(text, records) => text && formatDate(text)
+                render:(text, records) => text && formatDate(text, true, true)
             },
             {
                 title: 'End Date',
                 dataIndex: 'endDate',
                 key: 'endDate',
-                render:(text, records) => text && formatDate(text)
+                render:(text, records) => text && formatDate(text, true, true)
             },
             {
                 title: 'Leave Type',

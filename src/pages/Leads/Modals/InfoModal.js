@@ -1,12 +1,11 @@
 import React, { Component } from "react";
 import { Modal, Tabs, Form } from "antd";
 import { LoadingOutlined } from "@ant-design/icons"; //Icons
-import moment from "moment";
 import FormItems from "../../../components/Core/Forms/FormItems";
 
 import { addList, getRecord, editList, workWon } from "../../../service/opportunities";
 import { getOrganizations, getStates, getOrgPersons, getPanels, getProjects } from "../../../service/constant-Apis";
-import { dateWithoutUtc } from "../../../service/constant";
+import { formatDate } from "../../../service/constant";
 
 const { TabPane } = Tabs;
 
@@ -603,16 +602,12 @@ class InfoModal extends Component {
         };
     }
     componentDidMount = () =>{
-        // const date = moment().format('MMMM Do YYYY, h:mm:ss A z')
         this.fetchAll()
     }
 
     fetchAll = () =>{
         const { editLead, project }= this.props;  
         const { ManageFields, DatesFields, BasicFields } = this.state;
-        // const dates = {entryDate: moment(new Date())}
-        // this.formRef.current.setFieldsValue({ dates: dates, }); 
-        // to set the Default entryDate for new Oppurtunity  
 
         // For now doing it for quick insertion
         if (project){ // will have to open Project Add Modal when optimizing the code
@@ -686,10 +681,10 @@ class InfoModal extends Component {
             opportunityManagerId: manage.opportunityManagerId ?? null,
             projectManagerId: manage.projectManagerId ?? null,
 
-            startDate: dateWithoutUtc(dates.startDate),
-            endDate: dateWithoutUtc(dates.endDate),
-            bidDate: dateWithoutUtc(dates.bidDate),
-            entryDate: dateWithoutUtc(dates.entryDate),
+            startDate: formatDate(dates.startDate, true),
+            endDate: formatDate(dates.endDate, true),
+            bidDate: formatDate(dates.bidDate, true),
+            entryDate: formatDate(dates.entryDate, true),
         }
         if (!editLead) {
                 
@@ -779,7 +774,7 @@ class InfoModal extends Component {
                     scrollToFirstError={true}
                     size="small"
                     layout="inline"
-                    initialValues={ { dates:{ entryDate: moment(new Date()) } } }
+                    initialValues={ { dates:{ entryDate: formatDate(new Date()) } } }
                 >
                     <Tabs type="card" >
                         <TabPane tab="Opportunity Info" key="basic" forceRender className="ant-form ant-form-inline ant-form-small" >

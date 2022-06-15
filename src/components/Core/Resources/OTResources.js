@@ -1,6 +1,6 @@
 import React, { Component, useState } from "react";
 import { Menu, Button, Dropdown, Table} from "antd";
-import { SettingOutlined, DownOutlined } from "@ant-design/icons"; //Icons
+import { SettingOutlined } from "@ant-design/icons"; //Icons
 import { Link } from 'react-router-dom'
 import { formatDate, formatCurrency, localStore } from "../../../service/constant";
 import { tableSorter } from "../Table/TableFilter";
@@ -29,14 +29,14 @@ const positionColumns = (milestoneId) => [
         title: "Start Date",
         dataIndex: "startDate",
         key: "startDate",
-        render: (record)=> record && formatDate(record),
+        render: (record)=> record && formatDate(record, true, true),
         ...tableSorter('startDate', 'Date'),
     },
     {
         title: "End Date",
         dataIndex: "endDate",
         key: "endDate",
-        render: (record)=> record && formatDate(record),
+        render: (record)=> record && formatDate(record, true, true),
         ...tableSorter('endDate', 'Date'),
     },
     {

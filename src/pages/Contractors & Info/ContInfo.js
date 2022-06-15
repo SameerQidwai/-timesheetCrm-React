@@ -13,8 +13,7 @@ import ContractorCalculator from "../../components/Core/Cost Calculator/Contract
 import InfoModal from "./Modals/InfoModal";
 
 import { getRecord, delList } from "../../service/contractors";
-import { GENDER, localStore } from "../../service/constant";
-import  moment from "moment";
+import { formatDate, GENDER, localStore } from "../../service/constant";
 import AuthError from "../../components/Core/AuthError";
 import { generalDelete } from "../../service/delete-Api's";
 
@@ -138,7 +137,7 @@ class ContInfo extends Component {
                     <Item label="Phone">{data.phoneNumber} </Item>
                     <Item label="Email">{data.email}</Item>
                     <Item label="Address">{data.address}</Item>
-                    <Item label="Date Of Birth">{data.dateOfBirth ? moment(data.dateOfBirth).format('DD MM YYYY'): null}</Item>
+                    <Item label="Date Of Birth">{formatDate(data.dateOfBirth, true, true)}</Item>
                     <Item label="Gender">{GENDER[data.gender]}</Item>
                     {data.organization && <Item label="Organisation">{
                         <Link 

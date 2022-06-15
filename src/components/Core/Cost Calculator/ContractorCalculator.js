@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Col, Dropdown, InputNumber, Menu, Row, Typography } from "antd";
 
 import { formatCurrency, formatFloat, STATES } from "../../../service/constant";
-import moment from "moment";
-import 'moment-weekday-calc';
+
 import { formatter, parser } from "../Forms/FormItems";
 import { buyCost } from "../../../service/contractors";
 

@@ -6,7 +6,7 @@ import Form from "../../../components/Core/Forms/Form";
 import { addList, getContactRecord, editList } from "../../../service/conatct-person";
 import { getStates, getStandardLevels, getOrganizations } from "../../../service/constant-Apis";
 
-import moment from "moment";
+import { formatDate } from "../../../service/constant";
 
 const { TabPane } = Tabs;
 
@@ -639,8 +639,8 @@ class InfoModal extends Component {
                         id: asso[`id${i}`] ?? 0,
                         designation: asso[`designation${i}`],
                         organizationId: asso[`organizationId${i}`],
-                        startDate: asso[`startDate${i}`],
-                        endDate: asso[`endDate${i}`],
+                        startDate: formatDate(asso[`startDate${i}`], true),
+                        endDate: formatDate(asso[`endDate${i}`],  true),
                     });
                 }
             }
@@ -677,6 +677,11 @@ class InfoModal extends Component {
     SecurityCall = (vake) => {
         // this will work after  got  Object from the skill from
         // vake.basic.stateId = null
+        let sec = {
+            ...vake.sec,
+            clearanceGrantedDate: formatDate(vake?.sec?.clearanceGrantedDate, true),
+            clearanceExpiryDate: formatDate(vake?.sec?.clearanceExpiryDate, true),
+        }
 
         this.setState(
             {
@@ -748,8 +753,8 @@ class InfoModal extends Component {
                         asso[`id${i}`] = assoEl.id
                         asso[`designation${i}`] = assoEl.designation
                         asso[`organizationId${i}`] = assoEl.organizationId
-                        asso[`startDate${i}`] = assoEl.startDate && moment(assoEl.startDate)
-                        asso[`endDate${i}`] = assoEl.endDate && moment (assoEl.endDate)
+                        asso[`startDate${i}`] = assoEl.startDate && formatDate(assoEl.startDate)
+                        asso[`endDate${i}`] = assoEl.endDate && formatDate (assoEl.endDate)
                     }
                     
                 }
@@ -771,8 +776,8 @@ class InfoModal extends Component {
                 };
                 let sec = {
                     clearanceLevel: data.clearanceLevel,
-                    clearanceGrantedDate: data.clearanceGrantedDate && moment(data.clearanceGrantedDate),
-                    clearanceExpiryDate: data.clearanceExpiryDate && moment(data.clearanceExpiryDate),
+                    clearanceGrantedDate: data.clearanceGrantedDate && formatDate(data.clearanceGrantedDate),
+                    clearanceExpiryDate: data.clearanceExpiryDate && formatDate(data.clearanceExpiryDate),
                     clearanceSponsorId: data.clearanceSponsorId,
                 }
 

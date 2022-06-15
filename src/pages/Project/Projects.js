@@ -63,14 +63,14 @@ class Projects extends Component {
                 title: 'Start Date',
                 dataIndex: 'startDate',
                 key: 'startDate',
-                render: (record) =>(record && formatDate(record)),
+                render: (record) =>(formatDate(record, true, true)),
                 ...tableSorter('startDate', 'date'),
             },
             {
                 title: 'End Date',
                 dataIndex: 'endDate',
                 key: 'endDtae',
-                render: (record) =>(record &&  formatDate(record)),
+                render: (record) =>(formatDate(record, true, true)),
                 ...tableSorter('endDate', 'date'),
             },
             {
@@ -403,8 +403,8 @@ class Projects extends Component {
                     el.title && el.title.toLowerCase().includes(value.toLowerCase()) || 
                     organization && organization.toLowerCase().includes(value.toLowerCase()) ||
                     el.value && `${formatCurrency(el.value)}`.toLowerCase().includes(value.toLowerCase()) ||
-                    el.startDate && `${formatDate(el.startDate)}`.toLowerCase().includes(value.toLowerCase()) ||
-                    el.endDate && `${formatDate(el.endDate)}`.toLowerCase().includes(value.toLowerCase()) ||
+                    el.startDate && `${formatDate(el.startDate, true, true)}`.toLowerCase().includes(value.toLowerCase()) ||
+                    el.endDate && `${formatDate(el.endDate, true, true)}`.toLowerCase().includes(value.toLowerCase()) ||
                     el.type && `${O_TYPE[el.type]}`.toLowerCase().includes(value.toLowerCase()) 
                 })
             })
