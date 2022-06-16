@@ -1,6 +1,6 @@
 import moment from 'moment'
 import { message as messageAlert } from "antd";
-// export const Api = "http://localhost:3301/api/v1";
+export const Api = "http://localhost:3301/api/v1";
 
 // export const Api = "http://onelmcrm.gaamatech.com:8000/api/v1";
 // export const Api = "http://192.168.0.243:3000/api/v1"; // Shahzaib/   
@@ -8,7 +8,7 @@ import { message as messageAlert } from "antd";
 // export const Api = "https://2c13-111-88-189-227.ngrok.io/api/v1"; // Shahzaib/ tunnel   
 // export const Api = "http://192.168.0.218:3301/api/v1"; // Me
 
-export const Api = "http://54.91.49.138:8000/api/v1"; //Test 
+// export const Api = "http://54.91.49.138:8000/api/v1"; //Test 
 
 // export const Api = "http://192.168.0.110:3301/api/v1"; // TrunRajPal Home
 // export const Api = "http://192.168.0.244:3301/api/v1"; // TrunRajPal Office
@@ -62,9 +62,9 @@ export const formatDate = (date, string, format) =>{
     )
 }
 
-export const momentWithoutUtc = (date) =>{
-  return date && moment.utc(date)
-}
+// export const momentWithoutUtc = (date) =>{
+//   return date && moment.utc(date)
+// }
 
 export const formatFloat = (number) =>{
   return (!isNaN(parseFloat(number))) ? parseFloat(number).toFixed(2) : '0.00'

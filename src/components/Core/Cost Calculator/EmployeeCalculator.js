@@ -13,7 +13,6 @@ import '../../Styles/buycost.css'
 const EmployeeCalculator = (props) =>{
     const [contract, setContract] = useState({})
     const [variables, setVariables] = useState([])
-    const [holidays, setHolidays] = useState([])
     const [variableCount, setVariableCount] = useState(0)
     const [margin, setMargin] = useState([20, 25, 30, 40])
     const [adjustment, setAdjustment] = useState(0)
@@ -24,7 +23,7 @@ const EmployeeCalculator = (props) =>{
         
         buyCost(props.empId).then(res=>{
             if(res.success){
-                let {contract, golobalVariables, holidays} = res.data
+                let {contract, golobalVariables} = res.data
                 /** calculating noOfDays from contract not in use  */
                 let weekdays = []
                 for (var i=0 ; i < contract.noOfDays ?? 5 ; i++){
@@ -61,7 +60,6 @@ const EmployeeCalculator = (props) =>{
                 setVariableCount(count + contract.hourlyBaseRate)
                 setContract(contract)
                 setVariables(golobalVariables)
-                setHolidays(holidays)
             }
       })
     

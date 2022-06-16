@@ -70,7 +70,8 @@ class EmpBilling extends Component {
                     <Dropdown
                         overlay={
                             <Menu>
-                                <Menu.Item 
+                                <Menu.Item
+                                    key="delete" 
                                     danger
                                     disabled={!this?.state?.permissions?.['DELETE']}
                                 >
@@ -82,6 +83,7 @@ class EmpBilling extends Component {
                                     </Popconfirm>
                                 </Menu.Item >
                                 <Menu.Item
+                                    key="edit"
                                     disabled={!this?.state?.permissions?.['UPDATE']}
                                     onClick={() => {
                                         this.setState({ billModal: true, editCntrct: record.id, });

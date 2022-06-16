@@ -64,19 +64,26 @@ class EmpBilling extends Component {
                 key: "action",
                 align: "center",
                 width: '1%',
-                render: (value, record, index) => (
-                    <Dropdown
+                render: (value, record, index) =>{
+                    const { DELETE, UPDATE } = this?.state?.permissions ?? {}
+                    return <Dropdown
                         overlay={
                             <Menu>
-                                {/* <Menu.Item danger>
+                                <Menu.Item
+                                    key="delete" 
+                                    danger
+                                    disabled={!DELETE}
+                                >
                                     <Popconfirm
                                         title="Are you sure you want to delete"
                                         onConfirm={() => this.handleDelete(record.id, index) }
                                     >
                                         Delete
                                     </Popconfirm>
-                                </Menu.Item> */}
+                                </Menu.Item>
                                 <Menu.Item
+                                    key="edit"
+                                    disabled={!UPDATE}
                                     onClick={() => {
                                         this.setState({ billModal: true, editCntrct: record.id, });
                                     }}
@@ -90,7 +97,7 @@ class EmpBilling extends Component {
                             <SettingOutlined />
                         </Button>
                     </Dropdown>
-                ),
+                },
             },
         ];
 
@@ -101,6 +108,7 @@ class EmpBilling extends Component {
             editCntrct: false,
             openSearch: false,
             filterData: [],
+            permissions: {}
         }
     }
     componentDidMount = ()=>{
@@ -109,6 +117,7 @@ class EmpBilling extends Component {
     }
 
     fetchAll = (id) =>{
+        const { USERS }= JSON.parse(localStore().permissions)
         Promise.all([ getList(id), subContRecord(id) ])
         .then(res => {
             this.setState({
@@ -117,6 +126,7 @@ class EmpBilling extends Component {
                 intro: res[1].basic,
                 billModal: false,
                 editCntrct: false,
+                permissions: USERS
             })
         })
         .catch(e => {

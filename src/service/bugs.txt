@@ -75,19 +75,6 @@ filters on each page not done
 isoWeekdayCalc not done
 addRequestModal  not done
 
-check props that you are sending idiot
-check. function afters
-
-/***Check */
-LeaseModal.js
-getOrgRecord function in Organization.js
-calenders js
-
-/** SEARCH FOR***/
-momentWithoutUtc
-TimeOff
-/home/sudoware/Desktop/Projects/onelm/onelm-frontend/src/pages/Project/Resources.js
-
 
 /** Delete functaionalty */
 contBilling.js
