@@ -13,7 +13,7 @@ import '../../Styles/buycost.css'
 const EmployeeCalculator = (props) =>{
     const [contract, setContract] = useState({})
     const [variables, setVariables] = useState([])
-    const [variableCount, setVariableCount] = useState(0)
+    const [buyRate, setBuyRate] = useState(0)
     const [margin, setMargin] = useState([20, 25, 30, 40])
     const [adjustment, setAdjustment] = useState(0)
     const [expectedDailyHours, setExpectedDailyHours ] = useState(8.00)
@@ -23,7 +23,7 @@ const EmployeeCalculator = (props) =>{
         
         buyCost(props.empId).then(res=>{
             if(res.success){
-                let {contract, golobalVariables} = res.data
+                let {contract, golobalVariables, employeeBuyRate} = res.data
                 /** calculating noOfDays from contract not in use  */
                 let weekdays = []
                 for (var i=0 ; i < contract.noOfDays ?? 5 ; i++){
@@ -46,18 +46,18 @@ const EmployeeCalculator = (props) =>{
                 //     (contract?.remunerationAmount / 52 / contract?.noOfHours)
                 // ) /** hourlyBaseRate expression Annual hours / 52 * weekly hours  */
                     /** 52 is a number of weeks in a year, noOfHours are weekly our  */
-                let count = 0
-                golobalVariables = golobalVariables.map((el, index)=> {
-                    if (index === 0){
-                        el.amount = contract?.hourlyBaseRate * el?.value/100
-                    }else{
-                        el.amount = ((contract?.hourlyBaseRate + golobalVariables?.[0].amount) * el.value )/100
-                    }
-                    el.apply = 'Yes'
-                    count += el.amount
-                    return el
-                })
-                setVariableCount(count + contract.hourlyBaseRate)
+                // let count = 0
+                // golobalVariables = golobalVariables.map((el, index)=> {
+                //     if (index === 0){
+                //         el.amount = contract?.hourlyBaseRate * el?.value/100
+                //     }else{
+                //         el.amount = ((contract?.hourlyBaseRate + golobalVariables?.[0].amount) * el.value )/100
+                //     }
+                //     el.apply = 'Yes'
+                //     count += el.amount
+                //     return el
+                // })
+                setBuyRate(employeeBuyRate)
                 setContract(contract)
                 setVariables(golobalVariables)
             }
@@ -73,7 +73,7 @@ const EmployeeCalculator = (props) =>{
     const onAplicable = (value, index) =>{
         let changeVariables = variables 
         changeVariables[index]['apply'] = value
-        let count = 0
+        let count = contract.hourlyBaseRate
         changeVariables = changeVariables.map((el, index)=> {
             if (index === 0){// if applicable              // caluclation                     
                 el.amount = el.apply === 'Yes' ? (contract?.hourlyBaseRate * el.value/100) : 0
@@ -83,7 +83,7 @@ const EmployeeCalculator = (props) =>{
             count += el.amount
             return el
         })
-        setVariableCount(count + contract.hourlyBaseRate)
+        setBuyRate(count)
         setVariables([...changeVariables])
     }
 
@@ -153,7 +153,7 @@ const EmployeeCalculator = (props) =>{
                         />
                     </Col>
                     <Col span={16} className="label bold my-20"> Employee Hourly Buy Rate</Col>
-                    <Col span={8} className="item bold my-20"> {formatCurrency(variableCount + adjustment)}</Col>
+                    <Col span={8} className="item bold my-20"> {formatCurrency(buyRate + adjustment)}</Col>
                     <Col span={12} className="label mb-10">Daily Billable Hours</Col>
                     <Col span={6}  className="item bold  mb-10"> 
                         <Inputnumber
@@ -162,7 +162,7 @@ const EmployeeCalculator = (props) =>{
                         />
                     </Col>
                     <Col span={16} className="label bold "> Employee Daily Buy Rate</Col>
-                    <Col span={8} className="item bold total-cost pr-5"> {formatCurrency(expectedDailyHours * (variableCount + adjustment))}</Col>
+                    <Col span={8} className="item bold total-cost pr-5"> {formatCurrency(expectedDailyHours * (buyRate + adjustment))}</Col>
                 </Row>
             </Col>
             <Col span={12} className="sell-cost">
@@ -184,7 +184,7 @@ const EmployeeCalculator = (props) =>{
                 <Row align="bottom"> 
                     <Col span={8} className="label bold">Employee Daily Sell Rate</Col>
                     {margin.map((el,index)=> <Col span={4} className="bold" key={index}>
-                        {formatCurrency((expectedDailyHours * (variableCount + adjustment))/(1- (el/100)))}
+                        {formatCurrency((expectedDailyHours * (buyRate + adjustment))/(1- (el/100)))}
                     </Col>)}
                 </Row>
             </Col>
