@@ -1,7 +1,6 @@
 import axios from "axios";
 
-import { Api, apiErrorRes, headers, jwtExpired, setToken } from "./constant";
-import moment from "moment";
+import { Api, apiErrorRes, formatDate, headers, jwtExpired, setToken } from "./constant";
 import { message as messageAlert } from "antd";
 
 const url = `${Api}/organizations`;
@@ -57,9 +56,9 @@ const reConstruct = (data) =>{
             SumIns_PI: vake.piSumInsured,
             SumIns_PL: vake.plSumInsured,
             SumIns_WC: vake.wcSumInsured,
-            expiry_PI: vake.piInsuranceExpiry ? moment(vake.piInsuranceExpiry): null,
-            expiry_PL: vake.piInsuranceExpiry ? moment(vake.plInsuranceExpiry) : null,
-            expiry_WC: vake.piInsuranceExpiry ? moment(vake.wcInsuranceExpiry) : null,
+            expiry_PI: formatDate(vake.piInsuranceExpiry),
+            expiry_PL: formatDate(vake.plInsuranceExpiry),
+            expiry_WC: formatDate(vake.wcInsuranceExpiry),
         }
         const bank = {
             bankName: vake.bankAccounts[0] && vake.bankAccounts[0].name,

@@ -3,8 +3,6 @@ import { Button, Table, Dropdown, Menu } from "antd";
 import { SettingOutlined, DownOutlined } from "@ant-design/icons"; //Icons
 import { Link } from 'react-router-dom'
 
-import moment from "moment";
-
 import { formatDate, formatCurrency, localStore } from "../../service/constant";
 import { entityProjects } from "../../service/constant-Apis";
 
@@ -53,13 +51,13 @@ class Projects extends Component {
                 title: 'Start Date',
                 dataIndex: 'startDate',
                 key: 'startDate',
-                render: (record) =>(record && formatDate(record))
+                render: (record) =>(record && formatDate(record, true, true))
             },
             {
                 title: 'End Date',
                 dataIndex: 'endDate',
                 key: 'endDtae',
-                render: (record) =>(record &&  formatDate(record))
+                render: (record) =>(record &&  formatDate(record, true, true))
             },
             {
                 title: '...',
@@ -115,17 +113,15 @@ class Projects extends Component {
     render() {
         const { projects, columns } = this.state;
         return (
-            <>
-                <Table
-                    bordered
-                    rowKey={(data) => data.id} 
-                    pagination={{pageSize: localStore().pageSize}}
-                    columns={columns}
-                    dataSource={projects}
-                    size="small"
-                    className='fs-small'
-                />
-            </>
+            <Table
+                bordered
+                rowKey={(data) => data.id} 
+                pagination={{pageSize: localStore().pageSize}}
+                columns={columns}
+                dataSource={projects}
+                size="small"
+                className='fs-small'
+            />
         );
     }
 }

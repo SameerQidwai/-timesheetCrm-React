@@ -13,11 +13,11 @@ import InfoModal from "./Modals/InfoModal";
 
 import { getRecord, delList } from "../../service/projects";
 
-import moment from "moment"
 import { formatDate, formatCurrency, localStore, O_STATUS } from "../../service/constant";
 import AuthError from "../../components/Core/AuthError";
 import PMResources from "../../components/Core/Resources/PMResources";
 import PTResources from "../../components/Core/Resources/PTResources";
+import { generalDelete } from "../../service/delete-Api's";
 
 const { Item } = Descriptions;
 const { TabPane } = Tabs;
@@ -65,11 +65,13 @@ class ProjectInfo extends Component {
     };
 
     handleDelete = (id) => {
-        delList(id).then((res) => {
-            if (res.success) {
-                this.props.history.push('/Employees')
+        const url = '/projects'
+        const { history } = this.props
+        generalDelete(history, url, id).then(res =>{
+            if (res.success){
+               // will not run
             }
-        });
+        })
     };
 
     callBack = () => {
@@ -87,34 +89,56 @@ class ProjectInfo extends Component {
                     <Dropdown
                         overlay={
                             <Menu>
-                                <Menu.Item 
+                                <Menu.Item  
+                                    key={'delete'}
+                                    danger
+                                    disabled={!permissions?.['DELETE']}
+                                >
+                                    <Popconfirm
+                                        title="Are you sure you want to delete" 
+                                        onConfirm={() => this.handleDelete(leadId)} 
+                                    >
+                                        Delete
+                                    </Popconfirm>
+                                </Menu.Item >
+                                <Menu.Item  
+                                    key={'edit'}
                                     onClick={() => { 
                                         this.setState({ infoModal: true});
                                     }}
-                                    disabled={!permissions['UPDATE']}
-                                    > Edit </Menu.Item>
+                                    disabled={!permissions?.['UPDATE']}
+                                > 
+                                    Edit 
+                                </Menu.Item>
+                                <Menu.Item  
+                                    key={'order'}>
+                                    <Link to={{ pathname: `/projects/${leadId}/purchase-order`}} className="nav-link">
+                                        Purchase Order
+                                    </Link>
+                                </Menu.Item >
                                 {(basic && basic.type) === 1 ?  //if condition
-                                <Menu.Item> 
-                                    <Link
-                                        to={{ pathname: `/projects/${leadId}/milestones`, }}
-                                        className="nav-link"
-                                    >
-                                        Milestones
-                                    </Link>
-                                </Menu.Item>
-                                 : //else condition
-                                <Menu.Item>
-                                    <Link
-                                        to={{
-                                            pathname: `/projects/${leadId}/milestones/${leadId}/resources`,
-                                            // pathname: `/projects/${record.id}/resources`,
-                                        }}
-                                        className="nav-link"
-                                    >
-                                        Postions
-                                    </Link>
-                                </Menu.Item>
-                            }
+                                    <Menu.Item 
+                                        key={'milestone'}> 
+                                        <Link
+                                            to={{ pathname: `/projects/${leadId}/milestones`, }}
+                                            className="nav-link"
+                                        >
+                                            Milestones
+                                        </Link>
+                                    </Menu.Item>
+                                    : //else condition
+                                    <Menu.Item 
+                                        key={'position'}>
+                                        <Link
+                                            to={{
+                                                pathname: `/projects/${leadId}/milestones/${data?.milestones?.[0]?.id}/resources`,
+                                            }}
+                                            className="nav-link"
+                                        >
+                                            Postions
+                                        </Link>
+                                    </Menu.Item>
+                                }
                             </Menu>
                         }
                     >
@@ -151,9 +175,9 @@ class ProjectInfo extends Component {
                         
                     }</Item>
                     <Item label="Delegate Contact"> {basic ?basic.ContactName: null}</Item>
-                    <Item label="Start Date">{data.startDate ? formatDate(data.startDate): null} </Item>
-                    <Item label="End Date">{data.endDate ? formatDate(data.endDate): null}</Item>
-                    <Item label="Bid Date">{data.bidDate ? formatDate(data.bidDate): null}</Item>
+                    <Item label="Start Date">{formatDate(data.startDate, true, true)} </Item>
+                    <Item label="End Date">{formatDate(data.endDate, true, true)}</Item>
+                    <Item label="Bid Date">{formatDate(data.bidDate, true, true)}</Item>
                     <Item label="Status">{basic.status ? O_STATUS[basic.status]: ''}</Item>
                     {/* <Item label="Gender">{data.gender}</Item> */}
                 </Descriptions>

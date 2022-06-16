@@ -1,7 +1,6 @@
 import axios from "axios";
 
-import { Api, headers, jwtExpired, setToken } from "./constant";
-import moment from "moment";
+import { Api, formatDate, headers, jwtExpired, setToken } from "./constant";
 import { message as messageAlert } from "antd";
 
 const url = `${Api}/employees/`;
@@ -54,8 +53,8 @@ export const getRecord = (empId, id) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
             if (success){
-                data.startDate = data.startDate && moment(data.startDate)
-                data.endDate = data.endDate && moment(data.endDate) 
+                data.startDate = formatDate(data.startDate)
+                data.endDate = formatDate(data.endDate) 
                 data.totalDeduction = (data.preTaxDeductionAmount ? data.preTaxDeductionAmount : 0) + (data.postTaxDeductionAmount ? data.postTaxDeductionAmount : 0)
                 setToken(res.headers && res.headers.authorization)
             }

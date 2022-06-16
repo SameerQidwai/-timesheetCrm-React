@@ -3,7 +3,7 @@ import { Row, Button, Space, Popconfirm, Divider, Form } from "antd";
 import { getSettings, getVariables, upadteSettings, upadteVariables } from "../../service/global-apis"
 import FormItems from "../../components/Core/Forms/FormItems";
 import { getleaveRequestTypes, getStates } from '../../service/constant-Apis';
-import { STATES } from '../../service/constant';
+import { formatDate, STATES } from '../../service/constant';
 
 function GlobalVars(props) {
     const [form] = Form.useForm();
@@ -206,10 +206,10 @@ function GlobalVars(props) {
                 form.setFieldsValue({settings: res[2].data, ...res[3].data});
             }
             let workCover = {value: 'workCover', label:'WorkCover'}
-            let publicHoildays = {value: 'publicHoildays', label:'Public Hoildays'}
+            let publicHolidays = {value: 'publicHoildays', label:'Public Holidays'}
             let states = res[0].success ? res[0].data : []
             let leavetypes = res[1].success ? res[1].data : []
-            addStateFields([...states, workCover, ...leavetypes, publicHoildays]) 
+            addStateFields([...states, workCover, ...leavetypes, publicHolidays]) 
         })
         .catch(err => console.log(err))
     }
@@ -276,10 +276,15 @@ function GlobalVars(props) {
         delete childData.settings
         // let variable = {}
         let variable = []
-        Object.entries(childData).map( ([key, val]) => {
+        Object.entries(childData).map( ([key, val, startDate, endDate]) => {
             if (val.value){
                 // variable = {...val, name: key}
-                variable.push({...val, name: key})
+                variable.push({
+                    ...val, 
+                    name: key,
+                    startDate: formatDate(startDate, true),
+                    endDate: formatDate(endDate, true),
+                })
             }
           });
         Promise.all([upadteSettings(settings), upadteVariables({variables: variable})]).then(res=>{

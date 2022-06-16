@@ -11,11 +11,9 @@ import Bank from "../../components/Core/Bank";
 
 import InfoModal from "./Modals/InfoModal";
 
-import { getRecord, delList } from "../../service/Employees";
-
-import moment from "moment"
+import { getRecord } from "../../service/Employees";
 import LeaveBalance from "../../components/Core/LeaveBalance";
-import { GENDER, JOB_TYPE, localStore } from "../../service/constant";
+import { formatDate, GENDER, JOB_TYPE, localStore } from "../../service/constant";
 import AuthError from "../../components/Core/AuthError";
 import EmployeeCalculator from "../../components/Core/Cost Calculator/EmployeeCalculator";
 import { generalDelete } from "../../service/delete-Api's";
@@ -150,7 +148,7 @@ class OrgInfo extends Component {
                     <Item label="Phone">{data.phoneNumber} </Item>
                     <Item label="Email">{data.email}</Item>
                     <Item label="Address">{data.address}</Item>
-                    <Item label="Date Of Birth">{data.dateOfBirth ? moment(data.dateOfBirth).format('DD MM YYYY'): null}</Item>
+                    <Item label="Date Of Birth">{formatDate(data.dateOfBirth, true, true)}</Item>
                     <Item label="Gender">{GENDER[data.gender]}</Item>
                     <Item label="Employment Status">{JOB_TYPE[contract?.type]}</Item>
                 </Descriptions>
@@ -161,11 +159,8 @@ class OrgInfo extends Component {
                         // defaultActiveKey="cost-calculator"
                     >
                         <TabPane tab="Project" key="project">
-                        <Projects targetId={emp} customUrl={`helpers/work?type=P&employee=${emp}`} />
+                            <Projects targetId={emp} customUrl={`helpers/work?type=P&employee=${emp}`} />
                         </TabPane>
-                        {/* <TabPane tab="Travels" key="travels">
-                            <Travels id={emp} />
-                        </TabPane> */}
                         <TabPane tab="Comments" key="comments">
                             <Comments targetType="EMP" targetId={emp} />
                         </TabPane>

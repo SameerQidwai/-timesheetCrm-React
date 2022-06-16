@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import { Modal, Tabs, Form } from "antd";
 import { LoadingOutlined } from "@ant-design/icons"; //Icons
-import moment from "moment";
 import FormItems from "../../../components/Core/Forms/FormItems";
 
 import { addList, getRecord, editList } from "../../../service/projects";
 import { getOrganizations, getStates, getOrgPersons, getPanels, getProjects, } from "../../../service/constant-Apis";
+import { formatDate } from "../../../service/constant";
 
 const { TabPane } = Tabs;
 
@@ -456,7 +456,6 @@ class InfoModal extends Component {
 
   fetchAll = () => {
     const { editPro } = this.props;
-    // {dates :{ entryDate: moment(new Date()) }}
     const customUrl = `helpers/contact-persons?active=1&employee=1&associated=1&label=1`
     Promise.all([ getPanels(), getOrganizations(), getStates(), getOrgPersons(customUrl), editPro && this.getRecord(editPro), getProjects()])
       .then((res) => {
@@ -509,7 +508,9 @@ class InfoModal extends Component {
         accountManagerId: manage.accountManagerId ?? null,
         projectManagerId: manage.projectManagerId ?? null, 
 
-        ...dates
+        startDate: formatDate(dates.startDate, true),
+        endDate: formatDate(dates.endDate, true),
+        entryDate: formatDate(dates.entryDate, true),
     }
 
     if (!editPro) {
@@ -581,7 +582,7 @@ class InfoModal extends Component {
           scrollToFirstError={true}
           size="small"
           layout="inline"
-          initialValues={ { dates:{ entryDate: moment(new Date()) } } }
+          initialValues={ { dates:{ entryDate: formatDate(new Date()) } } }
         >
           <Tabs type="card">
               <TabPane tab="Opportunity Info" key="basic" forceRender className="ant-form ant-form-inline ant-form-small" >

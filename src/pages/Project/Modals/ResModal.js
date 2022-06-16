@@ -5,7 +5,7 @@ import { LoadingOutlined } from "@ant-design/icons"; //Icons
 import { addLeadSkill, getLeadSkill, editLeadSkill, } from "../../../service/projects";
 import { getPanelSkills, getOrgPersons, } from "../../../service/constant-Apis";
 import FormItems from "../../../components/Core/Forms/FormItems";
-import { dateRangeAfter, dateRangeBefore } from "../../../service/constant";
+import { dateRangeAfter, dateRangeBefore, formatDate } from "../../../service/constant";
 
 const { TabPane } = Tabs;
 
@@ -267,14 +267,19 @@ class ResModal extends Component {
     // this will work after I get the Object from the form
     this.setState({ loading: true });
     const { editRex } = this.props;
-    vake = vake.obj;
-    vake.isMarkedAsSelected = true;
+    
+    let { obj } = vake
+    obj = {
+      ...obj,
+      startDate: formatDate(obj.startDate, true),
+      endDate: formatDate(obj.endDate, true),
+      isMarkedAsSelected: true,
+    }
+
     if (editRex) {
-      console.log("edit");
-      this.editRecord(vake);
+      this.editRecord(obj);
     } else {
-      console.log("add");
-      this.addRecord(vake);
+      this.addRecord(obj);
     }
   };
 
@@ -292,7 +297,6 @@ class ResModal extends Component {
   getRecord = (skills) => {
     const { crud, editRex } = this.props;
     getLeadSkill(crud, editRex).then((resR) => {
-      console.log(resR.data);
       if (resR.success) {
         const skillIndex = skills.findIndex(
           (skill) => skill.value === resR.data.panelSkillId

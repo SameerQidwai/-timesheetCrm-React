@@ -1,8 +1,7 @@
 import axios from "axios";
 import { message as messageAlert } from "antd";
 
-import { Api, apiErrorRes, headers, jwtExpired, setToken, thumbUrl } from "./constant";
-import moment from "moment";
+import { Api, apiErrorRes, formatDate, headers, jwtExpired, setToken, thumbUrl } from "./constant";
 
 const url = `${Api}/employees`;
 
@@ -134,7 +133,7 @@ function reStructure(data) {
         firstName: contactPerson.firstName,
         lastName: contactPerson.lastName,
         gender: contactPerson.gender,
-        dateOfBirth: contactPerson.dateOfBirth ? moment(contactPerson.dateOfBirth): null,
+        dateOfBirth: formatDate(contactPerson.dateOfBirth),
         phoneNumber: contactPerson.phoneNumber,
         email: contactPerson.email,
         address: contactPerson.address,
@@ -154,7 +153,7 @@ function reStructure(data) {
         superannuationType: data.superannuationType
     }
     const kin = {
-        nextOfKinDateOfBirth: data.nextOfKinDateOfBirth? moment(data.nextOfKinDateOfBirth) : null,
+        nextOfKinDateOfBirth: formatDate(data.nextOfKinDateOfBirth),
         nextOfKinEmail: data.nextOfKinEmail,
         nextOfKinGender: data.nextOfKinGender,
         nextOfKinName:  data.nextOfKinName,
@@ -178,8 +177,8 @@ function reStructure(data) {
         payslipEmail: employmentContracts.payslipEmail, 
         membershipAccountNo: employmentContracts.membershipAccountNo, 
         payFrequency: employmentContracts.payFrequency, 
-        startDate: employmentContracts.startDate ? moment(employmentContracts.startDate) : null, 
-        endDate: employmentContracts.endDate ? moment(employmentContracts.endDate) : null,
+        startDate: formatDate(employmentContracts.startDate), 
+        endDate: formatDate(employmentContracts.endDate),
         type: employmentContracts.type, 
         noOfHours: employmentContracts.noOfHours, 
         noOfDays: employmentContracts.noOfDays, 

@@ -3,13 +3,13 @@ import { Row, Col, Menu, Button, Dropdown, Descriptions, Table, Tag, Progress, P
 import { SettingOutlined, DownOutlined } from "@ant-design/icons"; //Icons
 import { Link } from 'react-router-dom'
 
-import moment from "moment"
 
 import MileModal from "./MileModal";
 import { formatDate, formatCurrency, localStore } from "../../service/constant";
 import { getMilestones, getProjectDetail } from "../../service/Milestone-Apis";
 import { getRecord } from "../../service/opportunities";
 import { generalDelete } from "../../service/delete-Api's";
+import { tableSorter } from "../../components/Core/Table/TableFilter";
 
 const { Item } = Descriptions;
 
@@ -40,21 +40,21 @@ class Milestone extends Component {
                             {text}
                         </Link>
                     ),
-                    sorter: (a, b) => a.title - b.title,
+                    ...tableSorter('title', 'string'),
                 },
                 {
                     title: "Start Date",
                     dataIndex: "startDate",
                     key: "startDate",
-                    render: (record) =>(record && formatDate(record)),
-                    sorter: (a, b) => moment(a.startDate).unix() - moment(b.startDate).unix()
+                    render: (record) =>(formatDate(record, true, true)),
+                    ...tableSorter('startDate', 'date'),
                 },
                 {
                     title: "End Date",
                     dataIndex: "endDate",
                     key: "endDate",
-                    render: (record) =>(record && formatDate(record)),
-                    sorter: (a, b) => moment(a.endDate).unix() - moment(b.endDate).unix()
+                    render: (record) =>(formatDate(record, true, true)),
+                    ...tableSorter('endDate', 'date'),
                 },
                 {
                     title: "Progress",
@@ -212,9 +212,9 @@ class Milestone extends Component {
                 >
                     <Item label="Title">{desc.title}</Item>
                     <Item label="Value">{ formatCurrency(desc.value)}</Item>
-                    <Item label="Start Date">{desc.startDate ? formatDate(desc.startDate): null} </Item>
-                    <Item label="End Date">{desc.endDate ? formatDate(desc.endDate): null}</Item>
-                    <Item label="Bid Date">{desc.bidDate ? formatDate(desc.bidDate): null}</Item>
+                    <Item label="Start Date">{formatDate(desc.startDate, true, true)} </Item>
+                    <Item label="End Date">{formatDate(desc.endDate, true, true)}</Item>
+                    <Item label="Bid Date">{formatDate(desc.bidDate, true, true)}</Item>
                     {/* <Item label="Gender">{data.gender}</Item> */}
                 </Descriptions>
                 <Row justify="end">

@@ -7,7 +7,7 @@ import TimeModal from "./Modals/TimeModal"
 import AttachModal from "./Modals/AttachModal";
 import {  getList, reviewTimeSheet, getUsers, deleteTime,  } from "../../service/timesheet"
 import { getUserMilestones } from "../../service/constant-Apis";
-import { localStore, Api, thumbUrl, formatDate, STATUS_COLOR, R_STATUS, formatFloat } from "../../service/constant";
+import { localStore, Api, thumbUrl, STATUS_COLOR, R_STATUS, formatFloat } from "../../service/constant";
     
 import moment from "moment";
 import "../styles/button.css";
@@ -609,10 +609,8 @@ class TimeSheetContact extends Component {
     handleSelWeek = (buttonPress) =>{
         const { sheetDates } = this.state
         const { sWeek, startDate, endDate, cMonth } = sheetDates
-        console.log({'sWeek': formatDate(sWeek),'endDate': formatDate(endDate),'startDate': formatDate(startDate)})
         if (buttonPress === 'pWeek'){
             let showWeek = moment(sWeek.subtract(7, 'days'))
-            console.log({'showWeek': formatDate(showWeek),'sWeek': formatDate(sWeek),'startDate': formatDate(startDate)})
             if(!sWeek.isSame(startDate)){ // will not run hook if sWeek and startDate is same
                 this.setState({
                     sheetDates:{
@@ -623,7 +621,6 @@ class TimeSheetContact extends Component {
             }
         }else if (buttonPress === 'nWeek'){
             let showWeek = moment(sWeek.add(7, 'days'))
-            console.log({'showWeek': formatDate(showWeek),'sWeek': formatDate(sWeek),'endDate': formatDate(endDate)})
             if(!sWeek.isSame(endDate)){ // will not run the hook if sWeek is same as endDate
                 this.setState({
                     sheetDates:{

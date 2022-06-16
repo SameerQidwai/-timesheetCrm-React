@@ -5,7 +5,7 @@ import { buyCost } from "../../../service/Employees";
 import moment from "moment";
 import 'moment-weekday-calc';
 import { formatter, parser } from "../Forms/FormItems";
-import { formatCurrency, formatFloat, JOB_TYPE, STATES } from "../../../service/constant";
+import { formatCurrency, formatFloat, getFiscalYear, formatDate, STATES } from "../../../service/constant";
 
 import '../../Styles/buycost.css'
 
@@ -13,72 +13,67 @@ import '../../Styles/buycost.css'
 const EmployeeCalculator = (props) =>{
     const [contract, setContract] = useState({})
     const [variables, setVariables] = useState([])
-    const [holidays, setHolidays] = useState([])
-    const [variableCount, setVariableCount] = useState(0)
+    const [buyRate, setBuyRate] = useState(0)
     const [margin, setMargin] = useState([20, 25, 30, 40])
     const [adjustment, setAdjustment] = useState(0)
+    const [expectedDailyHours, setExpectedDailyHours ] = useState(8.00)
+
     useEffect(() => {
-        let fiscalYear = {}
-        if (parseInt(moment().format('M'))  < 7){
-            fiscalYear = {start: moment().subtract(1, 'y').format('YYYY'), end: moment().format('YYYY')}
-        }else{
-            fiscalYear = {start:moment().format('YYYY'), end: moment().add(1, 'y').format('YYYY')}
-        }
+        let fiscalYear = getFiscalYear('years')
+        
         buyCost(props.empId).then(res=>{
             if(res.success){
-                let {contract, golobalVariables, holidays} = res.data
+                let {contract, golobalVariables, employeeBuyRate} = res.data
+                /** calculating noOfDays from contract not in use  */
                 let weekdays = []
                 for (var i=0 ; i < contract.noOfDays ?? 5 ; i++){
                     weekdays.push(i+1);
                 }
+                /** noOfDays are now fixed 5 days a week throughout year */
+                /** Not In use put it here just in case */
                 let workdays = moment().isoWeekdayCalc({  
                     rangeStart: `1 July ${fiscalYear['start']}`,  
                     rangeEnd: `30 June ${fiscalYear['end']}`,
                     weekdays: weekdays,  
-                    exclusions: holidays,
+                    // exclusions: holidays,
                 }) 
-                contract.workDaysPerAnum = workdays
-                contract.dailyHours = contract?.noOfHours / contract?.noOfDays
-                contract.hourlyBaseRate = (contract.type=== 1 ? 
-                    contract?.remunerationAmount : 
-                    (contract?.remunerationAmount / workdays / contract?.dailyHours)
-                )
+                /**will remove isoWeekdayCalc later  and put constant workDaysPerAnum*/
 
-                let count = 0
-                golobalVariables = golobalVariables.map((el, index)=> {
-                    if (index === 0){
-                        el.amount = contract?.hourlyBaseRate * el.value/100
-                    }else{
-                        el.amount = ((contract?.hourlyBaseRate + golobalVariables[0].amount) * el.value )/100
-                    }
-                    el.apply = 'Yes'
-                    count += el.amount
-                    return el
-                })
-                setVariableCount(count + contract.hourlyBaseRate)
+                contract.workDaysPerAnum = workdays
+                // contract.dailyHours = contract?.noOfHours / contract?.noOfDays
+                // contract.hourlyBaseRate = (contract.type=== 1 ? 
+                //     contract?.remunerationAmount : 
+                //     (contract?.remunerationAmount / 52 / contract?.noOfHours)
+                // ) /** hourlyBaseRate expression Annual hours / 52 * weekly hours  */
+                    /** 52 is a number of weeks in a year, noOfHours are weekly our  */
+                // let count = 0
+                // golobalVariables = golobalVariables.map((el, index)=> {
+                //     if (index === 0){
+                //         el.amount = contract?.hourlyBaseRate * el?.value/100
+                //     }else{
+                //         el.amount = ((contract?.hourlyBaseRate + golobalVariables?.[0].amount) * el.value )/100
+                //     }
+                //     el.apply = 'Yes'
+                //     count += el.amount
+                //     return el
+                // })
+                setBuyRate(employeeBuyRate)
                 setContract(contract)
                 setVariables(golobalVariables)
-                setHolidays(holidays)
             }
       })
     
     }, [])
 
-    
-
-    const onChangeAdjustment = (value) =>{
-        setAdjustment(value)
-    }
-
     const onChangeMargin = (value, index) =>{
-        margin[index] = (value ?? 0)
+        margin[index] = value??0
         setMargin([...margin])
     }
 
     const onAplicable = (value, index) =>{
         let changeVariables = variables 
         changeVariables[index]['apply'] = value
-        let count = 0
+        let count = contract.hourlyBaseRate
         changeVariables = changeVariables.map((el, index)=> {
             if (index === 0){// if applicable              // caluclation                     
                 el.amount = el.apply === 'Yes' ? (contract?.hourlyBaseRate * el.value/100) : 0
@@ -88,7 +83,7 @@ const EmployeeCalculator = (props) =>{
             count += el.amount
             return el
         })
-        setVariableCount(count + contract.hourlyBaseRate)
+        setBuyRate(count)
         setVariables([...changeVariables])
     }
 
@@ -104,7 +99,7 @@ const EmployeeCalculator = (props) =>{
                     <Col span={16}  className="label">Daily Hours</Col>
                     <Col span={8}  className="item">{formatFloat(contract?.dailyHours)}</Col>
                     <Col span={16}  className="label">{`Weekly Hours - (${formatFloat(contract?.dailyHours)} * ${contract?.noOfDays} days)`}</Col>
-                    <Col span={8}  className="item">{contract?.noOfHours}</Col>
+                    <Col span={8}  className="item">{formatFloat(contract?.noOfHours)}</Col>
                     {/* we are saving noOfHOurs in week in our databse so no need to show here */}
                     <Col span={16}  className="label">Billable Days per annum</Col>
                     <Col span={8}  className="item">{contract?.workDaysPerAnum}</Col>
@@ -112,7 +107,7 @@ const EmployeeCalculator = (props) =>{
                     <Col span={16}  className="label my-10" >{
                     contract.type=== 1 ?
                         'Hourly Base Rate' :
-                        `Hourly Base Rate - (${formatCurrency(contract?.remunerationAmount)}/${contract?.workDaysPerAnum}/${contract?.dailyHours})`
+                        `Hourly Base Rate - (${formatCurrency(contract?.remunerationAmount)} / ${52} / ${formatFloat(contract?.noOfHours)})`
                     }</Col>
                     <Col span={8}  className="item my-10" >{formatCurrency(contract?.hourlyBaseRate)}</Col>
                     <Col span={5} offset={16} className="item"><Typography.Text underline strong >Applicable</Typography.Text></Col>
@@ -154,15 +149,20 @@ const EmployeeCalculator = (props) =>{
                         <Inputnumber
                             value={adjustment}
                             shape="$"
-                            onChange={onChangeAdjustment}
+                            onChange={(value)=>{setAdjustment(value??0)}}
                         />
                     </Col>
                     <Col span={16} className="label bold my-20"> Employee Hourly Buy Rate</Col>
-                    <Col span={8} className="item bold my-20"> {formatCurrency(variableCount + adjustment)}</Col>
-                    <Col span={12} className="label">Daily Billable Hours</Col>
-                    <Col span={6}  className="item bold"> {formatFloat(contract?.dailyHours)}</Col>
-                    <Col span={16} className="label bold"> Employee Daily Buy Rate</Col>
-                    <Col span={8} className="item bold total-cost"> {formatCurrency(contract?.dailyHours * (variableCount + adjustment))}</Col>
+                    <Col span={8} className="item bold my-20"> {formatCurrency(buyRate + adjustment)}</Col>
+                    <Col span={12} className="label mb-10">Daily Billable Hours</Col>
+                    <Col span={6}  className="item bold  mb-10"> 
+                        <Inputnumber
+                            value={expectedDailyHours}
+                            onChange={(value)=>{setExpectedDailyHours(value??0)}}
+                        />
+                    </Col>
+                    <Col span={16} className="label bold "> Employee Daily Buy Rate</Col>
+                    <Col span={8} className="item bold total-cost pr-5"> {formatCurrency(expectedDailyHours * (buyRate + adjustment))}</Col>
                 </Row>
             </Col>
             <Col span={12} className="sell-cost">
@@ -184,7 +184,7 @@ const EmployeeCalculator = (props) =>{
                 <Row align="bottom"> 
                     <Col span={8} className="label bold">Employee Daily Sell Rate</Col>
                     {margin.map((el,index)=> <Col span={4} className="bold" key={index}>
-                        {formatCurrency((contract?.dailyHours * (variableCount + adjustment))/(1- (el/100)))}
+                        {formatCurrency((expectedDailyHours * (buyRate + adjustment))/(1- (el/100)))}
                     </Col>)}
                 </Row>
             </Col>
@@ -201,7 +201,7 @@ function Inputnumber({value, shape, onChange, min, max}) {
         onChange={onChange}
         min={min}
         max={max}
-/>
+    />
 }
 
 export default EmployeeCalculator

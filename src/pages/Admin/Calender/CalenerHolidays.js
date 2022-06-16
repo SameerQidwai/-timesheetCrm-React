@@ -26,7 +26,7 @@ class CalenerHolidays extends Component {
                 title: "Date",
                 dataIndex: "date",
                 key: "date",
-                render: (text, record) => formatDate(text),
+                render: (text, record) => formatDate(text, true, true),
                 ...tableSorter('date', 'date')
             },
             {
@@ -146,16 +146,16 @@ class CalenerHolidays extends Component {
 
     componentDidMount() {
         const { id } = this.props.match.params
-        this.setState({calendarId: id},()=>this.getData(id))
+        this.getData(id)
         
     }
 
     getData = (id) => {
-        const { calendarId } = this.state;
-        getList(calendarId).then((res) => {
+        getList(id).then((res) => {
             if (res.success) {
                 this.setState({
                     data: res.data,
+                    calendarId: id,
                     filterData: res.data,
                     openModal: false,
                     editTimeoff: false,
@@ -195,12 +195,11 @@ class CalenerHolidays extends Component {
     Callback = (vake) => {
         const { calendarId } = this.state;
         // this will work after I get the Object
-        vake.obj.date = moment(vake.obj.date).valueOf();
         console.log(vake);
         const obj = {
             calendarId: calendarId,
-            holidayTypeId: vake.obj.holidayTypeId,
-            date: vake.obj.date.valueOf(),
+            holidayTypeId: vake?.obj.holidayTypeId,
+            date: formatDate(vake?.obj.date, true)
         };
         if (!this.state.editTimeoff) {
             // to add new datas
@@ -223,7 +222,7 @@ class CalenerHolidays extends Component {
         const vars = {
             id: data.id,
             holidayTypeId: data.holidayTypeId,
-            date: moment(data.date),
+            date: formatDate(data.date),
         };
         this.setState(
             {
@@ -260,7 +259,7 @@ class CalenerHolidays extends Component {
             this.setState({
                 filterData: data.filter(el => {
                     return el.label && el.label.toLowerCase().includes(value.toLowerCase()) || 
-                    el.date && formatDate(el.date).toLowerCase().includes(value.toLowerCase())
+                    el.date && formatDate(el.date, true, true).toLowerCase().includes(value.toLowerCase())
                 })
             })
         }else{

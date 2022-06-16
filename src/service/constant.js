@@ -1,14 +1,14 @@
 import moment from 'moment'
 import { message as messageAlert } from "antd";
-// export const Api = "http://localhost:3301/api/v1";
+export const Api = "http://localhost:3301/api/v1";
 
 // export const Api = "http://onelmcrm.gaamatech.com:8000/api/v1";
 // export const Api = "http://192.168.0.243:3000/api/v1"; // Shahzaib/   
 // export const Api = "http://192.168.43.207:3000/api/v1"; // new Shahzaib/   
-// export const Api = "https://6e21-115-186-75-92.ngrok.io/api/v1"; // Shahzaib/ tunnel   
+// export const Api = "https://2c13-111-88-189-227.ngrok.io/api/v1"; // Shahzaib/ tunnel   
 // export const Api = "http://192.168.0.218:3301/api/v1"; // Me
 
-export const Api = "http://54.91.49.138:8000/api/v1"; //Test 
+// export const Api = "http://54.91.49.138:8000/api/v1"; //Test 
 
 // export const Api = "http://192.168.0.110:3301/api/v1"; // TrunRajPal Home
 // export const Api = "http://192.168.0.244:3301/api/v1"; // TrunRajPal Office
@@ -45,9 +45,26 @@ export const formatCurrency = (amount) => {
 }; //end
 
 
-export const formatDate = (date, format) =>{
-  return date && moment(date).format(format ??'ddd DD MMM yyyy')
+// export const formatDate = (date, format) =>{
+//   // return date && moment(date).format(format ??'ddd DD MMM yyyy')
+//   return date && moment.utc(date).format(format ??'ddd DD MMM yyyy')
+// }
+
+export const formatDate = (date, string, format) =>{
+  return date && ( // check if date is not null or undefined
+    string ? // check if request is for string date or object
+      format? // check if format is given
+        moment.utc(date).format(format === true ?'ddd DD MMM yyyy': format)
+      :                          // check if format is true return default format or prop format         
+        moment(date).utcOffset(0, true).format()
+    :
+      moment.utc(date)
+    )
 }
+
+// export const momentWithoutUtc = (date) =>{
+//   return date && moment.utc(date)
+// }
 
 export const formatFloat = (number) =>{
   return (!isNaN(parseFloat(number))) ? parseFloat(number).toFixed(2) : '0.00'
@@ -123,20 +140,36 @@ export const apiErrorRes = (err, id, duration, style) =>{
   return { error: err.message, status, message, success };
 }
 
-export const dateRange = (current, selectedDate, isStartDate, pDates) =>{
+export const dateRange = (current, selectedDate, isDate, pDates) =>{
   if (current){
-    const startDate = pDates?.startDate ?? moment.subtract(10, 'years') 
-    const endDate =  pDates?.endDate ?? moment.add(10, 'years')
+    const startDate = pDates?.startDate ?? formatDate(new Date ()).subtract(10, 'years') 
+    const endDate =  pDates?.endDate ?? formatDate(new Date ()).add(10, 'years')
 
-    return (
-      (isStartDate && selectedDate) ? //checking if ut call from startDate 
+    return( 
+      ( (isDate === 'start' && selectedDate) ? //checking if ut call from startDate 
         (current >= selectedDate)   //disable after      
-      : //checking if it call from startDate
+      : (isDate === 'end' && selectedDate )  && //checking if it call from endtDate
         (current <= selectedDate) ) //disable Before  
-      || 
-                        // disable Before, // disable After
-    (!current.isBetween(moment(startDate), moment(endDate), 'day', '[]'))
+      ||                 // disable Before, // disable After
+    (!current.isBetween(formatDate(startDate), formatDate(endDate), 'day', '[]')) )
   }
+}
+
+export const getFiscalYear = (request) =>{
+  let fiscalStartYear = undefined
+  if (parseInt(moment().format('M'))  < 7){
+      fiscalStartYear =  moment().subtract(1, 'y').format('YYYY')
+  }else{
+      fiscalStartYear = moment().format('YYYY')
+  }
+  let fiscalYear = { 
+    dates : {
+      start:  moment().set({month: 6, date: 1, year: fiscalStartYear}),
+      end: moment().set({month: 5, date: 30, year: parseInt(fiscalStartYear )+1})
+    },
+    years: { start: fiscalStartYear, end: parseInt(fiscalStartYear)+1}
+  }
+  return fiscalYear[request]
 }
 
 export const dateRangeAfter = (current, eDate, pDates) =>{

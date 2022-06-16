@@ -429,8 +429,8 @@ class Resources extends Component {
                             'No Organisation'
                         
                     }</Item>
-                    <Item label="Start Date">{proDesc.startDate ? formatDate(proDesc.startDate): null} </Item>
-                    <Item label="End Date">{proDesc.endDate ? formatDate(proDesc.endDate): null}</Item>
+                    <Item label="Start Date">{formatDate(proDesc.startDate,true, true)} </Item>
+                    <Item label="End Date">{formatDate(proDesc.endDate,true, true)}</Item>
                 </Descriptions>
                 {proDesc.type===1 &&<Descriptions
                     style={{marginTop: 15}}
@@ -440,8 +440,8 @@ class Resources extends Component {
                     layout="horizontal"
                 >
                     <Item label="Milestone Name">{mileDesc.title}</Item>
-                    <Item label="Start Date">{mileDesc.startDate ? formatDate(mileDesc.startDate): null} </Item>
-                    <Item label="End Date">{mileDesc.endDate ? formatDate(mileDesc.endDate): null}</Item>
+                    <Item label="Start Date">{formatDate(mileDesc.startDate,true, true)} </Item>
+                    <Item label="End Date">{formatDate(mileDesc.endDate,true, true)}</Item>
                     <Item label="Progress">{mileDesc.progress} %</Item>
                     <Item label="Approved">{mileDesc.isApproved ? 'True' : 'False'}</Item>
                 </Descriptions>}

@@ -9,7 +9,7 @@ import { getRecord, getOrders, delOrder } from "../../service/projects";
 import moment from "moment"
 import { formatDate, formatCurrency, localStore, O_STATUS } from "../../service/constant";
 import { generalDelete } from "../../service/delete-Api's";
-import { Filtertags, TableModalFilter, tableTitleFilter } from "../../components/Core/Table/TableFilter";
+import { Filtertags, TableModalFilter, tableSorter, tableTitleFilter } from "../../components/Core/Table/TableFilter";
 
 const { Title } = Typography
 const { Item } = Descriptions;
@@ -23,34 +23,35 @@ class PurchaseOrder extends Component {
                 title: "Order Number",
                 dataIndex: "orderNo",
                 key: "orderNo",
+                ...tableSorter('orderNo', 'string', true),
             },
             {
                 title: "Issue Date",
                 dataIndex: "issueDate",
                 key: "issueDate",
-                render:(record)=> record && moment(record).format(`ddd MMM DD YYYY`),
-                sorter: (a, b) => moment(a.issueDate).unix() - moment(b.issueDate).unix()
+                render:(record)=> formatDate(record, true, true),
+                ...tableSorter('issueDate', 'date'),
             },
             {
                 title: "Expiry Date",
                 dataIndex: "expiryDate",
                 key: "expiryDate",
-                render:(record)=> record && moment(record).format(`ddd MMM DD YYYY`),
-                sorter: (a, b) => moment(a.expiryDate).unix() - moment(b.expiryDate).unix()
+                render:(record)=> formatDate(record, true, true),
+                ...tableSorter('expiryDate', 'date'),
             },
             {
                 title: "Value",
                 dataIndex: "value",
                 key: "value",
                 render: record => `${formatCurrency(record)}`,
-                sorter: (a, b) => a.value - b.value,
+                ...tableSorter('value', 'number'),
             },
             {
                 title: "Expense",
                 dataIndex: "expense",
                 key: "expense",
                 render: record => `${formatCurrency(record)}`,
-                sorter: (a, b) => a.expense - b.expense,
+                ...tableSorter('expense', 'number'),
             },
             {
                 title: "...",
@@ -326,8 +327,8 @@ class PurchaseOrder extends Component {
                     return `00${el.id.toString()}`.includes(value) ||
                     el.value && formatCurrency(el.value).toLowerCase().includes(value.toLowerCase()) ||
                     el.expense && formatCurrency(el.expense).toLowerCase().includes(value.toLowerCase()) ||
-                    el.issueDate && `${formatDate(el.issueDate)}`.toLowerCase().includes(value.toLowerCase()) ||
-                    el.expiryDate && `${formatDate(el.expiryDate)}`.toLowerCase().includes(value.toLowerCase())
+                    el.issueDate && `${formatDate(el.issueDate, true, true)}`.toLowerCase().includes(value.toLowerCase()) ||
+                    el.expiryDate && `${formatDate(el.expiryDate, true, true)}`.toLowerCase().includes(value.toLowerCase())
                 })
             })
         }else{
@@ -349,16 +350,16 @@ class PurchaseOrder extends Component {
             || search['expense1']['value'] || search['expense2']['value'] || 
             search['comment']['value'] || search['description']['value']  
         ){
-            const issueDate = search['issueDate']['value'] ?? [null, null]
-            const expiryDate = search['expiryDate']['value'] ?? [null, null]
+            const issueDate = search['issueDate']['value'] ?? ['2010-10-19','2010-10-25' ]
+            const expiryDate = search['expiryDate']['value'] ?? ['2010-10-19','2010-10-25']
 
             this.setState({
                 filterData: data.filter(el => { // method one which have mutliple if condition for every multiple search
                     return (
-                        moment(search['issueDate']['value']? formatDate(el.issueDate,'YYYY-MM-DD'): '2010-10-20')
-                        .isBetween(issueDate[0]?? '2010-10-19',issueDate[1]?? '2010-10-25' , undefined, '[]') &&
-                        moment(search['expiryDate']['value']? formatDate(el.expiryDate,'YYYY-MM-DD'): '2010-10-20')
-                        .isBetween(expiryDate[0]?? '2010-10-19', expiryDate[1]?? '2010-10-25' , undefined, '[]') &&
+                        moment(search['issueDate']['value']? formatDate(el.issueDate, true, 'YYYY-MM-DD'): '2010-10-20')
+                        .isBetween(issueDate[0] ,issueDate[1] , undefined, '[]') &&
+                        moment(search['expiryDate']['value']? formatDate(el.expiryDate, true, 'YYYY-MM-DD'): '2010-10-20')
+                        .isBetween(expiryDate[0] , expiryDate[1] , undefined, '[]') &&
                         // (el.value >= 2 )&&
                         // ((el.value?? Number.NEGATIVE_INFINITY) <= (search['value1']['value'] === '' ? Number.POSITIVE_INFINITY  :Number.POSITIVE_INFINITY))&&
                         // ((el.value?? Number.POSITIVE_INFINITY) >= (search['value2']['value'] === '' ? Number.NEGATIVE_INFINITY  :Number.NEGATIVE_INFINITY))&&
@@ -408,9 +409,9 @@ class PurchaseOrder extends Component {
                         
                     }</Item>
                     <Item label="Delegate Contact"> {desc.ContactName}</Item>
-                    <Item label="Start Date">{desc.startDate ? formatDate(desc.startDate): null} </Item>
-                    <Item label="End Date">{desc.endDate ? formatDate(desc.endDate): null}</Item>
-                    <Item label="Bid Date">{desc.bidDate ? formatDate(desc.bidDate): null}</Item>
+                    <Item label="Start Date">{formatDate(desc.startDate, true, true)} </Item>
+                    <Item label="End Date">{formatDate(desc.endDate, true, true)}</Item>
+                    <Item label="Bid Date">{formatDate(desc.bidDate, true, true)}</Item>
                     <Item label="Status">{desc.status ? O_STATUS[desc.status]: ''}</Item>
                     {/* <Item label="Gender">{data.gender}</Item> */}
                 </Descriptions>

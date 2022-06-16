@@ -1,12 +1,11 @@
 import React, { Component } from "react";
 import { Modal, Tabs, Form  } from "antd";
 import { LoadingOutlined } from "@ant-design/icons"; //Icons
-import moment from "moment";
 import FormItems from "../../../components/Core/Forms/FormItems";
 
 import { addLeadSkill, editLeadSkill, addLeadSkillResource, editLeadSkillResource, } from "../../../service/opportunities";
 import { getPanelSkills, getOrgPersons, } from "../../../service/constant-Apis";
-import { dateRange, dateRangeAfter, dateRangeBefore } from "../../../service/constant";
+import { dateRange, dateRangeAfter, dateRangeBefore, formatDate } from "../../../service/constant";
 
 const { TabPane } = Tabs;
 
@@ -262,7 +261,6 @@ class ResModal extends Component {
             effortRate: editRex.effortRate,
             buyingRate: editRex.buyingRate,
           };
-          console.log(obj);
           this.formRef.current.setFieldsValue({ obj:obj });
         }
         ResourceFields[2].data = data;
@@ -293,8 +291,8 @@ class ResModal extends Component {
             panelSkillStandardLevelId: editRex.panelSkillStandardLevelId,
             billableHours: editRex.billableHours,
             title: editRex.title,
-            endDate: editRex.endDate ? moment(editRex.endDate) : null,
-            startDate: editRex.startDate ? moment(editRex.startDate) : null,
+            endDate: formatDate(editRex.endDate),
+            startDate: formatDate(editRex.startDate),
 
           };
           this.formRef.current.setFieldsValue({ obj });
@@ -311,17 +309,26 @@ class ResModal extends Component {
     // this will work after I get the Object from the form
     this.setState({ loading: true });
     const { editRex, skillId } = this.props;
+    let { obj } = vake
+    if (!skillId){
+      obj = {
+        ...obj,
+        startDate: formatDate(obj.startDate, true),
+        endDate: formatDate(obj.endDate, true),
+      }
+    }
+
     if (editRex) {
       if (skillId) {
-        this.editResource(vake.obj);
+        this.editResource(obj);
       } else {
-        this.editSkill(vake.obj);
+        this.editSkill(obj);
       }
     } else {
       if (skillId) {
-        this.addResourse(vake.obj);
+        this.addResourse(obj);
       } else {
-        this.addSkill(vake.obj);
+        this.addSkill(obj);
       }
     }
   };
@@ -364,7 +371,6 @@ class ResModal extends Component {
   editResource = (data) => {
     const { editRex, callBack, leadId, skillId, crud } = this.props;
     data.id = editRex;
-    console.log(data);
     editLeadSkillResource(crud, skillId, editRex.id, data).then((res) => {
       if (res.success) {
         callBack(res.data);
@@ -397,7 +403,7 @@ class ResModal extends Component {
             layout="inline"
             initialValues={skillId? { obj:{effortRate: 100}}: { obj:{startDate: null}}}
         >
-        <FormItems FormFields={skillId ? ResourceFields : SkillFields} />
+          <FormItems FormFields={skillId ? ResourceFields : SkillFields} />
         </Form>
       </Modal>
     );

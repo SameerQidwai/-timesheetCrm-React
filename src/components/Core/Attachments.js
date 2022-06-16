@@ -1,7 +1,6 @@
 import React, { Component, createRef } from "react";
 import { Upload, message, Button, Row, Col } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import moment from "moment";
 import { addFiles, getAttachments , addAttachments, delAttachment} from "../../service/Attachment-Apis";
 
 import "../Styles/attachments.css"

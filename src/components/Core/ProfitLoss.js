@@ -1,9 +1,8 @@
 import React, { Component } from "react";
 import { Row, Col, Table, Typography } from "antd";
-import moment from "moment";
-import { isoWeekdayCalc } from 'moment-weekday-calc';
 import { getRecord } from "../../service/opportunities";
-import { formatCurrency } from "../../service/constant";
+import { formatCurrency, formatDate, formatFloat, getFiscalYear } from "../../service/constant";
+import 'moment-weekday-calc';
 const { Title, Text } = Typography
 
 class ProfitLoss extends Component {
@@ -11,32 +10,14 @@ class ProfitLoss extends Component {
         super(props)
         this.state={
             billing: {},
-            columns: [
-                {
-                    title: 'Month',
-                    // width: ,
-                    dataIndex: 'label',
-                    key: 'label',
-                    render: (text, record) =>{
-                        if (record.key === 'R' || record.key === 'C') {
-                            return text
-                        }else if (record.key === '$' || record.key === '%' || record.key === 'W'){
-                            return <b>{text}</b>
-                        }
-                    }
-                },
-                {
-                    title: 'Total',
-                    key: 'total',
-                }
-               
-            ],
+            columns: [],
+            fiscalYear: getFiscalYear('dates'),
             data:[
-                {key: 'W', label: 'Working Days'},
-                {key: 'R', label: 'Revenue \n (discounted value)'},
-                {key: 'C', label: 'Cost of sale/services' },
-                {key: '$', label: 'CM $' },
-                {key: '%', label: 'CM %' },
+                {key: 'W', label: 'Working Days', total: 0},
+                {key: 'R', label: 'Revenue \n (discounted value)', total: 0},
+                {key: 'C', label: 'Cost of sale/services', total: 0 },
+                {key: '$', label: 'CM $', total: 0 },
+                {key: '%', label: 'CM %', total: 0 },
             ]
         }
     }
@@ -45,43 +26,60 @@ class ProfitLoss extends Component {
     }
 
     getWeekdays = (startDate, endDate) =>{
-        console.log(startDate.format('DD MM YYYY'), endDate.format('DD MM YYYY'));
-        return moment().isoWeekdayCalc(startDate,endDate,[1,2,3,4,5])
+        return formatDate().isoWeekdayCalc({  
+            rangeStart: startDate,
+            rangeEnd: endDate,
+            weekdays: [1,2,3,4,5],  
+            // exclusions: holidays,
+            //when I get holidays
+        }) 
     }
 
     calculateData = () =>{
-        const { data } = this.state
+        let { data, fiscalYear } = this.state
         const { billing } = this.props
         const len = billing.totalMonths>0 ? billing.totalMonths : 0
-        let startDate = moment(billing.startDate)
-        let endDate = moment(billing.endDate)
+        let startDate = formatDate(billing.startDate)
+        let endDate = formatDate(billing.endDate)
         let noOfDays = 0
+        
         for (var i =1; i<=len; i++){
-            startDate = i===1 ? billing.startDate : moment(startDate).set('date', 1); 
-            endDate = i===len ? billing.endDate: moment(startDate).endOf('month');
+
+            startDate = i===1 ? billing.startDate : formatDate(startDate).set('date', 1); 
+            endDate = i===len ? billing.endDate: formatDate(startDate).endOf('month');
             const workDays = this.getWeekdays(startDate, endDate)
             noOfDays = noOfDays + workDays
-            let key = moment(startDate).format('MMM YY')
+            let key = formatDate(startDate).format('MMM YY')
             data[0][key]= workDays
-            startDate = moment(startDate).add(1, 'months')
+            startDate = formatDate(startDate).add(1, 'months')
         }
         let revenue = (billing.discount / noOfDays)
         let cm = (revenue * billing.cmPercentage /100 )
         let cos = (revenue - cm)
+
         for (var i =1; i<= len; i++){
-            console.log(i, len);
-            startDate = i===1 ? billing.startDate  : moment(startDate).set('date', 1); 
-            endDate = i===len ? billing.endDate: moment(startDate).endOf('month');
+            startDate = i===1 ? billing.startDate  : formatDate(startDate).set('date', 1); 
+            endDate = i===len ? billing.endDate: formatDate(startDate).endOf('month');
             // let workDays = this.getWeekdays(startDate, endDate)
-            let key = moment(startDate).format('MMM YY')
+            let key = formatDate(startDate).format('MMM YY')
             let workDays = data[0][key]
-            data[1][key] = formatCurrency((revenue * workDays).toFixed(2))
-            data[2][key] = formatCurrency((cos * workDays).toFixed(2))
-            data[3][key] = formatCurrency((cm * workDays).toFixed(2))
-            data[4][key] = formatCurrency(billing.cmPercentage)
-            startDate = moment(startDate).add(1, 'months')
+            data[1][key] = revenue * workDays
+            data[2][key] = cos * workDays
+            data[3][key] = cm * workDays
+            data[4][key] = billing.cmPercentage
+            
+            //Total of every row with in financial year... 
+            if (startDate.isBetween(formatDate(fiscalYear['start']), formatDate(fiscalYear['end']), 'month', '[]')){
+                data[0]['total'] += data[0][key] // this is wrong I know
+                data[1]['total'] += revenue * workDays
+                data[2]['total'] += cos * workDays
+                data[3]['total'] += cm * workDays
+                data[4]['total'] += (billing.cmPercentage ?? 0)
+            }
+            // Total of every row with in financial year... 
+
+            startDate = formatDate(startDate).add(1, 'months')
         }
-        console.log(data);
         this.setState({data},()=>{
             this.Columns()
 
@@ -89,30 +87,34 @@ class ProfitLoss extends Component {
     }
 
     Columns = () =>{
-        const { columns } = this.state
+        
         const { billing } = this.props
+        const { fiscalYear } = this.state
         // const len = billing.totalMonths>0 ? billing.totalMonths : 0
-        const len = 12
-        let month = moment().set({'month': 6, date: 1});
+        const len = 16
         let array = []
-        for (var i = 1; i <=len; i++){
+        for (
+                var month = formatDate(fiscalYear['start']) ; // defination
+                month.isSameOrBefore(formatDate(fiscalYear['end']));  //condition
+                month.add(1, 'months') //itrerater
+            ){
             array.push(
                 {
-                    title: moment(month).format('MMM YY'),
-                    width:100,
+                    title: formatDate(month).format('MMM YY'),
+                    // width:100,
                     align: 'center',
-                    dataIndex: moment(month).format('MMM YY'),
-                    key: moment(month).format('MMM YY'),
+                    dataIndex: formatDate(month).format('MMM YY'),
+                    key: formatDate(month).format('MMM YY'),
                     render: (record, records) =>{
                         if (record){
                             if (records.key === 'W') {
                                 return <b>{record} </b>
                             }else if (records.key === 'R') {
-                                return ` ${record}`
+                                return ` ${formatCurrency(formatFloat(record))}`
                             }else if (records.key === 'C'){
-                                return ` ${record}`
+                                return ` ${formatCurrency(formatFloat(record))}`
                             }else if (records.key === '$'){
-                                return <b>{` ${record}`}</b>
+                                return <b>{` ${formatCurrency(formatFloat(record))}`}</b>
                             }else if (records.key === '%'){
                                 return <b>{` ${record} %`}</b>
                             }
@@ -122,10 +124,45 @@ class ProfitLoss extends Component {
                 },
             )
             
-            month = moment(month).add(1, 'months')
         }
         this.setState({
-            columns: [...columns, ...array],
+            columns: [
+            {
+                title: 'Month',
+                // width: ,
+                dataIndex: 'label',
+                key: 'label',
+                render: (text, record) =>{
+                    if (record.key === 'R' || record.key === 'C') {
+                        return text
+                    }else if (record.key === '$' || record.key === '%' || record.key === 'W'){
+                        return <b>{text}</b>
+                    }
+                }
+            },
+            {
+                title: 'Total',
+                dataIndex: 'total',
+                key: 'total',
+                render:(text, record)=>{
+                    if (text){
+                        if (record.key === 'W') {
+                            return <b>{text} </b>
+                        }else if (record.key === 'R') {
+                            return ` ${formatCurrency(formatFloat(text))}`
+                        }else if (record.key === 'C'){
+                            return ` ${formatCurrency(formatFloat(text))}`
+                        }else if (record.key === '$'){
+                            return <b>{` ${formatCurrency(formatFloat(text))}`}</b>
+                        }else if (record.key === '%'){
+                            return <b>{` ${text} %`}</b>
+                        }
+                    }
+                    return '-'
+                }
+            }, 
+                ...array
+            ],
         })
     }
 
@@ -165,7 +202,7 @@ class ProfitLoss extends Component {
                     dataSource={data}
                     size="small"
                     pagination = {false}
-                    className="timeSheet-table fs-small"
+                    className="timeSheet-table fs-small full-width"
                 />
             </Row>
         )

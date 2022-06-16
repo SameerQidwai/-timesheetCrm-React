@@ -11,9 +11,8 @@ import ProfitLoss from "../../components/Core/ProfitLoss";
 
 import InfoModal from "./Modals/InfoModal";
 
-import { getRecord, delList, workIsLost } from "../../service/opportunities";
+import { getRecord } from "../../service/opportunities";
 
-import moment from "moment"
 import { formatDate, formatCurrency, localStore, O_STATUS } from "../../service/constant";
 import LostModal from "./Modals/LostModal";
 import { generalDelete } from "../../service/delete-Api's";
@@ -161,7 +160,7 @@ class OpportunityInfo extends Component {
                                 <Menu.Item>
                                     <Link
                                         to={{
-                                            pathname: `/opportunities/${leadId}/milestones/${basic.mileId}/resources`
+                                            pathname: `/opportunities/${leadId}/milestones/${data?.milestones?.[0]?.id}/resources`
                                         }}
                                         className="nav-link"
                                     >
@@ -205,9 +204,9 @@ class OpportunityInfo extends Component {
                         
                     }</Item>
                     <Item label="Delegate Contact"> {basic ?basic.ContactName: ''}</Item>
-                    <Item label="Start Date">{data.startDate ? formatDate(data.startDate): null} </Item>
-                    <Item label="End Date">{data.endDate ? formatDate(data.endDate): null}</Item>
-                    <Item label="Bid Date">{data.bidDate ? formatDate(data.bidDate): null}</Item>
+                    <Item label="Start Date">{formatDate(data.startDate, true, true)} </Item>
+                    <Item label="End Date">{formatDate(data.endDate, true, true)}</Item>
+                    <Item label="Bid Date">{formatDate(data.bidDate, true, true)}</Item>
                     <Item label="Status">{basic.status ? O_STATUS[basic.status]: ''}</Item>
                     {/* <Item label="Gender">{data.gender}</Item> */}
                 </Descriptions>
@@ -222,13 +221,6 @@ class OpportunityInfo extends Component {
                         <TabPane tab="Attachments" key="attachments">
                             <Attachments targetId={leadId} targetType="WOR"  />
                         </TabPane>
-                        {/* <TabPane tab="Travels" key="travels">
-                            <Travels id={leadId} />
-                        </TabPane> */}
-                        
-                        {/* <TabPane tab="Bank Account" key="account">
-                            <Bank id={leadId} title={data.name} />
-                        </TabPane> */}
                         <TabPane tab="Projected Profit & Loss" key="profitloss">
                             <ProfitLoss id={leadId} billing={billing} />
                         </TabPane>

@@ -2,7 +2,6 @@ import React, {Component} from 'react'
 import { Table, Button, Row, Col, Typography, Menu, Dropdown, DatePicker, Tag, Select, Modal, Form, Input, Tooltip, Space} from 'antd'
 import { DownOutlined, SettingOutlined, ExclamationCircleOutlined, CheckCircleOutlined, AuditOutlined} from '@ant-design/icons';
 import { formatDate, formatFloat, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
-import moment from "moment";
 import { getApprovalRequests, manageLeaveRequests } from '../../service/leaveRequest-Apis';
 import AddRequestModal from './Modals/AddRequestModal';
 import { getMilestones } from '../../service/timesheet';
@@ -38,21 +37,21 @@ class ApproveRequest extends Component {
                 title: 'Start Date',
                 dataIndex: 'startDate',
                 key: 'startDate',
-                render:(text, records) =>text && formatDate(text),
+                render:(text, records) =>text && formatDate(text, true, true),
                 ...tableSorter('startDate', 'date'),
             },
             {
                 title: 'End Date',
                 dataIndex: 'endDate',
                 key: 'endDate',
-                render:(text, records) =>text && formatDate(text),
+                render:(text, records) =>text && formatDate(text, true, true),
                 ...tableSorter('endDate', 'date'),
             },
             {
                 title: 'Submit Date',
                 dataIndex: 'submittedAt',
                 key: 'submittedAt',
-                render:(text, records) =>text && formatDate(text),
+                render:(text, records) =>text && formatDate(text, true, true),
                 ...tableSorter('submittedAt', 'date'),
             },
             {
@@ -129,8 +128,8 @@ class ApproveRequest extends Component {
             WORKS: [],
             USERS: [],
             queryRequest : {
-                startDate: moment().startOf("month"),
-                endDate: moment().endOf("month"), 
+                startDate: formatDate(new Date()).startOf("month"),
+                endDate: formatDate(new Date()).endOf("month"), 
                 workId: null, 
                 userId: null, 
             }
@@ -143,7 +142,7 @@ class ApproveRequest extends Component {
 
     fetchAll = () =>{
         const { startDate, endDate, workId, userId } = this.state.queryRequest
-        const query = { startDate: formatDate(startDate, 'DD-MM-YYYY'), endDate: formatDate(endDate, 'DD-MM-YYYY'), workId, userId, }
+        const query = { startDate: formatDate(startDate, true, 'DD-MM-YYYY'), endDate: formatDate(endDate, true, 'DD-MM-YYYY'), workId, userId, }
         const { id, permissions } = localStore()
         const loginId = parseInt(id)
         const { LEAVE_REQUESTS } = JSON.parse(permissions)
@@ -171,8 +170,8 @@ class ApproveRequest extends Component {
     getData = () =>{
         const { startDate, endDate, workId, userId } = this.state.queryRequest
         const query = {
-            startDate: formatDate(startDate, 'DD-MM-YYYY') ?? undefined,
-            endDate: formatDate(endDate, 'DD-MM-YYYY') ?? undefined,
+            startDate: formatDate(startDate, true, 'DD-MM-YYYY') ?? undefined,
+            endDate: formatDate(endDate, true, 'DD-MM-YYYY') ?? undefined,
             workId,
             userId,
         }
@@ -284,9 +283,9 @@ class ApproveRequest extends Component {
                     return `${el.employeeName??''}`.toLowerCase().includes(value.toLowerCase()) || 
                     `${el.project??''}`.toLowerCase().includes(value.toLowerCase()) || 
                     `${el.leaveRequestName??''}`.toLowerCase().includes(value.toLowerCase()) || 
-                    `${formatDate(el.startDate)??''}`.toLowerCase().includes(value.toLowerCase()) ||
-                    `${formatDate(el.endDate)??''}`.toLowerCase().includes(value.toLowerCase()) ||
-                    `${formatDate(el.submittedAt)??''}`.toLowerCase().includes(value.toLowerCase()) ||
+                    `${formatDate(el.startDate, true, true)??''}`.toLowerCase().includes(value.toLowerCase()) ||
+                    `${formatDate(el.endDate, true, true)??''}`.toLowerCase().includes(value.toLowerCase()) ||
+                    `${formatDate(el.submittedAt, true, true)??''}`.toLowerCase().includes(value.toLowerCase()) ||
                     `${R_STATUS[el.status]}`.toLowerCase().includes(value.toLowerCase())
                 })
             })
@@ -369,12 +368,11 @@ class ApproveRequest extends Component {
                             format="MMM-YYYY"
                             value={startDate}
                             onChange={(value)=>{
-                                console.log(value);
                                 this.setState({
                                     queryRequest : {
                                         ...queryRequest,
-                                        startDate: value && moment(value).startOf("month"),
-                                        endDate: value && moment(value).endOf("month") 
+                                        startDate: value && formatDate(value).startOf("month"),
+                                        endDate: value && formatDate(value).endOf("month") 
                                     }
                                 },()=>{
                                     this.getData()

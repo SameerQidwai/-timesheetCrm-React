@@ -2,7 +2,6 @@ import React, { Component, useEffect, useState } from "react";
 import { Row, Col, Menu, Button, Dropdown, Descriptions, Table, Tag, Popconfirm } from "antd";
 import { SettingOutlined, DownOutlined } from "@ant-design/icons"; //Icons
 import { Link } from 'react-router-dom'
-import moment from "moment"
 import { formatDate, formatCurrency, localStore } from "../../../service/constant";
 import { tableSorter } from "../Table/TableFilter";
 import { getHierarchy } from "../../../service/opportunities";
@@ -28,14 +27,14 @@ const milestoneColmuns = [
         title: "Start Date",
         dataIndex: "startDate",
         key: "startDate",
-        render: (record) =>(record && formatDate(record)),
+        render: (record) =>(record && formatDate(record, true, true)),
         ...tableSorter('startDate', 'date'),
     },
     {
         title: "End Date",
         dataIndex: "endDate",
         key: "endDate",
-        render: (record) =>(record && formatDate(record)),
+        render: (record) =>(record && formatDate(record, true, true)),
         ...tableSorter('endDate', 'date'),
     },
     {
@@ -56,22 +55,6 @@ const milestoneColmuns = [
             <Dropdown
                 overlay={
                     <Menu>
-                        {/* <Menu.Item danger 
-                            disabled={!this?.state?.permissions?.['DELETE']}
-                        >
-                            <Popconfirm 
-                                title="Are you sure you want to delete" 
-                                onConfirm={() => this.handleDelete(record.id, index)} 
-                            >
-                                Delete
-                            </Popconfirm>
-                        </Menu.Item >
-                        <Menu.Item
-                            onClick={() => { this.openModal({...record, rowIndex: index}) }}
-                            disabled={this.state && !this.state.permissions['UPDATE']}
-                        >
-                            Edit Milestone
-                        </Menu.Item> */}
                         <Menu.Item>
                             <Link
                                 to={{
@@ -116,14 +99,14 @@ const positionColumns = [
         title: "Start Date",
         dataIndex: "startDate",
         key: "startDate",
-        render: (record)=> record && formatDate(record),
+        render: (record)=> record && formatDate(record, true, true),
         ...tableSorter('startDate', 'Date'),
     },
     {
         title: "End Date",
         dataIndex: "endDate",
         key: "endDate",
-        render: (record)=> record && formatDate(record),
+        render: (record)=> record && formatDate(record, true, true),
         ...tableSorter('endDate', 'Date'),
     },
     {
@@ -132,53 +115,6 @@ const positionColumns = [
         key: "billableHours",
         ...tableSorter('billableHours', 'number'),
     },
-   
-    // {
-    //     title: "Action",
-    //     key: "action",
-    //     align: "right",
-    //     width: 115,
-    //     render: (text, record, index) => (
-    //         <Dropdown
-    //             overlay={
-    //                 <Menu>
-    //                     <Menu.Item 
-    //                         danger 
-    //                         disabled={!this?.state?.permissions?.['DELETE']}
-    //                     >
-    //                         <Popconfirm
-    //                             title="Are you sure you want to delete" 
-    //                             onConfirm={() => this.handleDelete(record.id, index)} 
-    //                         >
-    //                             Delete
-    //                         </Popconfirm>
-    //                     </Menu.Item >
-    //                     <Menu.Item
-    //                         onClick={() => {
-    //                             this.getSkilldEmployee(true,  false,  false, record,  index, record.panelSkillStandardLevelId)
-    //                         }}
-    //                         disabled={!this?.state?.permissions?.['UPDATE']}
-    //                     >
-    //                         Edit Position
-    //                     </Menu.Item>
-    //                     <Menu.Item 
-    //                         onClick={() => {
-    //                             console.log(record);
-    //                             this.getSkilldEmployee(true,  record.id,  true, false,  index, record.panelSkillStandardLevelId)
-    //                         }}
-    //                         disabled={!this?.state?.permissions?.['ADD']}
-    //                     >
-    //                             Add Resouce
-    //                     </Menu.Item>
-    //                 </Menu>
-    //             }
-    //         >
-    //             <Button size="small">
-    //                 <SettingOutlined /> Option <DownOutlined />
-    //             </Button>
-    //         </Dropdown>
-    //     ),
-    // },
 ];
 
 const resourceColumn = [
@@ -201,44 +137,6 @@ const resourceColumn = [
         key: 'sellingRate', 
         render: (record)=> `${formatCurrency(record)}`
     },
-    // {
-    //     title: "Action",
-    //     key: "action",
-    //     align: "right",
-    //     width: 115,
-    //     render: (text, record, index) => (
-    //         // <Dropdown
-    //         //     overlay={
-    //         //         <Menu>
-    //         //             <Menu.Item 
-    //         //                     danger 
-    //         //                     disabled={!props?.permissions?.['DELETE']}
-    //         //                 >
-    //         //                     <Popconfirm
-    //         //                         title="Are you sure you want to delete" 
-    //         //                         onConfirm={() => handleDelete(record.id, index)} 
-    //         //                     >
-    //         //                         Delete
-    //         //                     </Popconfirm>
-    //         //                 </Menu.Item >
-    //         //             <Menu.Item
-    //         //                 onClick={()=>{
-    //         //                     setEditRex({...record, tableIndex: index})
-    //         //                     setVisible(true)
-    //         //                 }}
-    //         //                 disabled={!props?.permissions?.['UPDATE']}
-    //         //             >
-    //         //                 Edit Resource
-    //         //             </Menu.Item>
-    //         //         </Menu>
-    //         //     }
-    //         // >
-    //         //     <Button size="small">
-    //         //         <SettingOutlined /> Option <DownOutlined />
-    //         //     </Button>
-    //         // </Dropdown>
-    //     ),
-    // },
 ]
 
 class OMResources extends Component {

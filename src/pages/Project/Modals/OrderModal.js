@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import { Modal, Tabs, Form, Upload } from "antd";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons"; //Icons
-import moment from "moment";
 
 import FormItems from "../../../components/Core/Forms/FormItems";
 import { addFiles } from "../../../service/Attachment-Apis";
 import { addOrder, getOrder, editOrder } from "../../../service/projects";
+import { formatDate } from "../../../service/constant";
 
 
 const { TabPane } = Tabs;
@@ -160,12 +160,18 @@ class OrderModal extends Component {
     OrderCall = (vake) => {
         // this will work after I get the Object from the form
         const { editRex } = this.props
-        vake.obj.fileId = this.state.fileIds;
+        let { obj } = vake
+        obj = {
+            ...obj,
+            fileId: this.state.fileIds,
+            issueDate: formatDate(obj.issueDate, true),
+            expiryDate: formatDate(obj.expiryDate, true),
+        }
         if (editRex){
-            this.editRecord(vake.obj)
+            this.editRecord(obj)
 
         }else{
-            this.addRecord(vake.obj)
+            this.addRecord(obj)
         }
     };
 
