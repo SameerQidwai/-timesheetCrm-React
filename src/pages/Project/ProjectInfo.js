@@ -13,7 +13,6 @@ import InfoModal from "./Modals/InfoModal";
 
 import { getRecord, delList } from "../../service/projects";
 
-import moment from "moment"
 import { formatDate, formatCurrency, localStore, O_STATUS } from "../../service/constant";
 import AuthError from "../../components/Core/AuthError";
 import PMResources from "../../components/Core/Resources/PMResources";

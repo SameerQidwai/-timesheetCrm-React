@@ -223,7 +223,7 @@ class AddRequestModal extends Component{
             var arr = new Array();
             data = entries.map(el=> {
                 var {date, hours } = el // in this conditon this hours value will be replace
-                date = moment(date)
+                date = formatDate(date)
                 const disabled = !include_off_days && ( (date.format('ddd') === 'Sun' || date.format('ddd') === 'Sat') && 'Weekend' || holidays[date.format('M/D/YYYY')] ) 
                     
                 if(showDetails ){ balance += hours}
@@ -321,8 +321,8 @@ class AddRequestModal extends Component{
                             ...data,
                             description: data.desc,
                             typeId: selectedLeaveType?.id,
-                            startDate: moment(entries[0].date),
-                            endDate: moment(entries[entries.length-1].date),
+                            startDate: formatDate(entries[0].date),
+                            endDate: formatDate(entries[entries.length-1].date),
                         }
                         this.getDateArray(formValues.startDate, formValues.endDate, selectedLeaveType, entries)
                         this.formRef.current.setFieldsValue({dates: formValues})
@@ -374,8 +374,8 @@ class AddRequestModal extends Component{
                     ...data,
                     description: data.desc,
                     typeId: selectedLeaveType?.id,
-                    startDate: moment(entries[0].date),
-                    endDate: moment(entries[entries.length-1].date),
+                    startDate: formatDate(entries[0].date),
+                    endDate: formatDate(entries[entries.length-1].date),
                 }
                 this.getDateArray(formValues.startDate, formValues.endDate, selectedLeaveType, entries)
                 this.formRef.current.setFieldsValue({dates: formValues})
@@ -392,7 +392,7 @@ class AddRequestModal extends Component{
         const { dates } = val;
         const { edit, callBack } = this.props
         const { data, fileIds } = this.state
-        console.log(data)
+        
         const newVal = {
                 description: dates.description ?? '',
                 typeId: dates.typeId || 0,
@@ -495,7 +495,7 @@ class AddRequestModal extends Component{
                 dataIndex: 'date',
                 key: 'date',
                 render:(text, records) =>(<Row justify="space-between" >
-                    <Col> {moment(text).format('ddd DD MMM yyyy')} </Col>
+                    <Col> {formatDate(text, true, true)} </Col>
                     <Col style={{marginLeft: 'auto', color: 'red'}} >{records.disabled}</Col>
                 </Row>
                 ),
@@ -505,7 +505,7 @@ class AddRequestModal extends Component{
                 dataIndex: 'hours',
                 key: 'hours',
                 render:(text, records, index) =>(
-                    <Form.Item noStyle name={['hours', moment(records.date).format('M/D/YYYY')]} >
+                    <Form.Item noStyle name={['hours', formatDate(records.date, true, 'M/D/YYYY')]} >
                         <InputNumber
                             max={contractDetails?.hoursPerDay ?? false}
                             min={0}

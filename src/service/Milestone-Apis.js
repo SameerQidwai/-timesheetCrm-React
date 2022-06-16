@@ -1,8 +1,7 @@
 import axios from "axios";
 import { message as messageAlert } from "antd";
 
-import { Api, apiErrorRes, headers, jwtExpired, setToken } from "./constant";
-import moment from "moment";
+import { Api, apiErrorRes, formatDate, headers, jwtExpired, setToken } from "./constant";
 
 const url = `${Api}/milestones`;
 
@@ -31,8 +30,8 @@ export const getMilestone = (crud, id) => {
             const { success, data } = res.data;
             setToken(res.headers && res.headers.authorization)
             if (success){
-                data.startDate = moment(data.startDate)
-                data.endDate = moment(data.endDate)
+                data.startDate = formatDate(data.startDate)
+                data.endDate = formatDate(data.endDate)
                 return { success: success, data: data }
             };
         })
@@ -130,9 +129,9 @@ export const getProjectDetail = (crud, id) => {
                     getPercentage: data.getPercentage ? data.getPercentage: 0,
                     goPercentage: data.goPercentage? data.goPercentage: 0,
                     // these Four keys are for Profit and lost
-                    totalMonths: (data.startDate && data.endDate) ? Math.ceil(moment(data.endDate).diff(moment(data.startDate), 'months', true)) : 0, 
-                    endDate: data.endDate ? moment(data.endDate): null,
-                    startDate: data.startDate ? moment(data.startDate): null,
+                    totalMonths: (data.startDate && data.endDate) ? Math.ceil(formatDate(data.endDate).diff(formatDate(data.startDate), 'months', true)) : 0, 
+                    endDate:  formatDate(data.endDate),
+                    startDate:  formatDate(data.startDate),
                     value: data.value? data.value: 0,
                 }
                 billing.goget = (billing.getPercentage* billing.goPercentage)/100
@@ -140,11 +139,11 @@ export const getProjectDetail = (crud, id) => {
                 billing.upside = (data.value - billing.discount)
                 
                 const dates = {
-                    entryDate: data.entryDate && moment(data.entryDate),
-                    startDate: data.startDate && moment(data.startDate),
+                    entryDate: formatDate(data.entryDate),
+                    startDate: formatDate(data.startDate),
                     hoursPerDay: data.hoursPerDay,
-                    endDate: data.endDate && moment(data.endDate),
-                    bidDate: data.bidDate && moment(data.bidDate)
+                    endDate: formatDate(data.endDate),
+                    bidDate: formatDate(data.bidDate)
                 }
                 const manage = {
                     accountDirectorId: data.accountDirectorId,

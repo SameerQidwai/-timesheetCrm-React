@@ -271,7 +271,6 @@ class LeaseModal extends Component {
         // this will work after  getting the Object from level form
         const {editLease, empId} = this.props
         let { obj } = vake;
-        obj.employeeId = empId;
         obj = {
             ...obj,
             employeeId: empId,
@@ -279,10 +278,8 @@ class LeaseModal extends Component {
             endDate: formatDate(obj.endDate, true)
         }
         if (!editLease) {
-            console.log("emes");
             this.addContract(obj); //add skill
         } else {
-            console.log("edit");
             this.editRecord(obj); //edit skill
         }
     };

@@ -1,8 +1,7 @@
 import axios from "axios";
 import { message as messageAlert } from "antd";
 
-import { Api, headers, jwtExpired, setToken } from "./constant";
-import moment from 'moment'
+import { Api, formatDate, headers, jwtExpired, setToken } from "./constant";
 
 const global_url = `${Api}/global-setting`;
 const var_url = `${Api}/global-variables`;
@@ -57,7 +56,7 @@ export const getVariables = () => {
             let variables= {}
             if (success) {
                 for (var {variable, globalVariableId, value, startDate, endDate} of data){
-                    variables[variable?.name] = {globalVariableId, value, startDate: moment(startDate), endDate: moment(endDate)}
+                    variables[variable?.name] = {globalVariableId, value, startDate: formatDate(startDate), endDate: formatDate(endDate)}
                 }
             }
             return { success, data: variables };

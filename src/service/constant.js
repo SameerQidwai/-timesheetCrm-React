@@ -140,19 +140,18 @@ export const apiErrorRes = (err, id, duration, style) =>{
   return { error: err.message, status, message, success };
 }
 
-export const dateRange = (current, selectedDate, isStartDate, pDates) =>{
+export const dateRange = (current, selectedDate, isDate, pDates) =>{
   if (current){
-    const startDate = pDates?.startDate ?? moment.subtract(10, 'years') 
-    const endDate =  pDates?.endDate ?? moment.add(10, 'years')
+    const startDate = pDates?.startDate ?? formatDate(new Date ()).subtract(10, 'years') 
+    const endDate =  pDates?.endDate ?? formatDate(new Date ()).add(10, 'years')
 
-    return (
-      (isStartDate && selectedDate) ? //checking if ut call from startDate 
+    return( 
+      ( (isDate === 'start' && selectedDate) ? //checking if ut call from startDate 
         (current >= selectedDate)   //disable after      
-      : //checking if it call from startDate
+      : (isDate === 'end' && selectedDate )  && //checking if it call from endtDate
         (current <= selectedDate) ) //disable Before  
-      || 
-                        // disable Before, // disable After
-    (!current.isBetween(moment(startDate), moment(endDate), 'day', '[]'))
+      ||                 // disable Before, // disable After
+    (!current.isBetween(formatDate(startDate), formatDate(endDate), 'day', '[]')) )
   }
 }
 

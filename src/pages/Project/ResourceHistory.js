@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 import HistModal from "./Modals/HistModal";
 import { getRecord, getLeadSkills, delLeadSkill } from "../../service/opportunities";
 
-import moment from "moment"
 import { localStore } from "../../service/constant";
 
 const { Item } = Descriptions;

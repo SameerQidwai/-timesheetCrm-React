@@ -844,18 +844,16 @@ class InfoModal extends Component {
             {
                 mergeObj: {
                     ...this.state.mergeObj,
-                    ...{
-                        name: vake.name? vake.name : '',
-                        title: vake.title ?? '',
-                        parentOrganizationId: vake.parent? vake.parent : null,
-                        phoneNumber: vake.phone? vake.phone : '',
-                        delegateContactPersonId: vake.delegate_cp? vake.delegate_cp: null,
-                        email: vake.email? vake.email : '',
-                        expectedBusinessAmount: vake.EBA? vake.EBA : 0,
-                        address: vake.address? vake.address : '',
-                        website: vake.website? vake.website: '',
-                        businessType: vake.businessType? vake.businessType: undefined,
-                    },
+                    name: vake.name? vake.name : '',
+                    title: vake.title ?? '',
+                    parentOrganizationId: vake.parent? vake.parent : null,
+                    phoneNumber: vake.phone? vake.phone : '',
+                    delegateContactPersonId: vake.delegate_cp? vake.delegate_cp: null,
+                    email: vake.email? vake.email : '',
+                    expectedBusinessAmount: vake.EBA? vake.EBA : 0,
+                    address: vake.address? vake.address : '',
+                    website: vake.website? vake.website: '',
+                    businessType: vake.businessType? vake.businessType: undefined,
                 },
                 basicSubmitted: true, // skill form submitted
             },
@@ -882,14 +880,12 @@ class InfoModal extends Component {
             {
                 mergeObj: {
                     ...this.state.mergeObj,
-                    ...{
-                        abn: vake.ABN? vake.ABN : '',
-                        taxCode: vake.tax_Code? vake.tax_Code : '',
-                        invoiceEmail: vake.invoice_email? vake.invoice_email: '',
-                        invoiceContactNumber: vake.invoice_number? vake.invoice_number: '',
-                        // businessType: vake.businessType? vake.businessType: undefined,
-                        cti: vake.CTI? vake.CTI : '',
-                    },
+                    abn: vake.ABN? vake.ABN : '',
+                    taxCode: vake.tax_Code? vake.tax_Code : '',
+                    invoiceEmail: vake.invoice_email? vake.invoice_email: '',
+                    invoiceContactNumber: vake.invoice_number? vake.invoice_number: '',
+                    // businessType: vake.businessType? vake.businessType: undefined,
+                    cti: vake.CTI? vake.CTI : '',
                 },
                 billingSubmitted: true, // level form submitted
             },
@@ -916,7 +912,6 @@ class InfoModal extends Component {
             {
                 mergeObj: {
                     ...this.state.mergeObj,
-                    ...{
                         piInsurer: vake.insurer_PI? vake.insurer_PI : '',
                         plInsurer: vake.insurer_PL? vake.insurer_PL : '',
                         wcInsurer: vake.insurer_WC? vake.insurer_WC : '',
@@ -929,7 +924,6 @@ class InfoModal extends Component {
                         piInsuranceExpiry: formatDate(vake.expiry_PI, true),
                         plInsuranceExpiry: formatDate(vake.expiry_PL, true),
                         wcInsuranceExpiry: formatDate(vake.expiry_WC, true),
-                    },
                 },
                 insuredSubmitted: true, // level form submitted
             },

@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import { Modal, Tabs } from "antd";
 import { LoadingOutlined } from "@ant-design/icons"; //Icons
-import moment from "moment";
 import Form from "../../../components/Core/Forms/Form";
 
 import { addLeadSkill, getLeadSkills, editLeadSkill } from "../../../service/opportunities";
 import { getPanelSkills, getStandardLevels, getContactPersons  } from "../../../service/constant-Apis";
+import { formatDate } from "../../../service/constant";
 
 
 const { TabPane } = Tabs;
@@ -165,13 +165,17 @@ class InfoModal extends Component {
     ResourceCall = (vake) => {
         // this will work after I get the Object from the form
         const { editRex } = this.props
+        let { obj } = vake
+        obj = {
+            ...obj,
+            s_date: formatDate(obj.s_date, true),
+            e_date: formatDate(obj.e_date, true)
+        }
         if (editRex){
-            console.log('edit');
-            this.editRecord(vake.obj)
+            this.editRecord(obj)
 
         }else{
-            console.log('add');
-            this.addRecord(vake.obj)
+            this.addRecord(obj)
         }
     };
 
@@ -189,7 +193,6 @@ class InfoModal extends Component {
     
     getRecord = (skills) => {
         const { proId, editRex } = this.props;
-        console.log(proId, editRex);
         getLeadSkills(proId, editRex).then((resR) => {
             console.log(resR.data);
             if (resR.success){

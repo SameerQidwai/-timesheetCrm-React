@@ -265,14 +265,17 @@ class BillModal extends Component {
         this.setState({loading: true,})
         const {editCntrct, editEmp} = this.props
         const { fileIds } = this.state
-        const { billing } = vake;
-        billing.noOfHoursPer = 1; 
-        billing.type === 1 ? billing.remunerationAmountPer = 1 : billing.remunerationAmountPer = 7;
-        billing.startDate = formatDate(billing.startDate, true);
-        billing.endDate = formatDate(billing.endDate, true);
-        billing.employeeId = editEmp;
-        billing.fileId = fileIds;
-        billing.leaveRequestPolicyId = billing.leaveRequestPolicyId || null; 
+        let { billing } = vake;
+        billing = { 
+            ...billing,
+            noOfHoursPer: 1,
+            remunerationAmountPer: billing.type === 1 ? 1 : 7,
+            startDate: formatDate(billing.startDate, true),
+            endDate: formatDate(billing.endDate, true),
+            employeeId: editEmp,
+            fileId: fileIds,
+            leaveRequestPolicyId: billing.leaveRequestPolicyId || null,
+    }
 
         if (!editCntrct) {
             this.addContract(billing); //add skill

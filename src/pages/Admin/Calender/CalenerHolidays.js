@@ -146,16 +146,16 @@ class CalenerHolidays extends Component {
 
     componentDidMount() {
         const { id } = this.props.match.params
-        this.setState({calendarId: id},()=>this.getData(id))
+        this.getData(id)
         
     }
 
     getData = (id) => {
-        const { calendarId } = this.state;
-        getList(calendarId).then((res) => {
+        getList(id).then((res) => {
             if (res.success) {
                 this.setState({
                     data: res.data,
+                    calendarId: id,
                     filterData: res.data,
                     openModal: false,
                     editTimeoff: false,
@@ -195,12 +195,11 @@ class CalenerHolidays extends Component {
     Callback = (vake) => {
         const { calendarId } = this.state;
         // this will work after I get the Object
-        vake.obj.date = formatDate(vake.obj.date, true)
         console.log(vake);
         const obj = {
             calendarId: calendarId,
-            holidayTypeId: vake.obj.holidayTypeId,
-            date: vake.obj.date
+            holidayTypeId: vake?.obj.holidayTypeId,
+            date: formatDate(vake?.obj.date, true)
         };
         if (!this.state.editTimeoff) {
             // to add new datas

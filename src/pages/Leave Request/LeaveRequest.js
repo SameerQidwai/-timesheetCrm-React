@@ -4,7 +4,6 @@ import { DownOutlined, SettingOutlined, PlusSquareOutlined, AuditOutlined} from 
 import { formatFloat, formatDate, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
 import AddRequestModal from './Modals/AddRequestModal';
 import { getRequests } from '../../service/leaveRequest-Apis';
-import moment from 'moment';
 import LeaveBalance from '../../components/Core/LeaveBalance';
 import { generalDelete } from '../../service/delete-Api\'s';
 const { Title } = Typography

@@ -1,8 +1,7 @@
 import { message as messageAlert } from "antd";
 import axios from "axios";
-import moment from "moment";
 
-import { Api, localStore, headers, setToken, jwtExpired } from "./constant";
+import { Api, localStore, headers, setToken, jwtExpired, formatDate } from "./constant";
 const url = `${Api}/auth`
 export const login = (data) => {
     return axios
@@ -83,7 +82,7 @@ export const getSettings = () => {
                     firstName: contactPerson.firstName,
                     lastName: contactPerson.lastName,
                     gender: contactPerson.gender,
-                    dateOfBirth: contactPerson.dateOfBirth ? moment(contactPerson.dateOfBirth): null,
+                    dateOfBirth:  formatDate(contactPerson.dateOfBirth),
                     phoneNumber: contactPerson.phoneNumber,
                     email: contactPerson.email,
                     address: contactPerson.address,
@@ -101,7 +100,7 @@ export const getSettings = () => {
                     superannuationType: data.superannuationType
                 }
                 const kin = {
-                    nextOfKinDateOfBirth: data.nextOfKinDateOfBirth? moment(data.nextOfKinDateOfBirth) : null,
+                    nextOfKinDateOfBirth:  formatDate(data.nextOfKinDateOfBirth),
                     nextOfKinEmail: data.nextOfKinEmail,
                     nextOfKinGender: data.nextOfKinGender,
                     nextOfKinName:  data.nextOfKinName,
@@ -123,8 +122,8 @@ export const getSettings = () => {
                     payslipEmail: employmentContracts?.payslipEmail, 
                     membershipAccountNo: employmentContracts?.membershipAccountNo, 
                     payFrequency: employmentContracts?.payFrequency, 
-                    startDate: employmentContracts?.startDate ? moment(employmentContracts?.startDate) : null, 
-                    endDate: employmentContracts?.endDate ? moment(employmentContracts?.endDate) : null,
+                    startDate:  formatDate(employmentContracts?.startDate), 
+                    endDate: formatDate(employmentContracts?.endDate),
                     type: employmentContracts?.type, 
                     noOfHours: employmentContracts?.noOfHours, 
                     noOfDays: employmentContracts?.noOfDays, 
@@ -136,8 +135,8 @@ export const getSettings = () => {
                 }
                 const sClearance = {
                     clearanceLevel: contactPerson.clearanceLevel,
-                    clearanceGrantedDate: contactPerson.clearanceGrantedDate ? moment(contactPerson.clearanceGrantedDate) : null, 
-                    clearanceExpiryDate: contactPerson.clearanceExpiryDate ? moment(contactPerson.clearanceExpiryDate) : null, 
+                    clearanceGrantedDate:  formatDate(contactPerson.clearanceGrantedDate), 
+                    clearanceExpiryDate:  formatDate(contactPerson.clearanceExpiryDate), 
                     clearanceSponsorId: contactPerson.clearanceSponsorId,
                 }
                 const resourceSkill = contactPerson.standardSkillStandardLevels

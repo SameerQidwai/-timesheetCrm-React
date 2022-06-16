@@ -223,8 +223,8 @@ export const getLeadSkill = (crud, resId) => {
                     title:  data.title,
                     panelSkillStandardLevelId:  data.panelSkillStandardLevelId,
                     billableHours: data.billableHours,
-                    startDate: data.startDate && formatDate(data.startDate),
-                    endDate: data.endDate && formatDate(data.endDate),
+                    startDate:  formatDate(data.startDate),
+                    endDate: formatDate(data.endDate),
                     contactPersonId:  data.opportunityResourceAllocations[0] && data.opportunityResourceAllocations[0].contactPersonId,
                     buyingRate:  data.opportunityResourceAllocations && data.opportunityResourceAllocations[0].buyingRate,
                     sellingRate:  data.opportunityResourceAllocations && data.opportunityResourceAllocations[0].sellingRate,
@@ -433,8 +433,8 @@ export const getOrder = (proId,id) => {
             if (success) {
                 data = {
                     ...data,
-                    issueDate: data.issueDate && formatDate(data.issueDate),
-                    expiryDate: data.expiryDate && formatDate(data.expiryDate),
+                    issueDate: formatDate(data.issueDate),
+                    expiryDate: formatDate(data.expiryDate),
                     file: data.fileId ? [{
                         id: data.file.id,
                         createdAt: data.file.createdAt,

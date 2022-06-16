@@ -619,7 +619,6 @@ class InfoModal extends Component {
                     if (!this.props.editCP) {
                         this.addPerson(mergeObj); //add skill
                     } else {
-                        console.log("edit");
                         this.editRecord(mergeObj); //edit skill
                     }
                 }
@@ -687,7 +686,7 @@ class InfoModal extends Component {
             {
                 mergeObj: {
                     ...this.state.mergeObj,
-                    ...vake.sec,
+                    ...sec,
                 },
                 securitySubmitted: true, // skill form submitted
             }, () => this.validateForm()

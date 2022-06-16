@@ -3,13 +3,13 @@ import { Row, Col, Menu, Button, Dropdown, Descriptions, Table, Tag, Progress, P
 import { SettingOutlined, DownOutlined } from "@ant-design/icons"; //Icons
 import { Link } from 'react-router-dom'
 
-import moment from "moment"
 
 import MileModal from "./MileModal";
 import { formatDate, formatCurrency, localStore } from "../../service/constant";
 import { getMilestones, getProjectDetail } from "../../service/Milestone-Apis";
 import { getRecord } from "../../service/opportunities";
 import { generalDelete } from "../../service/delete-Api's";
+import { tableSorter } from "../../components/Core/Table/TableFilter";
 
 const { Item } = Descriptions;
 
@@ -40,21 +40,21 @@ class Milestone extends Component {
                             {text}
                         </Link>
                     ),
-                    sorter: (a, b) => a.title - b.title,
+                    ...tableSorter('title', 'string'),
                 },
                 {
                     title: "Start Date",
                     dataIndex: "startDate",
                     key: "startDate",
                     render: (record) =>(formatDate(record, true, true)),
-                    sorter: (a, b) => moment(a.startDate).unix() - moment(b.startDate).unix()
+                    ...tableSorter('startDate', 'date'),
                 },
                 {
                     title: "End Date",
                     dataIndex: "endDate",
                     key: "endDate",
                     render: (record) =>(formatDate(record, true, true)),
-                    sorter: (a, b) => moment(a.endDate).unix() - moment(b.endDate).unix()
+                    ...tableSorter('endDate', 'date'),
                 },
                 {
                     title: "Progress",

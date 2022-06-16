@@ -456,7 +456,6 @@ class InfoModal extends Component {
 
   fetchAll = () => {
     const { editPro } = this.props;
-    // {dates :{ entryDate: moment(new Date()) }}
     const customUrl = `helpers/contact-persons?active=1&employee=1&associated=1&label=1`
     Promise.all([ getPanels(), getOrganizations(), getStates(), getOrgPersons(customUrl), editPro && this.getRecord(editPro), getProjects()])
       .then((res) => {
@@ -511,7 +510,6 @@ class InfoModal extends Component {
 
         startDate: formatDate(dates.startDate, true),
         endDate: formatDate(dates.endDate, true),
-        bidDate: formatDate(dates.bidDate, true),
         entryDate: formatDate(dates.entryDate, true),
     }
 

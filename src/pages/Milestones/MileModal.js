@@ -4,8 +4,7 @@ import { LoadingOutlined } from "@ant-design/icons"; //Icons
 import FormItems from "../../components/Core/Forms/FormItems";
 import { addMilestone, editMilestone, getMilestone } from "../../service/Milestone-Apis";
 
-import moment from "moment";
-import { dateRangeAfter, dateRangeBefore } from "../../service/constant";
+import { dateRangeAfter, dateRangeBefore, formatDate } from "../../service/constant";
 
 
 class MileModal extends Component {
@@ -264,11 +263,17 @@ class MileModal extends Component {
     // this will work after I get the Object from the form
     const { editMile } = this.props;
     this.setState({ loading: true });
-    vake = vake.obj
+    let { obj } = vake
+    obj = {
+      ...obj,
+      startDate: formatDate(obj.startDate, true),
+      endDate: formatDate(obj.endDate, true)
+    }
+
     if (editMile){
-      this.editRecord(vake)
+      this.editRecord(obj)
     }else{
-      this.addRecord(vake)
+      this.addRecord(obj)
     }
   };
 
@@ -286,8 +291,8 @@ class MileModal extends Component {
 
   getRecord = () => {
     const { editMile } = this.props;
-    editMile.startDate = editMile.startDate && moment(editMile.startDate)
-    editMile.endDate = editMile.endDate&& moment(editMile.endDate)
+    editMile.startDate = formatDate(editMile.startDate)
+    editMile.endDate = formatDate(editMile.endDate)
     this.formRef.current.setFieldsValue({ obj: editMile});
     // getMilestone(editMile.id).then(res=>{
     //   if( res.success ){
