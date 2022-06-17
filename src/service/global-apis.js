@@ -1,7 +1,7 @@
 import axios from "axios";
 import { message as messageAlert } from "antd";
 
-import { Api, formatDate, headers, jwtExpired, setToken } from "./constant";
+import { Api, apiErrorRes, formatDate, headers, jwtExpired, setToken } from "./constant";
 
 const global_url = `${Api}/global-setting`;
 const var_url = `${Api}/global-variables`;
@@ -32,9 +32,15 @@ export const upadteSettings = (data) => {
             const { success, message, data } = res.data;
             jwtExpired(message)
             messageAlert.success({ content: message, key: 1},5)
-            if (success) setToken(res.headers && res.headers.authorization)
+            setToken(res.headers && res.headers.authorization)
+            let response = {}
+            if (success){ 
+                data.forEach(({keyLabel, keyValue}) => {
+                    response[keyLabel] = keyValue;
+                  });
+            }
             
-            return {success, data};
+            return {success, data: response};
         })
         .catch((err) => {
                         messageAlert.error({ content: 'Error!', key: 1},5)
@@ -78,16 +84,16 @@ export const upadteVariables = (data) => {
             const { success, message, data } = res.data;
             jwtExpired(message)
             messageAlert.success({ content: message, key: 1},5)
-            if (success) setToken(res.headers && res.headers.authorization)
-            
-            return {success, data};
+            setToken(res.headers && res.headers.authorization)
+            let variables= {}
+            if (success) {
+                data.forEach(({name, values: [{globalVariableId, value, startDate, endDate}]}) =>{
+                    variables[name] = {globalVariableId, value, startDate: formatDate(startDate), endDate: formatDate(endDate)}
+                })
+            }
+            return { success, data: variables };
         })
         .catch((err) => {
-                        messageAlert.error({ content: 'Error!', key: 1},5)
-            return {
-                error: "Please login again!",
-                status: false,
-                message: err.message,
-            };
+            return apiErrorRes(err, 1, 5)
         });
 };
