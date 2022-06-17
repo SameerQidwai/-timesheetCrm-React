@@ -7,6 +7,7 @@ import { formatDate, STATES } from '../../service/constant';
 
 function GlobalVars(props) {
     const [form] = Form.useForm();
+    const [formValues, setFormValues] = useState({settings: {}, variables: {}})
     const [rateFields, setRateFields] = useState([
     {
         fieldCol: 6,
@@ -209,6 +210,7 @@ function GlobalVars(props) {
             let publicHolidays = {value: 'publicHoildays', label:'Public Holidays'}
             let states = res[0].success ? res[0].data : []
             let leavetypes = res[1].success ? res[1].data : []
+            setFormValues({settings: res[2].data, variable: res[3].data})
             addStateFields([...states, workCover, ...leavetypes, publicHolidays]) 
         })
         .catch(err => console.log(err))
@@ -276,19 +278,21 @@ function GlobalVars(props) {
         delete childData.settings
         // let variable = {}
         let variable = []
-        Object.entries(childData).map( ([key, val, startDate, endDate]) => {
+        Object.entries(childData).map( ([key, val]) => {
             if (val.value){
                 // variable = {...val, name: key}
                 variable.push({
                     ...val, 
                     name: key,
-                    startDate: formatDate(startDate, true),
-                    endDate: formatDate(endDate, true),
+                    startDate: formatDate(val.startDate, true),
+                    endDate: formatDate(val.endDate, true),
                 })
             }
           });
         Promise.all([upadteSettings(settings), upadteVariables({variables: variable})]).then(res=>{
-            
+            let settings = res[0].success ? res[0].data : formValues.settings
+            let variables = res[1].success ? res[1].data : formValues.variables
+            form.setFieldsValue({settings: settings, ...variables});
             // form.setFieldsValue({settings: res[0].data})
         })
         .catch(err => console.log(err))
