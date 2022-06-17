@@ -3,7 +3,7 @@ import { Modal, Tabs, Form } from "antd";
 import { LoadingOutlined } from "@ant-design/icons"; //Icons
 
 import { addLeadSkill, getLeadSkill, editLeadSkill, } from "../../../service/projects";
-import { getPanelSkills, getOrgPersons, } from "../../../service/constant-Apis";
+import { getPanelSkills, getOrgPersons, buyCost, } from "../../../service/constant-Apis";
 import FormItems from "../../../components/Core/Forms/FormItems";
 import { dateRangeAfter, dateRangeBefore, formatDate } from "../../../service/constant";
 
@@ -144,6 +144,7 @@ class ResModal extends Component {
           rules:[{ required: true, message: 'Resource is Required' }],
           data: [],
           type: "Select",
+          onChange: (value, option)=> { this.checkRates(value, option) }
         },
         {
           object: "obj",
@@ -247,6 +248,37 @@ class ResModal extends Component {
   componentDidMount = () => {
     this.openModal();
   };
+
+  checkRates = (value, option)=>{
+    if (value){
+      if (option.label.includes('Employee')){
+        this.getRates('employee', value)
+      }else if (option.label.includes('Sub-Contractor')){
+        this.getRates('sub-contractors', value)
+      }else{
+        this.setRates('No Active Contract', 'No Active Contract')
+      }
+    }else{
+      this.setRates(undefined, undefined)
+    }
+    
+  }
+
+  getRates = (crud, id) =>{
+    buyCost(crud, id).then(res=>{
+      if(res.success){
+          let {employeeBuyRate} = res.data
+          this.setRates(employeeBuyRate, employeeBuyRate*2)
+      }
+    })
+  }
+
+  setRates = (buy, sell) =>{
+    const {ResourceFields} = this.state
+    ResourceFields[18].hint = buy
+    ResourceFields[19].hint = sell
+    this.setState({ResourceFields: [...ResourceFields] })
+  }
 
   openModal = () => {
     const { editRex, panelId } = this.props;

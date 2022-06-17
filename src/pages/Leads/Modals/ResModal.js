@@ -4,8 +4,8 @@ import { LoadingOutlined } from "@ant-design/icons"; //Icons
 import FormItems from "../../../components/Core/Forms/FormItems";
 
 import { addLeadSkill, editLeadSkill, addLeadSkillResource, editLeadSkillResource, } from "../../../service/opportunities";
-import { getPanelSkills, getOrgPersons, } from "../../../service/constant-Apis";
-import { dateRange, dateRangeAfter, dateRangeBefore, formatDate } from "../../../service/constant";
+import { getPanelSkills, getOrgPersons, buyCost, } from "../../../service/constant-Apis";
+import { dateRange, dateRangeAfter, dateRangeBefore, formatCurrency, formatDate } from "../../../service/constant";
 
 const { TabPane } = Tabs;
 
@@ -50,6 +50,7 @@ class ResModal extends Component {
           rules: [{ required: true, message: "Resource is Required" }],
           data: [],
           type: "Select",
+          onChange: (value, option)=> { this.checkRates(value, option) }
         },
         {
           object: "obj",
@@ -270,6 +271,38 @@ class ResModal extends Component {
         console.log(e);
       });
   };
+
+  checkRates = (value, option)=>{
+    if (value){
+      if (option.label.includes('Employee')){
+        this.getRates('employee', value)
+      }else if (option.label.includes('Sub-Contractor')){
+        this.getRates('sub-contractors', value)
+      }else{
+        const noActive ='No Active Contract'
+        this.setRates(noActive, noActive)
+      }
+    }else{
+      this.setRates(undefined, undefined)
+    }
+    
+  }
+
+  getRates = (crud, id) =>{
+    buyCost(crud, id).then(res=>{
+      if(res.success){
+          let {employeeBuyRate} = res.data
+          this.setRates(employeeBuyRate, employeeBuyRate*2)
+      }
+    })
+  }
+
+  setRates = (buy, sell) =>{
+    const {ResourceFields} = this.state
+    ResourceFields[6].hint = buy
+    ResourceFields[7].hint = sell
+    this.setState({ResourceFields: [...ResourceFields] })
+  }
 
   skillModal = () => {
     const { editRex, panelId, leadId } = this.props;

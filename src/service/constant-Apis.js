@@ -431,3 +431,22 @@ export const getManageProjects = (resourcePermission) =>{
         };
     });
 }
+
+export const buyCost = (url, id) => {
+    return axios
+        .get(`${Api}/${url}/${id}/buy-cost`, {headers:headers()})
+        .then((res) => {
+            const { success, data, message } = res.data;
+            jwtExpired(message)
+            if (success) setToken(res.headers && res.headers.authorization)
+
+            return { success: success, data: data };
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                success: false,
+                message: err.message,
+            };
+        });
+};

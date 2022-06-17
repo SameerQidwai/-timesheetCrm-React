@@ -30,6 +30,18 @@
     justify-content: space-between;
 }
 
+.no-active {
+    height: 312px;
+    padding-top: 156px;
+    padding-bottom: 156px;
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+    
+}
+
 .my-10{
     margin: 10px 0
 }

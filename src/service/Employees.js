@@ -107,25 +107,6 @@ export const editList = (id, data) => {
         });
 };
 
-export const buyCost = (id) => {
-    return axios
-        .get(`${url}/${id}/buy-cost`, {headers:headers()})
-        .then((res) => {
-            const { success, data, message } = res.data;
-            jwtExpired(message)
-            if (success) setToken(res.headers && res.headers.authorization)
-
-            return { success: success, data: data };
-        })
-        .catch((err) => {
-            return {
-                error: "Please login again!",
-                success: false,
-                message: err.message,
-            };
-        });
-};
-
 function reStructure(data) {
     const contactPerson = data.contactPersonOrganization ? data.contactPersonOrganization.contactPerson : {}
     const basic = {
