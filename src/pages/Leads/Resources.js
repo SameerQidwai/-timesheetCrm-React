@@ -482,6 +482,7 @@ class Resources extends Component {
                         leadId={leadId}
                         mileId={mileId}
                         pDates={pDates}
+                        cmRate={desc.cmPercentage}
                         crud={crud}
                         panelId = {desc.panelId}
                         close={this.closeModal}

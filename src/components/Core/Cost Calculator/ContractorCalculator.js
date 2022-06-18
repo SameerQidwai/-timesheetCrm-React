@@ -135,7 +135,7 @@ const ContractorCalculator = (props) =>{
                         <Col span={6}  className="item bold mb-10"> 
                             <Inputnumber
                                 value={expectedDailyHours}
-                                shape="$"
+                                // shape="$"
                                 onChange={(value)=>{setExpectedDailyHours(value??0)}}
                             />
                         </Col>

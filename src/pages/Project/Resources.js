@@ -497,6 +497,7 @@ class Resources extends Component {
                         proId = {proId}
                         pDates = {pDates}
                         crud={crud}
+                        cmRate={proDesc.cmPercentage}
                         mileId={mileId}
                         panelId = {proDesc.panelId}
                         close={this.closeModal}

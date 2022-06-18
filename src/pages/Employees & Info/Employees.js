@@ -211,7 +211,7 @@ class Employees extends Component {
                     labelAlign: "right",
                 },
                 {
-                    Placeholder: "State",
+                    Placeholder: "State For Payroll Tax Purpose",
                     fieldCol: 12,
                     size: "small",
                     type: "Text",

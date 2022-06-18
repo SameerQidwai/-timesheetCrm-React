@@ -265,7 +265,7 @@ class ResModal extends Component {
   }
 
   getRates = (crud, id) =>{
-    buyCost(crud, id).then(res=>{
+    buyCost(crud, id, 'contactPerson').then(res=>{
       if(res.success){
           let {employeeBuyRate} = res.data
           this.setRates(employeeBuyRate, employeeBuyRate*2)

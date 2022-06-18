@@ -432,9 +432,9 @@ export const getManageProjects = (resourcePermission) =>{
     });
 }
 
-export const buyCost = (url, id) => {
+export const buyCost = (url, id, searchIn) => {
     return axios
-        .get(`${Api}/${url}/${id}/buy-cost`, {headers:headers()})
+        .get(`${Api}/${url}/${id}/buy-cost?searchIn=${searchIn}`, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)

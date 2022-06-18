@@ -189,7 +189,7 @@ class Contact extends Component {
                     type: "Text",
                 },
                 {
-                    Placeholder: "State",
+                    Placeholder: "State For Payroll Tax Purpose",
                     fieldCol: 12,
                     size: "small",
                     type: "Text",

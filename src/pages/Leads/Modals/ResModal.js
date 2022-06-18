@@ -275,12 +275,11 @@ class ResModal extends Component {
   checkRates = (value, option)=>{
     if (value){
       if (option.label.includes('Employee')){
-        this.getRates('employee', value)
+        this.getRates('employees', value)
       }else if (option.label.includes('Sub-Contractor')){
         this.getRates('sub-contractors', value)
       }else{
-        const noActive ='No Active Contract'
-        this.setRates(noActive, noActive)
+        this.setRates('No Active Contract', 'No Active Contract')
       }
     }else{
       this.setRates(undefined, undefined)
@@ -289,10 +288,14 @@ class ResModal extends Component {
   }
 
   getRates = (crud, id) =>{
-    buyCost(crud, id).then(res=>{
+    const {cmRate} = this.props
+    buyCost(crud, id, 'contactPerson').then(res=>{
       if(res.success){
+        console.log(cmRate);
           let {employeeBuyRate} = res.data
-          this.setRates(employeeBuyRate, employeeBuyRate*2)
+          this.setRates(formatCurrency(employeeBuyRate), formatCurrency(employeeBuyRate/(1- (cmRate/100))))
+      }else{
+        this.setRates('No Active Contract', 'No Active Contract')
       }
     })
   }
