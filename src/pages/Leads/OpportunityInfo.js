@@ -111,19 +111,21 @@ class OpportunityInfo extends Component {
                                 <Menu.Item 
                                 danger
                                 disabled={!this?.state?.permissions?.['DELETE']}
+                                className="pop-confirm-menu"
                             >
                                     <Popconfirm 
                                         title="Are you sure you want to delete" 
                                         onConfirm={() => this.handleDelete(leadId)} 
                                     >
-                                        Delete
+                                        <div> Delete </div>
                                     </Popconfirm>
                                 </Menu.Item >
-                                <SubMenu title={'Outcome'}>
+                                <SubMenu title={'Outcome'} key="Outcomes">
                                     {this.status.map(el => <Menu.Item 
                                         key={el.title}
                                         disabled={!permissions['UPDATE']}
                                         style={{color: el.color}}
+                                        className="pop-confirm-menu"
                                     >
                                         <Popconfirm 
                                             title={el.msg} 
@@ -138,7 +140,7 @@ class OpportunityInfo extends Component {
                                             okText="Yes"
                                             cancelText="No" 
                                         >
-                                            {el.title}
+                                            <div> {el.title} </div>
                                         </Popconfirm>
                                     </Menu.Item>)}
                                 </SubMenu>

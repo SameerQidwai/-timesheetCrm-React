@@ -68,21 +68,26 @@ class Organizations extends Component {
                         overlay={
                             <Menu>
                                 <Menu.Item 
+                                    key="Delete"
                                     danger
                                     disabled={!this?.state?.permissions?.['DELETE']}
+                                    className="pop-confirm-menu"
                                 >
                                     <Popconfirm
                                         title="Are you sure you want to delete" 
                                         onConfirm={() => this.handleDelete(record.id, index)} 
                                     >
-                                        Delete
+                                        <div> Delete </div>
                                     </Popconfirm>
                                 </Menu.Item >
                                 <Menu.Item
+                                    key="Edit"
                                     onClick={() => { this.setState({ infoModal: true, editOrg: record.id }); }}
                                     disabled={this.state&& !this.state.permissions['UPDATE']}
                                 >Edit </Menu.Item>
-                                <Menu.Item>
+                                <Menu.Item
+                                    key="View"
+                                >
                                     <Link
                                         to={{ pathname: `/organisations/${record.id}/info`, }}
                                         className="nav-link"

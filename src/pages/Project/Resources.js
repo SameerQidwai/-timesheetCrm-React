@@ -80,17 +80,20 @@ class Resources extends Component {
                         overlay={
                             <Menu>
                                 <Menu.Item 
+                                key="delete"
                                 danger
                                 disabled={!this?.state?.permissions?.['DELETE']}
+                                className="pop-confirm-menu"
                             >
                                 <Popconfirm
                                     title="Are you sure you want to delete" 
                                     onConfirm={() => this.handleDelete(record.id, index)} 
                                 >
-                                    Delete
+                                    <div> Delete </div>
                                 </Popconfirm>
                             </Menu.Item >
                                 <Menu.Item
+                                    key="update"
                                     onClick={() => this.openModal(record.id)}
                                     disabled={!this?.state?.permissions?.['UPDATE']}
                                 >

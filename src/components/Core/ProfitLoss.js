@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Row, Col, Table, Typography } from "antd";
 import { getRecord } from "../../service/opportunities";
 import { formatCurrency, formatDate, formatFloat, getFiscalYear } from "../../service/constant";
+// import moment from 'moment'
 import 'moment-weekday-calc';
 const { Title, Text } = Typography
 
@@ -26,7 +27,7 @@ class ProfitLoss extends Component {
     }
 
     getWeekdays = (startDate, endDate) =>{
-        return formatDate().isoWeekdayCalc({  
+        return formatDate(new Date ()).isoWeekdayCalc({  
             rangeStart: startDate,
             rangeEnd: endDate,
             weekdays: [1,2,3,4,5],  

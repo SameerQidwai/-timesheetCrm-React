@@ -110,12 +110,13 @@ class Opportunities extends Component {
                                 key="delete"
                                 danger
                                 disabled={!this?.state?.permissions?.['DELETE']}
+                                className="pop-confirm-menu"
                             >
                                 <Popconfirm 
                                     title="Are you sure you want to delete" 
                                     onConfirm={() => this.handleDelete(record.id, index)} 
                                 >
-                                    Delete
+                                    <div> Delete </div>
                                 </Popconfirm>
                             </Menu.Item >
                             <Menu.Item 

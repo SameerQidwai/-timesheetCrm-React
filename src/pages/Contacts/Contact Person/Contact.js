@@ -76,6 +76,7 @@ class Contact extends Component {
                                     key="delete"
                                     danger
                                     disabled={!this?.state?.permissions?.['DELETE']}
+                                    className="pop-confirm-menu"
                                 >
                                     <Popconfirm
                                         title="Are you sure you want to delete"
@@ -83,7 +84,7 @@ class Contact extends Component {
                                             this.handleDelete(record.id, index)
                                         }
                                     >
-                                        Delete
+                                        <div> Delete </div>
                                     </Popconfirm>
                                 </Menu.Item>
                                 <Menu.Item

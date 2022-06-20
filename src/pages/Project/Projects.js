@@ -90,30 +90,34 @@ class Projects extends Component {
                     <Dropdown overlay={
                         <Menu>
                             <Menu.Item 
+                                key="delete"
                                 danger
                                 disabled={!this?.state?.permissions?.['DELETE']}
+                                className="pop-confirm-menu"
                             >
                                 <Popconfirm
                                     title="Are you sure you want to delete" 
                                     onConfirm={() => this.handleDelete(record.id, index)} 
                                 >
-                                    Delete
+                                    <div> Delete </div>
+
                                 </Popconfirm>
                             </Menu.Item >
                             <Menu.Item 
+                                key="update"
                                 onClick={()=>this.setState({
                                     openModal: true,
                                     editPro: record.id
                                 })}
                                 disabled={!this?.state?.permissions?.['UPDATE']}
                             >Edit</Menu.Item>
-                            <Menu.Item >
+                            <Menu.Item key="order">
                                 <Link to={{ pathname: `/projects/${record.id}/purchase-order`}} className="nav-link">
                                     Purchase Order
                                 </Link>
                             </Menu.Item >
                             {record.type === 1 ?  //if condition
-                                <Menu.Item> 
+                                <Menu.Item key="milestone"> 
                                     <Link
                                         to={{ pathname: `/projects/${record.id}/milestones`, }}
                                         className="nav-link"
@@ -122,7 +126,7 @@ class Projects extends Component {
                                     </Link>
                                 </Menu.Item>
                                  : //else condition
-                                <Menu.Item>
+                                <Menu.Item key="position">
                                     <Link
                                         to={{
                                             pathname: `/projects/${record.id}/milestones/${record?.milestones?.[0]?.id}/resources`,
@@ -134,7 +138,7 @@ class Projects extends Component {
                                     </Link>
                                 </Menu.Item>
                             }
-                            <Menu.Item >
+                            <Menu.Item key="view" >
                                 <Link to={{ pathname: `/projects/${record.id}/info`}} className="nav-link">
                                     View
                                 </Link>

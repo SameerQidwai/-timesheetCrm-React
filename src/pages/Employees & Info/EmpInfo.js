@@ -89,12 +89,13 @@ class OrgInfo extends Component {
                                     key= "delete" 
                                     danger
                                     disabled={!permissions?.['DELETE']}
+                                    className="pop-confirm-menu"
                                 >
                                     <Popconfirm
                                         title="Are you sure you want to delete" 
                                         onConfirm={() => this.handleDelete(emp)} 
                                     >
-                                        Delete
+                                        <div> Delete </div>
                                     </Popconfirm>
                                 </Menu.Item >
                                 <Menu.Item

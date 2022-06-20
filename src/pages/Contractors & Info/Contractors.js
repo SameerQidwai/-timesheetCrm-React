@@ -73,17 +73,20 @@ class Contractors extends Component {
                         overlay={
                             <Menu>
                                 <Menu.Item 
+                                    key="Delete"
                                     danger
                                     disabled={!this?.state?.permissions?.['DELETE']}
+                                    className="pop-confirm-menu"
                                 >
                                     <Popconfirm
                                         title="Are you sure you want to delete" 
                                         onConfirm={() => this.handleDelete(record.id, index)} 
                                     >
-                                        Delete
+                                        <div> Delete </div>
                                     </Popconfirm>
                                 </Menu.Item >
                                 <Menu.Item
+                                    key="Edit"
                                     onClick={() => {
                                         this.setState({ infoModal: true, editCont: record.id, });
                                     }}
@@ -91,7 +94,9 @@ class Contractors extends Component {
                                 >
                                     Edit
                                 </Menu.Item>
-                                <Menu.Item>
+                                <Menu.Item
+                                    key="View"
+                                >
                                     <Link
                                         to={{
                                             pathname: `/sub-contractors/${record.id}/info`,
@@ -101,7 +106,9 @@ class Contractors extends Component {
                                         View
                                     </Link>
                                 </Menu.Item>
-                                <Menu.Item>
+                                <Menu.Item
+                                    key="Contracts"
+                                >
                                     <Link
                                         to={{
                                             pathname: `/sub-contractors/${record.id}/contracts`,
