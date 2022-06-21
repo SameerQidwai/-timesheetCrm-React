@@ -38,17 +38,22 @@ class CalenerHolidays extends Component {
                     <Dropdown
                         overlay={
                             <Menu>
-                                <Menu.Item danger>
+                                <Menu.Item 
+                                    key="Delete"
+                                    danger
+                                    className="pop-confirm-menu"
+                                >
                                     <Popconfirm
                                         title="Are you sure you want to delete"
                                         onConfirm={() =>
                                             this.handleDelete(record.id)
                                         }
                                     >
-                                        Delete
+                                        <div> Delete </div> 
                                     </Popconfirm>
                                 </Menu.Item>
                                 <Menu.Item
+                                    key="Edit"
                                     onClick={() => this.getRecord(record)}
                                 >
                                     Edit

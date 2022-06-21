@@ -4,8 +4,8 @@ import { LoadingOutlined } from "@ant-design/icons"; //Icons
 import FormItems from "../../../components/Core/Forms/FormItems";
 
 import { addLeadSkill, editLeadSkill, addLeadSkillResource, editLeadSkillResource, } from "../../../service/opportunities";
-import { getPanelSkills, getOrgPersons, } from "../../../service/constant-Apis";
-import { dateRange, dateRangeAfter, dateRangeBefore, formatDate } from "../../../service/constant";
+import { getPanelSkills, getOrgPersons, buyCost, } from "../../../service/constant-Apis";
+import { dateRange, dateRangeAfter, dateRangeBefore, formatCurrency, formatDate } from "../../../service/constant";
 
 const { TabPane } = Tabs;
 
@@ -50,6 +50,7 @@ class ResModal extends Component {
           rules: [{ required: true, message: "Resource is Required" }],
           data: [],
           type: "Select",
+          onChange: (value, option)=> { this.checkRates(value, option) }
         },
         {
           object: "obj",
@@ -246,13 +247,13 @@ class ResModal extends Component {
   };
 
   fetchRes = () => {
-    const { levelId } = this.props
+    const { levelId, editRex, cmRate } = this.props
+    console.log(editRex);
     const customUrl = `employees/get/by-skills?psslId=${levelId}&workType=O`
     Promise.all([getOrgPersons(customUrl)])
       .then((res) => {
         const data = res[0].success ? res[0].data :[]
         const { ResourceFields } = this.state;
-        const { editRex } = this.props;
         if (editRex) {
           const obj = {
             contactPersonId: editRex.contactPersonId,
@@ -262,6 +263,9 @@ class ResModal extends Component {
             buyingRate: editRex.buyingRate,
           };
           this.formRef.current.setFieldsValue({ obj:obj });
+          // let employeeBuyRate = res[1].success ? res[1].data.employeeBuyRate : res[2].success && res[2].data.employeeBuyRate
+          // ResourceFields[4].suggestion = formatCurrency(employeeBuyRate)
+          // ResourceFields[5].suggestion = formatCurrency(employeeBuyRate/(1- (cmRate/100)))
         }
         ResourceFields[2].data = data;
         this.setState({ ResourceFields });
@@ -270,6 +274,40 @@ class ResModal extends Component {
         console.log(e);
       });
   };
+
+  checkRates = (value, option)=>{
+    if (value){
+      if (option.label.includes('Employee')){
+        this.getRates('employees', value)
+      }else if (option.label.includes('Sub Contractor')){
+        this.getRates('sub-contractors', value)
+      }else{
+        this.setRates('No Active Contract', 'No Active Contract')
+      }
+    }else{
+      this.setRates(undefined, undefined)
+    }
+    
+  }
+
+  getRates = (crud, id) =>{
+    const {cmRate} = this.props
+    buyCost(crud, id, 'contactPerson').then(res=>{
+      if(res.success){
+          let {employeeBuyRate} = res.data
+          this.setRates(formatCurrency(employeeBuyRate), formatCurrency(employeeBuyRate/(1- (cmRate/100))))
+      }else{
+        this.setRates('No Active Contract', 'No Active Contract')
+      }
+    })
+  }
+
+  setRates = (buy, sell) =>{
+    const {ResourceFields} = this.state
+    ResourceFields[4].suggestion = buy
+    ResourceFields[5].suggestion = sell
+    this.setState({ResourceFields: [...ResourceFields] })
+  }
 
   skillModal = () => {
     const { editRex, panelId, leadId } = this.props;

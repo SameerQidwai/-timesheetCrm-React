@@ -30,4 +30,11 @@ span.disabledanticon{
 
 span.anticon[disabled]{
     pointer-events: none; 
-  }
+}
+
+.pop-confirm-menu{
+    padding: 1px;
+}
+.pop-confirm-menu div{
+    padding: 4px 11px;
+}

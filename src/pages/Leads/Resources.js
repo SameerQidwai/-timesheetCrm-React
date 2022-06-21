@@ -67,17 +67,20 @@ class Resources extends Component {
                         overlay={
                             <Menu>
                                 <Menu.Item 
+                                    key="delete"
                                     danger 
                                     disabled={!this?.state?.permissions?.['DELETE']}
+                                    className="pop-confirm-menu"
                                 >
                                     <Popconfirm
                                         title="Are you sure you want to delete" 
                                         onConfirm={() => this.handleDelete(record.id, index)} 
                                     >
-                                        Delete
+                                        <div> Delete </div>
                                     </Popconfirm>
                                 </Menu.Item >
                                 <Menu.Item
+                                    key="edit"
                                     onClick={() => {
                                         this.getSkilldEmployee(true,  false,  false, record,  index, record.panelSkillStandardLevelId)
                                     }}
@@ -86,6 +89,7 @@ class Resources extends Component {
                                     Edit Position
                                 </Menu.Item>
                                 <Menu.Item 
+                                    key="add"
                                     onClick={() => {
                                         this.getSkilldEmployee(true,  record.id,  true, false,  index, record.panelSkillStandardLevelId)
                                     }}
@@ -482,6 +486,7 @@ class Resources extends Component {
                         leadId={leadId}
                         mileId={mileId}
                         pDates={pDates}
+                        cmRate={desc.cmPercentage}
                         crud={crud}
                         panelId = {desc.panelId}
                         close={this.closeModal}
@@ -534,17 +539,20 @@ function NestedTable(props) {
                     overlay={
                         <Menu>
                             <Menu.Item 
+                                key="delete"
                                     danger 
                                     disabled={!props?.permissions?.['DELETE']}
+                                    className="pop-confirm-menu"
                                 >
                                     <Popconfirm
                                         title="Are you sure you want to delete" 
                                         onConfirm={() => handleDelete(record.id, index)} 
                                     >
-                                        Delete
+                                        <div> Delete </div>
                                     </Popconfirm>
                                 </Menu.Item >
                             <Menu.Item
+                                key="update"
                                 onClick={()=>{
                                     setEditRex({...record, tableIndex: index})
                                     setVisible(true)

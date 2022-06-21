@@ -154,7 +154,7 @@ class InfoModal extends Component {
                     // itemStyle:{marginBottom:'10px'},
                 },
                 {
-                    Placeholder: "State",
+                    Placeholder: "State For Payroll Tax Purpose",
                     fieldCol: 12,
                     size: "small",
                     type: "Text",

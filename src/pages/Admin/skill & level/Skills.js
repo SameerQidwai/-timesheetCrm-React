@@ -30,17 +30,22 @@ class Skills extends Component {
                     <Dropdown
                         overlay={
                             <Menu>
-                                <Menu.Item danger>
+                                <Menu.Item 
+                                    danger
+                                    key="Delete"
+                                    className="pop-confirm-menu"
+                                >
                                     <Popconfirm
                                         title="Are you sure you want to delete"
                                         onConfirm={() =>
                                             this.handleDelete(record.id)
                                         }
                                     >
-                                        Delete
+                                        <div> Delete </div>
                                     </Popconfirm>
                                 </Menu.Item>
                                 <Menu.Item
+                                    key="Eidt"
                                     onClick={() => this.getRecord(record, text)}
                                 >
                                     Edit

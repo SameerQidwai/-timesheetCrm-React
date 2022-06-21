@@ -75,7 +75,3 @@ tableFilter.js not done
 filters on each page not done
 isoWeekdayCalc not done
 addRequestModal  not done
-
-
-/** Delete functaionalty */
-contBilling.js

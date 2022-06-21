@@ -20,7 +20,7 @@ fields=[
             hint: 'hint',
             data: 'Option for the fields that needs i.e checkbox selectbox',
             itemStyle: 'put style on from item for the field',
-            fieldStyle = 'put style directly to the field ',
+            fieldStyle: 'put style directly to the field ',
             valuePropName:'"checked" for the field name as checkbox and switch and fileList for Dragger',
             rangeMin: 'To set min number to a input field ||  to put reqired staric in front of Labels || hide Now Button in TimePicker || defualt before disable dates',
             rangeMax: 'To set max number to a input field and if multiple allowed|| defualt after disable dates',
@@ -38,6 +38,7 @@ fields=[
             tooltipTitle: 'Title of the Tool tip', 
             tooltipTrigger: 'Hover click or focus tool tip trigger',
             fieldNames: 'Select Box Label and value key',
+            suggestion: 'Hint beside Field Label ',
             initialValue: 'Gives Item an initaialValues'
 
         }

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Row, Col, Menu, Button, Dropdown, Descriptions, Table, Popconfirm, Typography } from "antd";
-import { SettingOutlined, DownOutlined, PlusSquareOutlined, FilterOutlined } from "@ant-design/icons"; //Icons
+import { SettingOutlined, PlusSquareOutlined } from "@ant-design/icons"; //Icons
 import { Link } from "react-router-dom"; 
 
 import OrderModal from "./Modals/OrderModal";
@@ -63,19 +63,20 @@ class PurchaseOrder extends Component {
                         overlay={
                             <Menu>
                                 <Menu.Item 
-                                key={1}
+                                key={"delete"}
                                 danger
                                 disabled={!this?.state?.permissions?.['DELETE']}
+                                className="pop-confirm-menu"
                             >
                                 <Popconfirm
                                     title="Are you sure you want to delete" 
                                     onConfirm={() => this.handleDelete(record.id, index)} 
                                 >
-                                    Delete
+                                    <div> Delete </div>
                                 </Popconfirm>
                             </Menu.Item >
                                 <Menu.Item
-                                    key={0}
+                                    key={"edit"}
                                     onClick={() => { this.openModal(true, record.id, index) }}
                                     disabled={!this?.state?.permissions?.['UPDATE']}
                                 >
@@ -305,7 +306,7 @@ class PurchaseOrder extends Component {
 
     callBack = (record) => {
         let { tableIndex, data } = this.state
-        if(tableIndex >= 0){
+        if(tableIndex !== false){
             data[tableIndex] = record
         }else{
             data.push(record)

@@ -139,7 +139,7 @@ const PersonalDetails= (props) => {
             // itemStyle:{marginBottom:'1020'},
         },
         {
-            Placeholder: "State",
+            Placeholder: "State For Payroll Tax Purpose",
             fieldCol: 12,
             size: "small",
             type: "Text",

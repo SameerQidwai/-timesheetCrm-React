@@ -36,8 +36,8 @@ class Roles extends Component {
                     <Dropdown
                         overlay={
                             <Menu>
-                                <Menu.Item disabled={record.isSystem} onClick={() => { this.getRecord(record, index); }} > Edit </Menu.Item>
-                                <Menu.Item onClick={()=>this.callPermission(record, index)}> Permissions </Menu.Item>
+                                <Menu.Item key="Edit" disabled={record.isSystem} onClick={() => { this.getRecord(record, index); }} > Edit </Menu.Item>
+                                <Menu.Item key="Permission" onClick={()=>this.callPermission(record, index)}> Permissions </Menu.Item>
                             </Menu>
                         }
                     >

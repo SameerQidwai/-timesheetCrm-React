@@ -93,14 +93,47 @@ class ProjectInfo extends Component {
                                     key={'delete'}
                                     danger
                                     disabled={!permissions?.['DELETE']}
+                                    className="pop-confirm-menu"
                                 >
                                     <Popconfirm
                                         title="Are you sure you want to delete" 
                                         onConfirm={() => this.handleDelete(leadId)} 
                                     >
-                                        Delete
+                                        <div> Delete </div>
                                     </Popconfirm>
                                 </Menu.Item >
+                                <Menu.SubMenu title={'Outcome'} key="Outcome">
+                                    <Menu.Item 
+                                        key="Open"
+                                        disabled={!permissions['UPDATE']}
+                                        style={{color: '#6fac45'}}
+                                        className="pop-confirm-menu"
+                                    >
+                                        <Popconfirm 
+                                            title={'Do You Want To Open this Project?'} 
+                                            onConfirm={() => { console.log('Open') }}
+                                            okText="Yes"
+                                            cancelText="No" 
+                                        >
+                                            <div>Open</div>
+                                        </Popconfirm>
+                                    </Menu.Item>
+                                    <Menu.Item 
+                                        key="Close"
+                                        disabled={!permissions['UPDATE']}
+                                        style={{color: '#c00505'}}
+                                        className="pop-confirm-menu"
+                                    >
+                                        <Popconfirm 
+                                            title={'Do You Want To Close this Project?'} 
+                                            onConfirm={() => { console.log('Close') }}
+                                            okText="Yes"
+                                            cancelText="No" 
+                                        >
+                                            <div>Close</div>
+                                        </Popconfirm>
+                                    </Menu.Item>
+                                </Menu.SubMenu>
                                 <Menu.Item  
                                     key={'edit'}
                                     onClick={() => { 

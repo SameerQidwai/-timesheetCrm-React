@@ -61,17 +61,20 @@ class Employees extends Component {
                         overlay={
                             <Menu>
                                 <Menu.Item 
+                                    key="Delete"
                                     danger
                                     disabled={!this?.state?.permissions?.['DELETE']}
+                                    className="pop-confirm-menu"
                                 >
                                     <Popconfirm
                                         title="Are you sure you want to delete" 
                                         onConfirm={() => this.handleDelete(record.id, index)} 
                                     >
-                                        Delete
+                                        <div> Delete </div>
                                     </Popconfirm>
                                 </Menu.Item >
                                 <Menu.Item
+                                    key="Edit"
                                     onClick={() => {
                                         this.setState({ infoModal: true, editEmp: record.id, });
                                     }}
@@ -79,7 +82,9 @@ class Employees extends Component {
                                 >
                                     Edit
                                 </Menu.Item>
-                                <Menu.Item>
+                                <Menu.Item
+                                    key="view"
+                                >
                                     <Link
                                         to={{
                                             pathname: `/Employees/${record.id}/info`,
@@ -89,7 +94,9 @@ class Employees extends Component {
                                         View
                                     </Link>
                                 </Menu.Item>
-                                <Menu.Item>
+                                <Menu.Item
+                                    key="Contract History"
+                                >
                                     <Link
                                         to={{
                                             pathname: `/Employee/${record.id}/contracts`,
@@ -99,7 +106,9 @@ class Employees extends Component {
                                         Contract History
                                     </Link>
                                 </Menu.Item>
-                                <Menu.Item>
+                                <Menu.Item
+                                    key="Novated lease"
+                                >
                                     <Link
                                         to={{
                                             pathname: `/Employee/${record.id}/novated-lease`,
@@ -211,7 +220,7 @@ class Employees extends Component {
                     labelAlign: "right",
                 },
                 {
-                    Placeholder: "State",
+                    Placeholder: "State For Payroll Tax Purpose",
                     fieldCol: 12,
                     size: "small",
                     type: "Text",
