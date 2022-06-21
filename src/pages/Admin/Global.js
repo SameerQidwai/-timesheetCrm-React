@@ -9,110 +9,104 @@ function GlobalVars(props) {
     const [form] = Form.useForm();
     const [formValues, setFormValues] = useState({settings: {}, variables: {}})
     const [rateFields, setRateFields] = useState([
-    {
-        fieldCol: 6,
-        Placeholder: "Rate",
-        type: "Title",
-        mode: 4,
-        fieldStyle:{textAlign: 'right'},
-        style: { textDecoration: "underline" },
-    },
-    {
-        fieldCol: 5,
-        Placeholder: "Start Date",
-        type: "Title",
-        mode: 4,
-        fieldStyle:{textAlign: 'center'}, 
-        style: { textDecoration: "underline" },
-    },
-    {
-        fieldCol: 5,
-        Placeholder: "Finish Date",
-        type: "Title",
-        mode: 4,
-        fieldStyle:{textAlign: 'center'}, 
-        style: { textDecoration: "underline" },
-    },
-    {
-        fieldCol: 24,
-        Placeholder: "Sale Tax",
-        type: "Title",
-        mode: 4,
-        style: { textDecoration: "underline" },
-    },
-    {
-        fieldCol: 4,
-        Placeholder: "GST:",
-        type: "Text",
-        itemStyle:{textAlign: 'center'}, 
-    },
-    {
-        object: "GST",
-        fieldCol: 3,
-        key: "value",
-        size: "small",
-        shape: '%',
-        type: "InputNumber",
-    },
-    {
-        object: "GST",
-        fieldCol: 5,
-        key: "startDate",
-        size: "small",
-        shape: '%',
-        type: "DatePicker",
-    },
-    {
-        object: "GST",
-        fieldCol: 5,
-        key: "endDate",
-        size: "small",
-        shape: '%',
-        type: "DatePicker",
-    },
-    {
-        fieldCol: 24,
-        Placeholder: "on Cost Rate",
-        type: "Title",
-        mode: 4,
-        style: { textDecoration: "underline" },
-    },
-    {
-        fieldCol: 4,
-        Placeholder: "Superannuation:",
-        type: "Text",
-        itemStyle:{textAlign: 'center'}, 
-    },
-    {
-        object: "Superannuation",
-        fieldCol: 3,
-        key: "value",
-        size: "small",
-        shape: '%',
-        type: "InputNumber",
-    },
-    {
-        object: "Superannuation",
-        fieldCol: 5,
-        key: "startDate",
-        size: "small",
-        shape: '%',
-        type: "DatePicker",
-    },
-    {
-        object: "Superannuation",
-        fieldCol: 5,
-        key: "endDate",
-        size: "small",
-        shape: '%',
-        type: "DatePicker",
-    },
-    {
-        fieldCol: 24,
-        Placeholder: "Payroll Tax",
-        type: "Text",
-        itemStyle:{paddingLeft: '5%'}, 
-    }, 
+        {
+            fieldCol: 6,
+            Placeholder: "Rate",
+            type: "Title",
+            mode: 4,
+            fieldStyle:{textAlign: 'right'},
+            style: { textDecoration: "underline" },
+        },
+        {
+            fieldCol: 5,
+            Placeholder: "Start Date",
+            type: "Title",
+            mode: 4,
+            fieldStyle:{textAlign: 'center'}, 
+            style: { textDecoration: "underline" },
+        },
+        {
+            fieldCol: 10,
+            Placeholder: "Finish Date",
+            type: "Title",
+            mode: 4,
+            fieldStyle:{textAlign: 'center'}, 
+            style: { textDecoration: "underline" },
+        },
+        {
+            fieldCol: 24,
+            Placeholder: "Sale Tax",
+            type: "Title",
+            mode: 4,
+            style: { textDecoration: "underline" },
+        },
+        {
+            fieldCol: 4,
+            Placeholder: "GST:",
+            type: "Text",
+            itemStyle:{textAlign: 'right', paddingRight: '15%'}, 
+        },
+        {
+            object: "GST",
+            fieldCol: 3,
+            key: "value",
+            size: "small",
+            shape: '%',
+            type: "InputNumber",
+        },
+        {
+            object: "GST",
+            fieldCol: 5,
+            key: "startDate",
+            size: "small",
+            shape: '%',
+            type: "DatePicker",
+        },
+        {
+            object: "GST",
+            fieldCol: 10,
+            key: "endDate",
+            size: "small",
+            shape: '%',
+            type: "DatePicker",
+        },
+        {
+            fieldCol: 24,
+            Placeholder: "on Cost Rate",
+            type: "Title",
+            mode: 4,
+            style: { textDecoration: "underline" },
+        },
+        {
+            fieldCol: 4,
+            Placeholder: "Superannuation:",
+            type: "Text",
+            itemStyle:{textAlign: 'right', paddingRight: '15%', marginBottom: 10}, 
+        },
+        {
+            object: "Superannuation",
+            fieldCol: 3,
+            key: "value",
+            size: "small",
+            shape: '%',
+            type: "InputNumber",
+        },
+        {
+            object: "Superannuation",
+            fieldCol: 5,
+            key: "startDate",
+            size: "small",
+            shape: '%',
+            type: "DatePicker",
+        },
+        {
+            object: "Superannuation",
+            fieldCol: 10,
+            key: "endDate",
+            size: "small",
+            shape: '%',
+            type: "DatePicker",
+        },
     ])
 
     const otherFields = [
@@ -198,7 +192,7 @@ function GlobalVars(props) {
     useEffect(() => {
         // getApi()
         fetchAll()
-        // addStateFields() 
+        // addGlobalFields() 
     }, [])
 
     const fetchAll = ()=>{
@@ -211,7 +205,7 @@ function GlobalVars(props) {
             let states = res[0].success ? res[0].data : []
             let leavetypes = res[1].success ? res[1].data : []
             setFormValues({settings: res[2].data, variable: res[3].data})
-            addStateFields([...states, workCover, ...leavetypes, publicHolidays]) 
+            addGlobalFields([ workCover, ...leavetypes, publicHolidays], states)
         })
         .catch(err => console.log(err))
     }
@@ -249,10 +243,14 @@ function GlobalVars(props) {
         },]
     }
 
-    const addStateFields = (lables) =>{
+    const addGlobalFields = (lables, states) =>{
         let newFields = []
+        let stateFields = []
         for (const {label} of lables) {
             newFields.push(...stateFileds(label))
+        }
+        for (const {label} of states) {
+            stateFields.push(...stateFileds(label))
         }
 
         if (lables.length>0){
@@ -260,6 +258,15 @@ function GlobalVars(props) {
                 return [
                     ...prevFields,
                     ...newFields,
+                    {
+                        fieldCol: 24,
+                        Placeholder: "Payroll Tax",
+                        type: "Title",
+                        mode: 5,
+                        itemStyle:{paddingLeft: '5%'}, 
+                        style: { textDecoration: "underline" },
+                    },
+                    ...stateFields,
                     {
                         fieldCol: 20,
                         mode: "horizontal",

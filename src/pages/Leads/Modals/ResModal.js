@@ -247,13 +247,13 @@ class ResModal extends Component {
   };
 
   fetchRes = () => {
-    const { levelId } = this.props
+    const { levelId, editRex, cmRate } = this.props
+    console.log(editRex);
     const customUrl = `employees/get/by-skills?psslId=${levelId}&workType=O`
     Promise.all([getOrgPersons(customUrl)])
       .then((res) => {
         const data = res[0].success ? res[0].data :[]
         const { ResourceFields } = this.state;
-        const { editRex } = this.props;
         if (editRex) {
           const obj = {
             contactPersonId: editRex.contactPersonId,
@@ -263,6 +263,9 @@ class ResModal extends Component {
             buyingRate: editRex.buyingRate,
           };
           this.formRef.current.setFieldsValue({ obj:obj });
+          // let employeeBuyRate = res[1].success ? res[1].data.employeeBuyRate : res[2].success && res[2].data.employeeBuyRate
+          // ResourceFields[4].suggestion = formatCurrency(employeeBuyRate)
+          // ResourceFields[5].suggestion = formatCurrency(employeeBuyRate/(1- (cmRate/100)))
         }
         ResourceFields[2].data = data;
         this.setState({ ResourceFields });
@@ -276,7 +279,7 @@ class ResModal extends Component {
     if (value){
       if (option.label.includes('Employee')){
         this.getRates('employees', value)
-      }else if (option.label.includes('Sub-Contractor')){
+      }else if (option.label.includes('Sub Contractor')){
         this.getRates('sub-contractors', value)
       }else{
         this.setRates('No Active Contract', 'No Active Contract')
@@ -291,7 +294,6 @@ class ResModal extends Component {
     const {cmRate} = this.props
     buyCost(crud, id, 'contactPerson').then(res=>{
       if(res.success){
-        console.log(cmRate);
           let {employeeBuyRate} = res.data
           this.setRates(formatCurrency(employeeBuyRate), formatCurrency(employeeBuyRate/(1- (cmRate/100))))
       }else{
@@ -302,8 +304,8 @@ class ResModal extends Component {
 
   setRates = (buy, sell) =>{
     const {ResourceFields} = this.state
-    ResourceFields[6].hint = buy
-    ResourceFields[7].hint = sell
+    ResourceFields[4].suggestion = buy
+    ResourceFields[5].suggestion = sell
     this.setState({ResourceFields: [...ResourceFields] })
   }
 

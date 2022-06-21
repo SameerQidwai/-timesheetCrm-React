@@ -94,7 +94,7 @@ class FormItems extends Component {
                             this.filedformat( 
                                 item.type, item.Placeholder, item.data, item.mode, item.rangeMin, item.rangeMax, item.showTime, item.shape, 
                                 item.size, item.fieldStyle, item.disabled, item.readOnly, item.onChange, item.onClick, item.onBlur, 
-                                item.onClear, item.tooltip, item.tooltipTitle, item.tooltipTrigger, item.fieldNames
+                                item.onClear, item.tooltip, item.tooltipTitle, item.tooltipTrigger, item.fieldNames, item.suggestion
                             )
                         }
                     </Item>
@@ -104,7 +104,7 @@ class FormItems extends Component {
         );
     };
 
-    filedformat = ( type, placeholder, data, mode, min, max, showTime, shape, size, style, disabled, readOnly, onChange, onClick, onBlur, onClear, tooltip, tTitle, tTrigger, fieldNames ) => {
+    filedformat = ( type, placeholder, data, mode, min, max, showTime, shape, size, style, disabled, readOnly, onChange, onClick, onBlur, onClear, tooltip, tTitle, tTrigger, fieldNames, suggestion ) => {
         let item = null;
         switch (type) {
             case "Title":
@@ -119,6 +119,7 @@ class FormItems extends Component {
                     <Text strong={mode} onClick={onClick} style={style} disabled={disabled}>
                         { tooltip? <Tooltip title={tTitle} trigger={tTrigger}> {placeholder}</Tooltip> :   placeholder }
                         {min && <span style={{color: 'red'}}> * </span>}
+                        {suggestion && <span style={{float: 'right', color: '#747474'}}> {suggestion} </span>}
                     </Text>
                 );
                 break;

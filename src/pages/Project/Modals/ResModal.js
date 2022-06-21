@@ -5,7 +5,7 @@ import { LoadingOutlined } from "@ant-design/icons"; //Icons
 import { addLeadSkill, getLeadSkill, editLeadSkill, } from "../../../service/projects";
 import { getPanelSkills, getOrgPersons, buyCost, } from "../../../service/constant-Apis";
 import FormItems from "../../../components/Core/Forms/FormItems";
-import { dateRangeAfter, dateRangeBefore, formatDate } from "../../../service/constant";
+import { dateRangeAfter, dateRangeBefore, formatCurrency, formatDate } from "../../../service/constant";
 
 const { TabPane } = Tabs;
 
@@ -252,8 +252,8 @@ class ResModal extends Component {
   checkRates = (value, option)=>{
     if (value){
       if (option.label.includes('Employee')){
-        this.getRates('employee', value)
-      }else if (option.label.includes('Sub-Contractor')){
+        this.getRates('employees', value)
+      }else if (option.label.includes('Sub Contractor')){
         this.getRates('sub-contractors', value)
       }else{
         this.setRates('No Active Contract', 'No Active Contract')
@@ -265,18 +265,19 @@ class ResModal extends Component {
   }
 
   getRates = (crud, id) =>{
+    const {cmRate} = this.props
     buyCost(crud, id, 'contactPerson').then(res=>{
       if(res.success){
           let {employeeBuyRate} = res.data
-          this.setRates(employeeBuyRate, employeeBuyRate*2)
+          this.setRates(formatCurrency(employeeBuyRate), formatCurrency(employeeBuyRate/(1- (cmRate/100))))
       }
     })
   }
 
   setRates = (buy, sell) =>{
     const {ResourceFields} = this.state
-    ResourceFields[18].hint = buy
-    ResourceFields[19].hint = sell
+    ResourceFields[16].suggestion = buy
+    ResourceFields[17].suggestion = sell
     this.setState({ResourceFields: [...ResourceFields] })
   }
 
