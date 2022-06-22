@@ -4,11 +4,12 @@
 
 }
 
-@import url('../node_modules/@fontsource/poppins');
+/* @import url('../node_modules/@fontsource/poppins'); */
 /* @import url('./fonts/poppins/index.css'); */
 body {
   margin: 0;
   font-family: 'Poppins' !important;
+  font-style: normal !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
