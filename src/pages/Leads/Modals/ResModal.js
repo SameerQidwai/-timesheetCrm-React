@@ -262,13 +262,18 @@ class ResModal extends Component {
             effortRate: editRex.effortRate,
             buyingRate: editRex.buyingRate,
           };
+          ResourceFields[2].data = data;
+          this.setState({ ResourceFields },()=>{
+            // if (editRex.role) {
+            //   this.checkRates(obj.contactPersonId, {label: editRex.role})
+            // }else{
+            //   this.setRates('No Active Contract', 'No Active Contract')
+            // }
+          });
+          
           this.formRef.current.setFieldsValue({ obj:obj });
-          // let employeeBuyRate = res[1].success ? res[1].data.employeeBuyRate : res[2].success && res[2].data.employeeBuyRate
-          // ResourceFields[4].suggestion = formatCurrency(employeeBuyRate)
-          // ResourceFields[5].suggestion = formatCurrency(employeeBuyRate/(1- (cmRate/100)))
         }
-        ResourceFields[2].data = data;
-        this.setState({ ResourceFields });
+        
       })
       .catch((e) => {
         console.log(e);
