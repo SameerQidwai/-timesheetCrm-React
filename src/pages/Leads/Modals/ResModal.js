@@ -264,11 +264,11 @@ class ResModal extends Component {
           };
           ResourceFields[2].data = data;
           this.setState({ ResourceFields },()=>{
-            // if (editRex.role) {
-            //   this.checkRates(obj.contactPersonId, {label: editRex.role})
-            // }else{
-            //   this.setRates('No Active Contract', 'No Active Contract')
-            // }
+            if (editRex.role) {
+              this.checkRates(obj.contactPersonId, {label: editRex.role})
+            }else{
+              this.setRates('No Active Contract', 'No Active Contract')
+            }
           });
           
           this.formRef.current.setFieldsValue({ obj:obj });

@@ -225,11 +225,12 @@ export const getLeadSkill = (crud, resId) => {
                     billableHours: data.billableHours,
                     startDate:  formatDate(data.startDate),
                     endDate: formatDate(data.endDate),
-                    contactPersonId:  data.opportunityResourceAllocations[0] && data.opportunityResourceAllocations[0].contactPersonId,
-                    buyingRate:  data.opportunityResourceAllocations && data.opportunityResourceAllocations[0].buyingRate,
-                    sellingRate:  data.opportunityResourceAllocations && data.opportunityResourceAllocations[0].sellingRate,
-                    effortRate: data.opportunityResourceAllocations && data.opportunityResourceAllocations[0].effortRate,
-                    allocationId: data.opportunityResourceAllocations && data.opportunityResourceAllocations[0].id
+                    contactPersonId: data?.opportunityResourceAllocations?.[0]?.contactPersonId,
+                    buyingRate:  data?.opportunityResourceAllocations?.[0]?.buyingRate,
+                    sellingRate:  data?.opportunityResourceAllocations?.[0]?.sellingRate,
+                    effortRate: data?.opportunityResourceAllocations?.[0]?.effortRate,
+                    allocationId: data?.opportunityResourceAllocations?.[0]?.id,
+                    role: data.opportunityResourceAllocations?.[0]?.role
                 }
                 setToken(res.headers && res.headers.authorization)
                 return {success, data: obj}
