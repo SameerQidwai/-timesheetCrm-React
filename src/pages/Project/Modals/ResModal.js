@@ -341,12 +341,13 @@ class ResModal extends Component {
             ? skills[skillIndex].levels
             : [];
           ResourceFields[10].data = resP.success ? resP.data : [];
-          this.formRef.current.setFieldsValue({
-            obj: resR.data,
-          });
-          this.setState({
-            ResourceFields,
-            allocationId: resR.data.allocationId,
+          this.formRef.current.setFieldsValue({ obj: resR.data, });
+          this.setState({ ResourceFields, allocationId: resR.data.allocationId, },()=>{
+            if (resR?.data?.role) {
+              this.checkRates(resR.data.contactPersonId, {label: resR?.data?.role})
+            }else{
+              this.setRates('No Active Contract', 'No Active Contract')
+            }
           });
         });
       }
