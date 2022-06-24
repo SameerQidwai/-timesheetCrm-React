@@ -11,7 +11,7 @@ import ProfitLoss from "../../components/Core/ProfitLoss";
 
 import InfoModal from "./Modals/InfoModal";
 
-import { getRecord, delList } from "../../service/projects";
+import { getRecord, delList, Outcomes } from "../../service/projects";
 
 import { formatDate, formatCurrency, localStore, O_STATUS } from "../../service/constant";
 import AuthError from "../../components/Core/AuthError";
@@ -79,6 +79,19 @@ class ProjectInfo extends Component {
         this.getRecord(leadId)
     };
 
+    OutcomeAction = (action) =>{
+        const { leadId, basic } = this.state
+        console.log(action, action === 'open');
+        
+        Outcomes(action,leadId).then(res=>{
+            if (res.success){
+                if(basic.phase){
+                    this.setState({basic: {...basic, phase:action==='open'?1:0}})
+                }
+            }
+        })
+    }
+
     render() {
         const { data, infoModal, leadId, billing, renderTabs, permissions, basic,notAuth } = this.state;
         
@@ -92,10 +105,11 @@ class ProjectInfo extends Component {
                                 <Menu.Item  
                                     key={'delete'}
                                     danger
-                                    disabled={!permissions?.['DELETE']}
+                                    disabled={!permissions?.['DELETE']|| basic.phase===0}
                                     className="pop-confirm-menu"
                                 >
                                     <Popconfirm
+                                        disabled={!permissions?.['DELETE']|| basic.phase===0}
                                         title="Are you sure you want to delete" 
                                         onConfirm={() => this.handleDelete(leadId)} 
                                     >
@@ -105,13 +119,14 @@ class ProjectInfo extends Component {
                                 <Menu.SubMenu title={'Outcome'} key="Outcome">
                                     <Menu.Item 
                                         key="Open"
-                                        disabled={!permissions['UPDATE']}
+                                        disabled={!permissions['UPDATE']|| basic.phase===1}
                                         style={{color: '#6fac45'}}
                                         className="pop-confirm-menu"
                                     >
                                         <Popconfirm 
+                                            disabled={!permissions['UPDATE']|| basic.phase===1}
                                             title={'Do You Want To Open this Project?'} 
-                                            onConfirm={() => { console.log('Open') }}
+                                            onConfirm={() => this.OutcomeAction('open')}
                                             okText="Yes"
                                             cancelText="No" 
                                         >
@@ -120,13 +135,14 @@ class ProjectInfo extends Component {
                                     </Menu.Item>
                                     <Menu.Item 
                                         key="Close"
-                                        disabled={!permissions['UPDATE']}
+                                        disabled={!permissions['UPDATE']|| basic.phase===0}
                                         style={{color: '#c00505'}}
                                         className="pop-confirm-menu"
                                     >
                                         <Popconfirm 
+                                            disabled={!permissions['UPDATE']|| basic.phase===0}
                                             title={'Do You Want To Close this Project?'} 
-                                            onConfirm={() => { console.log('Close') }}
+                                            onConfirm={() => this.OutcomeAction('close')}
                                             okText="Yes"
                                             cancelText="No" 
                                         >
@@ -250,6 +266,7 @@ class ProjectInfo extends Component {
                         editPro={leadId}
                         close={this.closeModal}
                         callBack={this.callBack}
+                        onHold={basic.phase===0}
                     />
                 )}
                 {notAuth && <AuthError {...this.props}/>}
