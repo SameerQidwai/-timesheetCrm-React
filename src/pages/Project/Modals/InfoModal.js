@@ -562,7 +562,7 @@ class InfoModal extends Component {
   };
 
   render() {
-    const { editPro, visible, close } = this.props;
+    const { editPro, visible, close, onHold } = this.props;
     const { BasicFields, tenderFields, DatesFields, BillingFields, ManageFields, loading, } = this.state;
     return (
       <Modal
@@ -570,7 +570,7 @@ class InfoModal extends Component {
         maskClosable={false}
         centered
         visible={visible}
-        okButtonProps={{ disabled: loading, htmlType: 'submit', form: 'my-form'  }}
+        okButtonProps={{ disabled: loading || onHold, htmlType: 'submit', form: 'my-form'  }}
         okText={loading ? <LoadingOutlined /> : "Save"}
         onCancel={close}
         width={750}

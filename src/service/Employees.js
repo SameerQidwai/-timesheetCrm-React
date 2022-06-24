@@ -122,7 +122,8 @@ function reStructure(data) {
         username: data.username,
         password: data.password,
         roleId: data.roleId,
-        lineManagerId: data.lineManagerId
+        lineManagerId: data.lineManagerId,
+        phase: data.phase
     }
     const detail = {
         superannuationName: data.superannuationName,

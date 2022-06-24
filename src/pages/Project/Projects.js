@@ -92,7 +92,7 @@ class Projects extends Component {
                             <Menu.Item 
                                 key="delete"
                                 danger
-                                disabled={!this?.state?.permissions?.['DELETE']}
+                                disabled={!this?.state?.permissions?.['DELETE']|| record.phase}
                                 className="pop-confirm-menu"
                             >
                                 <Popconfirm
@@ -107,7 +107,7 @@ class Projects extends Component {
                                 key="update"
                                 onClick={()=>this.setState({
                                     openModal: true,
-                                    editPro: record.id
+                                    editPro: {id:record.id, onHold: record.phase===0}
                                 })}
                                 disabled={!this?.state?.permissions?.['UPDATE']}
                             >Edit</Menu.Item>
@@ -156,7 +156,7 @@ class Projects extends Component {
         this.state = {
             data : [ ],
             openModal: false,
-            editPro:false,
+            editPro:{id:false, onHold: false},
             permissions: {},
             filterData: [],
             openSearch: false,
@@ -366,7 +366,7 @@ class Projects extends Component {
                 data: res.success ? res.data : [],
                 filterData: res.success ? res.data : [],
                 openModal: false,
-                editPro: false,
+                editPro: {id: false, onHold: false},
                 permissions: PROJECTS
             })
         })
@@ -393,7 +393,7 @@ class Projects extends Component {
     closeModal = () =>{
         this.setState({
             openModal: false,
-            editPro: false
+            editPro: {id: false, onHold: false}
         })
     }
 
@@ -527,7 +527,7 @@ class Projects extends Component {
                                     onClick={()=>{
                                         this.setState({
                                             openModal: true,
-                                            editPro:false
+                                            editPro:{id: false, onHold: false}
                                         })
                                     }}
                                     disabled={!permissions['ADD']}
@@ -567,7 +567,8 @@ class Projects extends Component {
                 {openModal && (
                     <InfoModal
                         visible={openModal}
-                        editPro={editPro}
+                        editPro={editPro?.id}
+                        onHold={editPro?.onHold}
                         close={this.closeModal}
                         callBack={this.callBack}
                     />

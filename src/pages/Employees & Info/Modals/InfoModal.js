@@ -1046,7 +1046,7 @@ class InfoModal extends Component {
                 startDate: formatDate(billing.startDate, true),
                 endDate: formatDate(billing.endDate, true),
                 leaveRequestPolicyId: billing.leaveRequestPolicyId || null, 
-                type: billing.type && (billing.type === 1 ? billing.remunerationAmountPer = 1 : billing.remunerationAmountPer = 7)
+                remunerationAmountPer: billing.type === 1 ? 1 : 7
             }, 
             dateOfBirth: formatDate(basic.dateOfBirth, true),
             lineManagerId:  basic?.lineManagerId ?? null,

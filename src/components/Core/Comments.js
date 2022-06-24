@@ -8,7 +8,7 @@ import { DeleteOutlined, DeleteFilled, SendOutlined, PaperClipOutlined, } from "
 
 import { addFiles } from "../../service/Attachment-Apis";
 import { getComments, addComment, delComments, } from "../../service/comment-Apis";
-import { Api, localStore } from "../../service/constant";
+import { Api, formatDate, localStore } from "../../service/constant";
 
 import "../Styles/comment.css";
 
@@ -233,9 +233,10 @@ class Comments extends Component {
                 datetime={
                     <>
                         <Tooltip
-                            title={moment(item.createdAt).format( "YYYY-MM-DD HH:mm:ss" )}
+                            // title={moment(item.createdAt).format( "ddd DD MMM yyyy HH:mm:ss" )}
+                            title={formatDate(item.createdAt, true, "ddd DD MMM yyyy HH:mm:ss")}
                         >
-                            <span>{moment(item.createdAt).fromNow()}</span>
+                            <span>{moment(formatDate(item.createdAt, true, "ddd DD MMM yyyy HH:mm:ss")).fromNow()}</span>
                         </Tooltip>
                         <Tooltip key="comment-basic-delete" title="Delete">
                             <span

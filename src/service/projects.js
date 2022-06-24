@@ -477,3 +477,20 @@ export const delOrder = (proId,id) => {
             return apiErrorRes(err, id, 5)
         });
 };
+
+export const Outcomes = (phase, proId) => {
+    messageAlert.loading({ content: 'Loading...', key: proId })
+    return axios
+        .post(url + `/${proId}/phase/${phase}`, {headers:headers()})
+        .then((res) => {
+            const { success , message, data} = res.data;
+            jwtExpired(message)
+            messageAlert.success({ content: message, key: proId})
+            if (success) 
+                setToken(res.headers && res.headers.authorization)
+            return {success, data};
+        })
+        .catch((err) => {
+            return apiErrorRes(err, proId, 5)
+        });
+};

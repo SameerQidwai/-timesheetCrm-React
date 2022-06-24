@@ -253,7 +253,7 @@ class OrderModal extends Component {
     }
     
     render() {
-        const { editRex, visible, close } = this.props;
+        const { editRex, visible, close, onHold } = this.props;
         const { OrderFields, loading, fileList } = this.state
         return (
             <Modal
@@ -261,7 +261,7 @@ class OrderModal extends Component {
                 maskClosable={false}
                 centered
                 visible={visible}
-                okButtonProps={{ disabled: loading, htmlType: 'submit', form: 'my-form'  }}
+                okButtonProps={{ disabled: loading || onHold, htmlType: 'submit', form: 'my-form'  }}
                 okText={loading ?<LoadingOutlined /> :"Save"}
                 onCancel={close}
                 width={900}

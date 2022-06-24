@@ -367,7 +367,7 @@ class ResModal extends Component {
   };
 
   render() {
-    const { editRex, visible, close } = this.props;
+    const { editRex, visible, close, onHold } = this.props;
     const { ResourceFields, loading } = this.state;
     return (
       <Modal
@@ -375,7 +375,7 @@ class ResModal extends Component {
         maskClosable={false}
         centered
         visible={visible}
-        okButtonProps={{ disabled: loading, htmlType: 'submit', form: 'my-form' }}
+        okButtonProps={{ disabled: loading || onHold, htmlType: 'submit', form: 'my-form' }}
         okText={loading ? <LoadingOutlined /> : "Save"}
         onCancel={close}
         width={900}

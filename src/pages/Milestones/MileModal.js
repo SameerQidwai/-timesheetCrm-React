@@ -312,7 +312,7 @@ class MileModal extends Component {
   };
 
   render() {
-    const { editMile, visible, close, work, } = this.props;
+    const { editMile, visible, close, work, onHold} = this.props;
     const { PMileFields, LMileFields ,loading } = this.state;
     return (
       <Modal
@@ -320,7 +320,7 @@ class MileModal extends Component {
         maskClosable={false}
         centered
         visible={visible}
-        okButtonProps={{ disabled: loading, htmlType: 'submit', form: 'my-form' }}
+        okButtonProps={{ disabled: loading || onHold, htmlType: 'submit', form: 'my-form' }}
         okText={loading ? <LoadingOutlined /> : "Save"}
         onCancel={close}
         width={900}

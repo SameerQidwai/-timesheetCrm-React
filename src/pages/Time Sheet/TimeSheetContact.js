@@ -298,10 +298,10 @@ class TimeSheetContact extends Component {
                                 </Tooltip>}
                             }
                         }else{
-
+                            
                             //checking delete permission   // only admin and loggedin user will see the menu icon
-                            const canDelete = permissions && permissions['DELETE'] && permissions['DELETE']['ANY'] || sUser === loginId
-                            const clickable = ((record.status === 'SV' || record.status === 'RJ' || !record.status)) && canDelete
+                            const canDelete = permissions && permissions['DELETE'] && permissions['DELETE']['ANY'] || sUser === loginId    //checking if project is close
+                            const clickable = ((record.status === 'SV' || record.status === 'RJ' || !record.status)) && canDelete && !record.phase===0
                             if(value){ // I didn't put the conditon for column previos or next month because this column won't have any value for now
                                 let breakHours = moment.duration(value["breakHours"],'hours')
                                 breakHours = breakHours && moment(moment().hours(breakHours.hours()).minutes(breakHours.minutes())).format("HH:mm")
@@ -723,8 +723,8 @@ class TimeSheetContact extends Component {
                     className="timeSheet-table"
                     rowSelection={{ //multiple select commented
                         onChange:(selectedRowKeys, selectedRows)=>{this.milestoneSelect(selectedRowKeys, selectedRows )},
-                        getCheckboxProps: (record) => ({
-                            disabled: record.status === 'SB' || record.status === 'AP' || record.leaveRequest, 
+                        getCheckboxProps: (record) => ({                                                         //checking if project is close
+                            disabled: record.status === 'SB' || record.status === 'AP' || record.leaveRequest || record.phase===0, 
                             // Column configuration not to be checked
                           })
                     }}

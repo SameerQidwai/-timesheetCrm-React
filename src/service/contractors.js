@@ -132,7 +132,8 @@ function reStructure(data) {
         username: data.username,
         roleId: data.roleId,
         lineManagerId: data.lineManagerId,
-        organization: {name: organization.name, id: organization.id}
+        organization: {name: organization.name, id: organization.id},
+        phase: data.phase
     }
     const kin = {
         nextOfKinDateOfBirth:  formatDate(data.nextOfKinDateOfBirth) ,
