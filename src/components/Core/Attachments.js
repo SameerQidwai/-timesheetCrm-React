@@ -4,6 +4,7 @@ import { UploadOutlined } from "@ant-design/icons";
 import { addFiles, getAttachments , addAttachments, delAttachment} from "../../service/Attachment-Apis";
 
 import "../Styles/attachments.css"
+import { localStore } from "../../service/constant";
 // const { Dragger } = Upload;
 
 class Attachments extends Component {
@@ -13,7 +14,8 @@ class Attachments extends Component {
         this.state = {
             fileList: [],
             fileIds: [],
-            loading: false
+            loading: false,
+            loginId: null
         };
     }
 
@@ -28,6 +30,7 @@ class Attachments extends Component {
                 this.setState({
                     fileList: res.fileList,
                     fileIds: res.fileIds,
+                    loginId: parseInt(localStore().id)
                 })
             }
         })
@@ -76,26 +79,30 @@ class Attachments extends Component {
     }
 
     onRemove = (file) => {
-        delAttachment(file.id).then(res=>{
-            if(res.success){
-                this.setState((state) => {
-                    const index = state.fileList.indexOf(file);
-                    const newFileList = state.fileList.slice();
-                    const fileIds = state.fileIds
-                    newFileList.splice(index, 1);
-                    fileIds.splice(index, 1);
-                    return {
-                        fileIds,
-                        fileList: newFileList,
-                    };
-                });
-            }
-        })
+        const { loginId } = this.state
+        const { onHold } = this.props
+        if (file.userId === loginId && !onHold){
+            delAttachment(file.id).then(res=>{
+                if(res.success){
+                    this.setState((state) => {
+                        const index = state.fileList.indexOf(file);
+                        const newFileList = state.fileList.slice();
+                        const fileIds = state.fileIds
+                        newFileList.splice(index, 1);
+                        fileIds.splice(index, 1);
+                        return {
+                            fileIds,
+                            fileList: newFileList,
+                        };
+                    });
+                }
+            })
+        }
     }
 
     render() {
         const { fileList, loading } = this.state;
-        const { listType } = this.props;
+        const { listType, onHold } = this.props;
         return (
             <Row>
                 <Col span="24">
@@ -109,9 +116,10 @@ class Attachments extends Component {
                         // className="upload-list-inline"
                         style={{ backgroundColor: "rosybrown" }}
                     >
-                        <Button type="ghost" loading={loading}>
-                            <UploadOutlined /> Upload New File
+                        <Button type="ghost" loading={loading} disabled={onHold}>
+                            <UploadOutlined /> {onHold ? 'This Project Is Closed' :  'Upload New File'}
                         </Button>
+                        
                     </Upload>
                 </Col>
             </Row>

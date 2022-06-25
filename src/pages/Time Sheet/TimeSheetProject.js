@@ -461,7 +461,7 @@ class TimeSheetProject extends Component {
                         fixed:true,
                         onChange:(selectedRowKeys, selectedRows)=>{this.milestoneSelect(selectedRowKeys, selectedRows )},
                         getCheckboxProps: (record) => ({
-                            disabled: (record.timesheetStatus === 'SV' || record.timesheetStatus === 'RJ'  ||record.timesheetStatus === 'NC') || (!permissions['UNAPPROVAL'] && record.timesheetStatus === 'AP'), // Column configuration not to be checked
+                            disabled: (record.timesheetStatus === 'SV' || record.timesheetStatus === 'RJ'  ||record.timesheetStatus === 'NC') || (!permissions['UNAPPROVAL'] && record.timesheetStatus === 'AP') || (record.phase===false), // Column configuration not to be checked
                           }),
                     }}
                     scroll={{

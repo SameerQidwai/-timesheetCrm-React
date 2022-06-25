@@ -681,6 +681,7 @@ class InfoModal extends Component {
             opportunityManagerId: manage.opportunityManagerId ?? null,
             projectManagerId: manage.projectManagerId ?? null,
 
+            hoursPerDay: dates.hoursPerDay,
             startDate: formatDate(dates.startDate, true),
             endDate: formatDate(dates.endDate, true),
             bidDate: formatDate(dates.bidDate, true),

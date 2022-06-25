@@ -107,7 +107,7 @@ class Projects extends Component {
                                 key="update"
                                 onClick={()=>this.setState({
                                     openModal: true,
-                                    editPro: {id:record.id, onHold: record.phase===0}
+                                    editPro: {id:record.id, onHold: record.phase===false}
                                 })}
                                 disabled={!this?.state?.permissions?.['UPDATE']}
                             >Edit</Menu.Item>

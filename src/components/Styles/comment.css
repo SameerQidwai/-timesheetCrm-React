@@ -15,6 +15,10 @@ textarea {
   margin-right: 8px;
 }
 
+span.upload-list-inline div.ant-upload.ant-upload-select.ant-upload-select-text{
+  display: none !important;
+}
+
 .upload-list-inline [class*="-upload-list-rtl"] .ant-upload-list-item {
   float: right;
 }

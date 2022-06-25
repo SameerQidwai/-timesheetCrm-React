@@ -465,7 +465,7 @@ class Resources extends Component {
                             size='small'  
                             onClick={() => this.openModal(false)}
                                                                 //checking if project is close
-                            disabled={!permissions['ADD']|| proDesc.phase===0}
+                            disabled={!permissions['ADD']|| proDesc.phase===false}
                         ><PlusSquareOutlined /> Add Resource</Button> 
                     </Col>
                     {/* <Col> <Button type="danger" size='small'>Delete Resource</Button></Col> */}
@@ -504,7 +504,7 @@ class Resources extends Component {
                         cmRate={proDesc.cmPercentage}
                         mileId={mileId}
                         panelId = {proDesc.panelId}
-                        onHold={proDesc.phase===0}//checking if project is close
+                        onHold={proDesc.phase===false}//checking if project is close
                         close={this.closeModal}
                         callBack={this.callBack}
                     />

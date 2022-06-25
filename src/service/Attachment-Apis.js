@@ -86,6 +86,7 @@ export const getAttachments = (targetType, targetId) => {
                     fileIds.push(el.id)
                     fileList.push( {
                         id: el.id,
+                        userId: el.userId,
                         createdAt: el.createdAt,
                         fileId: el.fileId,
                         status: el.status,

@@ -508,6 +508,7 @@ class InfoModal extends Component {
         accountManagerId: manage.accountManagerId ?? null,
         projectManagerId: manage.projectManagerId ?? null, 
 
+        hoursPerDay: dates.hoursPerDay,
         startDate: formatDate(dates.startDate, true),
         endDate: formatDate(dates.endDate, true),
         entryDate: formatDate(dates.entryDate, true),

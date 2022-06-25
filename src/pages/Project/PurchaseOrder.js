@@ -429,7 +429,7 @@ class PurchaseOrder extends Component {
                         size='small' 
                         onClick={() => {  this.openModal(true, false, false) }}
                                                                             //checking if project is close
-                        disabled={(permissions && !permissions['ADD']) || desc.phase===0}
+                        disabled={(permissions && !permissions['ADD']) || desc.phase===false}
                     > <PlusSquareOutlined/> Add Purchase Order</Button> </Col>
                     {/* <Col> <Button type="danger" size='small'>Delete Resource</Button></Col> */}
                 </Row>
@@ -449,7 +449,7 @@ class PurchaseOrder extends Component {
                 />
                 {openModal && (
                     <OrderModal
-                        onHold={ desc.phase===0}//checking if project is close
+                        onHold={ desc.phase===false}//checking if project is close
                         visible={openModal}
                         editRex={editRex}
                         ProId = {ProId}

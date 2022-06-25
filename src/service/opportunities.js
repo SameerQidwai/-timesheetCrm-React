@@ -58,6 +58,7 @@ export const getRecord = (id) => {
                     type: data.type,
                     status: data.status,
                     // value: data.value? data.value: 0,
+                    phase: data.phase,
                     title: data.title,
                     stateId: data.stateId,
                     stage: data.stage,

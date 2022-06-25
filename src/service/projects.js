@@ -59,6 +59,7 @@ export const getRecord = (id) => {
                     type: data.type,
                     status: data.status,
                     // value: data.value? data.value: 0,
+                    phase: data.phase,
                     title: data.title,
                     stateId: data.stateId,
                     linkedWorkId: data.linkedWorkId,
@@ -481,7 +482,7 @@ export const delOrder = (proId,id) => {
 export const Outcomes = (phase, proId) => {
     messageAlert.loading({ content: 'Loading...', key: proId })
     return axios
-        .post(url + `/${proId}/phase/${phase}`, {headers:headers()})
+        .post(url + `/${proId}/phase/${phase}`,{}, {headers:headers()})
         .then((res) => {
             const { success , message, data} = res.data;
             jwtExpired(message)

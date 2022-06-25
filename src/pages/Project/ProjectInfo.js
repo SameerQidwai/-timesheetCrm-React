@@ -85,9 +85,7 @@ class ProjectInfo extends Component {
         
         Outcomes(action,leadId).then(res=>{
             if (res.success){
-                if(basic.phase){
-                    this.setState({basic: {...basic, phase:action==='open'?1:0}})
-                }
+                this.setState({basic: {...basic, phase:action==='open'}})
             }
         })
     }
@@ -105,11 +103,11 @@ class ProjectInfo extends Component {
                                 <Menu.Item  
                                     key={'delete'}
                                     danger
-                                    disabled={!permissions?.['DELETE']|| basic.phase===0}
+                                    disabled={!permissions?.['DELETE']|| basic.phase===false}
                                     className="pop-confirm-menu"
                                 >
                                     <Popconfirm
-                                        disabled={!permissions?.['DELETE']|| basic.phase===0}
+                                        disabled={!permissions?.['DELETE']|| basic.phase===false}
                                         title="Are you sure you want to delete" 
                                         onConfirm={() => this.handleDelete(leadId)} 
                                     >
@@ -119,12 +117,12 @@ class ProjectInfo extends Component {
                                 <Menu.SubMenu title={'Outcome'} key="Outcome">
                                     <Menu.Item 
                                         key="Open"
-                                        disabled={!permissions['UPDATE']|| basic.phase===1}
+                                        disabled={!permissions['UPDATE']|| basic.phase===true}
                                         style={{color: '#6fac45'}}
                                         className="pop-confirm-menu"
                                     >
                                         <Popconfirm 
-                                            disabled={!permissions['UPDATE']|| basic.phase===1}
+                                            disabled={!permissions['UPDATE']|| basic.phase===true}
                                             title={'Do You Want To Open this Project?'} 
                                             onConfirm={() => this.OutcomeAction('open')}
                                             okText="Yes"
@@ -135,12 +133,12 @@ class ProjectInfo extends Component {
                                     </Menu.Item>
                                     <Menu.Item 
                                         key="Close"
-                                        disabled={!permissions['UPDATE']|| basic.phase===0}
+                                        disabled={!permissions['UPDATE']|| basic.phase===false}
                                         style={{color: '#c00505'}}
                                         className="pop-confirm-menu"
                                     >
                                         <Popconfirm 
-                                            disabled={!permissions['UPDATE']|| basic.phase===0}
+                                            disabled={!permissions['UPDATE']|| basic.phase===false}
                                             title={'Do You Want To Close this Project?'} 
                                             onConfirm={() => this.OutcomeAction('close')}
                                             okText="Yes"
@@ -237,13 +235,13 @@ class ProjectInfo extends Component {
                         // defaultActiveKey="profitloss"   
                     >
                         <TabPane tab="Comments" key="comments">
-                            <Comments targetId={leadId} targetType="WOR" />
+                            <Comments targetId={leadId} targetType="WOR" onHold={basic.phase===false} />
                         </TabPane>
                         {/* <TabPane tab="Travels" key="travels">
                             <Travels id={leadId} />
                         </TabPane> */}
                         <TabPane tab="Attachments" key="attachments">
-                            <Attachments targetId={leadId} targetType="WOR" />
+                            <Attachments targetId={leadId} targetType="WOR" onHold={basic.phase===false} />
                         </TabPane>
                         {/* <TabPane tab="Bank Account" key="account">
                             <Bank id={leadId} title={data.name} />
@@ -266,7 +264,7 @@ class ProjectInfo extends Component {
                         editPro={leadId}
                         close={this.closeModal}
                         callBack={this.callBack}
-                        onHold={basic.phase===0}
+                        onHold={basic.phase===false}
                     />
                 )}
                 {notAuth && <AuthError {...this.props}/>}

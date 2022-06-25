@@ -301,7 +301,7 @@ class TimeSheetContact extends Component {
                             
                             //checking delete permission   // only admin and loggedin user will see the menu icon
                             const canDelete = permissions && permissions['DELETE'] && permissions['DELETE']['ANY'] || sUser === loginId    //checking if project is close
-                            const clickable = ((record.status === 'SV' || record.status === 'RJ' || !record.status)) && canDelete && !record.phase===0
+                            const clickable = ((record.status === 'SV' || record.status === 'RJ' || !record.status)) && canDelete && !(record.phase===false)
                             if(value){ // I didn't put the conditon for column previos or next month because this column won't have any value for now
                                 let breakHours = moment.duration(value["breakHours"],'hours')
                                 breakHours = breakHours && moment(moment().hours(breakHours.hours()).minutes(breakHours.minutes())).format("HH:mm")
@@ -724,7 +724,7 @@ class TimeSheetContact extends Component {
                     rowSelection={{ //multiple select commented
                         onChange:(selectedRowKeys, selectedRows)=>{this.milestoneSelect(selectedRowKeys, selectedRows )},
                         getCheckboxProps: (record) => ({                                                         //checking if project is close
-                            disabled: record.status === 'SB' || record.status === 'AP' || record.leaveRequest || record.phase===0, 
+                            disabled: record.status === 'SB' || record.status === 'AP' || record.leaveRequest || (record.phase===false), 
                             // Column configuration not to be checked
                           })
                     }}
@@ -809,6 +809,7 @@ class TimeSheetContact extends Component {
                                 data.splice(index, 0, {
                                     milestoneId: sMilestone.value,
                                     project: sMilestone.label,
+                                    phase: true
                                 });
                             }
                             this.setState({ proVisible: false, data: [...data], sMilestone:{} });

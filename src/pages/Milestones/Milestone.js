@@ -230,7 +230,7 @@ class Milestone extends Component {
                             size='small'  
                             onClick={() => this.openModal(false) }
                                                                 //checking if project is close
-                            disabled={!permissions['ADD'] || desc?.phase===0}
+                            disabled={!permissions['ADD'] || desc?.phase===false}
                         >Add Milestone</Button> 
                     </Col>
                     {/* <Col> <Button type="danger" size='small'>Delete Resource</Button></Col> */}
@@ -248,7 +248,7 @@ class Milestone extends Component {
                     <MileModal
                         visible={infoModal}
                         editMile={editMile}
-                        onHold={desc?.phase===0}//checking if project is close
+                        onHold={desc?.phase===false}//checking if project is close
                         pDates={pDates}
                         proId={proId}
                         crud={customUrl}

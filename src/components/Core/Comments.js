@@ -25,6 +25,7 @@ class Comments extends Component {
             fileIds: [],
             data: [],
             value: null,
+            loginId: null
         };
     }
     componentDidMount() {
@@ -38,6 +39,7 @@ class Comments extends Component {
             if (res && res.success) {
                 this.setState({
                     data: res.data ?? [],
+                    loginId: parseInt(localStore().id)
                 });
             }
         });
@@ -207,11 +209,13 @@ class Comments extends Component {
 
     commentRender = (item, index, isHovered) => {
         const actions = item.attachments && this.actions(item.attachments); //Function can not be pass to array Prop
+        const {loginId } = this.state
+        const { onHold } = this.props
         return (
             <Comment
                 key={item.id}
                 author={
-                    <a> {item.author ? item.authorId == parseInt(localStore().id) ? `${item.author} (Me)` :item.author : '?????'} </a>
+                    <a> {item.author ? item.authorId === loginId ? `${item.author} (Me)` :item.author : '?????'} </a>
                 }
                 avatar={
                     <Avatar
@@ -238,7 +242,7 @@ class Comments extends Component {
                         >
                             <span>{moment(formatDate(item.createdAt, true, "ddd DD MMM yyyy HH:mm:ss")).fromNow()}</span>
                         </Tooltip>
-                        <Tooltip key="comment-basic-delete" title="Delete">
+                        {(item.authorId === loginId && !onHold )&&<Tooltip key="comment-basic-delete" title="Delete">
                             <span
                                 style={styles.delCol}
                                 onMouseOver={() => {
@@ -263,7 +267,7 @@ class Comments extends Component {
                                     )}
                                 </Popconfirm>
                             </span>
-                        </Tooltip>
+                        </Tooltip>}
                     </>
                 }
             />
@@ -272,6 +276,7 @@ class Comments extends Component {
 
     render() {
         const { data, isHovered, value, fileList } = this.state;
+        const { onHold } = this.props;
         return (
             <Row justify="space-around">
                 <Col style={styles.cSec} span={24} onScroll={this.logScroll}>
@@ -287,16 +292,16 @@ class Comments extends Component {
                     {/* to scroll till down when new text is done */}
                     <div ref={this.messagesEnd} />
                 </Col>
-                <Col span={23} style={styles.cBox}>
+                 <Col span={23} style={styles.cBox}>
                     <Form.Item
                         colon={false}
-                        // label={ <Avatar alt='A' style={styles.sendAvatar}> A </Avatar>}
                         label={
                             <PaperClipOutlined
                                 style={
-                                    isHovered["attachIcon"]
+                                    !onHold? isHovered["attachIcon"]
                                         ? styles.attachIconHoverd
                                         : styles.sendIcon
+                                    : styles.sendIcon
                                 }
                                 onMouseOver={() => {
                                     this.deleteIcon("attachIcon", true);
@@ -305,15 +310,18 @@ class Comments extends Component {
                                     this.deleteIcon("attachIcon", false);
                                 }}
                                 onClick={() => {
-                                    this.UploadRef.current.click();
+                                    if (!onHold){
+                                        this.UploadRef.current.click();
+                                    }
                                 }}
                             />
                         }
                     >
                         <TextArea
-                            placeholder="Enter Your Comment...."
+                            placeholder={onHold?"This Project Is Closed...." :"Enter Your Comment...."}
                             autoSize={{ minRows: 1, maxRows: 5 }}
                             // allowClear
+                            disabled={onHold}
                             onPressEnter={this.addComent}
                             onChange={this.comChange}
                             onKeyDown={this.handelEmpty}
@@ -330,13 +338,12 @@ class Comments extends Component {
                         >
                             <PaperClipOutlined
                                 ref={this.UploadRef}
-                                style={{ fontSize: 0 }}
+                                style={{ fontSize: 0}}
                             />
                         </Upload>
                     </Form.Item>
                 </Col>
-                {/* alignSelf: "flex-end", marginBottom:20 * fileList.length */}
-                <Col
+               <Col
                     span={1}
                     style={{
                         alignSelf: "flex-end",
@@ -351,9 +358,10 @@ class Comments extends Component {
                             onClick={this.addComent}
                             className="sendIcon"
                             style={
-                                isHovered["sendIcon"]
+                                !onHold? isHovered["sendIcon"]
                                     ? styles.sendIconHoverd
                                     : styles.sendIcon
+                                : styles.sendIcon
                             }
                             onMouseOver={() => {
                                 this.deleteIcon("sendIcon", true);
@@ -395,6 +403,9 @@ const styles = {
         textAlignLast: "right",
     },
     cBox: {
+        paddingLeft: "40px",
+    },
+    disabled:{
         paddingLeft: "40px",
     },
     sendBox: {

@@ -35,6 +35,8 @@ New bug Found
 
         do not save Leave_request where it is 0 and render into ui when you are getting dates back
 
+        move inline css to stylesheet in comments
+
         need to create only one or two resource component... generalize them for further use... 
             {PMResources, OTResources, PTResources, OMResources}
                 make these four component into one or two only....
