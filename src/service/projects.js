@@ -70,7 +70,7 @@ export const getRecord = (id) => {
                 }
                 const billing = {
                     cmPercentage: data.cmPercentage ?? 0,
-                    cm$: data.value * data.cmPercentage /100,
+                    cm$: (data.value * data.cmPercentage /100).toFixed(2),
                     getPercentage: data.getPercentage ?? 0,
                     goPercentage: data.goPercentage ?? 0,
                     // these Four keys are for Profit and lost

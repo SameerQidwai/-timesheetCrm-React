@@ -71,7 +71,7 @@ export const getRecord = (id) => {
                 }
                 const billing = {
                     cmPercentage: data.cmPercentage? data.cmPercentage: 0,
-                    cm$: data.value * data.cmPercentage /100,
+                    cm$: (data.value * data.cmPercentage /100).toFixed(2),
                     getPercentage: data.getPercentage ? data.getPercentage: 0,
                     goPercentage: data.goPercentage? data.goPercentage: 0,
                     // these Four keys are for Profit and lost
@@ -80,9 +80,9 @@ export const getRecord = (id) => {
                     startDate: formatDate(data.startDate),
                     value: data.value? data.value: 0,
                 }
-                billing.goget = (billing.getPercentage* billing.goPercentage)/100
-                billing.discount = (data.value * billing.goget) /100
-                billing.upside = (data.value - billing.discount)
+                billing.goget = ((billing.getPercentage* billing.goPercentage)/100).toFixed(2)
+                billing.discount = ((data.value * billing.goget) /100).toFixed(2)
+                billing.upside = (data.value - billing.discount).toFixed(2)
                 
                 const dates = {
                     hoursPerDay: data.hoursPerDay,

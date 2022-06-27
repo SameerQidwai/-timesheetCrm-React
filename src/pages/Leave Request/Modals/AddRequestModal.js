@@ -292,7 +292,7 @@ class AddRequestModal extends Component{
         getSingleRequest(edit).then(srRes=> {
             if (srRes.success){
                 const { employeeId } = srRes.data
-                Promise.all([getUserProjects(employeeId, 'O'), getUserLeaveType()])
+                Promise.all([getUserProjects(employeeId, 'O', 0), getUserLeaveType()])
                 .then((proRes) => {
                     console.log(proRes);
                     //Destructure proRes[1] to avoid writing proRes[1] repeateadly
@@ -341,7 +341,7 @@ class AddRequestModal extends Component{
         const { edit, readOnly } = this.props;
         const {id: userId} = localStore()
         // Get Projects
-        Promise.all([getUserProjects(userId, 'O'), getUserLeaveType(), edit && getSingleRequest(edit)])
+        Promise.all([getUserProjects(userId, 'O', 0), getUserLeaveType(), edit && getSingleRequest(edit)])
         .then((res) => {
             console.log(res);
             //Destructure res[1] to avoid writing res[1] repeateadly

@@ -17,13 +17,14 @@ New bug Found
 
     change fincial year as per in global if included
 
+    
+
     change panelSkill Callback2 function as contactPerson/infoModal SkillCall function
     change contactPerson/infoModal AssociateCall  function as contactPerson/infoModal SkillCall function
     change admin/skill skillCall  function as contactPerson/infoModal SkillCall function
 
-    must do: 
-        multiple add in global variable
-        muliple add in addSkill from profile
+bigs new live
+    O
 
     Suggestion:
 

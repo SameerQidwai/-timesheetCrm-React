@@ -126,13 +126,13 @@ const resourceColumn = [
         render: (record) =>(record &&`${record.firstName} ${record.lastName}`)
     },
     { 
-        title: 'Buy Rate (hourly)', 
+        title: 'Buy Rate (Hourly)', 
         dataIndex: 'buyingRate', 
         key: 'buyingRate', 
         render: (record)=> `${formatCurrency(record)}` 
     },
     {  
-        title: 'Sell Cost (hourly)', 
+        title: 'Sell Cost (Hourly)', 
         dataIndex: 'sellingRate', 
         key: 'sellingRate', 
         render: (record)=> `${formatCurrency(record)}`

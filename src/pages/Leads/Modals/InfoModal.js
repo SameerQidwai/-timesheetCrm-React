@@ -282,9 +282,9 @@ class InfoModal extends Component {
                     type: "InputNumber",
                     onChange: (value)=> {
                         const {billing} = this.formRef.current.getFieldsValue();
-                        billing.cm$ =  billing.cmPercentage? (value * billing.cmPercentage) /100 : 0
-                        billing.discount =  billing.goget? (value * billing.goget) /100 : 0
-                        billing.upside =  billing.discount? (value - billing.discount) : 0
+                        billing.cm$ =  (billing.cmPercentage? (value * billing.cmPercentage) /100 : 0).toFixed(2)
+                        billing.discount =  (billing.goget? (value * billing.goget) /100 : 0).toFixed(2)
+                        billing.upside =  (billing.discount? (value - billing.discount) : 0).toFixed(2)
                         this.formRef.current.setFieldsValue({ billing: billing, });
             
                     },
@@ -303,7 +303,7 @@ class InfoModal extends Component {
                     fieldStyle: { width: "100%" },
                     onChange: (value)=> {
                         const {billing} = this.formRef.current.getFieldsValue();
-                        billing.cm$ =  billing.value? (billing.value * value) /100 : 0
+                        billing.cm$ =  (billing.value? (billing.value * value) /100 : 0).toFixed(2)
                         this.formRef.current.setFieldsValue({ billing: billing, });
                     }
                 },
@@ -348,9 +348,9 @@ class InfoModal extends Component {
                     rangeMax: 100,
                     onChange: (value)=> {
                         const { billing } = this.formRef.current.getFieldsValue();
-                        billing.goget =  billing.getPercentage? (billing.getPercentage * value) /100 : 0
-                        billing.discount =  (billing.goget && billing.value)? (billing.value * billing.goget) /100 : 0
-                        billing.upside =  billing.discount? (billing.value - billing.discount) : 0
+                        billing.goget =  (billing.getPercentage? (billing.getPercentage * value) /100 : 0).toFixed(2)
+                        billing.discount =  ((billing.goget && billing.value)? (billing.value * billing.goget) /100 : 0).toFixed(2)
+                        billing.upside =  (billing.discount? (billing.value - billing.discount) : 0).toFixed(2)
                         this.formRef.current.setFieldsValue({ billing: billing, });
                     }
                 },
@@ -383,9 +383,9 @@ class InfoModal extends Component {
                     fieldStyle: { width: "100%" },
                     onChange: (value)=> {
                         const { billing } = this.formRef.current.getFieldsValue();
-                        billing.goget =  billing.goPercentage? (billing.goPercentage * value) /100 : 0
-                        billing.discount =  (billing.goget && billing.value)? (billing.value * billing.goget) /100 : 0
-                        billing.upside =  billing.discount? (billing.value - billing.discount) : 0
+                        billing.goget =  (billing.goPercentage? (billing.goPercentage * value) /100 : 0).toFixed(2)
+                        billing.discount =  ((billing.goget && billing.value)? (billing.value * billing.goget) /100 : 0).toFixed(2)
+                        billing.upside =  (billing.discount? (billing.value - billing.discount) : 0).toFixed(2)
                         this.formRef.current.setFieldsValue({ billing: billing, });
                     }
                 },

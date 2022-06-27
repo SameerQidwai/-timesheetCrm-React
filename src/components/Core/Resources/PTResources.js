@@ -44,14 +44,14 @@ const resourceColumn = (milestoneId) => [
         ...tableSorter('billableHours', 'number'),
     },
     {
-        title: "Buy Rate (hourly)",
+        title: "Buy Rate (Hourly)",
         dataIndex: "buyingRate",
         key: "buyingRate",
         render:(record)=>( record &&formatCurrency(record) ),
         ...tableSorter('buyingRate', 'number'),
     },
     {
-        title: "Sell Rate (hourly)",
+        title: "Sell Rate (Hourly)",
         dataIndex: "sellingRate",
         key: "sellingRate",
         render:(record)=>( record && formatCurrency(record) ),

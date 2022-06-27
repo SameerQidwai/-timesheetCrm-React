@@ -457,6 +457,7 @@ class Resources extends Component {
                                 leadId={leadId} 
                                 mileId={mileId}
                                 crud={crud}
+                                cmRate={desc.cmPercentage ?? 0}
                                 history={this.props.history}
                                 panelId={desc.panelId}
                                 callBack={this.callBack}
@@ -484,9 +485,9 @@ class Resources extends Component {
                         skillId={skillId}
                         levelId={levelId}
                         leadId={leadId}
+                        cmRate={desc.cmPercentage ?? 0}
                         mileId={mileId}
                         pDates={pDates}
-                        cmRate={desc.cmPercentage}
                         crud={crud}
                         panelId = {desc.panelId}
                         close={this.closeModal}
@@ -526,8 +527,8 @@ function NestedTable(props) {
             key: 'contactPerson' ,
             render: (record) =>(record &&`${record.firstName} ${record.lastName}`)
         },
-        { title: 'Buy Rate (hourly)', dataIndex: 'buyingRate', key: 'buyingRate', render: (record)=> `${formatCurrency(record)}` },
-        { title: 'Sell Rate (hourly)', dataIndex: 'sellingRate', key: 'sellingRate', render: (record)=> `${formatCurrency(record)}`},
+        { title: 'Buy Rate (Hourly)', dataIndex: 'buyingRate', key: 'buyingRate', render: (record)=> `${formatCurrency(record)}` },
+        { title: 'Sell Rate (Hourly)', dataIndex: 'sellingRate', key: 'sellingRate', render: (record)=> `${formatCurrency(record)}`},
         // { title: 'Billable Hours', dataIndex: 'hours', key: 'hours' },
         {
             title: "...",
@@ -620,6 +621,7 @@ function NestedTable(props) {
         {visible && <ResModal
             visible={visible}
             editRex={editRex}
+            cmRate={props.cmRate}
             skillId={props.skill}
             leadId = {props.leadId}
             levelId = {props.levelId}

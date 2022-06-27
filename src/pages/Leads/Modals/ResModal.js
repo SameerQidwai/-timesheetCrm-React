@@ -295,6 +295,7 @@ class ResModal extends Component {
 
   getRates = (crud, id) =>{
     const {cmRate} = this.props
+    console.log(cmRate, 'cRate')
     buyCost(crud, id, 'contactPerson').then(res=>{
       if(res.success){
           let {employeeBuyRate} = res.data
