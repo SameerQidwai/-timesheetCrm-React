@@ -119,7 +119,7 @@ const positionColumns = [
         ...tableSorter('buyingRate', 'number'),
     },
     {
-        title: "Sale Rate (hourly)",
+        title: "Sell Rate (hourly)",
         dataIndex: "sellingRate",
         key: "sellingRate",
         render:(record)=>( record && formatCurrency(record) ),

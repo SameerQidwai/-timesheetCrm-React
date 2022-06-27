@@ -1,9 +1,7 @@
 New bug Found
-    milestone certification
+    Milestone Certification
 
     Expected CM in cost Calculator
-
-    Panel not editable
 
     add link in resources
 

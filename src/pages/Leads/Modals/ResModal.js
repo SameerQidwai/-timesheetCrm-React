@@ -74,7 +74,7 @@ class ResModal extends Component {
           // itemStyle:{marginBottom:'10px'},
         },
         {
-          Placeholder: "Sale Rate (Hourly)",
+          Placeholder: "Sell Rate (Hourly)",
           rangeMin: true,
           fieldCol: 12,
           size: "small",
@@ -261,19 +261,17 @@ class ResModal extends Component {
             sellingRate: editRex.sellingRate, 
             effortRate: editRex.effortRate,
             buyingRate: editRex.buyingRate,
-          };
-          ResourceFields[2].data = data;
-          this.setState({ ResourceFields },()=>{
-            if (editRex.role) {
-              this.checkRates(obj.contactPersonId, {label: editRex.role})
-            }else{
-              this.setRates('No Active Contract', 'No Active Contract')
-            }
-          });
-          
+          };          
           this.formRef.current.setFieldsValue({ obj:obj });
         }
-        
+        ResourceFields[2].data = data;
+        this.setState({ ResourceFields },()=>{
+          if (editRex?.role) {
+            this.checkRates(editRex?.contactPersonId, {label: editRex?.role})
+          }else{
+            this.setRates('No Active Contract', 'No Active Contract')
+          }
+        });
       })
       .catch((e) => {
         console.log(e);

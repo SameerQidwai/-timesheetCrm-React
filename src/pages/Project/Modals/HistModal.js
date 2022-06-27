@@ -43,7 +43,7 @@ class InfoModal extends Component {
                     },
 
                     {
-                        Placeholder: "Buy Cost",
+                        Placeholder: "Buy Rate (hourly)",
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -69,7 +69,7 @@ class InfoModal extends Component {
                         fieldStyle: { width: "100%" },
                     },
                     {
-                        Placeholder: "Sale Cost",
+                        Placeholder: "Sell Rate",
                         fieldCol: 12,
                         size: "small",
                         type: "Text",

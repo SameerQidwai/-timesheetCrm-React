@@ -21,12 +21,12 @@ class ResourceHistory extends Component {
                 key: "billableHours",
             },
             {
-                title: "Buy Cost",
+                title: "Buy Rate",
                 dataIndex: "buyingRate",
                 key: "buyingRate",
             },
             {
-                title: "Sale Cost",
+                title: "Sell Rate",
                 dataIndex: "sellingRate",
                 key: "sellingRate",
             },

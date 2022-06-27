@@ -206,7 +206,7 @@ class TimeSheetContact extends Component {
     }
 
     getProjects = (value) =>{
-        getUserMilestones(value).then(res=>{
+        getUserMilestones(value, 0).then(res=>{
             if(res.success){
                 this.setState({
                     milestones: res.data

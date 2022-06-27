@@ -1,0 +1,29 @@
+.import-empty{
+    margin: 0 8px !important;
+    font-size: 14px !important;
+    line-height: 1.5715 !important;
+    text-align: center !important;
+    color: #0000009D
+}
+
+.empty-upload{
+    border: dashed 1px #d9d9d9;
+    background-color: #fafafa;
+    cursor: pointer;
+    transition: border-color 0.3s;
+    border-radius: 2px;
+    padding: 0.7rem;
+}
+
+.empty-upload:hover{
+    border-color: #1890ff;
+}
+
+.text-right{
+    margin-left: auto !important;
+    text-align:right;
+}
+
+.mt-30{
+    margin-top: 30px;
+}

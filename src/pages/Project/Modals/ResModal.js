@@ -203,7 +203,7 @@ class ResModal extends Component {
           rangeMax: 100,
         },
         {
-          Placeholder: "Buy Cost",
+          Placeholder: "Buy Rate (hourly)",
           fieldCol: 12,
           size: "small",
           rangeMin: true,
@@ -212,7 +212,7 @@ class ResModal extends Component {
           // itemStyle:{marginBottom:'10px'},
         },
         {
-          Placeholder: "Sale Cost",
+          Placeholder: "Sell Rate (hourly)",
           fieldCol: 12,
           rangeMin: true,
           size: "small",

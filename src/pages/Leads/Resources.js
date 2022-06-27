@@ -526,8 +526,8 @@ function NestedTable(props) {
             key: 'contactPerson' ,
             render: (record) =>(record &&`${record.firstName} ${record.lastName}`)
         },
-        { title: 'Buy Cost (hourly)', dataIndex: 'buyingRate', key: 'buyingRate', render: (record)=> `${formatCurrency(record)}` },
-        { title: 'Sale Cost (hourly)', dataIndex: 'sellingRate', key: 'sellingRate', render: (record)=> `${formatCurrency(record)}`},
+        { title: 'Buy Rate (hourly)', dataIndex: 'buyingRate', key: 'buyingRate', render: (record)=> `${formatCurrency(record)}` },
+        { title: 'Sell Rate (hourly)', dataIndex: 'sellingRate', key: 'sellingRate', render: (record)=> `${formatCurrency(record)}`},
         // { title: 'Billable Hours', dataIndex: 'hours', key: 'hours' },
         {
             title: "...",

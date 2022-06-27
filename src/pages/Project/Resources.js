@@ -64,7 +64,7 @@ class Resources extends Component {
                 ...tableSorter('opportunityResourceAllocations.0.buyingRate', 'number'),
             },
             {
-                title: "Sale Rate (hourly)",
+                title: "Sell Rate (hourly)",
                 dataIndex: ["opportunityResourceAllocations", "0", "sellingRate"],
                 key: "opportunityResourceAllocations",
                 render:(record)=>( record && formatCurrency(record) ),
@@ -126,8 +126,8 @@ class Resources extends Component {
                 'level': { type: 'Select', multi: true, value: [], label:"Level",  showInColumn: true},
                 'name': { type: 'Input', value: "", label:"Name",  showInColumn: true },
                 'billableHours': { type: 'Input', value: "", label: 'Billable Hour' },
-                'buyingRate': { type: 'Input', value: "", label: 'Buy Cost' },
-                'sellingRate': { type: 'Input', value: "", label: 'Sale Cost' },
+                'buyingRate': { type: 'Input', value: "", label: 'Buy Rate' },
+                'sellingRate': { type: 'Input', value: "", label: 'Sell Rate' },
                 'effortRate': { type: 'Input', value: "", label: 'Effort Rate' },
                 'startDate': {type: 'Date', value: null,  label:"Start Date", showInColumn: true},
                 'endDate': {type: 'Date', value: null,  label:"End Date", showInColumn: true, disabled:true},
@@ -199,7 +199,7 @@ class Resources extends Component {
                   type: "Text",
                 },
                 {
-                  Placeholder: "Buy Cost",
+                  Placeholder: "Buy Rate (hourly)",
                   fieldCol: 12,
                   size: "small",
                   type: "Text",
@@ -224,7 +224,7 @@ class Resources extends Component {
                   fieldStyle: { width: "100%" },
                 },
                 {
-                  Placeholder: "Sale Cost",
+                  Placeholder: "Sell Rate",
                   fieldCol: 24,
                   size: "small",
                   type: "Text",

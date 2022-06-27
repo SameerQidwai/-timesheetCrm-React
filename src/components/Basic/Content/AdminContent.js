@@ -142,7 +142,7 @@ const pageLinks = [
     },
     {
         component: Admin,
-        link: "/check",
+        link: "/admin/import-export",
         key: 'ADMIN_OPTIONS',
         permission: 'READ'
     },

@@ -16,8 +16,9 @@ import Panels from "../Panels/Panels";
 import PanelSkills from "../Panels/PanelSkills";
 import Levels from "../skill & level/Levels.js";
 import Skills from "../skill & level/Skills.js";
+import ImportExport from "../ImportExport";
 
-import check from "../admin-drawer/admin-sidebar";
+// import check from "../admin-drawer/admin-sidebar";
 
 const pageLinks = [
     // Page link and router
@@ -62,8 +63,8 @@ const pageLinks = [
         link: "/admin/panels/skills/:id",
     },
     {
-        component: check,
-        link: "/admin/check",
+        component: ImportExport,
+        link: "/admin/import-export",
     },
     {
         component: Levels,
