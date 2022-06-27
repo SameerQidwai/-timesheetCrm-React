@@ -172,9 +172,9 @@ class Projects extends Component {
                 'stage': { type: 'Select', multi: true, value: [], label:"stage",  showInColumn: true},
                 'type': { type: 'Select', value: "", label:"Type",  showInColumn: true},
                 'Action': {type: 'Input', value: '', label:"",  showInColumn: true, disabled:true},
-                'stateId': {type: 'none', multi: true, value: [], label:"State",  showInColumn: false, disabled:false},
-                'address': {type: 'none', value: '', label:"Address",  showInColumn: false, disabled:false},
-                'qualifiedOps': {type: 'none', value: '', label:"Qualified Ops",  showInColumn: false, disabled:false},
+                'stateId': {type: 'Select', multi: true, value: [], label:"State",  showInColumn: false, disabled:false},
+                'address': {type: 'Input', value: '', label:"Address",  showInColumn: false, disabled:false},
+                'qualifiedOps': {type: 'Select', value: '', label:"Qualified Ops",  showInColumn: false, disabled:false},
                 'phase': { type: 'Select', value: "", label:"Status",  showInColumn: true},
             },
 
@@ -458,36 +458,35 @@ class Projects extends Component {
             this.setState({
                 filterData: data.filter(el => { // method one which have mutliple if condition for every multiple search
                     const { id: organization} = el.organization
-                    console.log(el.phase ,`${el.phase?? ''}`.toLowerCase().includes(search['phase']['value'].toLowerCase()),search['phase']['value'])
                     return  `00${el.id.toString()}`.includes(search['id']['value']) &&
-                        // `${el.title ?? ''}`.toLowerCase().includes(search['title']['value'].toLowerCase()) &&
-                        // `${el.value.toString() ?? ''}`.toLowerCase().includes(search['revenue']['value'].toString().toLowerCase()) &&
-                        // `${el.type?? ''}`.toLowerCase().includes(search['type']['value'].toLowerCase()) &&
-                        `${el.phase?? ''}`.toLowerCase().includes(search['phase']['value'].toLowerCase()) 
-                        // `${el.qualifiedOps?? ''}`.toLowerCase().includes(search['qualifiedOps']['value'].toLowerCase()) &&
-                        // // multi Select Search
+                        `${el.title ?? ''}`.toLowerCase().includes(search['title']['value'].toLowerCase()) &&
+                        `${el.value.toString() ?? ''}`.toLowerCase().includes(search['revenue']['value'].toString().toLowerCase()) &&
+                        `${el.type?? ''}`.toLowerCase().includes(search['type']['value'].toLowerCase()) &&
+                        `${el.phase?? ''}`.toLowerCase().includes(search['phase']['value'].toLowerCase()) &&
+                        `${el.qualifiedOps?? ''}`.toLowerCase().includes(search['qualifiedOps']['value'].toLowerCase()) &&
+                        // multi Select Search
 
-                        // (search['organization']['value'].length > 0 ? search['organization']['value'] : [{value: ','}])
-                        // .some(s => (search['organization']['value'].length > 0 ? [organization]: [',']).includes(s.value)) &&
+                        (search['organization']['value'].length > 0 ? search['organization']['value'] : [{value: ','}])
+                        .some(s => (search['organization']['value'].length > 0 ? [organization]: [',']).includes(s.value)) &&
 
-                        // (search['stateId']['value'].length > 0 ? search['stateId']['value'] : [{value: ','}])
-                        // .some(s => (search['stateId']['value'].length > 0 ? [el.stateId]: [',']).includes(s.value)) &&
+                        (search['stateId']['value'].length > 0 ? search['stateId']['value'] : [{value: ','}])
+                        .some(s => (search['stateId']['value'].length > 0 ? [el.stateId]: [',']).includes(s.value)) &&
 
-                        // (search['stage']['value'].length > 0 ? search['stage']['value'] : [{value: ','}])
-                        // .some(s => (search['stage']['value'].length > 0 ? [el.stage]: [',']).includes(s.value)) &&
+                        (search['stage']['value'].length > 0 ? search['stage']['value'] : [{value: ','}])
+                        .some(s => (search['stage']['value'].length > 0 ? [el.stage]: [',']).includes(s.value)) &&
 
-                        // (search['panel']['value'].length > 0 ? search['panel']['value'] : [{value:','}])
-                        // .some(s => (search['panel']['value'].length > 0 ? [el.panelId]: [',']).includes(s.value)) &&
+                        (search['panel']['value'].length > 0 ? search['panel']['value'] : [{value:','}])
+                        .some(s => (search['panel']['value'].length > 0 ? [el.panelId]: [',']).includes(s.value)) &&
 
-                        // //Start Date Filter
-                        // moment(search['startDate']['value']? formatDate(el.startDate, true, 'YYYY-MM-DD'): '2010-10-20')
-                        // .isBetween(startDate[0], startDate[1], undefined, '[]') &&
-                        // //End Date Filter
-                        // moment(search['endDate']['value']? formatDate(el.endDate, true, 'YYYY-MM-DD'): '2010-10-20')
-                        // .isBetween(endDate[0], endDate[1], undefined, '[]') &&
-                        // //Entry Date Filter
-                        // moment(search['entryDate']['value']? formatDate(el.entryDate, true, 'YYYY-MM-DD'): '2010-10-20')
-                        // .isBetween(entryDate[0], entryDate[1], undefined, '[]') 
+                        //Start Date Filter
+                        moment(search['startDate']['value']? formatDate(el.startDate, true, 'YYYY-MM-DD'): '2010-10-20')
+                        .isBetween(startDate[0], startDate[1], undefined, '[]') &&
+                        //End Date Filter
+                        moment(search['endDate']['value']? formatDate(el.endDate, true, 'YYYY-MM-DD'): '2010-10-20')
+                        .isBetween(endDate[0], endDate[1], undefined, '[]') &&
+                        //Entry Date Filter
+                        moment(search['entryDate']['value']? formatDate(el.entryDate, true, 'YYYY-MM-DD'): '2010-10-20')
+                        .isBetween(entryDate[0], entryDate[1], undefined, '[]') 
                    
                 }),
                 searchedColumn: search,

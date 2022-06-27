@@ -244,24 +244,57 @@ export const Filtertags = ({filters, filterFunction}) =>{
 
 export const leaf = (obj, path) => (path.split('.').reduce((value, el) => value[el]?? '', obj))
 
-const objectTagFilters = {
-    'O_STAGE' : {L: 'Lead', TR: 'Tender Released', BS: 'Bid Submitted', BD: 'Bid Development'},
-'O_STATUS' : {O: 'Open', L: 'Lost', P: 'Open', NB: 'Not Bid', DNP: 'Did Not Proceed', C: 'Completed'},
-'R_STATUS' : { 'AP' : 'Approved', 'SB' : 'Submitted' , 'R' : 'Rejected','RJ' : 'Rejected' }, //Request Status
-'STATUS_COLOR' : { 'AP' : 'green', 'SB' : 'cyan' , 'RJ' : 'red', 'R': 'red' }, //Request Status
-'O_TYPE' : {1: 'Milestone', 2: 'Time'},
-'O_PHASE' : {'false': 'Close', 'true': 'Open'},
-'JOB_TYPE' : { 1:"Casual", 2:"Part Time" , 3: "Full Time" },
-'DURATION' : {1: "Hourly" , 2: "Daily" , 3: "Weekly" , 4: "Fortnightly" , 5: "Monthly" },
-'GENDER' : {   "M" :  "Male", "F" :  "Female", "O" :  "Other" },
- 'STATES' : {
-'Australian Capital Territory': 'ACT', 
-'New South Wales': 'NSW', 
-'Victoria': 'VIC', 
-'Queensland': 'QLD', 
-'South Australia': 'SA', 
-'Western Australia': 'WA', 
-'Northern Territory': 'NT', 
-'Tasmania': 'TSA'
-},
+export const FiltertagsNew = ({filters, filterFunction}) =>{ //should make it work to show in tags in future
+    let filterKeys = Object.keys(filters)
+    const [state, setState] = useState({});
+    useEffect(() => {
+        return () => {
+          setState({}); // This worked for me
+        };
+    }, []);
+    return <Col span={24}> 
+        {filterKeys.map(el=>{
+            const { value, label, type, multi } = filters[el]
+            return value && value.length>0 &&<span key={el}>
+                <Tag color="magenta" key={el}>{label}: </Tag>
+                {
+                    type === 'Date' ? //String field search Tag
+                            <Tag 
+                                key={value[0]}
+                                color="lime" 
+                                closable 
+                                onClose={()=>{
+                                    let remove = null
+                                    filterFunction(remove, el)
+                                }}
+                            > {`${value[0]}=>${value[1]}`} </Tag>
+
+                    :   type === 'Select' ?
+                            multi ? value && value.map(elValue=> <Tag 
+                                key={`${el}${elValue.value}`}
+                                color="lime" 
+                                closable 
+                                onClose={()=>{
+                                    let remove = value.filter(elem=> elem.value !== elValue.value)
+                                    filterFunction(remove, el)
+                                }}
+                                >{elValue.label}</Tag>)
+                            : <Tag 
+                                key={`${el}${value.value}`}
+                                color="lime" 
+                                closable 
+                                onClose={()=>{
+                                    filterFunction({}, el)
+                                }}
+                            >{value.label}</Tag>
+                    :  <Tag 
+                            key={`${el}value`}
+                            color="lime" 
+                            closable 
+                            onClose={()=>filterFunction('', el)}
+                        >{value}</Tag>
+                }
+            </span> 
+        })}
+    </Col>
 }
