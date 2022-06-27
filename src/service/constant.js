@@ -18,6 +18,7 @@ export const Api = "http://localhost:3301/api/v1";
 
 export const O_STAGE = {L: 'Lead', TR: 'Tender Released', BS: 'Bid Submitted', BD: 'Bid Development'}
 export const O_STATUS = {O: 'Open', L: 'Lost', P: 'Open', NB: 'Not Bid', DNP: 'Did Not Proceed', C: 'Completed'}
+export const O_PHASE = {'false': 'Close', 'true': 'Open'}
 export const R_STATUS = { 'AP' : 'Approved', 'SB' : 'Submitted' , 'R' : 'Rejected','RJ' : 'Rejected' } //Request Status
 export const STATUS_COLOR = { 'AP' : 'green', 'SB' : 'cyan' , 'RJ' : 'red', 'R': 'red' } //Request Status
 export const O_TYPE = {1: 'Milestone', 2: 'Time'}

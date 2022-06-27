@@ -243,3 +243,25 @@ export const Filtertags = ({filters, filterFunction}) =>{
 
 
 export const leaf = (obj, path) => (path.split('.').reduce((value, el) => value[el]?? '', obj))
+
+const objectTagFilters = {
+    'O_STAGE' : {L: 'Lead', TR: 'Tender Released', BS: 'Bid Submitted', BD: 'Bid Development'},
+'O_STATUS' : {O: 'Open', L: 'Lost', P: 'Open', NB: 'Not Bid', DNP: 'Did Not Proceed', C: 'Completed'},
+'R_STATUS' : { 'AP' : 'Approved', 'SB' : 'Submitted' , 'R' : 'Rejected','RJ' : 'Rejected' }, //Request Status
+'STATUS_COLOR' : { 'AP' : 'green', 'SB' : 'cyan' , 'RJ' : 'red', 'R': 'red' }, //Request Status
+'O_TYPE' : {1: 'Milestone', 2: 'Time'},
+'O_PHASE' : {'false': 'Close', 'true': 'Open'},
+'JOB_TYPE' : { 1:"Casual", 2:"Part Time" , 3: "Full Time" },
+'DURATION' : {1: "Hourly" , 2: "Daily" , 3: "Weekly" , 4: "Fortnightly" , 5: "Monthly" },
+'GENDER' : {   "M" :  "Male", "F" :  "Female", "O" :  "Other" },
+ 'STATES' : {
+'Australian Capital Territory': 'ACT', 
+'New South Wales': 'NSW', 
+'Victoria': 'VIC', 
+'Queensland': 'QLD', 
+'South Australia': 'SA', 
+'Western Australia': 'WA', 
+'Northern Territory': 'NT', 
+'Tasmania': 'TSA'
+},
+}
