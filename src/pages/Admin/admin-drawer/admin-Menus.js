@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Menu } from "antd";
 import { Link, withRouter } from "react-router-dom";
 
-import { FieldTimeOutlined, UserOutlined, CalendarOutlined, GlobalOutlined, AppstoreOutlined, FileProtectOutlined, ApartmentOutlined, GoldOutlined, CalculatorOutlined } from "@ant-design/icons"; //Icons
+import { FieldTimeOutlined, UserOutlined, CalendarOutlined, GlobalOutlined, AppstoreOutlined, FileProtectOutlined, ApartmentOutlined, GoldOutlined, FileSyncOutlined } from "@ant-design/icons"; //Icons
 
 // import './Menus.css'
 
@@ -63,12 +63,12 @@ const listData = [
         link: "/admin/panels",
         key: "/admin/panels",
     },
-    // {
-    //     text: "Import/Export",
-    //     icon: <AppstoreOutlined />,
-    //     link: "/admin/import-export",
-    //     key: "/admin/import-export",
-    // },
+    {
+        text: "Import/Export",
+        icon: <FileSyncOutlined />,
+        link: "/admin/import-export",
+        key: "/admin/import-export",
+    },
     // { global Variable commented
     //     text: "Tax Rates",
     //     icon: <CalculatorOutlined />,
