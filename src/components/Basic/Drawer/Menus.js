@@ -30,13 +30,13 @@ const listData = [
         key: "TIMESHEETS APPROVAl",
         permissions: {module: "TIMESHEETS", key: 'APPROVAL,UNAPPROVAL'}
     },
-    {
-        text: "Milestone Approval",
-        icon: <CheckCircleOutlined  />,
-        link: "/milestones-certificate",
-        key: "MILESTONE APPROVAl",
-        permissions: {module: "TIMESHEETS", key: 'APPROVAL,UNAPPROVAL'}
-    },
+    // {
+    //     text: "Milestone Approval",
+    //     icon: <CheckCircleOutlined  />,
+    //     link: "/milestones-certificate",
+    //     key: "MILESTONE APPROVAl",
+    //     permissions: {module: "TIMESHEETS", key: 'APPROVAL,UNAPPROVAL'}
+    // },
     {
         text: "Leave Requests",
         icon: <CalendarOutlined  />,

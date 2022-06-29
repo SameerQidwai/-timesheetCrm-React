@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
-import { Button, Col, Empty, Modal, Row, Select, Table, Typography, Upload } from "antd"
+import { Button, Empty, message, Modal, Table, Typography, Upload } from "antd"
 import '../styles/import.css'
-import { PaperClipOutlined, InboxOutlined} from "@ant-design/icons"; //Icons
+import { PaperClipOutlined} from "@ant-design/icons"; //Icons
 import { formatDate, thumbUrl } from "../../service/constant"
 import { transfer, status } from "../../service/import-export-api's";
 const { Title } = Typography
@@ -119,10 +119,10 @@ const ImportExport = () =>{
         formData.append('file', fileList[0])
         InProrgess(sEntity['index'], 'importing', true)
         transfer('import', sEntity['type'], formData, true).then(res=>{
-            if (res.success){
+
                 getStatus()
                 setRunning(false)
-            }
+
         }).catch(err =>{
             InProrgess(sEntity['index'], 'importing', false)
         })
@@ -133,10 +133,10 @@ const ImportExport = () =>{
     const Exporting = (type, index) =>{
         InProrgess(index, 'exporting', true)
         transfer('export', type, {}).then(res=>{ 
-            if (res.success){
-                getStatus()
-                setRunning(false)
-            }
+
+            getStatus()
+            setRunning(false)
+
         }).catch(err =>{
             InProrgess(index, 'exporting', false)
         })
@@ -144,10 +144,15 @@ const ImportExport = () =>{
 
     const  handleUpload = async option=>{
         const { file } = option;
-        setsEntity({...sEntity, loading: true})
-        file.thumbUrl = thumbUrl('xls')
-        setFileList([file])
-        setsEntity({...sEntity, loading: false})
+        let ext =  file.name.split('.')
+        if (['xls', 'xlsx'].includes(ext[ext.length-1])){
+            setsEntity({...sEntity, loading: true})
+            file.thumbUrl = thumbUrl('xls')
+            setFileList([file])
+            setsEntity({...sEntity, loading: false})
+        }else{
+            message.error({ content: 'Only Xlsx Files Are Allowed ', key: sEntity['type']})
+        }
     }
 
     return (
@@ -184,6 +189,7 @@ const ImportExport = () =>{
                         customRequest={handleUpload}
                         onRemove= {()=>setFileList([])}
                         fileList={fileList}
+                        accept={'.xls, .xlsx'}
                     >
                         <Empty image={fileList.length > 0 ? Empty.PRESENTED_IMAGE_DEFAULT: Empty.PRESENTED_IMAGE_SIMPLE}
                             description={ <p className="import-empty">Click or drag file to this area to upload</p> }

@@ -85,9 +85,7 @@ const TimeSheetPDF = (props) => {
     })
 
     const getProjectEntry = () =>{
-        console.log(props);
         const data = {milestoneEntryIds: props.milestoneEntryId}
-        console.log(data);
         getPdf(data).then(res=>{
             if(res.success){
                 setData(res.data)

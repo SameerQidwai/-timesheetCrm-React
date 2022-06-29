@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom'
 
 import { formatDate, formatCurrency, localStore, thumbUrl } from "../../service/constant";
 import { tableSorter } from "../../components/Core/Table/TableFilter";
+import CertificatePdf from "./Modal/CertifcatePdf";
 
 
 class MileCertificate extends Component {
@@ -185,47 +186,48 @@ class MileCertificate extends Component {
     render() {
         const { desc, infoModal, data, sMile, permissions, loading, columns, fileList } = this.state;
         return (
-            <>
-                <Typography.Title level={3}>Milstone Approval</Typography.Title>
-                <Table
-                    bordered
-                    pagination={{pageSize: localStore().pageSize}}
-                    rowKey={(data) => data.id}
-                    columns={columns}
-                    dataSource={data}
-                    size="small"
-                    className='fs-small'
-                />
-                <Modal
-                    title={'Upload Certifiate'}
-                    maskClosable={false}
-                    centered
-                    visible={infoModal}
-                    onOk={this.uploading}
-                    okText={'Upload'}
-                    onCancel={()=> this.setState({infoModal: false, sMile: false, sIndex: false, loading: false})}
-                    width={540}
-                    confirmLoading={loading}
-                    destroyOnClose
-                >  
-                <div>
-                    <Upload.Dragger
-                        name= "file"
-                        multiple={false}
-                        maxCount={1}
-                        listType= "picture"
-                        className="upload-list-inline"
-                        customRequest={this.handleUpload}
-                        onRemove= {()=>this.setState({fileList : []})}
-                        fileList={fileList}
-                    >
-                        <Empty image={fileList.length > 0 ? Empty.PRESENTED_IMAGE_DEFAULT: Empty.PRESENTED_IMAGE_SIMPLE}
-                            description={ <p className="import-empty">Click or drag file to this area to upload</p> }
-                        />
-                    </Upload.Dragger>
-                </div>
-            </Modal>
-            </>
+            // <>
+            //     <Typography.Title level={3}>Milstone Approval</Typography.Title>
+            //     <Table
+            //         bordered
+            //         pagination={{pageSize: localStore().pageSize}}
+            //         rowKey={(data) => data.id}
+            //         columns={columns}
+            //         dataSource={data}
+            //         size="small"
+            //         className='fs-small'
+            //     />
+            //     <Modal
+            //         title={'Upload Certifiate'}
+            //         maskClosable={false}
+            //         centered
+            //         visible={infoModal}
+            //         onOk={this.uploading}
+            //         okText={'Upload'}
+            //         onCancel={()=> this.setState({infoModal: false, sMile: false, sIndex: false, loading: false})}
+            //         width={540}
+            //         confirmLoading={loading}
+            //         destroyOnClose
+            //     >  
+            //     <div>
+            //         <Upload.Dragger
+            //             name= "file"
+            //             multiple={false}
+            //             maxCount={1}
+            //             listType= "picture"
+            //             className="upload-list-inline"
+            //             customRequest={this.handleUpload}
+            //             onRemove= {()=>this.setState({fileList : []})}
+            //             fileList={fileList}
+            //         >
+            //             <Empty image={fileList.length > 0 ? Empty.PRESENTED_IMAGE_DEFAULT: Empty.PRESENTED_IMAGE_SIMPLE}
+            //                 description={ <p className="import-empty">Click or drag file to this area to upload</p> }
+            //             />
+            //         </Upload.Dragger>
+            //     </div>
+            // </Modal>
+            // </>
+            <CertificatePdf/>
         );
     }
 }
