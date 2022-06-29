@@ -24,6 +24,17 @@
     text-align:right;
 }
 
+.desc{
+    font-size: 12px !important;
+}
+
+.fail-link {
+    color: red !important
+}
+.file-mr{
+    margin-left: 30px;
+}
+
 .mt-30{
     margin-top: 30px;
 }

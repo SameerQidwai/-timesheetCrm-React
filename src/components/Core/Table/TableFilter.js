@@ -243,3 +243,58 @@ export const Filtertags = ({filters, filterFunction}) =>{
 
 
 export const leaf = (obj, path) => (path.split('.').reduce((value, el) => value[el]?? '', obj))
+
+export const FiltertagsNew = ({filters, filterFunction}) =>{ //should make it work to show in tags in future
+    let filterKeys = Object.keys(filters)
+    const [state, setState] = useState({});
+    useEffect(() => {
+        return () => {
+          setState({}); // This worked for me
+        };
+    }, []);
+    return <Col span={24}> 
+        {filterKeys.map(el=>{
+            const { value, label, type, multi } = filters[el]
+            return value && value.length>0 &&<span key={el}>
+                <Tag color="magenta" key={el}>{label}: </Tag>
+                {
+                    type === 'Date' ? //String field search Tag
+                            <Tag 
+                                key={value[0]}
+                                color="lime" 
+                                closable 
+                                onClose={()=>{
+                                    let remove = null
+                                    filterFunction(remove, el)
+                                }}
+                            > {`${value[0]}=>${value[1]}`} </Tag>
+
+                    :   type === 'Select' ?
+                            multi ? value && value.map(elValue=> <Tag 
+                                key={`${el}${elValue.value}`}
+                                color="lime" 
+                                closable 
+                                onClose={()=>{
+                                    let remove = value.filter(elem=> elem.value !== elValue.value)
+                                    filterFunction(remove, el)
+                                }}
+                                >{elValue.label}</Tag>)
+                            : <Tag 
+                                key={`${el}${value.value}`}
+                                color="lime" 
+                                closable 
+                                onClose={()=>{
+                                    filterFunction({}, el)
+                                }}
+                            >{value.label}</Tag>
+                    :  <Tag 
+                            key={`${el}value`}
+                            color="lime" 
+                            closable 
+                            onClose={()=>filterFunction('', el)}
+                        >{value}</Tag>
+                }
+            </span> 
+        })}
+    </Col>
+}

@@ -2,7 +2,7 @@
     margin: 10 
 }
 .sensitive{ 
-    color: '#ff0000' 
+    color: #ff0000
 }
 .textCenter{ 
     text-align:'center' 
@@ -14,6 +14,7 @@
 .marg20{ 
     margin-bottom: 20 
 }
+
 .signDiv { 
     border: 'solid black 1px'; 
     min-height:35
@@ -69,4 +70,46 @@
 .b-sensitive{
     page-break-after :always;
     margin-top: 10px
+}
+.b-sensitive-bottom{
+    page-break-after :always;
+}
+
+/* Certifacates Style */
+.certficate-describe{
+    margin-bottom: 10px !important;
+}
+.certficate-describe th{
+    width: 30%  !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+}
+.certficate-describe.small th{
+    padding-bottom: 5px !important;
+    padding-top: 5px !important;
+} 
+.certficate-describe.large th{
+    padding-bottom: 10px !important;
+    padding-top: 10px !important;
+} 
+.certficate-describe.right th{
+    text-align: right !important;
+}
+.certficate-describe th.paragraph{
+    height: 200px !important;
+}
+
+.certficate-describe.representative th {
+    width: 45% !important
+}
+
+.mb-40{ 
+    margin-bottom: 40px 
+}
+.mb-20{ 
+    margin-top: 20px 
+}
+
+.txt-center{
+    text-align: center ;
 }

@@ -85,9 +85,7 @@ const TimeSheetPDF = (props) => {
     })
 
     const getProjectEntry = () =>{
-        console.log(props);
         const data = {milestoneEntryIds: props.milestoneEntryId}
-        console.log(data);
         getPdf(data).then(res=>{
             if(res.success){
                 setData(res.data)
@@ -108,11 +106,11 @@ const TimeSheetPDF = (props) => {
             {/* style={{marginLeft:10,marginRight:10}} */}
             <div ref={componentRef}  style={{margin:'2mm 10mm 0mm 10mm', size: 'A4'   }}>
                 {data.map((details, index) => {
-                    return <div >
+                    return <div key={index}>
                         <div className='sensitive'><p >Sensitive: Personal (after first entry)</p></div>
                             <Row justify="space-between" align="middle" >
-                                <Col ><Typography.Title > Timesheet </Typography.Title></Col>
-                                <Col style={{width: '60%', textAlign: 'right'}}><img src={'/onelm.png'} width="35%" /></Col>
+                                <Col ><Typography.Title level={2}> Timesheet </Typography.Title></Col>
+                                <Col style={{width: '60%', textAlign: 'right'}}><img src={'/onelm.png'} width="32%" /></Col>
                             </Row>
                             <Row>
                                 {details &&<Descriptions column={2} bordered size={"small"} style={{margin:'15px 0px'}} className="describe">
@@ -156,8 +154,7 @@ const TimeSheetPDF = (props) => {
                                 <Col span={6}>Signature</Col>
                                 <Col span={5}>Date</Col>
                             </Row>
-                            <div  className='sensitive b-sensitive' >
-                                <p >Sensitive: Personal (after first entry)</p></div>
+                            <div  className='b-sensitive-bottom' > </div>
                         </div>
                     })}
                 </div>

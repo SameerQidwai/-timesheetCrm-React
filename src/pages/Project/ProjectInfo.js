@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Row, Col, Menu, Tabs, Button, Dropdown, Popconfirm, Descriptions, } from "antd";
+import { Row, Col, Menu, Tabs, Button, Dropdown, Popconfirm, Descriptions, Tag, } from "antd";
 import { SettingOutlined, DownOutlined } from "@ant-design/icons"; //Icons
 import { Link } from "react-router-dom"; 
 
@@ -13,7 +13,7 @@ import InfoModal from "./Modals/InfoModal";
 
 import { getRecord, delList, Outcomes } from "../../service/projects";
 
-import { formatDate, formatCurrency, localStore, O_STATUS } from "../../service/constant";
+import { formatDate, formatCurrency, localStore, O_STATUS, O_PHASE } from "../../service/constant";
 import AuthError from "../../components/Core/AuthError";
 import PMResources from "../../components/Core/Resources/PMResources";
 import PTResources from "../../components/Core/Resources/PTResources";
@@ -80,9 +80,7 @@ class ProjectInfo extends Component {
     };
 
     OutcomeAction = (action) =>{
-        const { leadId, basic } = this.state
-        console.log(action, action === 'open');
-        
+        const { leadId, basic } = this.state        
         Outcomes(action,leadId).then(res=>{
             if (res.success){
                 this.setState({basic: {...basic, phase:action==='open'}})
@@ -225,7 +223,7 @@ class ProjectInfo extends Component {
                     <Item label="Start Date">{formatDate(data.startDate, true, true)} </Item>
                     <Item label="End Date">{formatDate(data.endDate, true, true)}</Item>
                     <Item label="Bid Date">{formatDate(data.bidDate, true, true)}</Item>
-                    <Item label="Status">{basic.status ? O_STATUS[basic.status]: ''}</Item>
+                    <Item label="Status">{<Tag color={!basic.phase ? "red" : "green"}>{O_PHASE[basic.phase]}</Tag>}</Item>
                     {/* <Item label="Gender">{data.gender}</Item> */}
                 </Descriptions>
                 {renderTabs &&(

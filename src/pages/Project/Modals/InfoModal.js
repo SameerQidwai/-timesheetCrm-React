@@ -586,7 +586,7 @@ class InfoModal extends Component {
           initialValues={ { dates:{ entryDate: formatDate(new Date()) } } }
         >
           <Tabs type="card">
-              <TabPane tab="Opportunity Info" key="basic" forceRender className="ant-form ant-form-inline ant-form-small" >
+              <TabPane tab="Project Info" key="basic" forceRender className="ant-form ant-form-inline ant-form-small" >
                   <FormItems FormFields={BasicFields} />
               </TabPane>
               <TabPane tab="Tender Info" key="tender" forceRender className="ant-form ant-form-inline ant-form-small" >
