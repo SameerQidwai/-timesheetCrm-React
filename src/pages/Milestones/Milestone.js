@@ -4,7 +4,7 @@ import { SettingOutlined, DownOutlined } from "@ant-design/icons"; //Icons
 import { Link } from 'react-router-dom'
 
 
-import MileModal from "./MileModal";
+import MileModal from "./Modal/MileModal";
 import { formatDate, formatCurrency, localStore } from "../../service/constant";
 import { getMilestones, getProjectDetail } from "../../service/Milestone-Apis";
 import { getRecord } from "../../service/opportunities";

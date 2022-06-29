@@ -1,10 +1,10 @@
 import React, { Component, createRef } from "react";
 import { Modal, Tabs, Form } from "antd";
 import { LoadingOutlined } from "@ant-design/icons"; //Icons
-import FormItems from "../../components/Core/Forms/FormItems";
-import { addMilestone, editMilestone, getMilestone } from "../../service/Milestone-Apis";
+import FormItems from "../../../components/Core/Forms/FormItems";
+import { addMilestone, editMilestone, getMilestone } from "../../../service/Milestone-Apis";
 
-import { dateRangeAfter, dateRangeBefore, formatDate } from "../../service/constant";
+import { dateRangeAfter, dateRangeBefore, formatDate } from "../../../service/constant";
 
 
 class MileModal extends Component {

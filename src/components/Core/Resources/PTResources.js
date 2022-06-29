@@ -32,7 +32,7 @@ const resourceColumn = (milestoneId) => [
         dataIndex: "contactPerson",
         key: "contactPerson",
         render: (record)=>(
-            `${record?.firstName} ${record?.lastName}`
+            `${record?.firstName?? ''} ${record?.lastName?? ''}`
         ),
         ...tableSorter('contactPerson.firstName', 'string'),
     },

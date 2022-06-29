@@ -82,7 +82,7 @@ const resourceColumn = [
         title: 'Name', 
         dataIndex: 'contactPerson', 
         key: 'contactPerson' ,
-        render: (record) =>(record &&`${record.firstName} ${record.lastName}`)
+        render: (record) =>(record &&`${record.firstName?? ''} ${record.lastName?? ''}`)
     },
     { 
         title: 'Buy Rate (Hourly)', 

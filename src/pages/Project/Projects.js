@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { Table, Menu, Dropdown, Button, Popconfirm, Row, Col,Typography } from 'antd'
+import { Table, Menu, Dropdown, Button, Popconfirm, Row, Col,Typography, Tag } from 'antd'
 import { DownOutlined, SettingOutlined, PlusSquareOutlined, FilterOutlined} from '@ant-design/icons'; //Icons
 import { Link } from 'react-router-dom'
 
@@ -8,7 +8,7 @@ import InfoModal from './Modals/InfoModal'
 import { getList, delList } from "../../service/projects";
 
 import moment from "moment";
-import { formatDate, formatCurrency, localStore, O_TYPE } from '../../service/constant';
+import { formatDate, formatCurrency, localStore, O_TYPE, O_PHASE } from '../../service/constant';
 import { getOrganizations, getPanels, getStates } from '../../service/constant-Apis';
 import { Filtertags, TableModalFilter, tableSorter, tableTitleFilter } from '../../components/Core/Table/TableFilter';
 import { generalDelete } from '../../service/delete-Api\'s';
@@ -80,6 +80,14 @@ class Projects extends Component {
                 width: '1%',
                 render: (record) => O_TYPE[record], 
                 ...tableSorter('type', 'number'),
+            },
+            {
+                title: 'Status',
+                dataIndex: 'phase',
+                key: 'phase',
+                width: '1%',
+                render: (record) => <Tag color={!record ? "red" : "green"}>{O_PHASE[record]}</Tag>, 
+                ...tableSorter('phase', 'string'),
             },
             {
                 title: '...',
@@ -426,7 +434,8 @@ class Projects extends Component {
                     el.value && `${formatCurrency(el.value)}`.toLowerCase().includes(value.toLowerCase()) ||
                     el.startDate && `${formatDate(el.startDate, true, true)}`.toLowerCase().includes(value.toLowerCase()) ||
                     el.endDate && `${formatDate(el.endDate, true, true)}`.toLowerCase().includes(value.toLowerCase()) ||
-                    el.type && `${O_TYPE[el.type]}`.toLowerCase().includes(value.toLowerCase()) 
+                    el.type && `${O_TYPE[el.type]}`.toLowerCase().includes(value.toLowerCase()) ||
+                    `${O_PHASE[el.phase]}`.toLowerCase().includes(value.toLowerCase())
                 })
             })
         }else{

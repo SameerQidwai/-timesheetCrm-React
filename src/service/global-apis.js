@@ -37,7 +37,7 @@ export const upadteSettings = (data) => {
             if (success){ 
                 data.forEach(({keyLabel, keyValue}) => {
                     response[keyLabel] = keyValue;
-                  });
+                });
             }
             
             return {success, data: response};

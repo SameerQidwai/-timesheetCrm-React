@@ -47,6 +47,7 @@ import Training from "../../../pages/Trainings/Training"
 
 // import TimeSheetHTML from "../../Core/TimeSheetHTML" 
 import { localStore } from "../../../service/constant";
+import MileCertificate from "../../../pages/Milestones/MileCertificate";
 
 const { Content } = Layout;
 
@@ -252,6 +253,12 @@ const pageLinks = [
     {
         component: Milestone,
         link: "/projects/:proId/milestones",
+        key: "PROJECTS",
+        permission: 'READ'
+    },
+    {
+        component: MileCertificate,
+        link: "/milestones-certificate",
         key: "PROJECTS",
         permission: 'READ'
     },

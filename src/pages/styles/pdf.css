@@ -2,7 +2,7 @@
     margin: 10 
 }
 .sensitive{ 
-    color: '#ff0000' 
+    color: #ff0000
 }
 .textCenter{ 
     text-align:'center' 
@@ -69,4 +69,7 @@
 .b-sensitive{
     page-break-after :always;
     margin-top: 10px
+}
+.b-sensitive-bottom{
+    page-break-after :always;
 }

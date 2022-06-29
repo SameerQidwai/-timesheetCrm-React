@@ -1,12 +1,12 @@
 import moment from 'moment'
 import { message as messageAlert } from "antd";
-// export const Api = "http://localhost:3301/api/v1";
+export const Api = "http://localhost:3301/api/v1";
 
 // export const Api = "http://onelmcrm.gaamatech.com:8000/api/v1";
 // export const Api = "http://192.168.0.243:3000/api/v1"; // Shahzaib/   
 // export const Api = "http://192.168.43.207:3000/api/v1"; // new Shahzaib/   
 // export const Api = "https://008e-111-88-151-45.ngrok.io/api/v1"; // Shahzaib/ tunnel   
-export const Api = "http://192.168.0.218:3301/api/v1"; // Me
+// export const Api = "http://192.168.0.218:3301/api/v1"; // Me
 
 // export const Api = "http://54.91.49.138:8000/api/v1"; //Test 
 

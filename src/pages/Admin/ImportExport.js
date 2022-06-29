@@ -39,7 +39,7 @@ const ImportExport = () =>{
                     :
                         <div > 
                             <span>Last Import  At: <b>{(record.imported ? formatDate(record.lastImported, true, true): record.lastImported)}</b></span>
-                            <span className="file-mr">{record.log && <a href={`http://${record.file}`} target="_blank" rel="noopener noreferrer" > <PaperClipOutlined /> {typeName[text]}_LOGS.xlsx</a>}</span>
+                            <span className="file-mr">{record.log && <a href={`http://${record.log}`} target="_blank" rel="noopener noreferrer" > <PaperClipOutlined /> {typeName[text]}_LOGS.xlsx</a>}</span>
                         </div>
                     }
                     {record.exporting ?
