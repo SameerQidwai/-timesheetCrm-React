@@ -50,7 +50,7 @@ export const tableSorter = (dataIndex, type, sortOrder) => ({ //sorter on the he
             if(type=== 'number'){
                 return valueA -  valueB 
             }else if(type === 'string'){
-                return valueA.localeCompare(valueB)
+                return `${valueA}`.localeCompare(`${valueB}`)
             }else if (type === 'date'){
                 return moment(valueA ? valueA :'2011 11 10' ).unix() - moment(valueB ? valueB : '2011 11 10').unix()
             }

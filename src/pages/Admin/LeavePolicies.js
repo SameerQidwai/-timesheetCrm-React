@@ -19,6 +19,13 @@ class LeavePolicies extends Component {
 
         this.columns = [
             {
+                title: "Code",
+                dataIndex: "id",
+                key: "id",
+                width: '5%',
+                ...tableSorter('id', 'number', true)
+            },
+            {
                 title: "Title",
                 dataIndex: "label",
                 key: "label",
