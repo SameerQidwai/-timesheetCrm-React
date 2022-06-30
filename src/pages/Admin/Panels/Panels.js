@@ -18,6 +18,13 @@ class Panels extends Component {
 
         this.columns = [
             {
+                title: "Code",
+                dataIndex: "id",
+                key: "id",
+                width: '5%',
+                ...tableSorter('id', 'number', true)
+            },
+            {
                 title: "Name",
                 dataIndex: "label",
                 key: "label",

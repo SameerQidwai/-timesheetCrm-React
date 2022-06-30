@@ -174,7 +174,7 @@ const ImportExport = () =>{
                 visible={sEntity['visible']}
                 onOk={Importing}
                 okText={'Import'}
-                onCancel={()=> setsEntity({visible: false, type: null, loading: false})}
+                onCancel={()=> {setsEntity({visible: false, type: null, loading: false});setFileList([])}}
                 width={540}
                 confirmLoading={sEntity['loading']}
                 destroyOnClose

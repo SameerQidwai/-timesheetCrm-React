@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Menu } from "antd";
 import { Link, withRouter } from "react-router-dom";
 
-import { ClockCircleOutlined, CheckCircleOutlined , HomeOutlined, CalendarOutlined , CarryOutOutlined , SolutionOutlined, RestOutlined  } from "@ant-design/icons"; //Icons
+import { ClockCircleOutlined, CheckCircleOutlined , HomeOutlined, CalendarOutlined , CarryOutOutlined , SolutionOutlined, RestOutlined, CheckSquareOutlined  } from "@ant-design/icons"; //Icons
 
 import "../../Styles/Menus.css";
 import { localStore } from "../../../service/constant";
@@ -30,13 +30,13 @@ const listData = [
         key: "TIMESHEETS APPROVAl",
         permissions: {module: "TIMESHEETS", key: 'APPROVAL,UNAPPROVAL'}
     },
-    // {
-    //     text: "Milestone Approval",
-    //     icon: <CheckCircleOutlined  />,
-    //     link: "/milestones-certificate",
-    //     key: "MILESTONE APPROVAl",
-    //     permissions: {module: "TIMESHEETS", key: 'APPROVAL,UNAPPROVAL'}
-    // },
+    {
+        text: "Milestone Approval",
+        icon: <CheckSquareOutlined />,
+        link: "/milestones-certificate",
+        key: "MILESTONE APPROVAl",
+        permissions: {module: "TIMESHEETS", key: 'APPROVAL,UNAPPROVAL'}
+    },
     {
         text: "Leave Requests",
         icon: <CalendarOutlined  />,
