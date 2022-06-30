@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {  Menu, Button, Dropdown, Table, Tag, Popconfirm, Modal, Upload, Empty, Typography } from "antd";
+import {  Menu, Button, Dropdown, Table, Tag, Popconfirm, Modal, Upload, Empty, Typography, Col, Select, Row } from "antd";
 import { SettingOutlined } from "@ant-design/icons"; //Icons
 import { Link } from 'react-router-dom'
 
@@ -15,12 +15,14 @@ class MileCertificate extends Component {
 
         this.state = {
             infoModal: false,
+            data: [{project: 'dummy'}],
             sMile: false,
             sIndex: false,
             desc: {title: '', organization: {name: ''}, value: '', startDate: '', endDate: ''},
             permissions: {},
             loading: false,
             fileList:[],
+            printing: false,
             columns: [
                 {
                     title: "Project",
@@ -79,7 +81,6 @@ class MileCertificate extends Component {
                     title: "Status",
                     dataIndex: "isApproved",
                     key: "isApproved",
-                    align: "right",
                     render: (record) =>  <Tag color={record? 'green': 'volcano'} key={record}>
                         {record? 'APPROVED': 'REJECTED'}
                     </Tag>
@@ -97,13 +98,14 @@ class MileCertificate extends Component {
                                 <Menu>
                                     <Menu.Item
                                         key="Export"
-                                        disabled={!permissions['UPDATE']}
+                                        // disabled={}
+                                        onClick={()=> this.setState ({printing: true, sMile: record.milestoneId, sIndex: index})}
                                     >
                                         Export
                                     </Menu.Item>
                                     <Menu.Item
                                         key="Upload"
-                                        disabled={!permissions['UPDATE']}
+                                        // disabled={}
                                         onClick={()=> this.setState({infoModal: true, sMile: record.milestoneId, sIndex: index})}
                                     >
                                         Upload
@@ -184,50 +186,76 @@ class MileCertificate extends Component {
     
 
     render() {
-        const { desc, infoModal, data, sMile, permissions, loading, columns, fileList } = this.state;
+        const { desc, infoModal, data, sMile, permissions, loading, columns, fileList, printing } = this.state;
         return (
-            // <>
-            //     <Typography.Title level={3}>Milstone Approval</Typography.Title>
-            //     <Table
-            //         bordered
-            //         pagination={{pageSize: localStore().pageSize}}
-            //         rowKey={(data) => data.id}
-            //         columns={columns}
-            //         dataSource={data}
-            //         size="small"
-            //         className='fs-small'
-            //     />
-            //     <Modal
-            //         title={'Upload Certifiate'}
-            //         maskClosable={false}
-            //         centered
-            //         visible={infoModal}
-            //         onOk={this.uploading}
-            //         okText={'Upload'}
-            //         onCancel={()=> this.setState({infoModal: false, sMile: false, sIndex: false, loading: false})}
-            //         width={540}
-            //         confirmLoading={loading}
-            //         destroyOnClose
-            //     >  
-            //     <div>
-            //         <Upload.Dragger
-            //             name= "file"
-            //             multiple={false}
-            //             maxCount={1}
-            //             listType= "picture"
-            //             className="upload-list-inline"
-            //             customRequest={this.handleUpload}
-            //             onRemove= {()=>this.setState({fileList : []})}
-            //             fileList={fileList}
-            //         >
-            //             <Empty image={fileList.length > 0 ? Empty.PRESENTED_IMAGE_DEFAULT: Empty.PRESENTED_IMAGE_SIMPLE}
-            //                 description={ <p className="import-empty">Click or drag file to this area to upload</p> }
-            //             />
-            //         </Upload.Dragger>
-            //     </div>
-            // </Modal>
-            // </>
-            <CertificatePdf/>
+            <>  
+            <Row gutter={200}>
+                <Col>
+                    <Typography.Title level={3}>Milestone Approval</Typography.Title>
+                </Col>
+                <Col>
+                    <Select
+                        placeholder="Select Project"
+                        style={{ width: 300 }}
+                        // options={milestones}
+                        // value={sMilestone}           
+                        showSearch
+                        optionFilterProp={["label", "value"]}
+                        filterOption={
+                            (input, option) =>{
+                                const label = option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                const value = option.value.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                    return label || value
+                            }
+                        }
+                        onSelect={(value, option)=>{
+                            this.setState({
+                                sMilestone: value
+                            })
+                        }}
+                    />
+                </Col>
+            </Row>
+                <Table
+                    bordered
+                    pagination={{pageSize: localStore().pageSize}}
+                    rowKey={(data) => data.id}
+                    columns={columns}
+                    dataSource={data}
+                    size="small"
+                    className='fs-small'
+                />
+                <Modal
+                    title={'Upload Certifiate'}
+                    maskClosable={false}
+                    centered
+                    visible={infoModal}
+                    onOk={this.uploading}
+                    okText={'Upload'}
+                    onCancel={()=> this.setState({infoModal: false, sMile: false, sIndex: false, loading: false})}
+                    width={540}
+                    confirmLoading={loading}
+                    destroyOnClose
+                >  
+                <div>
+                    <Upload.Dragger
+                        name= "file"
+                        multiple={false}
+                        maxCount={1}
+                        listType= "picture"
+                        className="upload-list-inline"
+                        customRequest={this.handleUpload}
+                        onRemove= {()=>this.setState({fileList : []})}
+                        fileList={fileList}
+                    >
+                        <Empty image={fileList.length > 0 ? Empty.PRESENTED_IMAGE_DEFAULT: Empty.PRESENTED_IMAGE_SIMPLE}
+                            description={ <p className="import-empty">Click or drag file to this area to upload</p> }
+                        />
+                    </Upload.Dragger>
+                </div>
+            </Modal>
+            {printing && <CertificatePdf/>}
+            </>
         );
     }
 }

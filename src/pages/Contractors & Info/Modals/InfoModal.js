@@ -336,7 +336,7 @@ class InfoModal extends Component {
                     itemStyle: { marginBottom: 1 },
                     rangeMin: (current)=>{
                         const { billing } = this.formRef.current.getFieldValue();
-                        return  billing.endDate && current < billing.endDate
+                        return  billing.endDate && current > billing.endDate
                     }
                 },
                 {

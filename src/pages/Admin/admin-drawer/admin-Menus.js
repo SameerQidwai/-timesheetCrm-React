@@ -63,12 +63,12 @@ const listData = [
         link: "/admin/panels",
         key: "/admin/panels",
     },
-    // {
-    //     text: "Import/Export",
-    //     icon: <FileSyncOutlined />,
-    //     link: "/admin/import-export",
-    //     key: "/admin/import-export",
-    // },
+    {
+        text: "Import/Export",
+        icon: <FileSyncOutlined />,
+        link: "/admin/import-export",
+        key: "/admin/import-export",
+    },
     // { global Variable commented
     //     text: "Tax Rates",
     //     icon: <CalculatorOutlined />,
