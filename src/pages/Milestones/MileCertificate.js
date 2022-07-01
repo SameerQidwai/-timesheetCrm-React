@@ -35,7 +35,7 @@ class MileCertificate extends Component {
                     render:(text, record) => (
                         <Link
                             to={{
-                                pathname:  `project/${record.projectId}/info`,
+                                pathname:  `projects/${record.projectId}/info`,
                             }}
                             className="nav-link"
                         >
@@ -51,7 +51,7 @@ class MileCertificate extends Component {
                     render:(text, record) => (
                         <Link
                             to={{
-                                pathname:  `milestones/${record.milestoneId}/resources`,
+                                pathname:  `projects/${record.projectId}/milestones/${record.milestoneId}/resources`,
                             }}
                             className="nav-link"
                         >
@@ -117,7 +117,7 @@ class MileCertificate extends Component {
                                     <Menu.Item
                                         key="Upload"
                                         disabled={record.isApproved || !record.phase===true  }
-                                        onClick={()=> this.setState({   })}
+                                        onClick={()=> this.setState({ infoModal: true, sMile: record.milestoneId, sIndex: index, })}
                                     >
                                         Upload
                                     </Menu.Item>
@@ -203,8 +203,9 @@ class MileCertificate extends Component {
         const { sMile, data, sIndex, fileList } = this.state 
         console.log(fileList);
         milestoneUpload(sMile, {fileId: fileList[0].fileId}).then(res=>{
+            console.log(fileList[0],fileList[0].uniqueName);
             if (res.success){
-                data[sIndex]['fileName'] = fileList[0].uniqueName
+                data[sIndex]['fileName'] = fileList[0].uid
                 this.setState({data: [...data], infoModal: false, sMile: false, sIndex: false})
             }
         })
