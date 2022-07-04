@@ -61,6 +61,21 @@ function GlobalVars(props) {
             size: "small",
             shape: '%',
             type: "DatePicker",
+            rules:[
+                ({ getFieldValue }) => ({
+                    validator(_, date) {
+                        const {value} = getFieldValue('GST') ?? {}
+                        if (value){
+                            if(!date){
+                                return Promise.reject(new Error('Start Date is Required!!'))
+                            }else{
+                                return Promise.resolve();
+                            }
+                        }
+                        return Promise.resolve();
+                    },
+                }),
+            ]
         },
         {
             object: "GST",
@@ -69,6 +84,21 @@ function GlobalVars(props) {
             size: "small",
             shape: '%',
             type: "DatePicker",
+            rules:[
+                ({ getFieldValue }) => ({
+                    validator(_, date) {
+                        const {value} = getFieldValue('GST') ?? {}
+                        if (value){
+                            if(!date){
+                                return Promise.reject(new Error('End Date is Required!!'))
+                            }else{
+                                return Promise.resolve();
+                            }
+                        }
+                        return Promise.resolve();
+                    },
+                }),
+            ]
         },
         {
             fieldCol: 24,
@@ -98,6 +128,21 @@ function GlobalVars(props) {
             size: "small",
             shape: '%',
             type: "DatePicker",
+            rules:[
+                ({ getFieldValue }) => ({
+                    validator(_, date) {
+                        const {value} = getFieldValue('Superannuation') ?? {}
+                        if (value){
+                            if(!date){
+                                return Promise.reject(new Error('Start Date is Required!!'))
+                            }else{
+                                return Promise.resolve();
+                            }
+                        }
+                        return Promise.resolve();
+                    },
+                }),
+            ]
         },
         {
             object: "Superannuation",
@@ -106,6 +151,21 @@ function GlobalVars(props) {
             size: "small",
             shape: '%',
             type: "DatePicker",
+            rules:[
+                ({ getFieldValue }) => ({
+                    validator(_, date) {
+                        const {value} = getFieldValue('Superannuation') ?? {}
+                        if (value){
+                            if(!date){
+                                return Promise.reject(new Error('End Date is Required!!'))
+                            }else{
+                                return Promise.resolve();
+                            }
+                        }
+                        return Promise.resolve();
+                    },
+                }),
+            ]
         },
     ])
 
@@ -192,7 +252,6 @@ function GlobalVars(props) {
     useEffect(() => {
         // getApi()
         fetchAll()
-        // addGlobalFields() 
     }, [])
 
     const fetchAll = ()=>{
@@ -232,6 +291,21 @@ function GlobalVars(props) {
             size: "small",
             shape: '%',
             type: "DatePicker",
+            rules:[
+                ({ getFieldValue }) => ({
+                    validator(_, date) {
+                        const {value} = getFieldValue(key) ?? {}
+                        if (value){
+                            if(!date){
+                                return Promise.reject(new Error('Start Date is Required!!'))
+                            }else{
+                                return Promise.resolve();
+                            }
+                        }
+                        return Promise.resolve();
+                    },
+                }),
+            ]
         },
         {
             object: key,
@@ -240,6 +314,21 @@ function GlobalVars(props) {
             size: "small",
             shape: '%',
             type: "DatePicker",
+            rules:[
+                ({ getFieldValue }) => ({
+                    validator(_, date) {
+                        const {value} = getFieldValue(key) ?? {}
+                        if (value){
+                            if(!date){
+                                return Promise.reject(new Error('End Date is Required!!'))
+                            }else{
+                                return Promise.resolve();
+                            }
+                        }
+                        return Promise.resolve();
+                    },
+                }),
+            ]
         },]
     }
 
