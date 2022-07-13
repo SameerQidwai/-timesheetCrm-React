@@ -4,6 +4,7 @@ import { getRecord } from "../../service/opportunities";
 import { formatCurrency, formatDate, formatFloat, getFiscalYear } from "../../service/constant";
 // import moment from 'moment'
 import 'moment-weekday-calc';
+import { getProfitLoss } from "../../service/projects";
 const { Title, Text } = Typography
 
 class ProfitLoss extends Component {
@@ -23,7 +24,12 @@ class ProfitLoss extends Component {
         }
     }
     componentDidMount = () =>{
-        this.calculateData()
+        const {parent, id} = this.props
+        if (parent === 'P'){
+            getProfitLoss(id)
+        }else if (parent === 'O'){
+            this.calculateData()
+        }
     }
 
     getWeekdays = (startDate, endDate) =>{

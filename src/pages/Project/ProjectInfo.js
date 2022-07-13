@@ -245,7 +245,7 @@ class ProjectInfo extends Component {
                             <Bank id={leadId} title={data.name} />
                         </TabPane> */}
                         <TabPane tab="Projected Profit & Loss" key="profitloss">
-                            <ProfitLoss id={leadId} billing={billing} />
+                            <ProfitLoss id={leadId} parent={"P"} billing={billing} />
                         </TabPane>
                         <TabPane tab="Resources" key="resources">
                             { basic.type === 1 ?

@@ -212,6 +212,24 @@ export const getHierarchy = (projectId) => {
         });
 };
 
+export const getProfitLoss = (projectId) => {
+    return axios
+        .get(`${url}/${projectId}/profit-loss`, {headers:headers()})
+        .then((res) => {
+            const { success, data, message } = res.data;
+            jwtExpired(message)
+            setToken(res.headers && res.headers.authorization)
+            return {success, data}
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                status: false,
+                message: err.message,
+            };
+        });
+};
+
 export const getLeadSkill = (crud, resId) => {
     return axios
         .get(`${Api}${crud}/${resId}`, {headers:headers()})
