@@ -166,3 +166,36 @@ export const getProjectDetail = (crud, id) => {
             };
         });
 };
+
+export const milestoneActions = (crud ) => {
+    return axios
+        .get(`${url}${crud}`, {headers:headers()})
+        .then((res) => {
+            const { success, data } = res.data;
+            setToken(res.headers && res.headers.authorization)
+            if (success){
+                return { success: success, data: data }
+            };
+        })
+        .catch((err) => {
+            return apiErrorRes(err, 1, 5)
+        });
+};
+
+export const milestoneUpload = (id, data) => {
+    console.log(id, data)
+    messageAlert.loading({ content: 'Loading...', key: 1 })
+    return axios
+        .put(`${url}/${id}/upload`, data, {headers:headers()})
+        .then((res) => {
+            const { success, message, data } = res.data;
+            jwtExpired(message)
+            messageAlert.success({ content: message, key: 1})
+            if (success) setToken(res.headers && res.headers.authorization)
+
+            return {success, data};
+        })
+        .catch((err) => {
+            return apiErrorRes(err, 1, 5)
+        });
+};
