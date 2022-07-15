@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Api, apiErrorRes, headers, jwtExpired, formatDate, setToken, thumbUrl } from "./constant";
 import { message as messageAlert } from "antd";
-
+import moment from 'moment'
 const url = `${Api}/projects`;
 
 export const addList = (data) => {
@@ -212,9 +212,10 @@ export const getHierarchy = (projectId) => {
         });
 };
 
-export const getProfitLoss = (projectId) => {
+export const getProfitLoss = (projectId, dates) => {
+    const actualDate = moment().endOf('month').subtract(1, 'months')
     return axios
-        .get(`${url}/${projectId}/profit-loss`, {headers:headers()})
+        .get(`${url}/${projectId}/profit-loss?startDate=${formatDate(dates.start, true, 'D-M-YYYY')}&endDate=${formatDate(dates.end, true, 'D-M-YYYY')}&actualDate=${actualDate}`, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)

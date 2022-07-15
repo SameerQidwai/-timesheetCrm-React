@@ -45,6 +45,7 @@ class ProjectInfo extends Component {
         const { PROJECTS }= JSON.parse(localStore().permissions)
         getRecord(id).then(res=>{
             if(res.success){
+                console.log(res.data, res.billing);
                 this.setState({
                     data: res.data,
                     basic: res.basic,
@@ -230,7 +231,7 @@ class ProjectInfo extends Component {
                     <Tabs
                         type="card"
                         style={{ marginTop: "50px" }}
-                        // defaultActiveKey="profitloss"   
+                        defaultActiveKey="profitloss"   
                     >
                         <TabPane tab="Comments" key="comments">
                             <Comments targetId={leadId} targetType="WOR" onHold={basic.phase===false} />
@@ -245,7 +246,7 @@ class ProjectInfo extends Component {
                             <Bank id={leadId} title={data.name} />
                         </TabPane> */}
                         <TabPane tab="Projected Profit & Loss" key="profitloss">
-                            <ProfitLoss id={leadId} parent={"P"} billing={billing} />
+                            <ProfitLoss id={leadId} parent={"P"} billing={billing} type={data.type} />
                         </TabPane>
                         <TabPane tab="Resources" key="resources">
                             { basic.type === 1 ?

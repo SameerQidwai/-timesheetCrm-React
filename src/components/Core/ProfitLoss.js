@@ -25,9 +25,15 @@ class ProfitLoss extends Component {
     }
     componentDidMount = () =>{
         const {parent, id} = this.props
+        const {fiscalYear} = this.state
         if (parent === 'P'){
-            getProfitLoss(id)
-        }else if (parent === 'O'){
+            getProfitLoss(id, fiscalYear).then(res=>{
+                if(res.success){
+                    const {statement, statementTotal} = res.data
+                    this.calculateProjectData(statement, statementTotal)
+                }
+            })
+        }else{
             this.calculateData()
         }
     }
@@ -40,6 +46,69 @@ class ProfitLoss extends Component {
             // exclusions: holidays,
             //when I get holidays
         }) 
+    }
+
+    calculateProjectData = (statement, statementTotal) =>{
+        console.log(statement)
+        let { data, fiscalYear } = this.state
+        const { billing, type: proType } = this.props
+        console.log(proType, 'proType')
+        const len = billing.totalMonths>0 ? billing.totalMonths : 0
+        let startDate = formatDate(billing.startDate)
+        let endDate = formatDate(billing.endDate)
+        let noOfDays = 0
+        let pastMonthsDays = 0
+
+        for (var i =1; i<=len; i++){
+            startDate = i===1 ? billing.startDate : formatDate(startDate).set('date', 1); 
+            endDate = i===len ? billing.endDate: formatDate(startDate).endOf('month');
+            const workDays = this.getWeekdays(startDate, endDate)
+            let key = formatDate(startDate).format('MMM YY')
+            if (statement[key]){ // adding past month to subtract equally divided
+                pastMonthsDays += workDays
+            }
+            noOfDays = noOfDays + workDays
+            data[0][key]= workDays
+            startDate = formatDate(startDate).add(1, 'months')
+        }
+            //if project is Time base past Buy will be subtract and will divide same amoung remaining days
+        let revenue = ((billing.discount - (statementTotal['buyTotal']??0)) / (noOfDays-pastMonthsDays))
+
+        //for total column
+        let value = (revenue * (noOfDays-pastMonthsDays)) + (statementTotal['buyTotal'] ??0)
+        let cm = (value * billing.cmPercentage / 100 )
+        // data[0]['total'] = noOfDays 
+        // data[1]['total'] = value
+        // data[2]['total'] = cm
+        // data[3]['total'] = (value - cm)
+
+        for (var i =1; i<= len; i++){
+            startDate = i===1 ? billing.startDate  : formatDate(startDate).set('date', 1); 
+            endDate = i===len ? billing.endDate: formatDate(startDate).endOf('month');
+            // let workDays = this.getWeekdays(startDate, endDate)
+            let key = formatDate(startDate).format('MMM YY')
+            let workDays = data[0][key]
+
+            value = statement[key]?.['monthTotalBuy'] ?? (revenue * workDays)
+            cm = (value * billing.cmPercentage / 100 )
+            data[1][key] = value 
+            data[3][key] = cm
+            data[2][key] = (value - cm) 
+            data[4][key] = billing.cmPercentage
+
+            if (startDate.isBetween(formatDate(fiscalYear['start']), formatDate(fiscalYear['end']), 'month', '[]')){
+                data[0]['total'] += data[0][key]
+                data[1]['total'] += data[1][key]
+                data[2]['total'] += data[3][key]
+                data[3]['total'] += data[2][key]
+            }
+            startDate = formatDate(startDate).add(1, 'months')
+        }
+        
+        this.setState({data},()=>{
+            this.Columns()
+
+        })
     }
 
     calculateData = () =>{
@@ -172,11 +241,6 @@ class ProfitLoss extends Component {
             ],
         })
     }
-
-    // DataSource = () =>{
-    //     const { data } = this.state
-    //     return data
-    // }
 
     render(){
         const { data, columns } = this.state

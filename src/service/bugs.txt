@@ -74,3 +74,19 @@ tableFilter.js not done
 filters on each page not done
 isoWeekdayCalc not done
 addRequestModal  not done
+
+
+Select o_r.opportunity_id, o_r.milestone_id, o_r.start_date, o_r.end_date, ora.buying_rate, ora.selling_rate, ora.contact_person_id, e.id employee_id, o.cm_percentage cm, ora.effort_rate, ec.no_of_hours hoursInDay, ec.remuneration_amount salary, ec.no_of_days daysInWeek
+	FROM opportunities o 
+		JOIN opportunity_resources o_r ON 
+			o_r.opportunity_id = o.id 
+             JOIN opportunity_resource_allocations ora ON 
+                ora.opportunity_resource_id = o_r.id 
+                JOIN contact_person_organizations cpo ON 
+                  	cpo.contact_person_id = ora.contact_person_id 
+                    JOIN employees e ON 
+                    e.contact_person_organization_id = cpo.id
+                    JOIN employment_contracts ec ON
+                    	ec.employee_id = e.id
+WHERE o.id = 44 AND ora.is_marked_as_selected = 1
+GROUP By e.id;
