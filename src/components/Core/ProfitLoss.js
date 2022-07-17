@@ -58,7 +58,7 @@ class ProfitLoss extends Component {
         let endDate = formatDate(billing.endDate)
         let noOfDays = 0
         let pastMonthsDays = 0
-
+        let revenue = 0
         for (var i =1; i<=len; i++){
             startDate = i===1 ? billing.startDate : formatDate(startDate).set('date', 1); 
             endDate = i===len ? billing.endDate: formatDate(startDate).endOf('month');
@@ -66,21 +66,27 @@ class ProfitLoss extends Component {
             let key = formatDate(startDate).format('MMM YY')
             if (statement[key]){ // adding past month to subtract equally divided
                 pastMonthsDays += workDays
+            }else{
+
             }
             noOfDays = noOfDays + workDays
             data[0][key]= workDays
             startDate = formatDate(startDate).add(1, 'months')
-        }
+        }   
             //if project is Time base past Buy will be subtract and will divide same amoung remaining days
-        let revenue = ((billing.discount - (statementTotal['buyTotal']??0)) / (noOfDays-pastMonthsDays))
+            if (proType ===2){
+                revenue = ((billing.value - (statementTotal['sellTotal']??0)) / (noOfDays-pastMonthsDays))
+            }else{
+                revenue = (billing.value/noOfDays)
+            }
 
-        //for total column
-        let value = (revenue * (noOfDays-pastMonthsDays)) + (statementTotal['buyTotal'] ??0)
-        let cm = (value * billing.cmPercentage / 100 )
-        // data[0]['total'] = noOfDays 
-        // data[1]['total'] = value
-        // data[2]['total'] = cm
-        // data[3]['total'] = (value - cm)
+        // //for total column
+        // let value = (revenue * (noOfDays-pastMonthsDays)) + (statementTotal['buyTotal'] ??0)
+        // let cm = (value * billing.cmPercentage / 100 )
+        // // data[0]['total'] = noOfDays 
+        // // data[1]['total'] = value
+        // // data[2]['total'] = cm
+        // // data[3]['total'] = (value - cm)
 
         for (var i =1; i<= len; i++){
             startDate = i===1 ? billing.startDate  : formatDate(startDate).set('date', 1); 
@@ -88,13 +94,32 @@ class ProfitLoss extends Component {
             // let workDays = this.getWeekdays(startDate, endDate)
             let key = formatDate(startDate).format('MMM YY')
             let workDays = data[0][key]
-
-            value = statement[key]?.['monthTotalBuy'] ?? (revenue * workDays)
-            cm = (value * billing.cmPercentage / 100 )
-            data[1][key] = value 
-            data[3][key] = cm
-            data[2][key] = (value - cm) 
-            data[4][key] = billing.cmPercentage
+            let value = 0
+            let cm = 0
+            let cos = 0
+            // if (statement[key]){
+                if (proType === 2){
+                    value = statement[key]?.['monthTotalSell']
+                }else{
+                    value = (revenue * workDays)
+                }
+                
+                cos = statement[key]?.['monthTotalBuy']
+                cm = value - cos
+                
+                data[1][key] = value  //revune
+                data[3][key] = cm //cm
+                data[2][key] = cos //cos 
+                data[4][key] = ((cm / value )*100)//cm percentage
+            // }else{
+            //     value =  (revenue * workDays)
+            //     cm = statement[key]?.['monthTotalSell']  - statement[key]?.['monthTotalBuy']  ?? (value * billing.cmPercentage / 100 )
+            //     data[1][key] = value  //revune
+            //     data[3][key] = cm //cm
+            //     data[2][key] = statement[key]?.['monthTotalBuy'] ?? (value - cm) //cos 
+            //     data[4][key] = billing.cmPercentage //cm percentage
+            // }
+            
 
             if (startDate.isBetween(formatDate(fiscalYear['start']), formatDate(fiscalYear['end']), 'month', '[]')){
                 data[0]['total'] += data[0][key]
