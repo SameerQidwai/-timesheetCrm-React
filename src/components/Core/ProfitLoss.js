@@ -85,7 +85,8 @@ class ProfitLoss extends Component {
         data[1]['total'] = statementTotal['sellTotal']
         data[3]['total'] = statementTotal['buyTotal']
         data[2]['total'] = statementTotal['sellTotal'] - statementTotal['buyTotal']
-
+        data[4]['total'] = (( statementTotal['sellTotal'] - statementTotal['buyTotal'] ) / statementTotal['sellTotal']) * 100
+        
         for (var i =1; i<= len; i++){
             startDate = i===1 ? billing.startDate  : formatDate(startDate).set('date', 1); 
             endDate = i===len ? billing.endDate: formatDate(startDate).endOf('month');
@@ -119,13 +120,12 @@ class ProfitLoss extends Component {
             // }
             
             //calculating total of cm percentage...
-            data[4]['total'] += data[4][key]
+            
 
             startDate = formatDate(startDate).add(1, 'months')
         }
 
         //takeing avg of total cm%
-        data[4]['total'] = (data[4]['total'] / len ) * 100
         
         this.setState({data},()=>{
             this.Columns()
