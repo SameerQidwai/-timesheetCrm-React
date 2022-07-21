@@ -45,7 +45,6 @@ class ProjectInfo extends Component {
         const { PROJECTS }= JSON.parse(localStore().permissions)
         getRecord(id).then(res=>{
             if(res.success){
-                console.log(res.data, res.billing);
                 this.setState({
                     data: res.data,
                     basic: res.basic,

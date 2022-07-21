@@ -213,7 +213,7 @@ export const getHierarchy = (projectId) => {
 };
 
 export const getProfitLoss = (projectId, dates) => {
-    const actualDate = moment().endOf('month').subtract(1, 'months')
+    const actualDate = moment().endOf('month').subtract(1, 'months').format('D-M-YYYY')
     return axios
         .get(`${url}/${projectId}/profit-loss?startDate=${formatDate(dates.start, true, 'D-M-YYYY')}&endDate=${formatDate(dates.end, true, 'D-M-YYYY')}&actualDate=${actualDate}`, {headers:headers()})
         .then((res) => {

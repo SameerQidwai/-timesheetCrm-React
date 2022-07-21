@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Row, Col, Table, Typography } from "antd";
 import { getRecord } from "../../service/opportunities";
 import { formatCurrency, formatDate, formatFloat, getFiscalYear } from "../../service/constant";
-// import moment from 'moment'
+import moment from 'moment'
 import 'moment-weekday-calc';
 import { getProfitLoss } from "../../service/projects";
 const { Title, Text } = Typography
@@ -29,8 +29,8 @@ class ProfitLoss extends Component {
         if (parent === 'P'){
             getProfitLoss(id, fiscalYear).then(res=>{
                 if(res.success){
-                    const {statement, statementTotal} = res.data
-                    this.calculateProjectData(statement, statementTotal)
+                    const {actualStatement, actualTotal} = res.data
+                    this.calculateProjectData(actualStatement, actualTotal)
                 }
             })
         }else{
@@ -48,14 +48,16 @@ class ProfitLoss extends Component {
         }) 
     }
 
-    calculateProjectData = (statement, statementTotal) =>{
+    calculateProjectData = (actualStatement, actualTotal) =>{
         let { data, fiscalYear } = this.state
         const { billing, type: proType } = this.props
         const len = billing.totalMonths ?? 0
         let startDate = formatDate(billing.startDate)
         let endDate = formatDate(billing.endDate)
         let noOfDays = 0
-        let pastMonthsDays = 0
+        let actualDays = 0
+        let fiscalDays = 0
+        let fiscalactualDays = 0
         let revenue = 0
 
         for (var i =1; i<=len; i++){
@@ -64,28 +66,40 @@ class ProfitLoss extends Component {
             const workDays = this.getWeekdays(startDate, endDate)
             let key = formatDate(startDate).format('MMM YY')
             
-            if (startDate.isBefore(moment().set('date', 1))){ //checking if the date belongs to past month
-                pastMonthsDays += workDays // adding past month to subtract equally divided
+            if (startDate.isBefore(moment(), 'month')){ //checking if the date belongs to past month
+                actualDays += workDays // Finding total actual Months
             }
 
-            noOfDays = noOfDays + workDays
-            data[0][key]= workDays
+            if ( startDate.isSameOrAfter(fiscalYear['start']) && // finding Actual Month in fiscal year
+            startDate.isSameOrBefore(fiscalYear['end']) ) {
+
+                if (startDate.isBefore(moment(), 'month')){ //checking if the date belongs to past month
+                    fiscalactualDays += workDays // Finding total actual Months in Fiscal year
+                }
+
+                fiscalDays += workDays
+                data[0][key]= workDays
+            }
+
+            noOfDays += workDays
             startDate = formatDate(startDate).add(1, 'months')
-        }   
+        }
 
         //if project is Time base past Buy will be subtract and will divide same amoung remaining days
         if (proType ===2){
-            revenue = ((billing.value - (statementTotal['sellTotal']??0)) / (noOfDays-pastMonthsDays))
+            revenue = ((billing.value - (actualTotal['sellTotal']??0)) / (noOfDays-actualDays))
         }else{
             revenue = (billing.value/noOfDays)
         }
 
+        console.log(actualDays, noOfDays);
+
         //for total column
-        data[0]['total'] = noOfDays 
-        data[1]['total'] = statementTotal['sellTotal']
-        data[3]['total'] = statementTotal['buyTotal']
-        data[2]['total'] = statementTotal['sellTotal'] - statementTotal['buyTotal']
-        data[4]['total'] = (( statementTotal['sellTotal'] - statementTotal['buyTotal'] ) / statementTotal['sellTotal']) * 100
+        data[0]['total'] = fiscalDays 
+        data[1]['total'] = actualTotal['sellTotal']
+        data[3]['total'] = actualTotal['buyTotal']
+        data[2]['total'] = actualTotal['sellTotal'] - actualTotal['buyTotal']
+        data[4]['total'] = (( actualTotal['sellTotal'] - actualTotal['buyTotal'] ) / actualTotal['sellTotal']) * 100
         
         for (var i =1; i<= len; i++){
             startDate = i===1 ? billing.startDate  : formatDate(startDate).set('date', 1); 
@@ -96,14 +110,19 @@ class ProfitLoss extends Component {
             let value = 0
             let cm = 0
             let cos = 0
-            // if (statement[key]){
-                if (proType === 2){
-                    value = statement[key]?.['monthTotalSell']
+            // if (actualStatement[key]){
+            if (proType === 2){
+                if (startDate.isBefore(moment(), 'month')){
+                    value = actualStatement[key]?.['monthTotalSell']
                 }else{
-                    value = (revenue * workDays)
+                    
                 }
+            }else{
+                value = (revenue * workDays)
+            }
+
+            cos = actualStatement[key]?.['monthTotalBuy']
                 
-            cos = statement[key]?.['monthTotalBuy']
             cm = value - cos
             
             data[1][key] = value  //revune
