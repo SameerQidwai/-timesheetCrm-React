@@ -62,6 +62,10 @@ class ProfitLoss extends Component {
         let forecastStatement = {}
         let forecastTotal = {sellTotal: 0, buyTotal: 0}
         let tempEndDate = formatDate(new Date()).add(100, 'years')
+        let forecastStartDate = startDate.isBefore(fiscalYear['start'], 'day') ? fiscalYear['start'] : startDate
+        let forecastEndDate = endDate.isBefore(fiscalYear['end'], 'day') ? fiscalYear['end'] : endDate
+        
+        console.log(forecast)
 
         for (var iDate = formatDate(startDate); iDate.isSameOrBefore(endDate); iDate.add(1, 'days')) {
             if (iDate.isoWeekday() !== 6 , iDate.isoWeekday() !== 7){
@@ -71,8 +75,8 @@ class ProfitLoss extends Component {
                     actualDays ++ // Number of ACTUAL working days
                 }
                 
-                if ( iDate.isSameOrAfter(fiscalYear['start'], 'day') && // finding Fiscal Months
-                    iDate.isSameOrBefore(fiscalYear['end']), 'day' ) {
+                if ( iDate.isSameOrAfter(forecastStartDate, 'day') && // finding Fiscal Months
+                    iDate.isSameOrBefore(forecastEndDate), 'day' ) {
 
                     // FORCASTING 
                     if (iDate.isSameOrAfter(moment(), 'month')){ 
@@ -82,19 +86,19 @@ class ProfitLoss extends Component {
                             if ( iDate.isBetween(formatDate(el.con_startDate), formatDate(el.con_endDate) ??  tempEndDate, 'day', '[]') &&
                                 iDate.isBetween(formatDate(el.res_startDate), formatDate(el.res_endDate)??  tempEndDate , 'day', '[]') ){
                                 if (forecastStatement[key]){
-                                    forecastStatement[key].monthTotalBuy += el.forecateBuyRateDaily
-                                    forecastStatement[key].monthTotalSell += el.forecateSellRateDaily
+                                    forecastStatement[key].monthTotalBuy += el.forecastBuyRateDaily
+                                    forecastStatement[key].monthTotalSell += el.forecastSellRateDaily
 
                                 }else{
                                     forecastStatement[key] = {
                                         month: key, 
-                                        monthTotalBuy: el.forecateBuyRateDaily, 
-                                        monthTotalSell: el.forecateSellRateDaily, 
+                                        monthTotalBuy: el.forecastBuyRateDaily, 
+                                        monthTotalSell: el.forecastSellRateDaily, 
                                     }
                                 }
-                                forecastTotal['buyTotal'] += el.forecateBuyRateDaily
-                                forecastTotal['sellTotal'] += el.forecateSellRateDaily
-                                console.log ({cal: forecastStatement[key].monthTotalSell, sellRate: el.forecateSellRateDaily})
+                                forecastTotal['buyTotal'] += el.forecastBuyRateDaily
+                                forecastTotal['sellTotal'] += el.forecastSellRateDaily
+                                // console.log ({cal: forecastStatement[key].monthTotalSell, sellRate: el.forecateSellRateDaily})
                             }
                         })
                     }
@@ -115,8 +119,9 @@ class ProfitLoss extends Component {
         //if project is Time base past Buy will be subtract and will divide same amoung remaining days
         if (proType ===2){
             totalRevenue = (billing.value - (actualTotal['sellTotal']??0))
+            // totalRevenue = (583699.9420359948 - (actualTotal['sellTotal']??0))
             revenuePerDay = ( totalRevenue/ (noOfDays-actualDays))
-            console.log('billing.value', billing.value, actualTotal['sellTotal'], revenuePerDay);
+            console.log('billing.value', billing.value, actualTotal['sellTotal'], revenuePerDay,totalRevenue, forecastTotal['sellTotal'] );
         }else{ 
             revenuePerDay = (billing.value/noOfDays)
         }
@@ -137,7 +142,6 @@ class ProfitLoss extends Component {
             if (proType === 2){
                 let revAmount = revenuePerDay * workDays// get revenuePerDay for the month 
                 let forecastRevenue = (revAmount - forecastStatement[key]?.['monthTotalSell']) < 0 ? revAmount :  forecastStatement[key]?.['monthTotalSell']
-                // let forecastRevenue =  revAmount - forecastStatement[key]?.['monthTotalSell']  < 0 ? revAmount :  forecastStatement[key]?.['monthTotalSell']
                 value = actualStatement[key]?.['monthTotalSell'] ?? forecastRevenue
                 totalValue += value
                 totalRevenue -= value // subtract this month revenuePerDay form revmonth
@@ -150,7 +154,6 @@ class ProfitLoss extends Component {
             }
 
             let cos = actualStatement[key]?.['monthTotalBuy'] ?? forecastStatement[key]?.['monthTotalBuy']
-            // console.log (key,{actual: actualStatement[key]?.['monthTotalBuy'], forcaste: forecastStatement[key]?.['monthTotalBuy']} )
                 
             let cm = value - cos
             
