@@ -133,3 +133,5 @@ Forcast Query
       WHERE o.id = ${projectId} AND ora.is_marked_as_selected = 1 AND ec.start_date <= STR_TO_DATE('31-12-2022' ,'%e-%m-%Y') 
       AND (ec.end_date IS NULL ||  ec.end_date >= STR_TO_DATE('1-9-2022' ,'%e-%m-%Y')) 
       AND o_r.start_date <= STR_TO_DATE('${fiscalYear.end}' ,'%e-%m-%Y') AND (o_r.end_date IS NULL ||  o_r.end_date >= STR_TO_DATE('${forecastStartMonth}' ,'%e-%m-%Y'));
+
+

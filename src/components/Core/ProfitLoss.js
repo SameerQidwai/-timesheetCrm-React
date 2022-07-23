@@ -65,10 +65,11 @@ class ProfitLoss extends Component {
         let forecastStartDate = startDate.isBefore(fiscalYear['start'], 'day') ? fiscalYear['start'] : startDate
         let forecastEndDate = endDate.isBefore(fiscalYear['end'], 'day') ? fiscalYear['end'] : endDate
         
-        console.log(forecast)
+        //Testing
+       
 
         for (var iDate = formatDate(startDate); iDate.isSameOrBefore(endDate); iDate.add(1, 'days')) {
-            if (iDate.isoWeekday() !== 6 , iDate.isoWeekday() !== 7){
+            if (iDate.isoWeekday() !== 6 && iDate.isoWeekday() !== 7){
                 let key = formatDate(iDate).format('MMM YY')
 
                 if (iDate.isBefore(moment(), 'month')){ //checking if the date belongs to past month
@@ -77,14 +78,13 @@ class ProfitLoss extends Component {
                 
                 if ( iDate.isSameOrAfter(forecastStartDate, 'day') && // finding Fiscal Months
                     iDate.isSameOrBefore(forecastEndDate), 'day' ) {
-
-                    // FORCASTING 
                     if (iDate.isSameOrAfter(moment(), 'month')){ 
                         //FORCASTING Future predictions
-                        forecast.forEach((el) =>{
-                            //If end dats is null that means date is infinity and can be in this
+                        
+                        forecast.forEach((el, index) =>{
+                          
                             if ( iDate.isBetween(formatDate(el.con_startDate), formatDate(el.con_endDate) ??  tempEndDate, 'day', '[]') &&
-                                iDate.isBetween(formatDate(el.res_startDate), formatDate(el.res_endDate)??  tempEndDate , 'day', '[]') ){
+                            iDate.isBetween(formatDate(el.res_startDate), formatDate(el.res_endDate)??  tempEndDate , 'day', '[]') ){
                                 if (forecastStatement[key]){
                                     forecastStatement[key].monthTotalBuy += el.forecastBuyRateDaily
                                     forecastStatement[key].monthTotalSell += el.forecastSellRateDaily
@@ -98,7 +98,7 @@ class ProfitLoss extends Component {
                                 }
                                 forecastTotal['buyTotal'] += el.forecastBuyRateDaily
                                 forecastTotal['sellTotal'] += el.forecastSellRateDaily
-                                // console.log ({cal: forecastStatement[key].monthTotalSell, sellRate: el.forecateSellRateDaily})
+                                
                             }
                         })
                     }
@@ -114,55 +114,54 @@ class ProfitLoss extends Component {
                 }
                 
                 noOfDays ++ //Number of working days in a project
+                
             }
         }
         //if project is Time base past Buy will be subtract and will divide same amoung remaining days
         if (proType ===2){
             totalRevenue = (billing.value - (actualTotal['sellTotal']??0))
-            // totalRevenue = (583699.9420359948 - (actualTotal['sellTotal']??0))
-            revenuePerDay = ( totalRevenue/ (noOfDays-actualDays))
-            console.log('billing.value', billing.value, actualTotal['sellTotal'], revenuePerDay,totalRevenue, forecastTotal['sellTotal'] );
         }else{ 
             revenuePerDay = (billing.value/noOfDays)
         }
 
         //for total column
         data[0]['total'] = fiscalDays 
-        data[1]['total'] = actualTotal['sellTotal'] + forecastTotal['sellTotal'] //SELL TOTAL WITH IN A FISCAL YEAR
-        data[3]['total'] = actualTotal['buyTotal'] + forecastTotal['buyTotal'] //BUY TOTAL WITH IN A FISCAL YEAR
-        data[2]['total'] = data[1]['total'] - data[3]['total'] //CM
-        data[4]['total'] = (( data[1]['total'] - data[3]['total'] ) / data[1]['total']) * 100 //CM%
+        data[1]['total'] = actualTotal['sellTotal'] + forecastTotal['sellTotal']  //SELL TOTAL WITH IN A FISCAL YEAR
+        data[2]['total'] = actualTotal['buyTotal'] + forecastTotal['buyTotal'] //BUY TOTAL WITH IN A FISCAL YEAR
+        data[3]['total'] = data[1]['total'] - data[2]['total'] //CM
+        data[4]['total'] = (( data[1]['total'] - data[2]['total'] ) / data[1]['total']) * 100 //CM%
 
-        let totalValue = 0
         for (var iMonth = formatDate(fiscalYear['start']); iMonth.isSameOrBefore(fiscalYear['end']); iMonth.add(1, 'months')) {
             let key = formatDate(iMonth).format('MMM YY')
             let workDays = data[0][key]
             let value = 0
+            let cos = 0
 
             if (proType === 2){
-                let revAmount = revenuePerDay * workDays// get revenuePerDay for the month 
-                let forecastRevenue = (revAmount - forecastStatement[key]?.['monthTotalSell']) < 0 ? revAmount :  forecastStatement[key]?.['monthTotalSell']
+                let forecastRevenue = (totalRevenue - forecastStatement[key]?.['monthTotalSell']) < 0 ? totalRevenue :  forecastStatement[key]?.['monthTotalSell']
                 value = actualStatement[key]?.['monthTotalSell'] ?? forecastRevenue
-                totalValue += value
                 totalRevenue -= value // subtract this month revenuePerDay form revmonth
-                
-                // console.log ({totalRevenue, revAmount, revenuePerDay, workDays, forecastRevenue, totalValue, forecastStatement:forecastStatement[key]?.['monthTotalSell'], cal: revAmount - forecastStatement[key]?.['monthTotalSell']})
-                // console.log ({totalRevenue, value, revenuePerDay, workDays, forecastRevenue, totalValue, actual: actualStatement[key]?.['monthTotalSell'], forecast: forecastStatement[key]?.['monthTotalSell']})
-                // console.log (key,{actual: actualStatement[key]?.['monthTotalSell'], forcaste: forecastStatement[key]?.['monthTotalSell'], forecastRevenue} )
+
             }else{
                 value = (revenuePerDay * workDays)
             }
 
-            let cos = actualStatement[key]?.['monthTotalBuy'] ?? forecastStatement[key]?.['monthTotalBuy']
+            if (!actualStatement[key] && forecastStatement[key]?.['monthTotalSell']> value){
+                let sellpercent = (value / forecastStatement[key]?.['monthTotalSell']) * 100
+                cos = (forecastStatement[key]?.['monthTotalBuy'] /100 )* sellpercent
+            }else{
+                
+                cos = actualStatement[key]?.['monthTotalBuy'] ?? forecastStatement[key]?.['monthTotalBuy']
+            }
                 
             let cm = value - cos
             
             data[1][key] = value  //revune
-            data[3][key] = cm //cm
-            data[2][key] = cos //cos 
-            data[4][key] = ((cm / value )*100)//cm percentage
+            data[2][key] = value ? cos : 0 //cos 
+            data[3][key] = value ? cm: 0 //cm
+            data[4][key] = value ? ((cm / value )*100): 0//cm percentage
+// #a0df7d
         }
-
         //takeing avg of total cm%
         
         this.setState({data},()=>{
