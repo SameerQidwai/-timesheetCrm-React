@@ -216,7 +216,16 @@ class Milestone extends Component {
                     layout="horizontal"
                     // extra={<Button type="primary">Edit</Button>}
                 >
-                    <Item label="Title">{desc.title}</Item>
+                    <Item label="Title">
+                        <Link
+                            to={{
+                                pathname: `/projects/${desc.id}/info`,
+                            }}
+                            className="nav-link"
+                        >
+                            {desc.title}
+                        </Link>
+                    </Item>
                     <Item label="Value">{ formatCurrency(desc.value)}</Item>
                     <Item label="Start Date">{formatDate(desc.startDate, true, true)} </Item>
                     <Item label="End Date">{formatDate(desc.endDate, true, true)}</Item>

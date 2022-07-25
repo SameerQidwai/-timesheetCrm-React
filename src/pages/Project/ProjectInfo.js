@@ -230,7 +230,7 @@ class ProjectInfo extends Component {
                     <Tabs
                         type="card"
                         style={{ marginTop: "50px" }}
-                        defaultActiveKey="profitloss"   
+                        // defaultActiveKey="profitloss"   
                     >
                         <TabPane tab="Comments" key="comments">
                             <Comments targetId={leadId} targetType="WOR" onHold={basic.phase===false} />

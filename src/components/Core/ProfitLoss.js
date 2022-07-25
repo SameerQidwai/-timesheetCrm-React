@@ -34,7 +34,7 @@ class ProfitLoss extends Component {
                 }
             })
         }else{
-            this.calculateData()
+            this.calculateLeadData()
         }
     }
 
@@ -63,8 +63,8 @@ class ProfitLoss extends Component {
         let forecastTotal = {sellTotal: 0, buyTotal: 0}
         let tempEndDate = formatDate(new Date()).add(100, 'years')
         let forecastStartDate = startDate.isBefore(fiscalYear['start'], 'day') ? fiscalYear['start'] : startDate
-        let forecastEndDate = endDate.isBefore(fiscalYear['end'], 'day') ? fiscalYear['end'] : endDate
-        
+        let forecastEndDate = endDate.isAfter(fiscalYear['end'], 'day') ? fiscalYear['end'] : endDate
+        let rowCol = {}
         //Testing
        
 
@@ -117,60 +117,71 @@ class ProfitLoss extends Component {
                 
             }
         }
+
+
         //if project is Time base past Buy will be subtract and will divide same amoung remaining days
-        if (proType ===2){
+        if (proType === 2){
             totalRevenue = (billing.value - (actualTotal['sellTotal']??0))
-        }else{ 
+        }else if (proType === 1){ 
+
             revenuePerDay = (billing.value/noOfDays)
         }
-
-        //for total column
-        data[0]['total'] = fiscalDays 
-        data[1]['total'] = actualTotal['sellTotal'] + forecastTotal['sellTotal']  //SELL TOTAL WITH IN A FISCAL YEAR
-        data[2]['total'] = actualTotal['buyTotal'] + forecastTotal['buyTotal'] //BUY TOTAL WITH IN A FISCAL YEAR
-        data[3]['total'] = data[1]['total'] - data[2]['total'] //CM
-        data[4]['total'] = (( data[1]['total'] - data[2]['total'] ) / data[1]['total']) * 100 //CM%
 
         for (var iMonth = formatDate(fiscalYear['start']); iMonth.isSameOrBefore(fiscalYear['end']); iMonth.add(1, 'months')) {
             let key = formatDate(iMonth).format('MMM YY')
             let workDays = data[0][key]
-            let value = 0
+            let revenueValue = 0
             let cos = 0
 
-            if (proType === 2){
-                let forecastRevenue = (totalRevenue - forecastStatement[key]?.['monthTotalSell']) < 0 ? totalRevenue :  forecastStatement[key]?.['monthTotalSell']
-                value = actualStatement[key]?.['monthTotalSell'] ?? forecastRevenue
-                totalRevenue -= value // subtract this month revenuePerDay form revmonth
+            if (proType === 2){ //For timebase Project
+                if (actualStatement[key]){ //If actual is present 
+                    revenueValue = actualStatement[key]?.['monthTotalSell'] ?? 0
+                    //Not subtratcing actual month because it is already gets subtracted in totalRevnenue
+                        //we are not doing it becuase all actual are being delete on assigning totalRevenue
 
-            }else{
-                value = (revenuePerDay * workDays)
-            }
+                }else if (forecastStatement[key]){ //If forcast is found
+                    revenueValue = (totalRevenue - forecastStatement[key]?.['monthTotalSell']) < 0 ? totalRevenue ?? 0 :  forecastStatement[key]?.['monthTotalSell'] ?? 0
+                    totalRevenue -= revenueValue // subtract this month revenuePerDay form revmonth
 
-            if (!actualStatement[key] && forecastStatement[key]?.['monthTotalSell']> value){
-                let sellpercent = (value / forecastStatement[key]?.['monthTotalSell']) * 100
-                cos = (forecastStatement[key]?.['monthTotalBuy'] /100 )* sellpercent
-            }else{
-                
+                    if (forecastStatement[key]?.['monthTotalSell'] > revenueValue){
+                            // checking total Revenue to get cos %
+                        let sellpercent = (revenueValue / forecastStatement[key]?.['monthTotalSell']) * 100
+                        cos = (forecastStatement[key]?.['monthTotalBuy'] /100 )* sellpercent
+                    }else{
+                        cos = actualStatement[key]?.['monthTotalBuy'] ?? forecastStatement[key]?.['monthTotalBuy']
+                    }
+                }
+
+            }else if (proType === 1){ //For Project Base Project
+                revenueValue = (revenuePerDay * workDays)
                 cos = actualStatement[key]?.['monthTotalBuy'] ?? forecastStatement[key]?.['monthTotalBuy']
             }
+                //if revenue amount finish before project and fiscal year endDate
                 
-            let cm = value - cos
+            let cm = revenueValue - cos
             
-            data[1][key] = value  //revune
-            data[2][key] = value ? cos : 0 //cos 
-            data[3][key] = value ? cm: 0 //cm
-            data[4][key] = value ? ((cm / value )*100): 0//cm percentage
-// #a0df7d
+            data[1][key] = revenueValue   //revune
+            data[2][key] = revenueValue ? cos : 0 //cos 
+            data[3][key] = revenueValue ? cm: 0 //cm
+            data[4][key] = revenueValue ? ((cm / revenueValue )*100): 0//cm percentage
+
+            //For Total Column 
+            data[0]['total'] += data[0][key]
+            data[1]['total'] += data[1][key] //SELL TOTAL WITH IN A FISCAL YEAR
+            data[2]['total'] += data[2][key] //BUY TOTAL WITH IN A FISCAL YEAR
+            data[3]['total'] += data[3][key] //CM
+            // #a0df7d
         }
+        //average Total cm %
+        data[4]['total'] = (data[3]['total']  / data[1]['total']) * 100 //CM%
         //takeing avg of total cm%
-        
         this.setState({data},()=>{
             this.Columns()
 
         })
     }
 
-    calculateData = () =>{
+    calculateLeadData = () =>{
         let { data, fiscalYear } = this.state
         const { billing } = this.props
         const len = billing.totalMonths>0 ? billing.totalMonths : 0
@@ -236,7 +247,7 @@ class ProfitLoss extends Component {
             array.push(
                 {
                     title: formatDate(month).format('MMM YY'),
-                    // width:100,
+                    // width:110,
                     align: 'center',
                     dataIndex: formatDate(month).format('MMM YY'),
                     key: formatDate(month).format('MMM YY'),
@@ -264,7 +275,7 @@ class ProfitLoss extends Component {
             columns: [
             {
                 title: 'Month',
-                // width: ,
+                width: 200,
                 dataIndex: 'label',
                 key: 'label',
                 render: (text, record) =>{
@@ -279,6 +290,7 @@ class ProfitLoss extends Component {
                 title: 'Total',
                 dataIndex: 'total',
                 key: 'total',
+                width: 150,
                 render:(text, record)=>{
                     if (text){
                         if (record.key === 'W') {
@@ -306,25 +318,6 @@ class ProfitLoss extends Component {
         const { billing } = this.props
         return (
             <Row justify="center">
-                {/* <Col span={4}>
-                    <Title level={5} >Rev - Discount Value</Title>
-                </Col>
-                <Col span={5}>
-                    <Text>{formatCurrency(billing.discount)} / {billing.totalMonths} Months  = {formatCurrency((billing.discount / billing.totalMonths).toFixed(2))}</Text>
-                </Col>
-                <Col span={24}>
-                    <Row >
-                        <Col span={10}>
-                            <Title level={3}>Projected Profit & Loss </Title>
-                        </Col>
-                        <Col span={2}>
-                            <Title level={5}>CM %</Title>
-                        </Col>
-                        <Col span={2}>
-                            <Text>{billing.cmPercentage} %</Text>
-                        </Col>
-                    </Row>
-                </Col> */}
                 <Table
                     bordered
                     rowKey= {(data =>data.label)}
@@ -332,7 +325,11 @@ class ProfitLoss extends Component {
                     dataSource={data}
                     size="small"
                     pagination = {false}
-                    className="timeSheet-table fs-small full-width"
+                    className="scroll-table fs-v-small full-width"
+                    scroll={{
+                        // x: "calc(700px + 100%)",
+                        x: "max-content",
+                    }}
                 />
             </Row>
         )

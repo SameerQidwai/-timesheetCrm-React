@@ -416,7 +416,16 @@ class Resources extends Component {
                     bordered
                     layout="horizontal"
                 >
-                    <Item label="Project Name">{proDesc.title}</Item>
+                    <Item label="Project Name">
+                        <Link
+                            to={{
+                                pathname: `/projects/${proDesc.id}/info`,
+                            }}
+                            className="nav-link"
+                        >
+                            {proDesc.title}
+                        </Link>
+                    </Item>
                     <Item label="Estimated Value">{ formatCurrency(proDesc.value ?? 0)}</Item>
                     <Item label="Organisation">{
                         proDesc.organization ? 

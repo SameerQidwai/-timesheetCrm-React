@@ -5,7 +5,7 @@ New bug Found
 
     Filters Form Backend (Low)
 
-    add link in resources
+    add link in resources, in mileston_view, in project opp list for milestone
 
     https error !important
 
