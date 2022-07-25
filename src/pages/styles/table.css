@@ -17,10 +17,32 @@
     font-weight: 600 !important; 
     font-size: small !important;
 }
+
+.fs-v-small div.ant-table.ant-table-small{
+    font-size: 12px;
+}
+.fs-v-small div.ant-table-container table > thead > tr th{
+    font-weight: 600 !important; 
+    font-size: 12px !important;
+}
+
+
 .full-width{
     width: 100% !important;
 }
+div.scroll-table{
+    overflow-x: hidden !important;
+}
 
+.scroll-table:hover{
+    overflow-x: scroll !important;
+}
+.success-color{
+    background-color: #a0df7d;
+}
+.error-color{
+    background-color: #df7d7d;
+}
 /* .ant-table-wrapper.TimeSheetTable {
     height: 75vh;
 } */
