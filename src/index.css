@@ -12,6 +12,8 @@ body {
   font-style: normal !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  scrollbar-width: thin;
+  scrollbar-color: #d8d2d2 transparent;
 }
 /* code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
