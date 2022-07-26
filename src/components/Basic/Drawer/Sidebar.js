@@ -44,11 +44,24 @@ class Drawers extends Component {
                         <Link
                             to={'/dashboard'}
                         >
-                            <img
-                                src={!collapsed ? "/tw-logo.png" : "/tw-avatar.png" }
-                                alt="Logo"
-                                style={{ width: "100%" }}
-                            />
+                            {!collapsed ? 
+                                <div style={{height: '64px'}}>
+                                    <img
+                                        src={"/Z-logo.png"  }
+                                        alt="Logo"
+                                        width={'100%'}
+                                        style={{height: '64px'}}
+                                    />
+                                </div>
+                                :
+                                <div style={{height: '64px', padding: '12%'}}>
+                                    <img
+                                        src={"/Z-s-avatar.png" }
+                                        alt="Logo"
+                                        style={{height: '42px'}}
+                                    />
+                                </div>
+                            }
                         </Link>
                         
                         {/* <Divider >.</Divider> */}

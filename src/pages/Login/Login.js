@@ -43,20 +43,24 @@ function Login(props) {
     <Row
         justify="center"
         align="middle"
-        style={{ backgroundColor: "#DDDEDE", minHeight: "100vh" }}
+        className="app-login app-login-background"
+        style={{backgroundImage: `url(${"/Z-avatar.svg"})`}}
     >
         {/* <Form Callback={this.Callback} FormFields= {FormFields}/> */}
         <Col span={8}>
             <Row
                 justify="center"
                 align="middle"
-                gutter={[24, 45]}
-                style={{ backgroundColor: "White", border: "1px solid black", padding: "15px 0 ", }}
+                gutter={[24, 10]}
+                className="form-row"
             >
-                <Col span={24} style={{ textAlign: "center" }}>
-                    <Title>OneLM CRM</Title>
+                <Col 
+                span={24} 
+                style={{backgroundImage: `url(${"/Z-logo.png"})`}} 
+                        className="app-title-image"
+                >
                 </Col>
-                <Col span={15} style={{ textAlign: "center" }}>
+                <Col span={16} className="txt-center">
                     <Form
                         {...{ wrapperCol: 24 }}
                         initialValues={{ remember: true }}

@@ -6,7 +6,7 @@
     background-position: 80%;
     background-size: 85%;
     background-repeat: no-repeat;
-    background-position-x: right
+    background-position-x: center
 }
 
 .landing-placeholder span.ant-typography {
@@ -23,3 +23,28 @@
 .ls10 {
     letter-spacing: 10px;
 }
+
+.app-login{
+    background-color: #DDDEDE;
+    min-height: 100vh
+}
+
+.app-login .form-row{
+    background-color: White;
+    border: 1px solid black; 
+    padding: 15px 0px;
+}
+
+.app-login-background {
+    background-repeat: no-repeat;
+    background-position-x: center
+}
+
+.app-title-image{
+    min-height: 10vh !important;
+    background-position: 1%;
+    background-size: 70%;
+    background-repeat: no-repeat;
+    background-position-x: center;
+}
+
