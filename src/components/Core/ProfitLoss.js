@@ -1,11 +1,9 @@
 import React, { Component } from "react";
-import { Row, Col, Table, Typography } from "antd";
-import { getRecord } from "../../service/opportunities";
+import { Row, Table, Typography } from "antd";
 import { formatCurrency, formatDate, formatFloat, getFiscalYear } from "../../service/constant";
 import moment from 'moment'
 import 'moment-weekday-calc';
 import { getProfitLoss } from "../../service/projects";
-const { Title, Text } = Typography
 
 class ProfitLoss extends Component {
     constructor(props){
@@ -54,9 +52,6 @@ class ProfitLoss extends Component {
         let startDate = formatDate(billing.startDate)
         let endDate = formatDate(billing.endDate)
         let noOfDays = 0
-        let actualDays = 0
-        let fiscalDays = 0
-        let fiscalActualDays = 0
         let revenuePerDay = 0
         let totalRevenue = 0
         let forecastStatement = {}
@@ -64,17 +59,11 @@ class ProfitLoss extends Component {
         let tempEndDate = formatDate(new Date()).add(100, 'years')
         let forecastStartDate = startDate.isBefore(fiscalYear['start'], 'day') ? fiscalYear['start'] : startDate
         let forecastEndDate = endDate.isAfter(fiscalYear['end'], 'day') ? fiscalYear['end'] : endDate
-        let rowCol = {}
         //Testing
        
-
         for (var iDate = formatDate(startDate); iDate.isSameOrBefore(endDate); iDate.add(1, 'days')) {
             if (iDate.isoWeekday() !== 6 && iDate.isoWeekday() !== 7){
                 let key = formatDate(iDate).format('MMM YY')
-
-                if (iDate.isBefore(moment(), 'month')){ //checking if the date belongs to past month
-                    actualDays ++ // Number of ACTUAL working days
-                }
                 
                 if ( iDate.isSameOrAfter(forecastStartDate, 'day') && // finding Fiscal Months
                     iDate.isSameOrBefore(forecastEndDate), 'day' ) {
@@ -102,8 +91,6 @@ class ProfitLoss extends Component {
                             }
                         })
                     }
-
-                    fiscalDays ++ // number of working days in fiscal year 
 
                     // Number of working days in a Fiscal year month
                     if (data[0][key]){
@@ -235,22 +222,35 @@ class ProfitLoss extends Component {
     Columns = () =>{
         
         const { billing } = this.props
-        const { fiscalYear } = this.state
+        const { fiscalYear, data } = this.state
         // const len = billing.totalMonths>0 ? billing.totalMonths : 0
         const len = 16
         let array = []
+
         for (
-                var month = formatDate(fiscalYear['start']) ; // defination
-                month.isSameOrBefore(formatDate(fiscalYear['end']));  //condition
-                month.add(1, 'months') //itrerater
-            ){
+            var iMonth = formatDate(fiscalYear['start']) ; // defination
+            iMonth.isSameOrBefore(formatDate(fiscalYear['end']));  //condition
+            iMonth.add(1, 'months') //itrerater
+        ){
+            let key = formatDate(iMonth).format('MMM YY')
+            // let color = iMonth.isAfter(moment(), 'month') ? '#ff4d4f' : '#73d13d'
+            let color = iMonth.isAfter(moment(), 'month') ? '#ff7875' : '#a0df7d'
             array.push(
                 {
-                    title: formatDate(month).format('MMM YY'),
-                    // width:110,
+                    title: key,
                     align: 'center',
-                    dataIndex: formatDate(month).format('MMM YY'),
-                    key: formatDate(month).format('MMM YY'),
+                    dataIndex: key,
+                    key: key,
+                    onCell: () => ({
+                        style: {
+                        backgroundColor: data[1][key]? color: ''
+                        }
+                    }),
+                    onHeaderCell: () => ({
+                        style: {
+                        backgroundColor: data[1][key]? color: ''
+                        }
+                    }),
                     render: (record, records) =>{
                         if (record){
                             if (records.key === 'W') {

@@ -30,19 +30,16 @@
 .full-width{
     width: 100% !important;
 }
-div.scroll-table{
-    overflow-x: hidden !important;
-}
 
-.scroll-table:hover{
+.scroll-table div.ant-table-content{
+    overflow-x: hidden !important;
+    scrollbar-width: thin;
+    scrollbar-color: #d8d2d2 transparent;
+}
+.scroll-table div.ant-table-content:hover{
     overflow-x: scroll !important;
 }
-.success-color{
-    background-color: #a0df7d;
-}
-.error-color{
-    background-color: #df7d7d;
-}
+
 /* .ant-table-wrapper.TimeSheetTable {
     height: 75vh;
 } */
@@ -62,6 +59,8 @@ div.timeSheet-table{
 
 div.timeSheet-table div.ant-table-content {
     overflow-x: hidden !important;
+    scrollbar-width: thin;
+    scrollbar-color: #d8d2d2 transparent;
 }
 
 div.timeSheet-table div.ant-table-content:hover {
@@ -135,6 +134,8 @@ div.timeSheet-table .ant-table-tbody > tr.approveClass.ant-table-row-selected.an
 ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
+    scrollbar-width: thin;
+  scrollbar-color: #d8d2d2 transparent;
 }
 
 /* Track */
@@ -145,6 +146,7 @@ div.timeSheet-table .ant-table-tbody > tr.approveClass.ant-table-row-selected.an
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background: #d8d2d2;
+    background: transparent;
+    background-color: #d8d2d2;
     border-radius: 10px;
 }
