@@ -47,7 +47,7 @@ class Drawers extends Component {
                             {!collapsed ? 
                                 <div style={{height: '64px'}}>
                                     <img
-                                        src={"/Z-logo.png"  }
+                                        src={"/z-logo.png"  }
                                         alt="Logo"
                                         width={'100%'}
                                         style={{height: '64px'}}
@@ -56,7 +56,7 @@ class Drawers extends Component {
                                 :
                                 <div style={{height: '64px', padding: '12%'}}>
                                     <img
-                                        src={"/Z-s-avatar.png" }
+                                        src={"/z-s-avatar.png" }
                                         alt="Logo"
                                         style={{height: '42px'}}
                                     />
