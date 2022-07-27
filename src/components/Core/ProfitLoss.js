@@ -234,7 +234,7 @@ class ProfitLoss extends Component {
         ){
             let key = formatDate(iMonth).format('MMM YY')
             // let color = iMonth.isAfter(moment(), 'month') ? '#ff4d4f' : '#73d13d'
-            let color = iMonth.isAfter(moment(), 'month') ? '#ff7875' : '#a0df7d'
+            let color = iMonth.isSameOrAfter(moment(), 'month') ? '#ff7875' : '#a0df7d'
             array.push(
                 {
                     title: key,

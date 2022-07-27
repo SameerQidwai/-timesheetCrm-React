@@ -56,7 +56,7 @@ function Login(props) {
             >
                 <Col 
                 span={24} 
-                style={{backgroundImage: `url(${"/Z-logo.png"})`}} 
+                style={{backgroundImage: `url(${"/z-logo.png"})`}} 
                         className="app-title-image"
                 >
                 </Col>
