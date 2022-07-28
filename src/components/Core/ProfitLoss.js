@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Col, Row, Table, Tag, Typography } from "antd";
 import { formatCurrency, formatDate, formatFloat, getFiscalYear } from "../../service/constant";
-import moment from 'moment'
 import 'moment-weekday-calc';
 import { getProfitLoss } from "../../service/projects";
 
@@ -67,7 +66,7 @@ class ProfitLoss extends Component {
                 
                 if ( iDate.isSameOrAfter(forecastStartDate, 'day') && // finding Fiscal Months
                     iDate.isSameOrBefore(forecastEndDate), 'day' ) {
-                    if (iDate.isSameOrAfter(moment(), 'month')){ 
+                    if (iDate.isSameOrAfter(formatDate(new Date()), 'month')){ 
                         //FORCASTING Future predictions
                         
                         forecast.forEach((el, index) =>{
@@ -113,13 +112,12 @@ class ProfitLoss extends Component {
 
             revenuePerDay = (billing.value/noOfDays)
         }
-
         for (var iMonth = formatDate(fiscalYear['start']); iMonth.isSameOrBefore(fiscalYear['end']); iMonth.add(1, 'months')) {
             let key = formatDate(iMonth).format('MMM YY')
             let workDays = data[0][key]
             let revenueValue = 0
             let cos = 0
-
+            
             if (proType === 2){ //For timebase Project
                 if (actualStatement[key]){ //If actual is present 
                     revenueValue = actualStatement[key]?.['monthTotalSell'] ?? 0
@@ -234,7 +232,7 @@ class ProfitLoss extends Component {
         ){
             let key = formatDate(iMonth).format('MMM YY')
                         //project can have green column if we are checking opportunity P&L there won't be actual
-            let color = parent === 'P' ? iMonth.isSameOrAfter(moment(), 'month') ? '#ff7875' : '#a0df7d' : '#ff7875'
+            let color = parent === 'P' ? iMonth.isSameOrAfter(formatDate(new Date()), 'month') ? '#ff7875' : '#a0df7d' : '#ff7875'
             array.push(
                 {
                     title: key,

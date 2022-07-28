@@ -158,15 +158,15 @@ export const dateRange = (current, selectedDate, isDate, pDates) =>{
 
 export const getFiscalYear = (request) =>{
   let fiscalStartYear = undefined
-  if (parseInt(moment().format('M'))  < 7){
-      fiscalStartYear =  moment().subtract(1, 'y').format('YYYY')
+  if (parseInt(formatDate(new Date()).format('M'))  < 7){
+      fiscalStartYear =  formatDate(new Date()).subtract(1, 'y').format('YYYY')
   }else{
-      fiscalStartYear = moment().format('YYYY')
+      fiscalStartYear = formatDate(new Date()).format('YYYY')
   }
   let fiscalYear = { 
     dates : {
-      start:  moment().set({month: 6, date: 1, year: fiscalStartYear}),
-      end: moment().set({month: 5, date: 30, year: parseInt(fiscalStartYear )+1})
+      start:  formatDate(new Date()).set({month: 6, date: 1, year: fiscalStartYear}),
+      end: formatDate(new Date()).set({month: 5, date: 30, year: parseInt(fiscalStartYear )+1 })
     },
     years: { start: fiscalStartYear, end: parseInt(fiscalStartYear)+1}
   }
