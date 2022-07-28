@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Row, Table, Typography } from "antd";
+import { Col, Row, Table, Tag, Typography } from "antd";
 import { formatCurrency, formatDate, formatFloat, getFiscalYear } from "../../service/constant";
 import moment from 'moment'
 import 'moment-weekday-calc';
@@ -221,7 +221,7 @@ class ProfitLoss extends Component {
 
     Columns = () =>{
         
-        const { billing } = this.props
+        const { billing, parent } = this.props
         const { fiscalYear, data } = this.state
         // const len = billing.totalMonths>0 ? billing.totalMonths : 0
         const len = 16
@@ -233,8 +233,8 @@ class ProfitLoss extends Component {
             iMonth.add(1, 'months') //itrerater
         ){
             let key = formatDate(iMonth).format('MMM YY')
-            // let color = iMonth.isAfter(moment(), 'month') ? '#ff4d4f' : '#73d13d'
-            let color = iMonth.isSameOrAfter(moment(), 'month') ? '#ff7875' : '#a0df7d'
+                        //project can have green column if we are checking opportunity P&L there won't be actual
+            let color = parent === 'P' ? iMonth.isSameOrAfter(moment(), 'month') ? '#ff7875' : '#a0df7d' : '#ff7875'
             array.push(
                 {
                     title: key,
@@ -290,7 +290,7 @@ class ProfitLoss extends Component {
                 title: 'Total',
                 dataIndex: 'total',
                 key: 'total',
-                width: 150,
+                width: 130,
                 render:(text, record)=>{
                     if (text){
                         if (record.key === 'W') {
@@ -317,23 +317,34 @@ class ProfitLoss extends Component {
         const { data, columns } = this.state
         const { billing } = this.props
         return (
-            <Row justify="center">
-                <Table
-                    bordered
-                    rowKey= {(data =>data.label)}
-                    columns={columns}
-                    dataSource={data}
-                    size="small"
-                    pagination = {false}
-                    className="scroll-table fs-v-small full-width"
-                    scroll={{
-                        // x: "calc(700px + 100%)",
-                        x: "max-content",
-                    }}
-                />
+            <Row justify="start" gutter={[20, 5]}>
+                <Col><Tag color="#a0df7d" className="legends"></Tag><span> Actual</span></Col>
+                <Col><Tag color="#ff7875" className="legends"></Tag><span> Forecast</span></Col>
+                <Col span="24">
+                    <Table
+                        bordered
+                        rowKey= {(data =>data.label)}
+                        columns={columns}
+                        dataSource={data}
+                        size="small"
+                        pagination = {false}
+                        className="scroll-table fs-v-small full-width"
+                        scroll={{
+                            // x: "calc(700px + 100%)",
+                            x: "max-content",
+                        }}
+                    />
+                </Col>
+               
             </Row>
         )
     }
 }
 
 export default ProfitLoss
+
+const legends = {
+        padding: '6px 14px',
+        border: '1px black solid',
+        marginRight: '2px'
+}
