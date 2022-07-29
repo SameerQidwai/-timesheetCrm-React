@@ -31,7 +31,7 @@ const EmployeeCalculator = (props) =>{
                 }
                 /** noOfDays are now fixed 5 days a week throughout year */
                 /** Not In use put it here just in case */
-                let workdays = moment().isoWeekdayCalc({  
+                let workdays = formatDate(new Date()).isoWeekdayCalc({  
                     rangeStart: `1 July ${fiscalYear['start']}`,  
                     rangeEnd: `30 June ${fiscalYear['end']}`,
                     weekdays: weekdays,  
