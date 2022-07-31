@@ -189,11 +189,19 @@ class InfoModal extends Component {
                 {
                     Placeholder: "Role",
                     rangeMin: true,
-                    fieldCol: 24,
+                    fieldCol: 12,
                     size: "small",
                     type: "Text",
                     labelAlign: "right",
                 },
+                {
+                    Placeholder: 'Birth Place',
+                    fieldCol: 12,
+                    size: 'small',
+                    type: 'Text',
+                    labelAlign: 'right',
+                    // itemStyle: { marginBottom: "10px" },
+                  },
                 {
                     object: "basic",
                     fieldCol: 12,
@@ -203,6 +211,14 @@ class InfoModal extends Component {
                     type: "Select",
                     data: [],
                     itemStyle: { marginBottom: 10 },
+                },
+                {
+                    object: 'basic',
+                    fieldCol: 12,
+                    key: 'birthPlace',
+                    size: 'small',
+                    type: 'Input',
+                    itemStyle: { marginBottom: 20 },
                 },
                 {
                     Placeholder: "Address",
