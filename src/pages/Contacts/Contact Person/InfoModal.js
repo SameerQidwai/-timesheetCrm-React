@@ -171,28 +171,12 @@ class InfoModal extends Component {
             itemStyle: { marginBottom: 10 },
           },
           {
-            Placeholder: 'Address',
-            fieldCol: 12,
-            size: 'small',
-            type: 'Text',
-            labelAlign: 'right',
-            // itemStyle: { marginBottom: "10px" },
-          },
-          {
             Placeholder: 'Birth Place',
-            fieldCol: 12,
+            fieldCol: 24,
             size: 'small',
             type: 'Text',
             labelAlign: 'right',
             // itemStyle: { marginBottom: "10px" },
-          },
-          {
-            object: 'basic',
-            fieldCol: 12,
-            key: 'address',
-            size: 'small',
-            type: 'Input',
-            itemStyle: { marginBottom: 20 },
           },
           {
             object: 'basic',
@@ -202,6 +186,23 @@ class InfoModal extends Component {
             type: 'Input',
             itemStyle: { marginBottom: 20 },
           },
+          {
+            Placeholder: 'Address',
+            fieldCol: 24,
+            size: 'small',
+            type: 'Text',
+            labelAlign: 'right',
+            // itemStyle: { marginBottom: "10px" },
+          },
+          {
+            object: 'basic',
+            fieldCol: 24,
+            key: 'address',
+            size: 'small',
+            type: 'Input',
+            itemStyle: { marginBottom: 20 },
+          },
+          
           // {
           //     object: "basic",
           //     fieldCol: 12,
