@@ -133,7 +133,7 @@ function reStructure(data) {
         roleId: data.roleId,
         lineManagerId: data.lineManagerId,
         organization: {name: organization.name, id: organization.id},
-        birthPlace: data.birthPlace
+        birthPlace: contactPerson.birthPlace
     }
     const kin = {
         nextOfKinDateOfBirth:  formatDate(data.nextOfKinDateOfBirth) ,
