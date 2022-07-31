@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Link, NavLink, Redirect, useLocation } from 'react-router-dom';
+import { Link, Redirect, useLocation } from 'react-router-dom';
 import { Row, Col, Typography, Input, Button, Form } from 'antd';
-import { login, loggedIn } from '../../service/Login-Apis';
+import { login, loggedIn, forgotPassword } from '../../service/Login-Apis';
 import { localStore } from '../../service/constant';
 import { getSettings } from '../../service/global-apis';
 import Text from 'antd/lib/typography/Text';
 const { Title } = Typography;
 const { Password } = Input;
 
-function Login(props) {
+function ForgotPassword(props) {
   const { state } = useLocation();
   const { from } = state || { from: { pathname: '/dashboard' } };
   const [redirectToReferrer, setRedirectToReferrer] = useState(false);
@@ -17,16 +17,12 @@ function Login(props) {
     checkLogin();
   }, []);
 
-  const loginFunc = (value) => {
-    login(value).then((res) => {
+  const forgotPasswordFunc = (value) => {
+    forgotPassword(value).then((res) => {
       if (res && res.success) {
+        console.log(res);
         //set local storage
-        getSettings().then((res) => {
-          if (res.success) {
-            localStorage.setItem('pageSize', res.data.recordsPerPage);
-          }
-          window.location.href = '/dashboard';
-        });
+        window.location.href = '/login';
         // setRedirectToReferrer(true)
       }
     });
@@ -53,17 +49,16 @@ function Login(props) {
           gutter={[24, 10]}
           className="form-row"
         >
-          <Col 
-            span={24} 
-            style={{backgroundImage: `url(${"/z-logo.png"})`}} 
-                    className="app-title-image"
-            >
-            </Col>
+          <Col
+            span={24}
+            style={{ backgroundImage: `url(${'/Z-logo.png'})` }}
+            className="app-title-image"
+          ></Col>
           <Col span={16} className="txt-center">
             <Form
               {...{ wrapperCol: 24 }}
               initialValues={{ remember: true }}
-              onFinish={loginFunc}
+              onFinish={forgotPasswordFunc}
               // onFinishFailed={onFinishFailed}
               layout="vertical"
             >
@@ -77,24 +72,14 @@ function Login(props) {
                 <Input />
               </Form.Item>
 
-              <Form.Item
-                label="Password"
-                name="password"
-                rules={[
-                  { required: true, message: 'Please input your password!' },
-                ]}
-              >
-                <Password />
-              </Form.Item>
-
               <Form.Item>
                 <Button type="primary" htmlType="submit">
-                  Login
+                  Request Reset
                 </Button>
               </Form.Item>
               <Form.Item>
                 <Text type="secondary">
-                  <Link to="/forgot-password"> Forgot Password </Link>
+                  <Link to="/login"> Login </Link>
                 </Text>
               </Form.Item>
               <Form.Item noStyle>
@@ -112,4 +97,4 @@ function Login(props) {
   );
 }
 
-export default Login;
+export default ForgotPassword;

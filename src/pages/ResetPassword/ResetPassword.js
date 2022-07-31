@@ -1,32 +1,32 @@
 import React, { useState, useEffect } from 'react';
-import { Link, NavLink, Redirect, useLocation } from 'react-router-dom';
+import { Redirect, useLocation, useParams } from 'react-router-dom';
 import { Row, Col, Typography, Input, Button, Form } from 'antd';
-import { login, loggedIn } from '../../service/Login-Apis';
-import { localStore } from '../../service/constant';
-import { getSettings } from '../../service/global-apis';
+import {
+  loggedIn,
+  forgotPassword,
+  resetPassword,
+} from '../../service/Login-Apis';
 import Text from 'antd/lib/typography/Text';
 const { Title } = Typography;
 const { Password } = Input;
 
-function Login(props) {
+function ResetPassword(props) {
   const { state } = useLocation();
   const { from } = state || { from: { pathname: '/dashboard' } };
   const [redirectToReferrer, setRedirectToReferrer] = useState(false);
+  const [token] = useState(useParams().token);
 
   useEffect(() => {
     checkLogin();
+    console.log(state);
   }, []);
 
-  const loginFunc = (value) => {
-    login(value).then((res) => {
+  const resetPasswordFunc = (value) => {
+    resetPassword(token, value).then((res) => {
       if (res && res.success) {
+        console.log(res);
         //set local storage
-        getSettings().then((res) => {
-          if (res.success) {
-            localStorage.setItem('pageSize', res.data.recordsPerPage);
-          }
-          window.location.href = '/dashboard';
-        });
+        window.location.href = '/login';
         // setRedirectToReferrer(true)
       }
     });
@@ -53,35 +53,50 @@ function Login(props) {
           gutter={[24, 10]}
           className="form-row"
         >
-          <Col 
-            span={24} 
-            style={{backgroundImage: `url(${"/z-logo.png"})`}} 
-                    className="app-title-image"
-            >
-            </Col>
+          <Col
+            span={24}
+            style={{ backgroundImage: `url(${'/Z-logo.png'})` }}
+            className="app-title-image"
+          ></Col>
           <Col span={16} className="txt-center">
             <Form
               {...{ wrapperCol: 24 }}
               initialValues={{ remember: true }}
-              onFinish={loginFunc}
+              onFinish={resetPasswordFunc}
               // onFinishFailed={onFinishFailed}
               layout="vertical"
             >
               <Form.Item
-                label="Username"
-                name="email"
-                rules={[
-                  { required: true, message: 'Please input your username!' },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-
-              <Form.Item
-                label="Password"
+                label="New Password"
                 name="password"
                 rules={[
-                  { required: true, message: 'Please input your password!' },
+                  {
+                    required: true,
+                    message: 'Please Enter your new password!',
+                  },
+                ]}
+              >
+                <Password />
+              </Form.Item>
+              <Form.Item
+                label="Confirm New Password"
+                name="confirmPassword"
+                dependencies={['password']}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please Enter your new password!',
+                  },
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      if (!value || getFieldValue('password') === value) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(
+                        new Error('Passwords do not match!')
+                      );
+                    },
+                  }),
                 ]}
               >
                 <Password />
@@ -89,13 +104,8 @@ function Login(props) {
 
               <Form.Item>
                 <Button type="primary" htmlType="submit">
-                  Login
+                  Reset
                 </Button>
-              </Form.Item>
-              <Form.Item>
-                <Text type="secondary">
-                  <Link to="/forgot-password"> Forgot Password </Link>
-                </Text>
               </Form.Item>
               <Form.Item noStyle>
                 <Text type="danger">
@@ -112,4 +122,4 @@ function Login(props) {
   );
 }
 
-export default Login;
+export default ResetPassword;
