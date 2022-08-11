@@ -40,12 +40,12 @@ class InfoModal extends Component {
                     labelAlign: "left",
                 },
                 {
-                    Placeholder: "Date Of Birth",
+                    Placeholder: "Role",
+                    rangeMin: true,
                     fieldCol: 12,
                     size: "small",
                     type: "Text",
                     labelAlign: "right",
-                    itemStyle: { marginBottom: 1 },
                 },
                 {
                     object: "basic", //this is field 3
@@ -67,11 +67,11 @@ class InfoModal extends Component {
                 {
                     object: "basic",
                     fieldCol: 12,
-                    key: "dateOfBirth",
+                    key: "roleId",
                     size: "small",
-                    type: "DatePicker",
-                    fieldStyle: { width: "100%" },
-                    
+                    rules:[{ required: true, message: 'Role is required!!' }],
+                    type: "Select",
+                    data: [],
                     itemStyle: { marginBottom: 10 },
                 },
                 {
@@ -186,13 +186,14 @@ class InfoModal extends Component {
                     data: [],
                     itemStyle: { marginBottom: 10 },
                 },
+                
                 {
-                    Placeholder: "Role",
-                    rangeMin: true,
+                    Placeholder: "Date Of Birth",
                     fieldCol: 12,
                     size: "small",
                     type: "Text",
                     labelAlign: "right",
+                    itemStyle: { marginBottom: 1 },
                 },
                 {
                     Placeholder: 'Birth Place',
@@ -201,15 +202,15 @@ class InfoModal extends Component {
                     type: 'Text',
                     labelAlign: 'right',
                     // itemStyle: { marginBottom: "10px" },
-                  },
+                },
                 {
                     object: "basic",
                     fieldCol: 12,
-                    key: "roleId",
+                    key: "dateOfBirth",
                     size: "small",
-                    rules:[{ required: true, message: 'Role is required!!' }],
-                    type: "Select",
-                    data: [],
+                    type: "DatePicker",
+                    fieldStyle: { width: "100%" },
+                    
                     itemStyle: { marginBottom: 10 },
                 },
                 {
@@ -551,7 +552,7 @@ class InfoModal extends Component {
         .then(res => {
             const { BasicFields, ManagerFields, BillingFields } = this.state
             BasicFields[15].data = res[0].data;
-            BasicFields[17].data = res[1].data;
+            BasicFields[3].data = res[1].data;
             ManagerFields[1].data = res[3].data;
             BillingFields[5].Placeholder = edit &&`Total Fee ${DURATION[res[2].paymentBase]}`
                 this.setState({

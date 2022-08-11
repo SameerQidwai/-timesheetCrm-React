@@ -802,7 +802,7 @@ class InfoModal extends Component {
       .then((res) => {
         const { BasicFields, BillingFields, ManagerFields } = this.state;
         BasicFields[15].data = res[0].data;
-        BasicFields[17].data = res[1].data;
+        BasicFields[3].data = res[1].data;
         BillingFields[17].data = res[3].data;
         ManagerFields[1].data = res[4].data;
         this.setState({
