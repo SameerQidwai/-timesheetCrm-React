@@ -171,13 +171,31 @@ class InfoModal extends Component {
             itemStyle: { marginBottom: 10 },
           },
           {
+            Placeholder: "Date Of Birth",
+            fieldCol: 12,
+            size: "small",
+            type: "Text",
+            labelAlign: "right",
+            itemStyle: { marginBottom: 1 },
+          },
+          {
             Placeholder: 'Birth Place',
-            fieldCol: 24,
+            fieldCol: 12,
             size: 'small',
             type: 'Text',
             labelAlign: 'right',
             // itemStyle: { marginBottom: "10px" },
           },
+          {
+            object: "basic",
+            fieldCol: 12,
+            key: "dateOfBirth",
+            size: "small",
+            type: "DatePicker",
+            fieldStyle: { width: "100%" },
+            
+            itemStyle: { marginBottom: 10 },
+        },
           {
             object: 'basic',
             fieldCol: 12,
@@ -663,6 +681,10 @@ class InfoModal extends Component {
   BasicCall = (vake) => {
     // this will work after  got  Object from the skill from
     // vake.basic.stateId = null
+    let basic = {
+      ...vake.basic,
+      dateOfBirth: formatDate(vake?.basic?.dateOfBirth, true)
+    }
     this.setState(
       {
         mergeObj: {
@@ -870,6 +892,7 @@ class InfoModal extends Component {
           phoneNumber: data.phoneNumber,
           address: data.address,
           birthPlace: data.birthPlace,
+          dateOfBirth: formatDate(data.dateOfBirth),
           stateId: data.stateId,
         };
         let sec = {
