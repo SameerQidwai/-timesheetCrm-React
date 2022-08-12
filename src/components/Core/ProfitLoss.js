@@ -123,6 +123,7 @@ class ProfitLoss extends Component {
                     revenueValue = actualStatement[key]?.['monthTotalSell'] ?? 0
                     //Not subtratcing actual month because it is already gets subtracted in totalRevnenue
                         //we are not doing it becuase all actual are being delete on assigning totalRevenue
+                     cos = actualStatement[key]?.['monthTotalBuy'] ?? 0
 
                 }else if (forecastStatement[key]){ //If forcast is found
                     revenueValue = (totalRevenue - forecastStatement[key]?.['monthTotalSell']) < 0 ? totalRevenue ?? 0 :  forecastStatement[key]?.['monthTotalSell'] ?? 0
@@ -131,9 +132,9 @@ class ProfitLoss extends Component {
                     if (forecastStatement[key]?.['monthTotalSell'] > revenueValue){
                             // checking total Revenue to get cos %
                         let sellpercent = (revenueValue / forecastStatement[key]?.['monthTotalSell']) * 100
-                        cos = (forecastStatement[key]?.['monthTotalBuy'] /100 )* sellpercent
+                        cos = (forecastStatement[key]?.['monthTotalBuy'] /100 )* sellpercent //to get percentage how much cos is needed to less amount sale
                     }else{
-                        cos = actualStatement[key]?.['monthTotalBuy'] ?? forecastStatement[key]?.['monthTotalBuy']
+                        cos = forecastStatement[key]?.['monthTotalBuy'] ?? 0 // assigning forcasting Cost
                     }
                 }
 
@@ -142,6 +143,7 @@ class ProfitLoss extends Component {
                 cos = actualStatement[key]?.['monthTotalBuy'] ?? forecastStatement[key]?.['monthTotalBuy']
             }
                 //if revenue amount finish before project and fiscal year endDate
+
                 
             let cm = revenueValue - cos
             
@@ -205,12 +207,13 @@ class ProfitLoss extends Component {
                 data[1]['total'] += revenue * workDays
                 data[2]['total'] += cos * workDays
                 data[3]['total'] += cm * workDays
-                data[4]['total'] += (billing.cmPercentage ?? 0)
+                // data[4]['total'] += (billing.cmPercentage ?? 0)
             }
             // Total of every row with in financial year... 
 
             startDate = formatDate(startDate).add(1, 'months')
         }
+        data[4]['total'] = (data[3]['total']  / data[1]['total']) * 100 //CM%
         this.setState({data},()=>{
             this.Columns()
 
