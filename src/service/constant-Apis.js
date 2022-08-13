@@ -218,7 +218,19 @@ export const getPanelSkills = (id) => {
             const { success, data } = res.data;
             var panelskill = []
             data.map((el) => {
-                panelskill.push({value: el.id, label: el.label,  levels: el.panelSkillStandardLevels.map(lvlEl=>{ return { value:lvlEl.id, label: lvlEl.levelLabel}})})
+                panelskill.push({
+                    value: el.id, 
+                    label: el.label,  
+                    levels: el.panelSkillStandardLevels.map(lvlEl=>{ 
+                        return { 
+                            value:lvlEl.id, 
+                            label: lvlEl.levelLabel, 
+                            stceil: lvlEl.shortTermCeil,
+                            ltceil: lvlEl.longTermCeil
+                            
+                        }
+                    })
+                })
             });
             setToken(res.headers && res.headers.authorization)
             if (success) return { success: success, data: sorting(panelskill, 'label') };

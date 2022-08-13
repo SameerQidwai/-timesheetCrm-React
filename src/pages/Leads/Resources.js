@@ -91,7 +91,7 @@ class Resources extends Component {
                                 <Menu.Item 
                                     key="add"
                                     onClick={() => {
-                                        this.getSkilldEmployee(true,  record.id,  true, false,  index, record.panelSkillStandardLevelId)
+                                        this.getSkilldEmployee(true,  record.id,  true, false,  index, record.panelSkillStandardLevelId, record.panelSkillStandardLevel)
                                     }}
                                     disabled={!this?.state?.permissions?.['ADD']}
                                 >
@@ -115,6 +115,7 @@ class Resources extends Component {
             data: [],
             desc: {},
             mileDesc: {},
+            ceil: {},
             skillId: false,
             levelId: false,
             crud: false,
@@ -235,13 +236,14 @@ class Resources extends Component {
                     infoModal: false,
                     skillId: false,
                     levelId: false,
-                    tableIndex:false
+                    tableIndex:false,
+                    ceil: {}
                 })
             }
         })
     }
 
-    getSkilldEmployee = (infoModal, skillId, resource, editRex, tableIndex, levelId ) =>{
+    getSkilldEmployee = (infoModal, skillId, resource, editRex, tableIndex, levelId, panelSkillLevel ) =>{
         const { startDate, endDate } = this.state.mileDesc
         this.setState({
             pDates: {startDate, endDate}, 
@@ -250,12 +252,13 @@ class Resources extends Component {
             levelId: levelId,
             resource:resource, 
             editRex:editRex, 
-            tableIndex:tableIndex 
+            tableIndex:tableIndex ,
+            ceil: panelSkillLevel && {short: panelSkillLevel.shortTermCeil, long: panelSkillLevel.longTermCeil}
         })
     }
 
     closeModal = () => {
-        this.setState({ infoModal: false, editRex: false});
+        this.setState({ infoModal: false, editRex: false, ceil: {}});
     };
 
     handleDelete = (id, index) => {
@@ -366,7 +369,7 @@ class Resources extends Component {
     }
 
     render() {
-        const { desc, filterData, data, infoModal, editRex, leadId, resource , skillId, levelId, permissions, mileId, crud, openSearch, filterFields, searchedColumn, mileDesc, pDates} = this.state;
+        const { desc, filterData, data, infoModal, editRex, leadId, resource , skillId, levelId, permissions, mileId, crud, openSearch, filterFields, searchedColumn, mileDesc, pDates,  ceil} = this.state;
         return (
             <>
                 <Descriptions
@@ -376,9 +379,9 @@ class Resources extends Component {
                     layout="horizontal"
                     // extra={<Button type="primary">Edit</Button>}
                 >
-                    <Item label="Project Name">{desc.title}</Item>
+                    <Item label="Project Name"  contentStyle={{width: '25%'}}>{desc.title}</Item>
                     <Item label="Estimated Value">{`${formatCurrency(desc.value)}`}</Item>
-                    <Item label="Organisation">{
+                    <Item label="Organisation" contentStyle={{width: '25%'}}>{
                         desc.organization ? 
                             <Link
                                 to={{
@@ -461,6 +464,10 @@ class Resources extends Component {
                                 history={this.props.history}
                                 panelId={desc.panelId}
                                 callBack={this.callBack}
+                                ceil={{
+                                    short: record.panelSkillStandardLevel?.shortTermCeil,
+                                    long: record.panelSkillStandardLevel?.longTermCeil,
+                                }}
                                 permissions={permissions}
                                 className='fs-small'
                             />)
@@ -492,6 +499,7 @@ class Resources extends Component {
                         panelId = {desc.panelId}
                         close={this.closeModal}
                         callBack={this.callBack}
+                        ceil={ceil}
                     />
                 )}
 
@@ -628,6 +636,7 @@ function NestedTable(props) {
             panelId = {props.panelId}
             mileId={props.mileId}
             crud={props.crud}
+            ceil={props.ceil}
             close={()=>{setVisible(false)}}
             callBack={callBack}
         />}

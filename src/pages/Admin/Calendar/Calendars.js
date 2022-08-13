@@ -5,13 +5,13 @@ import { Link } from "react-router-dom";
 
 import Form from "../../../components/Core/Forms/Form";
 
-import { getList, addList, editLabel } from "../../../service/calender";
+import { getList, addList, editLabel } from "../../../service/calendar";
 import { localStore } from "../../../service/constant";
 import { tableSorter, tableTitleFilter } from "../../../components/Core/Table/TableFilter";
 
 const { Title } = Typography;
 
-class Calenders extends Component {
+class Calendars extends Component {
     constructor(props) {
         super(props);
 
@@ -59,7 +59,7 @@ class Calenders extends Component {
                                 <Menu.Item>
                                     <Link
                                         to={{
-                                            pathname: `/admin/calenders/holidays/${record.id}`,
+                                            pathname: `/admin/calendars/holidays/${record.id}`,
                                         }}
                                         className="nav-link"
                                     >
@@ -230,7 +230,7 @@ class Calenders extends Component {
             <>
                 <Row justify="space-between">
                     <Col>
-                        <Title level={4}>Calenders</Title>
+                        <Title level={4}>Calendars</Title>
                     </Col>
                     <Col style={{ textAlign: "end" }}>
                         <Button
@@ -241,7 +241,7 @@ class Calenders extends Component {
                             size="small"
                         >
                             <PlusSquareOutlined />
-                            Add Calender
+                            Add Calendar
                         </Button>
                     </Col>
                     <Col span={24}>
@@ -260,7 +260,7 @@ class Calenders extends Component {
                 {
                     openModal ? (
                         <Modal
-                            title={ editTimeoff ? "Edit Calender" : "Add Calender" }
+                            title={ editTimeoff ? "Edit Calendar" : "Add Calendar" }
                             maskClosable={false}
                             centered
                             visible={openModal}
@@ -285,4 +285,4 @@ class Calenders extends Component {
     }
 }
 
-export default Calenders;
+export default Calendars;

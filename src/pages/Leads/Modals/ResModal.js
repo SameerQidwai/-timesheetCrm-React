@@ -175,7 +175,7 @@ class ResModal extends Component {
           rules: [{ required: true, message: "Level is Required" }],
           data: [],
           type: "Select",
-          onChange: (e, value) =>{
+          onChange: (value, option) =>{
             this.fetchRes();
           },
         },
@@ -184,7 +184,7 @@ class ResModal extends Component {
           fieldCol: 12,
           key: "billableHours",
           size: "small",
-          rules: [{ required: true, message: "Nillable Hours is Required" }],
+          rules: [{ required: true, message: "Billable Hours is Required" }],
           type: "InputNumber",
           fieldStyle: { width: "100%" },
         },
@@ -239,6 +239,7 @@ class ResModal extends Component {
   }
   componentDidMount = () => {
     const { skillId } = this.props;
+    console.log(skillId);
     if (skillId) {
       this.fetchRes();
     } else {
@@ -247,8 +248,7 @@ class ResModal extends Component {
   };
 
   fetchRes = () => {
-    const { levelId, editRex, cmRate } = this.props
-    console.log(editRex);
+    const { levelId, editRex, cmRate, ceil } = this.props
     const customUrl = `employees/get/by-skills?psslId=${levelId}&workType=O`
     Promise.all([getOrgPersons(customUrl)])
       .then((res) => {
@@ -265,6 +265,7 @@ class ResModal extends Component {
           this.formRef.current.setFieldsValue({ obj:obj });
         }
         ResourceFields[2].data = data;
+        ResourceFields[7].hint = this.ceilHint(ceil.short, ceil.long);
         this.setState({ ResourceFields },()=>{
           if (editRex?.role) {
             this.checkRates(editRex?.contactPersonId, {label: editRex?.role})
@@ -311,6 +312,13 @@ class ResModal extends Component {
     ResourceFields[4].suggestion = buy
     ResourceFields[5].suggestion = sell
     this.setState({ResourceFields: [...ResourceFields] })
+  }
+
+  ceilHint = (stceil, ltceil) =>{
+    return <div>
+      <span style={{float: "left"}}>ST Ceil(hourly): {stceil}</span>
+      <span style={{float: "right"}}>LT Ceil(hourly): {ltceil}</span>
+    </div>
   }
 
   skillModal = () => {

@@ -24,8 +24,8 @@ const listData = [
     {
         text: "Calendars",
         icon: <CalendarOutlined />,
-        link: "/admin/calenders",
-        key: "/admin/calenders",
+        link: "/admin/calendars",
+        key: "/admin/calendars",
     },
     {
         text: "Leave Categories",

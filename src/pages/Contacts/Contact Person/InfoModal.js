@@ -750,7 +750,7 @@ class InfoModal extends Component {
     const { skill } = vake;
     const vars = [];
 
-    for (const [key, value] of Object.entries(skill)) {
+    for (const [key, value] of Object.entries(skill?? {})) {
       if (key.includes('level') && value) {
         vars.push(value);
       }

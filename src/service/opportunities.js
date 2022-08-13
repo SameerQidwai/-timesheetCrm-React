@@ -316,6 +316,24 @@ export const getHierarchy = (opportunityId) => {
         });
 };
 
+export const getHolidays = () => {
+    return axios
+        .get(`${url}/get-holidays`, {headers:headers()})
+        .then((res) => {
+            const { success, data, message } = res.data;
+            jwtExpired(message)
+            setToken(res.headers && res.headers.authorization)
+            return {success, data}
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                status: false,
+                message: err.message,
+            };
+        });
+};
+
 
 export const delLeadSkillResource = (oppId, skillId, resId,) => {
     return axios

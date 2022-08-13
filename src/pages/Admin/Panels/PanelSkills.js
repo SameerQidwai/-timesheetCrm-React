@@ -193,7 +193,7 @@ class PanelInfo extends Component {
                         layout: {
                             wrapperCol: { offset: 1 },
                         },
-                        Placeholder: "ST Ceil",
+                        Placeholder: <div>ST Ceil <span style={{fontSize: 10}}>(hourly)</span></div>,
                         tooltip: true,
                         tooltipTitle: "Short Term Ceiling Rate (ex GST)",
                         tooltipTrigger: "hover",
@@ -208,7 +208,7 @@ class PanelInfo extends Component {
                         tooltip: true,
                         tooltipTitle: "Long Term Ceiling Rate (ex GST)",
                         tooltipTrigger: "hover",
-                        Placeholder: "LT Ceil",
+                        Placeholder: <div>LT Ceil <span style={{fontSize: 10}}>(hourly)</span></div>,
                         type: "Text",
                         size: "small",
                     },

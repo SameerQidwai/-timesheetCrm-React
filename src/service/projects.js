@@ -242,6 +242,8 @@ export const getLeadSkill = (crud, resId) => {
                     panelSkillId:  data.panelSkillId,
                     title:  data.title,
                     panelSkillStandardLevelId:  data.panelSkillStandardLevelId,
+                    ltceil: data.panelSkillStandardLevel?.longTermCeil,
+                    stceil: data.panelSkillStandardLevel?.shortTermCeil,
                     billableHours: data.billableHours,
                     startDate:  formatDate(data.startDate),
                     endDate: formatDate(data.endDate),

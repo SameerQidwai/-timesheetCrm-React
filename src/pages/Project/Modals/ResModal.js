@@ -60,11 +60,10 @@ class ResModal extends Component {
           onChange: (e, value) =>{
             const { ResourceFields } = this.state;
             ResourceFields[6].data = value ? value.levels : [];
-            const {
-              obj,
-            } = this.formRef.current.getFieldsValue(); // const
+            const { obj, } = this.formRef.current.getFieldsValue(); // const
             obj["panelSkillStandardLevelId"] = undefined;
             obj["contactPersonId"] = undefined;
+            delete ResourceFields[19].hint
             this.formRef.current.setFieldsValue({ obj, });
             this.setState({ ResourceFields });
           },
@@ -96,17 +95,24 @@ class ResModal extends Component {
           rules:[{ required: true, message: 'Level is Required' }],
           data: [],
           type: "Select",
-          onChange: (e, value) =>{
+          onChange: (value, option) =>{
             const { ResourceFields } = this.state;
-            const customUrl = `employees/get/by-skills?psslId=${value?.value}&workType=P`
-            getOrgPersons(customUrl).then((res) => {
-              ResourceFields[10].data = res.success ? res.data : [];
-              const { obj, } = this.formRef.current.getFieldsValue(); // const
-              obj["contactPersonId"] = undefined;
-              this.formRef.current.setFieldsValue({ obj, });
-              this.setState({ ResourceFields });
-            });
-          },
+          if (value){
+              const customUrl = `employees/get/by-skills?psslId=${value}&workType=P`
+              getOrgPersons(customUrl).then((res) => {
+                ResourceFields[10].data = res.success ? res.data : [];
+              });
+
+              ResourceFields[19].hint = this.ceilHint(option.stceil,option.ltceil)
+            }else{
+              delete ResourceFields[19].hint
+            }
+            const { obj, } = this.formRef.current.getFieldsValue(); // const
+            obj["contactPersonId"] = undefined;
+            this.formRef.current.setFieldsValue({ obj, });
+            this.setState({ ResourceFields });
+          }
+           
         },
         {
           object: "obj",
@@ -336,11 +342,13 @@ class ResModal extends Component {
         );
           const customUrl = `employees/get/by-skills?psslId=${resR?.data?.panelSkillStandardLevelId}&workType=P`
           getOrgPersons(customUrl).then((resP) => {
+            
           const { ResourceFields } = this.state;
           ResourceFields[6].data = skills[skillIndex]
             ? skills[skillIndex].levels
             : [];
           ResourceFields[10].data = resP.success ? resP.data : [];
+          ResourceFields[19].hint = this.ceilHint(resR.data?.stceil, resR.data?.ltceil)
           this.formRef.current.setFieldsValue({ obj: resR.data, });
           this.setState({ ResourceFields, allocationId: resR.data.allocationId, },()=>{
             if (resR?.data?.role) {
@@ -365,6 +373,13 @@ class ResModal extends Component {
       }
     });
   };
+  
+  ceilHint = (stceil, ltceil) =>{
+      return <div>
+      <span style={{float: "left"}}>ST Ceil(hourly): {stceil}</span>
+      <span style={{float: "right"}}>LT Ceil(hourly): {ltceil}</span>
+    </div>
+  }
 
   render() {
     const { editRex, visible, close, onHold } = this.props;

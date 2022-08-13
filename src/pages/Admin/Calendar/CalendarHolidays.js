@@ -11,7 +11,7 @@ import { Filtertags, TableModalFilter, tableSorter, tableTitleFilter } from "../
 
 const { Title } = Typography;
 
-class CalenerHolidays extends Component {
+class CalendarHolidays extends Component {
     constructor(props) {
         super(props);
         this.holidayForm = React.createRef();
@@ -400,4 +400,4 @@ class CalenerHolidays extends Component {
     }
 }
 
-export default CalenerHolidays;
+export default CalendarHolidays;

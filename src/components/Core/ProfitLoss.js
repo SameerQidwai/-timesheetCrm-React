@@ -3,6 +3,7 @@ import { Col, Row, Table, Tag, Typography } from "antd";
 import { formatCurrency, formatDate, formatFloat, getFiscalYear } from "../../service/constant";
 import 'moment-weekday-calc';
 import { getProfitLoss } from "../../service/projects";
+import { getHolidays } from "../../service/opportunities";
 
 class ProfitLoss extends Component {
     constructor(props){
@@ -26,26 +27,31 @@ class ProfitLoss extends Component {
         if (parent === 'P'){
             getProfitLoss(id, fiscalYear).then(res=>{
                 if(res.success){
-                    const {actualStatement, actualTotal, forecast} = res.data
-                    this.calculateProjectData(actualStatement, actualTotal, forecast ?? [])
+                    const {actualStatement, actualTotal, forecast, holidays} = res.data
+                    this.calculateProjectData(actualStatement, actualTotal, forecast ?? [], holidays)
                 }
             })
         }else{
-            this.calculateLeadData()
+            getHolidays().then(res=>{
+                if(res.success){
+                    const { holidays } = res.data
+                    this.calculateLeadData(holidays)
+                }
+            })
         }
     }
 
-    getWeekdays = (startDate, endDate) =>{
+    getWeekdays = (startDate, endDate, holidays) =>{
         return formatDate(new Date ()).isoWeekdayCalc({  
             rangeStart: startDate,
             rangeEnd: endDate,
             weekdays: [1,2,3,4,5],  
-            // exclusions: holidays,
+            exclusions: holidays,
             //when I get holidays
         }) 
     }
 
-    calculateProjectData = (actualStatement, actualTotal, forecast) =>{
+    calculateProjectData = (actualStatement, actualTotal, forecast, holidays) =>{
         let { data, fiscalYear } = this.state
         const { billing, type: proType } = this.props
         let startDate = formatDate(billing.startDate)
@@ -61,7 +67,10 @@ class ProfitLoss extends Component {
         //Testing
        
         for (var iDate = formatDate(startDate); iDate.isSameOrBefore(endDate); iDate.add(1, 'days')) {
-            if (iDate.isoWeekday() !== 6 && iDate.isoWeekday() !== 7){
+            if (iDate.isoWeekday() !== 6 && iDate.isoWeekday() !== 7 && !holidays[formatDate(iDate, true, 'M/D/YYYY')]){
+                if (holidays[formatDate(iDate, true, 'M/D/YYYY')]){
+                    console.log (formatDate(iDate, true, 'M/D/YYYY'))
+                }
                 let key = formatDate(iDate).format('MMM YY')
                 
                 if ( iDate.isSameOrAfter(forecastStartDate, 'day') && // finding Fiscal Months
@@ -168,7 +177,8 @@ class ProfitLoss extends Component {
         })
     }
 
-    calculateLeadData = () =>{
+    calculateLeadData = (holidays) =>{
+        console.log(holidays)
         let { data, fiscalYear } = this.state
         const { billing } = this.props
         const len = billing.totalMonths>0 ? billing.totalMonths : 0
@@ -180,7 +190,7 @@ class ProfitLoss extends Component {
 
             startDate = i===1 ? billing.startDate : formatDate(startDate).set('date', 1); 
             endDate = i===len ? billing.endDate: formatDate(startDate).endOf('month');
-            const workDays = this.getWeekdays(startDate, endDate)
+            const workDays = this.getWeekdays(startDate, endDate, holidays)
             noOfDays = noOfDays + workDays
             let key = formatDate(startDate).format('MMM YY')
             data[0][key]= workDays
