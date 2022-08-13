@@ -6,9 +6,9 @@ import { Breadcrumb, Col } from "antd";
 
 import Global from "../Global";
 import GlobalVars from "../GlobalVars";
-import CalenderHoldays from "../Calender/CalenerHolidays";
-import Calenders from "../Calender/Calenders";
-import HolidayTypes from "../Calender/HolidayTypes";
+import CalendarHolidays from "../Calendar/CalendarHolidays";
+import Calendars from "../Calendar/Calendars";
+import HolidayTypes from "../Calendar/HolidayTypes";
 import LeaveCategories from "../LeaveCategories";
 import LeavePolicies from "../LeavePolicies";
 import Roles from "../Role & Permission/Roles";
@@ -35,12 +35,12 @@ const pageLinks = [
         link: "/admin/holiday-types",
     },
     {
-        component: Calenders,
-        link: "/admin/calenders",
+        component: Calendars,
+        link: "/admin/calendar",
     },
     {
-        component: CalenderHoldays,
-        link: "/admin/calenders/holidays/:id",
+        component: CalendarHolidays,
+        link: "/admin/calendar/holidays/:id",
     },
     {
         component: LeaveCategories,

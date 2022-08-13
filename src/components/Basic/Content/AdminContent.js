@@ -83,13 +83,13 @@ const pageLinks = [
     },
     {
         component: Admin,
-        link: "/admin/calenders/holidays/:id",
+        link: "/admin/calendars/holidays/:id",
         key: 'ADMIN_OPTIONS',
         permission: 'READ',
     },
     {
         component: Admin,
-        link: "/admin/calenders",
+        link: "/admin/calendars",
         key: 'ADMIN_OPTIONS',
         permission: 'READ'
     },
