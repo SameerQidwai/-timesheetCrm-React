@@ -273,6 +273,42 @@ export const getProfitLoss = (projectId, dates) => {
     });
 };
 
+export const getCalculatedValue = (projectId) => {
+  return axios
+    .get(`${url}/${projectId}/calculatedValue`, { headers: headers() })
+    .then((res) => {
+      const { success, data, message } = res.data;
+      jwtExpired(message);
+      setToken(res.headers && res.headers.authorization);
+      return { success, data };
+    })
+    .catch((err) => {
+      return {
+        error: 'Please login again!',
+        status: false,
+        message: err.message,
+      };
+    });
+};
+
+export const updateProjectValue = (projectId) => {
+  return axios
+    .put(`${url}/${projectId}/calculatedValue`, {}, { headers: headers() })
+    .then((res) => {
+      const { success, data, message } = res.data;
+      jwtExpired(message);
+      setToken(res.headers && res.headers.authorization);
+      return { success, data };
+    })
+    .catch((err) => {
+      return {
+        error: 'Please login again!',
+        status: false,
+        message: err.message,
+      };
+    });
+};
+
 export const getLeadSkill = (crud, resId) => {
   return axios
     .get(`${Api}${crud}/${resId}`, { headers: headers() })
