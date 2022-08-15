@@ -284,30 +284,34 @@ class ProjectInfo extends Component {
           <Item label="Contract Value">
             <Row justify="space-between" align="middle">
               <Col>{formatCurrency(data.value)}</Col>
-              <Col>
-                <Popconfirm
-                  title={`Calculated Project Contract Value is: ${formatCurrency(
-                    calculatedValue
-                  )}`}
-                  okText="Update"
-                  onConfirm={() => {
-                    this.updateProjectValue(leadId);
-                  }}
-                  okButtonProps={{ disabled: !updateEnabled }}
-                  showCancel={false}
-                  placement="top"
-                >
-                  <Button
-                    type="primary"
-                    size="sm"
-                    onClick={() => {
-                      this.getCalculatedValue(leadId);
+              {data.value !== calculatedValue ? (
+                <Col>
+                  <Popconfirm
+                    title={`Calculated Project Contract Value is: ${formatCurrency(
+                      calculatedValue
+                    )}`}
+                    okText="Update"
+                    onConfirm={() => {
+                      this.updateProjectValue(leadId);
                     }}
+                    okButtonProps={{ disabled: !updateEnabled }}
+                    showCancel={false}
+                    placement="top"
                   >
-                    <SyncOutlined spin={valueSpin} />
-                  </Button>
-                </Popconfirm>
-              </Col>
+                    <Button
+                      type="primary"
+                      size="sm"
+                      onClick={() => {
+                        this.getCalculatedValue(leadId);
+                      }}
+                    >
+                      <SyncOutlined spin={valueSpin} />
+                    </Button>
+                  </Popconfirm>
+                </Col>
+              ) : (
+                <></>
+              )}
             </Row>
           </Item>
           <Item label="Organisation">
