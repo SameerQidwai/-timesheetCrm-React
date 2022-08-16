@@ -17,8 +17,7 @@ import {
 } from '@ant-design/icons'; //Icons
 import { Link } from 'react-router-dom';
 
-import ResModal from './Modals/ResModal';
-import { getRecord, getLeadSkills, delLeadSkill } from '../../service/projects';
+import { getRecord, getMilestoneExpenses } from '../../service/projects';
 
 import moment from 'moment';
 import {
@@ -33,85 +32,38 @@ import {
   tableSorter,
   tableTitleFilter,
 } from '../../components/Core/Table/TableFilter';
-import { getPanelSkills } from '../../service/constant-Apis';
 import { generalDelete } from "../../service/delete-Api's";
 import { getMilestone } from '../../service/Milestone-Apis';
 import AuthError from '../../components/Core/AuthError';
+import ExpenseModal from './Modals/ExpenseModal';
+import { getListAlt as getExpenseList } from '../../service/expenseType-Apis';
 
 const { Item } = Descriptions;
 
-class Resources extends Component {
+class Expenses extends Component {
   constructor(props) {
     super(props);
 
     this.columns = [
       {
-        title: 'Title',
-        dataIndex: 'title',
-        key: 'title',
-        ...tableSorter('title', 'string'),
+        title: 'Expense',
+        dataIndex: ['expenseType', 'label'],
+        key: 'label',
+        ...tableSorter('label', 'string'),
       },
       {
-        title: 'Skill',
-        dataIndex: ['panelSkill', 'label'],
-        key: 'panelSkill',
-        ...tableSorter('panelSkill.label', 'string'),
-      },
-      {
-        title: 'Level',
-        dataIndex: ['panelSkillStandardLevel', 'levelLabel'],
-        key: 'panelSkillStandardLevel',
-        ...tableSorter('panelSkillStandardLevel.levelLabel', 'string'),
-      },
-      {
-        title: 'Employee Name',
-        dataIndex: ['opportunityResourceAllocations', '0', 'contactPerson'],
-        key: 'contactPerson',
-        render: (record) =>
-          // record && record[0] && record[0].contactPerson && `${record[0].contactPerson.firstName	} ${record[0].contactPerson.lastName	}`
-          `${record?.firstName ?? ''} ${record?.lastName ?? ''}`,
-        ...tableSorter(
-          'opportunityResourceAllocations.0.contactPerson',
-          'string'
-        ),
-      },
-      {
-        title: 'Billable Hours',
-        dataIndex: 'billableHours',
-        key: 'billableHours',
-        sorter: (a, b) => a.billableHours - b.billableHours,
-        ...tableSorter('billableHours', 'number'),
-      },
-      {
-        title: 'Buy Rate (Hourly)',
-        dataIndex: ['opportunityResourceAllocations', '0', 'buyingRate'],
-        key: 'opportunityResourceAllocations',
+        title: 'Buy Rate',
+        dataIndex: 'buyingRate',
+        key: 'buyingRate',
         render: (record) => record && formatCurrency(record),
-        ...tableSorter('opportunityResourceAllocations.0.buyingRate', 'number'),
+        ...tableSorter('buyingRate', 'number'),
       },
       {
-        title: 'Sell Rate (Hourly)',
-        dataIndex: ['opportunityResourceAllocations', '0', 'sellingRate'],
-        key: 'opportunityResourceAllocations',
+        title: 'Sell Rate',
+        dataIndex: 'sellingRate',
+        key: 'sellingRate',
         render: (record) => record && formatCurrency(record),
-        ...tableSorter(
-          'opportunityResourceAllocations.0.sellingRate',
-          'number'
-        ),
-      },
-      {
-        title: 'CM $',
-        dataIndex: ['opportunityResourceAllocations', '0', 'cm$'],
-        key: 'opportunityResourceAllocations$',
-        render: (record) => record && formatCurrency(record),
-        ...tableSorter('opportunityResourceAllocations.0.cm$', 'number'),
-      },
-      {
-        title: 'CM %',
-        dataIndex: ['opportunityResourceAllocations', '0', 'cmPercent'],
-        key: 'opportunityResourceAllocationsPercent',
-        render: (record) => `${record} %`,
-        ...tableSorter('opportunityResourceAllocations.0.cmPercent', 'number'),
+        ...tableSorter('sellingRate', 'number'),
       },
       {
         title: '...',
@@ -140,7 +92,7 @@ class Resources extends Component {
                   onClick={() => this.openModal(record.id)}
                   disabled={!this?.state?.permissions?.['UPDATE']}
                 >
-                  Edit Resource
+                  Edit Expense
                 </Menu.Item>
               </Menu>
             }
@@ -165,120 +117,46 @@ class Resources extends Component {
       openSearch: false,
       filterData: [],
       searchedColumn: {
-        skill: {
+        label: {
           type: 'Select',
           multi: true,
           value: [],
-          label: 'Skill',
+          label: 'Expense',
           showInColumn: true,
         },
-        level: {
-          type: 'Select',
-          multi: true,
-          value: [],
-          label: 'Level',
-          showInColumn: true,
-        },
-        name: { type: 'Input', value: '', label: 'Name', showInColumn: true },
-        billableHours: { type: 'Input', value: '', label: 'Billable Hour' },
         buyingRate: { type: 'Input', value: '', label: 'Buy Rate' },
         sellingRate: { type: 'Input', value: '', label: 'Sell Rate' },
-        effortRate: { type: 'Input', value: '', label: 'Effort Rate' },
-        startDate: {
-          type: 'Date',
-          value: null,
-          label: 'Start Date',
-          showInColumn: true,
-        },
-        endDate: {
-          type: 'Date',
-          value: null,
-          label: 'End Date',
-          showInColumn: true,
-          disabled: true,
-        },
       },
 
       filterFields: [
         {
-          Placeholder: 'Skill',
-          fieldCol: 12,
-          size: 'small',
-          type: 'Text',
-        },
-        {
-          Placeholder: 'Total Billable Hours',
-          fieldCol: 12,
+          Placeholder: 'Expense',
+          fieldCol: 24,
           size: 'small',
           type: 'Text',
         },
         {
           object: 'obj',
-          fieldCol: 12,
+          fieldCol: 24,
           mode: 'multiple',
-          key: 'skill',
+          key: 'label',
           customValue: (value, option) => option,
           size: 'small',
           data: [],
           type: 'Select',
+          fieldStyle: { width: '50%' },
         },
         {
-          object: 'obj',
-          fieldCol: 12,
-          key: 'billableHours',
-          size: 'small',
-          type: 'InputNumber',
-          fieldStyle: { width: '100%' },
-        },
-        {
-          Placeholder: 'Start Date',
+          Placeholder: 'Buy Rate',
           fieldCol: 12,
           size: 'small',
           type: 'Text',
         },
         {
-          Placeholder: 'End Date',
+          Placeholder: 'Sell Rate',
           fieldCol: 12,
           size: 'small',
           type: 'Text',
-        },
-        {
-          object: 'obj',
-          fieldCol: 12,
-          key: 'startDate',
-          size: 'small',
-          type: 'RangePicker',
-          fieldStyle: { width: '100%' },
-        },
-        {
-          object: 'obj',
-          fieldCol: 12,
-          key: 'endDate',
-          size: 'small',
-          type: 'RangePicker',
-          fieldStyle: { width: '100%' },
-        },
-        {
-          Placeholder: 'Effort Rate',
-          fieldCol: 12,
-          size: 'small',
-          type: 'Text',
-        },
-        {
-          Placeholder: 'Buy Rate (Hourly)',
-          fieldCol: 12,
-          size: 'small',
-          type: 'Text',
-        },
-        {
-          object: 'obj',
-          fieldCol: 12,
-          key: 'effortRate',
-          shape: '%',
-          size: 'small',
-          type: 'InputNumber',
-          fieldStyle: { width: '100%' },
-          rangeMax: 100,
         },
         {
           object: 'obj',
@@ -288,12 +166,6 @@ class Resources extends Component {
           size: 'small',
           type: 'InputNumber',
           fieldStyle: { width: '100%' },
-        },
-        {
-          Placeholder: 'Sell Rate (Hourly)',
-          fieldCol: 24,
-          size: 'small',
-          type: 'Text',
         },
         {
           object: 'obj',
@@ -317,7 +189,7 @@ class Resources extends Component {
     const { PROJECTS } = JSON.parse(localStore().permissions);
     const { url } = this.props.match;
     const { proId, mileId } = this.props.match.params;
-    Promise.all([getRecord(proId), getLeadSkills(url, id)])
+    Promise.all([getRecord(proId), getMilestoneExpenses(url, id)])
       .then((res) => {
         this.setState({
           proDesc: res[0]?.success ? res[0].data : {},
@@ -341,9 +213,9 @@ class Resources extends Component {
       });
   };
 
-  getLeadSkills = (id) => {
+  getMilestoneExpenses = (id) => {
     const { crud } = this.state;
-    getLeadSkills(crud).then((res) => {
+    getMilestoneExpenses(crud).then((res) => {
       if (res.success) {
         this.setState({
           data: res.success ? res.data : [],
@@ -384,7 +256,7 @@ class Resources extends Component {
 
   callBack = () => {
     const { proId } = this.state;
-    this.getLeadSkills(proId);
+    this.getMilestoneExpenses(proId);
   };
 
   generalFilter = (value) => {
@@ -392,31 +264,15 @@ class Resources extends Component {
     if (value) {
       this.setState({
         filterData: data.filter((el) => {
-          const { firstName, lastName } =
-            el.opportunityResourceAllocations &&
-            el.opportunityResourceAllocations[0]?.contactPerson;
-          const { buyingRate, sellingRate } =
-            el.opportunityResourceAllocations &&
-            el.opportunityResourceAllocations[0];
-          const { label } = el.panelSkill;
-          const { levelLabel } = el.panelSkillStandardLevel;
+          const { label } = el.expenseType;
           return (
-            (el.title &&
-              el.title.toLowerCase().includes(value.toLowerCase())) ||
-            `${firstName ?? ''} ${lastName ?? ''}`
-              .toLowerCase()
-              .includes(value.toLowerCase()) ||
             `${label ?? ''}`.toLowerCase().includes(value.toLowerCase()) ||
-            `${levelLabel ?? ''}`.toLowerCase().includes(value.toLowerCase()) ||
-            `${el.billableHours ?? ''}`
-              .toLowerCase()
-              .includes(value.toLowerCase()) ||
-            (buyingRate &&
-              formatCurrency(buyingRate)
+            (el.buyingRate &&
+              formatCurrency(el.buyingRate)
                 .toLowerCase()
                 .includes(value.toLowerCase())) ||
-            (sellingRate &&
-              formatCurrency(sellingRate)
+            (el.sellingRate &&
+              formatCurrency(el.sellingRate)
                 .toLowerCase()
                 .includes(value.toLowerCase()))
           );
@@ -438,76 +294,38 @@ class Resources extends Component {
     }
 
     if (
-      search['skill']['value'] ||
-      search['billableHours']['value'] ||
-      search['startDate']['value'] ||
-      search['endDate']['value'] ||
+      search['label']['value'] ||
       search['buyingRate']['value'] ||
-      search['sellingRate']['value'] ||
-      search['effortRate']['value']
+      search['sellingRate']['value']
     ) {
-      const startDate = search['startDate']['value'] ?? [null, null];
-      const endDate = search['endDate']['value'] ?? [null, null];
       this.setState({
         filterData: data.filter((el) => {
           // method one which have mutliple if condition for every multiple search
-          const { buyingRate, sellingRate, effortRate } =
-            el.opportunityResourceAllocations &&
-            el.opportunityResourceAllocations[0];
-
+          console.log('HELLLLLOOO', {
+            label: el.expenseType.id,
+            value: search['label']['value'],
+          });
           return (
-            `${el.billableHours.toString() ?? ''}`
-              .toLowerCase()
-              .includes(
-                search['billableHours']['value'].toString().toLowerCase()
-              ) &&
-            (formatCurrency(buyingRate) ?? '')
+            (formatCurrency(el.buyingRate) ?? '')
               .toLowerCase()
               .includes(
                 search['buyingRate']['value'].toString().toLowerCase()
               ) &&
-            (formatCurrency(sellingRate) ?? '')
+            (formatCurrency(el.sellingRate) ?? '')
               .toLowerCase()
               .includes(
                 search['sellingRate']['value'].toString().toLowerCase()
               ) &&
-            (formatCurrency(effortRate) ?? '')
-              .toLowerCase()
-              .includes(
-                search['effortRate']['value'].toString().toLowerCase()
-              ) &&
             // multi Select Search
 
-            (search['skill']['value'].length > 0
-              ? search['skill']['value']
+            (search['label']['value'].length > 0
+              ? search['label']['value']
               : [{ value: ',' }]
             ).some((s) =>
-              (search['skill']['value'].length > 0
-                ? [el.panelSkillId]
+              (search['label']['value'].length > 0
+                ? [el.expenseType.id]
                 : [',']
               ).includes(s.value)
-            ) &&
-            //Start Date Filter
-            moment(
-              search['startDate']['value']
-                ? moment(el.startDate).format('YYYY-MM-DD')
-                : '2010-10-20'
-            ).isBetween(
-              startDate[0] ?? '2010-10-19',
-              startDate[1] ?? '2010-10-25',
-              undefined,
-              '[]'
-            ) &&
-            //End Date Filter
-            moment(
-              search['endDate']['value']
-                ? moment(el.endDate).format('YYYY-MM-DD')
-                : '2010-10-20'
-            ).isBetween(
-              endDate[0] ?? '2010-10-19',
-              endDate[1] ?? '2010-10-25',
-              undefined,
-              '[]'
             )
           );
         }),
@@ -524,11 +342,10 @@ class Resources extends Component {
   };
 
   filterModalUseEffect = () => {
-    const { proDesc } = this.state;
-    Promise.all([getPanelSkills(proDesc.panelId)])
+    Promise.all([getExpenseList()])
       .then((res) => {
         const { filterFields } = this.state;
-        filterFields[2].data = res[0].success ? res[0].data : [];
+        filterFields[1].data = res[0].success ? res[0].data : [];
         this.setState({ filterFields });
       })
       .catch((e) => {
@@ -636,7 +453,7 @@ class Resources extends Component {
               //checking if project is close
               disabled={!permissions['ADD'] || proDesc.phase === false}
             >
-              <PlusSquareOutlined /> Add Resource
+              <PlusSquareOutlined /> Add Expense
             </Button>
           </Col>
           {/* <Col> <Button type="danger" size='small'>Delete Resource</Button></Col> */}
@@ -657,7 +474,7 @@ class Resources extends Component {
         />
         {openSearch && (
           <TableModalFilter
-            title={'Search Resources'}
+            title={'Search Expenses'}
             visible={openSearch}
             filters={searchedColumn}
             filterFields={filterFields}
@@ -668,15 +485,13 @@ class Resources extends Component {
           />
         )}
         {infoModal && (
-          <ResModal
+          <ExpenseModal
             visible={infoModal}
             editRex={editRex}
             proId={proId}
-            pDates={pDates}
             crud={crud}
             cmRate={proDesc.cmPercentage}
             mileId={mileId}
-            panelId={proDesc.panelId}
             onHold={proDesc.phase === false} //checking if project is close
             close={this.closeModal}
             callBack={this.callBack}
@@ -688,4 +503,4 @@ class Resources extends Component {
   }
 }
 
-export default Resources;
+export default Expenses;
