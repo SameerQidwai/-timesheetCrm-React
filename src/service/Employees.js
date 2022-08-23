@@ -120,6 +120,25 @@ export const editList = (id, data) => {
     });
 };
 
+export const toggleActiveStatus = (id) => {
+  messageAlert.loading({ content: 'Loading...', key: id });
+  return axios
+    .put(url + `/${id}/toggleActive`, {}, { headers: headers() })
+    .then((res) => {
+      const { success, message, data } = res.data;
+      jwtExpired(message);
+      messageAlert.success({ content: message, key: id });
+      if (success) {
+        setToken(res.headers && res.headers.authorization);
+        return { success, data };
+      }
+      return { success, data };
+    })
+    .catch((err) => {
+      return apiErrorRes(err, id, 5);
+    });
+};
+
 function reStructure(data) {
   const contactPerson = data.contactPersonOrganization
     ? data.contactPersonOrganization.contactPerson
@@ -139,6 +158,7 @@ function reStructure(data) {
     password: data.password,
     roleId: data.roleId,
     lineManagerId: data.lineManagerId,
+    active: data.active,
   };
   const detail = {
     superannuationName: data.superannuationName,
