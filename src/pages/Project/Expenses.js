@@ -186,7 +186,7 @@ class Expenses extends Component {
   };
 
   fetchAll = (id) => {
-    const { PROJECTS } = JSON.parse(localStore().permissions);
+    const { OPPORTUNITIES } = JSON.parse(localStore().permissions);
     const { url } = this.props.match;
     const { proId, mileId } = this.props.match.params;
     Promise.all([getRecord(proId), getMilestoneExpenses(url, id)])
@@ -204,7 +204,7 @@ class Expenses extends Component {
           infoModal: false,
           data: res[1]?.success ? res[1].data : [],
           filterData: res[1]?.success ? res[1].data : [],
-          permissions: PROJECTS,
+          permissions: OPPORTUNITIES,
           notAuth: res?.[1]?.authError,
         });
       })

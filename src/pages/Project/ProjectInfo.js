@@ -12,7 +12,7 @@ import {
   Popover,
 } from 'antd';
 import { Link } from 'react-router-dom';
-import { SettingOutlined, DownOutlined, SyncOutlined } from '@ant-design/icons'; //Icons
+import { SettingOutlined, DownOutlined } from '@ant-design/icons'; //Icons
 
 import Comments from '../../components/Core/Comments';
 // import Travels from "../../components/Core/Travels";
@@ -22,13 +22,7 @@ import ProfitLoss from '../../components/Core/ProfitLoss';
 
 import InfoModal from './Modals/InfoModal';
 
-import {
-  getRecord,
-  delList,
-  Outcomes,
-  getCalculatedValue,
-  updateProjectValue,
-} from '../../service/projects';
+import { getRecord, delList, Outcomes } from '../../service/projects';
 
 import {
   formatDate,
@@ -111,43 +105,6 @@ class ProjectInfo extends Component {
     Outcomes(action, leadId).then((res) => {
       if (res.success) {
         this.setState({ basic: { ...basic, phase: action === 'open' } });
-      }
-    });
-  };
-
-  getCalculatedValue = (id) => {
-    const { history } = this.props;
-    this.setState({ valueSpin: true });
-    getCalculatedValue(id).then((res) => {
-      if (res.success) {
-        let updateEnabled = true;
-        console.log({
-          data: res.data,
-          state: this.state.data.value,
-          condition: res.data === this.state.data.value,
-        });
-        if (res.data === this.state.data.value) {
-          updateEnabled = false;
-        } else {
-          updateEnabled = true;
-        }
-        this.setState({
-          calculatedValue: res.data,
-          valueSpin: false,
-          updateEnabled: updateEnabled,
-        });
-      }
-    });
-  };
-
-  updateProjectValue = (id) => {
-    const { history } = this.props;
-    updateProjectValue(id).then((res) => {
-      if (res.success) {
-        res.data.calculatedValue = this.state.calculatedValue;
-        this.setState({
-          data: res.data,
-        });
       }
     });
   };
@@ -283,35 +240,7 @@ class ProjectInfo extends Component {
           <Item label="Project Name">{data.title}</Item>
           <Item label="Contract Value">
             <Row justify="space-between" align="middle">
-              <Col>{formatCurrency(data.value)}</Col>
-              {data.value !== calculatedValue ? (
-                <Col>
-                  <Popconfirm
-                    title={`Calculated Project Contract Value is: ${formatCurrency(
-                      calculatedValue
-                    )}`}
-                    okText="Update"
-                    onConfirm={() => {
-                      this.updateProjectValue(leadId);
-                    }}
-                    okButtonProps={{ disabled: !updateEnabled }}
-                    showCancel={false}
-                    placement="top"
-                  >
-                    <Button
-                      type="primary"
-                      size="sm"
-                      onClick={() => {
-                        this.getCalculatedValue(leadId);
-                      }}
-                    >
-                      <SyncOutlined spin={valueSpin} />
-                    </Button>
-                  </Popconfirm>
-                </Col>
-              ) : (
-                <></>
-              )}
+              {formatCurrency(data.value)}
             </Row>
           </Item>
           <Item label="Organisation">

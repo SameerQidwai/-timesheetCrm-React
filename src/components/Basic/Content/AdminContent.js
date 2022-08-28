@@ -33,7 +33,7 @@ import ProjectInfo from '../../../pages/Project/ProjectInfo';
 import ProjectResources from '../../../pages/Project/Resources';
 import ResourceHistory from '../../../pages/Project/ResourceHistory';
 import PurchaseOrder from '../../../pages/Project/PurchaseOrder';
-import ProjectExpenses from '../../../pages/Project/Expenses';
+import OpportunityExpenses from '../../../pages/Project/Expenses';
 
 import LeaveRequest from '../../../pages/Leave Request/LeaveRequest';
 import ApproveRequest from '../../../pages/Leave Request/ApproveRequest';
@@ -233,6 +233,13 @@ const pageLinks = [
     permission: 'READ',
   },
   {
+    component: OpportunityExpenses,
+    link: '/opportunities/:proId/milestones/:mileId/expenses',
+    // link: "/projects/:id/resources",
+    key: 'OPPORTUNITIES',
+    permission: 'READ',
+  },
+  {
     component: OpportunityResources,
     link: '/opportunities/:proId/milestones/:mileId/resources',
     // link: "/opportunities/:id/resources",
@@ -272,13 +279,6 @@ const pageLinks = [
   {
     component: ProjectResources,
     link: '/projects/:proId/milestones/:mileId/resources',
-    // link: "/projects/:id/resources",
-    key: 'PROJECTS',
-    permission: 'READ',
-  },
-  {
-    component: ProjectExpenses,
-    link: '/projects/:proId/milestones/:mileId/expenses',
     // link: "/projects/:id/resources",
     key: 'PROJECTS',
     permission: 'READ',

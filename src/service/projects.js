@@ -273,77 +273,42 @@ export const getProfitLoss = (projectId, dates) => {
     });
 };
 
-export const getCalculatedValue = (projectId) => {
-  return axios
-    .get(`${url}/${projectId}/calculatedValue`, { headers: headers() })
-    .then((res) => {
-      const { success, data, message } = res.data;
-      jwtExpired(message);
-      setToken(res.headers && res.headers.authorization);
-      return { success, data };
-    })
-    .catch((err) => {
-      return {
-        error: 'Please login again!',
-        status: false,
-        message: err.message,
-      };
-    });
-};
-
-export const updateProjectValue = (projectId) => {
-  return axios
-    .put(`${url}/${projectId}/calculatedValue`, {}, { headers: headers() })
-    .then((res) => {
-      const { success, data, message } = res.data;
-      jwtExpired(message);
-      setToken(res.headers && res.headers.authorization);
-      return { success, data };
-    })
-    .catch((err) => {
-      return {
-        error: 'Please login again!',
-        status: false,
-        message: err.message,
-      };
-    });
-};
-
 export const getLeadSkill = (crud, resId) => {
-    return axios
-        .get(`${Api}${crud}/${resId}`, {headers:headers()})
-        .then((res) => {
-            const { success, data, message } = res.data;
-            jwtExpired(message)
-            if (success){
-                let obj = {
-                    panelSkillId:  data.panelSkillId,
-                    title:  data.title,
-                    panelSkillStandardLevelId:  data.panelSkillStandardLevelId,
-                    ltceil: data.panelSkillStandardLevel?.longTermCeil,
-                    stceil: data.panelSkillStandardLevel?.shortTermCeil,
-                    billableHours: data.billableHours,
-                    startDate:  formatDate(data.startDate),
-                    endDate: formatDate(data.endDate),
-                    contactPersonId: data?.opportunityResourceAllocations?.[0]?.contactPersonId,
-                    buyingRate:  data?.opportunityResourceAllocations?.[0]?.buyingRate,
-                    sellingRate:  data?.opportunityResourceAllocations?.[0]?.sellingRate,
-                    effortRate: data?.opportunityResourceAllocations?.[0]?.effortRate,
-                    allocationId: data?.opportunityResourceAllocations?.[0]?.id,
-                    role: data.opportunityResourceAllocations?.[0]?.role
-                }
-                setToken(res.headers && res.headers.authorization)
-                return {success, data: obj}
-            }
-            return { success }
-        })
-        .catch((err) => {
-            return {
-                error: "Please login again!",
-                status: false,
-                message: err.message,
-            };
-        });
+  return axios
+    .get(`${Api}${crud}/${resId}`, { headers: headers() })
+    .then((res) => {
+      const { success, data, message } = res.data;
+      jwtExpired(message);
+      if (success) {
+        let obj = {
+          panelSkillId: data.panelSkillId,
+          title: data.title,
+          panelSkillStandardLevelId: data.panelSkillStandardLevelId,
+          ltceil: data.panelSkillStandardLevel?.longTermCeil,
+          stceil: data.panelSkillStandardLevel?.shortTermCeil,
+          billableHours: data.billableHours,
+          startDate: formatDate(data.startDate),
+          endDate: formatDate(data.endDate),
+          contactPersonId:
+            data?.opportunityResourceAllocations?.[0]?.contactPersonId,
+          buyingRate: data?.opportunityResourceAllocations?.[0]?.buyingRate,
+          sellingRate: data?.opportunityResourceAllocations?.[0]?.sellingRate,
+          effortRate: data?.opportunityResourceAllocations?.[0]?.effortRate,
+          allocationId: data?.opportunityResourceAllocations?.[0]?.id,
+          role: data.opportunityResourceAllocations?.[0]?.role,
+        };
+        setToken(res.headers && res.headers.authorization);
+        return { success, data: obj };
+      }
+      return { success };
+    })
+    .catch((err) => {
+      return {
+        error: 'Please login again!',
+        status: false,
+        message: err.message,
+      };
+    });
 };
 
 export const editLeadSkill = (crud, resId, data) => {

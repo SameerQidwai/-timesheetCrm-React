@@ -153,7 +153,7 @@ class OrgInfo extends Component {
                   </Link>
                 </Menu.Item>
                 <Menu.Item
-                  key="delete"
+                  key="deactive"
                   disabled={!permissions?.['DELETE']}
                   className="pop-confirm-menu"
                 >
