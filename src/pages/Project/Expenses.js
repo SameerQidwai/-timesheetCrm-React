@@ -474,7 +474,7 @@ class Expenses extends Component {
         />
         {openSearch && (
           <TableModalFilter
-            title={'Search Expenses'}
+            title={'Filter Expenses'}
             visible={openSearch}
             filters={searchedColumn}
             filterFields={filterFields}

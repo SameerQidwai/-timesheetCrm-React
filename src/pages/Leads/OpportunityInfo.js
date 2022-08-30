@@ -301,7 +301,7 @@ class OpportunityInfo extends Component {
               {data.value !== calculatedValue ? (
                 <Col>
                   <Popconfirm
-                    title={`Calculated Project Contract Value is: ${formatCurrency(
+                    title={`Calculated Estimated Value is: ${formatCurrency(
                       calculatedValue
                     )}`}
                     okText="Update"
