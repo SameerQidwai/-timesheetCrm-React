@@ -529,7 +529,7 @@ class Organizations extends Component {
         </Row>
         {openSearch && (
           <TableModalFilter
-            title="Filter Organization"
+            title="Filter Organizations"
             visible={openSearch}
             filters={searchedColumn}
             filterFields={filterFields}
