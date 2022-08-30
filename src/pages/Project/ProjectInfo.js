@@ -265,7 +265,7 @@ class ProjectInfo extends Component {
             {formatDate(data.startDate, true, true)}{' '}
           </Item>
           <Item label="End Date">{formatDate(data.endDate, true, true)}</Item>
-          <Item label="Bid Date">{formatDate(data.bidDate, true, true)}</Item>
+          {/* <Item label="Bid Date">{formatDate(data.bidDate, true, true)}</Item> */}
           <Item label="Status">
             {
               <Tag color={!basic.phase ? 'red' : 'green'}>

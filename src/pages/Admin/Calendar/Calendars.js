@@ -1,288 +1,316 @@
-import React, { Component } from "react";
-import { Table, Menu, Dropdown, Button, Tag, Row, Col, Typography, Modal, } from "antd";
-import { DownOutlined, SettingOutlined, PlusSquareOutlined, LoadingOutlined} from "@ant-design/icons"; //Icons
-import { Link } from "react-router-dom";
+import React, { Component } from 'react';
+import {
+  Table,
+  Menu,
+  Dropdown,
+  Button,
+  Tag,
+  Row,
+  Col,
+  Typography,
+  Modal,
+} from 'antd';
+import {
+  DownOutlined,
+  SettingOutlined,
+  PlusSquareOutlined,
+  LoadingOutlined,
+} from '@ant-design/icons'; //Icons
+import { Link } from 'react-router-dom';
 
-import Form from "../../../components/Core/Forms/Form";
+import Form from '../../../components/Core/Forms/Form';
 
-import { getList, addList, editLabel } from "../../../service/calendar";
-import { localStore } from "../../../service/constant";
-import { tableSorter, tableTitleFilter } from "../../../components/Core/Table/TableFilter";
+import { getList, addList, editLabel } from '../../../service/calendar';
+import { localStore } from '../../../service/constant';
+import {
+  tableSorter,
+  tableTitleFilter,
+} from '../../../components/Core/Table/TableFilter';
 
 const { Title } = Typography;
 
 class Calendars extends Component {
-    constructor(props) {
-        super(props);
+  constructor(props) {
+    super(props);
 
-        // this.calenderForm =  React.createRef();
+    // this.calenderForm =  React.createRef();
 
-        this.columns = [
+    this.columns = [
+      {
+        title: 'Title',
+        dataIndex: 'label',
+        key: 'label',
+        ...tableSorter('label', 'string'),
+      },
+      {
+        title: 'Status',
+        dataIndex: 'isActive',
+        key: 'isActive',
+        align: 'right',
+        render: (isActive) => (
+          <>
             {
-                title: "Title",
-                dataIndex: "label",
-                key: "label",
-                ...tableSorter('label', 'string')
-            },
-            {
-                title: "Status",
-                dataIndex: "isActive",
-                key: "isActive",
-                align: "right",
-                render: (isActive) => (
-                    <>
-                        {
-                            <Tag
-                                color={!isActive ? "#7d7b7b" : "green"}
-                                key={isActive}
-                            >
-                                {isActive ? "Enabled" : "Disabled"}
-                            </Tag>
-                        }
-                    </>
-                ),
-            },
-            {
-                title: "Action",
-                key: "action",
-                align: "right",
-                width: 115,
-                render: (record, text) => (
-                    <Dropdown
-                        overlay={
-                            <Menu>
-                                <Menu.Item
-                                    onClick={() => this.getRecord(record, text)}
-                                >
-                                    Edit
-                                </Menu.Item>
-                                <Menu.Item>
-                                    <Link
-                                        to={{
-                                            pathname: `/admin/calendars/holidays/${record.id}`,
-                                        }}
-                                        className="nav-link"
-                                    >
-                                        Holidays
-                                    </Link>
-                                </Menu.Item>
-                            </Menu>
-                        }
-                    >
-                        <Button size="small">
-                            <SettingOutlined /> Option <DownOutlined />
-                        </Button>
-                    </Dropdown>
-                ),
-            },
-        ];
-
-        this.state = {
-            data: [],
-            calenderForm: React.createRef(),
-            openModal: false,
-            filterData: [],
-
-            FormFields: {
-                formId: "calenderId",
-                justify: "center",
-                FormCol: 20,
-                FieldSpace: { xs: 12, sm: 16, md: 122 },
-                layout: { labelCol: { span: 12 } },
-                justifyField: "center",
-                size: "middle",
-                initialValues: { obj: { isActive: true } },
-                fields: [
-                    {
-                        object: "obj",
-                        fieldCol: 20,
-                        layout: {
-                            labelCol: { span: 4 },
-                            wrapperCol: { span: 0 },
-                        },
-                        key: "label",
-                        label: "Title",
-                        size: "small",
-                        // rules:[{ required: true }],
-                        type: "input",
-                        labelAlign: "left",
-                    },
-                    {
-                        object: "obj",
-                        fieldCol: 20,
-                        key: "isActive",
-                        label: "Status",
-                        size: "small",
-                        // rules:[{ required: true, message: 'Insert your Password Please' }],
-                        type: "Switch",
-                        layout: { labelCol: { span: 4 } },
-                        labelAlign: "left",
-                        valuePropName: "checked",
-                        // hidden: false
-                    },
-                ],
-            },
-        };
-    }
-
-    componentDidMount = () => {
-        this.getData();
-    };
-
-    getData = () => {
-        //creating API's
-        getList().then((res) => {
-            if (res.success) {
-                this.setState({
-                    data: res.data,
-                    filterData: res.data,
-                    FormFields: {
-                        ...this.state.FormFields,
-                        initialValues: {},
-                    },
-                    openModal: false,
-                    editTimeoff: false,
-                    loading: false
-                });
+              <Tag color={!isActive ? '#7d7b7b' : 'green'} key={isActive}>
+                {isActive ? 'Enabled' : 'Disabled'}
+              </Tag>
             }
-        });
-    };
-
-    toggelModal = (status) => {
-        if (status) {
-            this.setState({ openModal: status });
-        } else {
-            this.setState({
-                FormFields: {
-                    ...this.state.FormFields,
-                    initialValues: {},
-                },
-                openModal: false,
-                editTimeoff: false,
-            });
-        }
-    };
-
-    Callback = (vake) => {
-        // this will work after I get the Object from the form
-        if (!this.state.editTimeoff) {
-            this.addCal(vake.obj);
-        } else {
-            this.editRecord(vake.obj);
-        }
-    };
-
-    addCal = (value) => {
-        this.setState({loading: true})
-        addList(value).then((res) => {
-            if (res) {
-                this.getData();
+          </>
+        ),
+      },
+      {
+        title: 'Action',
+        key: 'action',
+        align: 'right',
+        width: 115,
+        render: (record, text) => (
+          <Dropdown
+            overlay={
+              <Menu>
+                <Menu.Item onClick={() => this.getRecord(record, text)}>
+                  Edit
+                </Menu.Item>
+                <Menu.Item>
+                  <Link
+                    to={{
+                      pathname: `/admin/calendars/holidays/${record.id}`,
+                    }}
+                    className="nav-link"
+                  >
+                    Holidays
+                  </Link>
+                </Menu.Item>
+              </Menu>
             }
-        });
-    };
+          >
+            <Button size="small">
+              <SettingOutlined /> Option <DownOutlined />
+            </Button>
+          </Dropdown>
+        ),
+      },
+    ];
 
-    getRecord = (data, text) => {
+    this.state = {
+      data: [],
+      calenderForm: React.createRef(),
+      openModal: false,
+      filterData: [],
+
+      FormFields: {
+        formId: 'calenderId',
+        justify: 'center',
+        FormCol: 20,
+        FieldSpace: { xs: 12, sm: 16, md: 122 },
+        layout: { labelCol: { span: 12 } },
+        justifyField: 'center',
+        size: 'middle',
+        initialValues: { obj: { isActive: true } },
+        fields: [
+          {
+            object: 'obj',
+            fieldCol: 20,
+            layout: {
+              labelCol: { span: 4 },
+              wrapperCol: { span: 0 },
+            },
+            key: 'label',
+            label: 'Title',
+            size: 'small',
+            // rules:[{ required: true }],
+            type: 'input',
+            labelAlign: 'left',
+          },
+          {
+            object: 'obj',
+            fieldCol: 20,
+            key: 'isActive',
+            label: 'Status',
+            size: 'small',
+            // rules:[{ required: true, message: 'Insert your Password Please' }],
+            type: 'Switch',
+            layout: { labelCol: { span: 4 } },
+            labelAlign: 'left',
+            valuePropName: 'checked',
+            // hidden: false
+          },
+        ],
+      },
+    };
+  }
+
+  componentDidMount = () => {
+    this.getData();
+  };
+
+  getData = () => {
+    //creating API's
+    getList().then((res) => {
+      if (res.success) {
         this.setState({
-            FormFields: {
-                ...this.state.FormFields,
-                initialValues: { obj: data },
-            },
-            editTimeoff: data.id,
-            openModal: true,
+          data: res.data,
+          filterData: res.data,
+          FormFields: {
+            ...this.state.FormFields,
+            initialValues: {},
+          },
+          openModal: false,
+          editTimeoff: false,
+          loading: false,
         });
-    };
+      }
+    });
+  };
 
-    editRecord = (obj) => {
-        const { editTimeoff } = this.state;
-        this.setState({loading: true})
-        obj.id = editTimeoff;
-        editLabel(obj).then((res) => {
-            if (res) {
-                this.getData();
-            }
-        });
-    };
+  toggelModal = (status) => {
+    if (status) {
+      this.setState({ openModal: status });
+    } else {
+      this.setState({
+        FormFields: {
+          ...this.state.FormFields,
+          initialValues: {},
+        },
+        openModal: false,
+        editTimeoff: false,
+      });
+    }
+  };
 
-    submit = () => {
-        this.state.calenderForm.current.refs.calenderId.submit();
-    };
+  Callback = (vake) => {
+    // this will work after I get the Object from the form
+    if (!this.state.editTimeoff) {
+      this.addCal(vake.obj);
+    } else {
+      this.editRecord(vake.obj);
+    }
+  };
 
-    generalFilter = (value) =>{
-        const { data } = this.state
-        if (value){
-            this.setState({
-                filterData: data.filter(el => {
-                    return el.label && el.label.toLowerCase().includes(value.toLowerCase()) || 
-                    `${el.isActive ? "Enabled" : "Disabled"}`.toLowerCase().includes(value.toLowerCase())
-                })
-            })
-        }else{
-            this.setState({
-                filterData: data
-            })
+  addCal = (value) => {
+    this.setState({ loading: true });
+    addList(value).then((res) => {
+      if (res) {
+        this.getData();
+      }
+    });
+  };
+
+  getRecord = (data, text) => {
+    this.setState({
+      FormFields: {
+        ...this.state.FormFields,
+        initialValues: { obj: data },
+      },
+      editTimeoff: data.id,
+      openModal: true,
+    });
+  };
+
+  editRecord = (obj) => {
+    const { editTimeoff } = this.state;
+    this.setState({ loading: true });
+    obj.id = editTimeoff;
+    editLabel(obj).then((res) => {
+      if (res) {
+        this.getData();
+      }
+    });
+  };
+
+  submit = () => {
+    this.state.calenderForm.current.refs.calenderId.submit();
+  };
+
+  generalFilter = (value) => {
+    const { data } = this.state;
+    if (value) {
+      this.setState({
+        filterData: data.filter((el) => {
+          return (
+            (el.label &&
+              el.label.toLowerCase().includes(value.toLowerCase())) ||
+            `${el.isActive ? 'Enabled' : 'Disabled'}`
+              .toLowerCase()
+              .includes(value.toLowerCase())
+          );
+        }),
+      });
+    } else {
+      this.setState({
+        filterData: data,
+      });
+    }
+  };
+
+  render() {
+    const {
+      data,
+      openModal,
+      editTimeoff,
+      loading,
+      calenderForm,
+      FormFields,
+      filterData,
+    } = this.state;
+    const columns = this.columns;
+    return (
+      <>
+        <Row justify="space-between">
+          <Col>
+            <Title level={4}>Calendars</Title>
+          </Col>
+          <Col style={{ textAlign: 'end' }}>
+            <Button
+              type="primary"
+              onClick={() => {
+                this.toggelModal(true);
+              }}
+              size="small"
+            >
+              <PlusSquareOutlined />
+              Add Calendar
+            </Button>
+          </Col>
+          <Col span={24}>
+            <Table
+              title={() => tableTitleFilter(5, this.generalFilter)}
+              bordered
+              pagination={{ pageSize: localStore().pageSize }}
+              columns={columns}
+              dataSource={filterData}
+              size="small"
+              rowKey={(data) => data.id}
+              className="fs-small"
+            />
+          </Col>
+        </Row>
+        {
+          openModal ? (
+            <Modal
+              title={editTimeoff ? 'Edit Calendar' : 'Add Calendar'}
+              maskClosable={false}
+              centered
+              visible={openModal}
+              onOk={() => {
+                this.submit();
+              }}
+              okButtonProps={{ disabled: loading }}
+              okText={loading ? <LoadingOutlined /> : 'Save'}
+              onCancel={() => {
+                this.toggelModal(false);
+              }}
+              width={600}
+            >
+              <Form
+                ref={calenderForm}
+                Callback={this.Callback}
+                FormFields={FormFields}
+              />
+            </Modal>
+          ) : null //adding a commit
         }
-    }
-
-    render() {
-        const { data, openModal, editTimeoff, loading, calenderForm, FormFields, filterData } = this.state;
-        const columns = this.columns;
-        return (
-            <>
-                <Row justify="space-between">
-                    <Col>
-                        <Title level={4}>Calendars</Title>
-                    </Col>
-                    <Col style={{ textAlign: "end" }}>
-                        <Button
-                            type="primary"
-                            onClick={() => {
-                                this.toggelModal(true);
-                            }}
-                            size="small"
-                        >
-                            <PlusSquareOutlined />
-                            Add Calendar
-                        </Button>
-                    </Col>
-                    <Col span={24}>
-                        <Table
-                            title={()=>tableTitleFilter(5, this.generalFilter)}
-                            bordered
-                            pagination={{pageSize: localStore().pageSize}}
-                            columns={columns}
-                            dataSource={filterData}
-                            size="small"
-                            rowKey={(data) => data.id}
-                            className='fs-small'
-                        />
-                    </Col>
-                </Row>
-                {
-                    openModal ? (
-                        <Modal
-                            title={ editTimeoff ? "Edit Calendar" : "Add Calendar" }
-                            maskClosable={false}
-                            centered
-                            visible={openModal}
-                            onOk={() => { this.submit(); }}
-                            okButtonProps={{ disabled: loading }}
-                            okText={loading ?<LoadingOutlined /> :"Save"}
-                            onCancel={() => {
-                                this.toggelModal(false);
-                            }}
-                            width={600}
-                        >
-                            <Form
-                                ref={calenderForm}
-                                Callback={this.Callback}
-                                FormFields={FormFields}
-                            />
-                        </Modal>
-                    ) : null //adding a commit
-                }
-            </>
-        );
-    }
+      </>
+    );
+  }
 }
 
 export default Calendars;

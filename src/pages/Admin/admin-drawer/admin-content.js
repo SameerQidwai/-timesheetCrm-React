@@ -37,11 +37,11 @@ const pageLinks = [
   },
   {
     component: Calendars,
-    link: '/admin/calendar',
+    link: '/admin/calendars',
   },
   {
     component: CalendarHolidays,
-    link: '/admin/calendar/holidays/:id',
+    link: '/admin/calendars/holidays/:id',
   },
   {
     component: LeaveCategories,
