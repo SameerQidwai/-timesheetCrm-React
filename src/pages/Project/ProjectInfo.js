@@ -35,6 +35,7 @@ import AuthError from '../../components/Core/AuthError';
 import PMResources from '../../components/Core/Resources/PMResources';
 import PTResources from '../../components/Core/Resources/PTResources';
 import { generalDelete } from "../../service/delete-Api's";
+import ProjectTracking from '../../components/Core/ProjectTracking/ProjectTracking';
 
 const { Item } = Descriptions;
 const { TabPane } = Tabs;
@@ -316,6 +317,9 @@ class ProjectInfo extends Component {
                 // Need to create these both component as one
                 <PTResources id={leadId} data={data} />
               )}
+            </TabPane>
+            <TabPane tab="Project Tracking" key="projectTracking">
+              <ProjectTracking id={leadId} data={data} />
             </TabPane>
           </Tabs>
         )}
