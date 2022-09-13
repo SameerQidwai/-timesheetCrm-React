@@ -3,11 +3,10 @@
 }
 
 .project-tracking-nested tr.forecast {
-  background-color: #ff7875;
 }
 
 .project-tracking-nested tr:first-child {
-  background-color: #ffc792;
+  background-color: #bbbbbb;
 }
 
 .project-tracking-nested {
