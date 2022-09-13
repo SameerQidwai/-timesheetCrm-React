@@ -108,14 +108,14 @@ const trackingColumn = [
     ...tableSorter('actualDays', 'number'),
   },
   {
-    title: 'Revenue',
+    title: 'Actual Revenue',
     dataIndex: 'actualRevenue',
     key: 'actualRevenue',
     render: (record) => record && formatCurrency(record),
     ...tableSorter('actualRevenue', 'number'),
   },
   {
-    title: 'Cost',
+    title: 'Actual Cost',
     dataIndex: 'actualCost',
     key: 'actualCost',
     render: (record) => record && formatCurrency(record),
@@ -207,8 +207,9 @@ function NestedTable({ columns, data }) {
       <Table
         bordered
         size="small"
-        className="fs-small"
+        className="fs-small project-tracking-nested"
         rowKey={(record) => record.allocationId}
+        rowClassName={(record) => (record.current ? 'current' : 'forecast')}
         columns={columns}
         dataSource={data}
         pagination={false}
@@ -272,3 +273,12 @@ function NestedTable({ columns, data }) {
 }
 
 export default ProjectTracking;
+
+//COST = Actual hours.
+//TIMESHEET BY PROJECT
+//TOP ROW = Total ((Cost, Revenue) Total, Utilized, Remaining  ,CM$, CM%)
+//Add actual in Columns
+//Background Colors
+//Margin Or padding
+//Resource two digit %
+//Green and Red

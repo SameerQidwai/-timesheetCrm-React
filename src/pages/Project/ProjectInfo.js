@@ -37,6 +37,8 @@ import PTResources from '../../components/Core/Resources/PTResources';
 import { generalDelete } from "../../service/delete-Api's";
 import ProjectTracking from '../../components/Core/ProjectTracking/ProjectTracking';
 
+import './styles.css';
+
 const { Item } = Descriptions;
 const { TabPane } = Tabs;
 
