@@ -14,7 +14,7 @@ class ProfitLoss extends Component {
             fiscalYear: getFiscalYear('dates'),
             data:[
                 {key: 'W', label: 'Working Days', total: 0},
-                {key: 'R', label: 'Revenue \n (discounted value)', total: 0},
+                {key: 'R', label: `Revenue \n ${props['parent'] === 'O'? '(discounted value)' : ''}`, total: 0},
                 {key: 'C', label: 'Cost of sale/services', total: 0 },
                 {key: '$', label: 'CM $', total: 0 },
                 {key: '%', label: 'CM %', total: 0 },
@@ -162,7 +162,7 @@ class ProfitLoss extends Component {
             data[4][key] = revenueValue ? ((cm / revenueValue )*100): 0//cm percentage
 
             //For Total Column 
-            data[0]['total'] += data[0][key]
+            data[0]['total'] += data[0][key] ?? 0
             data[1]['total'] += data[1][key] //SELL TOTAL WITH IN A FISCAL YEAR
             data[2]['total'] += data[2][key] //BUY TOTAL WITH IN A FISCAL YEAR
             data[3]['total'] += data[3][key] //CM
@@ -178,7 +178,6 @@ class ProfitLoss extends Component {
     }
 
     calculateLeadData = (holidays) =>{
-        console.log(holidays)
         let { data, fiscalYear } = this.state
         const { billing } = this.props
         const len = billing.totalMonths>0 ? billing.totalMonths : 0
@@ -213,7 +212,7 @@ class ProfitLoss extends Component {
             
             //Total of every row with in financial year... 
             if (startDate.isBetween(formatDate(fiscalYear['start']), formatDate(fiscalYear['end']), 'month', '[]')){
-                data[0]['total'] += data[0][key] // this is wrong I know
+                data[0]['total'] += workDays
                 data[1]['total'] += revenue * workDays
                 data[2]['total'] += cos * workDays
                 data[3]['total'] += cm * workDays

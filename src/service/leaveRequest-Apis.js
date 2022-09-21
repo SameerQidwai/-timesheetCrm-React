@@ -58,7 +58,7 @@ export const getSingleRequest = (id) => {
                 var fileIds = []
                 var fileList = []
                 attachments.map((el) => {
-                    fileIds.push(el.id)
+                    fileIds.push(el.fileId)
                     fileList.push({
                         id: el.id,
                         createdAt: el.createdAt,
