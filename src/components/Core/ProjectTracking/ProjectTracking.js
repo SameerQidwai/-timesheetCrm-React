@@ -44,6 +44,13 @@ const resourceColumns = [
     ...tableSorter('total.utilizedHours', 'number'),
   },
   {
+    title: 'Remaining Hours',
+    dataIndex: ['total', 'remainingHours'],
+    key: 'remaining',
+    render: (record) => record && formatCurrency(record),
+    ...tableSorter('total.remainingHours', 'number'),
+  },
+  {
     title: 'Actual Cost',
     dataIndex: ['total', 'actualCost'],
     key: 'actualCost',
