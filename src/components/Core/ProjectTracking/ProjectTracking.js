@@ -10,6 +10,7 @@ import {
 } from '../../../service/constant';
 import { tableSorter } from '../Table/TableFilter';
 import { getHierarchy, getProjectTracking } from '../../../service/projects';
+import moment from 'moment';
 
 const resourceColumns = [
   {
@@ -29,19 +30,48 @@ const resourceColumns = [
     ...tableSorter('fullName', 'string'),
   },
   {
-    title: 'CM $',
-    dataIndex: ['now', 'cm$'],
-    key: 'cm$',
+    title: 'Total Hours',
+    dataIndex: ['total', 'totalHours'],
+    key: 'total',
     render: (record) => record && formatCurrency(record),
-    ...tableSorter('now.cm$', 'number'),
+    ...tableSorter('total.totalHours', 'number'),
   },
   {
-    title: 'CM %',
-    dataIndex: ['now', 'cmPercent'],
-    key: 'cmPercent',
-    render: (record) => `${record ?? '-'} %`,
-    ...tableSorter('now.cmPercent', 'number'),
+    title: 'Utilized Hours',
+    dataIndex: ['total', 'utilizedHours'],
+    key: 'utilized',
+    render: (record) => record && formatCurrency(record),
+    ...tableSorter('total.utilizedHours', 'number'),
   },
+  {
+    title: 'Actual Cost',
+    dataIndex: ['total', 'actualCost'],
+    key: 'actualCost',
+    render: (record) => record && formatCurrency(record),
+    ...tableSorter('total.actualCost', 'number'),
+  },
+  {
+    title: 'Actual Revenue',
+    dataIndex: ['total', 'actualRevenue'],
+    key: 'actualRevenue',
+    render: (record) => record && formatCurrency(record),
+    ...tableSorter('total.actualRevenue', 'number'),
+  },
+  {
+    title: 'CM$',
+    dataIndex: ['total', 'cm$'],
+    key: 'cm$',
+    render: (record) => record && formatCurrency(record),
+    ...tableSorter('total.cm$', 'number'),
+  },
+  {
+    title: 'CM%',
+    dataIndex: ['total', 'cmPercent'],
+    key: 'cmPercent',
+    render: (record) => record && formatFloat(record),
+    ...tableSorter('total.cmPercent', 'number'),
+  },
+
   {
     title: '...',
     key: 'action',
@@ -155,8 +185,8 @@ class ProjectTracking extends Component {
   componentDidMount = () => {
     const { id } = this.props;
     getProjectTracking(id, {
-      startDate: '01-07-2022',
-      endDate: '30-06-2023',
+      startDate: moment().format('01-07-YYYY'),
+      endDate: moment().add(1, 'year').format('30-06-YYYY'),
     }).then((res) => {
       if (res) {
         const { success, data } = res;
@@ -225,13 +255,13 @@ function NestedTable({ columns, data }) {
           let rowCount = 0;
 
           data.forEach((row) => {
-            totalWorkDays += row.workDays;
-            totalActualHours += row.actualHours;
-            totalActualDays += row.actualDays;
-            totalRevenue += row.actualRevenue;
-            totalCost += row.actualCost;
-            totalCm$ += row.cm$;
-            totalCmPercent += row.cmPercent ?? 0;
+            totalWorkDays += parseFloat(row.workDays ?? 0);
+            totalActualHours += parseFloat(row.actualHours ?? 0);
+            totalActualDays += parseFloat(row.actualDays ?? 0);
+            totalRevenue += parseFloat(row.actualRevenue ?? 0);
+            totalCost += parseFloat(row.actualCost ?? 0);
+            totalCm$ += parseFloat(row.cm$ ?? 0);
+            totalCmPercent += parseFloat(row.cmPercent ?? 0);
             if (row.cmPercent) rowCount++;
           });
 
