@@ -75,7 +75,7 @@ const resourceColumns = [
     title: 'CM%',
     dataIndex: ['total', 'cmPercent'],
     key: 'cmPercent',
-    render: (record) => formatFloat(record ?? '-'),
+    render: (record) => `${formatFloat(record ?? '-')} %`,
     ...tableSorter('total.cmPercent', 'number'),
   },
 
