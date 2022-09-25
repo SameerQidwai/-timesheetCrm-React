@@ -33,21 +33,21 @@ const resourceColumns = [
     title: 'Total Hours',
     dataIndex: ['total', 'totalHours'],
     key: 'total',
-    render: (record) => record && formatCurrency(record),
+    render: (record) => record && formatFloat(record),
     ...tableSorter('total.totalHours', 'number'),
   },
   {
     title: 'Utilized Hours',
     dataIndex: ['total', 'utilizedHours'],
     key: 'utilized',
-    render: (record) => record && formatCurrency(record),
+    render: (record) => record && formatFloat(record),
     ...tableSorter('total.utilizedHours', 'number'),
   },
   {
     title: 'Remaining Hours',
     dataIndex: ['total', 'remainingHours'],
     key: 'remaining',
-    render: (record) => record && formatCurrency(record),
+    render: (record) => record && formatFloat(record),
     ...tableSorter('total.remainingHours', 'number'),
   },
   {
@@ -75,7 +75,7 @@ const resourceColumns = [
     title: 'CM%',
     dataIndex: ['total', 'cmPercent'],
     key: 'cmPercent',
-    render: (record) => record && formatFloat(record),
+    render: (record) => formatFloat(record ?? '-'),
     ...tableSorter('total.cmPercent', 'number'),
   },
 
@@ -120,6 +120,7 @@ const trackingColumn = [
     title: 'Working Days',
     dataIndex: 'workDays',
     key: 'workDays',
+    render: (record) => formatFloat(record ?? 0),
     sorter: (a, b) => a.workDays - b.workDays,
     ...tableSorter('workDays', 'string'),
   },
@@ -127,6 +128,7 @@ const trackingColumn = [
     title: 'Effort Rate',
     dataIndex: 'effortRate',
     key: 'effortRate',
+    render: (record) => formatFloat(record ?? 0),
     sorter: (a, b) => a.effortRate - b.effortRate,
     ...tableSorter('effortRate', 'string'),
   },
@@ -134,6 +136,7 @@ const trackingColumn = [
     title: 'Actual Hours',
     dataIndex: 'actualHours',
     key: 'actualHours',
+    render: (record) => formatFloat(record ?? 0),
     sorter: (a, b) => a.actualHours - b.actualHours,
     ...tableSorter('actualHours', 'string'),
   },
@@ -141,6 +144,7 @@ const trackingColumn = [
     title: 'Actual Days',
     dataIndex: 'actualDays',
     key: 'actualDays',
+    render: (record) => formatFloat(record ?? 0),
     sorter: (a, b) => a.actualDays - b.actualDays,
     ...tableSorter('actualDays', 'number'),
   },
@@ -148,28 +152,28 @@ const trackingColumn = [
     title: 'Actual Revenue',
     dataIndex: 'actualRevenue',
     key: 'actualRevenue',
-    render: (record) => record && formatCurrency(record),
+    render: (record) => formatCurrency(record ?? 0),
     ...tableSorter('actualRevenue', 'number'),
   },
   {
     title: 'Actual Cost',
     dataIndex: 'actualCost',
     key: 'actualCost',
-    render: (record) => record && formatCurrency(record),
+    render: (record) => formatCurrency(record ?? 0),
     ...tableSorter('actualCost', 'number'),
   },
   {
     title: 'CM $',
     dataIndex: 'cm$',
     key: 'cm$',
-    render: (record) => record && formatCurrency(record),
+    render: (record) => formatCurrency(record ?? 0),
     ...tableSorter('cm$', 'number'),
   },
   {
     title: 'CM %',
     dataIndex: 'cmPercent',
     key: 'cmPercent',
-    render: (record) => `${record ?? '-'} %`,
+    render: (record) => `${formatFloat(record ?? '-')} %`,
     ...tableSorter('cmPercent', 'number'),
   },
 ];
@@ -272,21 +276,22 @@ function NestedTable({ columns, data }) {
             if (row.cmPercent) rowCount++;
           });
 
-          let averageCmPercent = totalCmPercent / rowCount;
+          let averageCmPercent = 0;
+          if (totalCmPercent > 0) averageCmPercent = totalCmPercent / rowCount;
 
           return (
             <Table.Summary fixed="bottom">
               <Table.Summary.Row>
                 <Table.Summary.Cell index={0}>Total</Table.Summary.Cell>
                 <Table.Summary.Cell index={1}>
-                  {totalWorkDays}
+                  {formatFloat(totalWorkDays)}
                 </Table.Summary.Cell>
                 <Table.Summary.Cell index={2}>-</Table.Summary.Cell>
                 <Table.Summary.Cell index={3}>
-                  {totalActualHours}
+                  {formatFloat(totalActualHours)}
                 </Table.Summary.Cell>
                 <Table.Summary.Cell index={4}>
-                  {totalActualDays}
+                  {formatFloat(totalActualDays)}
                 </Table.Summary.Cell>
                 <Table.Summary.Cell index={5}>
                   {formatCurrency(totalRevenue)}
@@ -298,7 +303,7 @@ function NestedTable({ columns, data }) {
                   {formatCurrency(totalCm$)}
                 </Table.Summary.Cell>
                 <Table.Summary.Cell index={8}>
-                  {averageCmPercent} %
+                  {formatFloat(averageCmPercent)} %
                 </Table.Summary.Cell>
               </Table.Summary.Row>
             </Table.Summary>
