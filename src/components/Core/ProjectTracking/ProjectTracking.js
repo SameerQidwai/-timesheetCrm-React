@@ -51,18 +51,18 @@ const resourceColumns = [
     ...tableSorter('total.remainingHours', 'number'),
   },
   {
-    title: 'Actual Cost',
-    dataIndex: ['total', 'actualCost'],
-    key: 'actualCost',
-    render: (record) => record && formatCurrency(record),
-    ...tableSorter('total.actualCost', 'number'),
-  },
-  {
     title: 'Actual Revenue',
     dataIndex: ['total', 'actualRevenue'],
     key: 'actualRevenue',
     render: (record) => record && formatCurrency(record),
     ...tableSorter('total.actualRevenue', 'number'),
+  },
+  {
+    title: 'Actual Cost',
+    dataIndex: ['total', 'actualCost'],
+    key: 'actualCost',
+    render: (record) => record && formatCurrency(record),
+    ...tableSorter('total.actualCost', 'number'),
   },
   {
     title: 'CM$',
@@ -149,18 +149,18 @@ const trackingColumn = [
     ...tableSorter('actualDays', 'number'),
   },
   {
-    title: 'Actual Cost',
-    dataIndex: 'actualCost',
-    key: 'actualCost',
-    render: (record) => formatCurrency(record ?? 0),
-    ...tableSorter('actualCost', 'number'),
-  },
-  {
     title: 'Actual Revenue',
     dataIndex: 'actualRevenue',
     key: 'actualRevenue',
     render: (record) => formatCurrency(record ?? 0),
     ...tableSorter('actualRevenue', 'number'),
+  },
+  {
+    title: 'Actual Cost',
+    dataIndex: 'actualCost',
+    key: 'actualCost',
+    render: (record) => formatCurrency(record ?? 0),
+    ...tableSorter('actualCost', 'number'),
   },
   {
     title: 'CM $',
@@ -293,11 +293,11 @@ function NestedTable({ columns, data }) {
                 <Table.Summary.Cell index={4}>
                   {formatFloat(totalActualDays)}
                 </Table.Summary.Cell>
-                <Table.Summary.Cell index={6}>
-                  {formatCurrency(totalCost)}
-                </Table.Summary.Cell>
                 <Table.Summary.Cell index={5}>
                   {formatCurrency(totalRevenue)}
+                </Table.Summary.Cell>
+                <Table.Summary.Cell index={6}>
+                  {formatCurrency(totalCost)}
                 </Table.Summary.Cell>
                 <Table.Summary.Cell index={7}>
                   {formatCurrency(totalCm$)}
