@@ -2,10 +2,26 @@
   background-color: #a0df7d;
 }
 
+.project-tracking-nested tr.current:hover {
+  background-color: #a0df7d !important;
+}
+
+.project-tracking-nested tr.current:hover .ant-table-cell-row-hover {
+  background-color: #a0df7d;
+}
+
 .project-tracking-nested tr.forecast {
 }
 
 .project-tracking-nested tr:first-child {
+  background-color: #bbbbbb;
+}
+
+.project-tracking-nested tr:first-child:hover {
+  background-color: #bbbbbb;
+}
+
+.project-tracking-nested tr:first-child:hover .ant-table-cell-row-hover {
   background-color: #bbbbbb;
 }
 

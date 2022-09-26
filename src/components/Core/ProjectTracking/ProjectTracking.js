@@ -79,34 +79,34 @@ const resourceColumns = [
     ...tableSorter('total.cmPercent', 'number'),
   },
 
-  {
-    title: '...',
-    key: 'action',
-    align: 'center',
-    width: '1%',
-    render: (value, record, index) => (
-      <Dropdown
-        overlay={
-          <Menu>
-            <Menu.Item>
-              <Link
-                to={{
-                  pathname: `milestones/${record.id}/resources`,
-                }}
-                className="nav-link"
-              >
-                Milestone
-              </Link>
-            </Menu.Item>
-          </Menu>
-        }
-      >
-        <Button size="small">
-          <SettingOutlined />
-        </Button>
-      </Dropdown>
-    ),
-  },
+  // {
+  //   title: '...',
+  //   key: 'action',
+  //   align: 'center',
+  //   width: '1%',
+  //   render: (value, record, index) => (
+  //     <Dropdown
+  //       overlay={
+  //         <Menu>
+  //           <Menu.Item>
+  //             <Link
+  //               to={{
+  //                 pathname: `milestones/${record.id}/resources`,
+  //               }}
+  //               className="nav-link"
+  //             >
+  //               Milestone
+  //             </Link>
+  //           </Menu.Item>
+  //         </Menu>
+  //       }
+  //     >
+  //       <Button size="small">
+  //         <SettingOutlined />
+  //       </Button>
+  //     </Dropdown>
+  //   ),
+  // },
 ];
 
 const trackingColumn = [
@@ -149,18 +149,18 @@ const trackingColumn = [
     ...tableSorter('actualDays', 'number'),
   },
   {
-    title: 'Actual Revenue',
-    dataIndex: 'actualRevenue',
-    key: 'actualRevenue',
-    render: (record) => formatCurrency(record ?? 0),
-    ...tableSorter('actualRevenue', 'number'),
-  },
-  {
     title: 'Actual Cost',
     dataIndex: 'actualCost',
     key: 'actualCost',
     render: (record) => formatCurrency(record ?? 0),
     ...tableSorter('actualCost', 'number'),
+  },
+  {
+    title: 'Actual Revenue',
+    dataIndex: 'actualRevenue',
+    key: 'actualRevenue',
+    render: (record) => formatCurrency(record ?? 0),
+    ...tableSorter('actualRevenue', 'number'),
   },
   {
     title: 'CM $',
@@ -293,11 +293,11 @@ function NestedTable({ columns, data }) {
                 <Table.Summary.Cell index={4}>
                   {formatFloat(totalActualDays)}
                 </Table.Summary.Cell>
-                <Table.Summary.Cell index={5}>
-                  {formatCurrency(totalRevenue)}
-                </Table.Summary.Cell>
                 <Table.Summary.Cell index={6}>
                   {formatCurrency(totalCost)}
+                </Table.Summary.Cell>
+                <Table.Summary.Cell index={5}>
+                  {formatCurrency(totalRevenue)}
                 </Table.Summary.Cell>
                 <Table.Summary.Cell index={7}>
                   {formatCurrency(totalCm$)}
