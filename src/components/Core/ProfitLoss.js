@@ -148,8 +148,9 @@ class ProfitLoss extends Component {
                 }
 
             }else if (proType === 1){ //For Project Base Project
-                revenueValue = (revenuePerDay * workDays)
+                revenueValue = isNaN(revenuePerDay * workDays) ? 0 : (revenuePerDay * workDays)
                 cos = actualStatement[key]?.['monthTotalBuy'] ?? forecastStatement[key]?.['monthTotalBuy']
+                
             }
                 //if revenue amount finish before project and fiscal year endDate
 
@@ -160,12 +161,14 @@ class ProfitLoss extends Component {
             data[2][key] = revenueValue ? cos : 0 //cos 
             data[3][key] = revenueValue ? cm: 0 //cm
             data[4][key] = revenueValue ? ((cm / revenueValue )*100): 0//cm percentage
-
+            
+            console.log(key, data[1][key], data[1]['total'], 'before')
             //For Total Column 
-            data[0]['total'] += data[0][key] ?? 0
+            data[0]['total'] += data[0][key] ?? 0 //days
             data[1]['total'] += data[1][key] //SELL TOTAL WITH IN A FISCAL YEAR
             data[2]['total'] += data[2][key] //BUY TOTAL WITH IN A FISCAL YEAR
             data[3]['total'] += data[3][key] //CM
+            console.log(key, data[1][key], data[1]['total'])
             // #a0df7d
         }
         //average Total cm %

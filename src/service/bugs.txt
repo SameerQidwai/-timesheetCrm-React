@@ -15,7 +15,7 @@ New bug Found
 
     logon on login 
 
-    unselect sideMenu on change link
+    
 
     change fincial year as per in global if included 
 
@@ -39,6 +39,13 @@ New bug Found
         need to create only one or two resource component... generalize them for further use... 
             {PMResources, OTResources, PTResources, OMResources}
                 make these four component into one or two only....
+
+      29/sep
+        date in profit and loss -> time prase
+        on link organization going to home page
+        others are on whatsapp salman -> 27/sep
+        unselect sideMenu on change link
+        counter in getting wrong
 
 Tagrget
     Expense
