@@ -235,6 +235,61 @@ class ProjectTracking extends Component {
             );
           },
         }}
+        summary={(data) => {
+          console.log(data);
+          let totalHours = 0;
+          let utilizedHours = 0;
+          let remainingHours = 0;
+          let totalRevenue = 0;
+          let totalCost = 0;
+          let totalCm$ = 0;
+          let totalCmPercent = 0;
+          let rowCount = 0;
+
+          data.forEach((row) => {
+            totalHours += parseFloat(row.total.totalHours ?? 0);
+            utilizedHours += parseFloat(row.total.utilizedHours ?? 0);
+            remainingHours += parseFloat(row.total.remainingHours ?? 0);
+            totalRevenue += parseFloat(row.total.actualRevenue ?? 0);
+            totalCost += parseFloat(row.total.actualCost ?? 0);
+            totalCm$ += parseFloat(row.total.cm$ ?? 0);
+            totalCmPercent += parseFloat(row.total.cmPercent ?? 0);
+            if (row.total.cmPercent && row.total.cmPercent > 0) rowCount++;
+          });
+
+          let averageCmPercent = 0;
+          if (totalCmPercent > 0) averageCmPercent = totalCmPercent / rowCount;
+
+          return (
+            <Table.Summary fixed="bottom">
+              <Table.Summary.Row>
+                <Table.Summary.Cell index={0}>-</Table.Summary.Cell>
+                <Table.Summary.Cell index={1}>Total</Table.Summary.Cell>
+                <Table.Summary.Cell index={2}>
+                  {formatFloat(totalHours)}
+                </Table.Summary.Cell>
+                <Table.Summary.Cell index={3}>
+                  {formatFloat(utilizedHours)}
+                </Table.Summary.Cell>
+                <Table.Summary.Cell index={4}>
+                  {formatFloat(remainingHours)}
+                </Table.Summary.Cell>
+                <Table.Summary.Cell index={5}>
+                  {formatCurrency(totalRevenue)}
+                </Table.Summary.Cell>
+                <Table.Summary.Cell index={6}>
+                  {formatCurrency(totalCost)}
+                </Table.Summary.Cell>
+                <Table.Summary.Cell index={7}>
+                  {formatCurrency(totalCm$)}
+                </Table.Summary.Cell>
+                <Table.Summary.Cell index={8}>
+                  {formatFloat(averageCmPercent)} %
+                </Table.Summary.Cell>
+              </Table.Summary.Row>
+            </Table.Summary>
+          );
+        }}
       />
     );
   }
