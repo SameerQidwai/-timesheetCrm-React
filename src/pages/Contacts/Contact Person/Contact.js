@@ -451,47 +451,10 @@ class Contact extends Component {
       search['skill']['value'].length > 0 ||
       search['association']['value'].length > 0
     ) {
-      let count = 0
-      let looping = 0
+
       this.setState({
         filterData: data.filter((el) => {
-          // method one which have mutliple if condition for every multiple search
-        //   looping++
-        //   if ((search['gender']['value'].length > 0
-        //   ? search['gender']['value']
-        //   : [{ value: ',' }]
-        //   ).some((s) =>
-        //   (search['gender']['value'].length > 0
-        //   ? [el.gender]
-        //   : [',']
-        //   ).includes(s.value)) &&  
-          
-        //   (search['skill']['value'].length > 0
-        //   ? search['skill']['value']
-        //   : [{ value: ',' }]
-        // ).some(
-        //   (s) =>{
-        //     // console.log(s, 
-        //     //   (( el.standardSkillStandardLevels &&
-        //     //     el.standardSkillStandardLevels.length > 0  && search['skill']['value'].length > 0)
-        //     //     ? el.standardSkillStandardLevels.map((p) => p.standardSkillId)
-        //     //     : [',']
-        //     //   ))
-        //     return ((el.standardSkillStandardLevels &&
-        //     el.standardSkillStandardLevels.length > 0 &&
-        //     search['skill']['value'].length > 0)
-        //       ? el.standardSkillStandardLevels.map((p) => p.standardSkillId)
-        //       : [',']
-        //     ).includes(s.value)}
-        // )){
-        //     count++
-        //     console.log('this shouldn"t run')
-
-        //     console.log(count, el.id, looping)
-        //   }
-
-        
-
+          // method one which have mutliple if condition for every multiple search       
           return (
             `00${el.id.toString()}`.includes(search['id']['value']) &&
             `${el.firstName ?? ''}`
@@ -548,9 +511,8 @@ class Contact extends Component {
               : [{ value: ',' }]
             ).some(
               (s) =>
-                el.contactPersonOrganizations &&
-                el.contactPersonOrganizations.length > 0 &&
-                (search['association']['value'].length > 0
+                ( (el.contactPersonOrganizations &&
+                  el.contactPersonOrganizations.length > 0 && search['association']['value'].length > 0)
                   ? el.contactPersonOrganizations.map((p) => p.organizationId)
                   : [',']
                 ).includes(s.value)

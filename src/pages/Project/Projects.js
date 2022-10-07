@@ -600,7 +600,6 @@ class Projects extends Component {
     } else {
       search = advSearch;
     }
-    console.log(search['phase']['value']);
     if (
       search['id']['value'] ||
       search['title']['value'] ||
