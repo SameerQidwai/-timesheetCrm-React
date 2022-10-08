@@ -87,8 +87,14 @@ addRequestModal  not done
 
 timesheet permission disable own and manage 
 
-status milestone 
-dashboard
+status milestone  (upload)
+    editable status ... from action 
+dashboard  
 miro Expense
 expense module
+Contact person View...
+
+bug
+    expense route 
+
 
