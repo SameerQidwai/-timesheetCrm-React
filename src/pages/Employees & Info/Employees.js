@@ -57,6 +57,14 @@ class Employees extends Component {
         title: 'First Name',
         dataIndex: ['contactPersonOrganization', 'contactPerson', 'firstName'],
         key: 'firstName',
+        render: (text, record) => (
+          <Link
+            to={{ pathname: `/Employees/${record.id}/info` }}
+            className="nav-link"
+          >
+            {text}
+          </Link>
+        ),
         ...tableSorter(
           'contactPersonOrganization.contactPerson.firstName',
           'string'
