@@ -8,6 +8,7 @@ import InfoModal from './InfoModal';
 import Attachments from '../../../components/Core/Attachments';
 import Comments from '../../../components/Core/Comments';
 import Opportunities from '../../../components/Core/Opportunities';
+import { generalDelete } from '../../../service/delete-Api\'s';
 
 const {Item} = Descriptions 
 const {TabPane} = Tabs
@@ -38,9 +39,16 @@ export class ContactInfo extends Component {
         })
     }
 
-    handleDelete = (id)=>{
-        console.log(id)
-    }
+    handleDelete = () => {
+        const url = '/contactpersons';
+        const { userId } = this.state;
+        const { history } = this.props;
+        generalDelete(history, url, userId).then((res) => {
+            if (res.success) {
+                // will not run
+              }
+        });
+      };
 
     toggelModal = () =>{
         this.setState({
@@ -74,7 +82,7 @@ export class ContactInfo extends Component {
                                 >
                                     <Popconfirm
                                         title="Are you sure you want to delete"
-                                        onConfirm={() => this.handleDelete(data.id) }
+                                        onConfirm={() => this.handleDelete() }
                                     >
                                     <div> Delete </div> 
                                     </Popconfirm>
@@ -84,7 +92,6 @@ export class ContactInfo extends Component {
                                     onClick={() => {
                                         this.setState({
                                             infoModal: true,
-                                            editOrg: data.id,
                                         });
                                     }}
                                 >

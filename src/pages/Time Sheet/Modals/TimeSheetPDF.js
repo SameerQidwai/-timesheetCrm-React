@@ -91,7 +91,7 @@ const TimeSheetPDF = (props) => {
                 setData(res.data)
                 // setDetail(res.milestoneInfo)
                 handlePrint()
-                // props.close()
+                props.close()
             }
         })
         return true
@@ -99,8 +99,8 @@ const TimeSheetPDF = (props) => {
 
     return (
         // style={{display: 'none'}}
-        // <div style={{display: 'none'}}>
-            <div>
+        // <div>
+        <div style={{display: 'none'}}>
             {/* {console.log('I was here')} */}
             {/* {handlePrint()} */}
             {/* style={{marginLeft:10,marginRight:10}} */}

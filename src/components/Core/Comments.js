@@ -2,8 +2,6 @@ import React, { Component } from "react";
 
 import { Row, Col, Comment, Tooltip, Avatar, Popconfirm, Form, Input, List, Upload, } from "antd";
 
-import moment from "moment";
-
 import { DeleteOutlined, DeleteFilled, SendOutlined, PaperClipOutlined, } from "@ant-design/icons";
 
 import { addFiles } from "../../service/Attachment-Apis";
@@ -240,7 +238,7 @@ class Comments extends Component {
                             // title={moment(item.createdAt).format( "ddd DD MMM yyyy HH:mm:ss" )}
                             title={formatDate(item.createdAt, true, "ddd DD MMM yyyy HH:mm:ss")}
                         >
-                            <span>{formatDate(formatDate(item.createdAt, true, "ddd DD MMM yyyy HH:mm:ss")).fromNow()}</span>
+                            <span>{formatDate(item.createdAt).fromNow()}</span>
                         </Tooltip>
                         {(item.authorId === loginId && !onHold )&&<Tooltip key="comment-basic-delete" title="Delete">
                             <span

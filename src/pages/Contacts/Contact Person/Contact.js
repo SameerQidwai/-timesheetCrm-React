@@ -64,6 +64,14 @@ class Contact extends Component {
         title: 'First Name',
         dataIndex: 'firstName',
         key: 'firstName',
+        render: (text, record) => (
+          <Link
+            to={{ pathname: `/contacts/${record.id}/info` }}
+            className="nav-link"
+          >
+            {text}
+          </Link>
+        ),
         ...tableSorter('firstName', 'string'),
         // ...tableFilter('firstName', 'includes')
       },
