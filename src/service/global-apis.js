@@ -12,7 +12,7 @@ export const getSettings = () => {
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
-            if (success) setToken(res.headers && res.headers.authorization)
+            if (success) setToken(res?.headers?.authorization)
             return { success, data };
         })
         .catch((err) => {
@@ -32,7 +32,7 @@ export const upadteSettings = (data) => {
             const { success, message, data } = res.data;
             jwtExpired(message)
             messageAlert.success({ content: message, key: 1},5)
-            setToken(res.headers && res.headers.authorization)
+            setToken(res?.headers?.authorization)
             let response = {}
             if (success){ 
                 data.forEach(({keyLabel, keyValue}) => {
@@ -58,7 +58,7 @@ export const getVariables = () => {
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
-            setToken(res.headers && res.headers.authorization)
+            setToken(res?.headers?.authorization)
             let variables= {}
             if (success) {
                 for (var {variable, globalVariableId, value, startDate, endDate} of data){
@@ -84,7 +84,7 @@ export const upadteVariables = (data) => {
             const { success, message, data } = res.data;
             jwtExpired(message)
             messageAlert.success({ content: message, key: 1},5)
-            setToken(res.headers && res.headers.authorization)
+            setToken(res?.headers?.authorization)
             let variables= {}
             if (success) {
                 data.forEach(({name, values: [{globalVariableId, value, startDate, endDate}]}) =>{

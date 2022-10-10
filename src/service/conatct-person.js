@@ -10,7 +10,7 @@ export const getList = () => {
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
-            if (success) setToken(res.headers && res.headers.authorization)
+            if (success) setToken(res?.headers?.authorization)
             
             return { success, data };
         })
@@ -30,10 +30,16 @@ export const getContactRecord = (id) => {
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
-            setToken(res.headers && res.headers.authorization)
+            setToken(res?.headers?.authorization)
             if (success) return {success, data};
         })
         .catch((err) => {
+            if (err.response?.data){
+                const { status } = err.response
+                const { message, success } = err.response?.data
+                jwtExpired(message)
+                return { authError: message === "Not Authorized!", status, success, message, };
+            }
             return {
                 error: "Please login again!",
                 status: false,
@@ -50,7 +56,7 @@ export const addList = (data) => {
             const { success, message } = res.data;
             jwtExpired(message)
             messageAlert.success({ content: message, key: 1})
-            if (success) setToken(res.headers && res.headers.authorization)
+            if (success) setToken(res?.headers?.authorization)
             return {success};
         })
         .catch((err) => {
@@ -70,7 +76,7 @@ export const delList = (id) => {
             const { success, message } = res.data;
             jwtExpired(message)
 
-            if (success)  setToken(res.headers && res.headers.authorization)
+            if (success)  setToken(res?.headers?.authorization)
 
             return {success};
         })
@@ -83,18 +89,21 @@ export const delList = (id) => {
         });
 };
 
-export const editList = (data) => {
-    messageAlert.loading({ content: 'Loading...', key: data.id })
+export const editList = (updateData) => {
+    messageAlert.loading({ content: 'Loading...', key: updateData.id })
     return axios
-        .put(url + `/${data.id}`, data, {headers:headers()})
+        .put(url + `/${updateData.id}`, updateData, {headers:headers()})
         .then((res) => {
-            const { success, message } = res.data;
+            const { success, message, data} = res.data;
             jwtExpired(message)
-            messageAlert.success({ content: message, key: data.id})
-            if (success) setToken(res.headers && res.headers.authorization)
+            messageAlert.success({ content: message, key: updateData.id})
+            setToken(res?.headers?.authorization)
+            if (success){
+                return {success, data}
+            } 
             return {success};
         })
         .catch((err) => {
-            return apiErrorRes(err, data.id, 5)
+            return apiErrorRes(err, updateData.id, 5)
         });
 };

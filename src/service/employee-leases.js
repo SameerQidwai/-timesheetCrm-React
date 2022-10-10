@@ -11,7 +11,7 @@ export const getList = (empId) => {
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
-            if (success) setToken(res.headers && res.headers.authorization)
+            if (success) setToken(res?.headers?.authorization)
 
             return { success: success, data: data };
         })
@@ -32,7 +32,7 @@ export const addList = (empId, data) => {
             const { success, message } = res.data;
             jwtExpired(message)
             messageAlert.success({ content: message, key: empId})
-            if (success) setToken(res.headers && res.headers.authorization)
+            if (success) setToken(res?.headers?.authorization)
             
             return {success};
         })
@@ -56,7 +56,7 @@ export const getRecord = (empId, id) => {
                 data.startDate = formatDate(data.startDate)
                 data.endDate = formatDate(data.endDate) 
                 data.totalDeduction = (data.preTaxDeductionAmount ? data.preTaxDeductionAmount : 0) + (data.postTaxDeductionAmount ? data.postTaxDeductionAmount : 0)
-                setToken(res.headers && res.headers.authorization)
+                setToken(res?.headers?.authorization)
             }
             return {success, data}
         })
@@ -75,7 +75,7 @@ export const delList = (empId, id) => {
         .then((res) => {
             const { success, message } = res.data;
             jwtExpired(message)
-            if (success) setToken(res.headers && res.headers.authorization)
+            if (success) setToken(res?.headers?.authorization)
 
             return {success};
         })
@@ -96,7 +96,7 @@ export const editList = (empId, id, data) => {
             const { success, message } = res.data;
             jwtExpired(message)
             messageAlert.success({ content: message, key: id})
-            if (success) setToken(res.headers && res.headers.authorization)
+            if (success) setToken(res?.headers?.authorization)
             
             return {success};
         })

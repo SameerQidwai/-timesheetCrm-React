@@ -93,8 +93,11 @@ dashboard
 miro Expense
 expense module
 Contact person View...
-
+    opportuninties 
+    comments ( if not on employee id)
+    
+    employee_Id
+    subcontracontor
 bug
     expense route 
-
-
+    

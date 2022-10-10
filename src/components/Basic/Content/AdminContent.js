@@ -49,6 +49,7 @@ import Training from '../../../pages/Trainings/Training';
 // import TimeSheetHTML from "../../Core/TimeSheetHTML"
 import { localStore } from '../../../service/constant';
 import MileCertificate from '../../../pages/Milestones/MileCertificate';
+import ContactInfo from '../../../pages/Contacts/Contact Person/ContactInfo';
 
 const { Content } = Layout;
 
@@ -168,7 +169,13 @@ const pageLinks = [
   },
   {
     component: Contact,
-    link: '/contact',
+    link: '/contacts',
+    key: 'CONTACT_PERSONS',
+    permission: 'READ',
+  },
+  {
+    component: ContactInfo,
+    link: '/contacts/:id/info',
     key: 'CONTACT_PERSONS',
     permission: 'READ',
   },

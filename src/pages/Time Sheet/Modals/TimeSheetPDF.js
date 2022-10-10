@@ -91,7 +91,7 @@ const TimeSheetPDF = (props) => {
                 setData(res.data)
                 // setDetail(res.milestoneInfo)
                 handlePrint()
-                props.close()
+                // props.close()
             }
         })
         return true
@@ -99,8 +99,8 @@ const TimeSheetPDF = (props) => {
 
     return (
         // style={{display: 'none'}}
-        <div style={{display: 'none'}}>
-        {/* <div> */}
+        // <div style={{display: 'none'}}>
+            <div>
             {/* {console.log('I was here')} */}
             {/* {handlePrint()} */}
             {/* style={{marginLeft:10,marginRight:10}} */}
@@ -109,8 +109,8 @@ const TimeSheetPDF = (props) => {
                     return <div key={index}>
                         <div className='sensitive'><p >Sensitive: Personal (after first entry)</p></div>
                             <Row justify="space-between" align="middle" >
-                                <Col ><Typography.Title level={2}> Timesheet </Typography.Title></Col>
-                                <Col style={{width: '60%', textAlign: 'right'}}><img src={'/onelm.png'} width="32%" /></Col>
+                                <Col ><Typography.Title level={2} style={{margin: 0}}> Timesheet </Typography.Title></Col>
+                                <Col style={{ width: '60%', textAlign: 'right'}}><img src={'/z-cp-logo.png'} width={200} /></Col>
                             </Row>
                             <Row>
                                 {details &&<Descriptions column={2} bordered size={"small"} style={{margin:'15px 0px'}} className="describe">
