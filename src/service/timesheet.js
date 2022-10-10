@@ -11,7 +11,7 @@ export const getList = (keys) => {
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
-            if (success)  setToken(res.headers && res.headers.authorization)
+            if (success)  setToken(res?.headers?.authorization)
             
             return { success: success, data: data }
         })
@@ -35,7 +35,7 @@ export const addTime = (keys ,data) => {
             if (success) {
                 messageAlert.success({ content: message, key: 1})
                 data.actualHours = data.hours
-                setToken(res.headers && res.headers.authorization)
+                setToken(res?.headers?.authorization)
                 return {success, data}
             };
             return { success }
@@ -55,7 +55,7 @@ export const editTime = (entryId ,data) => {
             if (success) {
                 messageAlert.success({ content: message, key: 1})
                 data.actualHours = data.hours
-                setToken(res.headers && res.headers.authorization)
+                setToken(res?.headers?.authorization)
                 return {success, data}
             };
             return { success }
@@ -73,7 +73,7 @@ export const deleteTime = (entryId ) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
             messageAlert.success({ content: message, key: 1})
-            if (success) setToken(res.headers && res.headers.authorization)
+            if (success) setToken(res?.headers?.authorization)
             return {success, data};
         })
         .catch((err) => {
@@ -94,7 +94,7 @@ export const reviewTimeSheet = (keys, stage, data) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
             messageAlert.success({ content: message, key: 1})
-            if (success) setToken(res.headers && res.headers.authorization)
+            if (success) setToken(res?.headers?.authorization)
             return {success, data};
         })
         .catch((err) => {
@@ -115,7 +115,7 @@ export const editLabel = (data) => {
             const { success, message } = res.data;
             jwtExpired(message)
             messageAlert.success({ content: message, key: data.id})
-            if (success) setToken(res.headers && res.headers.authorization)
+            if (success) setToken(res?.headers?.authorization)
             return {success};
         })
         .catch((err) => {
@@ -141,7 +141,7 @@ export const addMilestoneTimesheetNote = (id, data) => {
                     notes: data.notes,
                     attachment: data.attachment
                 }
-                setToken(res.headers && res.headers.authorization)
+                setToken(res?.headers?.authorization)
                 return {success, data};
             }
             return {success};
@@ -164,7 +164,7 @@ export const getUsers = () => {
             const { success, data, message } = res.data;
             jwtExpired(message)
             var pros = []
-            if (success) setToken(res.headers && res.headers.authorization)
+            if (success) setToken(res?.headers?.authorization)
             
             return { success, data };
         })
@@ -184,7 +184,7 @@ export const getPdf = (entryIds) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
             if (success) {
-                setToken(res.headers && res.headers.authorization)
+                setToken(res?.headers?.authorization)
                 return { success, data}
             }
             
@@ -205,7 +205,7 @@ export const getMilestones = () => {
         .then((res) => {
             const { success, data } = res.data;
             if (success) {
-                setToken(res.headers && res.headers.authorization)
+                setToken(res?.headers?.authorization)
             }
             return { success: success, data: data };
         })
@@ -230,7 +230,7 @@ export const getUsersTimesheet = (keys) => {
                         delete obj.milestones
                         newData.push(obj)
                     });      
-                setToken(res.headers && res.headers.authorization)
+                setToken(res?.headers?.authorization)
             }
             console.log(newData);
             return { success: success, data: newData };

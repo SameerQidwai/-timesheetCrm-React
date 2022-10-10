@@ -11,7 +11,7 @@ export const getList = () => {
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
-            if (success) setToken(res.headers && res.headers.authorization)
+            if (success) setToken(res?.headers?.authorization)
             return { success: success, data: data };
         })
         .catch((err) => {
@@ -80,7 +80,7 @@ export const getOrgRecord = (id) => {
             jwtExpired(message)
             if (success) {
                 const { basic, billing, insured, bank, future } = reConstruct(data)
-                setToken(res.headers && res.headers.authorization)
+                setToken(res?.headers?.authorization)
                 return {success ,basic, billing, insured, bank, future, data}
             }
             return { success }
@@ -107,7 +107,7 @@ export const addList = (data) => {
             const { success, message } = res.data;
             jwtExpired(message)
             messageAlert.success({ content: message, key: 1})
-            if (success) setToken(res.headers && res.headers.authorization)
+            if (success) setToken(res?.headers?.authorization)
             return {success};
         })
         .catch((err) => {
@@ -126,7 +126,7 @@ export const delOrg = (id) => {
         .then((res) => {
             const { success, message } = res.data;
             jwtExpired(message)
-            if (success) setToken(res.headers && res.headers.authorization)
+            if (success) setToken(res?.headers?.authorization)
             return {success};
         })
         .catch((err) => {
@@ -148,7 +148,7 @@ export const editList = (data) => {
             messageAlert.success({ content: message, key: data.id})
             if (success) {
                 const { basic, billing, insured, bank, future } = reConstruct(data)
-                setToken(res.headers && res.headers.authorization)
+                setToken(res?.headers?.authorization)
                 return {success ,basic, billing, insured, bank, future, data}
             }
             return {success, data};

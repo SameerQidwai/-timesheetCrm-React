@@ -14,7 +14,7 @@ export const addRequest = (data) => {
             jwtExpired(message)
             messageAlert.success({ content: 'Success!', key: 1})
             if (success) 
-                setToken(res.headers && res.headers.authorization)
+                setToken(res?.headers?.authorization)
             return {success};
         })
         .catch((err) => {
@@ -28,7 +28,7 @@ export const getRequests = () => {
         .get(url,{headers:headers()})
         .then((res) => {
             const { success, data } = res.data;
-            setToken(res.headers && res.headers.authorization)
+            setToken(res?.headers?.authorization)
             if (success) return { success: success, data: data };
         })
         .catch((err) => {
@@ -51,7 +51,7 @@ export const getSingleRequest = (id) => {
         .then((res) => {
             const { success, message, data } = res.data;
             messageAlert.success({ content: message, key: id})
-            setToken(res.headers && res.headers.authorization)
+            setToken(res?.headers?.authorization)
             if (success){ 
                 const entries = data?.entries
                 let attachments = data?.attachments ?? []
@@ -96,7 +96,7 @@ export const editRequest = (id, data) => {
             const { success, message, data } = res.data;
             jwtExpired(message)
             messageAlert.success({ content: message, key: id})
-            if (success) setToken(res.headers && res.headers.authorization)
+            if (success) setToken(res?.headers?.authorization)
 
             return {success, data: data};
         })
@@ -111,7 +111,7 @@ export const getApprovalRequests = (queries) => {
     .get(`${url}/approvalLeaveRequests?${queries}`,{headers:headers()})
         .then((res) => {
             const { success, data } = res.data;
-            setToken(res.headers && res.headers.authorization)
+            setToken(res?.headers?.authorization)
             if (success) return { success: success, data: data };
         })
         .catch((err) => {
@@ -132,7 +132,7 @@ export const manageLeaveRequests = (manage, data) => {
     .post(`${url}/${manage}`, data,{headers:headers()})
         .then((res) => {
             const { success, data } = res.data;
-            setToken(res.headers && res.headers.authorization)
+            setToken(res?.headers?.authorization)
             if (success) return { success: success, data: data };
         })
         .catch((err) => {
@@ -150,7 +150,7 @@ export const manageLeaveRequests = (manage, data) => {
             .get(`${Api}/leave-request-balances?employeeId=${id}`,{headers:headers()})
             .then((res) => {
                 const { success, data } = res.data;
-                setToken(res.headers && res.headers.authorization)
+                setToken(res?.headers?.authorization)
                 if (success) return { success: success, data: data };
             })
             .catch((err) => {
@@ -168,7 +168,7 @@ export const manageLeaveRequests = (manage, data) => {
             .patch(`${Api}/leave-request-balances/${id}`, data,{headers:headers()})
             .then((res) => {
                 const { success, data } = res.data;
-                setToken(res.headers && res.headers.authorization)
+                setToken(res?.headers?.authorization)
                 if (success) return { success: success, data: data };
             })
             .catch((err) => {

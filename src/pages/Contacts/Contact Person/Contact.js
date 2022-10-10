@@ -23,6 +23,7 @@ import {
   SearchOutlined,
 } from '@ant-design/icons'; //Icons
 // import { Link } from 'react-router-dom'
+import { Link } from "react-router-dom";
 
 import InfoModal from './InfoModal';
 import { getList, delList } from '../../../service/conatct-person';
@@ -63,6 +64,14 @@ class Contact extends Component {
         title: 'First Name',
         dataIndex: 'firstName',
         key: 'firstName',
+        render: (text, record) => (
+          <Link
+            to={{ pathname: `/contacts/${record.id}/info` }}
+            className="nav-link"
+          >
+            {text}
+          </Link>
+        ),
         ...tableSorter('firstName', 'string'),
         // ...tableFilter('firstName', 'includes')
       },
@@ -124,6 +133,14 @@ class Contact extends Component {
                   disabled={this.state && !this.state.permissions['UPDATE']}
                 >
                   Edit
+                </Menu.Item>
+                <Menu.Item key="View">
+                  <Link
+                    to={{ pathname: `/contacts/${record.id}/info` }}
+                    className="nav-link"
+                  >
+                    View
+                  </Link>
                 </Menu.Item>
               </Menu>
             }

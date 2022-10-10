@@ -18,7 +18,7 @@ export const generalDelete = (history, url, id, index, filterData, data) => {
             jwtExpired(message)
             if (success){
                 messageAlert.success({ content: message, key: id})
-                setToken(res.headers && res.headers.authorization)
+                setToken(res?.headers?.authorization)
                 if (index >= 0) { // if Entity is delete from ListView
                     // filterData.splice(index,1) // deleting Index
                     let delFdata = filterData.filter((el,index) => el.id !== id)

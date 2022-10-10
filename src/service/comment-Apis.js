@@ -14,7 +14,7 @@ export const addComment = (targetType, targetId, data) => {
             if (status === 200) {
                 const { success, data, message } = res.data;
                 jwtExpired(message)
-                setToken(res.headers && res.headers.authorization)
+                setToken(res?.headers?.authorization)
                 return { success, data };
             }
         })
@@ -35,7 +35,7 @@ export const getComments = (targetType, targetId) => {
         .then((res) => {
             const { success, data,message } = res.data;
             jwtExpired(message)
-            setToken(res.headers && res.headers.authorization)
+            setToken(res?.headers?.authorization)
             if (success) return { success, data  };
         })
         .catch((err) => {
@@ -53,7 +53,7 @@ export const delComments = (id,) => {
         .then((res) => {
             const { success, message } = res.data;
             jwtExpired(message)
-            setToken(res.headers && res.headers.authorization)
+            setToken(res?.headers?.authorization)
             if (success) return { success };
         })
         .catch((err) => {

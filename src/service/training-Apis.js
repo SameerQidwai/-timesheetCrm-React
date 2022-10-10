@@ -10,7 +10,7 @@ export const getTraining = () => {
             const { success, data, message } = res.data;
             jwtExpired(message)
             messageAlert.success({ content: message, key: 'logout'})
-            if (success) setToken(res.headers && res.headers.authorization)
+            if (success) setToken(res?.headers?.authorization)
             return {success, data};
         })
         .catch((err) => {
@@ -30,7 +30,7 @@ export const upadteTraining = (data) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
             messageAlert.success({ content: message, key: 'logout'})
-            if (success) setToken(res.headers && res.headers.authorization)
+            if (success) setToken(res?.headers?.authorization)
             return {success, data};
         })
         .catch((err) => {

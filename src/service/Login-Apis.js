@@ -107,7 +107,7 @@ export const upadtePassword = (data) => {
       const { success, data, message } = res.data;
       jwtExpired(message);
       messageAlert.success({ content: message, key: 'logout' }, 5);
-      if (success) setToken(res.headers && res.headers.authorization);
+      if (success) setToken(res?.headers?.authorization);
 
       return { success, data };
     })
@@ -201,7 +201,7 @@ export const getSettings = () => {
         };
         const resourceSkill = contactPerson.standardSkillStandardLevels;
 
-        setToken(res.headers && res.headers.authorization);
+        setToken(res?.headers?.authorization);
         return {
           success,
           data,
@@ -234,7 +234,7 @@ export const upadteSettings = (data) => {
       const { success, data, message } = res.data;
       jwtExpired(message);
       messageAlert.success({ content: message, key: 'logout' });
-      if (success) setToken(res.headers && res.headers.authorization);
+      if (success) setToken(res?.headers?.authorization);
       return { success, data };
     })
     .catch((err) => {
@@ -253,7 +253,7 @@ export const addNewSill = (data) => {
       const { success, data, message } = res.data;
       jwtExpired(message);
       messageAlert.success({ content: message, key: 'logout' });
-      if (success) setToken(res.headers && res.headers.authorization);
+      if (success) setToken(res?.headers?.authorization);
       return { success, data };
     })
     .catch((err) => {
@@ -273,7 +273,7 @@ export const upadteAddress = (data) => {
       const { success, data, message } = res.data;
       jwtExpired(message);
       messageAlert.success({ content: message, key: 'logout' });
-      if (success) setToken(res.headers && res.headers.authorization);
+      if (success) setToken(res?.headers?.authorization);
       return { success, data };
     })
     .catch((err) => {
@@ -306,7 +306,7 @@ export const refreshToken = () => {
       jwtExpired(message);
       if (success) {
         messageAlert.success({ content: 'Token Refresh Successfully' }, 5);
-        setToken(res.headers && res.headers.authorization);
+        setToken(res?.headers?.authorization);
       }
       return { success: success };
     })

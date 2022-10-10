@@ -19,7 +19,7 @@ export const timeOff = () => {
                     delete el.deletedAt;
                     delete el.updatedAt;
                 });
-                setToken(res.headers && res.headers.authorization)
+                setToken(res?.headers?.authorization)
             }
             return { success: success, data: data };
         })
@@ -39,7 +39,7 @@ export const getList = () => {
             const { success, data, message } = res.data;
             jwtExpired(message)
             if (success) 
-                setToken(res.headers && res.headers.authorization)
+                setToken(res?.headers?.authorization)
             return { success: success, data: data };
         })
         .catch((err) => {
@@ -60,7 +60,7 @@ export const addList = (data) => {
             jwtExpired(message)
             messageAlert.success({ content: message, key: 1})
             if (success) 
-                setToken(res.headers && res.headers.authorization)
+                setToken(res?.headers?.authorization)
 
             return success;
         })
@@ -81,7 +81,7 @@ export const delLabel = (id) => {
             const { success, message } = res.data;
             jwtExpired(message)
             if (success) 
-                setToken(res.headers && res.headers.authorization)
+                setToken(res?.headers?.authorization)
 
             return success;
         })
@@ -103,7 +103,7 @@ export const editLabel = (data) => {
             jwtExpired(message)
             messageAlert.success({ content: message, key: data.id})
             if (success) 
-                setToken(res.headers && res.headers.authorization)
+                setToken(res?.headers?.authorization)
             return success;
         })
         .catch((err) => {

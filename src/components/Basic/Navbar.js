@@ -11,7 +11,7 @@ const NavItem = [
         text: "Contacts",
         items: [
             { text: "Organisations", link: "/organisations", key: 'ORGANIZATIONS' },
-            { text: "Contact", link: "/contact", key: 'CONTACT_PERSONS' },
+            { text: "Contact", link: "/contacts", key: 'CONTACT_PERSONS' },
         ],
         key: 'CHILDRENS'
     },

@@ -824,7 +824,7 @@ class InfoModal extends Component {
     addList(value).then((res) => {
       this.setState({ loading: false });
       if (res.success) {
-        callBack();
+        callBack(res.data);
       }
     });
   };
@@ -931,7 +931,7 @@ class InfoModal extends Component {
     editList(value).then((res) => {
       this.setState({ loading: false });
       if (res.success) {
-        callBack();
+        callBack(res.data);
       }
     });
   };

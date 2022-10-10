@@ -5,6 +5,19 @@ import 'moment-weekday-calc';
 import { getProfitLoss } from "../../service/projects";
 import { getHolidays } from "../../service/opportunities";
 
+import moment from 'moment';
+
+
+const parseDate = (date, string, format)=>{
+    if (date){
+        if (string){
+            return moment.parseZone(date).format(format === true ? 'ddd DD MMM yyyy' : format)
+        }
+        return moment.parseZone(date)
+    }
+  }
+
+
 class ProfitLoss extends Component {
     constructor(props){
         super(props)
@@ -54,34 +67,34 @@ class ProfitLoss extends Component {
     calculateProjectData = (actualStatement, actualTotal, forecast, holidays) =>{
         let { data, fiscalYear } = this.state
         const { billing, type: proType } = this.props
-        let startDate = formatDate(billing.startDate)
-        let endDate = formatDate(billing.endDate)
+        let startDate = parseDate(billing.startDate)
+        let endDate = parseDate(billing.endDate)
         let noOfDays = 0
         let revenuePerDay = 0
         let totalRevenue = 0
         let forecastStatement = {}
         let forecastTotal = {sellTotal: 0, buyTotal: 0}
-        let tempEndDate = formatDate(new Date()).add(100, 'years')
+        let tempEndDate = parseDate(new Date()).add(100, 'years')
         let forecastStartDate = startDate.isBefore(fiscalYear['start'], 'day') ? fiscalYear['start'] : startDate
         let forecastEndDate = endDate.isAfter(fiscalYear['end'], 'day') ? fiscalYear['end'] : endDate
         //Testing
        
-        for (var iDate = formatDate(startDate); iDate.isSameOrBefore(endDate); iDate.add(1, 'days')) {
-            if (iDate.isoWeekday() !== 6 && iDate.isoWeekday() !== 7 && !holidays[formatDate(iDate, true, 'M/D/YYYY')]){
-                if (holidays[formatDate(iDate, true, 'M/D/YYYY')]){
-                    console.log (formatDate(iDate, true, 'M/D/YYYY'))
+        for (var iDate = parseDate(startDate); iDate.isSameOrBefore(endDate); iDate.add(1, 'days')) {
+            if (iDate.isoWeekday() !== 6 && iDate.isoWeekday() !== 7 && !holidays[parseDate(iDate, true, 'M/D/YYYY')]){
+                if (holidays[parseDate(iDate, true, 'M/D/YYYY')]){
+                    console.log (parseDate(iDate, true, 'M/D/YYYY'))
                 }
-                let key = formatDate(iDate).format('MMM YY')
+                let key = parseDate(iDate, true, 'MMM YY')
                 
                 if ( iDate.isSameOrAfter(forecastStartDate, 'day') && // finding Fiscal Months
                     iDate.isSameOrBefore(forecastEndDate), 'day' ) {
-                    if (iDate.isSameOrAfter(formatDate(new Date()), 'month')){ 
+                    if (iDate.isSameOrAfter(parseDate(new Date()), 'month')){ 
                         //FORCASTING Future predictions
                         
                         forecast.forEach((el, index) =>{
                           
-                            if ( iDate.isBetween(formatDate(el.con_startDate), formatDate(el.con_endDate) ??  tempEndDate, 'day', '[]') &&
-                            iDate.isBetween(formatDate(el.res_startDate), formatDate(el.res_endDate)??  tempEndDate , 'day', '[]') ){
+                            if ( iDate.isBetween(parseDate(el.con_startDate), parseDate(el.con_endDate) ??  tempEndDate, 'day', '[]') &&
+                            iDate.isBetween(parseDate(el.res_startDate), parseDate(el.res_endDate)??  tempEndDate , 'day', '[]') ){
                                 if (forecastStatement[key]){
                                     forecastStatement[key].monthTotalBuy += el.forecastBuyRateDaily
                                     forecastStatement[key].monthTotalSell += el.forecastSellRateDaily
@@ -121,8 +134,8 @@ class ProfitLoss extends Component {
 
             revenuePerDay = (billing.value/noOfDays)
         }
-        for (var iMonth = formatDate(fiscalYear['start']); iMonth.isSameOrBefore(fiscalYear['end']); iMonth.add(1, 'months')) {
-            let key = formatDate(iMonth).format('MMM YY')
+        for (var iMonth = parseDate(fiscalYear['start']); iMonth.isSameOrBefore(fiscalYear['end']); iMonth.add(1, 'months')) {
+            let key = parseDate(iMonth, true, 'MMM YY')
             let workDays = data[0][key]
             let revenueValue = 0
             let cos = 0
@@ -162,13 +175,11 @@ class ProfitLoss extends Component {
             data[3][key] = revenueValue ? cm: 0 //cm
             data[4][key] = revenueValue ? ((cm / revenueValue )*100): 0//cm percentage
             
-            console.log(key, data[1][key], data[1]['total'], 'before')
             //For Total Column 
             data[0]['total'] += data[0][key] ?? 0 //days
             data[1]['total'] += data[1][key] //SELL TOTAL WITH IN A FISCAL YEAR
             data[2]['total'] += data[2][key] //BUY TOTAL WITH IN A FISCAL YEAR
             data[3]['total'] += data[3][key] //CM
-            console.log(key, data[1][key], data[1]['total'])
             // #a0df7d
         }
         //average Total cm %
@@ -184,29 +195,29 @@ class ProfitLoss extends Component {
         let { data, fiscalYear } = this.state
         const { billing } = this.props
         const len = billing.totalMonths>0 ? billing.totalMonths : 0
-        let startDate = formatDate(billing.startDate)
-        let endDate = formatDate(billing.endDate)
+        let startDate = parseDate(billing.startDate)
+        let endDate = parseDate(billing.endDate)
         let noOfDays = 0
         
         for (var i =1; i<=len; i++){
 
-            startDate = i===1 ? billing.startDate : formatDate(startDate).set('date', 1); 
-            endDate = i===len ? billing.endDate: formatDate(startDate).endOf('month');
+            startDate = i===1 ? billing.startDate : parseDate(startDate).set('date', 1); 
+            endDate = i===len ? billing.endDate: parseDate(startDate).endOf('month');
             const workDays = this.getWeekdays(startDate, endDate, holidays)
             noOfDays = noOfDays + workDays
-            let key = formatDate(startDate).format('MMM YY')
+            let key = parseDate(startDate, true, 'MMM YY')
             data[0][key]= workDays
-            startDate = formatDate(startDate).add(1, 'months')
+            startDate = parseDate(startDate).add(1, 'months')
         }
         let revenue = (billing.discount / noOfDays)
         let cm = (revenue * billing.cmPercentage /100 )
         let cos = (revenue - cm)
 
         for (var i =1; i<= len; i++){
-            startDate = i===1 ? billing.startDate  : formatDate(startDate).set('date', 1); 
-            endDate = i===len ? billing.endDate: formatDate(startDate).endOf('month');
+            startDate = i===1 ? billing.startDate  : parseDate(startDate).set('date', 1); 
+            endDate = i===len ? billing.endDate: parseDate(startDate).endOf('month');
             // let workDays = this.getWeekdays(startDate, endDate)
-            let key = formatDate(startDate).format('MMM YY')
+            let key = parseDate(startDate, true, 'MMM YY')
             let workDays = data[0][key]
             data[1][key] = revenue * workDays
             data[2][key] = cos * workDays
@@ -214,7 +225,7 @@ class ProfitLoss extends Component {
             data[4][key] = billing.cmPercentage
             
             //Total of every row with in financial year... 
-            if (startDate.isBetween(formatDate(fiscalYear['start']), formatDate(fiscalYear['end']), 'month', '[]')){
+            if (startDate.isBetween(parseDate(fiscalYear['start']), parseDate(fiscalYear['end']), 'month', '[]')){
                 data[0]['total'] += workDays
                 data[1]['total'] += revenue * workDays
                 data[2]['total'] += cos * workDays
@@ -223,7 +234,7 @@ class ProfitLoss extends Component {
             }
             // Total of every row with in financial year... 
 
-            startDate = formatDate(startDate).add(1, 'months')
+            startDate = parseDate(startDate).add(1, 'months')
         }
         data[4]['total'] = (data[3]['total']  / data[1]['total']) * 100 //CM%
         this.setState({data},()=>{
@@ -241,13 +252,13 @@ class ProfitLoss extends Component {
         let array = []
 
         for (
-            var iMonth = formatDate(fiscalYear['start']) ; // defination
-            iMonth.isSameOrBefore(formatDate(fiscalYear['end']));  //condition
+            var iMonth = parseDate(fiscalYear['start']) ; // defination
+            iMonth.isSameOrBefore(parseDate(fiscalYear['end']));  //condition
             iMonth.add(1, 'months') //itrerater
         ){
-            let key = formatDate(iMonth).format('MMM YY')
+            let key = parseDate(iMonth, true, 'MMM YY')
                         //project can have green column if we are checking opportunity P&L there won't be actual
-            let color = parent === 'P' ? iMonth.isSameOrAfter(formatDate(new Date()), 'month') ? '#ff7875' : '#a0df7d' : '#ff7875'
+            let color = parent === 'P' ? iMonth.isSameOrAfter(parseDate(new Date()), 'month') ? '#ff7875' : '#a0df7d' : '#ff7875'
             array.push(
                 {
                     title: key,
