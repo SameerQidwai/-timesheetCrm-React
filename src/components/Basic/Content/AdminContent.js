@@ -46,6 +46,12 @@ import Profile from '../../../pages/Profiles/Profile';
 
 import Training from '../../../pages/Trainings/Training';
 
+// shahbaz work
+import Expense from '../../../pages/Expenses/Expense';
+
+// shahbaz work END
+
+
 // import TimeSheetHTML from "../../Core/TimeSheetHTML"
 import { localStore } from '../../../service/constant';
 import MileCertificate from '../../../pages/Milestones/MileCertificate';
@@ -320,6 +326,11 @@ const pageLinks = [
   {
     component: Training,
     link: '/training',
+    permission: 'ALLOWED',
+  },
+  {
+    component: Expense,
+    link: '/expense',
     permission: 'ALLOWED',
   },
 ];

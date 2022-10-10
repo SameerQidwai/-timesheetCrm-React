@@ -59,6 +59,13 @@ const listData = [
         permissions: {module: "TIMESHEETS", key: 'READ'}
     },
     {
+        text: "Expense",
+        icon: <SolutionOutlined  />,
+        link: "/expense",
+        key: "Expense",
+        permissions: {module: "TIMESHEETS", key: 'READ'}
+    },
+    {
         text: "Timesheets",
         icon: <ClockCircleOutlined />,
         key: "TIMESHEETS",
