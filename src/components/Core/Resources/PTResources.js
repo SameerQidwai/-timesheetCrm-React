@@ -71,34 +71,34 @@ const resourceColumn = (milestoneId) => [
     render: (record) => `${record} %`,
     ...tableSorter('cmPercent', 'number'),
   },
-  {
-    title: '...',
-    key: 'action',
-    align: 'right',
-    width: '1%',
-    render: (value, record, index) => (
-      <Dropdown
-        overlay={
-          <Menu>
-            <Menu.Item>
-              <Link
-                to={{
-                  pathname: `milestones/${milestoneId}/resources`,
-                }}
-                className="nav-link"
-              >
-                Milestone
-              </Link>
-            </Menu.Item>
-          </Menu>
-        }
-      >
-        <Button size="small">
-          <SettingOutlined />
-        </Button>
-      </Dropdown>
-    ),
-  },
+  // {
+  //   title: '...',
+  //   key: 'action',
+  //   align: 'right',
+  //   width: '1%',
+  //   render: (value, record, index) => (
+  //     <Dropdown
+  //       overlay={
+  //         <Menu>
+  //           <Menu.Item>
+  //             <Link
+  //               to={{
+  //                 pathname: `milestones/${milestoneId}/resources`,
+  //               }}
+  //               className="nav-link"
+  //             >
+  //               Milestone
+  //             </Link>
+  //           </Menu.Item>
+  //         </Menu>
+  //       }
+  //     >
+  //       <Button size="small">
+  //         <SettingOutlined />
+  //       </Button>
+  //     </Dropdown>
+  //   ),
+  // },
 ];
 
 class PTResources extends Component {
