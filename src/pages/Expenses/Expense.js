@@ -1,4 +1,4 @@
-import { Button, Col, Row, Table } from 'antd'
+import { Button, Col, Dropdown, Menu, Popconfirm, Row, Table } from 'antd'
 import {
   DownOutlined,
   SettingOutlined,
@@ -10,102 +10,167 @@ import React from 'react'
 import { useState } from 'react';
 import InfoModal from './InfoModal';
 
-const columns = [
-  {
-    title: 'CODE',
-    dataIndex: 'code',
-    sorter: {
-      compare: (a, b) => a.code - b.code,
-      multiple: 4,
-    },
-  },
-  {
-    title: 'TITLE',
-    dataIndex: 'title',
-    sorter: {
-      compare: (a, b) => a.title - b.title,
-      multiple: 3,
-    },
-  },
-  {
-    title: 'PROJECT',
-    dataIndex: 'project',
-    sorter: {
-      compare: (a, b) => a.project - b.project,
-      multiple: 2,
-    },
-  },
-  {
-    title: 'AMOUNT',
-    dataIndex: 'amount',
-    sorter: {
-      compare: (a, b) => a.amount - b.amount,
-      multiple: 1,
-    },
-  },
-  {
-    title: 'STATUS',
-    dataIndex: 'status',
-    sorter: {
-      compare: (a, b) => a.status - b.status,
-      multiple: 1,
-    },
-  },
-  {
-    title: 'SUBMITTED AT',
-    dataIndex: 'submittedAt',
-    sorter: {
-      compare: (a, b) => a.submittedAt - b.submittedAt,
-      multiple: 1,
-    },
-  },
-];
-
-const data = [
-  {
-    key: '1',
-    code: 'John Brown',
-    title: 98,
-    project: 60,
-    amount: 70,
-    status: "saved",
-      submittedAt: "12-05-2022"
-
-  },
-  {
-    key: '2',
-    code: 'Jim Green',
-    title: 98,
-    project: 66,
-    amount: 89,
-    status: "saved",
-    submittedAt: "12-05-2022"
-    },
-  {
-    key: '3',
-    code: 'Joe Black',
-    title: 98,
-    project: 90,
-    amount: 70,
-    status: "saved",
-    submittedAt: "12-05-2022"
-    },
-  {
-    key: '4',
-    code: 'Jim Red',
-    title: 88,
-    project: 99,
-    amount: 89,
-    status: "saved",
-    submittedAt: "12-05-2022"
-    },
-];
 
 const Expense = () => {
 
+  // dummy text
+  const data = [
+    {
+      id: '1',
+      code: 'John Brown',
+      title: 'abc',
+      project: {label: "defiti"},
+      amount: 70,
+      status: "saved",
+      submittedAt: "12-05-2022"
+  
+    },
+    {
+      id: '2',
+      code: 'Jim Green',
+      title: 'def',
+      project: {label: 'mongo'},
+      amount: 89,
+      status: "saved",
+      submittedAt: "12-05-2022"
+      },
+    {
+      id: '3',
+      code: 'Joe Black',
+      title: 'ghi',
+      project: {label: "gifti"},
+      amount: 70,
+      status: "saved",
+      submittedAt: "12-05-2022"
+      },
+    {
+      id: '4',
+      code: 'Jim Red',
+      title: 'jkl',
+      project: {label: 'mouse'},
+      amount: 89,
+      status: "saved",
+      submittedAt: "12-05-2022"
+      },
+  ];
+
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [openModal, setOpenModal] = useState(false);
+  const [expenseData, setExpenseData] = useState(data);
 
+
+	const handleDelete = (id,index) => {
+		let updatedData = expenseData.filter((ele,ind) => {
+			return ind != index;
+		});
+		setExpenseData([...updatedData]);
+	}
+
+  const columns = [
+    {
+      title: 'CODE',
+      dataIndex: 'code',
+      sorter: {
+        compare: (a, b) => a.code - b.code,
+        multiple: 4,
+      },
+    },
+    {
+      title: 'TITLE',
+      dataIndex: 'title',
+      sorter: {
+        compare: (a, b) => a.title - b.title,
+        multiple: 3,
+      },
+    },
+    {
+      title: 'PROJECT',
+      dataIndex: ['project', 'label'], // when-api change it to [project,name] or projectName
+      sorter: {
+        compare: (a, b) => a.project?.label - b.project?.label,
+        multiple: 2,
+      },
+    },
+    {
+      title: 'AMOUNT',
+      dataIndex: 'amount',
+      sorter: {
+        compare: (a, b) => a.amount - b.amount,
+        multiple: 1,
+      },
+    },
+    {
+      title: 'STATUS',
+      dataIndex: 'status',
+      sorter: {
+        compare: (a, b) => a.status - b.status,
+        multiple: 1,
+      },
+    },
+    {
+      title: 'SUBMITTED AT',
+      dataIndex: 'submittedAt',
+      sorter: {
+        compare: (a, b) => a.submittedAt - b.submittedAt,
+        multiple: 1,
+      },
+    },
+    {
+      title: '...',
+      key: 'action',
+      align: 'center',
+      width: '1%',
+      // width: '155',
+      render: (value, record, index) => (
+        <Dropdown
+          overlay={
+            <Menu>
+              <Menu.Item
+                key="delete"
+                danger
+                // disabled={!this?.state?.permissions?.['DELETE']}
+                className="pop-confirm-menu"
+              >
+                <Popconfirm
+                  title="Are you sure you want to delete"
+                  onConfirm={() => handleDelete(record.id, index)}
+                >
+                  <div> Delete </div>
+                </Popconfirm>
+              </Menu.Item>
+              <Menu.Item
+                key="edit"
+                onClick={() =>
+                  setOpenModal({...record,index})
+            
+                  // this.setState({
+                  //   openModal: true,
+                    
+                  // })
+                }
+                // disabled={this.state && !this.state.permissions['UPDATE']}
+              >
+                Edit
+              </Menu.Item>
+              {/* <Menu.Item key="view">
+                <Link
+                  to={{ pathname: `/opportunities/${record.id}/info` }}
+                  className="nav-link"
+                >
+                  View
+                </Link>
+              </Menu.Item> */}
+            </Menu>
+          }
+        >
+          <Button size="small">
+            <SettingOutlined />
+          </Button>
+        </Dropdown>
+      ),
+    },
+  ];
+  
   const onChange = (pagination, filters, sorter, extra) => {
     console.log('params', pagination, filters, sorter, extra);
   };
@@ -115,11 +180,25 @@ const Expense = () => {
     setSelectedRowKeys(newSelectedRowKeys);
   };
 
-
   // modals 
   const closeModal = () => {
     setOpenModal(false);
   }
+
+	const callBack = (data, index) => {
+		
+		let exp = expenseData;
+		if (index) {
+			exp[index] = data; 
+		} else {
+			data.id = expenseData.length + 1; // when-api remove this
+			exp = [...expenseData, data]
+		}
+    
+		setExpenseData([...exp]);  
+		setOpenModal(false);
+  }
+
   const rowSelection = {
     selectedRowKeys,
     onChange: onSelectChange,
@@ -179,21 +258,23 @@ const Expense = () => {
         </Button>
         </Col>  
         <Col span={24}>
-          <Table rowSelection={rowSelection} columns={columns} dataSource={data}
+          <Table
+            rowKey={data=> data.id}
+            rowSelection={rowSelection}
+            columns={columns}
+            dataSource={expenseData}
           onChange={onChange} 
           />
         </Col>
       </Row>
-      <InfoModal
+      {openModal&&<InfoModal
         visible={openModal}
         close={closeModal}
-        
-            // editLead={editLead}
-            // close={this.closeModal}
-            // callBack={this.callBack}
-          />
+        callBack={callBack}
+      />}
     </>
   )
 }
 
 export default Expense
+

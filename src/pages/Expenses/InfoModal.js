@@ -1,13 +1,26 @@
 import { Form, Modal } from 'antd'
+import axios from 'axios'
 import React from 'react'
+import { useEffect } from 'react'
 import { useState } from 'react'
 import FormItems from '../../components/Core/Forms/FormItems'
-import { getOrgPersons } from '../../service/constant-Apis'
+import { getOrgPersons, getProjects } from '../../service/constant-Apis'
 
-const InfoModal = ({ visible, close }) => {
-    
-    const [data, setData] = useState({
-        BasicFields : [
+const InfoModal = ({ visible, close, callBack }) => {
+    const [form] = Form.useForm();
+    console.log("visible--> ", visible);
+
+    const onFinish = (data) => {
+        console.log('dasic-->', data);
+
+        let { basic } = data;
+        basic.code = 'AR389'; // when-api remove this
+        basic.projectId = basic.project?.value // when-api remove this
+        callBack(basic,visible?.index);
+
+    }
+
+    const [basicFields, setBasicFields] = useState([
         {
             Placeholder: "Title",
             rangeMin: true,
@@ -19,10 +32,9 @@ const InfoModal = ({ visible, close }) => {
         {
             object: "basic",
             fieldCol: 24,
-            key: "titleId",
+            key: "title",
             size: "small",
             rules: [{ required: true, message: 'Title is Required' }],
-            data: [],
             type: "Input",
             },
             {
@@ -36,52 +48,54 @@ const InfoModal = ({ visible, close }) => {
             {
             object: "basic",
             fieldCol: 24,
-            key: "ProjectId",
+            key: "project", // when-api change it to projectId
             size: "small",
             rules:[{ required: true, message: 'Project is Required' }],
             data: [],
+            customValue: (value, option) => option, // when-api remove this
             type: "Select",
-            // onChange: (value)=> {
-            //     if (value){
-            //         const customUrl = `helpers/contact-persons?organizationId=${value}&associated=1`
-            //         getOrgPersons(customUrl).then(res=>{
-            //             if(res.success){
-            //                 // const { BasicFields } = basicFields
-            //                 BasicFields[6].data = res.data
-            //                 this.setState({ BasicFields })
-            //             }
-            //         })
-            //     }else{
-            //         // const { BasicFields } = basicFields
-            //         basicFields[6].data = []
-            //         const { basic } = this.formRef.current.getFieldsValue();
-            //         basic.contactPersonId = undefined
-            //         this.formRef.current.setFieldsValue({ basic: basic, });
-            //         this.setState({ BasicFields })
-            //     }
-            // }
-        },
-    ],
-        }
+          },
+    ]
+        
     );
-    const { BasicFields } = data;
+
+    useEffect(() => {
+        gettingProject();
+        if (visible !== true) {
+            form.setFieldsValue({ basic: visible })
+        }
+    }, []);
+
+    const gettingProject = () => {
+        getProjects().then((res) => {
+            if (res.success) {
+                let basic = basicFields
+                basic[3].data = res.data
+                setBasicFields([...basic]); 
+            }
+            
+        })
+    }
+
   return (
       <Modal
+          title={visible !== true ? "Edit Expense" : "Add Expense"}
           visible={visible}
         //   width={450}
           onCancel={close}
+          okText={"Save"}
+          okButtonProps={{ htmlType: 'submit', form: 'my-form' }}
       >
           <Form
             id={'my-form'}
+            form={form}
             // ref={formRef}
-            // onFinish={onFinish}
+            onFinish={onFinish}
             scrollToFirstError={true}
             size="small"
             layout="inline"
-            //   need some change 
-            // style={{flexDirection:"column"}}
           >
-              <FormItems FormFields={BasicFields}/>
+              <FormItems FormFields={basicFields}/>
           </Form>
       </Modal>
   )
