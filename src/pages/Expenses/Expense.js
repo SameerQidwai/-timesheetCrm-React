@@ -186,9 +186,10 @@ const Expense = () => {
   }
 
 	const callBack = (data, index) => {
-		
+		console.log("index------>",index)
 		let exp = expenseData;
-		if (index) {
+    if (index >= 0) {
+		console.log("index find------>",index)
 			exp[index] = data; 
 		} else {
 			data.id = expenseData.length + 1; // when-api remove this
