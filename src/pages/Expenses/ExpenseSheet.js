@@ -8,16 +8,16 @@ import {
 import Title from 'antd/lib/typography/Title'
 import React from 'react'
 import { useState } from 'react';
-import InfoModal from './InfoModal';
+import InfoModal from './Modals/InfoModal';
 
 
-const Expense = () => {
+const ExpenseSheet = () => {
 
   // dummy text
   const data = [
     {
       id: '1',
-      code: 'John Brown',
+      code: 'AR390',
       title: 'abc',
       project: {label: "defiti"},
       amount: 70,
@@ -27,7 +27,7 @@ const Expense = () => {
     },
     {
       id: '2',
-      code: 'Jim Green',
+      code: 'AR391',
       title: 'def',
       project: {label: 'mongo'},
       amount: 89,
@@ -36,7 +36,7 @@ const Expense = () => {
       },
     {
       id: '3',
-      code: 'Joe Black',
+      code: 'AR392',
       title: 'ghi',
       project: {label: "gifti"},
       amount: 70,
@@ -45,7 +45,7 @@ const Expense = () => {
       },
     {
       id: '4',
-      code: 'Jim Red',
+      code: 'AR393',
       title: 'jkl',
       project: {label: 'mouse'},
       amount: 89,
@@ -277,5 +277,5 @@ const Expense = () => {
   )
 }
 
-export default Expense
+export default ExpenseSheet
 

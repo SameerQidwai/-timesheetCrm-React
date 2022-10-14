@@ -3,8 +3,8 @@ import axios from 'axios'
 import React from 'react'
 import { useEffect } from 'react'
 import { useState } from 'react'
-import FormItems from '../../components/Core/Forms/FormItems'
-import { getOrgPersons, getProjects } from '../../service/constant-Apis'
+import FormItems from '../../../components/Core/Forms/FormItems'
+import { getOrgPersons, getProjects } from '../../../service/constant-Apis'
 
 const InfoModal = ({ visible, close, callBack }) => {
     const [form] = Form.useForm();

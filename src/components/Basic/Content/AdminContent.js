@@ -47,14 +47,15 @@ import Profile from '../../../pages/Profiles/Profile';
 import Training from '../../../pages/Trainings/Training';
 
 // shahbaz work
-import Expense from '../../../pages/Expenses/Expense';
+// import Expense from '../../../pages/Expenses/ExpenseSheet';
 
 // shahbaz work END
-
+import Expense from '../../../pages/Expenses/Expenses/Expense';
 
 // import TimeSheetHTML from "../../Core/TimeSheetHTML"
 import { localStore } from '../../../service/constant';
 import MileCertificate from '../../../pages/Milestones/MileCertificate';
+import ExpenseSheet from '../../../pages/Expenses/ExpenseSheet';
 
 const { Content } = Layout;
 
@@ -326,6 +327,11 @@ const pageLinks = [
   {
     component: Training,
     link: '/training',
+    permission: 'ALLOWED',
+  },
+  {
+    component: ExpenseSheet,
+    link: '/expenseSheet',
     permission: 'ALLOWED',
   },
   {
