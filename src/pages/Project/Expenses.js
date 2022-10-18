@@ -185,9 +185,13 @@ class Expenses extends Component {
     this.fetchAll();
   };
 
-  fetchAll = (id) => {
+  fetchAll = async (id) => {
     const { OPPORTUNITIES } = JSON.parse(localStore().permissions);
-    const { url } = this.props.match;
+    var { url } = this.props.match;
+    //till something is done
+    url = url.replace('projects', 'opportunities')
+    console.log(url)
+    //will it work fine
     const { proId, mileId } = this.props.match.params;
     Promise.all([getRecord(proId), getMilestoneExpenses(url, id)])
       .then((res) => {
