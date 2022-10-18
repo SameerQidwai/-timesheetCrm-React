@@ -28,6 +28,7 @@ class Drawers extends Component {
 
     render() {
         const { collapsed } = this.state;
+        console.log(this.props.location.pathname)
         return (
             <Layout className="setMinWidth">
                 {/* collapsedWidth={0} prop to hide full sidebar */}
@@ -66,7 +67,7 @@ class Drawers extends Component {
                         
                         {/* <Divider >.</Divider> */}
                     </div>
-                    <Menus />
+                    <Menus activatePath={this.props?.location?.pathname} />
                 </Sider>
                 <Layout className="site-layout">
                     <Header

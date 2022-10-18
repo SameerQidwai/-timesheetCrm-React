@@ -396,7 +396,7 @@ class Expenses extends Component {
             {proDesc.organization ? (
               <Link
                 to={{
-                  pathname: `/organizations/info/${proDesc.organizationId}`,
+                  pathname: `/organisations/${proDesc.organizationId}/info`,
                 }}
                 className="nav-link"
               >

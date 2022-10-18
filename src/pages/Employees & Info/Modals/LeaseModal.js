@@ -5,7 +5,7 @@ import { LoadingOutlined } from "@ant-design/icons"; //Icons
 import FormItems from "../../../components/Core/Forms/FormItems";
 
 import { addList, editList, getRecord } from "../../../service/employee-leases";
-import { formatDate } from "../../../service/constant";
+import { dateRange, formatDate } from "../../../service/constant";
 
 class LeaseModal extends Component {
     constructor() {
@@ -53,9 +53,9 @@ class LeaseModal extends Component {
                     fieldStyle: { width: "100%" },
                     itemStyle: { marginBottom: 10 },
                     rangeMin: (current)=>{
-                    const { obj } = this.leaseRef.current.refs.lease_form.getFieldValue();
-                    return  obj.endDate && current > obj.endDate
-                }
+                        let endDate = this.leaseRef.current.getFieldValue(["obj","endDate"])
+                        return dateRange(current, endDate, 'start')
+                    }
                 },
                 {
                     Placeholder: "Lease End Date",
@@ -83,9 +83,9 @@ class LeaseModal extends Component {
                     fieldStyle: { width: "100%" },
                     itemStyle: { marginBottom: 10 },
                     rangeMax: (current)=>{
-                    const { obj } = this.leaseRef.current.refs.lease_form.getFieldValue();
-                    return  obj.startDate && current < obj.startDate
-                }
+                        let startDate = this.leaseRef.current.getFieldValue(["obj","startDate"])
+                        return dateRange(current, startDate, 'end')
+                    }
                 },
                 {
                     object: "obj", //this is field 3
@@ -213,9 +213,9 @@ class LeaseModal extends Component {
                     fieldStyle: {width: '100%'},
                     itemStyle: { marginBottom: 10 },
                     onChange: ()=> {
-                        const { obj } =  this.leaseRef.current.refs.lease_form.getFieldsValue();
+                        const { obj } =  this.leaseRef.current.getFieldsValue();
                         obj.totalDeduction = (obj.preTaxDeductionAmount ? obj.preTaxDeductionAmount : 0) + (obj.postTaxDeductionAmount ? obj.postTaxDeductionAmount : 0)
-                        this.leaseRef.current.refs.lease_form.setFieldsValue({ obj: obj, });                            
+                        this.leaseRef.current.setFieldsValue({ obj: obj, });                            
                     }
                 },
                 {
@@ -230,9 +230,9 @@ class LeaseModal extends Component {
                     fieldStyle: {width: '100%'},
                     itemStyle: { marginBottom: 10 },
                     onChange: ()=> {
-                        const { obj } =  this.leaseRef.current.refs.lease_form.getFieldsValue();
+                        const { obj } =  this.leaseRef.current.getFieldsValue();
                         obj.totalDeduction = (obj.preTaxDeductionAmount ? obj.preTaxDeductionAmount : 0) + (obj.postTaxDeductionAmount ? obj.postTaxDeductionAmount : 0)
-                        this.leaseRef.current.refs.lease_form.setFieldsValue({ obj: obj, });
+                        this.leaseRef.current.setFieldsValue({ obj: obj, });
                     }
                 },
                 {
@@ -299,11 +299,11 @@ class LeaseModal extends Component {
         getRecord(empId, id).then(res=>{
             const {success, data} = res
             if (success){
-                this.leaseRef.current.refs.lease_form.setFieldsValue({ obj: data, });
+                this.leaseRef.current.setFieldsValue({ obj: data, });
             }
         })        
     };
-
+    
     editRecord = (data) => {
         this.setState({loading: true})
         const { editLease, callBack, empId } = this.props;
@@ -331,7 +331,7 @@ class LeaseModal extends Component {
             >
                 <Form
                     id={'my-form'}
-                    ref={this.formRef}
+                    ref={this.leaseRef}
                     onFinish={this.onFinish}
                     scrollToFirstError={true}
                     size="small"
