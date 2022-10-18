@@ -35,7 +35,7 @@ const CertificatePdf = (props) =>{
                 {/* <Descriptions column={1} bordered size={"small"} style={{margin:'15px 0px'}} className="describe"> */}
                 
                 <Row justify="space-around">
-                    <Col span={24} className="txt-center mb-40"><img src={'/onelm.png'} width="22%" /></Col>
+                    <Col span={24} className="txt-center mb-40 mt-10"><img src={'/z-cp-logo.png'} width="32%" /></Col>
                     <Col span={24} className="txt-center">
                         <Typography.Title level={4}>MILESTONE ACCEPTANCE CERTIFICATE</Typography.Title> 
                     </Col>
