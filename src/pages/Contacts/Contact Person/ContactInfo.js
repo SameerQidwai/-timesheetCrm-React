@@ -120,7 +120,7 @@ export class ContactInfo extends Component {
                     <Item label="Phone">{data.phoneNumber}</Item>
                     <Item label="Email">{data.email}</Item>
                     <Item label="Gender">{GENDER[data?.gender]}</Item>
-                    <Item label="Date Of Birth">{data.dateOfBirth}</Item>
+                    <Item label="Date Of Birth">{formatDate(data.dateOfBirth, true, true)}</Item>
                     <Item label="Birth Place">{data.birthPlace}</Item>
                 </Descriptions>
             </Col>
