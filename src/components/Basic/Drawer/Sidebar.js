@@ -66,7 +66,7 @@ class Drawers extends Component {
                         
                         {/* <Divider >.</Divider> */}
                     </div>
-                    <Menus />
+                    <Menus activatePath={this.props?.location?.pathname} />
                 </Sider>
                 <Layout className="site-layout">
                     <Header

@@ -159,8 +159,9 @@ class Menus extends Component {
     highlightRow(link) {
         const { pathname } = this.props.location
         if (pathname === link ){
-            // return 'ant-menu-item-selected'
+            return 'ant-menu-item-selected'
         }
+        return ''
     }
     onSelect = ({ item, key, keyPath, selectedKeys }) => {
         console.log({item, key, keyPath, selectedKeys});
@@ -172,7 +173,7 @@ class Menus extends Component {
             item.subMenu ? (
                 <SubMenu  key={item.key} icon={item.icon} title={item.text}>
                     {item.subMenu.map((sub, j) => (
-                        <Menu.Item key={sub.key} icon={sub.icon} className={this.highlightRow(sub.link)}>
+                        <Menu.Item key={sub.link} icon={sub.icon} className={this.highlightRow(sub.link)}>
                             <Link to={sub.link} className="nav-link">
                                 {sub.text}
                             </Link>
@@ -180,7 +181,8 @@ class Menus extends Component {
                     ))}
                 </SubMenu>
             ) : (
-                <Menu.Item key={item.key} icon={item.icon} className={this.highlightRow(item.link)} onSelect={this.onSelect}>
+                // className={this.highlightRow(item.link)}
+                <Menu.Item key={item.link} icon={item.icon}  >
                     <Link to={item.link} className="nav-link" >
                         {item.text}
                     </Link>
@@ -189,12 +191,13 @@ class Menus extends Component {
         );
     };
     render() {
-        const { location } = this.props;
         return (
             <Menu
                 theme="light"
                 mode="inline"
-                defaultSelectedKeys={location.pathname}
+                // defaultSelectedKeys={location.pathname}
+                selectedKeys={[this.props.activatePath]}
+                // onSelect={this.onSelect}
                 style={{ fontSize: 12}}
             >
                 {this.MenuRender()}

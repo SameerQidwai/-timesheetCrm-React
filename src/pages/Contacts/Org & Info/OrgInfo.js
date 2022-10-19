@@ -71,7 +71,7 @@ class OrgInfo extends Component {
     handleDelete = (id) => {
         delOrg(id).then((res) => {
             if (res.success) {
-                window.location.href = '/organizations'
+                window.location.href = '/organisations'
             }
         });
     };

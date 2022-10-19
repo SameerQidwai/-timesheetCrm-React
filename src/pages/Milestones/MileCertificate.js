@@ -246,11 +246,11 @@ class MileCertificate extends Component {
         const { desc, infoModal, data, sMile, permissions, loading, columns, fileList, printing, PROJECTS } = this.state;
         return (
             <>  
-            <Row gutter={200}>
+            <Row >
                 <Col>
                     <Typography.Title level={3}>Milestone Approval</Typography.Title>
                 </Col>
-                <Col>
+                <Col offset={5}>
                     <Select
                         placeholder="Select Project"
                         style={{ width: 300 }}

@@ -13,7 +13,7 @@ class ChildOrg extends Component {
                 render: (text, record) => (
                     <Link
                         to={{
-                            pathname: `/organizations/info/${record && record.key}`,
+                            pathname: `/organisations/${record.key}/info`,
                         }}
                         className="nav-link"
                     >
@@ -28,7 +28,7 @@ class ChildOrg extends Component {
                 render: (text, record) => (
                     <Link
                         to={{
-                            pathname: `/organizations/info/${record &&  record.key}`,
+                            pathname: `/organisations/${record &&  record.key}/info`,
                         }}
                         className="nav-link"
                     >
@@ -49,7 +49,6 @@ class ChildOrg extends Component {
     };
 
     componentWillReceiveProps(nextProps) {
-        console.log(nextProps);
         window.location.reload(false);
         //call function to call data here
     }

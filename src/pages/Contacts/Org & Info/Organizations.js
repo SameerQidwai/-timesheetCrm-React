@@ -252,7 +252,7 @@ class Organizations extends Component {
         {
           object: 'obj',
           fieldCol: 12,
-          key: 'phone',
+          key: 'phoneNumber',
           size: 'small',
           type: 'Input',
         },
