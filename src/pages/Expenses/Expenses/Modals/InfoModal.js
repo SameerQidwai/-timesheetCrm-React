@@ -18,14 +18,17 @@ const InfoModal = ({ visible, close, callBack }) => {
     const [progress, setProgress] = useState();
     const [form] = Form.useForm();
 
+    // console.log("fileList", fileList);
     // on submit 
     const onFinish = (data) => {
         console.log('dasic-->', data);
-
-        // let { basic } = data;
-        // basic.code = 'AR389'; // when-api remove this
-        // basic.projectId = basic.project?.value // when-api remove this
-        // callBack(basic,visible?.index);
+        let { basic } = data;
+        basic.code = 'AR389'; // when-api remove this
+        basic.projectId = basic.project?.value // when-api remove this
+        basic.attachments = fileList.map((file, index) => {
+            return file.fileId;
+        });
+        callBack(basic, visible?.index);
 
     }
 
@@ -91,6 +94,7 @@ const InfoModal = ({ visible, close, callBack }) => {
             size: "small",
             rules: [{ required: false, message: 'Reimbursed is Required' }],
             type: "Checkbox",
+            valuePropName: "checked"
             // name:"reimbursed",
             // value:"reimbursed"
             // checked: []
@@ -110,6 +114,7 @@ const InfoModal = ({ visible, close, callBack }) => {
             size: "small",
             rules: [{ required: false, message: 'Billable is Required' }],
             type: "Checkbox",
+            valuePropName: "checked"
             // name:"billable",
             // value: "billable"
             // checked: []

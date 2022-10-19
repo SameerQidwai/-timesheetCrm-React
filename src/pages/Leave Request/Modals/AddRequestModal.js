@@ -401,6 +401,7 @@ class AddRequestModal extends Component{
                 attachments: fileIds ?? []
         }
 
+        console.log("newVal--->",newVal);
         if(edit){
             editRequest(edit, newVal).then((res) => {
                 this.setState({loading: false})

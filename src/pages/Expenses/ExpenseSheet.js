@@ -9,6 +9,8 @@ import Title from 'antd/lib/typography/Title'
 import React from 'react'
 import { useState } from 'react';
 import InfoModal from './Modals/InfoModal';
+import ExpenseSheetModal from './Expenses/Modals/ExpenseSheetModal';
+import { expensesData } from './DummyData';
 
 
 const ExpenseSheet = () => {
@@ -19,7 +21,7 @@ const ExpenseSheet = () => {
       id: '1',
       code: 'AR390',
       title: 'abc',
-      project: {label: "defiti"},
+      // project: {label: "defiti"},
       amount: 70,
       status: "saved",
       submittedAt: "12-05-2022"
@@ -29,7 +31,7 @@ const ExpenseSheet = () => {
       id: '2',
       code: 'AR391',
       title: 'def',
-      project: {label: 'mongo'},
+      // project: {label: 'mongo'},
       amount: 89,
       status: "saved",
       submittedAt: "12-05-2022"
@@ -38,7 +40,7 @@ const ExpenseSheet = () => {
       id: '3',
       code: 'AR392',
       title: 'ghi',
-      project: {label: "gifti"},
+      // project: {label: "gifti"},
       amount: 70,
       status: "saved",
       submittedAt: "12-05-2022"
@@ -47,7 +49,7 @@ const ExpenseSheet = () => {
       id: '4',
       code: 'AR393',
       title: 'jkl',
-      project: {label: 'mouse'},
+      // project: {label: 'mouse'},
       amount: 89,
       status: "saved",
       submittedAt: "12-05-2022"
@@ -186,6 +188,7 @@ const ExpenseSheet = () => {
   }
 
 	const callBack = (data, index) => {
+		console.log("data------>",data)
 		console.log("index------>",index)
 		let exp = expenseData;
     if (index >= 0) {
@@ -255,7 +258,7 @@ const ExpenseSheet = () => {
           }}
           // disabled={!permissions['ADD']}
         >
-          <PlusSquareOutlined /> Add Expense
+          <PlusSquareOutlined /> Add Expense Sheet
         </Button>
         </Col>  
         <Col span={24}>
@@ -264,11 +267,16 @@ const ExpenseSheet = () => {
             rowSelection={rowSelection}
             columns={columns}
             dataSource={expenseData}
-          onChange={onChange} 
+            onChange={onChange} 
           />
         </Col>
       </Row>
-      {openModal&&<InfoModal
+      {/* {openModal&&<InfoModal
+        visible={openModal}
+        close={closeModal}
+        callBack={callBack}
+      />} */}
+      {openModal&&<ExpenseSheetModal
         visible={openModal}
         close={closeModal}
         callBack={callBack}
