@@ -137,25 +137,6 @@ class MileCertificate extends Component {
                                                 <div>Approve</div>
                                             </Popconfirm>
                                         </Menu.Item>
-                                    {/* <Menu.SubMenu title={'Action'} key="Action">
-                                        
-                                        <Menu.Item 
-                                            key="Close"
-                                            disabled={!permissions['UPDATE']|| basic.phase===false}
-                                            style={{color: '#c00505'}}
-                                            className="pop-confirm-menu"
-                                        >
-                                            <Popconfirm 
-                                                disabled={!permissions['UPDATE']|| basic.phase===false}
-                                                title={'Do You Want To Close this Project?'} 
-                                                onConfirm={() => this.OutcomeAction('close')}
-                                                okText="Yes"
-                                                cancelText="No" 
-                                            >
-                                                <div>Reject</div>
-                                            </Popconfirm>
-                                        </Menu.Item>
-                                    </Menu.SubMenu> */}
                                 </Menu>
                             }
                         >
@@ -278,6 +259,26 @@ class MileCertificate extends Component {
                     size="small"
                     className='fs-small'
                 />
+                <Row justify="end" gutter={[20,200]}>
+                    <Col>
+                        <Button
+                            className={'success'}
+                            // disabled={ sTimesheet.keys.length<1 || !permissions['APPROVAL'] || sTimesheet.cantApprove}
+                            onClick={()=> this.multiAction('Approve')}
+                        >
+                            Approve
+                        </Button>
+                    </Col>
+                    <Col>
+                        <Button
+                            className={'not-success'}
+                            // disabled={ sTimesheet.keys.length<1 || !permissions['UNAPPROVAL'] || sTimesheet.cantUnapprove}
+                            onClick={()=> this.multiAction('Unapprove')}
+                        >
+                            Unapprove
+                        </Button>
+                    </Col>
+                </Row>
                 <Modal
                     title={'Upload Certifiate'}
                     maskClosable={false}

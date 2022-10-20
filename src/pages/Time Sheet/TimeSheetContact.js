@@ -495,7 +495,7 @@ class TimeSheetContact extends Component {
         this.setState({ timeObj, isAttach: true})
     }
 
-   attachCallBack = (res) =>{ 
+    attachCallBack = (res) =>{ 
         const {data, timeObj } = this.state
         const {rowIndex} = timeObj
         if(rowIndex >= 0 ){
@@ -507,13 +507,14 @@ class TimeSheetContact extends Component {
         }
     }
 
-
     exporPDF = (entryId) =>{
-        const keys = entryId ? [entryId] :this.state.sTimesheet.keys
-        this.setState({
-            eData: keys,
-            isDownload: true
-        })   
+        const keys = entryId ? [entryId] :this.state?.sTimesheet?.keys
+        if(keys){
+            this.setState({
+                eData: keys,
+                isDownload: true
+            })
+        }
     }
         
     summaryFooter = (data) =>{
