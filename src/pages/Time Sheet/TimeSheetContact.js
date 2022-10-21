@@ -473,26 +473,34 @@ class TimeSheetContact extends Component {
 
     openAttachModal = (record, index) =>{
         let timeObj = {}
-        if(index >= 0){
-            timeObj = {
-                milestoneEntryId: [record.milestoneEntryId],
-                milestoneId: record.milestoneId,
-                notes: record.notes,
-                milestone: record.milestone,
-                status: record.status,
-                rowIndex: index
+        if (record.milestoneEntryId){
+            if(index >= 0){
+                timeObj = {
+                    milestoneEntryId: [record.milestoneEntryId],
+                    milestoneId: record.milestoneId,
+                    notes: record.notes,
+                    milestone: record.milestone,
+                    status: record.status,
+                    rowIndex: index
+                }
+            }else{
+                const {keys, timesheet} = this.state.sTimesheet
+                timeObj = {
+                    milestoneEntryId: keys,
+                    milestoneId: timesheet[0].milestoneId,
+                    notes: timesheet[0].notes,
+                    milestone: timesheet[0].milestone,
+                    status: false,
+                }
             }
+            this.setState({ timeObj, isAttach: true})
         }else{
-            const {keys, timesheet} = this.state.sTimesheet
-            timeObj = {
-                milestoneEntryId: keys,
-                milestoneId: timesheet[0].milestoneId,
-                notes: timesheet[0].notes,
-                milestone: timesheet[0].milestone,
-                status: false,
-            }
+            this.exportUploadError()
         }
-        this.setState({ timeObj, isAttach: true})
+    }
+
+    exportUploadError = ()=>{
+        message.error({ content: "Can't Upload/Export To Timesheet Without Any Time Entry", key: 'empty'}, 3)
     }
 
     attachCallBack = (res) =>{ 
@@ -514,6 +522,8 @@ class TimeSheetContact extends Component {
                 eData: keys,
                 isDownload: true
             })
+        }else{
+            this.exportUploadError()
         }
     }
         

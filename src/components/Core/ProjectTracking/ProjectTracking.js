@@ -18,14 +18,14 @@ const resourceColumns = [
     dataIndex: 'fullName',
     key: 'fullName',
     render: (text, record) => (
-      <Link
-        to={{
-          pathname: `milestones/${record.id}/resources`,
-        }}
-        className="nav-link"
-      >
-        {text}
-      </Link>
+      // <Link
+      //   to={{
+      //     pathname: `/employees/${record.id}/resources`,
+      //   }}
+      //   className="nav-link"
+      // >
+        text
+      // </Link>
     ),
     ...tableSorter('fullName', 'string'),
   },
