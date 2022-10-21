@@ -22,6 +22,12 @@ const Expense = () => {
   const [openExpenseModal, setOpenExpenseModal] = useState(false);
   const [expenseData, setExpenseData] = useState(expensesData);
 
+  const handleDelete = (id,index) => {
+		let updatedData = expenseData.filter((ele,ind) => {
+			return ind != index;
+		});
+		setExpenseData([...updatedData]);
+	}
     
   const columns = [
     {
@@ -100,21 +106,21 @@ const Expense = () => {
               >
                 <Popconfirm
                   title="Are you sure you want to delete"
-                //   onConfirm={() => handleDelete(record.id, index)}
+                  onConfirm={() => handleDelete(record.id, index)}
                 >
                   <div> Delete </div>
                 </Popconfirm>
               </Menu.Item>
               <Menu.Item
                 key="edit"
-              // onClick={() =>
-              //   setOpenModal({...record,index})
+              onClick={() =>
+                setOpenModal({...record,index})
                 
               //   // this.setState({
               //   //   openModal: true,
                         
-              //   // })
-              // }
+                // })
+              }
               // disabled={this.state && !this.state.permissions['UPDATE']}
               >
                 Edit
@@ -150,6 +156,7 @@ const Expense = () => {
     setOpenModal(false);
   }
   
+  // expense sheet onsubmit
   const sheetCallBack = (data) => {
     console.log({ 'Expense seheet data': data })
     setOpenExpenseModal(false)

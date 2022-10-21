@@ -21,7 +21,7 @@ const ExpenseSheet = () => {
       id: '1',
       code: 'AR390',
       title: 'abc',
-      // project: {label: "defiti"},
+      project: {label: "defiti"},
       amount: 70,
       status: "saved",
       submittedAt: "12-05-2022"
@@ -31,7 +31,7 @@ const ExpenseSheet = () => {
       id: '2',
       code: 'AR391',
       title: 'def',
-      // project: {label: 'mongo'},
+      project: {label: 'mongo'},
       amount: 89,
       status: "saved",
       submittedAt: "12-05-2022"
@@ -40,7 +40,7 @@ const ExpenseSheet = () => {
       id: '3',
       code: 'AR392',
       title: 'ghi',
-      // project: {label: "gifti"},
+      project: {label: "gifti"},
       amount: 70,
       status: "saved",
       submittedAt: "12-05-2022"
@@ -49,7 +49,7 @@ const ExpenseSheet = () => {
       id: '4',
       code: 'AR393',
       title: 'jkl',
-      // project: {label: 'mouse'},
+      project: {label: 'mouse'},
       amount: 89,
       status: "saved",
       submittedAt: "12-05-2022"
@@ -59,7 +59,6 @@ const ExpenseSheet = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [expenseData, setExpenseData] = useState(data);
-
 
 	const handleDelete = (id,index) => {
 		let updatedData = expenseData.filter((ele,ind) => {
@@ -206,41 +205,6 @@ const ExpenseSheet = () => {
   const rowSelection = {
     selectedRowKeys,
     onChange: onSelectChange,
-    selections: [
-      Table.SELECTION_ALL,
-      Table.SELECTION_INVERT,
-      Table.SELECTION_NONE,
-      {
-        key: 'odd',
-        text: 'Select Odd Row',
-        onSelect: (changableRowKeys) => {
-          let newSelectedRowKeys = [];
-          newSelectedRowKeys = changableRowKeys.filter((_, index) => {
-            if (index % 2 !== 0) {
-              return false;
-            }
-
-            return true;
-          });
-          setSelectedRowKeys(newSelectedRowKeys);
-        },
-      },
-      {
-        key: 'even',
-        text: 'Select Even Row',
-        onSelect: (changableRowKeys) => {
-          let newSelectedRowKeys = [];
-          newSelectedRowKeys = changableRowKeys.filter((_, index) => {
-            if (index % 2 !== 0) {
-              return true;
-            }
-
-            return false;
-          });
-          setSelectedRowKeys(newSelectedRowKeys);
-        },
-      },
-    ],
   };
 
   return (

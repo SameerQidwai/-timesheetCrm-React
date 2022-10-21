@@ -8,6 +8,7 @@ import FormItems from '../../../../components/Core/Forms/FormItems'
 import { getOrgPersons, getProjects } from '../../../../service/constant-Apis'
 import { PlusOutlined } from "@ant-design/icons"; //Icons
 import { addFiles } from '../../../../service/Attachment-Apis'
+import { formatDate } from '../../../../service/constant'
 
 const { Text } = Typography
 
@@ -129,7 +130,7 @@ const InfoModal = ({ visible, close, callBack }) => {
         },
         {
             Placeholder: "Project",
-            rangeMin: true,
+            // rangeMin: true,
             fieldCol: 24,
             size: "small",
             type: "Text",
@@ -140,7 +141,7 @@ const InfoModal = ({ visible, close, callBack }) => {
             fieldCol: 12,
             key: "project", // when-api change it to projectId
             size: "small",
-            rules:[{ required: true, message: 'Project is Required' }],
+            // rules:[{ required: true, message: 'Project is Required' }],
             data: [],
             customValue: (value, option) => option, // when-api remove this
             type: "Select",
@@ -158,7 +159,7 @@ const InfoModal = ({ visible, close, callBack }) => {
             fieldCol: 24,
             key: "note", // when-api change it to projectId
             size: "small",
-            rules:[{ required: true, message: 'note is Required' }],
+            // rules:[{ required: true, message: 'note is Required' }],
             data: [],
             type: "Textarea",
             rows: 5,
@@ -174,6 +175,8 @@ const InfoModal = ({ visible, close, callBack }) => {
         gettingRandomType();
         gettingProject();
         if (visible !== true) {
+            console.log("visible-->", visible)
+            visible.date = formatDate(visible.date)
             form.setFieldsValue({ basic: visible })
         }
     }, []);
