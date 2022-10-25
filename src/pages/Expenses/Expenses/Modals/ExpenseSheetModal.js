@@ -175,20 +175,29 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack }) => {
     }
 }
 
-  const addSheet=(data)=>{
-    addExpenseSheet(data).then(res=>{
-      if (res.success){
-        
-      }
-    })
+  const addSheet = (data) => {
+    console.log("data->", data)
+    // addExpenseSheet(data).then(res=>{
+    //   if (res.success){
+        // callBack(res.data);
+     // } else{
+      // console.log("err",res)
+    // 
+    //  }
+    
+    // })
+    callBack(data); //remove apter integration of api
   }
 
   const editSheet=(id, data)=>{
-    editExpenseSheet(id, data).then(res=>{
-      if (res.success){
-        
-      }
-    })
+    // editExpenseSheet(visible.id, data).then(res=>{
+    //   if (res.success){
+      // callBack(res.data, visible?.index);
+    //   } else {
+      // console.log("err",res)
+    // }
+    // })
+    callBack(data,visible?.index);
   }
 
 
