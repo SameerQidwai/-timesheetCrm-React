@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Menu } from "antd";
 import { Link, withRouter } from "react-router-dom";
 
-import { ClockCircleOutlined, CheckCircleOutlined , HomeOutlined, CalendarOutlined , CarryOutOutlined , SolutionOutlined, RestOutlined, CheckSquareOutlined  } from "@ant-design/icons"; //Icons
+import { ClockCircleOutlined, CheckCircleOutlined , HomeOutlined, CalendarOutlined , CarryOutOutlined , SolutionOutlined, RestOutlined, CheckSquareOutlined, SnippetsOutlined, DiffOutlined  } from "@ant-design/icons"; //Icons
 
 import "../../Styles/Menus.css";
 import { localStore } from "../../../service/constant";
@@ -60,16 +60,23 @@ const listData = [
     },
     {
         text: "Expense Sheet",
-        icon: <SolutionOutlined  />,
+        icon: <SnippetsOutlined/>,
         link: "/expenseSheet",
         key: "EXPENSE SHEET ",
         permissions: {module: "TIMESHEETS", key: 'READ'}
     },
     {
         text: "Expense",
-        icon: <SolutionOutlined  />,
+        icon: <DiffOutlined />,
         link: "/expense",
         key: "EXPENSE",
+        permissions: {module: "TIMESHEETS", key: 'READ'}
+    },
+    {
+        text: "Expense Sheet Admin View",
+        icon: <SolutionOutlined  />,
+        link: "/expSheetAdminView",
+        key: "EXPENSE SHEET ADMIN VIEW",
         permissions: {module: "TIMESHEETS", key: 'READ'}
     },
     {

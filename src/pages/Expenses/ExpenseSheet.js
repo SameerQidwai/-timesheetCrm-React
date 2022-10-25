@@ -11,110 +11,69 @@ import { useState } from 'react';
 import InfoModal from './Modals/InfoModal';
 import ExpenseSheetModal from './Expenses/Modals/ExpenseSheetModal';
 import { expensesData } from './DummyData';
+import { useEffect } from 'react';
+import { getExpenseSheets } from '../../service/expenseSheet-Apis';
+import { getListOfExpenses } from '../../service/expense-Apis';
+import { generalDelete } from '../../service/delete-Api\'s';
 
 
-const ExpenseSheet = () => {
-
-  // dummy text
-  const data = [
-    {
-      id: '1',
-      code: 'AR390',
-      title: 'abc',
-      project: {label: "defiti"},
-      amount: 70,
-      status: "saved",
-      submittedAt: "12-05-2022"
-  
-    },
-    {
-      id: '2',
-      code: 'AR391',
-      title: 'def',
-      project: {label: 'mongo'},
-      amount: 89,
-      status: "saved",
-      submittedAt: "12-05-2022"
-      },
-    {
-      id: '3',
-      code: 'AR392',
-      title: 'ghi',
-      project: {label: "gifti"},
-      amount: 70,
-      status: "saved",
-      submittedAt: "12-05-2022"
-      },
-    {
-      id: '4',
-      code: 'AR393',
-      title: 'jkl',
-      project: {label: 'mouse'},
-      amount: 89,
-      status: "saved",
-      submittedAt: "12-05-2022"
-      },
-  ];
+const ExpenseSheet = (props) => {
 
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [openModal, setOpenModal] = useState(false);
-  const [expenseData, setExpenseData] = useState(data);
+  const [expenseSheet, setExpenseSheet] = useState([]);
+  const [expenses, setExpenses] =  useState([])
 
-	const handleDelete = (id,index) => {
-		let updatedData = expenseData.filter((ele,ind) => {
-			return ind != index;
-		});
-		setExpenseData([...updatedData]);
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const getData = () => {
+    getExpenseSheets().then((res) => {
+      if (res.success) {
+        console.log("res->",res.data)
+        setExpenseSheet(res.data);
+      }
+    })
+  }
+
+  const handleDelete = (id, index) => {
+    const url = '/expense-sheets';
+    // const { data, filterData } = this.state;
+    const { history } = props;
+    generalDelete(history, url, id, index, expenseSheet).then((res) => {
+      if (res.success) {
+        setExpenseSheet([...res.filterData]);
+      }
+    });
+    
 	}
 
   const columns = [
     {
-      title: 'CODE',
-      dataIndex: 'code',
-      sorter: {
-        compare: (a, b) => a.code - b.code,
-        multiple: 4,
-      },
+      title: 'Code',
+      dataIndex: 'id',
+      render: (text)=> `00${text}`, 
     },
     {
-      title: 'TITLE',
-      dataIndex: 'title',
-      sorter: {
-        compare: (a, b) => a.title - b.title,
-        multiple: 3,
-      },
+      title: 'Title',
+      dataIndex: 'label',
     },
     {
-      title: 'PROJECT',
-      dataIndex: ['project', 'label'], // when-api change it to [project,name] or projectName
-      sorter: {
-        compare: (a, b) => a.project?.label - b.project?.label,
-        multiple: 2,
-      },
+      title: 'Project',
+      dataIndex: 'projectName',
     },
     {
-      title: 'AMOUNT',
+      title: 'Amount',
       dataIndex: 'amount',
-      sorter: {
-        compare: (a, b) => a.amount - b.amount,
-        multiple: 1,
-      },
     },
     {
-      title: 'STATUS',
+      title: 'Status',
       dataIndex: 'status',
-      sorter: {
-        compare: (a, b) => a.status - b.status,
-        multiple: 1,
-      },
     },
     {
-      title: 'SUBMITTED AT',
+      title: 'Submited At',
       dataIndex: 'submittedAt',
-      sorter: {
-        compare: (a, b) => a.submittedAt - b.submittedAt,
-        multiple: 1,
-      },
     },
     {
       title: '...',
@@ -142,8 +101,7 @@ const ExpenseSheet = () => {
               <Menu.Item
                 key="edit"
                 onClick={() =>
-                  setOpenModal({...record,index})
-            
+                  onOpenModal({...record,index})
                   // this.setState({
                   //   openModal: true,
                     
@@ -186,19 +144,16 @@ const ExpenseSheet = () => {
     setOpenModal(false);
   }
 
-	const callBack = (data, index) => {
-		console.log("data------>",data)
-		console.log("index------>",index)
-		let exp = expenseData;
+  const callBack = (data, index) => {
+		let exp = expenseSheet;
     if (index >= 0) {
-		console.log("index find------>",index)
 			exp[index] = data; 
 		} else {
-			data.id = expenseData.length + 1; // when-api remove this
-			exp = [...expenseData, data]
+			data.id = expenseSheet.length + 1; // when-api remove this
+			exp = [...expenseSheet, data]
 		}
     
-		setExpenseData([...exp]);  
+		setExpenseSheet([...exp]);  
 		setOpenModal(false);
   }
 
@@ -206,6 +161,15 @@ const ExpenseSheet = () => {
     selectedRowKeys,
     onChange: onSelectChange,
   };
+
+  const onOpenModal = (open) =>{
+    getListOfExpenses().then(res=>{
+      if (res.success){
+        setExpenses(res.data)
+      }
+      setOpenModal(open)
+    })
+  }
 
   return (
     <>
@@ -218,7 +182,7 @@ const ExpenseSheet = () => {
           type="primary"
           size="small"
           onClick={() => {
-            setOpenModal(true);
+            onOpenModal(true)
           }}
           // disabled={!permissions['ADD']}
         >
@@ -230,7 +194,7 @@ const ExpenseSheet = () => {
             rowKey={data=> data.id}
             rowSelection={rowSelection}
             columns={columns}
-            dataSource={expenseData}
+            dataSource={expenseSheet}
             onChange={onChange} 
           />
         </Col>
@@ -244,6 +208,7 @@ const ExpenseSheet = () => {
         visible={openModal}
         close={closeModal}
         callBack={callBack}
+        expenses={expenses}
       />}
     </>
   )

@@ -9,7 +9,8 @@ import { getOrgPersons, getProjects } from '../../../../service/constant-Apis'
 import { PlusOutlined } from "@ant-design/icons"; //Icons
 import { addFiles } from '../../../../service/Attachment-Apis'
 import { formatDate } from '../../../../service/constant'
-
+import { addExpense, editExpense } from '../../../../service/expense-Apis'
+import { getListAlt as getExpenseTypeList } from '../../../../service/expenseType-Apis';
 const { Text } = Typography
 
 
@@ -20,23 +21,10 @@ const InfoModal = ({ visible, close, callBack }) => {
     const [form] = Form.useForm();
 
     // console.log("fileList", fileList);
-    // on submit 
-    const onFinish = (data) => {
-        console.log('dasic-->', data);
-        let { basic } = data;
-        basic.code = 'AR389'; // when-api remove this
-        basic.projectId = basic.project?.value // when-api remove this
-        basic.attachments = fileList.map((file, index) => {
-            return file.fileId;
-        });
-        callBack(basic, visible?.index);
-
-    }
-
     // fields 
     const [basicFields, setBasicFields] = useState([
         {
-            Placeholder: "Type",
+            Placeholder: "Expense Type",
             rangeMin: true,
             fieldCol: 12,
             size: "small",
@@ -54,7 +42,7 @@ const InfoModal = ({ visible, close, callBack }) => {
         {
             object: "basic",
             fieldCol: 12,
-            key: "type", // when-api change it to projectId
+            key: "expenseTypeId", // when-api change it to projectId
             size: "small",
             rules:[{ required: true, message: 'type is Required' }],
             data: [],
@@ -91,9 +79,9 @@ const InfoModal = ({ visible, close, callBack }) => {
         {
             object: "basic",
             fieldCol: 1,
-            key: "reimbursed",
+            key: "isReimbursed",
             size: "small",
-            rules: [{ required: false, message: 'Reimbursed is Required' }],
+            initialValue: false,
             type: "Checkbox",
             valuePropName: "checked"
             // name:"reimbursed",
@@ -111,9 +99,9 @@ const InfoModal = ({ visible, close, callBack }) => {
         {
             object: "basic",
             fieldCol: 1,
-            key: "billable",
+            key: "isBillable",
+            initialValue: false,
             size: "small",
-            rules: [{ required: false, message: 'Billable is Required' }],
             type: "Checkbox",
             valuePropName: "checked"
             // name:"billable",
@@ -139,11 +127,10 @@ const InfoModal = ({ visible, close, callBack }) => {
         {
             object: "basic",
             fieldCol: 12,
-            key: "project", // when-api change it to projectId
+            key: "projectId", 
             size: "small",
             // rules:[{ required: true, message: 'Project is Required' }],
             data: [],
-            customValue: (value, option) => option, // when-api remove this
             type: "Select",
         },
         {
@@ -157,10 +144,9 @@ const InfoModal = ({ visible, close, callBack }) => {
         {
             object: "basic",
             fieldCol: 24,
-            key: "note", // when-api change it to projectId
+            key: "notes", 
+            initialValue: null,
             size: "small",
-            // rules:[{ required: true, message: 'note is Required' }],
-            data: [],
             type: "Textarea",
             rows: 5,
             placeholder: "Note"
@@ -172,8 +158,9 @@ const InfoModal = ({ visible, close, callBack }) => {
     const randomTypes = [{value:'dinner', label:"lene hain"},{value:'lunch', label:"lunch lene hain"},{value:'breakFast', label:"breakFast lene hain"}];
 
     useEffect(() => {
-        gettingRandomType();
-        gettingProject();
+        // gettingRandomType();
+        getData();
+        // gettingProject();
         if (visible !== true) {
             console.log("visible-->", visible)
             visible.date = formatDate(visible.date)
@@ -181,6 +168,45 @@ const InfoModal = ({ visible, close, callBack }) => {
         }
     }, []);
 
+    // on submit 
+    const onFinish = (data) => {
+
+        let { basic } = data;
+        // basic.attachments = fileList.map((file, index) => {
+        //     return file.fileId;
+        // });
+        console.log("basic-->", basic)
+        if (visible === true) {
+            addExpense(basic).then((res) => {
+                if (res.success) {
+                    console.log("res-->", res);
+                    callBack(res.data);
+                } else {
+                    console.log("err",res)
+                }
+            })
+        } else {
+            editExpense(visible.id,basic).then((res) => { 
+                if (res.success) {
+                    console.log("res-->", res);
+                    callBack(res.data, visible?.index);
+                } else {
+                    console.log("err",res)
+                }
+            })
+        }        
+    }
+
+    const getData = () => {
+        Promise.all([getProjects(), getExpenseTypeList()]).then((res) => {
+            let basic = basicFields
+            basic[11].data = res[0].success ? res[0].data : ''
+            basic[2].data = res[1].success ? res[1].data : ''
+            setBasicFields([...basic]); 
+        })
+    }
+
+    // remove these functions 
     const gettingRandomType = () => {
         let basic = basicFields
         basic[2].data = randomTypes;
@@ -198,6 +224,7 @@ const InfoModal = ({ visible, close, callBack }) => {
             
         })
     }
+    ///////
 
     //File
     const handleUpload = async option=>{

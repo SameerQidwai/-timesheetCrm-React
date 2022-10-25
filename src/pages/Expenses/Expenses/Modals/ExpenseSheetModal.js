@@ -10,41 +10,16 @@ import {
 import { formatDate } from '../../../../service/constant';
 import FormItems from '../../../../components/Core/Forms/FormItems';
 import { getProjects } from '../../../../service/constant-Apis';
-import { expensesData as dummyExpensesData } from '../../DummyData';
+// import { expensesData as dummyExpensesData } from '../../DummyData';
+import { getListOfExpenses } from '../../../../service/expense-Apis';
+import { addExpenseInSheet, addExpenseSheet, editExpenseSheet } from '../../../../service/expenseSheet-Apis';
 const {Text} = Typography;
 
 const ExpenseSheetModal = ({ visible, close, expenses, callBack }) => {
   
   const [form] = Form.useForm();
-  const [expensesData, setExpensesData] = useState();
+  const [filteredExpenses, setfilteredExpenses] = useState();
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-
-  
-  useEffect(() => {
-    gettingProject();
-    let ind = undefined;
-    if (visible !== true) {
-      console.log("visible->", visible)
-      form.setFieldsValue({ basic: visible })
-      ind = visible.projectId
-    }
-    // if (!expenses) {
-      // setExpensesData(dummyExpensesData)
-      selectedProjectExpenses(ind,visible?.expenseCode)
-
-    // }
-},[]);
-  
-  // for filter expense according to project
-  const selectedProjectExpenses = (ind,codes) => {
-    let backupExpenses = expenses?? dummyExpensesData
-    let filteredProject = backupExpenses?.filter((ele) => {
-      return ele.projectId === ind;
-    });
-    setExpensesData(filteredProject);
-    setSelectedRowKeys(codes?? [])
-  }
-  
   // fields of form
   const [basicFields, setBasicFields] = useState([
   {
@@ -66,7 +41,7 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack }) => {
   {
       object: "basic",
       fieldCol: 12,
-      key: "title",
+      key: "label",
       size: "small",
       rules: [{ required: true, message: 'Title is Required' }],
       type: "Input",
@@ -79,13 +54,11 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack }) => {
   {
       object: "basic",
       fieldCol: 12,
-      key: "project", // when-api change it to projectId
+      key: "projectId", // when-api change it to projectId
       size: "small",
-      // rules:[{ required: false, message: 'Project is Required' }],
       data: [],
-      customValue: (value, option) => option, // when-api remove this
       type: "Select",
-    onChange: (ind) => { selectedProjectExpenses(ind) }
+    onChange: (projectId) => { selectedProjectExpenses(projectId) }
   },
   ]);
   
@@ -93,15 +66,12 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack }) => {
   const columns = [
       {
         title: 'CODE',
-        dataIndex: 'code',
-        sorter: {
-          compare: (a, b) => a.code - b.code,
-          multiple: 4,
-        },
+        dataIndex: 'id',
+        render: (text)=> `00${text}`, 
       },
       {
         title: 'TYPE',
-        dataIndex: 'type',
+        dataIndex: 'expenseTypeName',
         sorter: {
           compare: (a, b) => a.type - b.type,
           multiple: 3,
@@ -137,25 +107,55 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack }) => {
       },
       {
           title: 'i',
-          dataIndex: 'reimbursed',
+          dataIndex: 'isReimbursed',
           render: (value) => (
               <Checkbox defaultChecked={false} checked={value}  />
           )
       },
       {
           title: 'b',
-          dataIndex: 'billable',
+          dataIndex: 'isBillable',
           render: (value) => (
               <Checkbox defaultChecked={false} checked={value}/>
           )
       },
   ];  
 
+  useEffect(() => {
+    if (visible !== true) {
+      form.setFieldsValue({ basic: visible })
+    }
+    getData()
+
+  },[]);
+
+  const getData = () => {
+    getProjects().then((res) => {
+      if (res?.success) {
+        let basic = basicFields
+        basic[3].data = res?.data
+        setBasicFields([...basic]); 
+      }
+      selectedProjectExpenses(visible?.projectId)
+    })
+  }
+  
+  // for filter expense according to project
+  const selectedProjectExpenses = (selectedProject) => {
+    let projectId = selectedProject
+    let codes = visible?.expenseSheetExpenses ?? []
+    let backupExpenses = expenses
+    let filteredProject = backupExpenses?.filter((ele) => {
+      return ele.projectId == projectId;
+    });
+    setfilteredExpenses([...filteredProject]); 
+    setSelectedRowKeys(codes)
+  }
+
   // for filter table 
   const onSelectChange = (newSelectedRowKeys) => {
     setSelectedRowKeys(newSelectedRowKeys);
   };
-  console.log('selectedRowKeys changed: ', selectedRowKeys);
 
   const rowSelection = {
     selectedRowKeys,
@@ -163,31 +163,33 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack }) => {
     preserveSelectedRowKeys: false
   }; 
 
-  // for get all project 
-  const gettingProject = () => {
-    getProjects().then((res) => {
-        if (res.success) {
-            let basic = basicFields
-            basic[3].data = res.data
-            setBasicFields([...basic]); 
-        }
+
+  const onFinish = (value) => {
+    console.log('value-->', value , visible);
+    let { basic } = value;
+    basic.expenseSheetExpenses = selectedRowKeys
+    if (visible?.id){
+      editSheet(visible.id, basic)
+    }else{
+      addSheet(basic)
+    }
+}
+
+  const addSheet=(data)=>{
+    addExpenseSheet(data).then(res=>{
+      if (res.success){
         
+      }
     })
   }
 
-  const onSubmit = (value) => {
-    console.log("value-->", value);
-
+  const editSheet=(id, data)=>{
+    editExpenseSheet(id, data).then(res=>{
+      if (res.success){
+        
+      }
+    })
   }
-  const onFinish = (value) => {
-    console.log('value-->', value,visible);
-    
-    let { basic } = value;
-    basic.code = 'AR389'; // when-api remove this
-    basic.projectId = basic.project // when-api remove this
-    basic.expenseCode = selectedRowKeys 
-    callBack(basic,visible?.index);
-}
 
 
   return (
@@ -196,8 +198,9 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack }) => {
         visible={visible}
         width={850}
         onCancel={close}
-        okText={"Save"}
-        okButtonProps={{ htmlType: 'submit', form: 'my-form' }}
+      okText={"Save"}
+      // adminView Prop add
+        okButtonProps={ visible.adminView ? { style: { display: 'none' } } : { htmlType: 'submit', form: 'my-form' }}
     >
       <Row gutter={[0,20]}>
         <Col span={24}>
@@ -215,10 +218,11 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack }) => {
         </Col>
         <Col span={24}>
             <Table
-            rowKey={data=> data.id}
-            rowSelection={rowSelection}
+            rowKey={data => data.id}
+      // adminView Prop add
+            rowSelection={visible.adminView ? '': rowSelection}
             columns={columns}
-            dataSource={expensesData}
+            dataSource={filteredExpenses}
             // onChange={onChange} 
             />
         </Col>

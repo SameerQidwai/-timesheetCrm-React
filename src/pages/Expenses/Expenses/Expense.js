@@ -1,6 +1,6 @@
 import { Button, Checkbox, Col, Dropdown, Menu, Popconfirm, Row, Table, Typography } from 'antd';
 import Title from 'antd/lib/typography/Title';
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
     DownOutlined,
     SettingOutlined,
@@ -12,78 +12,64 @@ import InfoModal from './Modals/InfoModal';
 import { formatDate } from '../../../service/constant';
 import ExpenseSheetModal from './Modals/ExpenseSheetModal';
 import { expensesData } from '../DummyData';
+import { delExpense, getListOfExpenses } from '../../../service/expense-Apis';
+import { generalDelete } from '../../../service/delete-Api\'s';
+import { tableSorter } from '../../../components/Core/Table/TableFilter';
   
 
 const {Text} = Typography;
-const Expense = () => {
+const Expense = (props) => {
 
     
   const [openModal, setOpenModal] = useState(false);
   const [openExpenseModal, setOpenExpenseModal] = useState(false);
-  const [expenseData, setExpenseData] = useState(expensesData);
-
-  const handleDelete = (id,index) => {
-		let updatedData = expenseData.filter((ele,ind) => {
-			return ind != index;
-		});
-		setExpenseData([...updatedData]);
-	}
+  const [expenseData, setExpenseData] = useState([]);
     
   const columns = [
     {
-      title: 'CODE',
-      dataIndex: 'code',
-      sorter: {
-        compare: (a, b) => a.code - b.code,
-        multiple: 4,
-      },
+      title: 'Code', 
+      dataIndex: 'id',
+      render: (text)=> `00${text}`, 
+      ...tableSorter('id', 'number', true),
     },
     {
-      title: 'TYPE',
-      dataIndex: 'type',
-      sorter: {
-        compare: (a, b) => a.type - b.type,
-        multiple: 3,
-      },
+      title: 'Type',
+      dataIndex: 'expenseTypeName',
+      ...tableSorter('expenseTypeName', 'string'),
     },
+    // {
+    //   title: 'Project',
+    //   dataIndex: 'projectName',
+    //   ...tableSorter('projectName', 'string'),
+    // },
     {
-      title: 'DATE',
+      title: 'Date',
       dataIndex: 'date', // when-api change it to [date,name] or dateName
       render: (text) => formatDate(text, true, true),
-      sorter: {
-        compare: (a, b) => a.date - b.date,
-        multiple: 2,
-      },
+      ...tableSorter('date', 'date'),
     },
     {
-      title: 'AMOUNT',
+      title: 'Amount',
       dataIndex: 'amount',
-      sorter: {
-        compare: (a, b) => a.amount - b.amount,
-        multiple: 1,
-      },
+      ...tableSorter('id', 'number'),
     },
     {
-      title: 'FILES',
+      title: 'Files',
       dataIndex: 'files',
-      //   sorter: {
-      //     compare: (a, b) => a.files - b.files,
-      //     multiple: 1,
-      //   },
       render: () => (
         <Text>View</Text>
       )
     },
     {
       title: 'i',
-      dataIndex: 'reimbursed',
+      dataIndex: 'isReimbursed',
       render: (value) => (
         <Checkbox defaultChecked={false} checked={value} />
       )
     },
     {
       title: 'b',
-      dataIndex: 'billable',
+      dataIndex: 'isBillable',
       render: (value) => (
         <Checkbox defaultChecked={false} checked={value} />
       )
@@ -144,12 +130,22 @@ const Expense = () => {
     },
   ];
 
+  useEffect(() => { 
+    getData();
+  }, []);
+
+  const getData = () => {
+    Promise.all([getListOfExpenses()]).then((res) => {
+      setExpenseData(res[0]?.data?? []);
+    })
+  }
+
+
   const callBack = (data, index) => {
     let exp = expenseData;
     if (index >= 0) {
       exp[index] = data;
     } else {
-      data.id = expenseData.length + 1; // when-api remove this
       exp = [...expenseData, data]
     }
     setExpenseData([...exp]);
@@ -162,14 +158,26 @@ const Expense = () => {
     setOpenExpenseModal(false)
   }
     
-    const closeModal = () => {
-    setOpenModal(false);
-    }
+  const closeModal = () => {
+  setOpenModal(false);
+  }
 
-    const closeExpenseModal = () => {
-        setOpenExpenseModal(false);
-    }
+  const closeExpenseModal = () => {
+      setOpenExpenseModal(false);
+  }
 
+  const handleDelete = (id, index) => {
+    const url = '/expenses';
+    // const { data, filterData } = this.state;
+    const { history } = props;
+    generalDelete(history, url, id, index, expenseData).then((res) => {
+      if (res.success) {
+        setExpenseData([...res.filterData]);
+      }
+    });
+    
+	}
+  
   return (
     <>
     <Row justify='space-between'>
@@ -219,8 +227,8 @@ const Expense = () => {
     {openExpenseModal && <ExpenseSheetModal
       visible={openExpenseModal}
       expenses= {expenseData}
-        close={closeExpenseModal}
-        callBack={sheetCallBack}
+      close={closeExpenseModal}
+      callBack={sheetCallBack}
     />
     }     
   </>

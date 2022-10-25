@@ -56,6 +56,7 @@ import Expense from '../../../pages/Expenses/Expenses/Expense';
 import { localStore } from '../../../service/constant';
 import MileCertificate from '../../../pages/Milestones/MileCertificate';
 import ExpenseSheet from '../../../pages/Expenses/ExpenseSheet';
+import ExpSheetAdminView from '../../../pages/Expenses/AdminView/ExpSheetAdminView';
 
 const { Content } = Layout;
 
@@ -337,6 +338,11 @@ const pageLinks = [
   {
     component: Expense,
     link: '/expense',
+    permission: 'ALLOWED',
+  },
+  {
+    component: ExpSheetAdminView,
+    link: '/expSheetAdminView',
     permission: 'ALLOWED',
   },
 ];
