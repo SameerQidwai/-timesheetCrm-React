@@ -19,7 +19,7 @@ export const getList = () => {
     .then((res) => {
       const { success, data, message } = res.data;
       jwtExpired(message);
-      if (success) setToken(res.headers && res.headers.authorization);
+      if (success) setToken(res?.headers?.authorization);
 
       return { success: success, data: data };
     })
@@ -110,7 +110,7 @@ export const editList = (id, data) => {
       messageAlert.success({ content: message, key: id });
       if (success) {
         const { billing } = reStructure(data);
-        setToken(res.headers && res.headers.authorization);
+        setToken(res?.headers?.authorization);
         return { success, data, billing };
       }
       return { success, data };
@@ -129,7 +129,7 @@ export const toggleActiveStatus = (id) => {
       jwtExpired(message);
       messageAlert.success({ content: message, key: id });
       if (success) {
-        setToken(res.headers && res.headers.authorization);
+        setToken(res?.headers?.authorization);
         return { success, data };
       }
       return { success, data };

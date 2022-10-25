@@ -29,6 +29,7 @@ import {
   tableTitleFilter,
 } from '../../../components/Core/Table/TableFilter';
 import { generalDelete } from "../../../service/delete-Api's";
+import { getContactPersons } from '../../../service/constant-Apis';
 
 const { Title } = Typography;
 
@@ -251,7 +252,7 @@ class Organizations extends Component {
         {
           object: 'obj',
           fieldCol: 12,
-          key: 'phone',
+          key: 'phoneNumber',
           size: 'small',
           type: 'Input',
         },
@@ -295,7 +296,7 @@ class Organizations extends Component {
           key: 'delegate_cp',
           size: 'small',
           // rules:[{ required: true }],
-          data: this.state ? this.state.contactPerson : [],
+          data: [],
           type: 'Select',
           itemStyle: { marginBottom: '10px' },
         },
@@ -402,6 +403,7 @@ class Organizations extends Component {
       search['parentOrganization.name']['value'] ||
       search['phoneNumber']['value'] ||
       search['email']['value'] ||
+      search['delegate_cp']['value'] ||
       search['address']['value'] ||
       search['businessType']['value'].length > 0
     ) {
@@ -430,16 +432,10 @@ class Organizations extends Component {
             `${el.address ?? ''}`
               .toLowerCase()
               .includes(search['address']['value'].toLowerCase()) &&
-            `${search['delegate_cp']['value'].reduce(
-              (p, n) => p + n,
-              ''
-            )}`.includes(
-              `${
-                search['delegate_cp']['value'].length > 0
-                  ? el.delegateContactPersonId ?? ''
-                  : ''
-              }`
-            ) &&
+            `${el.delegateContactPersonId ?? ''}`
+              .toLowerCase()
+              .includes(`${search['delegate_cp']['value']}`.toLowerCase())
+             &&
             (search['businessType']['value'].length > 0
               ? search['businessType']['value']
               : [{ value: ',' }]
@@ -461,6 +457,20 @@ class Organizations extends Component {
         openSearch: false,
       });
     }
+  };
+
+  filterModalUseEffect = () => {
+    getContactPersons()
+      .then((res) => {
+        const { filterFields } = this.state;
+        filterFields[13].data = res.success ? res.data : [];
+        this.setState({
+          filterFields,
+        });
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   };
 
   render() {
@@ -534,6 +544,8 @@ class Organizations extends Component {
             filters={searchedColumn}
             filterFields={filterFields}
             filterFunction={this.advancefilter}
+            effectFunction={this.filterModalUseEffect}
+            effectRender={true}
             onClose={() => this.setState({ openSearch: false })}
           />
         )}

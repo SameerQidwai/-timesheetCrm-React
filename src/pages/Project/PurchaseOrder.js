@@ -399,7 +399,7 @@ class PurchaseOrder extends Component {
                         desc.organization ? 
                             <Link
                                 to={{
-                                    pathname: `/organizations/info/${desc.organizationId}`,
+                                    pathname: `/organisations/${desc.organizationId}/info`,
                                 }}
                                 className="nav-link"
                             >

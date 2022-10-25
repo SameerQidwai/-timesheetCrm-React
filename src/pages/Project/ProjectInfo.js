@@ -250,7 +250,7 @@ class ProjectInfo extends Component {
             {data.organizationName ? (
               <Link
                 to={{
-                  pathname: `/organizations/info/${data.organizationId}`,
+                  pathname: `/organisations/${data.organizationId}/info`,
                 }}
                 className="nav-link"
               >

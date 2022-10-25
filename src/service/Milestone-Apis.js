@@ -11,7 +11,7 @@ export const getMilestones = (crud) => {
         .get(`${Api}${crud}`, {headers:headers()})
         .then((res) => {
             const { success, data } = res.data;
-            setToken(res.headers && res.headers.authorization)
+            setToken(res?.headers?.authorization)
             if (success) return { success: success, data: data };
         })
         .catch((err) => {
@@ -28,7 +28,7 @@ export const getMilestone = (crud, id) => {
         .get(`${Api}${crud}/${id}`, {headers:headers()})
         .then((res) => {
             const { success, data } = res.data;
-            setToken(res.headers && res.headers.authorization)
+            setToken(res?.headers?.authorization)
             if (success){
                 data.startDate = formatDate(data.startDate)
                 data.endDate = formatDate(data.endDate)
@@ -53,7 +53,7 @@ export const addMilestone = (crud, data) => {
             const { success, message, data } = res.data;
             jwtExpired(message)
             messageAlert.success({ content: message, key: 1})
-            if (success) setToken(res.headers && res.headers.authorization)
+            if (success) setToken(res?.headers?.authorization)
 
             return {success, data};
         })
@@ -68,7 +68,7 @@ export const delMilestones = (id) => {
         .then((res) => {
             const { success, message, data } = res.data;
             jwtExpired(message)
-            if (success) setToken(res.headers && res.headers.authorization)
+            if (success) setToken(res?.headers?.authorization)
             
             return {success, data};
         })
@@ -89,7 +89,7 @@ export const editMilestone = (crud, id, data) => {
             const { success, message, data } = res.data;
             jwtExpired(message)
             messageAlert.success({ content: message, key: id})
-            if (success) setToken(res.headers && res.headers.authorization)
+            if (success) setToken(res?.headers?.authorization)
 
             return {success, data: data[0]};
         })
@@ -153,7 +153,7 @@ export const getProjectDetail = (crud, id) => {
                 }
                 data.ContactName= data.contactPerson && data.contactPerson.firstName + ' ' + data.contactPerson.lastName
                 data.organizationName = data.organization && data.organization.name 
-                setToken(res.headers && res.headers.authorization)
+                setToken(res?.headers?.authorization)
                 return {success, data, basic, tender, billing, dates, manage};
             }
             return { success }
@@ -172,7 +172,7 @@ export const milestoneActions = (crud ) => {
         .get(`${url}${crud}`, {headers:headers()})
         .then((res) => {
             const { success, data } = res.data;
-            setToken(res.headers && res.headers.authorization)
+            setToken(res?.headers?.authorization)
             if (success){
                 return { success: success, data: data }
             };
@@ -191,7 +191,7 @@ export const milestoneUpload = (id, data) => {
             const { success, message, data } = res.data;
             jwtExpired(message)
             messageAlert.success({ content: message, key: 1})
-            if (success) setToken(res.headers && res.headers.authorization)
+            if (success) setToken(res?.headers?.authorization)
 
             return {success, data};
         })

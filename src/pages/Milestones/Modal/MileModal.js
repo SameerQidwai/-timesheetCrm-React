@@ -321,7 +321,7 @@ class MileModal extends Component {
         maskClosable={false}
         centered
         visible={visible}
-        okButtonProps={{ disabled: loading || onHold, htmlType: 'submit', form: 'my-form' }}
+        okButtonProps={{ disabled: (loading || onHold ||editMile.isApproved === 'AP' || editMile.isApproved === 'SB') , htmlType: 'submit', form: 'my-form' }}
         okText={loading ? <LoadingOutlined /> : "Save"}
         onCancel={close}
         width={900}

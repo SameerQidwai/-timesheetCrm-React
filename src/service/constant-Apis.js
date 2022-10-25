@@ -12,7 +12,7 @@ export const getStates = () => {
             data.map((el) => {
                 states.push({value: el.id, label: el.label})
             });
-            setToken(res.headers && res.headers.authorization)
+            setToken(res?.headers?.authorization)
             if (success) return { success: success, data: sorting(states, 'label') };
         })
         .catch((err) => {
@@ -31,7 +31,7 @@ export const getleaveRequestTypes = () => {
             let types = data.map((el) => {
                return {value: el.id, label: el.label}
             });
-            setToken(res.headers && res.headers.authorization)
+            setToken(res?.headers?.authorization)
             if (success) return { success: success, data: sorting(types, 'label') };
         })
         .catch((err) => {
@@ -52,7 +52,7 @@ export const getStandardLevels = () => {
             data.map((el) => {
                 standlevel.push({value: el.id, label: el.label,  levels: el.standardSkillStandardLevels.map(lvlEl=>{ return { value:lvlEl.id, label: lvlEl.standardLevel.label}})})
             });
-            setToken(res.headers && res.headers.authorization)
+            setToken(res?.headers?.authorization)
             if (success) return { success: success, data: sorting(standlevel, 'label') };
         })
         .catch((err) => {
@@ -73,7 +73,7 @@ export const getContactPersons = () =>{ //NOT IN USE
         data.map((el) => {
             cps.push({value: el.id, label: el.firstName +' ' +el.lastName})
         });
-        setToken(res.headers && res.headers.authorization)
+        setToken(res?.headers?.authorization)
         if (success) return { success: success, data: sorting(cps, 'label') };
     })
     .catch((err) => {
@@ -95,7 +95,7 @@ export const getEmployees = () => { //NOT IN USE
                 data.map((el) => {
                     cps.push({value: el.contactPersonOrganization.contactPerson.id, label: el.contactPersonOrganization.contactPerson.firstName +' ' +el.contactPersonOrganization.contactPerson.lastName + '   '+'(Employee)', status: '(Employee)'})
                 });
-                setToken(res.headers && res.headers.authorization)
+                setToken(res?.headers?.authorization)
                 return { success: success, data: sorting(cps, 'label') }
             }
         })
@@ -118,7 +118,7 @@ export const getSubContractors = () => { //NOT IN USE
                 data.map((el) => {
                     cps.push({value: el.contactPersonOrganization.contactPerson.id, label: el.contactPersonOrganization.contactPerson.firstName +' ' +el.contactPersonOrganization.contactPerson.lastName + '   '+ '(Sub-Contractor)', status: '(Sub-Contractor)'})
                 });
-                setToken(res.headers && res.headers.authorization)
+                setToken(res?.headers?.authorization)
                 return { success: success, data: sorting(cps, 'label') };
             }
         })
@@ -136,7 +136,7 @@ export const getOrgPersons = (url) =>{
     .get(`${Api}/${url}`, {headers:headers()})
     .then((res) => {
         const { success, data } = res.data;
-        setToken(res.headers && res.headers.authorization)
+        setToken(res?.headers?.authorization)
         if (success) return { success: success, data:  sorting(data, 'label') };
     })
     .catch((err) => {
@@ -157,7 +157,7 @@ export const getEmpPersons = (id) =>{ //NOT IN USE
         data.map((el) => {
             cps.push({value: el.id, label: el.firstName +' ' +el.lastName})
         });
-        setToken(res.headers && res.headers.authorization)
+        setToken(res?.headers?.authorization)
         if (success) return { success: success, data: sorting(cps, 'label')  };
     })
     .catch((err) => {
@@ -178,7 +178,7 @@ export const getOrganizations = (id) => {
             data.map((el) => {
                 orgs.push({value: el.id, label: el.name, disabled: el.id === id && true})
             });
-            setToken(res.headers && res.headers.authorization)
+            setToken(res?.headers?.authorization)
             if (success) return { success: success, data: sorting(orgs, 'label') };
         })
         .catch((err) => {
@@ -199,7 +199,7 @@ export const getPanels = () => {
             data.map((el) => {
                 panels.push({ value: el.id, label: el.label })
             });
-            setToken(res.headers && res.headers.authorization)
+            setToken(res?.headers?.authorization)
             if (success) return { success: success, data: sorting(panels, 'label') };
         })
         .catch((err) => {
@@ -232,7 +232,7 @@ export const getPanelSkills = (id) => {
                     })
                 })
             });
-            setToken(res.headers && res.headers.authorization)
+            setToken(res?.headers?.authorization)
             if (success) return { success: success, data: sorting(panelskill, 'label') };
         })
         .catch((err) => {
@@ -252,7 +252,7 @@ export const getProjects = () => {
             let work = []
             if (success) {
                 data.map((el) => {work.push({ value: el.id, label: el.title}) });
-                setToken(res.headers && res.headers.authorization)
+                setToken(res?.headers?.authorization)
             }
             return { success: success, data: sorting(work, 'label') };
         })
@@ -271,7 +271,7 @@ export const getUserProjects = (userId, mod, phase) => {
         .then((res) => {
             const { success, data } = res.data;
             if (success) {
-                setToken(res.headers && res.headers.authorization)
+                setToken(res?.headers?.authorization)
             }
             return { success: success, data: sorting(data, 'label') };
         })
@@ -290,7 +290,7 @@ export const getUserMilestones = (userId, phase) => {
         .then((res) => {
             const { success, data } = res.data;
             if (success) {
-                setToken(res.headers && res.headers.authorization)
+                setToken(res?.headers?.authorization)
             }
             return { success: success, data: sorting(data, 'label') };
         })
@@ -310,7 +310,7 @@ export const getSkillLevels = (skill) =>{
             const { success, data } = res.data;
             var pros = []
             if (success){
-                setToken(res.headers && res.headers.authorization)
+                setToken(res?.headers?.authorization)
                 return { success: success, data: sorting(data, 'label') };
             }
         })
@@ -329,7 +329,7 @@ export const getRoles = () =>{
         .then((res) => {
             const { success, data } = res.data;
             if (success){
-                setToken(res.headers && res.headers.authorization)
+                setToken(res?.headers?.authorization)
                 return { success: success, data: sorting(data, 'label') };
             }
         })
@@ -347,7 +347,7 @@ export const entityProjects = (url) =>{
     .get(`${Api}/${url}`, {headers:headers()})
     .then((res) => {
         const { success, data } = res.data;
-        setToken(res.headers && res.headers.authorization)
+        setToken(res?.headers?.authorization)
         if (success) return { success: success, data: data };
     })
     .catch((err) => {
@@ -369,7 +369,7 @@ export const getLeavePolicy = () => {
                 policies.push({value: el.id, label: el.label})
             });
             policies.push({value: 0, label: 'Unpaid'})
-            setToken(res.headers && res.headers.authorization)
+            setToken(res?.headers?.authorization)
             if (success) return { success: success, data: sorting(policies, 'label') };
         })
         .catch((err) => {
@@ -386,7 +386,7 @@ export const getUserLeaveType = () => {
         .get(`${Api}/leave-request-types/getOwn`, {headers:headers()})
         .then((res) => {
             const { success, data } = res.data;
-            setToken(res.headers && res.headers.authorization)
+            setToken(res?.headers?.authorization)
             if (success){
                 const {holidays, contractDetails, LeaveRequestTypes = []} = data
                 let requestType = [{id: 0, name: 'Unpaid', include_off_days: true}]
@@ -415,7 +415,7 @@ export const getLineEmployees = () =>{
     .get(`${Api}/auth/users`, {headers:headers()})
     .then((res) => {
         const { success, data } = res.data;
-        setToken(res.headers && res.headers.authorization)
+        setToken(res?.headers?.authorization)
         if (success) return { success: success, data: sorting(data, 'label') };
     })
     .catch((err) => {
@@ -432,7 +432,7 @@ export const getManageProjects = (resourcePermission) =>{
     .get(`${Api}/auth/projects?resource=${resourcePermission}`, {headers:headers()})
     .then((res) => {
         const { success, data } = res.data;
-        setToken(res.headers && res.headers.authorization)
+        setToken(res?.headers?.authorization)
         if (success) return { success: success, data: sorting(data, 'label') };
     })
     .catch((err) => {
@@ -450,7 +450,7 @@ export const buyCost = (url, id, searchIn) => {
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
-            if (success) setToken(res.headers && res.headers.authorization)
+            if (success) setToken(res?.headers?.authorization)
 
             return { success: success, data: data };
         })

@@ -6,7 +6,7 @@ export const Api = 'http://localhost:3301/api/v1';
 // export const Api = "http://192.168.0.243:3000/api/v1"; // Shahzaib/
 // export const Api = "http://192.168.43.207:3000/api/v1"; // new Shahzaib/
 // export const Api = "https://a067-111-88-150-124.ngrok.io/api/v1"; // Shahzaib/ tunnel
-// export const Api = 'http://localhost:3000/api/v1'; // Me
+// export const Api = 'http://192.168.0.147:3301/api/v1'; // Me
 
 //// export const Api = 'http://54.91.49.138:8000/api/v1'; //Test
 // export const Api = 'http://54.174.229.28:8000/api/v1'; //Demo...
@@ -32,12 +32,13 @@ export const O_STATUS = {
 };
 export const O_PHASE = { false: 'Close', true: 'Open' };
 export const R_STATUS = {
+  CM: 'Completed',
   AP: 'Approved',
   SB: 'Submitted',
   R: 'Rejected',
   RJ: 'Rejected',
 }; //Request Status
-export const STATUS_COLOR = { AP: 'green', SB: 'cyan', RJ: 'red', R: 'red' }; //Request Status
+export const STATUS_COLOR = { CM: 'geekblue', AP: 'green', SB: 'cyan', RJ: 'red', R: 'red' }; //Request Status
 export const O_TYPE = { 1: 'Milestone', 2: 'Time' };
 export const JOB_TYPE = { 1: 'Casual', 2: 'Part Time', 3: 'Full Time' };
 export const DURATION = {
@@ -51,12 +52,12 @@ export const GENDER = { M: 'Male', F: 'Female', O: 'Other' };
 export const STATES = {
   'Australian Capital Territory': 'ACT',
   'New South Wales': 'NSW',
-  Victoria: 'VIC',
-  Queensland: 'QLD',
+  'Victoria': 'VIC',
+  'Queensland': 'QLD',
   'South Australia': 'SA',
   'Western Australia': 'WA',
   'Northern Territory': 'NT',
-  Tasmania: 'TSA',
+  'Tasmania': 'TSA',
 };
 
 export const formatCurrency = (amount) => {

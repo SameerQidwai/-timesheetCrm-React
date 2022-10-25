@@ -52,34 +52,34 @@ const milestoneColmuns = [
       </Tag>
     ),
   },
-  {
-    title: '...',
-    key: 'action',
-    align: 'center',
-    width: '1%',
-    render: (value, record, index) => (
-      <Dropdown
-        overlay={
-          <Menu>
-            <Menu.Item>
-              <Link
-                to={{
-                  pathname: `milestones/${record.id}/resources`,
-                }}
-                className="nav-link"
-              >
-                Milestone
-              </Link>
-            </Menu.Item>
-          </Menu>
-        }
-      >
-        <Button size="small">
-          <SettingOutlined />
-        </Button>
-      </Dropdown>
-    ),
-  },
+  // {
+  //   title: '...',
+  //   key: 'action',
+  //   align: 'center',
+  //   width: '1%',
+  //   render: (value, record, index) => (
+  //     <Dropdown
+  //       overlay={
+  //         <Menu>
+  //           <Menu.Item>
+  //             <Link
+  //               to={{
+  //                 pathname: `milestones/${record.id}/resources`,
+  //               }}
+  //               className="nav-link"
+  //             >
+  //               Milestone
+  //             </Link>
+  //           </Menu.Item>
+  //         </Menu>
+  //       }
+  //     >
+  //       <Button size="small">
+  //         <SettingOutlined />
+  //       </Button>
+  //     </Dropdown>
+  //   ),
+  // },
 ];
 
 const positionColumns = [

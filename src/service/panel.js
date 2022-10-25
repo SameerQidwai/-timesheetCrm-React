@@ -10,7 +10,7 @@ export const getList = () => {
         .get(url, {headers:headers()})
         .then((res) => {
             const { success, data } = res.data;
-            setToken(res.headers && res.headers.authorization)
+            setToken(res?.headers?.authorization)
             if (success) return { success: success, data: data };
         })
         .catch((err) => {
@@ -30,7 +30,7 @@ export const addList = (data) => {
             const { success, message } = res.data;
             jwtExpired(message)
             messageAlert.success({ content: message, key: 1})
-            if (success) setToken(res.headers && res.headers.authorization)
+            if (success) setToken(res?.headers?.authorization)
 
             return success;
         })
@@ -50,7 +50,7 @@ export const delLabel = (id) => {
         .then((res) => {
             const { success, message } = res.data;
             jwtExpired(message)
-            if (success) setToken(res.headers && res.headers.authorization)
+            if (success) setToken(res?.headers?.authorization)
             
             return success;
         })
@@ -71,7 +71,7 @@ export const editLabel = (data) => {
             const { success, message } = res.data;
             jwtExpired(message)
             messageAlert.success({ content: message, key: data.id})
-            if (success) setToken(res.headers && res.headers.authorization)
+            if (success) setToken(res?.headers?.authorization)
 
             return success;
         })

@@ -23,6 +23,7 @@ import {
   SearchOutlined,
 } from '@ant-design/icons'; //Icons
 // import { Link } from 'react-router-dom'
+import { Link } from "react-router-dom";
 
 import InfoModal from './InfoModal';
 import { getList, delList } from '../../../service/conatct-person';
@@ -63,6 +64,14 @@ class Contact extends Component {
         title: 'First Name',
         dataIndex: 'firstName',
         key: 'firstName',
+        render: (text, record) => (
+          <Link
+            to={{ pathname: `/contacts/${record.id}/info` }}
+            className="nav-link"
+          >
+            {text}
+          </Link>
+        ),
         ...tableSorter('firstName', 'string'),
         // ...tableFilter('firstName', 'includes')
       },
@@ -124,6 +133,14 @@ class Contact extends Component {
                   disabled={this.state && !this.state.permissions['UPDATE']}
                 >
                   Edit
+                </Menu.Item>
+                <Menu.Item key="View">
+                  <Link
+                    to={{ pathname: `/contacts/${record.id}/info` }}
+                    className="nav-link"
+                  >
+                    View
+                  </Link>
                 </Menu.Item>
               </Menu>
             }
@@ -451,9 +468,10 @@ class Contact extends Component {
       search['skill']['value'].length > 0 ||
       search['association']['value'].length > 0
     ) {
+
       this.setState({
         filterData: data.filter((el) => {
-          // method one which have mutliple if condition for every multiple search
+          // method one which have mutliple if condition for every multiple search       
           return (
             `00${el.id.toString()}`.includes(search['id']['value']) &&
             `${el.firstName ?? ''}`
@@ -497,23 +515,21 @@ class Contact extends Component {
             (search['skill']['value'].length > 0
               ? search['skill']['value']
               : [{ value: ',' }]
-            ).some(
-              (s) =>
-                el.standardSkillStandardLevels &&
-                el.standardSkillStandardLevels.length > 0 &&
-                (search['skill']['value'].length > 0
-                  ? el.standardSkillStandardLevels.map((p) => p.standardSkillId)
-                  : [',']
-                ).includes(s.value)
+            ).some((s) =>
+              (el.standardSkillStandardLevels &&
+              el.standardSkillStandardLevels.length > 0 &&
+              search['skill']['value'].length > 0
+                ? el.standardSkillStandardLevels.map((p) => p.standardSkillId)
+                : [',']
+              ).includes(s.value)
             ) &&
             (search['association']['value'].length > 0
               ? search['association']['value']
               : [{ value: ',' }]
             ).some(
               (s) =>
-                el.contactPersonOrganizations &&
-                el.contactPersonOrganizations.length > 0 &&
-                (search['association']['value'].length > 0
+                ( (el.contactPersonOrganizations &&
+                  el.contactPersonOrganizations.length > 0 && search['association']['value'].length > 0)
                   ? el.contactPersonOrganizations.map((p) => p.organizationId)
                   : [',']
                 ).includes(s.value)

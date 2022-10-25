@@ -413,31 +413,16 @@ class Projects extends Component {
           type: 'Select',
         },
         {
-          Placeholder: 'Stage',
-          fieldCol: 12,
-          size: 'small',
-          type: 'Text',
-        },
-        {
           Placeholder: 'Estimated Value',
           fieldCol: 12,
           size: 'small',
           type: 'Text',
         },
         {
-          object: 'obj',
+          Placeholder: 'Start Date',
           fieldCol: 12,
-          key: 'stage',
-          mode: 'multiple',
-          customValue: (value, option) => option,
           size: 'small',
-          data: [
-            { label: 'Lead', value: 'L' },
-            { label: 'Tender Released', value: 'TR' },
-            { label: 'Bid Development', value: 'BD' },
-            { label: 'Bid Submitted', value: 'BS' },
-          ],
-          type: 'Select',
+          type: 'Text',
         },
         {
           object: 'obj',
@@ -449,10 +434,12 @@ class Projects extends Component {
           fieldStyle: { width: '100%' },
         },
         {
-          Placeholder: 'Start Date',
+          object: 'obj',
           fieldCol: 12,
+          key: 'startDate',
           size: 'small',
-          type: 'Text',
+          type: 'RangePicker',
+          fieldStyle: { width: '100%' },
         },
         {
           Placeholder: 'End Date',
@@ -461,12 +448,10 @@ class Projects extends Component {
           type: 'Text',
         },
         {
-          object: 'obj',
+          Placeholder: 'Entry Date',
           fieldCol: 12,
-          key: 'startDate',
           size: 'small',
-          type: 'RangePicker',
-          fieldStyle: { width: '100%' },
+          type: 'Text',
         },
         {
           object: 'obj',
@@ -477,24 +462,18 @@ class Projects extends Component {
           fieldStyle: { width: '100%' },
         },
         {
-          Placeholder: 'Entry Date',
-          fieldCol: 12,
-          size: 'small',
-          type: 'Text',
-        },
-        {
-          Placeholder: 'Status',
-          fieldCol: 12,
-          size: 'small',
-          type: 'Text',
-        },
-        {
           object: 'obj',
           fieldCol: 12,
           key: 'entryDate',
           size: 'small',
           type: 'RangePicker',
           fieldStyle: { width: '100%' },
+        },
+        {
+          Placeholder: 'Status',
+          fieldCol: 24,
+          size: 'small',
+          type: 'Text',
         },
         {
           object: 'obj',
@@ -600,7 +579,6 @@ class Projects extends Component {
     } else {
       search = advSearch;
     }
-    console.log(search['phase']['value']);
     if (
       search['id']['value'] ||
       search['title']['value'] ||

@@ -15,7 +15,7 @@ import { SettingOutlined, DownOutlined } from '@ant-design/icons'; //Icons
 import { Link } from 'react-router-dom';
 
 import MileModal from './Modal/MileModal';
-import { formatDate, formatCurrency, localStore } from '../../service/constant';
+import { formatDate, formatCurrency, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
 import { getMilestones, getProjectDetail } from '../../service/Milestone-Apis';
 import { getRecord } from '../../service/opportunities';
 import { generalDelete } from "../../service/delete-Api's";
@@ -84,11 +84,10 @@ class Milestone extends Component {
           dataIndex: 'isApproved',
           key: 'isApproved',
           align: 'right',
-          render: (record) => (
-            <Tag color={record ? 'green' : 'volcano'} key={record}>
-              {record ? 'TRUE' : 'FALSE'}
-            </Tag>
-          ),
+          render: (text) => {
+            let status = text?? 'CM'
+              return <Tag color={STATUS_COLOR[status]}> {R_STATUS[status]}  </Tag>
+          },
         },
         {
           title: '...',

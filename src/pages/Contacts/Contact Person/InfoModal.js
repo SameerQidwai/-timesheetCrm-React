@@ -284,6 +284,7 @@ class InfoModal extends Component {
         justifyField: 'center',
         FormLayout: 'inline',
         size: 'middle',
+        preserve:false,
         // fields: this.newAssociateField(0),
         fields: [],
       },
@@ -601,6 +602,11 @@ class InfoModal extends Component {
         data: orgs_data,
         // rules:[{ required: true }],
         type: 'Select',
+        onChange: ()=>{
+          let { asso } = this.associateRef.current.refs.associate_form.getFieldsValue(); // const
+          asso[`id${item_no}`] = undefined
+          this.associateRef.current.refs.associate_form.setFieldsValue({asso})
+        }
       },
       {
         object: 'asso',
@@ -824,7 +830,7 @@ class InfoModal extends Component {
     addList(value).then((res) => {
       this.setState({ loading: false });
       if (res.success) {
-        callBack();
+        callBack(res.data);
       }
     });
   };
@@ -931,7 +937,7 @@ class InfoModal extends Component {
     editList(value).then((res) => {
       this.setState({ loading: false });
       if (res.success) {
-        callBack();
+        callBack(res.data);
       }
     });
   };

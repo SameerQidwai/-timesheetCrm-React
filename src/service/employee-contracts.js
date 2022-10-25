@@ -11,7 +11,7 @@ export const getList = (id) => {
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
-            if (success)  setToken(res.headers && res.headers.authorization)
+            if (success)  setToken(res?.headers?.authorization)
             return { success, data };
         })
         .catch((err) => {
@@ -30,7 +30,7 @@ export const getRecord = (id) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
             if (success)  {
-                setToken(res.headers && res.headers.authorization)
+                setToken(res?.headers?.authorization)
                 data.leaveRequestPolicyId = data.leaveRequestPolicyId?? 0
                 data.file= data.fileId ? [{
                     id: data.file.id,
@@ -62,7 +62,7 @@ export const addList = (data) => {
             const { success, message } = res.data;
             jwtExpired(message)
             messageAlert.success({ content: message, key: 1})
-            if (success) setToken(res.headers && res.headers.authorization)
+            if (success) setToken(res?.headers?.authorization)
             return {success};
         })
         .catch((err) => {
@@ -82,7 +82,7 @@ export const delList = (id) => {
             const { success, message } = res.data;
             jwtExpired(message)
             if (success) {
-                setToken(res.headers && res.headers.authorization)
+                setToken(res?.headers?.authorization)
             }
             return {success};
         })
@@ -104,7 +104,7 @@ export const editList = (id, data) => {
             jwtExpired(message)
             messageAlert.success({ content: message, key: id})
             if (success) {
-                setToken(res.headers && res.headers.authorization)
+                setToken(res?.headers?.authorization)
             }
             return {success};
         })

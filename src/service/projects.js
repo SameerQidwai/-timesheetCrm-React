@@ -20,7 +20,7 @@ export const addList = (data) => {
       const { success, message } = res.data;
       jwtExpired(message);
       messageAlert.success({ content: message, key: 1 });
-      if (success) setToken(res.headers && res.headers.authorization);
+      if (success) setToken(res?.headers?.authorization);
       return { success };
     })
     .catch((err) => {
@@ -34,7 +34,7 @@ export const getList = () => {
     .then((res) => {
       const { success, data, message } = res.data;
       jwtExpired(message);
-      if (success) setToken(res.headers && res.headers.authorization);
+      if (success) setToken(res?.headers?.authorization);
       return { success: success, data: data };
     })
     .catch((err) => {
@@ -118,7 +118,7 @@ export const getRecord = (id) => {
           data.contactPerson &&
           data.contactPerson.firstName + ' ' + data.contactPerson.lastName;
         data.organizationName = data.organization && data.organization.name;
-        setToken(res.headers && res.headers.authorization);
+        setToken(res?.headers?.authorization);
         return { success, data, basic, tender, billing, dates, manage };
       }
       return { success };
@@ -148,7 +148,7 @@ export const delList = (id) => {
     .then((res) => {
       const { success, message } = res.data;
       jwtExpired(message);
-      if (success) setToken(res.headers && res.headers.authorization);
+      if (success) setToken(res?.headers?.authorization);
       return { success };
     })
     .catch((err) => {
@@ -168,7 +168,7 @@ export const editList = (data) => {
       const { success, message } = res.data;
       jwtExpired(message);
       messageAlert.success({ content: message, key: data.id });
-      if (success) setToken(res.headers && res.headers.authorization);
+      if (success) setToken(res?.headers?.authorization);
       return { success };
     })
     .catch((err) => {
@@ -184,7 +184,7 @@ export const addLeadSkill = (crud, data, id) => {
       const { success, message } = res.data;
       jwtExpired(message);
       messageAlert.success({ content: message, key: id });
-      if (success) setToken(res.headers && res.headers.authorization);
+      if (success) setToken(res?.headers?.authorization);
       return { success };
     })
     .catch((err) => {
@@ -199,7 +199,7 @@ export const getLeadSkills = (crud, id) => {
       const { success, data, message } = res.data;
       jwtExpired(message);
       if (success) {
-        setToken(res.headers && res.headers.authorization);
+        setToken(res?.headers?.authorization);
       }
       return { success: success, data: data };
     })
@@ -228,7 +228,7 @@ export const getHierarchy = (projectId) => {
     .then((res) => {
       const { success, data, message } = res.data;
       jwtExpired(message);
-      setToken(res.headers && res.headers.authorization);
+      setToken(res?.headers?.authorization);
       return { success, data };
     })
     .catch((err) => {
@@ -258,7 +258,7 @@ export const getProfitLoss = (projectId, dates) => {
     .then((res) => {
       const { success, data, message } = res.data;
       jwtExpired(message);
-      setToken(res.headers && res.headers.authorization);
+      setToken(res?.headers?.authorization);
       return { success, data };
     })
     .catch((err) => {
@@ -279,7 +279,7 @@ export const getProjectTracking = (projectId, dates) => {
     .then((res) => {
       const { success, data, message } = res.data;
       jwtExpired(message);
-      setToken(res.headers && res.headers.authorization);
+      setToken(res?.headers?.authorization);
       return { success, data };
     })
     .catch((err) => {
@@ -315,7 +315,7 @@ export const getLeadSkill = (crud, resId) => {
           allocationId: data?.opportunityResourceAllocations?.[0]?.id,
           role: data.opportunityResourceAllocations?.[0]?.role,
         };
-        setToken(res.headers && res.headers.authorization);
+        setToken(res?.headers?.authorization);
         return { success, data: obj };
       }
       return { success };
@@ -338,7 +338,7 @@ export const editLeadSkill = (crud, resId, data) => {
       const { success, data, message } = res.data;
       jwtExpired(message);
       messageAlert.success({ content: message, key: resId });
-      if (success) setToken(res.headers && res.headers.authorization);
+      if (success) setToken(res?.headers?.authorization);
       return { success, data: data[0] };
     })
     .catch((err) => {
@@ -352,7 +352,7 @@ export const delLeadSkill = (proId, resId) => {
     .then((res) => {
       const { success, message } = res.data;
       jwtExpired(message);
-      if (success) setToken(res.headers && res.headers.authorization);
+      if (success) setToken(res?.headers?.authorization);
       return { success };
     })
     .catch((err) => {
@@ -374,7 +374,7 @@ export const addLeadSkillResource = (proId, skillId, data) => {
       const { success, data, message } = res.data;
       jwtExpired(message);
       messageAlert.success({ content: message, key: skillId });
-      if (success) setToken(res.headers && res.headers.authorization);
+      if (success) setToken(res?.headers?.authorization);
       return { success, data: data };
     })
     .catch((err) => {
@@ -390,7 +390,7 @@ export const getLeadSkillResource = (proId, skillId, resId) => {
     .then((res) => {
       const { success, data, message } = res.data;
       jwtExpired(message);
-      setToken(res.headers && res.headers.authorization);
+      setToken(res?.headers?.authorization);
       return { success, data };
     })
     .catch((err) => {
@@ -410,7 +410,7 @@ export const editLeadSkillResource = (proId, skillId, resId, data) => {
     .then((res) => {
       const { success, data, message } = res.data;
       jwtExpired(message);
-      if (success) setToken(res.headers && res.headers.authorization);
+      if (success) setToken(res?.headers?.authorization);
       return { success, data };
     })
     .catch((err) => {
@@ -426,7 +426,7 @@ export const delLeadSkillResource = (proId, skillId, resId) => {
     .then((res) => {
       const { success, message } = res.data;
       jwtExpired(message);
-      if (success) setToken(res.headers && res.headers.authorization);
+      if (success) setToken(res?.headers?.authorization);
       return { success };
     })
     .catch((err) => {
@@ -448,7 +448,7 @@ export const selectLeadSkillResource = (proId, skillId, resId) => {
     .then((res) => {
       const { success, message } = res.data;
       jwtExpired(message);
-      if (success) setToken(res.headers && res.headers.authorization);
+      if (success) setToken(res?.headers?.authorization);
       return { success };
     })
     .catch((err) => {
@@ -468,7 +468,7 @@ export const addOrder = (proId, data) => {
       const { success, message, data } = res.data;
       jwtExpired(message);
       messageAlert.success({ content: message, key: proId });
-      if (success) setToken(res.headers && res.headers.authorization);
+      if (success) setToken(res?.headers?.authorization);
       return { success, data };
     })
     .catch((err) => {
@@ -482,7 +482,7 @@ export const getOrders = (proId) => {
     .then((res) => {
       const { success, data, message } = res.data;
       jwtExpired(message);
-      if (success) setToken(res.headers && res.headers.authorization);
+      if (success) setToken(res?.headers?.authorization);
       return { success: success, data: data };
     })
     .catch((err) => {
@@ -502,7 +502,7 @@ export const editOrder = (proId, id, data) => {
       const { success, message, data } = res.data;
       jwtExpired(message);
       messageAlert.success({ content: message, key: id });
-      if (success) setToken(res.headers && res.headers.authorization);
+      if (success) setToken(res?.headers?.authorization);
       return { success, data };
     })
     .catch((err) => {
@@ -537,7 +537,7 @@ export const getOrder = (proId, id) => {
             : [],
         };
 
-        setToken(res.headers && res.headers.authorization);
+        setToken(res?.headers?.authorization);
         return { success, data: data };
       }
       return { success };
@@ -557,7 +557,7 @@ export const delOrder = (proId, id) => {
     .then((res) => {
       const { success, message } = res.data;
       jwtExpired(message);
-      if (success) setToken(res.headers && res.headers.authorization);
+      if (success) setToken(res?.headers?.authorization);
 
       return { success };
     })
@@ -574,7 +574,7 @@ export const Outcomes = (phase, proId) => {
       const { success, message, data } = res.data;
       jwtExpired(message);
       messageAlert.success({ content: message, key: proId });
-      if (success) setToken(res.headers && res.headers.authorization);
+      if (success) setToken(res?.headers?.authorization);
       return { success, data };
     })
     .catch((err) => {
@@ -589,7 +589,7 @@ export const getMilestoneExpenses = (crud) => {
       const { success, data, message } = res.data;
       jwtExpired(message);
       if (success) {
-        setToken(res.headers && res.headers.authorization);
+        setToken(res?.headers?.authorization);
       }
       return { success: success, data: data };
     })
@@ -620,7 +620,7 @@ export const addMilestoneExpense = (crud, data, id) => {
       const { success, message } = res.data;
       jwtExpired(message);
       messageAlert.success({ content: message, key: id });
-      if (success) setToken(res.headers && res.headers.authorization);
+      if (success) setToken(res?.headers?.authorization);
       return { success };
     })
     .catch((err) => {
@@ -635,7 +635,7 @@ export const getMilestoneExpense = (crud, expenseId) => {
       const { success, data, message } = res.data;
       jwtExpired(message);
       if (success) {
-        setToken(res.headers && res.headers.authorization);
+        setToken(res?.headers?.authorization);
         return { success, data: data };
       }
       return { success };
@@ -658,7 +658,7 @@ export const editMilestoneExpense = (crud, expenseId, data) => {
       const { success, data, message } = res.data;
       jwtExpired(message);
       messageAlert.success({ content: message, key: expenseId });
-      if (success) setToken(res.headers && res.headers.authorization);
+      if (success) setToken(res?.headers?.authorization);
       return { success, data: data[0] };
     })
     .catch((err) => {

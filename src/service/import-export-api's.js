@@ -12,7 +12,7 @@ export const transfer = (action, type, file, config) => {
             jwtExpired(message)
             messageAlert.success({ content: message, key: type})
             if (success) 
-                setToken(res.headers && res.headers.authorization)
+                setToken(res?.headers?.authorization)
             return {success, data};
         })
         .catch((err) => {
@@ -27,7 +27,7 @@ export const status = () => {
             const { success, data, message } = res.data;
             jwtExpired(message)
             if (success) {
-                setToken(res.headers && res.headers.authorization)
+                setToken(res?.headers?.authorization)
                 return { success, data }
             };
             return { success: false }

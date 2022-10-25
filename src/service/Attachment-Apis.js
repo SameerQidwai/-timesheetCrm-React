@@ -20,7 +20,7 @@ export const addFiles = (data, config) => {
                     url: `${Api}/files/${data[0]&&data[0].uniqueName}`,
                     thumbUrl:thumbUrl(data[0].type)
                 }
-                setToken(res.headers && res.headers.authorization)
+                setToken(res?.headers?.authorization)
                 return { success, file };
             }
             return { success: false }
@@ -57,7 +57,7 @@ export const addAttachments = (targetType, targetId, data) => {
                     url: `${Api}/files/${data[0]&&data[0].file.uniqueName}`,
                     thumbUrl: thumbUrl(data[0].file.type)
                 }
-                setToken(res.headers && res.headers.authorization)
+                setToken(res?.headers?.authorization)
                 return { success, data };
             }
             return { success: false }
@@ -99,7 +99,7 @@ export const getAttachments = (targetType, targetId) => {
                         thumbUrl: thumbUrl(el.file.type)
                     })
                 });
-                setToken(res.headers && res.headers.authorization)
+                setToken(res?.headers?.authorization)
                 return { success, fileList, fileIds }
             };
             return { success: false }
@@ -119,7 +119,7 @@ export const delAttachment = (id,) => {
         .then((res) => {
             const { success, message } = res.data;
             jwtExpired(message)
-            setToken(res.headers && res.headers.authorization)
+            setToken(res?.headers?.authorization)
             return { success };
         })
         .catch((err) => {

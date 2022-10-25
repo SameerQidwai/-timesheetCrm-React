@@ -18,7 +18,7 @@ export const getList = () => {
     .then((res) => {
       const { success, data, message } = res.data;
       jwtExpired(message);
-      setToken(res.headers && res.headers.authorization);
+      setToken(res?.headers?.authorization);
       if (success) return { success: success, data: data };
     })
     .catch((err) => {
@@ -38,7 +38,7 @@ export const getRecord = (id) => {
       jwtExpired(message);
       if (success) {
         const { basic, kin, billing } = reStructure(data);
-        setToken(res.headers && res.headers.authorization);
+        setToken(res?.headers?.authorization);
         return { success, data, basic, billing, kin };
       }
       return { success: false };
@@ -71,7 +71,7 @@ export const addList = (data) => {
       jwtExpired(message);
       messageAlert.success({ content: message, key: 1 });
       if (success) {
-        setToken(res.headers && res.headers.authorization);
+        setToken(res?.headers?.authorization);
         return { success, data: res.data };
       }
       return { success: false };
@@ -92,7 +92,7 @@ export const delList = (id) => {
     .then((res) => {
       const { success, message } = res.data;
       jwtExpired(message);
-      if (success) setToken(res.headers && res.headers.authorization);
+      if (success) setToken(res?.headers?.authorization);
       return { success };
     })
     .catch((err) => {
@@ -112,7 +112,7 @@ export const editList = (id, data) => {
       const { success, message } = res.data;
       jwtExpired(message);
       messageAlert.success({ content: message, key: id });
-      if (success) setToken(res.headers && res.headers.authorization);
+      if (success) setToken(res?.headers?.authorization);
       return { success };
     })
     .catch((err) => {
@@ -134,7 +134,7 @@ export const toggleActiveStatus = (id) => {
       jwtExpired(message);
       messageAlert.success({ content: message, key: id });
       if (success) {
-        setToken(res.headers && res.headers.authorization);
+        setToken(res?.headers?.authorization);
         return { success, data };
       }
       return { success, data };

@@ -57,6 +57,7 @@ import { localStore } from '../../../service/constant';
 import MileCertificate from '../../../pages/Milestones/MileCertificate';
 import ExpenseSheet from '../../../pages/Expenses/ExpenseSheet';
 import ExpSheetAdminView from '../../../pages/Expenses/AdminView/ExpSheetAdminView';
+import ContactInfo from '../../../pages/Contacts/Contact Person/ContactInfo';
 
 const { Content } = Layout;
 
@@ -176,7 +177,13 @@ const pageLinks = [
   },
   {
     component: Contact,
-    link: '/contact',
+    link: '/contacts',
+    key: 'CONTACT_PERSONS',
+    permission: 'READ',
+  },
+  {
+    component: ContactInfo,
+    link: '/contacts/:id/info',
     key: 'CONTACT_PERSONS',
     permission: 'READ',
   },
@@ -281,6 +288,13 @@ const pageLinks = [
   {
     component: MileCertificate,
     link: '/milestones-certificate',
+    key: 'PROJECTS',
+    permission: 'READ',
+  },
+  {
+    component: OpportunityExpenses,
+    link: '/projects/:proId/milestones/:mileId/expenses',
+    // link: "/projects/:id/resources",
     key: 'PROJECTS',
     permission: 'READ',
   },

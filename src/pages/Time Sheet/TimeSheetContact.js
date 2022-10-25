@@ -473,29 +473,37 @@ class TimeSheetContact extends Component {
 
     openAttachModal = (record, index) =>{
         let timeObj = {}
-        if(index >= 0){
-            timeObj = {
-                milestoneEntryId: [record.milestoneEntryId],
-                milestoneId: record.milestoneId,
-                notes: record.notes,
-                milestone: record.milestone,
-                status: record.status,
-                rowIndex: index
+        if (record.milestoneEntryId){
+            if(index >= 0){
+                timeObj = {
+                    milestoneEntryId: [record.milestoneEntryId],
+                    milestoneId: record.milestoneId,
+                    notes: record.notes,
+                    milestone: record.milestone,
+                    status: record.status,
+                    rowIndex: index
+                }
+            }else{
+                const {keys, timesheet} = this.state.sTimesheet
+                timeObj = {
+                    milestoneEntryId: keys,
+                    milestoneId: timesheet[0].milestoneId,
+                    notes: timesheet[0].notes,
+                    milestone: timesheet[0].milestone,
+                    status: false,
+                }
             }
+            this.setState({ timeObj, isAttach: true})
         }else{
-            const {keys, timesheet} = this.state.sTimesheet
-            timeObj = {
-                milestoneEntryId: keys,
-                milestoneId: timesheet[0].milestoneId,
-                notes: timesheet[0].notes,
-                milestone: timesheet[0].milestone,
-                status: false,
-            }
+            this.exportUploadError()
         }
-        this.setState({ timeObj, isAttach: true})
     }
 
-   attachCallBack = (res) =>{ 
+    exportUploadError = ()=>{
+        message.error({ content: "Can't Upload/Export To Timesheet Without Any Time Entry", key: 'empty'}, 3)
+    }
+
+    attachCallBack = (res) =>{ 
         const {data, timeObj } = this.state
         const {rowIndex} = timeObj
         if(rowIndex >= 0 ){
@@ -507,13 +515,16 @@ class TimeSheetContact extends Component {
         }
     }
 
-
     exporPDF = (entryId) =>{
-        const keys = entryId ? [entryId] :this.state.sTimesheet.keys
-        this.setState({
-            eData: keys,
-            isDownload: true
-        })   
+        const keys = entryId ? [entryId] :this.state?.sTimesheet?.keys
+        if(keys){
+            this.setState({
+                eData: keys,
+                isDownload: true
+            })
+        }else{
+            this.exportUploadError()
+        }
     }
         
     summaryFooter = (data) =>{
