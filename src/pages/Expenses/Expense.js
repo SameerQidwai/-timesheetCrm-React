@@ -1,23 +1,16 @@
+import React, { useEffect, useState } from 'react'
 import { Button, Checkbox, Col, Dropdown, Menu, Popconfirm, Row, Table, Typography } from 'antd';
-import Title from 'antd/lib/typography/Title';
-import React, { useEffect } from 'react'
-import {
-    DownOutlined,
-    SettingOutlined,
-    PlusSquareOutlined,
-    FilterOutlined,
-} from '@ant-design/icons'; //Icons
-import { useState } from 'react';
+import { SettingOutlined, PlusSquareOutlined, } from '@ant-design/icons'; //Icons
 import InfoModal from './Modals/InfoModal';
-import { formatDate, localStore } from '../../../service/constant';
+import { formatDate, localStore } from '../../service/constant';
 import ExpenseSheetModal from './Modals/ExpenseSheetModal';
-import { expensesData } from '../DummyData';
-import { delExpense, getListOfExpenses } from '../../../service/expense-Apis';
-import { generalDelete } from '../../../service/delete-Api\'s';
-import { tableSorter } from '../../../components/Core/Table/TableFilter';
+import { expensesData } from './DummyData';
+import { delExpense, getListOfExpenses } from '../../service/expense-Apis';
+import { generalDelete } from "../../service/delete-Api's";
+import { tableSorter } from '../../components/Core/Table/TableFilter';
   
 
-const {Text} = Typography;
+const {Text, Title} = Typography;
 const Expense = (props) => {
 
     

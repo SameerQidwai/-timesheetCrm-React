@@ -19,6 +19,8 @@ import ContInfo from '../../../pages/Contractors & Info/ContInfo';
 import ContBilling from '../../../pages/Contractors & Info/ContBilling';
 
 import Contact from '../../../pages/Contacts/Contact Person/Contact';
+import ContactInfo from '../../../pages/Contacts/Contact Person/ContactInfo';
+
 import TimeSheetProject from '../../../pages/Time Sheet/TimeSheetProject';
 import TimeSheetContact from '../../../pages/Time Sheet/TimeSheetContact';
 import TimeOff from '../../../pages/Time/TimeOff';
@@ -39,6 +41,7 @@ import LeaveRequest from '../../../pages/Leave Request/LeaveRequest';
 import ApproveRequest from '../../../pages/Leave Request/ApproveRequest';
 
 import Milestone from '../../../pages/Milestones/Milestone';
+import MileCertificate from '../../../pages/Milestones/MileCertificate';
 
 import Calender from '../../Calender/Calender';
 
@@ -50,14 +53,12 @@ import Training from '../../../pages/Trainings/Training';
 // import Expense from '../../../pages/Expenses/ExpenseSheet';
 
 // shahbaz work END
-import Expense from '../../../pages/Expenses/Expenses/Expense';
+import Expense from '../../../pages/Expenses/Expense';
+import ExpSheetAdminView from '../../../pages/Expenses/ExpenseApproval';
+import ExpenseSheet from '../../../pages/Expenses/ExpenseSheet';
 
 // import TimeSheetHTML from "../../Core/TimeSheetHTML"
 import { localStore } from '../../../service/constant';
-import MileCertificate from '../../../pages/Milestones/MileCertificate';
-import ExpenseSheet from '../../../pages/Expenses/ExpenseSheet';
-import ExpSheetAdminView from '../../../pages/Expenses/AdminView/ExpSheetAdminView';
-import ContactInfo from '../../../pages/Contacts/Contact Person/ContactInfo';
 
 const { Content } = Layout;
 

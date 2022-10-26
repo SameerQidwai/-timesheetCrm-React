@@ -1,21 +1,14 @@
-import { Button, Col, Dropdown, Menu, Popconfirm, Row, Table } from 'antd'
-import {
-  DownOutlined,
-  SettingOutlined,
-  PlusSquareOutlined,
-  FilterOutlined,
-} from '@ant-design/icons'; //Icons
-import Title from 'antd/lib/typography/Title'
-import React from 'react'
-import { useState } from 'react';
-import InfoModal from './Modals/InfoModal';
-import ExpenseSheetModal from './Expenses/Modals/ExpenseSheetModal';
+import React, { useState, useEffect } from 'react'
+import { Button, Col, Dropdown, Menu, Popconfirm, Row, Table, Typography } from 'antd'
+import { SettingOutlined, PlusSquareOutlined, } from '@ant-design/icons'; //Icons
+import ExpenseSheetModal from './Modals/ExpenseSheetModal';
 import { expensesData } from './DummyData';
-import { useEffect } from 'react';
 import { getExpenseSheets } from '../../service/expenseSheet-Apis';
 import { getListOfExpenses } from '../../service/expense-Apis';
 import { generalDelete } from "../../service/delete-Api\'s";
 import { localStore } from '../../service/constant';
+
+const { Title } =  Typography
 
 const ExpenseSheet = (props) => {
 
