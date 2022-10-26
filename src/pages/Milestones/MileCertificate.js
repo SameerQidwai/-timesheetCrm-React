@@ -8,7 +8,7 @@ import { formatDate, formatCurrency, localStore, thumbUrl, Api, STATUS_COLOR, R_
 import { tableSorter } from "../../components/Core/Table/TableFilter";
 import CertificatePdf from "./Modal/CertifcatePdf";
 import { getManageProjects } from "../../service/constant-Apis";
-import { milestoneActions, milestoneUpload } from "../../service/Milestone-Apis";
+import { getApprovalMilestones, milestoneActions, milestoneUplaodDelete, milestoneUpload } from "../../service/Milestone-Apis";
 import { addFiles } from "../../service/Attachment-Apis";
 import './styles.css'
 
@@ -197,7 +197,7 @@ class MileCertificate extends Component {
         
     }
     fetchAll = () =>{
-        Promise.all([ getManageProjects('PROJECTS'), milestoneActions('/approvals') ])
+        Promise.all([ getManageProjects('PROJECTS'), getApprovalMilestones() ])
         .then(res => {
             const { permissions } = localStore()
             const { TIMESHEETS } = JSON.parse(permissions)
@@ -214,8 +214,7 @@ class MileCertificate extends Component {
     }
 
     getProjects= (value)=>{
-        let crud = `/approvals${value? ('?projectId=' + value ): ''}`
-        milestoneActions(crud).then(res=>{
+      getApprovalMilestones(value).then(res=>{
             if (res.success){
                 this.setState({
                     data: res.data,
@@ -246,16 +245,24 @@ class MileCertificate extends Component {
     }
 
     OutcomeAction = (action, id) =>{
-        let { data, sTMilestones } = this.state
-        let {keys} = sTMilestones
-        let milestoneId = action !== 'delete-certificate'? keys[0] :id
-        let crud = `/${milestoneId}/${action}`
-        milestoneActions(crud).then(res=>{
+        if (action === 'delete-certificate'){
+          milestoneUplaodDelete(id).then(res=>{
             if (res.success){
-                // data[index]['isApproved'] = true
-                this.getProjects()
+              // data[index]['isApproved'] = true
+              this.getProjects()
             }
-        })
+          })
+        }else{
+          let { data, sTMilestones } = this.state
+          let {keys} = sTMilestones
+          let obj = {milestones: keys}
+          milestoneActions(`/${action}`, obj).then(res=>{
+              if (res.success){
+                  // data[index]['isApproved'] = true
+                  this.getProjects()
+              }
+          })
+        }
     }
 
     handleUpload = option =>{

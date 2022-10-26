@@ -15,6 +15,7 @@ import { useEffect } from 'react';
 import { getExpenseSheets } from '../../service/expenseSheet-Apis';
 import { getListOfExpenses } from '../../service/expense-Apis';
 import { generalDelete } from "../../service/delete-Api\'s";
+import { localStore } from '../../service/constant';
 
 const ExpenseSheet = (props) => {
 
@@ -31,8 +32,8 @@ const ExpenseSheet = (props) => {
   const getData = () => {
     getExpenseSheets().then((res) => {
       if (res.success) {
-        console.log("res->", res.data)
-        res.data[1].status = 'AP'
+        res.data[0].status = 'AP'
+        res.data[1].status = 'SB'
         setExpenseSheet(res.data);
       }
     })
@@ -40,7 +41,6 @@ const ExpenseSheet = (props) => {
 
   const handleDelete = (id, index) => {
     const url = '/expense-sheets';
-    // const { data, filterData } = this.state;
     const { history } = props;
     generalDelete(history, url, id, index, expenseSheet).then((res) => {
       if (res.success) {
@@ -131,26 +131,14 @@ const ExpenseSheet = (props) => {
     },
   ];
   
-  const onChange = (pagination, filters, sorter, extra) => {
-    console.log('params', pagination, filters, sorter, extra);
-  };
-
   const onSelectChange = (newSelectedRowKeys, selectedRow) => {
-    let checkDisable = true;
-    
-    for (let index = 0; index < selectedRow.length; index++) {
-      const el = selectedRow[index];
-      if (el.status === 'AP') {
-        checkDisable = true;
-        break;
-      } else if (el.status === 'SB') {
-        checkDisable = true;
-        break;
-      } else {
-        checkDisable = false
+    let checkDisable = false;
+    selectedRow.forEach(el=>{
+      if(el.status !== 'Saved'){
+        checkDisable = true
       }
-
-    }
+    })
+    
     setDisableSubmit(checkDisable);
     setSelectedRowKeys(newSelectedRowKeys);
   };
@@ -160,7 +148,6 @@ const ExpenseSheet = (props) => {
   }
 
   const callBack = (data, index) => {
-    console.log(data)
 		let exp = expenseSheet;
     if (index >= 0) {
 			exp[index] = data; 
@@ -172,8 +159,6 @@ const ExpenseSheet = (props) => {
 		setExpenseSheet([...exp]);  
 		setOpenModal(false);
   }
-
-  console.log(selectedRowKeys)
 
   const rowSelection = {
     selectedRowKeys,
@@ -209,27 +194,30 @@ const ExpenseSheet = (props) => {
         </Col>  
         <Col span={24}>
           <Table
+            size={'small'}
+            bordered
+            className='fs-small'
+            pagination={{pageSize: localStore().pageSize}}
             rowKey={data=> data.id}
             rowSelection={rowSelection}
             columns={columns}
             dataSource={expenseSheet}
-            onChange={onChange} 
           />
         </Col>
         <Col span={24} >
-        {/* <Row justify="end" gutter={[20,200]}>
-            <Col >
+          <Row justify="end" >
+            <Col>
                 <Button 
                     type="primary" 
                     className={'success'}
-                    disabled={ !disableSubmit}
+                    disabled={ (disableSubmit || selectedRowKeys.length<1)}
                     // disabled={ sRequest.keys.length<1 || !permissions['APPROVAL'] || sRequest.cantReject}
                     // onClick={()=>this.multiAction('Reject')}
                 > 
                     Submit
                 </Button>
             </Col>
-          </Row> */}
+          </Row>
         </Col>
       
       </Row>

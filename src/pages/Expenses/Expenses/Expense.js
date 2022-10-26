@@ -9,7 +9,7 @@ import {
 } from '@ant-design/icons'; //Icons
 import { useState } from 'react';
 import InfoModal from './Modals/InfoModal';
-import { formatDate } from '../../../service/constant';
+import { formatDate, localStore } from '../../../service/constant';
 import ExpenseSheetModal from './Modals/ExpenseSheetModal';
 import { expensesData } from '../DummyData';
 import { delExpense, getListOfExpenses } from '../../../service/expense-Apis';
@@ -37,14 +37,14 @@ const Expense = (props) => {
       dataIndex: 'expenseTypeName',
       ...tableSorter('expenseTypeName', 'string'),
     },
-    // {
-    //   title: 'Project',
-    //   dataIndex: 'projectName',
-    //   ...tableSorter('projectName', 'string'),
-    // },
+    {
+      title: 'Project',
+      dataIndex: 'projectName',
+      ...tableSorter('projectName', 'string'),
+    },
     {
       title: 'Date',
-      dataIndex: 'date', // when-api change it to [date,name] or dateName
+      dataIndex: 'date',
       render: (text) => formatDate(text, true, true),
       ...tableSorter('date', 'date'),
     },
@@ -101,24 +101,10 @@ const Expense = (props) => {
                 key="edit"
               onClick={() =>
                 setOpenModal({...record,index})
-                
-              //   // this.setState({
-              //   //   openModal: true,
-                        
-                // })
               }
-              // disabled={this.state && !this.state.permissions['UPDATE']}
               >
                 Edit
               </Menu.Item>
-              {/* <Menu.Item key="view">
-                    <Link
-                      to={{ pathname: `/opportunities/${record.id}/info` }}
-                      className="nav-link"
-                    >
-                      View
-                    </Link>
-                  </Menu.Item> */}
             </Menu>
           }
         >
@@ -135,8 +121,10 @@ const Expense = (props) => {
   }, []);
 
   const getData = () => {
-    Promise.all([getListOfExpenses()]).then((res) => {
-      setExpenseData(res[0]?.data?? []);
+    getListOfExpenses().then((res) => {
+      if(res?.success){
+        setExpenseData(res?.data?? []);
+      }
     })
   }
 
@@ -198,12 +186,14 @@ const Expense = (props) => {
       </Col>  
       <Col span={24}>
         <Table
+          size={'small'}
+          bordered
+          className='fs-small'
+          pagination={{pageSize: localStore().pageSize}}
           rowKey={data=> data.id}
-        //   rowSelection={rowSelection}
           columns={columns}
           dataSource={expenseData}
-        // onChange={onChange} 
-        />
+          />
         </Col>
     </Row>
         <Col style={{display:"flex",flexDirection:"row",justifyContent:"flex-end"}}>

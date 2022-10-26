@@ -155,14 +155,10 @@ const InfoModal = ({ visible, close, callBack }) => {
         
     );
 
-    const randomTypes = [{value:'dinner', label:"lene hain"},{value:'lunch', label:"lunch lene hain"},{value:'breakFast', label:"breakFast lene hain"}];
-
     useEffect(() => {
-        // gettingRandomType();
+        
         getData();
-        // gettingProject();
         if (visible !== true) {
-            console.log("visible-->", visible)
             visible.date = formatDate(visible.date)
             form.setFieldsValue({ basic: visible })
         }
@@ -206,24 +202,7 @@ const InfoModal = ({ visible, close, callBack }) => {
         })
     }
 
-    // remove these functions 
-    const gettingRandomType = () => {
-        let basic = basicFields
-        basic[2].data = randomTypes;
-        setBasicFields([...basic]); 
-    }
 
-    const gettingProject = () => {
-        getProjects().then((res) => {
-            if (res.success) {
-                let basic = basicFields
-                console.log('res->', res.data);
-                basic[11].data = res.data
-                setBasicFields([...basic]); 
-            }
-            
-        })
-    }
     ///////
 
     //File

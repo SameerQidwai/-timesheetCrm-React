@@ -7,7 +7,7 @@ import {
     PlusSquareOutlined,
     FilterOutlined,
 } from '@ant-design/icons';
-import { formatDate } from '../../../../service/constant';
+import { formatDate, localStore } from '../../../../service/constant';
 import FormItems from '../../../../components/Core/Forms/FormItems';
 import { getProjects } from '../../../../service/constant-Apis';
 // import { expensesData as dummyExpensesData } from '../../DummyData';
@@ -56,6 +56,7 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack }) => {
       fieldCol: 12,
       key: "projectId", // when-api change it to projectId
       size: "small",
+      initialValue: null,
       data: [],
       type: "Select",
     onChange: (projectId) => { selectedProjectExpenses(projectId) }
@@ -65,7 +66,7 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack }) => {
   // table columns
   const columns = [
       {
-        title: 'CODE',
+        title: 'Code',
         dataIndex: 'id',
         render: (text)=> `00${text}`, 
       },
@@ -78,7 +79,7 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack }) => {
         },
       },
       {
-        title: 'DATE',
+        title: 'Date',
           dataIndex: 'date', // when-api change it to [date,name] or dateName
         render: (text)=> formatDate(text, true , true),
         sorter: {
@@ -87,7 +88,7 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack }) => {
         },
       },
       {
-        title: 'AMOUNT',
+        title: 'Amount',
         dataIndex: 'amount',
         sorter: {
           compare: (a, b) => a.amount - b.amount,
@@ -95,7 +96,7 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack }) => {
         },
       },
       {
-        title: 'FILES',
+        title: 'Files',
         dataIndex: 'files',
       //   sorter: {
       //     compare: (a, b) => a.files - b.files,
@@ -143,7 +144,7 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack }) => {
   // for filter expense according to project
   const selectedProjectExpenses = (selectedProject) => {
     let projectId = selectedProject
-    let codes = visible?.expenseSheetExpenses ?? []
+    let codes = visible?.expenseSheetExpensesIds ?? []
     let backupExpenses = expenses
     let filteredProject = backupExpenses?.filter((ele) => {
       return ele.projectId == projectId;
@@ -165,7 +166,6 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack }) => {
 
 
   const onFinish = (value) => {
-    console.log('value-->', value , visible);
     let { basic } = value;
     basic.expenseSheetExpenses = selectedRowKeys
     if (visible?.id){
@@ -176,28 +176,25 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack }) => {
 }
 
   const addSheet = (data) => {
-    console.log("data->", data)
-    // addExpenseSheet(data).then(res=>{
-    //   if (res.success){
-        // callBack(res.data);
-     // } else{
-      // console.log("err",res)
-    // 
-    //  }
+    addExpenseSheet(data).then(res=>{
+      if (res.success){
+        callBack(res.data);
+     } else{
+      console.log("err",res)
     
-    // })
-    callBack(data); //remove apter integration of api
+     }
+    
+    })
   }
 
   const editSheet=(id, data)=>{
-    // editExpenseSheet(visible.id, data).then(res=>{
-    //   if (res.success){
-      // callBack(res.data, visible?.index);
-    //   } else {
-      // console.log("err",res)
-    // }
-    // })
-    callBack(data,visible?.index);
+    editExpenseSheet(visible.id, data).then(res=>{
+      if (res.success){
+        callBack(res.data, visible?.index);
+      } else {
+      console.log("err",res)
+    }
+    })
   }
 
 
@@ -227,9 +224,13 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack }) => {
         </Col>
         <Col span={24}>
             <Table
+            size={'small'}
+            bordered
+            className='fs-small'
+            pagination={{pageSize: localStore().pageSize}}
             rowKey={data => data.id}
       // adminView Prop add
-            rowSelection={visible.adminView ? '': rowSelection}
+            rowSelection={!visible.adminView && rowSelection}
             columns={columns}
             dataSource={filteredExpenses}
             // onChange={onChange} 

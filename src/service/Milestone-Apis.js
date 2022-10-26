@@ -166,16 +166,49 @@ export const getProjectDetail = (crud, id) => {
             };
         });
 };
-
-export const milestoneActions = (crud ) => {
+export const getApprovalMilestones = (project) => {
+    messageAlert.loading({ content: 'Loading...', key: 1 })
     return axios
-        .get(`${url}${crud}`, {headers:headers()})
+        .get(`${url}/approvals${project? ('?projectId=' + project ): ''}`, {headers:headers()})
         .then((res) => {
-            const { success, data } = res.data;
+            const { success, data, message } = res.data;
+            jwtExpired(message)
+            messageAlert.destroy(1)
             setToken(res?.headers?.authorization)
-            if (success){
-                return { success: success, data: data }
-            };
+            return { success, data }
+        })
+        .catch((err) => {
+            return apiErrorRes(err, 1, 5)
+        });
+};
+
+export const milestoneActions = (crud, data) => {
+    messageAlert.loading({ content: 'Loading...', key: crud })
+    return axios
+        .patch(`${url}${crud}`, data, {headers:headers()})
+        .then((res) => {
+            const { success, data, message } = res.data;
+            jwtExpired(message)
+            messageAlert.success({ content: message, key: crud})
+            setToken(res?.headers?.authorization)
+            return { success, data }
+        })
+        .catch((err) => {
+            return apiErrorRes(err, 1, 5)
+        });
+};
+
+
+export const milestoneUplaodDelete = (id) => {
+    messageAlert.loading({ content: 'Loading...', key: id })
+    return axios
+        .delete(`${url}/${id}/delete-certificate`, {headers:headers()})
+        .then((res) => {
+            const { success, data, message } = res.data;
+            jwtExpired(message)
+            messageAlert.success({ content: message, key: id})
+            setToken(res?.headers?.authorization)
+            return { success, data }
         })
         .catch((err) => {
             return apiErrorRes(err, 1, 5)
@@ -183,7 +216,6 @@ export const milestoneActions = (crud ) => {
 };
 
 export const milestoneUpload = (id, data) => {
-    console.log(id, data)
     messageAlert.loading({ content: 'Loading...', key: 1 })
     return axios
         .put(`${url}/${id}/upload`, data, {headers:headers()})
