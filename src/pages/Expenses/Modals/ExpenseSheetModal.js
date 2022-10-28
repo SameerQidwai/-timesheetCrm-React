@@ -4,7 +4,6 @@ import { formatDate, localStore } from '../../../service/constant';
 import FormItems from '../../../components/Core/Forms/FormItems';
 import { getProjects } from '../../../service/constant-Apis';
 // import { expensesData as dummyExpensesData } from '../../DummyData';
-import { getListOfExpenses } from '../../../service/expense-Apis';
 import { addExpenseInSheet, addExpenseSheet, editExpenseSheet } from '../../../service/expenseSheet-Apis';
 const {Text, Title} = Typography;
 
@@ -116,6 +115,7 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack }) => {
   ];  
 
   useEffect(() => {
+    console.log(visible)
     if (visible !== true) {
       form.setFieldsValue({ basic: visible })
     }
@@ -161,6 +161,7 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack }) => {
   const onFinish = (value) => {
     let { basic } = value;
     basic.expenseSheetExpenses = selectedRowKeys
+    basic.attachments= []
     if (visible?.id){
       editSheet(visible.id, basic)
     }else{

@@ -44,7 +44,7 @@ const Expense = (props) => {
     {
       title: 'Amount',
       dataIndex: 'amount',
-      ...tableSorter('id', 'number'),
+      ...tableSorter('amount', 'number'),
     },
     {
       title: 'Files',
@@ -127,7 +127,7 @@ const Expense = (props) => {
     if (index >= 0) {
       exp[index] = data;
     } else {
-      exp = [...expenseData, data]
+      // exp = [...expenseData, data]
     }
     setExpenseData([...exp]);
     setOpenModal(false);

@@ -2,13 +2,13 @@ import { Button, Col, DatePicker, Dropdown, Menu, Popconfirm, Row, Select, Table
 import { SettingOutlined, } from '@ant-design/icons'; //Icons
 import React, { useEffect, useState } from 'react'
 import { getProjects } from '../../service/constant-Apis';
-import { formatDate } from '../../service/constant';
+import { formatDate, localStore } from '../../service/constant';
 // import { expensesData as dummyExpensesData } from '../DummyData';
 import ExpenseSheetModal from './Modals/ExpenseSheetModal';
 
 const { Title } = Typography
 
-const ExpSheetAdminView = () => {
+const ExpenseApproval = () => {
 
   // dummy text
   const data = [
@@ -64,7 +64,7 @@ const ExpSheetAdminView = () => {
 
   const columns = [
     {
-      title: 'CODE',
+      title: 'Code',
       dataIndex: 'code',
       sorter: {
         compare: (a, b) => a.code - b.code,
@@ -72,7 +72,7 @@ const ExpSheetAdminView = () => {
       },
     },
     {
-      title: 'TITLE',
+      title: 'Title',
       dataIndex: 'title',
       sorter: {
         compare: (a, b) => a.title - b.title,
@@ -80,7 +80,7 @@ const ExpSheetAdminView = () => {
       },
     },
     {
-      title: 'PROJECT',
+      title: 'Project',
       dataIndex: ['project', 'label'], // when-api change it to [project,name] or projectName
       sorter: {
         compare: (a, b) => a.project?.label - b.project?.label,
@@ -88,7 +88,7 @@ const ExpSheetAdminView = () => {
       },
     },
     {
-      title: 'AMOUNT',
+      title: 'Amount',
       dataIndex: 'amount',
       sorter: {
         compare: (a, b) => a.amount - b.amount,
@@ -96,7 +96,7 @@ const ExpSheetAdminView = () => {
       },
     },
     {
-      title: 'STATUS',
+      title: 'Status',
       dataIndex: 'status',
       sorter: {
         compare: (a, b) => a.status - b.status,
@@ -104,7 +104,7 @@ const ExpSheetAdminView = () => {
       },
     },
     {
-      title: 'SUBMITTED AT',
+      title: 'Submitted At',
       dataIndex: 'submittedAt',
       sorter: {
         compare: (a, b) => a.submittedAt - b.submittedAt,
@@ -268,6 +268,10 @@ const ExpSheetAdminView = () => {
         </Col>  
         <Col span={24}>
           <Table
+            size={'small'}
+            bordered
+            className='fs-small'
+            pagination={{pageSize: localStore().pageSize, hideOnSinglePage: true, responsive: true, size: 'small'}}
             rowKey={data=> data.id}
             rowSelection={rowSelection}
             columns={columns}
@@ -313,4 +317,4 @@ const ExpSheetAdminView = () => {
   )
 }
 
-export default ExpSheetAdminView
+export default ExpenseApproval

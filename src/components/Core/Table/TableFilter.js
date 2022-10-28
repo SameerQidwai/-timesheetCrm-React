@@ -3,6 +3,29 @@ import { Button, Col, Input, Modal, Row, Space, Table, Form, Select, Tag, DatePi
 import FormItems from '../Forms/FormItems';
 import { SearchOutlined } from "@ant-design/icons";
 import moment from "moment";
+import { localStore } from '../../../service/constant';
+
+const ATable = ({size= 'small', columns=[], dataSource=[], rowKey='id', rowSelection=false, bordered=true, className, defaultClass, pagination, rowClassName})=>{
+    return <Table
+    size={size}
+    bordered={bordered}
+    className={`fs-small ${className}` }
+    rowClassName={rowClassName}
+    pagination={pagination !== false( 
+        pagination ?? {
+            pageSize: localStore().pageSize, 
+            hideOnSinglePage: true, 
+            responsive: true, 
+            size: 'small'
+        })
+    }
+    rowKey={data=> data[rowKey]}
+    rowSelection={rowSelection}
+    columns={columns}
+    dataSource={dataSource}
+    // onChange={onChange} 
+  />
+}
 
                             //keys          //serachFunction
 export const tableFilter = (dataIndex, searchFunction) => ({ // filter on the head

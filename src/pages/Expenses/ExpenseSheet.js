@@ -1,73 +1,62 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Col, Dropdown, Menu, Popconfirm, Row, Table, Typography } from 'antd'
-import { SettingOutlined, PlusSquareOutlined, } from '@ant-design/icons'; //Icons
+import { Button, Col, Dropdown, Menu, Modal, Popconfirm, Row, Table, Tag, Typography } from 'antd'
+import { SettingOutlined, PlusSquareOutlined,ExclamationCircleOutlined, CheckCircleOutlined } from '@ant-design/icons'; //Icons
 import ExpenseSheetModal from './Modals/ExpenseSheetModal';
 import { expensesData } from './DummyData';
-import { getExpenseSheets } from '../../service/expenseSheet-Apis';
+import { expenseSheetActions, getExpenseSheets } from '../../service/expenseSheet-Apis';
 import { getListOfExpenses } from '../../service/expense-Apis';
 import { generalDelete } from "../../service/delete-Api\'s";
-import { localStore } from '../../service/constant';
+import { formatDate, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
+import { tableSorter } from '../../components/Core/Table/TableFilter';
 
 const { Title } =  Typography
 
 const ExpenseSheet = (props) => {
 
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [selectedRows, setSelectedRows] = useState({keys: [], data: []});
   const [openModal, setOpenModal] = useState(false);
   const [expenseSheet, setExpenseSheet] = useState([]);
   const [expenses, setExpenses] =  useState([])
   const [disableSubmit, setDisableSubmit] = useState(true);
-
-  useEffect(() => {
-    getData();
-  }, []);
-
-  const getData = () => {
-    getExpenseSheets().then((res) => {
-      if (res.success) {
-        res.data[0].status = 'AP'
-        res.data[1].status = 'SB'
-        setExpenseSheet(res.data);
-      }
-    })
-  }
-
-  const handleDelete = (id, index) => {
-    const url = '/expense-sheets';
-    const { history } = props;
-    generalDelete(history, url, id, index, expenseSheet).then((res) => {
-      if (res.success) {
-        setExpenseSheet([...res.filterData]);
-      }
-    });
-    
-	}
 
   const columns = [
     {
       title: 'Code',
       dataIndex: 'id',
       render: (text)=> `00${text}`, 
+      ...tableSorter('id', 'number'),
     },
     {
       title: 'Title',
       dataIndex: 'label',
+      align: 'center',
+      ...tableSorter('label', 'string'),
     },
     {
       title: 'Project',
       dataIndex: 'projectName',
+      align: 'center',
+      ...tableSorter('projectName', 'string'),
     },
     {
       title: 'Amount',
       dataIndex: 'amount',
+      align: 'center',
+      ...tableSorter('amount', 'number'),
     },
     {
       title: 'Status',
       dataIndex: 'status',
+      align: 'center',
+      render: (text)=> (text && text !== 'SV') && <Tag color={STATUS_COLOR[text]}>{R_STATUS[text]}</Tag>,
+      ...tableSorter('status', 'string'),
     },
     {
       title: 'Submited At',
       dataIndex: 'submittedAt',
+      align: 'center',
+      render: (text)=> formatDate(text, true, true),
+      ...tableSorter('date', 'date'),
     },
     {
       title: '...',
@@ -123,17 +112,40 @@ const ExpenseSheet = (props) => {
       ),
     },
   ];
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const getData = () => {
+    getExpenseSheets().then((res) => {
+      if (res.success) {
+        setExpenseSheet(res.data);
+      }
+    })
+  }
+
+  const handleDelete = (id, index) => {
+    const url = '/expense-sheets';
+    const { history } = props;
+    generalDelete(history, url, id, index, expenseSheet).then((res) => {
+      if (res.success) {
+        setExpenseSheet([...res.filterData]);
+      }
+    });
+    
+	}
   
   const onSelectChange = (newSelectedRowKeys, selectedRow) => {
     let checkDisable = false;
     selectedRow.forEach(el=>{
-      if(el.status !== 'Saved'){
+      if(el.status !== 'SV'){
         checkDisable = true
       }
     })
     
     setDisableSubmit(checkDisable);
-    setSelectedRowKeys(newSelectedRowKeys);
+    setSelectedRows({keys:newSelectedRowKeys, data: selectedRow});
   };
 
   const closeModal = () => {
@@ -145,7 +157,6 @@ const ExpenseSheet = (props) => {
     if (index >= 0) {
 			exp[index] = data; 
 		} else {
-			data.id = expenseSheet.length + 1; // when-api remove this
 			exp = [...expenseSheet, data]
 		}
     
@@ -154,16 +165,52 @@ const ExpenseSheet = (props) => {
   }
 
   const rowSelection = {
-    selectedRowKeys,
+    selectedRows,
     onChange: onSelectChange,
   };
 
   const onOpenModal = (open) =>{
-    getListOfExpenses().then(res=>{
+    //send true if you need to call expenses for expense sheet
+    getListOfExpenses(true).then(res=>{
       if (res.success){
         setExpenses(res.data)
       }
       setOpenModal(open)
+    })
+  }
+
+  const multiAction = ()=> {
+    const {data =[] } = selectedRows
+    let length = data.length
+    let content = <div>{ 
+      data.map(({label, projectName, projectType}, index) =>(
+            <div key={index}>
+                {label}{length -1 > index && ','  }  
+            </div> 
+        )) 
+    }</div>
+    const modal = Modal.confirm({
+      title: `Do you wish to submit Certificate${length >1 ? 's': ''} for`,
+      icon: <CheckCircleOutlined />,
+      content: content,
+      // okButtonProps: {danger: stage === 'unapprove'??true},
+      okText: 'Okay',
+      cancelText: 'Cancel',
+      onOk:()=>{
+        //   this.actionTimeSheet(stage) 
+          OutcomeAction()
+          modal.destroy();
+      }
+    });
+  }
+
+  const OutcomeAction = () =>{
+    const {keys =[] } = selectedRows
+    expenseSheetActions(`/${keys[0]}/submit`).then(res=>{
+        if (res.success){
+            // data[index]['isApproved'] = true
+            getData()
+        }
     })
   }
 
@@ -203,9 +250,9 @@ const ExpenseSheet = (props) => {
                 <Button 
                     type="primary" 
                     className={'success'}
-                    disabled={ (disableSubmit || selectedRowKeys.length<1)}
+                    disabled={ (disableSubmit || selectedRows['keys']?.length<1)}
                     // disabled={ sRequest.keys.length<1 || !permissions['APPROVAL'] || sRequest.cantReject}
-                    // onClick={()=>this.multiAction('Reject')}
+                    onClick={()=>multiAction()}
                 > 
                     Submit
                 </Button>

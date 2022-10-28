@@ -92,3 +92,19 @@ export const addExpenseInSheet = (id, data) => {
       };
     });
 };
+
+export const expenseSheetActions = (crud, data) => {
+  messageAlert.loading({ content: 'Loading...', key: crud })
+  return axios
+      .post(`${url}${crud}`, data, {headers:headers()})
+      .then((res) => {
+          const { success, data, message } = res.data;
+          jwtExpired(message)
+          messageAlert.success({ content: message, key: crud})
+          setToken(res?.headers?.authorization)
+          return { success, data }
+      })
+      .catch((err) => {
+          return apiErrorRes(err, 1, 5)
+      });
+};

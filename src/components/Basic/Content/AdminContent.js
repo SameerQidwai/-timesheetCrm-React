@@ -54,7 +54,7 @@ import Training from '../../../pages/Trainings/Training';
 
 // shahbaz work END
 import Expense from '../../../pages/Expenses/Expense';
-import ExpSheetAdminView from '../../../pages/Expenses/ExpenseApproval';
+import ExpenseApproval from '../../../pages/Expenses/ExpenseApproval';
 import ExpenseSheet from '../../../pages/Expenses/ExpenseSheet';
 
 // import TimeSheetHTML from "../../Core/TimeSheetHTML"
@@ -347,7 +347,7 @@ const pageLinks = [
   },
   {
     component: ExpenseSheet,
-    link: '/expenseSheet',
+    link: '/expense-sheets',
     permission: 'ALLOWED',
   },
   {
@@ -356,8 +356,8 @@ const pageLinks = [
     permission: 'ALLOWED',
   },
   {
-    component: ExpSheetAdminView,
-    link: '/expSheetAdminView',
+    component: ExpenseApproval,
+    link: '/expense-sheet-approval',
     permission: 'ALLOWED',
   },
 ];

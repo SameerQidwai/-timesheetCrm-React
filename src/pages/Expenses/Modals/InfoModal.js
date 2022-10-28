@@ -166,14 +166,13 @@ const InfoModal = ({ visible, close, callBack }) => {
     const onFinish = (data) => {
 
         let { basic } = data;
-        // basic.attachments = fileList.map((file, index) => {
-        //     return file.fileId;
-        // });
+        basic.attachments = fileList.map((file, index) => {
+            return file.fileId;
+        });
         console.log("basic-->", basic)
         if (visible === true) {
             addExpense(basic).then((res) => {
                 if (res.success) {
-                    console.log("res-->", res);
                     callBack(res.data);
                 } else {
                     console.log("err",res)
@@ -182,7 +181,7 @@ const InfoModal = ({ visible, close, callBack }) => {
         } else {
             editExpense(visible.id,basic).then((res) => { 
                 if (res.success) {
-                    console.log("res-->", res);
+                    console.log("res-->", res.data, visible?.index);
                     callBack(res.data, visible?.index);
                 } else {
                     console.log("err",res)

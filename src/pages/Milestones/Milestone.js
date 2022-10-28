@@ -233,18 +233,7 @@ class Milestone extends Component {
   };
 
   render() {
-    const {
-      desc,
-      data,
-      infoModal,
-      editMile,
-      proId,
-      permissions,
-      columns,
-      customUrl,
-      pDates,
-      work,
-    } = this.state;
+    const { desc, data, infoModal, editMile, proId, permissions, columns, customUrl, pDates, work, } = this.state;
     return (
       <>
         <Descriptions

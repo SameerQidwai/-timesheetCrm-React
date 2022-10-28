@@ -45,17 +45,18 @@ export const addAttachments = (targetType, targetId, data) => {
                 let { success, data, message } = res.data;
                 jwtExpired(message)
                 data = {
-                    id: data[0].id,
-                    createdAt: data[0].createdAt,
-                    fileId: data[0].fileId,
-                    status: data[0].status,
-                    targetId: data[0].targetId,
-                    targetType: data[0].type,
-                    uid: data[0]&&data[0].file.uniqueName,
-                    name: data[0]&&data[0].file.originalName,
-                    type: data[0]&&data[0].file.type,
-                    url: `${Api}/files/${data[0]&&data[0].file.uniqueName}`,
-                    thumbUrl: thumbUrl(data[0].file.type)
+                    id: data[0]?.id,
+                    createdAt: data[0]?.createdAt,
+                    fileId: data[0]?.fileId,
+                    status: data[0]?.status,
+                    targetId: data[0]?.targetId,
+                    targetType: data[0]?.type,
+                    uid: data[0]?.file?.uniqueName,
+                    name: data[0]?.file?.originalName,
+                    type: data[0]?.file?.type,
+                    url: `${Api}/files/${data[0]?.file?.uniqueName}`,
+                    userId: data[0]?.file?.userId,
+                    thumbUrl: thumbUrl(data[0]?.file?.type)
                 }
                 setToken(res?.headers?.authorization)
                 return { success, data };

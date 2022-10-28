@@ -71,8 +71,8 @@ class Attachments extends Component {
                     })
                 }else{
                     console.log("Eroor: ", err);
-                    const error = new Error("Some error");
                     this.setState({loading: false})
+                    const error = new Error("Some error");
                     onError({ err });
                 }
             })
@@ -81,6 +81,7 @@ class Attachments extends Component {
     onRemove = (file) => {
         const { loginId } = this.state
         const { onHold } = this.props
+        console.log(file)
         if (file.userId === loginId && !onHold){
             delAttachment(file.id).then(res=>{
                 if(res.success){

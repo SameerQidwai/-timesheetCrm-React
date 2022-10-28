@@ -61,7 +61,7 @@ const listData = [
     {
         text: "Expense Sheet",
         icon: <SnippetsOutlined/>,
-        link: "/expenseSheet",
+        link: "/expense-sheets",
         key: "EXPENSE SHEET ",
         permissions: {module: "TIMESHEETS", key: 'READ'}
     },
@@ -75,7 +75,7 @@ const listData = [
     {
         text: "Expense Sheet Admin View",
         icon: <SolutionOutlined  />,
-        link: "/expSheetAdminView",
+        link: "/expense-sheet-approval",
         key: "EXPENSE SHEET ADMIN VIEW",
         permissions: {module: "TIMESHEETS", key: 'READ'}
     },
