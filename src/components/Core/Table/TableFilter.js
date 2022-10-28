@@ -5,19 +5,22 @@ import { SearchOutlined } from "@ant-design/icons";
 import moment from "moment";
 import { localStore } from '../../../service/constant';
 
-const ATable = ({size= 'small', columns=[], dataSource=[], rowKey='id', rowSelection=false, bordered=true, className, defaultClass, pagination, rowClassName})=>{
+
+//an idea for small data 
+const ATable = ({size= 'small', title, columns=[], dataSource=[], rowKey='id', rowSelection=false, bordered=true, className= 'fs-small' , pagination= false, rowClassName})=>{
     return <Table
+    title={title}
     size={size}
     bordered={bordered}
-    className={`fs-small ${className}` }
+    className={className }
     rowClassName={rowClassName}
-    pagination={pagination !== false( 
+    pagination={
         pagination ?? {
             pageSize: localStore().pageSize, 
             hideOnSinglePage: true, 
             responsive: true, 
             size: 'small'
-        })
+        }
     }
     rowKey={data=> data[rowKey]}
     rowSelection={rowSelection}
@@ -321,3 +324,5 @@ export const FiltertagsNew = ({filters, filterFunction}) =>{ //should make it wo
         })}
     </Col>
 }
+
+export default ATable
