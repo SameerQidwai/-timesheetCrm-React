@@ -125,9 +125,10 @@ const Expense = (props) => {
   const callBack = (data, index) => {
     let exp = expenseData;
     if (index >= 0) {
-      exp[index] = data;
+      let findIndex = expenseData.findIndex(el=> el.id === data.id)
+      exp[findIndex] = data;
     } else {
-      // exp = [...expenseData, data]
+      exp = [...expenseData, data]
     }
     setExpenseData([...exp]);
     setOpenModal(false);
@@ -194,7 +195,7 @@ const Expense = (props) => {
                 type="primary"
                 size="small"
                 onClick={() => {
-                setOpenExpenseModal(true);
+                  setOpenExpenseModal(true);
                 }}
                 // disabled={!permissions['ADD']}
             >

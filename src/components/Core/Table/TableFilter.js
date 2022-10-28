@@ -7,7 +7,21 @@ import { localStore } from '../../../service/constant';
 
 
 //an idea for small data 
-const ATable = ({size= 'small', title, columns=[], dataSource=[], rowKey='id', rowSelection=false, bordered=true, className= 'fs-small' , pagination= false, rowClassName})=>{
+const ATable = ({size= 'small', title, columns=[], dataSource=[], rowKey='id', rowSelection=false, bordered=true, className= 'fs-small' , pagination, rowClassName})=>{
+    let {
+        current: pageNo =1,
+        onChange: onPaginationChange = false,
+        pageSize = localStore().pageSize,
+        hideOnSinglePage = true,
+        responsive: paginationResponsive = true,
+        size: paginationSize = 'small',
+        disabled: paginationDisabled = false,
+    } = pagination ?? {};
+
+    const [pageNoState, setpageNoState] = useState(pageNo);
+    const [pageSizeState, setPageSizeState] = useState(pageSize);
+
+
     return <Table
     title={title}
     size={size}
@@ -15,11 +29,21 @@ const ATable = ({size= 'small', title, columns=[], dataSource=[], rowKey='id', r
     className={className }
     rowClassName={rowClassName}
     pagination={
-        pagination ?? {
-            pageSize: localStore().pageSize, 
-            hideOnSinglePage: true, 
-            responsive: true, 
-            size: 'small'
+        {
+            onChange:  (current, pageSize) =>{
+                if (onPaginationChange){
+                    onPaginationChange(current, pageSize)
+                }else{
+                    setpageNoState(current);
+                    setPageSizeState(pageSize)
+                }
+            },
+            current: pageNoState,
+            pageSize: pageSizeState, 
+            hideOnSinglePage, 
+            responsive: paginationResponsive, 
+            size: paginationSize,
+            disabled: paginationDisabled
         }
     }
     rowKey={data=> data[rowKey]}

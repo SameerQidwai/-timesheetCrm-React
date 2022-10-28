@@ -218,7 +218,6 @@ class CalendarHolidays extends Component {
   Callback = (vake) => {
     const { calendarId } = this.state;
     // this will work after I get the Object
-    console.log(vake);
     const obj = {
       calendarId: calendarId,
       holidayTypeId: vake?.obj.holidayTypeId,
@@ -241,7 +240,6 @@ class CalendarHolidays extends Component {
   };
 
   getRecord = (data) => {
-    console.log(data);
     const vars = {
       id: data.id,
       holidayTypeId: data.holidayTypeId,
