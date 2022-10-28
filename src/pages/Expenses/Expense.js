@@ -15,7 +15,7 @@ const Expense = (props) => {
 
     
   const [openModal, setOpenModal] = useState(false);
-  const [openExpenseModal, setOpenExpenseModal] = useState(false);
+  // const [openExpenseModal, setOpenExpenseModal] = useState(false);
   const [expenseData, setExpenseData] = useState([]);
     
   const columns = [
@@ -39,16 +39,19 @@ const Expense = (props) => {
       title: 'Date',
       dataIndex: 'date',
       render: (text) => formatDate(text, true, true),
+      align: 'center',
       ...tableSorter('date', 'date'),
     },
     {
       title: 'Amount',
       dataIndex: 'amount',
+      align: 'center',
       ...tableSorter('amount', 'number'),
     },
     {
       title: 'Files',
       dataIndex: 'files',
+      align: 'center',
       render: () => (
         <Text>View</Text>
       )
@@ -121,31 +124,30 @@ const Expense = (props) => {
     })
   }
 
-
   const callBack = (data, index) => {
     let exp = expenseData;
     if (index >= 0) {
       exp[index] = data;
     } else {
-      // exp = [...expenseData, data]
+//???      // exp = [...expenseData, data]
     }
     setExpenseData([...exp]);
     setOpenModal(false);
   }
   
   // expense sheet onsubmit
-  const sheetCallBack = (data) => {
-    console.log({ 'Expense seheet data': data })
-    setOpenExpenseModal(false)
-  }
+  // const sheetCallBack = (data) => {
+  //   console.log({ 'Expense seheet data': data })
+  //   setOpenExpenseModal(false)
+  // }
     
   const closeModal = () => {
   setOpenModal(false);
   }
 
-  const closeExpenseModal = () => {
-      setOpenExpenseModal(false);
-  }
+  // const closeExpenseModal = () => {
+  //     setOpenExpenseModal(false);
+  // }
 
   const handleDelete = (id, index) => {
     const url = '/expenses';
@@ -189,7 +191,7 @@ const Expense = (props) => {
           />
         </Col>
     </Row>
-        <Col style={{display:"flex",flexDirection:"row",justifyContent:"flex-end"}}>
+        {/* <Col style={{display:"flex",flexDirection:"row",justifyContent:"flex-end"}}>
             <Button
                 type="primary"
                 size="small"
@@ -200,20 +202,20 @@ const Expense = (props) => {
             >
                 <PlusSquareOutlined /> Create Expense Sheet
             </Button>
-        </Col>
+        </Col> */}
               
     {openModal&&<InfoModal
       visible={openModal}
       close={closeModal}
       callBack={callBack}
     />}
-    {openExpenseModal && <ExpenseSheetModal
+    {/* {openExpenseModal && <ExpenseSheetModal
       visible={openExpenseModal}
       expenses= {expenseData}
       close={closeExpenseModal}
       callBack={sheetCallBack}
     />
-    }     
+    }      */}
   </>
   )
 }

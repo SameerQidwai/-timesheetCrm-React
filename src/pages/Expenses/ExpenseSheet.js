@@ -29,13 +29,11 @@ const ExpenseSheet = (props) => {
     {
       title: 'Title',
       dataIndex: 'label',
-      align: 'center',
       ...tableSorter('label', 'string'),
     },
     {
       title: 'Project',
       dataIndex: 'projectName',
-      align: 'center',
       ...tableSorter('projectName', 'string'),
     },
     {

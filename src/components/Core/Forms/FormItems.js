@@ -215,6 +215,7 @@ class FormItems extends Component {
                         options={data}
                         size={size}
                         style={style}
+                        disabled={disabled}
                         onChange={onChange}
                     />
                 );
@@ -225,6 +226,7 @@ class FormItems extends Component {
                         options={data}
                         size={size}
                         style={style}
+                        disabled={disabled}
                         onChange={onChange}
                     />
                 );
