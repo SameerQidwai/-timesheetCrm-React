@@ -1,20 +1,26 @@
-import { Button, Checkbox, Col, Form, Modal, Row, Table, Typography } from 'antd'
+import { Button, Checkbox, Col, Form, Modal, Row, Table, Typography, Upload } from 'antd'
+import { PlusOutlined } from "@ant-design/icons"; //Icons
 import React, { useEffect, useState } from 'react'
 import { formatDate, localStore } from '../../../service/constant';
 import FormItems from '../../../components/Core/Forms/FormItems';
 import { getProjects } from '../../../service/constant-Apis';
 // import { expensesData as dummyExpensesData } from '../../DummyData';
 import { addExpenseInSheet, addExpenseSheet, editExpenseSheet } from '../../../service/expenseSheet-Apis';
+import { addFiles } from '../../../service/Attachment-Apis';
 const {Text, Title} = Typography;
 
-const ExpenseSheetModal = ({ visible, close, expenses, callBack }) => {
+const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) => {
   
+
   const [form] = Form.useForm();
-  const [filteredExpenses, setfilteredExpenses] = useState();
+  const [filteredExpenses, setfilteredExpenses] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [progress, setProgress] = useState();
+  const [fileList, setFileList] = useState([]);
   // fields of form
   const [basicFields, setBasicFields] = useState([
-  {
+    {
+      
       Placeholder: "Title",
       rangeMin: true,
       fieldCol: 12,
@@ -30,7 +36,8 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack }) => {
       type: "Text",
       // itemStyle:{marginBottom:'10px'},
   },
-  {
+    {
+      disabled: adminView,  
       object: "basic",
       fieldCol: 12,
       key: "label",
@@ -43,7 +50,8 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack }) => {
       // }
 
   },
-  {
+    {
+      disabled: adminView,  
       object: "basic",
       fieldCol: 12,
       key: "projectId", // when-api change it to projectId
@@ -52,6 +60,26 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack }) => {
       data: [],
       type: "Select",
     onChange: (projectId) => { selectedProjectExpenses(projectId) }
+  },
+  {
+      disabled : visible?.projectId === null,  
+      object: "basic",
+      fieldCol: 1,
+      key: "isBillable",
+      size: "small",
+      initialValue: undefined,
+      type: "Checkbox",
+      valuePropName: "checked",
+      itemStyle:{marginTop:'10px', display : adminView ?? 'none' },
+  },
+    {
+      
+      Placeholder: "Billable",
+      // rangeMin: true,
+      fieldCol: 5,
+      size: "small",
+      type: "Text",
+      itemStyle:{marginTop:'10px', display : adminView ?? 'none'},
   },
   ]);
   
@@ -115,9 +143,10 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack }) => {
   ];  
 
   useEffect(() => {
-    console.log(visible)
     if (visible !== true) {
+      let {attachments = []} = visible
       form.setFieldsValue({ basic: visible })
+      setFileList(attachments)
     }
     getData()
 
@@ -130,7 +159,12 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack }) => {
         basic[3].data = res?.data
         setBasicFields([...basic]); 
       }
-      selectedProjectExpenses(visible?.projectId)
+      if (adminView) {
+        setfilteredExpenses(visible?.expenseSheetExpenses)
+      } else {
+        selectedProjectExpenses(visible?.projectId)
+      }
+
     })
   }
   
@@ -138,7 +172,9 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack }) => {
   const selectedProjectExpenses = (selectedProject) => {
     let projectId = selectedProject
     let codes = visible?.expenseSheetExpensesIds ?? []
-    let backupExpenses = expenses
+    let backupExpenses =  expenses
+
+    // console.log("backupExpenses", backupExpenses);
     let filteredProject = backupExpenses?.filter((ele) => {
       return ele.projectId == projectId;
     });
@@ -160,8 +196,11 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack }) => {
 
   const onFinish = (value) => {
     let { basic } = value;
+    basic.attachments = fileList.map((file, index) => {
+        return file.fileId;
+    });
     basic.expenseSheetExpenses = selectedRowKeys
-    basic.attachments= []
+    // basic.attachments= []
     if (visible?.id){
       editSheet(visible.id, basic)
     }else{
@@ -191,46 +230,110 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack }) => {
     })
   }
 
+  const handleUpload = async option=>{
+    const { onSuccess, onError, file, onProgress } = option;
+    const formData = new FormData();
+    const  config = {
+        headers: {"content-type": "multipart/form-data"},
+        onUploadProgress: event =>{
+            const percent = Math.floor((event.loaded / event.total) * 100);
+            // this.setState({progress: percent});
+            setProgress(percent);
+            if (percent === 100) {
+            //   setTimeout(() => this.setState({progres: 0}), 1000);
+              setTimeout(() => setProgress(0), 1000);
+            }
+            onProgress({ percent: (event.loaded / event.total) * 100 });
+          }
+        }
+        formData.append('files', file)
+        addFiles(formData, config).then((res,err)=>{
+            if (res.success){
+                onSuccess("Ok");
+                setFileList([...fileList, res.file])
+                    // fileIds: [fileIds, res.file.fileId]
+                // })
+            }else{
+                console.log("Eroor: ", err);
+                const error = new Error("Some error");
+                onError({ err });
+            }
+        })
+  }
+
+  const onRemove = (file) => {
+    const index = fileList.indexOf(file);
+    fileList.splice(index, 1);
+    setFileList([...fileList]);
+
+  }
 
   return (
     <Modal
-        title={visible !== true ? "Edit Expense Sheet" : "Add Expense Sheet"}
-        visible={visible}
-        width={850}
-        onCancel={close}
+      title={`${adminView ? "Approve" : visible === true ? "Add" : "Edit"} Expense Sheet`}
+      visible={visible}
+      width={850}
+      onCancel={close}
       okText={"Save"}
       // adminView Prop add
-        okButtonProps={ visible.adminView ? { style: { display: 'none' } } : { htmlType: 'submit', form: 'my-form' }}
+      okButtonProps={{ htmlType: 'submit', form: 'my-form', disabled: (visible?.projectId === null && adminView) }}
     >
-      <Row gutter={[0,20]}>
-        <Col span={24}>
-          <Form
-              id={'my-form'}
-              form={form}
-              // ref={formRef}
-              onFinish={onFinish}
-              scrollToFirstError={true}
-              size="small"
-              layout="inline"
+      <Form
+          id={'my-form'}
+          form={form}
+          // ref={formRef}
+          onFinish={onFinish}
+          scrollToFirstError={true}
+          size="small"
+          layout="inline"
+      >
+        <Row gutter={[0, 20]}>
+          {/* need change  */}
+          <Col span={24} style={{display:"flex", flexWrap:"wrap"}}>
+              <FormItems FormFields={basicFields} />         
+          </Col>
+          <Col span={24}>
+              <Table
+              size={'small'}
+              bordered
+              className='fs-small'
+              // pagination={{pageSize: localStore().pageSize}}
+              pagination={false}
+              rowKey={data => data.id}
+              scroll={{
+                // x: 1500,
+                y: 250,
+              }}
+        // adminView Prop add
+              rowSelection={!visible.adminView && rowSelection}
+              columns={columns}
+              dataSource={filteredExpenses}
+              
+              // onChange={onChange} 
+              />
+          </Col>
+          <Col span={24}>
+          <Text style={{marginTop: 10, marginBottom: 2}}>Attachments</Text>
+            <Upload
+              disabled = {adminView}  
+              customRequest={handleUpload}
+              // listType="picture"
+              listType="picture-card"
+              maxCount={4}
+              fileList={fileList}
+              onRemove= {onRemove}
+              // disabled={readOnly}
           >
-                  <FormItems FormFields={basicFields} />
-          </Form>
-        </Col>
-        <Col span={24}>
-            <Table
-            size={'small'}
-            bordered
-            className='fs-small'
-            pagination={{pageSize: localStore().pageSize}}
-            rowKey={data => data.id}
-      // adminView Prop add
-            rowSelection={!visible.adminView && rowSelection}
-            columns={columns}
-            dataSource={filteredExpenses}
-            // onChange={onChange} 
-            />
-        </Col>
-      </Row>
+              {fileList.length < 4 &&
+                  <div style={{marginTop: 10}} >
+                      <PlusOutlined />
+                      <div style={{ marginTop: 8 }}>Upload</div>
+                  </div>
+              }
+          </Upload>
+          </Col>
+        </Row>
+      </Form>
     </Modal>
   )
 }

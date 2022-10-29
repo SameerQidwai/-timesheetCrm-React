@@ -29,13 +29,11 @@ const ExpenseSheet = (props) => {
     {
       title: 'Title',
       dataIndex: 'label',
-      align: 'center',
       ...tableSorter('label', 'string'),
     },
     {
       title: 'Project',
       dataIndex: 'projectName',
-      align: 'center',
       ...tableSorter('projectName', 'string'),
     },
     {
@@ -171,7 +169,7 @@ const ExpenseSheet = (props) => {
 
   const onOpenModal = (open) =>{
     //send true if you need to call expenses for expense sheet
-    getListOfExpenses(true).then(res=>{
+    getListOfExpenses(true, open?.id).then(res=>{
       if (res.success){
         setExpenses(res.data)
       }
@@ -206,7 +204,8 @@ const ExpenseSheet = (props) => {
 
   const OutcomeAction = () =>{
     const {keys =[] } = selectedRows
-    expenseSheetActions(`/${keys[0]}/submit`).then(res=>{
+    let obj={sheets: keys}
+    expenseSheetActions(`/submitMany`, obj).then(res=>{
         if (res.success){
             // data[index]['isApproved'] = true
             getData()

@@ -2,9 +2,11 @@ import { Button, Col, DatePicker, Dropdown, Menu, Popconfirm, Row, Select, Table
 import { SettingOutlined, } from '@ant-design/icons'; //Icons
 import React, { useEffect, useState } from 'react'
 import { getProjects } from '../../service/constant-Apis';
+import { getExpenseSheets } from '../../service/expenseSheet-Apis';
 import { formatDate, localStore } from '../../service/constant';
 // import { expensesData as dummyExpensesData } from '../DummyData';
 import ExpenseSheetModal from './Modals/ExpenseSheetModal';
+import { tableSorter } from '../../components/Core/Table/TableFilter';
 
 const { Title } = Typography
 
@@ -18,7 +20,7 @@ const ExpenseApproval = () => {
       title: 'abc',
       project: {label: "defiti"},
       amount: 70,
-      status: "saved",
+      status: "Submitted",
       submittedAt: "12-05-2022"
   
     },
@@ -37,7 +39,7 @@ const ExpenseApproval = () => {
       title: 'ghi',
       project: {label: "gifti"},
       amount: 70,
-      status: "saved",
+      status: "Submitted",
       submittedAt: "12-05-2022"
       },
     {
@@ -46,17 +48,17 @@ const ExpenseApproval = () => {
       title: 'jkl',
       project: {label: 'mouse'},
       amount: 89,
-      status: "saved",
+      status: "Submitted",
       submittedAt: "12-05-2022"
       },
   ];
 
   const [projects, setProjects] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [expenseData, setExpenseData] = useState(data);
+  const [expenseData, setExpenseData] = useState();
   const [openModal, setOpenModal] = useState(false);
   // const [adminView, setAdminView] = useState(false);
-
+  const [disableSubmit, setDisableSubmit] = useState(true);
   const [queryRequest, setQueryRequest] = useState({
     startDate: formatDate(new Date()).startOf("month"),
     endDate: formatDate(new Date()).endOf("month")});  
@@ -65,51 +67,38 @@ const ExpenseApproval = () => {
   const columns = [
     {
       title: 'Code',
-      dataIndex: 'code',
-      sorter: {
-        compare: (a, b) => a.code - b.code,
-        multiple: 4,
-      },
+      dataIndex: 'id',
+      render: (text)=> `00${text}`, 
+      ...tableSorter('id', 'number'),
+    
     },
     {
       title: 'Title',
-      dataIndex: 'title',
-      sorter: {
-        compare: (a, b) => a.title - b.title,
-        multiple: 3,
-      },
+      dataIndex: 'label',
+      ...tableSorter('label', 'string'),
     },
     {
       title: 'Project',
-      dataIndex: ['project', 'label'], // when-api change it to [project,name] or projectName
-      sorter: {
-        compare: (a, b) => a.project?.label - b.project?.label,
-        multiple: 2,
-      },
+      dataIndex: 'projectName',
+      ...tableSorter('projectName', 'string'),
     },
     {
       title: 'Amount',
       dataIndex: 'amount',
-      sorter: {
-        compare: (a, b) => a.amount - b.amount,
-        multiple: 1,
-      },
+      align: 'center',
+      ...tableSorter('amount', 'number'),
     },
     {
       title: 'Status',
       dataIndex: 'status',
-      sorter: {
-        compare: (a, b) => a.status - b.status,
-        multiple: 1,
-      },
+      align: 'center',
+      ...tableSorter('status', 'string')
     },
     {
       title: 'Submitted At',
       dataIndex: 'submittedAt',
-      sorter: {
-        compare: (a, b) => a.submittedAt - b.submittedAt,
-        multiple: 1,
-      },
+      align: 'center',
+      ...tableSorter('submittedAt', 'string')    
     },
     {
       title: '...',
@@ -162,11 +151,24 @@ const ExpenseApproval = () => {
     },
   ];
 
-  const onSelectChange = (newSelectedRowKeys) => {
+  const onSelectChange = (newSelectedRowKeys, selectedRow) => {
     console.log('selectedRowKeys changed: ', selectedRowKeys);
+    let checkRejectDisable = false;
+    let checkApproveDisable = false;
+    selectedRow.forEach(el=>{
+      if(el.status !== 'Submitted'){
+        checkRejectDisable = true;
+      } 
+      if(el.status !== 'Rejected'){
+        checkApproveDisable = true  
+      } 
+    })
+    
+    setDisableSubmit([checkRejectDisable,checkApproveDisable]);
     setSelectedRowKeys(newSelectedRowKeys);
   };
 
+  console.log("di",disableSubmit)
   const rowSelection = {
     selectedRowKeys,
     onChange: onSelectChange,
@@ -179,6 +181,15 @@ const ExpenseApproval = () => {
         setProjects(res.data); 
       }
         
+    })
+  }
+
+  const gettingExpenseSheets = () => {
+    getExpenseSheets().then((res) => {
+      if (res.success) {
+        console.log("res->", res.data)
+        setExpenseData(res.data); 
+      }
     })
   }
 
@@ -199,13 +210,14 @@ const ExpenseApproval = () => {
   
   useEffect(() => {
     gettingProject();
+    gettingExpenseSheets();
   }, []);
   
   return (
     <>
     <Row justify='space-between'>
         <Col span={5}>
-          <Title level={4}>Expenses Sheets</Title>
+          <Title level={4}>Expenses Sheets Approval</Title>
         </Col>
         <Col span={3}>
         <Select
@@ -289,7 +301,7 @@ const ExpenseApproval = () => {
                 <Button 
                     type="primary" 
                     danger
-                    // disabled={ selectedRowKeys.status === 'Rejected'}
+                    disabled={ (disableSubmit[0] || selectedRowKeys.length<1)}
                     // disabled={ sRequest.keys.length<1 || !permissions['APPROVAL'] || sRequest.cantReject}
                     // onClick={()=>this.multiAction('Reject')}
                 > 
@@ -299,7 +311,7 @@ const ExpenseApproval = () => {
             <Col>
                 <Button
                     className={'success'}
-                    // disabled={ sTimesheet.keys.length<1 || !permissions['APPROVAL'] || sTimesheet.cantApprove}
+                    disabled={ (disableSubmit[1] || selectedRowKeys.length<1)}
                     // onClick={()=> this.multiAction('Approve')}
                 >
                     Approve
@@ -311,6 +323,7 @@ const ExpenseApproval = () => {
       {openModal&&<ExpenseSheetModal
         visible={openModal}
         close={closeModal}
+        adminView= {true}
         // callBack={callBack}
       />}   
     </>

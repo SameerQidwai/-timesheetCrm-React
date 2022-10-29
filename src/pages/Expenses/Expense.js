@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Checkbox, Col, Dropdown, Menu, Popconfirm, Row, Table, Typography } from 'antd';
+import { Button, Checkbox, Col, Dropdown, Menu, Popconfirm, Popover, Row, Table, Typography, Upload } from 'antd';
 import { SettingOutlined, PlusSquareOutlined, } from '@ant-design/icons'; //Icons
 import InfoModal from './Modals/InfoModal';
-import { formatDate, localStore } from '../../service/constant';
+import { Api, formatDate, localStore } from '../../service/constant';
 import ExpenseSheetModal from './Modals/ExpenseSheetModal';
 import { expensesData } from './DummyData';
 import { delExpense, getListOfExpenses } from '../../service/expense-Apis';
@@ -15,7 +15,7 @@ const Expense = (props) => {
 
     
   const [openModal, setOpenModal] = useState(false);
-  const [openExpenseModal, setOpenExpenseModal] = useState(false);
+  // const [openExpenseModal, setOpenExpenseModal] = useState(false);
   const [expenseData, setExpenseData] = useState([]);
     
   const columns = [
@@ -39,19 +39,41 @@ const Expense = (props) => {
       title: 'Date',
       dataIndex: 'date',
       render: (text) => formatDate(text, true, true),
+      align: 'center',
       ...tableSorter('date', 'date'),
     },
     {
       title: 'Amount',
       dataIndex: 'amount',
+      align: 'center',
       ...tableSorter('amount', 'number'),
     },
     {
       title: 'Files',
-      dataIndex: 'files',
-      render: () => (
-        <Text>View</Text>
-      )
+      dataIndex: 'attachments',
+      align: 'center',
+      render: (files, records, index) => {
+        // let urlFiles = records.attachments
+        //  urlFiles = urlFiles.map(el=>{el.url = `${Api}/${el.url}`; return el})
+        // console.log(urlFiles)
+        let display = files.length
+        return display ? <Popover
+          title={`00${records.id}`}
+          destroyTooltipOnHide
+          overlayStyle={{maxWidth: 300}}
+          trigger="hover"
+          content={<div>
+             <Upload
+                listType="text"
+                maxCount={4}
+                fileList={files}
+                disabled
+              />
+          </div>}
+        >
+          <Text underline italic>View</Text>
+        </Popover>: null
+      }
     },
     {
       title: 'i',
@@ -121,7 +143,6 @@ const Expense = (props) => {
     })
   }
 
-
   const callBack = (data, index) => {
     let exp = expenseData;
     if (index >= 0) {
@@ -135,18 +156,18 @@ const Expense = (props) => {
   }
   
   // expense sheet onsubmit
-  const sheetCallBack = (data) => {
-    console.log({ 'Expense seheet data': data })
-    setOpenExpenseModal(false)
-  }
+  // const sheetCallBack = (data) => {
+  //   console.log({ 'Expense seheet data': data })
+  //   setOpenExpenseModal(false)
+  // }
     
   const closeModal = () => {
   setOpenModal(false);
   }
 
-  const closeExpenseModal = () => {
-      setOpenExpenseModal(false);
-  }
+  // const closeExpenseModal = () => {
+  //     setOpenExpenseModal(false);
+  // }
 
   const handleDelete = (id, index) => {
     const url = '/expenses';
@@ -190,7 +211,7 @@ const Expense = (props) => {
           />
         </Col>
     </Row>
-        <Col style={{display:"flex",flexDirection:"row",justifyContent:"flex-end"}}>
+        {/* <Col style={{display:"flex",flexDirection:"row",justifyContent:"flex-end"}}>
             <Button
                 type="primary"
                 size="small"
@@ -201,20 +222,20 @@ const Expense = (props) => {
             >
                 <PlusSquareOutlined /> Create Expense Sheet
             </Button>
-        </Col>
+        </Col> */}
               
     {openModal&&<InfoModal
       visible={openModal}
       close={closeModal}
       callBack={callBack}
     />}
-    {openExpenseModal && <ExpenseSheetModal
+    {/* {openExpenseModal && <ExpenseSheetModal
       visible={openExpenseModal}
       expenses= {expenseData}
       close={closeExpenseModal}
       callBack={sheetCallBack}
     />
-    }     
+    }      */}
   </>
   )
 }

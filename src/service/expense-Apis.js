@@ -29,9 +29,9 @@ export const addExpense = (data) => {
       });
 };
 
-export const getListOfExpenses = (forSheets) => {
+export const getListOfExpenses = (forSheets, expenseId) => {
   return axios
-    .get(`${url}${forSheets ? '/available': ''}`, { headers: headers() })
+    .get(`${url}${forSheets ? '/available': ''}${expenseId ? `?sheetId=${expenseId}`: ''}`, { headers: headers() })
     .then((res) => {
       const { success, data, message } = res.data;
       jwtExpired(message);

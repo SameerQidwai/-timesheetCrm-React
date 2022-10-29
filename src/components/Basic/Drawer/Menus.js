@@ -73,10 +73,10 @@ const listData = [
         permissions: {module: "TIMESHEETS", key: 'READ'}
     },
     {
-        text: "Expense Sheet Admin View",
+        text: "Expense Approval",
         icon: <SolutionOutlined  />,
         link: "/expense-sheet-approval",
-        key: "EXPENSE SHEET ADMIN VIEW",
+        key: "EXPENSE Approval",
         permissions: {module: "TIMESHEETS", key: 'READ'}
     },
     {

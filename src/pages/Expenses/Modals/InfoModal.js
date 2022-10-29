@@ -5,7 +5,7 @@ import FormItems from '../../../components/Core/Forms/FormItems'
 
 import { getOrgPersons, getProjects } from '../../../service/constant-Apis'
 import { addFiles } from '../../../service/Attachment-Apis'
-import { formatDate } from '../../../service/constant'
+import { Api, formatDate } from '../../../service/constant'
 import { addExpense, editExpense } from '../../../service/expense-Apis'
 import { getListAlt as getExpenseTypeList } from '../../../service/expenseType-Apis';
 
@@ -127,6 +127,7 @@ const InfoModal = ({ visible, close, callBack }) => {
             fieldCol: 12,
             key: "projectId", 
             size: "small",
+            initialValue: null,
             // rules:[{ required: true, message: 'Project is Required' }],
             data: [],
             type: "Select",
@@ -179,9 +180,10 @@ const InfoModal = ({ visible, close, callBack }) => {
                 }
             })
         } else {
+            //for some reason projectId key was being removed if it is undefined
+            basic.projectId = basic.projectId ?? null
             editExpense(visible.id,basic).then((res) => { 
                 if (res.success) {
-                    console.log("res-->", res.data, visible?.index);
                     callBack(res.data, visible?.index);
                 } else {
                     console.log("err",res)
@@ -192,10 +194,16 @@ const InfoModal = ({ visible, close, callBack }) => {
 
     const getData = () => {
         Promise.all([getProjects(), getExpenseTypeList()]).then((res) => {
+            let {attachments = []} = visible
+            attachments = attachments.map(el=>{
+                el.url = `${Api}/${el.url}`;
+                return el
+            })
             let basic = basicFields
             basic[11].data = res[0].success ? res[0].data : ''
             basic[2].data = res[1].success ? res[1].data : ''
             setBasicFields([...basic]); 
+            setFileList([...attachments])
         })
     }
 
