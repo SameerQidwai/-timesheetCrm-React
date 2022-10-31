@@ -28,6 +28,8 @@ import {
 import AddRequestModal from './Modals/AddRequestModal';
 import { getRequests } from '../../service/leaveRequest-Apis';
 import LeaveBalance from '../../components/Core/LeaveBalance';
+import {Tag_s} from '../../components/Core/Custom/Index';
+
 import { generalDelete } from "../../service/delete-Api's";
 const { Title } = Typography;
 
@@ -104,7 +106,7 @@ class LeaveRequest extends Component {
           // note outside the tag
           return (
             <Space align="end">
-              <Tag color={STATUS_COLOR[text]}>{R_STATUS[text]}</Tag>
+              <Tag_s text={text}/>
               <Tooltip
                 placement="top"
                 title={records.note}

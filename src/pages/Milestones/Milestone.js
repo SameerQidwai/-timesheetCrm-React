@@ -20,6 +20,7 @@ import { getMilestones, getProjectDetail } from '../../service/Milestone-Apis';
 import { getRecord } from '../../service/opportunities';
 import { generalDelete } from "../../service/delete-Api's";
 import { tableSorter } from '../../components/Core/Table/TableFilter';
+import { Tag_s } from '../../components/Core/Custom/Index';
 
 const { Item } = Descriptions;
 
@@ -86,7 +87,7 @@ class Milestone extends Component {
           align: 'right',
           render: (text) => {
             let status = text?? 'CM'
-              return <Tag color={STATUS_COLOR[status]}> {R_STATUS[status]}  </Tag>
+              return <Tag_s text={status}/>
           },
         },
         {

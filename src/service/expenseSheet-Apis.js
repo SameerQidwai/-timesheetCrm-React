@@ -32,7 +32,11 @@ export const getExpenseSheets = () => {
   return axios
     .get(`${url}`, { headers: headers() })
     .then((res) => {
+      console.log("resss")
       const { success, data, message } = res.data;
+      console.log("message->", message)
+      console.log("data->", data)
+      console.log("success->", success)
       jwtExpired(message);
       setToken(res.headers && res.headers.authorization);
 

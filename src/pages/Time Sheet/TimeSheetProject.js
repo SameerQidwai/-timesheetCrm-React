@@ -8,6 +8,7 @@ import { Api, localStore, R_STATUS, STATUS_COLOR } from "../../service/constant"
 
 import "../styles/button.css";
 import TimeSheetPDF from "./Modals/TimeSheetPDF";
+import { Tag_s } from "../../components/Core/Custom/Index";
 
 const { Title, Link, Text } = Typography;
 //inTable insert
@@ -94,9 +95,7 @@ class TimeSheetProject extends Component {
                                     </Col>}
                                     <Col style={{marginLeft:'auto'}} >
                                         {/* <Space  align="end"> */}
-                                            { record.status &&record.status !== 'SV' && <Tag color={STATUS_COLOR[record.status]}> 
-                                                {R_STATUS[record.status]}  
-                                            </Tag>}
+                                            { record.status && <Tag_s text={record.status}/>}
                                            
                                         {/* </Space> */}
                                     </Col>

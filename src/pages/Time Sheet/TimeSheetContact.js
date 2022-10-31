@@ -12,6 +12,7 @@ import { localStore, Api, thumbUrl, STATUS_COLOR, R_STATUS, formatFloat } from "
 import moment from "moment";
 import "../styles/button.css";
 import TimeSheetPDF from "./Modals/TimeSheetPDF";
+import { Tag_s } from "../../components/Core/Custom/Index";
 
 const { Title, Link: Tlink} = Typography;
 //inTable insert
@@ -129,12 +130,8 @@ class TimeSheetContact extends Component {
                                         </Tlink>
                                     </Col>}
                                     <Col style={{marginLeft:'auto'}} >
-                                        {/* <Space  align="end"> */}
-                                            { record.status &&record.status !== 'SV' && <Tag color={STATUS_COLOR[record.status]}> 
-                                                {R_STATUS[record.status]}  
-                                            </Tag>}
-                                           
-                                        {/* </Space> */}
+                                            { record.status && <Tag_s text={record.status}/> 
+                                            }
                                     </Col>
                                     <Col>
                                         <Tooltip 
@@ -282,9 +279,7 @@ class TimeSheetContact extends Component {
                                     <Col >Status: </Col>
                                     <Col style={{marginLeft:'auto', marginRight:5}} >
                                         <Space  align="end">
-                                            <Tag color={STATUS_COLOR[value['status']]}> 
-                                                {R_STATUS[value['status']]}  
-                                            </Tag>
+                                                <Tag_s text={value['status']}/>
                                             <Tooltip 
                                                 placement="top" 
                                                 title={value['statusMsg']}

@@ -8,6 +8,7 @@ import { getListOfExpenses } from '../../service/expense-Apis';
 import { generalDelete } from "../../service/delete-Api\'s";
 import { formatDate, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
 import { tableSorter } from '../../components/Core/Table/TableFilter';
+import {Tag_s} from '../../components/Core/Custom/Index';
 
 const { Title } =  Typography
 
@@ -17,7 +18,7 @@ const ExpenseSheet = (props) => {
   const [openModal, setOpenModal] = useState(false);
   const [expenseSheet, setExpenseSheet] = useState([]);
   const [expenses, setExpenses] =  useState([])
-  const [disableSubmit, setDisableSubmit] = useState(true);
+  // const [disableSubmit, setDisableSubmit] = useState(true);
 
   const columns = [
     {
@@ -46,7 +47,7 @@ const ExpenseSheet = (props) => {
       title: 'Status',
       dataIndex: 'status',
       align: 'center',
-      render: (text)=> (text && text !== 'SV') && <Tag color={STATUS_COLOR[text]}>{R_STATUS[text]}</Tag>,
+      render: (text)=> <Tag_s text={text}/>,
       ...tableSorter('status', 'string'),
     },
     {
@@ -117,6 +118,7 @@ const ExpenseSheet = (props) => {
 
   const getData = () => {
     getExpenseSheets().then((res) => {
+      console.log("res--->", res)
       if (res.success) {
         setExpenseSheet(res.data);
       }
@@ -142,8 +144,8 @@ const ExpenseSheet = (props) => {
       }
     })
     
-    setDisableSubmit(checkDisable);
-    setSelectedRows({keys:newSelectedRowKeys, data: selectedRow});
+    // setDisableSubmit(checkDisable);
+    setSelectedRows({keys:newSelectedRowKeys, data: selectedRow, checkDisable});
   };
 
   const closeModal = () => {
@@ -249,7 +251,7 @@ const ExpenseSheet = (props) => {
                 <Button 
                     type="primary" 
                     className={'success'}
-                    disabled={ (disableSubmit || selectedRows['keys']?.length<1)}
+                    disabled={ (selectedRows.checkDisable || selectedRows['keys']?.length<1)}
                     // disabled={ sRequest.keys.length<1 || !permissions['APPROVAL'] || sRequest.cantReject}
                     onClick={()=>multiAction()}
                 > 

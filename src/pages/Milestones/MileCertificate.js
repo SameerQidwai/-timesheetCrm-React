@@ -11,6 +11,7 @@ import { getManageProjects } from "../../service/constant-Apis";
 import { getApprovalMilestones, milestoneActions, milestoneUplaodDelete, milestoneUpload } from "../../service/Milestone-Apis";
 import { addFiles } from "../../service/Attachment-Apis";
 import './styles.css'
+import { Tag_s } from "../../components/Core/Custom/Index";
 
 
 class MileCertificate extends Component {
@@ -136,8 +137,8 @@ class MileCertificate extends Component {
               key: 'isApproved',
               align: 'center',
               render: (text) => {
-                let status = text=== '' ? 'CM':text
-                  return <Tag color={STATUS_COLOR[status]}> {R_STATUS[status]}  </Tag>
+                let status = text === '' ? 'CM':text
+                return <Tag_s text={status} />
               },
               ...tableSorter('isApproved', 'string', true),
             },
