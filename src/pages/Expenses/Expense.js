@@ -3,8 +3,6 @@ import { Button, Checkbox, Col, Dropdown, Menu, Popconfirm, Popover, Row, Table,
 import { SettingOutlined, PlusSquareOutlined, } from '@ant-design/icons'; //Icons
 import InfoModal from './Modals/InfoModal';
 import { Api, formatDate, localStore } from '../../service/constant';
-import ExpenseSheetModal from './Modals/ExpenseSheetModal';
-import { expensesData } from './DummyData';
 import { delExpense, getListOfExpenses } from '../../service/expense-Apis';
 import { generalDelete } from "../../service/delete-Api's";
 import { tableSorter } from '../../components/Core/Table/TableFilter';
@@ -15,7 +13,6 @@ const Expense = (props) => {
 
     
   const [openModal, setOpenModal] = useState(false);
-  // const [openExpenseModal, setOpenExpenseModal] = useState(false);
   const [expenseData, setExpenseData] = useState([]);
     
   const columns = [
@@ -53,9 +50,7 @@ const Expense = (props) => {
       dataIndex: 'attachments',
       align: 'center',
       render: (files, records, index) => {
-        // let urlFiles = records.attachments
-        //  urlFiles = urlFiles.map(el=>{el.url = `${Api}/${el.url}`; return el})
-        // console.log(urlFiles)
+         files = files.map(el=>{el.url = `${Api}/files/${el.uid}`; return el})
         let display = files.length
         return display ? <Popover
           title={`00${records.id}`}
@@ -154,24 +149,13 @@ const Expense = (props) => {
     setExpenseData([...exp]);
     setOpenModal(false);
   }
-  
-  // expense sheet onsubmit
-  // const sheetCallBack = (data) => {
-  //   console.log({ 'Expense seheet data': data })
-  //   setOpenExpenseModal(false)
-  // }
-    
+      
   const closeModal = () => {
   setOpenModal(false);
   }
 
-  // const closeExpenseModal = () => {
-  //     setOpenExpenseModal(false);
-  // }
-
   const handleDelete = (id, index) => {
     const url = '/expenses';
-    // const { data, filterData } = this.state;
     const { history } = props;
     generalDelete(history, url, id, index, expenseData).then((res) => {
       if (res.success) {
@@ -211,31 +195,12 @@ const Expense = (props) => {
           />
         </Col>
     </Row>
-        {/* <Col style={{display:"flex",flexDirection:"row",justifyContent:"flex-end"}}>
-            <Button
-                type="primary"
-                size="small"
-                onClick={() => {
-                  setOpenExpenseModal(true);
-                }}
-                // disabled={!permissions['ADD']}
-            >
-                <PlusSquareOutlined /> Create Expense Sheet
-            </Button>
-        </Col> */}
               
     {openModal&&<InfoModal
       visible={openModal}
       close={closeModal}
       callBack={callBack}
     />}
-    {/* {openExpenseModal && <ExpenseSheetModal
-      visible={openExpenseModal}
-      expenses= {expenseData}
-      close={closeExpenseModal}
-      callBack={sheetCallBack}
-    />
-    }      */}
   </>
   )
 }

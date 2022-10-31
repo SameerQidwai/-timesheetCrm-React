@@ -196,7 +196,7 @@ const InfoModal = ({ visible, close, callBack }) => {
         Promise.all([getProjects(), getExpenseTypeList()]).then((res) => {
             let {attachments = []} = visible
             attachments = attachments.map(el=>{
-                el.url = `${Api}/${el.url}`;
+                el.url = `${Api}/files/${el.uid}`;
                 return el
             })
             let basic = basicFields
@@ -246,18 +246,6 @@ const InfoModal = ({ visible, close, callBack }) => {
         const index = fileList.indexOf(file);
         fileList.splice(index, 1);
         setFileList([...fileList]);
-
-        // this.setState((state) => {
-        //     const index = state.fileList.indexOf(file);
-        //     const newFileList = state.fileList.slice();
-        //     const fileIds = state.fileIds
-        //     newFileList.splice(index, 1);
-        //     fileIds.splice(index, 1);
-        //     return {
-        //         fileIds,
-        //         fileList: newFileList,
-        //     };
-        // })
     }
 
   return (
