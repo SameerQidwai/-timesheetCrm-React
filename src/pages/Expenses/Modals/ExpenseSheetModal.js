@@ -276,7 +276,7 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) =>
       onCancel={close}
       okText={"Save"}
       // adminView Prop add
-      okButtonProps={{ htmlType: 'submit', form: 'my-form', disabled: (visible?.projectId === null && adminView) }}
+      okButtonProps={{ htmlType: 'submit', form: 'my-form', disabled: (visible?.projectId === null && adminView) || (selectedRowKeys.length < 1 && !adminView)}}
     >
       <Form
           id={'my-form'}

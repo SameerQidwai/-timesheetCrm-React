@@ -9,7 +9,7 @@ export const getTraining = () => {
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
-            messageAlert.success({ content: message, key: 'logout'})
+            // messageAlert.success({ content: message, key: 'logout'})
             if (success) setToken(res?.headers?.authorization)
             return {success, data};
         })

@@ -98,6 +98,7 @@ export const addExpenseInSheet = (id, data) => {
 };
 
 export const expenseSheetActions = (crud, data) => {
+  console.log("crud->",crud)
   messageAlert.loading({ content: 'Loading...', key: crud })
   return axios
       .post(`${url}${crud}`, data, {headers:headers()})

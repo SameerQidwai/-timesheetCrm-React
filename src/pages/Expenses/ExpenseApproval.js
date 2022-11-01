@@ -120,7 +120,7 @@ const ExpenseApproval = () => {
 				<Dropdown
 					overlay={
 						<Menu>
-							<Menu.Item
+							{/* <Menu.Item
 								key="delete"
 								danger
 								// disabled={!this?.state?.permissions?.['DELETE']}
@@ -132,7 +132,7 @@ const ExpenseApproval = () => {
 								>
 									<div> Delete </div>
 								</Popconfirm>
-							</Menu.Item>
+							</Menu.Item> */}
 							<Menu.Item
 								key="edit"
 								onClick={() =>
@@ -154,16 +154,32 @@ const ExpenseApproval = () => {
 	];
 
 	const onSelectChange = (newSelectedRowKeys, selectedRow) => {
-		let cantApprove = true, cantReject = true, cantUnapprove = true
-		selectedRow.forEach(el =>{
-			if (el.status === 'SB'){
-				cantApprove = false
-				cantReject = false
+		// let cantApprove = true, cantReject = true, cantUnapprove = true
+		// selectedRow.forEach(el =>{
+		// 	if (el.status === 'SB'){
+		// 		cantApprove = false
+		// 		// cantReject = false
+		// 	}
+		// 	if(el.status === 'AP'){
+		// 		cantUnapprove = false
+		// 	}
+		// })
+		let cantApprove = false, cantUnapprove = false, cantReject = false
+        selectedRow.forEach(el =>{
+            if(el.status === 'SB'){
+				cantUnapprove = true;
 			}
-			if(el.status === 'AP'){
-				cantUnapprove = false
+            if(el.status === 'AP'){
+				cantReject = true;
+				cantApprove = true;
 			}
-		})
+			if (el.status === 'RJ' || el.status === 'SV') {
+				cantUnapprove = true;
+				cantReject = true;
+				cantApprove = true;
+			}
+			
+        })
 		setSelectedRows({keys:newSelectedRowKeys, data: selectedRow, cantReject, cantApprove, cantUnapprove});
 	};
 	
@@ -340,7 +356,7 @@ const ExpenseApproval = () => {
 						<Button
 							className={'success'}
 							disabled={ (selectedRows?.cantUnapprove || selectedRows['keys']?.length<1	)}
-							onClick={()=> multiAction('unApprove')}
+							onClick={()=> multiAction('unapprove')}
 						>
 							Unapprove
 						</Button>
