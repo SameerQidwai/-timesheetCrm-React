@@ -36,16 +36,6 @@ const ExpenseApproval = () => {
     {
       title: 'Title',
       dataIndex: 'label',
-      render: (text, record) => (
-        <span>
-          {text}{' '}
-          {record.notes && (
-            <Tooltip title={record.notes} placement="top" destroyTooltipOnHide>
-              <AuditOutlined />
-            </Tooltip>
-          )}
-        </span>
-      ),
       ...tableSorter('label', 'string'),
     },
     {
@@ -63,7 +53,15 @@ const ExpenseApproval = () => {
       title: 'Status',
       dataIndex: 'status',
       align: 'center',
-      render: (text) => <Tag_s text={text} />,
+      render: (text, record) => 
+	  <span>
+          <Tag_s text={text} />{' '}
+          {record.notes && (
+            <Tooltip title={record.notes} placement="top" destroyTooltipOnHide>
+              <AuditOutlined />
+            </Tooltip>
+          )}
+        </span>,
       ...tableSorter('status', 'string'),
     },
     {
@@ -126,7 +124,7 @@ const ExpenseApproval = () => {
 	const rowSelection = {
 		selectedRows: selectedRows.keys,
 		onChange: onSelectChange,
-		preserveSelectedRowKeys: false,
+		// preserveSelectedRowKeys: false,
    		getCheckboxProps: (record)=> ({disabled: ['RJ', 'SV'].includes(record.status) })
 	};
 

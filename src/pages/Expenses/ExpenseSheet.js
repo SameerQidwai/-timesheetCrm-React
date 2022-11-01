@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Col, Dropdown, Menu, Modal, Popconfirm, Row, Table, Tag, Typography } from 'antd'
-import { SettingOutlined, PlusSquareOutlined,ExclamationCircleOutlined, CheckCircleOutlined } from '@ant-design/icons'; //Icons
+import { Button, Col, Dropdown, Menu, Modal, Popconfirm, Row, Table, Tag, Tooltip, Typography } from 'antd'
+import { SettingOutlined, PlusSquareOutlined,ExclamationCircleOutlined, CheckCircleOutlined, AuditOutlined } from '@ant-design/icons'; //Icons
 import ExpenseSheetModal from './Modals/ExpenseSheetModal';
 import { expensesData } from './DummyData';
 import { expenseSheetActions, getExpenseSheets } from '../../service/expenseSheet-Apis';
@@ -46,7 +46,16 @@ const ExpenseSheet = (props) => {
       title: 'Status',
       dataIndex: 'status',
       align: 'center',
-      render: (text)=> <Tag_s text={text}/>,
+      render: (text, record) => (
+        <span>
+          <Tag_s text={text} />{' '}
+          {record.notes && (
+            <Tooltip title={record.notes} placement="top" destroyTooltipOnHide>
+              <AuditOutlined />
+            </Tooltip>
+          )}
+        </span>
+      ),
       ...tableSorter('status', 'string'),
     },
     {
