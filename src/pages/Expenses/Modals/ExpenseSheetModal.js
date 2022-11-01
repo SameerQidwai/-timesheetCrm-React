@@ -10,7 +10,7 @@ import { addFiles } from '../../../service/Attachment-Apis';
 const {Text, Title} = Typography;
 
 const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) => {
-  
+  let editDisabled = ['AP', 'SB'].includes(visible.status)
 
   const [form] = Form.useForm();
   const [filteredExpenses, setfilteredExpenses] = useState([]);
@@ -37,7 +37,7 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) =>
       // itemStyle:{marginBottom:'10px'},
   },
     {
-      disabled: adminView,  
+      disabled: adminView || editDisabled,  
       object: "basic",
       fieldCol: 12,
       key: "label",
@@ -51,7 +51,7 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) =>
 
   },
     {
-      disabled: adminView,  
+      disabled: adminView || editDisabled,  
       object: "basic",
       fieldCol: 12,
       key: "projectId", // when-api change it to projectId
@@ -190,7 +190,8 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) =>
   const rowSelection = {
     selectedRowKeys,
     onChange: onSelectChange,
-    preserveSelectedRowKeys: false
+    preserveSelectedRowKeys: false,
+    getCheckboxProps: ()=> ({disabled:editDisabled})
   }; 
 
 
@@ -276,7 +277,7 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) =>
       onCancel={close}
       okText={"Save"}
       // adminView Prop add
-      okButtonProps={{ htmlType: 'submit', form: 'my-form', disabled: (visible?.projectId === null && adminView) }}
+      okButtonProps={{ htmlType: 'submit', form: 'my-form', disabled: ((visible?.projectId === null && adminView) || editDisabled)}}
     >
       <Form
           id={'my-form'}
@@ -315,7 +316,7 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) =>
           <Col span={24}>
           <Text style={{marginTop: 10, marginBottom: 2}}>Attachments</Text>
             <Upload
-              disabled = {adminView}  
+              disabled = {adminView || editDisabled}  
               customRequest={handleUpload}
               // listType="picture"
               listType="picture-card"

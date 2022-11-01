@@ -1,5 +1,5 @@
-import { Button, Col, DatePicker, Dropdown, Menu, Popconfirm, Row, Select, Table, Tag, Typography,Modal} from 'antd';
-import { SettingOutlined, CheckCircleOutlined} from '@ant-design/icons'; //Icons
+import { Button, Col, DatePicker, Dropdown, Menu, Popconfirm, Row, Select, Table, Tag, Typography,Modal, Form, Input, Tooltip} from 'antd';
+import { SettingOutlined, CheckCircleOutlined, AuditOutlined} from '@ant-design/icons'; //Icons
 import React, { useEffect, useState } from 'react'
 import { getProjects } from '../../service/constant-Apis';
 import { expenseSheetActions, getExpenseSheets } from '../../service/expenseSheet-Apis';
@@ -11,49 +11,9 @@ import {Tag_s} from '../../components/Core/Custom/Index';
 
 const { Title } = Typography
 const { RangePicker } = DatePicker
+let modal = ""
 
 const ExpenseApproval = () => {
-
-	// dummy text
-	const data = [
-		{
-			id: '1',
-			code: 'AR390',
-			title: 'abc',
-			project: {label: "defiti"},
-			amount: 70,
-			status: "Submitted",
-			submittedAt: "12-05-2022"
-	
-		},
-		{
-			id: '2',
-			code: 'AR391',
-			title: 'def',
-			project: {label: 'mongo'},
-			amount: 89,
-			status: "Rejected",
-			submittedAt: "12-05-2022"
-			},
-		{
-			id: '3',
-			code: 'AR392',
-			title: 'ghi',
-			project: {label: "gifti"},
-			amount: 70,
-			status: "Submitted",
-			submittedAt: "12-05-2022"
-			},
-		{
-			id: '4',
-			code: 'AR393',
-			title: 'jkl',
-			project: {label: 'mouse'},
-			amount: 89,
-			status: "Submitted",
-			submittedAt: "12-05-2022"
-			},
-	];
 
 	const [projects, setProjects] = useState([]);
 	const [selectedRows, setSelectedRows] = useState({keys: [], data: []});
@@ -67,91 +27,87 @@ const ExpenseApproval = () => {
 	const { startDate, endDate} = queryRequest
 
 	const columns = [
-		{
-			title: 'Code',
-			dataIndex: 'id',
-			render: (text)=> `00${text}`, 
-			...tableSorter('id', 'number'),
-		
-		},
-		{
-			title: 'Title',
-			dataIndex: 'label',
-			...tableSorter('label', 'string'),
-		},
-		{
-			title: 'Project',
-			dataIndex: 'projectName',
-			...tableSorter('projectName', 'string'),
-		},
-		{
-			title: 'Amount',
-			dataIndex: 'amount',
-			align: 'center',
-			...tableSorter('amount', 'number'),
-		},
-		{
-			title: 'Status',
-			dataIndex: 'status',
-			align: 'center',
-			render: (text)=> <Tag_s text={text}/>,
-			...tableSorter('status', 'string')
-		},
-		{
-			title: 'Submitted At',
-			dataIndex: 'submittedAt',
-			align: 'center',
-			render:(text)=>(formatDate(text, true, true)),
-			...tableSorter('submittedAt', 'date')    
-		},
-		{
-			title: 'Submitted By',
-			dataIndex: 'submittedBy',
-			align: 'center',
-			...tableSorter('submittedBy', 'string')    
-		},
-		{
-			title: '...',
-			key: 'action',
-			align: 'center',
-			width: '1%',
-			// width: '155',
-			render: (value, record, index) => (
-				<Dropdown
-					overlay={
-						<Menu>
-							<Menu.Item
-								key="delete"
-								danger
-								// disabled={!this?.state?.permissions?.['DELETE']}
-								className="pop-confirm-menu"
-							>
-								<Popconfirm
-									title="Are you sure you want to delete"
-									// onConfirm={() => handleDelete(record.id, index)}
-								>
-									<div> Delete </div>
-								</Popconfirm>
-							</Menu.Item>
-							<Menu.Item
-								key="edit"
-								onClick={() =>
-									setOpenModal({...record,index,adminView : true})
-								}
-								// disabled={this.state && !this.state.permissions['UPDATE']}
-							>
-								Edit
-							</Menu.Item>
-						</Menu>
-					}
-				>
-					<Button size="small">
-						<SettingOutlined />
-					</Button>
-				</Dropdown>
-			),
-		},
-	];
+    {
+      title: 'Code',
+      dataIndex: 'id',
+      render: (text) => `00${text}`,
+      ...tableSorter('id', 'number'),
+    },
+    {
+      title: 'Title',
+      dataIndex: 'label',
+      render: (text, record) => (
+        <span>
+          {text}{' '}
+          {record.notes && (
+            <Tooltip title={record.notes} placement="top" destroyTooltipOnHide>
+              <AuditOutlined />
+            </Tooltip>
+          )}
+        </span>
+      ),
+      ...tableSorter('label', 'string'),
+    },
+    {
+      title: 'Project',
+      dataIndex: 'projectName',
+      ...tableSorter('projectName', 'string'),
+    },
+    {
+      title: 'Amount',
+      dataIndex: 'amount',
+      align: 'center',
+      ...tableSorter('amount', 'number'),
+    },
+    {
+      title: 'Status',
+      dataIndex: 'status',
+      align: 'center',
+      render: (text) => <Tag_s text={text} />,
+      ...tableSorter('status', 'string'),
+    },
+    {
+      title: 'Submitted At',
+      dataIndex: 'submittedAt',
+      align: 'center',
+      render: (text) => formatDate(text, true, true),
+      ...tableSorter('submittedAt', 'date'),
+    },
+    {
+      title: 'Submitted By',
+      dataIndex: 'submittedBy',
+      align: 'center',
+      ...tableSorter('submittedBy', 'string'),
+    },
+    {
+      title: '...',
+      key: 'action',
+      align: 'center',
+      width: '1%',
+      // width: '155',
+      render: (value, record, index) => (
+        <Dropdown
+          overlay={
+            <Menu>
+              <Menu.Item
+                key="edit"
+                onClick={() =>
+                  setOpenModal({ ...record, index, adminView: true })
+                }
+                // disabled={this.state && !this.state.permissions['UPDATE']}
+              >
+                View
+              </Menu.Item>
+            </Menu>
+          }
+        >
+          <Button size="small">
+            <SettingOutlined />
+          </Button>
+        </Dropdown>
+      ),
+    },
+  ];
 
 	const onSelectChange = (newSelectedRowKeys, selectedRow) => {
 		let cantApprove = true, cantReject = true, cantUnapprove = true
@@ -168,8 +124,10 @@ const ExpenseApproval = () => {
 	};
 	
 	const rowSelection = {
-		selectedRows,
+		selectedRows: selectedRows.keys,
 		onChange: onSelectChange,
+		preserveSelectedRowKeys: false,
+   		getCheckboxProps: (record)=> ({disabled: ['AP', 'RJ', 'SV'].includes(record.status) })
 	};
 
 	// for get all project 
@@ -202,7 +160,7 @@ const ExpenseApproval = () => {
 		gettingExpenseSheets();
 	}, []);
 
-	const multiAction = (action)=> {
+	const multiAction = (stage)=> {
 		const {data =[] } = selectedRows
 		let length = data.length
 		let content = <div>{ 
@@ -211,28 +169,49 @@ const ExpenseApproval = () => {
 					{label}{length -1 > index && ','  }  
 				</div> 
 			)) 
-		}</div>
-		const modal = Modal.confirm({
-		  title: `Do you wish to ${action} Certificate${length >1 ? 's': ''} for`,
+		}
+		<div style={{margin: 10}}>
+			<Form  id={'my-form' } onFinish={(values)=> onActionFinished(values, stage)} >
+				<Form.Item noStyle name={'notes'} >
+					<Input.TextArea
+						placeholder="Enter Your Notes...."
+						autoSize={{ minRows: 3, maxRows: 10 }}
+						allowClear
+					/>
+					</Form.Item>
+			</Form>
+		</div>
+	</div>
+
+		modal = Modal.confirm({
+		  title: `Do you wish to ${stage} listed sheet${length >1 ? 's': ''}`,
 		  icon: <CheckCircleOutlined />,
 		  content: content,
 		  // okButtonProps: {danger: stage === 'unapprove'??true},
 		  okText: 'Okay',
 		  cancelText: 'Cancel',
-		  onOk:()=>{
-			//   this.actionTimeSheet(stage) 
-			  OutcomeAction(action)
-			  modal.destroy();
-		  }
+		  okButtonProps: {danger: stage === 'reject'??true, htmlType: 'submit', form: 'my-form'  },
+		  // onOk:()=>{
+		  //   //   this.actionTimeSheet(stage) 
+		  //     OutcomeAction()
+		  //     modal.destroy();
+		  // }
 		});
 	  }
 	
-	  const OutcomeAction = (action) =>{
+	  const onActionFinished = (formValues, stage) =>{
+		const {notes} = formValues
+		OutcomeAction(stage, notes) 
+		modal.destroy();
+	  }
+	
+	  const OutcomeAction = (stage, actionNotes) =>{
 		const {keys =[] } = selectedRows
-		let obj={sheets: keys}
-		expenseSheetActions(`/${action}Many`, obj).then(res=>{
+		let obj={sheets: keys, notes: actionNotes }
+		expenseSheetActions(`/${stage}Many`, obj).then(res=>{
 			if (res.success){
 				// data[index]['isApproved'] = true
+				setSelectedRows({keys: [], data: []})
 				gettingExpenseSheets()
 			}
 		})
@@ -263,44 +242,6 @@ const ExpenseApproval = () => {
 			</Col>  
 			<Col >
 				<RangePicker />
-			{/* <Row justify='space-between'>      
-					<Col>                  
-						<DatePicker
-								// mode="month"
-								// picker="month"
-								// format="MMM-YYYY"
-								value={startDate}
-								onChange={(value)=>{
-										setQueryRequest({...queryRequest,
-												startDate: value && formatDate(value).startOf("month"),
-												// endDate: value && formatDate(value).endOf("month") 
-										}
-										//   , () => {
-										//     this.getData()
-										// }
-										)
-								}}
-						/>
-					</Col>
-					<Col>
-						<DatePicker
-								// mode="month"
-								// picker="month"
-								// format="MMM-YYYY"
-								value={endDate}
-								onChange={(value)=>{
-									setQueryRequest({...queryRequest,
-												// startDate: value && formatDate(value).startOf("month"),
-												endDate: value && formatDate(value).endOf("month") 
-										}
-										//   , () => {
-										//     this.getData()
-										// }
-										)
-								}}
-						/>
-					</Col>
-			</Row> */}
 			</Col>  
 			<Col span={24}>
 				<Table

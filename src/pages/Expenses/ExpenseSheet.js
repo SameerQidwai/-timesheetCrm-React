@@ -13,7 +13,6 @@ import {Tag_s} from '../../components/Core/Custom/Index';
 const { Title } =  Typography
 
 const ExpenseSheet = (props) => {
-
   const [selectedRows, setSelectedRows] = useState({keys: [], data: []});
   const [openModal, setOpenModal] = useState(false);
   const [expenseSheet, setExpenseSheet] = useState([]);
@@ -70,10 +69,11 @@ const ExpenseSheet = (props) => {
               <Menu.Item
                 key="delete"
                 danger
-                // disabled={!this?.state?.permissions?.['DELETE']}
+                disabled={['AP', 'SB'].includes(record.status)}
                 className="pop-confirm-menu"
               >
                 <Popconfirm
+                  disabled={['AP', 'SB'].includes(record.status)}
                   title="Are you sure you want to delete"
                   onConfirm={() => handleDelete(record.id, index)}
                 >
@@ -118,7 +118,6 @@ const ExpenseSheet = (props) => {
 
   const getData = () => {
     getExpenseSheets().then((res) => {
-      console.log("res--->", res)
       if (res.success) {
         setExpenseSheet(res.data);
       }
@@ -165,8 +164,10 @@ const ExpenseSheet = (props) => {
   }
 
   const rowSelection = {
-    selectedRows,
+    selectedRows: selectedRows.keys,
     onChange: onSelectChange,
+    preserveSelectedRowKeys: false,
+    getCheckboxProps: (record)=> ({disabled: ['AP', 'SB'].includes(record.status) })
   };
 
   const onOpenModal = (open) =>{
@@ -190,7 +191,7 @@ const ExpenseSheet = (props) => {
         )) 
     }</div>
     const modal = Modal.confirm({
-      title: `Do you wish to submit Certificate${length >1 ? 's': ''} for`,
+      title: `Do you wish to submit sheet${length >1 ? 's': ''} for`,
       icon: <CheckCircleOutlined />,
       content: content,
       // okButtonProps: {danger: stage === 'unapprove'??true},
@@ -210,6 +211,7 @@ const ExpenseSheet = (props) => {
     expenseSheetActions(`/submitMany`, obj).then(res=>{
         if (res.success){
             // data[index]['isApproved'] = true
+            setSelectedRows({keys: [], data: []})
             getData()
         }
     })
