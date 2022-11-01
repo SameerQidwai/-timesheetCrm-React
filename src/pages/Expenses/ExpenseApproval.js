@@ -127,7 +127,7 @@ const ExpenseApproval = () => {
 		selectedRows: selectedRows.keys,
 		onChange: onSelectChange,
 		preserveSelectedRowKeys: false,
-   		getCheckboxProps: (record)=> ({disabled: ['AP', 'RJ', 'SV'].includes(record.status) })
+   		getCheckboxProps: (record)=> ({disabled: ['RJ', 'SV'].includes(record.status) })
 	};
 
 	// for get all project 
