@@ -389,7 +389,7 @@ export const getUserLeaveType = () => {
             setToken(res?.headers?.authorization)
             if (success){
                 const {holidays, contractDetails, LeaveRequestTypes = []} = data
-                let requestType = [{id: 0, name: 'Unpaid', include_off_days: true}]
+                let requestType = [{id: 0, name: 'Unpaid', include_off_days: false}]
                 LeaveRequestTypes.forEach((el,index)=>{
                     const type= {}
                     Object.entries(el).forEach(([key, value]) => {

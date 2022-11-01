@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Col, Dropdown, Menu, Modal, Popconfirm, Row, Table, Tag, Typography } from 'antd'
-import { SettingOutlined, PlusSquareOutlined,ExclamationCircleOutlined, CheckCircleOutlined } from '@ant-design/icons'; //Icons
+import { Button, Col, Dropdown, Menu, Modal, Popconfirm, Row, Table, Tag, Tooltip, Typography } from 'antd'
+import { SettingOutlined, PlusSquareOutlined,ExclamationCircleOutlined, CheckCircleOutlined, AuditOutlined } from '@ant-design/icons'; //Icons
 import ExpenseSheetModal from './Modals/ExpenseSheetModal';
 import { expensesData } from './DummyData';
 import { expenseSheetActions, getExpenseSheets } from '../../service/expenseSheet-Apis';
@@ -13,7 +13,6 @@ import {Tag_s} from '../../components/Core/Custom/Index';
 const { Title } =  Typography
 
 const ExpenseSheet = (props) => {
-
   const [selectedRows, setSelectedRows] = useState({keys: [], data: []});
   const [openModal, setOpenModal] = useState(false);
   const [expenseSheet, setExpenseSheet] = useState([]);
@@ -47,7 +46,16 @@ const ExpenseSheet = (props) => {
       title: 'Status',
       dataIndex: 'status',
       align: 'center',
-      render: (text)=> <Tag_s text={text}/>,
+      render: (text, record) => (
+        <span>
+          <Tag_s text={text} />{' '}
+          {record.notes && (
+            <Tooltip title={record.notes} placement="top" destroyTooltipOnHide>
+              <AuditOutlined />
+            </Tooltip>
+          )}
+        </span>
+      ),
       ...tableSorter('status', 'string'),
     },
     {
@@ -70,10 +78,11 @@ const ExpenseSheet = (props) => {
               <Menu.Item
                 key="delete"
                 danger
-                // disabled={!this?.state?.permissions?.['DELETE']}
+                disabled={['AP', 'SB'].includes(record.status)}
                 className="pop-confirm-menu"
               >
                 <Popconfirm
+                  disabled={['AP', 'SB'].includes(record.status)}
                   title="Are you sure you want to delete"
                   onConfirm={() => handleDelete(record.id, index)}
                 >
@@ -118,7 +127,6 @@ const ExpenseSheet = (props) => {
 
   const getData = () => {
     getExpenseSheets().then((res) => {
-      console.log("res--->", res)
       if (res.success) {
         setExpenseSheet(res.data);
       }
@@ -165,8 +173,10 @@ const ExpenseSheet = (props) => {
   }
 
   const rowSelection = {
-    selectedRows,
+    selectedRows: selectedRows.keys,
     onChange: onSelectChange,
+    preserveSelectedRowKeys: false,
+    getCheckboxProps: (record)=> ({disabled: ['AP', 'SB'].includes(record.status) })
   };
 
   const onOpenModal = (open) =>{
@@ -190,7 +200,7 @@ const ExpenseSheet = (props) => {
         )) 
     }</div>
     const modal = Modal.confirm({
-      title: `Do you wish to submit Certificate${length >1 ? 's': ''} for`,
+      title: `Do you wish to submit sheet${length >1 ? 's': ''} for`,
       icon: <CheckCircleOutlined />,
       content: content,
       // okButtonProps: {danger: stage === 'unapprove'??true},
@@ -210,6 +220,7 @@ const ExpenseSheet = (props) => {
     expenseSheetActions(`/submitMany`, obj).then(res=>{
         if (res.success){
             // data[index]['isApproved'] = true
+            setSelectedRows({keys: [], data: []})
             getData()
         }
     })

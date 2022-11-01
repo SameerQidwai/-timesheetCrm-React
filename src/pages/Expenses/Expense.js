@@ -45,31 +45,31 @@ const Expense = (props) => {
       align: 'center',
       ...tableSorter('amount', 'number'),
     },
-    {
-      title: 'Files',
-      dataIndex: 'attachments',
-      align: 'center',
-      render: (files, records, index) => {
-         files = files.map(el=>{el.url = `${Api}/files/${el.uid}`; return el})
-        let display = files.length
-        return display ? <Popover
-          title={`00${records.id}`}
-          destroyTooltipOnHide
-          overlayStyle={{maxWidth: 300}}
-          trigger="hover"
-          content={<div>
-             <Upload
-                listType="text"
-                maxCount={4}
-                fileList={files}
-                disabled
-              />
-          </div>}
-        >
-          <Text underline italic>View</Text>
-        </Popover>: null
-      }
-    },
+    // {
+    //   title: 'Files',
+    //   dataIndex: 'attachments',
+    //   align: 'center',
+    //   render: (files, records, index) => {
+    //      files = files.map(el=>{el.url = `${Api}/files/${el.uid}`; return el})
+    //     let display = files.length
+    //     return display ? <Popover
+    //       title={`00${records.id}`}
+    //       destroyTooltipOnHide
+    //       overlayStyle={{maxWidth: 300}}
+    //       trigger="hover"
+    //       content={<div>
+    //          <Upload
+    //             listType="text"
+    //             maxCount={4}
+    //             fileList={files}
+    //             disabled
+    //           />
+    //       </div>}
+    //     >
+    //       <Text underline italic>View</Text>
+    //     </Popover>: null
+    //   }
+    // },
     {
       title: 'i',
       dataIndex: 'isReimbursed',
@@ -97,7 +97,7 @@ const Expense = (props) => {
               <Menu.Item
                 key="delete"
                 danger
-                // disabled={!this?.state?.permissions?.['DELETE']}
+                disabled={record.isInSheet}
                 className="pop-confirm-menu"
               >
                 <Popconfirm
@@ -109,7 +109,7 @@ const Expense = (props) => {
               </Menu.Item>
               <Menu.Item
                 key="edit"
-              onClick={() =>
+                onClick={() =>
                 setOpenModal({...record,index})
               }
               >

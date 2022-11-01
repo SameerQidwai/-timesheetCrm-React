@@ -56,7 +56,7 @@ const InfoModal = ({ visible, close, callBack }) => {
             data: [],
             // customValue: (value, option) => option, // when-api remove this
             type: "DatePicker",
-        fieldStyle:{width: '100%'}
+            fieldStyle:{width: '100%'}
         },
         {
             Placeholder: "Amount",
@@ -126,6 +126,7 @@ const InfoModal = ({ visible, close, callBack }) => {
             object: "basic",
             fieldCol: 12,
             key: "projectId", 
+            disabled: visible.isInSheet,
             size: "small",
             initialValue: null,
             // rules:[{ required: true, message: 'Project is Required' }],
@@ -155,7 +156,6 @@ const InfoModal = ({ visible, close, callBack }) => {
     );
 
     useEffect(() => {
-        
         getData();
         if (visible !== true) {
             visible.date = formatDate(visible.date)
