@@ -6,7 +6,7 @@ import FormItems from '../../../components/Core/Forms/FormItems';
 import { getProjects } from '../../../service/constant-Apis';
 // import { expensesData as dummyExpensesData } from '../../DummyData';
 import { addExpenseInSheet, addExpenseSheet, editExpenseSheet } from '../../../service/expenseSheet-Apis';
-import { addFiles } from '../../../service/Attachment-Apis';
+import { addFiles, getAttachments } from '../../../service/Attachment-Apis';
 const {Text, Title} = Typography;
 
 const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) => {
@@ -144,22 +144,20 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) =>
 
   useEffect(() => {
     if (visible !== true) {
-      let {attachments = []} = visible
       form.setFieldsValue({ basic: visible })
-      setFileList(attachments)
     }
     getData()
 
   },[]);
 
   const getData = () => {
-    getProjects().then((res) => {
-      if (res?.success) {
+    Promise.all([getProjects(), getAttachments('ESH', visible.id)]).then((res) => {
         let basic = basicFields
-        basic[3].data = res?.data
+        basic[3].data = res[0].success ? res[0].data : []
         setBasicFields([...basic]); 
-      }
-      if (adminView) {
+        setFileList(res[1].success ? res[1].fileList : [])
+        
+        if (adminView) {
         setfilteredExpenses(visible?.expenseSheetExpenses)
       } else {
         selectedProjectExpenses(visible?.projectId)

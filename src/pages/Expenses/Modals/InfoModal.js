@@ -4,7 +4,7 @@ import { PlusOutlined } from "@ant-design/icons"; //Icons
 import FormItems from '../../../components/Core/Forms/FormItems'
 
 import { getOrgPersons, getProjects } from '../../../service/constant-Apis'
-import { addFiles } from '../../../service/Attachment-Apis'
+import { addFiles, getAttachments } from '../../../service/Attachment-Apis'
 import { Api, formatDate } from '../../../service/constant'
 import { addExpense, editExpense } from '../../../service/expense-Apis'
 import { getListAlt as getExpenseTypeList } from '../../../service/expenseType-Apis';
@@ -193,17 +193,12 @@ const InfoModal = ({ visible, close, callBack }) => {
     }
 
     const getData = () => {
-        Promise.all([getProjects(), getExpenseTypeList()]).then((res) => {
-            let {attachments = []} = visible
-            attachments = attachments.map(el=>{
-                el.url = `${Api}/files/${el.uid}`;
-                return el
-            })
+        Promise.all([getProjects(), getExpenseTypeList(), getAttachments('EXP', visible.id)]).then((res) => {
             let basic = basicFields
-            basic[11].data = res[0].success ? res[0].data : ''
-            basic[2].data = res[1].success ? res[1].data : ''
+            basic[11].data = res[0].success ? res[0].data : []
+            basic[2].data = res[1].success ? res[1].data : []
             setBasicFields([...basic]); 
-            setFileList([...attachments])
+            setFileList(res[2].success ? res[2].fileList : [])
         })
     }
 
