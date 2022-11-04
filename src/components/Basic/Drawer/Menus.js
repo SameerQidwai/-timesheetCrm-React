@@ -79,56 +79,87 @@ const listData = [
         key: "EXPENSE Approval",
         permissions: {module: "TIMESHEETS", key: 'READ'}
     },
+];
+
+const subListData = [
     {
-        text: "Timesheets",
+        text: "APPROVALS",
         icon: <ClockCircleOutlined />,
-        key: "TIMESHEETS",
+        key: "APPROVALS",
         subMenu: [
-            {
-                text: "Timesheet Entry",
-                icon: <ClockCircleOutlined />,
-                link: "/time-sheet",
-                key: "TIMESHEETS ENTRY",
-                // permissions: {module: "TIMESHEETS", key: 'READ'}
-            },
             {
                 text: "Timesheet Approval",
                 icon: <CheckCircleOutlined />,
                 link: "/time-sheet-approval",
                 key: "TIMESHEETS APPROVAl",
-                // permissions: {module: "TIMESHEETS", key: 'APPROVAL'}
-            },
-        ],
-    },
-    {
-        text: "Leaves",
-        icon: <RestOutlined />,
-        key: "LEAVES",
-        subMenu: [
-            {
-                text: "Leave Request",
-                icon: <CalendarOutlined />,
-                link: "/leave-request",
-                key: "LEAVE REQUEST",
-                // permissions: {module: "LEAVE_REQUESTS", key: 'READ'}
+                permissions: {module: "TIMESHEETS", key: 'APPROVAL'}
             },
             {
                 text: "Leave Approval ",
                 icon: <CarryOutOutlined />,
                 link: "/approve-request",
                 key: "APPROVE REQUEST",
-                // permissions: {module: "LEAVE_REQUESTS", key: 'APPROVAL'}
+                permissions: {module: "LEAVE_REQUESTS", key: 'APPROVAL'}
+            },
+            {
+                text: "Milestone Approval",
+                icon: <CheckSquareOutlined />,
+                link: "/milestones-certificate",
+                key: "MILESTONE APPROVAl",
+                permissions: {module: "TIMESHEETS", key: 'APPROVAL,UNAPPROVAL'}
+            },
+            {
+                text: "Expense Approval",
+                icon: <SolutionOutlined  />,
+                link: "/expense-sheet-approval",
+                key: "EXPENSE Approval",
+                permissions: {module: "TIMESHEETS", key: 'READ'}
             },
         ],
     },
-    // {
-    //     text: "Travels",
-    //     icon: <DingdingOutlined />,
-    //     link: "/travles",
-    //     key: "/travles",
-    // },
-    
-];
+    {
+        text: "SUBMISSIONS",
+        icon: <ClockCircleOutlined />,
+        key: "SUBMISSIONS",
+        subMenu: [
+            {
+                text: "Timesheet Entry",
+                icon: <ClockCircleOutlined />,
+                link: "/time-sheet",
+                key: "TIMESHEETS ENTRY",
+                permissions: {module: "TIMESHEETS", key: 'READ'}
+            },
+            {
+                text: "Leave Request",
+                icon: <CalendarOutlined />,
+                link: "/leave-request",
+                key: "LEAVE REQUEST",
+                permissions: {module: "LEAVE_REQUESTS", key: 'READ'}
+            },
+            {
+                text: "Expense Sheet",
+                icon: <SnippetsOutlined/>,
+                link: "/expense-sheets",
+                key: "EXPENSE SHEET ",
+                permissions: {module: "TIMESHEETS", key: 'READ'}
+            },
+        ],
+    },
+    {
+        text: "Expense",
+        icon: <DiffOutlined />,
+        link: "/expense",
+        key: "EXPENSE",
+        permissions: {module: "TIMESHEETS", key: 'READ'}
+    },
+    {
+        text: "Training",
+        icon: <SolutionOutlined  />,
+        link: "/training",
+        key: "Training",
+        permissions: {module: "TIMESHEETS", key: 'READ'}
+    },
+]
 
 class Menus extends Component {
     constructor(){
@@ -145,35 +176,41 @@ class Menus extends Component {
         let permissions = localStore().permissions
         permissions = permissions ? JSON.parse(permissions) : []
         let { allowedMenu } = this.state
-            // allowedMenu[0] = pageLinks[0]
-            listData.map(el=>{
-                if (el.subMenu){
-                    const subMenu = []
-                    el.subMenu.map(sEl => {
-                        if(sEl.permissions && permissions?.[sEl.permissions.module]){
-                            const condtion = sEl.permissions.key.split(',')
-                            for (let cond of condtion){
-                                if (permissions[sEl.permissions.module][cond]){
-                                    allowedMenu.push(sEl)
-                                    break;
-                                }
+        listData.map(el=>{
+            if (el.subMenu){
+                const subMenu = []
+                el.subMenu.map((sub)=>{
+                    if(permissions?.[sub?.permissions?.module]){
+                        const condtion = sub?.permissions?.key?.split(',')
+                        for (let cond of condtion){
+                            if (permissions[sub?.permissions?.module]?.[cond]){
+                                subMenu.push(sub)
+                                break;
                             }
                         }
-                    })
-                    if(subMenu.length> 0){
-                        el.subMenu = subMenu
-                        allowedMenu.push(el)
                     }
-                }else if(el.permissions && permissions?.[el.permissions.module]){
-                    const condtion = el.permissions.key.split(',')
-                    for (let cond of condtion){
-                        if (permissions[el.permissions.module][cond]){
-                            allowedMenu.push(el)
-                            break;
-                        }
+
+                })
+                if (subMenu.length){
+                    el.subMenu = subMenu
+                    allowedMenu.push(el)
+                    // return el
+                }else{
+                    delete el.subMenu
+                    allowedMenu.push(el)
+                    // return el
+                }
+            }else if(permissions?.[el?.permissions?.module]){
+                const condtion = el.permissions.key.split(',')
+                for (let cond of condtion){
+                    if (permissions[el.permissions.module][cond]){
+                        allowedMenu.push(el)
+                        // return el
+                        break;
                     }
                 }
-            })
+            }
+        })
         this.setState({allowedMenu})
     }
 
@@ -194,7 +231,7 @@ class Menus extends Component {
             item.subMenu ? (
                 <SubMenu  key={item.key} icon={item.icon} title={item.text}>
                     {item.subMenu.map((sub, j) => (
-                        <Menu.Item key={sub.link} icon={sub.icon} className={this.highlightRow(sub.link)}>
+                        <Menu.Item key={sub.link} icon={sub.icon}>
                             <Link to={sub.link} className="nav-link">
                                 {sub.text}
                             </Link>

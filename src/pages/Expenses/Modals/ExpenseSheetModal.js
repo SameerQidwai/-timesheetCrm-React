@@ -230,7 +230,7 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) =>
       })
     }else{
       const {basic}= form.getFieldsValue()
-      visible.isBillable = basic.isBillable = true
+      visible.isBillable = basic.isBillable
       manageExpenseSheet(visible.id, data).then(res=>{
         if (res.success){
           callBack(visible, visible?.index);

@@ -315,7 +315,7 @@ const ExpenseApproval = () => {
 					</Col>
 					<Col>
 						<Button
-							className={'success'}
+							className={'not-success'}
 							disabled={ (selectedRows?.cantUnapprove || selectedRows['keys']?.length<1	)}
 							onClick={()=> multiAction('unapprove')}
 						>
