@@ -1,14 +1,16 @@
 import React, { Component } from 'react'
 import { Button, Col, Descriptions, Dropdown, Menu, Popconfirm, Row, Tabs } from 'antd';
+import { Link } from "react-router-dom";
 import { SettingOutlined, DownOutlined } from "@ant-design/icons"; //Icons
 import { getContactRecord } from '../../../service/conatct-person';
-import { formatDate, GENDER } from '../../../service/constant';
+import { formatDate, GENDER, JOB_TYPE } from '../../../service/constant';
 import AuthError from "../../../components/Core/AuthError";
 import InfoModal from './InfoModal';
 import Attachments from '../../../components/Core/Attachments';
 import Comments from '../../../components/Core/Comments';
 import Opportunities from '../../../components/Core/Opportunities';
 import { generalDelete } from '../../../service/delete-Api\'s';
+import Projects from '../../../components/Core/Projects';
 
 const {Item} = Descriptions 
 const {TabPane} = Tabs
@@ -116,26 +118,33 @@ export class ContactInfo extends Component {
                     bordered
                     layout="horizontal"
                 >
-                    <Item label="Name">{data.firstName + ' '+ data.lastName}</Item>
+                    <Item label="Name">{data.fullname}</Item>
                     <Item label="Phone">{data.phoneNumber}</Item>
                     <Item label="Email">{data.email}</Item>
-                    <Item label="Gender">{GENDER[data?.gender]}</Item>
-                    <Item label="Date Of Birth">{formatDate(data.dateOfBirth, true, true)}</Item>
+                    <Item label="Gender">{data.gender}</Item>
+                    <Item label="Date Of Birth">{data.dateOfBirth}</Item>
                     <Item label="Birth Place">{data.birthPlace}</Item>
+                    <Item label="Status">{data.employementStatus }</Item>
+                    {/* {data.employementStatus === 'Employee' && <Item label="Employement Status">{data.employementType}</Item>} */}
                 </Descriptions>
             </Col>
             <Col span={24}>
             <Tabs
                 type="card"
                 style={{ marginTop: "50px" }}
-                // defaultActiveKey="comments"
             >
                 <TabPane tab="Opportunities" key="leads">
-                <Opportunities
-                    targetId={userId}
-                    customUrl={`helpers/work?type=O&employee=${userId}`}
-                />
+                    <Opportunities
+                        targetId={userId}
+                        customUrl={`helpers/work?type=O&employee=${userId}`}
+                    />
                 </TabPane>
+                {data.employeeId && <TabPane tab="Projects" key="projects">
+                    <Projects
+                        targetId={data.employeeId}
+                        customUrl={`helpers/work?type=P&employee=${data.employeeId}`}
+                    />
+                </TabPane>}
                 <TabPane tab="Comments" key="comments">
                     <Comments targetType="COP" targetId={userId} />
                 </TabPane>
@@ -161,14 +170,39 @@ export class ContactInfo extends Component {
 export default ContactInfo
 
 //------------HELPER------------
-const dataStructure = (data) =>({
-    firstName: data.firstName,
-    lastName: data.lastName,
-    email: data.email,
-    gender: data.gender,
-    phoneNumber: data.phoneNumber,
-    address: data.address,
-    birthPlace: data.birthPlace,
-    dateOfBirth: formatDate(data.dateOfBirth),
-    stateId: data.stateId,
-})
+const dataStructure = (data) => ({
+  fullname: data.firstName + ' ' + data.lastName,
+  email: data.email,
+  gender: GENDER[data?.gender],
+  phoneNumber: data.phoneNumber,
+  address: data.address,
+  birthPlace: data.birthPlace,
+  dateOfBirth: formatDate(formatDate(data.dateOfBirth), true, true),
+  stateId: data.stateId,
+  employementStatus: employementLink(
+    data.employementStatus,
+    data?.employee?.id
+  ),
+  employeeId: data?.employee?.id,
+  // employementType: JOB_TYPE[data?.employmentContracts?.type],
+});
+
+function employementLink(status, employeeId){
+    let endPoint =
+      status === 'Employee'
+        ? 'Employees'
+        : status === 'Sub Contractor'
+        ? 'sub-contractor'
+        : 'contacts';
+
+    return employeeId ? (
+      <Link
+        to={{ pathname: `/${endPoint}/${employeeId}/info` }}
+        className="nav-link"
+      >
+        {status}
+      </Link>
+    ) : (
+      status
+    );
+}

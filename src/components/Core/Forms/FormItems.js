@@ -158,7 +158,7 @@ class FormItems extends Component {
                         size={size}
                         formatter={(value) => formatter(value, shape) }
                         parser={(value) => parser(value, shape) }
-                        style={style}
+                        style={{width: '100%',...style}}
                         onBlur={onBlur}
                         onChange={onChange}
                         disabled={disabled}
