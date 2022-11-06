@@ -402,7 +402,7 @@ class TimeSheetProject extends Component {
             <>
                 <Row justify="space-between" >
                     <Col>
-                        <Title level={3}>Approval</Title>
+                        <Title level={4}>Timesheet Approval</Title>
                     </Col>
                     <Col  >
                         <Select
@@ -454,7 +454,7 @@ class TimeSheetProject extends Component {
                     sticky
                     size="small"
                     style={{maxHeight: 'fit-content'}}
-                    className="timeSheet-table"
+                    className="timeSheet-table fs-small"
                     rowSelection={{ //multiple select commented
                         selectedRowKeys: sTimesheet.keys,
                         fixed:true,

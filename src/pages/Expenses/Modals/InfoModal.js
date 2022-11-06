@@ -4,7 +4,7 @@ import { PlusOutlined } from "@ant-design/icons"; //Icons
 import FormItems from '../../../components/Core/Forms/FormItems'
 
 import { getOrgPersons, getProjects } from '../../../service/constant-Apis'
-import { addFiles } from '../../../service/Attachment-Apis'
+import { addFiles, getAttachments } from '../../../service/Attachment-Apis'
 import { Api, formatDate } from '../../../service/constant'
 import { addExpense, editExpense } from '../../../service/expense-Apis'
 import { getListAlt as getExpenseTypeList } from '../../../service/expenseType-Apis';
@@ -13,7 +13,8 @@ const { Text } = Typography
 
 
 const InfoModal = ({ visible, close, callBack }) => {
-    
+    let editDisabled = ['AP', 'SB'].includes(visible.status)
+
     const [fileList, setFileList] = useState([]);
     const [progress, setProgress] = useState();
     const [form] = Form.useForm();
@@ -41,6 +42,7 @@ const InfoModal = ({ visible, close, callBack }) => {
             object: "basic",
             fieldCol: 12,
             key: "expenseTypeId", // when-api change it to projectId
+            disabled: editDisabled,
             size: "small",
             rules:[{ required: true, message: 'type is Required' }],
             data: [],
@@ -51,6 +53,7 @@ const InfoModal = ({ visible, close, callBack }) => {
             object: "basic",
             fieldCol: 12,
             key: "date", // when-api change it to projectId
+            disabled: editDisabled,
             size: "small",
             rules:[{ required: true, message: 'Date is Required' }],
             data: [],
@@ -70,14 +73,17 @@ const InfoModal = ({ visible, close, callBack }) => {
             object: "basic",
             fieldCol: 12,
             key: "amount",
+            disabled: editDisabled,
             size: "small",
+            shape:"$",
             rules: [{ required: true, message: 'Amount is Required' }],
-            type: "Input",
+            type: "InputNumber",
         },
         {
             object: "basic",
             fieldCol: 1,
             key: "isReimbursed",
+            disabled: editDisabled,
             size: "small",
             initialValue: false,
             type: "Checkbox",
@@ -99,6 +105,7 @@ const InfoModal = ({ visible, close, callBack }) => {
             fieldCol: 1,
             key: "isBillable",
             initialValue: false,
+            disabled: editDisabled,
             size: "small",
             type: "Checkbox",
             valuePropName: "checked"
@@ -146,6 +153,7 @@ const InfoModal = ({ visible, close, callBack }) => {
             fieldCol: 24,
             key: "notes", 
             initialValue: null,
+            disabled: editDisabled,
             size: "small",
             type: "Textarea",
             rows: 5,
@@ -193,17 +201,12 @@ const InfoModal = ({ visible, close, callBack }) => {
     }
 
     const getData = () => {
-        Promise.all([getProjects(), getExpenseTypeList()]).then((res) => {
-            let {attachments = []} = visible
-            attachments = attachments.map(el=>{
-                el.url = `${Api}/files/${el.uid}`;
-                return el
-            })
+        Promise.all([getProjects(), getExpenseTypeList(), visible !== true && getAttachments('EXP', visible.id)]).then((res) => {
             let basic = basicFields
-            basic[11].data = res[0].success ? res[0].data : ''
-            basic[2].data = res[1].success ? res[1].data : ''
+            basic[11].data = res[0].success ? res[0].data : []
+            basic[2].data = res[1].success ? res[1].data : []
             setBasicFields([...basic]); 
-            setFileList([...attachments])
+            setFileList(res[2]?.success ? res[2].fileList : [])
         })
     }
 
@@ -255,7 +258,7 @@ const InfoModal = ({ visible, close, callBack }) => {
           width={650}
           onCancel={close}
           okText={"Save"}
-          okButtonProps={{ htmlType: 'submit', form: 'my-form' }}
+          okButtonProps={{ htmlType: 'submit', form: 'my-form', disabled: editDisabled }}
       >
           <Form
             id={'my-form'}
@@ -275,7 +278,7 @@ const InfoModal = ({ visible, close, callBack }) => {
                     maxCount={4}
                     fileList={fileList}
                     onRemove= {onRemove}
-                    // disabled={readOnly}
+                    disabled={editDisabled}
                 >
                     {fileList.length < 4 &&
                         <div style={{marginTop: 10}} >

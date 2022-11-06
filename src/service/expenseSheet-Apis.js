@@ -1,7 +1,7 @@
 import { message as messageAlert } from 'antd';
 import axios from 'axios';
 
-import { Api, apiErrorRes, headers, jwtExpired, setToken } from './constant';
+import { Api, apiErrorRes, formatDate, headers, jwtExpired, setToken } from './constant';
 
 const url = `${Api}/expense-sheets`;
 
@@ -28,15 +28,23 @@ export const addExpenseSheet = (data) => {
       });
 };
 
-export const getExpenseSheets = () => {
+export const getExpenseSheets = (qureyFilters) => {
+  const {
+    filterSatrtDate: startDate,
+    filterEndDate: endDate,
+    filterProject: projectId,
+  } = qureyFilters ?? {};
+
+  let queryUrl = `${url}?${
+    startDate ? `startDate=${formatDate(startDate, true, 'DD/MM/YYYY')}` : ''
+  }${
+    endDate ? `&endDate=${formatDate(endDate, true, 'DD/MM/YYYY')}` : ''
+  }&projectId=${projectId?? null}`;
+
   return axios
-    .get(`${url}`, { headers: headers() })
+    .get(queryUrl, { headers: headers() })
     .then((res) => {
-      console.log("resss")
       const { success, data, message } = res.data;
-      console.log("message->", message)
-      console.log("data->", data)
-      console.log("success->", success)
       jwtExpired(message);
       setToken(res.headers && res.headers.authorization);
 
@@ -55,6 +63,29 @@ export const editExpenseSheet = (id,data) => {
   messageAlert.loading({ content: 'Loading...', key: id }); // this open toast
   return axios
     .put(url + `/${id}`, data, { headers: headers() }) 
+    .then((res) => {
+      const { success, message, data } = res.data;
+      jwtExpired(message); // checking jwd isExpired?
+      messageAlert.success({ content: message, key: id }, 5); // open toast on sceess
+      setToken(res.headers && res.headers.authorization); //
+      return {success, data};
+
+    })
+    .catch((err) => {
+      // messageAlert.error({ content: 'Error!', key: id });
+      // return {
+      //   error: 'Please login again!',
+      //   status: false,
+      //   message: err.message,
+      // };
+      return apiErrorRes(err, id, 5)
+    });
+};
+
+export const manageExpenseSheet = (id,data) => {
+  messageAlert.loading({ content: 'Loading...', key: id }); // this open toast
+  return axios
+    .put(url + `/${id}/isBillable`, data, { headers: headers() }) 
     .then((res) => {
       const { success, message, data } = res.data;
       jwtExpired(message); // checking jwd isExpired?
@@ -98,7 +129,6 @@ export const addExpenseInSheet = (id, data) => {
 };
 
 export const expenseSheetActions = (crud, data) => {
-  console.log("crud->",crud)
   messageAlert.loading({ content: 'Loading...', key: crud })
   return axios
       .post(`${url}${crud}`, data, {headers:headers()})
