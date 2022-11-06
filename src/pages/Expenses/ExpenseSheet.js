@@ -47,14 +47,14 @@ const ExpenseSheet = (props) => {
       dataIndex: 'status',
       align: 'center',
       render: (text, record) => (
-        <span>
+        <div>
           <Tag_s text={text} />{' '}
           {record.notes && (
             <Tooltip title={record.notes} placement="top" destroyTooltipOnHide>
               <AuditOutlined />
             </Tooltip>
           )}
-        </span>
+        </div>
       ),
       ...tableSorter('status', 'string'),
     },
@@ -147,7 +147,7 @@ const ExpenseSheet = (props) => {
   const onSelectChange = (newSelectedRowKeys, selectedRow) => {
     let checkDisable = false;
     selectedRow.forEach(el=>{
-      if(el.status !== 'SV'){
+      if(el.status !== 'SV' && el.status !== 'RJ'){
         checkDisable = true
       }
     })
@@ -173,9 +173,9 @@ const ExpenseSheet = (props) => {
   }
 
   const rowSelection = {
-    selectedRows: selectedRows.keys,
+    selectedRowKeys: selectedRows.keys,
     onChange: onSelectChange,
-    preserveSelectedRowKeys: false,
+    // preserveSelectedRowKeys: false,
     getCheckboxProps: (record)=> ({disabled: ['AP', 'SB'].includes(record.status) })
   };
 
@@ -220,7 +220,7 @@ const ExpenseSheet = (props) => {
     expenseSheetActions(`/submitMany`, obj).then(res=>{
         if (res.success){
             // data[index]['isApproved'] = true
-            setSelectedRows({keys: [], data: []})
+            setSelectedRows({keys: [], data: []})              
             getData()
         }
     })

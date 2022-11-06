@@ -14,7 +14,7 @@ const { RangePicker } = DatePicker
 let modal = ""
 
 const ExpenseApproval = () => {
-
+	
 	const [projects, setProjects] = useState([]);
 	const [selectedRows, setSelectedRows] = useState({keys: [], data: []});
 	const [expenseData, setExpenseData] = useState();
@@ -22,9 +22,11 @@ const ExpenseApproval = () => {
 	// const [adminView, setAdminView] = useState(false);
 	// const [disableSubmit, setDisableSubmit] = useState(true);
 	const [queryRequest, setQueryRequest] = useState({
-		startDate: formatDate(new Date()).startOf("month"),
-		endDate: formatDate(new Date()).endOf("month")});  
-	const { startDate, endDate} = queryRequest
+		filterSatrtDate: formatDate(new Date()).startOf("month"),
+		filterEndDate: formatDate(new Date()).endOf("month"),
+		filterProject: null
+	});  
+	const { filterSatrtDate, filterEndDate, filterProject } = queryRequest
 
 	const columns = [
     {
@@ -105,19 +107,17 @@ const ExpenseApproval = () => {
         </Dropdown>
       ),
     },
-  ];
+  	];
+
+	useEffect(() => {
+		gettingProject();
+	}, []);
+
+	useEffect(() => {
+		gettingExpenseSheets(queryRequest);
+	}, [queryRequest]);
 
 	const onSelectChange = (newSelectedRowKeys, selectedRow) => {
-		// let cantApprove = true, cantReject = true, cantUnapprove = true
-		// selectedRow.forEach(el =>{
-		// 	if (el.status === 'SB'){
-		// 		cantApprove = false
-		// 		// cantReject = false
-		// 	}
-		// 	if(el.status === 'AP'){
-		// 		cantUnapprove = false
-		// 	}
-		// })
 		let cantApprove = false, cantUnapprove = false, cantReject = false
         selectedRow.forEach(el =>{
             if(el.status === 'SB'){
@@ -138,7 +138,7 @@ const ExpenseApproval = () => {
 	};
 	
 	const rowSelection = {
-		selectedRows: selectedRows.keys,
+		selectedRowKeys: selectedRows.keys,
 		onChange: onSelectChange,
 		// preserveSelectedRowKeys: false,
    		getCheckboxProps: (record)=> ({disabled: ['RJ', 'SV'].includes(record.status) })
@@ -148,20 +148,29 @@ const ExpenseApproval = () => {
 	const gettingProject = () => {
 		getProjects().then((res) => {
 			if (res.success) {
+				res.data.unshift({value:0, label: 'No Project'})
 				setProjects(res.data); 
 			}
 				
 		})
 	}
 
-	const gettingExpenseSheets = () => {
-		getExpenseSheets().then((res) => {
+	const gettingExpenseSheets = (filters) => {
+		getExpenseSheets(filters).then((res) => {
 			if (res.success) {
-				console.log("res->", res.data)
 				setExpenseData(res.data); 
 			}
 		})
 	}
+
+	const callBack = (data, index) => {
+		let exp = expenseData;
+    if (index >= 0) {
+			exp[index] = data; 
+		}
+		setExpenseData([...exp]);  
+		setOpenModal(false);
+  }
 
 	// modals 
 	const closeModal = () => {
@@ -169,10 +178,7 @@ const ExpenseApproval = () => {
 	}
 
 	// for filter 
-	useEffect(() => {
-		gettingProject();
-		gettingExpenseSheets();
-	}, []);
+	
 
 	const multiAction = (stage)=> {
 		const {data =[] } = selectedRows
@@ -211,25 +217,25 @@ const ExpenseApproval = () => {
 		  //     modal.destroy();
 		  // }
 		});
-	  }
-	
-	  const onActionFinished = (formValues, stage) =>{
-		const {notes} = formValues
-		OutcomeAction(stage, notes) 
-		modal.destroy();
-	  }
-	
-	  const OutcomeAction = (stage, actionNotes) =>{
-		const {keys =[] } = selectedRows
-		let obj={sheets: keys, notes: actionNotes }
-		expenseSheetActions(`/${stage}Many`, obj).then(res=>{
-			if (res.success){
-				// data[index]['isApproved'] = true
-				setSelectedRows({keys: [], data: []})
-				gettingExpenseSheets()
-			}
-		})
-	  }
+	}
+
+	const onActionFinished = (formValues, stage) =>{
+	const {notes} = formValues
+	OutcomeAction(stage, notes) 
+	modal.destroy();
+	}
+
+	const OutcomeAction = (stage, actionNotes) =>{
+	const {keys =[] } = selectedRows
+	let obj={sheets: keys, notes: actionNotes }
+	expenseSheetActions(`/${stage}Many`, obj).then(res=>{
+		if (res.success){
+			// data[index]['isApproved'] = true
+			setSelectedRows({keys: [], data: []})
+			gettingExpenseSheets()
+		}
+	})
+	}
 	
 	return (<>
 		<Row justify='space-between'>
@@ -245,17 +251,33 @@ const ExpenseApproval = () => {
 					showSearch
 					optionFilterProp={["label", "value"]}
 					filterOption={
-							(input, option) =>{
-									const label = option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
-									const value = option.value.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0
-											return label || value
-							}
+						(input, option) =>{
+							const label = option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
+							const value = option.value.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0
+							return label || value
+						}
 					}
-					onChange={(ind) => { console.log("need change") }}
+					onChange={(ind) => { 
+						setQueryRequest((prev)=>(
+							{...prev, filterProject: ind}
+						)) 
+					}}
 				/>
 			</Col>  
 			<Col >
-				<RangePicker />
+				<RangePicker 
+					format={'ddd DD MMM yyyy'}
+					value={[filterSatrtDate, filterEndDate]}
+					size="small"
+					onChange={(dates)=>{
+						setQueryRequest((prev)=>(
+							{	...prev, 
+								filterSatrtDate: dates?.[0] ?? null, 
+								filterEndDate: dates?.[1] ?? null
+							}
+						))
+					}}
+				/>
 			</Col>  
 			<Col span={24}>
 				<Table
@@ -307,7 +329,7 @@ const ExpenseApproval = () => {
 				visible={openModal}
 				close={closeModal}
 				adminView= {true}
-				// callBack={callBack}
+				callBack={callBack}
 			/>}   
 		</>
 	)

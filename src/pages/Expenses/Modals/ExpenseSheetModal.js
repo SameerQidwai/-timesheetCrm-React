@@ -5,7 +5,7 @@ import { formatDate, localStore } from '../../../service/constant';
 import FormItems from '../../../components/Core/Forms/FormItems';
 import { getProjects } from '../../../service/constant-Apis';
 // import { expensesData as dummyExpensesData } from '../../DummyData';
-import { addExpenseInSheet, addExpenseSheet, editExpenseSheet } from '../../../service/expenseSheet-Apis';
+import { addExpenseInSheet, addExpenseSheet, editExpenseSheet, manageExpenseSheet } from '../../../service/expenseSheet-Apis';
 import { addFiles, getAttachments } from '../../../service/Attachment-Apis';
 const {Text, Title} = Typography;
 
@@ -151,12 +151,12 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) =>
   },[]);
 
   const getData = () => {
-    Promise.all([getProjects(), getAttachments('ESH', visible.id)]).then((res) => {
+    Promise.all([getProjects(),  visible !== true && getAttachments('ESH', visible.id)]).then((res) => {
         let basic = basicFields
         basic[3].data = res[0].success ? res[0].data : []
         setBasicFields([...basic]); 
-        setFileList(res[1].success ? res[1].fileList : [])
-        
+        setFileList(res[1]?.success ? res[1].fileList : [])
+
         if (adminView) {
         setfilteredExpenses(visible?.expenseSheetExpenses)
       } else {
@@ -220,13 +220,25 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) =>
   }
 
   const editSheet=(id, data)=>{
-    editExpenseSheet(visible.id, data).then(res=>{
-      if (res.success){
-        callBack(res.data, visible?.index);
-      } else {
-      console.log("err",res)
+    if (!adminView){
+      editExpenseSheet(visible.id, data).then(res=>{
+        if (res.success){
+          callBack(res.data, visible?.index);
+        } else {
+          console.log("err",res)
+        }
+      })
+    }else{
+      const {basic}= form.getFieldsValue()
+      visible.isBillable = basic.isBillable = true
+      manageExpenseSheet(visible.id, data).then(res=>{
+        if (res.success){
+          callBack(visible, visible?.index);
+        } else {
+          console.log("err",res)
+        }
+      })
     }
-    })
   }
 
   const handleUpload = async option=>{
@@ -275,7 +287,7 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) =>
       onCancel={close}
       okText={"Save"}
       // adminView Prop add
-      okButtonProps={{ htmlType: 'submit', form: 'my-form', disabled: ((visible?.projectId === null && adminView) || editDisabled || (selectedRowKeys.length < 1 && !adminView))}}
+      okButtonProps={{ htmlType: 'submit', form: 'my-form', disabled: ((visible?.projectId === null && adminView)  || (selectedRowKeys.length < 1 && !adminView))}}
     >
       <Form
           id={'my-form'}

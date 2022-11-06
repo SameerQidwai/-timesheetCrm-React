@@ -340,7 +340,7 @@ class MileCertificate extends Component {
             <>  
             <Row >
                 <Col>
-                    <Typography.Title level={3}>Milestone Approval</Typography.Title>
+                    <Typography.Title level={4}>Milestone Approval</Typography.Title>
                 </Col>
                 <Col offset={5}>
                     <Select

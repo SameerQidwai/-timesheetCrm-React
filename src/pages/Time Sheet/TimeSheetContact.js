@@ -647,7 +647,7 @@ class TimeSheetContact extends Component {
             <>
                 <Row justify="space-between">
                     <Col >
-                        <Title level={3}>Timesheet Submission</Title>
+                        <Title level={4}>Timesheet Submission</Title>
                     </Col>
                     <Col >
                         <Select
@@ -726,7 +726,7 @@ class TimeSheetContact extends Component {
                     sticky
                     size="small"
                     style={{maxHeight: 'fit-content'}}
-                    className="timeSheet-table"
+                    className="timeSheet-table fs-small"
                     rowSelection={{ //multiple select commented
                         onChange:(selectedRowKeys, selectedRows)=>{this.milestoneSelect(selectedRowKeys, selectedRows )},
                         getCheckboxProps: (record) => ({                                                         //checking if project is close
