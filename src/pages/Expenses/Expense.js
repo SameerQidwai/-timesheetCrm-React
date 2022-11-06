@@ -7,13 +7,13 @@ import { delExpense, getListOfExpenses } from '../../service/expense-Apis';
 import { generalDelete } from "../../service/delete-Api's";
 import { tableSorter } from '../../components/Core/Table/TableFilter';
   
-
 const {Text, Title} = Typography;
 const Expense = (props) => {
 
     
   const [openModal, setOpenModal] = useState(false);
   const [expenseData, setExpenseData] = useState([]);
+	const [permission, setPermission] = useState({});
     
   const columns = [
     {
@@ -97,7 +97,7 @@ const Expense = (props) => {
               <Menu.Item
                 key="delete"
                 danger
-                disabled={record.isInSheet}
+                disabled={record.isInSheet || !permission?.['DELETE']}
                 className="pop-confirm-menu"
               >
                 <Popconfirm
@@ -113,6 +113,7 @@ const Expense = (props) => {
                 onClick={() =>
                 setOpenModal({...record,index})
               }
+                disabled={!permission?.['UPDATE']}
               >
                 Edit
               </Menu.Item>
@@ -129,6 +130,7 @@ const Expense = (props) => {
 
   useEffect(() => { 
     getData();
+    gettingPermissions();
   }, []);
 
   const getData = () => {
@@ -139,6 +141,15 @@ const Expense = (props) => {
     })
   }
 
+  // my work 
+	const gettingPermissions = () => {
+		const { id, permissions} = localStore();
+		console.log("permissions", permissions);
+		const { EXPENSES = {}} = JSON.parse(permissions)
+		console.log("EXPENSE", EXPENSES);
+		setPermission(EXPENSES);		
+  } 
+  
   const callBack = (data, index) => {
     let exp = expenseData;
     if (index >= 0) {
@@ -175,11 +186,11 @@ const Expense = (props) => {
       <Col>
       <Button
         type="primary"
-        size="small"
+            size="small"
         onClick={() => {
           setOpenModal(true);
         }}
-        // disabled={!permissions['ADD']}
+        disabled={!permission['ADD']}
       >
         <PlusSquareOutlined /> Add Expense
       </Button>

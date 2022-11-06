@@ -19,6 +19,7 @@ const ExpenseApproval = () => {
 	const [selectedRows, setSelectedRows] = useState({keys: [], data: []});
 	const [expenseData, setExpenseData] = useState();
 	const [openModal, setOpenModal] = useState(false);
+	const [permission, setPermission] = useState({});
 	// const [adminView, setAdminView] = useState(false);
 	// const [disableSubmit, setDisableSubmit] = useState(true);
 	const [queryRequest, setQueryRequest] = useState({
@@ -94,7 +95,8 @@ const ExpenseApproval = () => {
                 onClick={() =>
                   setOpenModal({ ...record, index, adminView: true })
                 }
-                // disabled={this.state && !this.state.permissions['UPDATE']}
+						//   need some confirmation 
+                disabled={!permission['UPDATE']}
               >
                 View
               </Menu.Item>
@@ -111,12 +113,22 @@ const ExpenseApproval = () => {
 
 	useEffect(() => {
 		gettingProject();
+		gettingPermissions();
 	}, []);
 
 	useEffect(() => {
 		gettingExpenseSheets(queryRequest);
 	}, [queryRequest]);
 
+	// my work 
+	const gettingPermissions = () => {
+		const { id, permissions} = localStore();
+		console.log("permissions", permissions);
+		const { EXPENSES = {}} = JSON.parse(permissions)
+		console.log("EXPENSE", EXPENSES);
+		setPermission(EXPENSES);		
+	} 
+	
 	const onSelectChange = (newSelectedRowKeys, selectedRow) => {
 		let cantApprove = false, cantUnapprove = false, cantReject = false
         selectedRow.forEach(el =>{
@@ -298,7 +310,7 @@ const ExpenseApproval = () => {
 						<Button 
 							type="primary" 
 							danger
-							disabled={ (selectedRows?.cantReject || selectedRows['keys']?.length<1)}
+							disabled={ (selectedRows?.cantReject || !permission?.['APPROVAL'] || selectedRows['keys']?.length<1)}
 							onClick={()=> multiAction('reject')}
 						> 
 							Reject
@@ -307,7 +319,7 @@ const ExpenseApproval = () => {
 					<Col>
 						<Button
 							className={'success'}
-							disabled={ (selectedRows?.cantApprove || selectedRows['keys']?.length<1)}
+							disabled={ (selectedRows?.cantApprove || !permission?.['APPROVAL'] || selectedRows['keys']?.length<1)}
 							onClick={()=> multiAction('approve')}
 						>
 							Approve
@@ -316,7 +328,7 @@ const ExpenseApproval = () => {
 					<Col>
 						<Button
 							className={'not-success'}
-							disabled={ (selectedRows?.cantUnapprove || selectedRows['keys']?.length<1	)}
+							disabled={ (selectedRows?.cantUnapprove || !permission?.['UNAPPROVAL'] || selectedRows['keys']?.length<1	)}
 							onClick={()=> multiAction('unapprove')}
 						>
 							Unapprove

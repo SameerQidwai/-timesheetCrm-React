@@ -33,7 +33,7 @@ class Permission extends Component {
                 dataIndex: 'ADD',
                 render: (text, record, rowIndex) => {
                     {return <Form.Item noStyle name={[record.key, 'ADD']}>{  
-                        record.key === "TIMESHEETS" || record.key === "LEAVE_REQUESTS" ?
+                        record.key === "TIMESHEETS" || record.key === "LEAVE_REQUESTS" || record.key === "EXPENSE" ?
                         <Checkbox.Group  options={['ANY', 'MANAGE', 'OWN']}  />
                         : record.key === "PROFILE" ?
                             null
@@ -52,7 +52,7 @@ class Permission extends Component {
                     {return  <Form.Item noStyle name={[record.key, 'UPDATE']}>{  
                             record.key === "PROJECTS" || record.key === "OPPORTUNITIES"?
                             <Checkbox.Group  options={['ANY', 'MANAGE']}  />
-                            : record.key === "TIMESHEETS" || record.key === "LEAVE_REQUESTS"  ?
+                            : record.key === "TIMESHEETS" || record.key === "LEAVE_REQUESTS" || record.key === "EXPENSES" ?
                                 <Checkbox.Group  options={['ANY', 'MANAGE', 'OWN']}  />
                             : record.key === "PROFILE" ?
                                 <Checkbox.Group  options={['OWN']}  />
@@ -68,7 +68,7 @@ class Permission extends Component {
                 dataIndex: 'READ',
                 render: (text, record,  rowIndex) => {
                     {return  <Form.Item noStyle name={[record.key, 'READ']}>{
-                            record.key === "PROJECTS" || record.key === "TIMESHEETS"|| record.key === "LEAVE_REQUESTS"  ?
+                            record.key === "PROJECTS" || record.key === "TIMESHEETS"|| record.key === "LEAVE_REQUESTS" || record.key === "EXPENSES" ?
                             <Checkbox.Group  options={['ANY', 'MANAGE', 'OWN']}  />
                             : record.key === "OPPORTUNITIES"? 
                                 <Checkbox.Group  options={['ANY', 'MANAGE']}  />
@@ -100,7 +100,7 @@ class Permission extends Component {
                 dataIndex: 'APPROVAL',
                 render: (text, record, rowIndex) => {
                     {return   <Form.Item noStyle name={[record.key, 'APPROVAL']}>{ 
-                            (record.key === "TIMESHEETS" || record.key === "LEAVE_REQUESTS" ) && (
+                            (record.key === "TIMESHEETS" || record.key === "LEAVE_REQUESTS" || record.key === "EXPENSES") && (
                             <Checkbox.Group  options={['ANY', 'MANAGE']}  />
                             )
                         }</Form.Item>
@@ -113,7 +113,7 @@ class Permission extends Component {
                 dataIndex: 'UNAPPROVAL',
                 render: (text, record, rowIndex) => {
                     {return   <Form.Item noStyle name={[record.key, 'UNAPPROVAL']}>{ 
-                            (record.key === "TIMESHEETS" || record.key === "LEAVE_REQUESTS" ) && (
+                            (record.key === "TIMESHEETS" || record.key === "LEAVE_REQUESTS" || record.key === "EXPENSES") && (
                             <Checkbox.Group  options={['ANY', 'MANAGE']}  />
                             )
                         }</Form.Item>
@@ -157,6 +157,10 @@ class Permission extends Component {
                 {
                     key: 'LEAVE_REQUESTS',
                     category: "Leave Requests",
+                },
+                {
+                    key: 'EXPENSES',
+                    category: "Expenses",
                 },
                 {
                     key: 'PROFILE',

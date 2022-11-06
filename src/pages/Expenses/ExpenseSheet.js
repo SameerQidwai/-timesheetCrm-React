@@ -17,6 +17,7 @@ const ExpenseSheet = (props) => {
   const [openModal, setOpenModal] = useState(false);
   const [expenseSheet, setExpenseSheet] = useState([]);
   const [expenses, setExpenses] =  useState([])
+	const [permission, setPermission] = useState({});
   // const [disableSubmit, setDisableSubmit] = useState(true);
 
   const columns = [
@@ -78,7 +79,7 @@ const ExpenseSheet = (props) => {
               <Menu.Item
                 key="delete"
                 danger
-                disabled={['AP', 'SB'].includes(record.status)}
+                disabled={['AP', 'SB'].includes(record.status) || !permission['DELETE']}
                 className="pop-confirm-menu"
               >
                 <Popconfirm
@@ -98,7 +99,7 @@ const ExpenseSheet = (props) => {
                     
                   // })
                 }
-                // disabled={this.state && !this.state.permissions['UPDATE']}
+                disabled={['AP', 'SB'].includes(record.status) || !permission['UPDATE']}
               >
                 Edit
               </Menu.Item>
@@ -123,6 +124,7 @@ const ExpenseSheet = (props) => {
 
   useEffect(() => {
     getData();
+    gettingPermissions();
   }, []);
 
   const getData = () => {
@@ -133,6 +135,15 @@ const ExpenseSheet = (props) => {
     })
   }
 
+  // my work 
+	const gettingPermissions = () => {
+		const { id, permissions} = localStore();
+		console.log("permissions", permissions);
+		const { EXPENSES } = JSON.parse(permissions)
+		// console.log("EXPENSE", EXPENSES);
+		setPermission(EXPENSES);		
+  } 
+  
   const handleDelete = (id, index) => {
     const url = '/expense-sheets';
     const { history } = props;
@@ -141,7 +152,6 @@ const ExpenseSheet = (props) => {
         setExpenseSheet([...res.filterData]);
       }
     });
-    
 	}
   
   const onSelectChange = (newSelectedRowKeys, selectedRow) => {
@@ -239,7 +249,8 @@ const ExpenseSheet = (props) => {
           onClick={() => {
             onOpenModal(true)
           }}
-          // disabled={!permissions['ADD']}
+          disabled={!permission['ADD']}
+            
         >
           <PlusSquareOutlined /> Add Expense Sheet
         </Button>
@@ -262,7 +273,7 @@ const ExpenseSheet = (props) => {
                 <Button 
                     type="primary" 
                     className={'success'}
-                    disabled={ (selectedRows.checkDisable || selectedRows['keys']?.length<1)}
+                    disabled={ (selectedRows.checkDisable || !permission['ADD'] || selectedRows['keys']?.length<1)}
                     // disabled={ sRequest.keys.length<1 || !permissions['APPROVAL'] || sRequest.cantReject}
                     onClick={()=>multiAction()}
                 > 
