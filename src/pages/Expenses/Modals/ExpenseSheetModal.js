@@ -3,7 +3,7 @@ import { PlusOutlined } from "@ant-design/icons"; //Icons
 import React, { useEffect, useState } from 'react'
 import { formatDate, localStore } from '../../../service/constant';
 import FormItems from '../../../components/Core/Forms/FormItems';
-import { getProjects } from '../../../service/constant-Apis';
+import { getUserProjects } from '../../../service/constant-Apis';
 // import { expensesData as dummyExpensesData } from '../../DummyData';
 import { addExpenseInSheet, addExpenseSheet, editExpenseSheet, manageExpenseSheet } from '../../../service/expenseSheet-Apis';
 import { addFiles, getAttachments } from '../../../service/Attachment-Apis';
@@ -54,11 +54,11 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) =>
       disabled: adminView || editDisabled,  
       object: "basic",
       fieldCol: 12,
-      key: "projectId", // when-api change it to projectId
+      key: adminView? "projectName": "projectId", // when-api change it to projectId
       size: "small",
       initialValue: null,
       data: [],
-      type: "Select",
+      type: adminView ? "Input": "Select",
     onChange: (projectId) => { selectedProjectExpenses(projectId) }
   },
   {
@@ -151,7 +151,10 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) =>
   },[]);
 
   const getData = () => {
-    Promise.all([getProjects(),  visible !== true && getAttachments('ESH', visible.id)]).then((res) => {
+    const { id, permissions = ''} = localStore();
+		const { EXPENSES = {}} = JSON.parse(permissions)
+		// setPermission(EXPENSES);		
+    Promise.all([getUserProjects(id, 'O', 0),  visible !== true && getAttachments('ESH', visible.id)]).then((res) => {
         let basic = basicFields
         basic[3].data = res[0].success ? res[0].data : []
         setBasicFields([...basic]); 

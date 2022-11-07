@@ -73,6 +73,7 @@ const Expense = (props) => {
     {
       title: 'i',
       dataIndex: 'isReimbursed',
+      align: 'center',
       render: (value) => (
         <Checkbox defaultChecked={false} checked={value} />
       )
@@ -80,6 +81,7 @@ const Expense = (props) => {
     {
       title: 'b',
       dataIndex: 'isBillable',
+      align: 'center',
       render: (value) => (
         <Checkbox defaultChecked={false} checked={value} />
       )
@@ -113,9 +115,8 @@ const Expense = (props) => {
                 onClick={() =>
                 setOpenModal({...record,index})
               }
-                disabled={!permission?.['UPDATE']}
               >
-                Edit
+                {(record.status === 'AP' || record.status === 'SB') ? 'View' : 'Edit'}
               </Menu.Item>
             </Menu>
           }
@@ -143,10 +144,8 @@ const Expense = (props) => {
 
   // my work 
 	const gettingPermissions = () => {
-		const { id, permissions} = localStore();
-		console.log("permissions", permissions);
+		const { id, permissions = ''} = localStore();
 		const { EXPENSES = {}} = JSON.parse(permissions)
-		console.log("EXPENSE", EXPENSES);
 		setPermission(EXPENSES);		
   } 
   

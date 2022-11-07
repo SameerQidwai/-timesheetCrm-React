@@ -1,4 +1,4 @@
-import { Button, Col, DatePicker, Dropdown, Menu, Popconfirm, Row, Select, Table, Tag, Typography,Modal, Form, Input, Tooltip} from 'antd';
+import { Button, Col, DatePicker, Dropdown, Menu, Popconfirm, Row, Select, Table, Tag, Typography,Modal, Form, Input, Tooltip, Checkbox} from 'antd';
 import { SettingOutlined, CheckCircleOutlined, AuditOutlined} from '@ant-design/icons'; //Icons
 import React, { useEffect, useState } from 'react'
 import { getProjects } from '../../service/constant-Apis';
@@ -80,6 +80,14 @@ const ExpenseApproval = () => {
       align: 'center',
       ...tableSorter('submittedBy', 'string'),
     },
+	{
+		title: 'b',
+		dataIndex: 'isBillable',
+		align: 'center',
+		render: (value) => (
+		  <Checkbox defaultChecked={false} checked={value} />
+		)
+	  },
     {
       title: '...',
       key: 'action',
