@@ -3,9 +3,9 @@ import { DatePicker, Form, Modal, Typography, Upload } from 'antd'
 import { PlusOutlined } from "@ant-design/icons"; //Icons
 import FormItems from '../../../components/Core/Forms/FormItems'
 
-import { getOrgPersons, getProjects } from '../../../service/constant-Apis'
+import { getUserProjects } from '../../../service/constant-Apis'
 import { addFiles, getAttachments } from '../../../service/Attachment-Apis'
-import { Api, formatDate } from '../../../service/constant'
+import { Api, formatDate, localStore } from '../../../service/constant'
 import { addExpense, editExpense } from '../../../service/expense-Apis'
 import { getListAlt as getExpenseTypeList } from '../../../service/expenseType-Apis';
 
@@ -17,6 +17,7 @@ const InfoModal = ({ visible, close, callBack }) => {
 
     const [fileList, setFileList] = useState([]);
     const [progress, setProgress] = useState();
+    const [permission, setPermission] = useState({});
     const [form] = Form.useForm();
 
     // console.log("fileList", fileList);
@@ -93,7 +94,7 @@ const InfoModal = ({ visible, close, callBack }) => {
             // checked: []
         },
         {
-            Placeholder: "Reimbursed",
+            Placeholder: "Reimbursable",
             // rangeMin: true,
             fieldCol: 5,
             size: "small",
@@ -165,11 +166,17 @@ const InfoModal = ({ visible, close, callBack }) => {
 
     useEffect(() => {
         getData();
+        gettingPermissions()
         if (visible !== true) {
             visible.date = formatDate(visible.date)
             form.setFieldsValue({ basic: visible })
         }
     }, []);
+    const gettingPermissions = () => {
+		const { id, permissions = ''} = localStore();
+		const { EXPENSES = {}} = JSON.parse(permissions)
+		setPermission(EXPENSES);		
+  } 
 
     // on submit 
     const onFinish = (data) => {
@@ -178,7 +185,6 @@ const InfoModal = ({ visible, close, callBack }) => {
         basic.attachments = fileList.map((file, index) => {
             return file.fileId;
         });
-        console.log("basic-->", basic)
         if (visible === true) {
             addExpense(basic).then((res) => {
                 if (res.success) {
@@ -201,7 +207,10 @@ const InfoModal = ({ visible, close, callBack }) => {
     }
 
     const getData = () => {
-        Promise.all([getProjects(), getExpenseTypeList(), visible !== true && getAttachments('EXP', visible.id)]).then((res) => {
+        const { id, permissions = ''} = localStore();
+		const { EXPENSES = {}} = JSON.parse(permissions)
+		setPermission(EXPENSES);		
+        Promise.all([getUserProjects(id, 'O', 0), getExpenseTypeList(), visible !== true && getAttachments('EXP', visible.id)]).then((res) => {
             let basic = basicFields
             basic[11].data = res[0].success ? res[0].data : []
             basic[2].data = res[1].success ? res[1].data : []
@@ -258,7 +267,7 @@ const InfoModal = ({ visible, close, callBack }) => {
           width={650}
           onCancel={close}
           okText={"Save"}
-          okButtonProps={{ htmlType: 'submit', form: 'my-form', disabled: editDisabled }}
+          okButtonProps={{ htmlType: 'submit', form: 'my-form', disabled: editDisabled || !permission['UPDATE'] || !permission['ADD'] }}
       >
           <Form
             id={'my-form'}

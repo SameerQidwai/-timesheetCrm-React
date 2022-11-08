@@ -1,12 +1,12 @@
-import { Button, Col, DatePicker, Dropdown, Menu, Popconfirm, Row, Select, Table, Tag, Typography,Modal, Form, Input, Tooltip} from 'antd';
+import { Button, Col, DatePicker, Dropdown, Menu, Popconfirm, Row, Select, Table, Tag, Typography,Modal, Form, Input, Tooltip, Checkbox} from 'antd';
 import { SettingOutlined, CheckCircleOutlined, AuditOutlined} from '@ant-design/icons'; //Icons
 import React, { useEffect, useState } from 'react'
-import { getProjects } from '../../service/constant-Apis';
+import { getManageProjects, getUserProjects } from '../../service/constant-Apis';
 import { expenseSheetActions, getExpenseSheets } from '../../service/expenseSheet-Apis';
-import { formatDate, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
+import { formatCurrency, formatDate, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
 // import { expensesData as dummyExpensesData } from '../DummyData';
 import ExpenseSheetModal from './Modals/ExpenseSheetModal';
-import { tableSorter } from '../../components/Core/Table/TableFilter';
+import { tableCondSorter, tableSorter } from '../../components/Core/Table/TableFilter';
 import {Tag_s} from '../../components/Core/Custom/Index';
 
 const { Title } = Typography
@@ -19,6 +19,7 @@ const ExpenseApproval = () => {
 	const [selectedRows, setSelectedRows] = useState({keys: [], data: []});
 	const [expenseData, setExpenseData] = useState();
 	const [openModal, setOpenModal] = useState(false);
+	const [permission, setPermission] = useState({});
 	// const [adminView, setAdminView] = useState(false);
 	// const [disableSubmit, setDisableSubmit] = useState(true);
 	const [queryRequest, setQueryRequest] = useState({
@@ -49,6 +50,7 @@ const ExpenseApproval = () => {
       title: 'Amount',
       dataIndex: 'amount',
       align: 'center',
+	  render: (text) => formatCurrency(text),
       ...tableSorter('amount', 'number'),
     },
     {
@@ -64,8 +66,8 @@ const ExpenseApproval = () => {
             </Tooltip>
           )}
         </span>,
-      ...tableSorter('status', 'string'),
-    },
+      ...tableCondSorter('status', 'string', true, 'SB')
+	},
     {
       title: 'Submitted At',
       dataIndex: 'submittedAt',
@@ -79,7 +81,15 @@ const ExpenseApproval = () => {
       align: 'center',
       ...tableSorter('submittedBy', 'string'),
     },
-    {
+	{
+	title: 'b',
+	dataIndex: 'isBillable',
+	align: 'center',
+	render: (value) => (
+		<Checkbox defaultChecked={false} checked={value} />
+		)
+	},
+	{
       title: '...',
       key: 'action',
       align: 'center',
@@ -94,7 +104,6 @@ const ExpenseApproval = () => {
                 onClick={() =>
                   setOpenModal({ ...record, index, adminView: true })
                 }
-                // disabled={this.state && !this.state.permissions['UPDATE']}
               >
                 View
               </Menu.Item>
@@ -117,6 +126,8 @@ const ExpenseApproval = () => {
 		gettingExpenseSheets(queryRequest);
 	}, [queryRequest]);
 
+	// my work 
+	
 	const onSelectChange = (newSelectedRowKeys, selectedRow) => {
 		let cantApprove = false, cantUnapprove = false, cantReject = false
         selectedRow.forEach(el =>{
@@ -146,7 +157,10 @@ const ExpenseApproval = () => {
 
 	// for get all project 
 	const gettingProject = () => {
-		getProjects().then((res) => {
+		const { id, permissions} = localStore();
+		const { EXPENSES = {}} = JSON.parse(permissions)
+		setPermission(EXPENSES);		
+		getUserProjects(id, 'M', 0).then((res) => {
 			if (res.success) {
 				res.data.unshift({value:0, label: 'No Project'})
 				setProjects(res.data); 
@@ -298,7 +312,7 @@ const ExpenseApproval = () => {
 						<Button 
 							type="primary" 
 							danger
-							disabled={ (selectedRows?.cantReject || selectedRows['keys']?.length<1)}
+							disabled={ (selectedRows?.cantReject || !permission?.['APPROVAL'] || selectedRows['keys']?.length<1)}
 							onClick={()=> multiAction('reject')}
 						> 
 							Reject
@@ -307,7 +321,7 @@ const ExpenseApproval = () => {
 					<Col>
 						<Button
 							className={'success'}
-							disabled={ (selectedRows?.cantApprove || selectedRows['keys']?.length<1)}
+							disabled={ (selectedRows?.cantApprove || !permission?.['APPROVAL'] || selectedRows['keys']?.length<1)}
 							onClick={()=> multiAction('approve')}
 						>
 							Approve
@@ -315,8 +329,8 @@ const ExpenseApproval = () => {
 					</Col>
 					<Col>
 						<Button
-							className={'success'}
-							disabled={ (selectedRows?.cantUnapprove || selectedRows['keys']?.length<1	)}
+							className={'not-success'}
+							disabled={ (selectedRows?.cantUnapprove || !permission?.['UNAPPROVAL'] || selectedRows['keys']?.length<1	)}
 							onClick={()=> multiAction('unapprove')}
 						>
 							Unapprove

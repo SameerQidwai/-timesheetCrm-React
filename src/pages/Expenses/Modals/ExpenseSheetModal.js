@@ -1,21 +1,24 @@
 import { Button, Checkbox, Col, Form, Modal, Row, Table, Typography, Upload } from 'antd'
 import { PlusOutlined } from "@ant-design/icons"; //Icons
 import React, { useEffect, useState } from 'react'
-import { formatDate, localStore } from '../../../service/constant';
+import { formatCurrency, formatDate, localStore } from '../../../service/constant';
 import FormItems from '../../../components/Core/Forms/FormItems';
-import { getProjects } from '../../../service/constant-Apis';
+import { getProjects, getUserProjects } from '../../../service/constant-Apis';
 // import { expensesData as dummyExpensesData } from '../../DummyData';
 import { addExpenseInSheet, addExpenseSheet, editExpenseSheet, manageExpenseSheet } from '../../../service/expenseSheet-Apis';
 import { addFiles, getAttachments } from '../../../service/Attachment-Apis';
+import { tableSorter } from '../../../components/Core/Table/TableFilter';
 const {Text, Title} = Typography;
 
 const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) => {
   let editDisabled = ['AP', 'SB'].includes(visible.status)
 
+  console.log("check->", editDisabled)
   const [form] = Form.useForm();
   const [filteredExpenses, setfilteredExpenses] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [progress, setProgress] = useState();
+  const [permission, setPermission] = useState({});
   const [fileList, setFileList] = useState([]);
   // fields of form
   const [basicFields, setBasicFields] = useState([
@@ -54,12 +57,12 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) =>
       disabled: adminView || editDisabled,  
       object: "basic",
       fieldCol: 12,
-      key: "projectId", // when-api change it to projectId
+      key:  adminView ? "projectName" : "projectId" , // when-api change it to projectId
       size: "small",
       initialValue: null,
       data: [],
-      type: "Select",
-    onChange: (projectId) => { selectedProjectExpenses(projectId) }
+      type: adminView ? "Input" : "Select",
+      onChange: (projectId) => { selectedProjectExpenses(projectId) }
   },
   {
       disabled : visible?.projectId === null,  
@@ -89,31 +92,24 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) =>
         title: 'Code',
         dataIndex: 'id',
         render: (text)=> `00${text}`, 
+        ...tableSorter('id', 'number'),
       },
       {
         title: 'TYPE',
         dataIndex: 'expenseTypeName',
-        sorter: {
-          compare: (a, b) => a.type - b.type,
-          multiple: 3,
-        },
+        ...tableSorter('expenseTypeName', 'string'),
       },
       {
         title: 'Date',
-          dataIndex: 'date', // when-api change it to [date,name] or dateName
+        dataIndex: 'date', // when-api change it to [date,name] or dateName
         render: (text)=> formatDate(text, true , true),
-        sorter: {
-          compare: (a, b) => a.date - b.date,
-          multiple: 2,
-        },
+        ...tableSorter('date', 'date'),
       },
       {
         title: 'Amount',
         dataIndex: 'amount',
-        sorter: {
-          compare: (a, b) => a.amount - b.amount,
-          multiple: 1,
-        },
+        render: (text) => formatCurrency(text),
+        ...tableSorter('amount', 'number'),
       },
       {
         title: 'Files',
@@ -151,9 +147,12 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) =>
   },[]);
 
   const getData = () => {
-    Promise.all([getProjects(),  visible !== true && getAttachments('ESH', visible.id)]).then((res) => {
+    const { id, permissions = ''} = localStore();
+		const { EXPENSES = {}} = JSON.parse(permissions)
+		setPermission(EXPENSES);		
+    Promise.all([!adminView && getUserProjects(id, 'O', 0),  visible !== true && getAttachments('ESH', visible.id)]).then((res) => {
         let basic = basicFields
-        basic[3].data = res[0].success ? res[0].data : []
+        basic[3].data = res[0]?.success ? res[0].data : []
         setBasicFields([...basic]); 
         setFileList(res[1]?.success ? res[1].fileList : [])
 
@@ -230,7 +229,7 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) =>
       })
     }else{
       const {basic}= form.getFieldsValue()
-      visible.isBillable = basic.isBillable = true
+      visible.isBillable = basic.isBillable
       manageExpenseSheet(visible.id, data).then(res=>{
         if (res.success){
           callBack(visible, visible?.index);
@@ -287,7 +286,8 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) =>
       onCancel={close}
       okText={"Save"}
       // adminView Prop add
-      okButtonProps={{ htmlType: 'submit', form: 'my-form', disabled: ((visible?.projectId === null && adminView)  || (selectedRowKeys.length < 1 && !adminView))}}
+      // okButtonProps={{ htmlType: 'submit', form: 'my-form', disabled: (( (visible?.projectId === null && adminView) || (selectedRowKeys.length < 1 && !adminView)) || !permission['UPDATE'] || !permission['ADD'])}}
+      okButtonProps={{ htmlType: 'submit', form: 'my-form', disabled: ((visible?.projectId === null && adminView) || (!adminView && ((selectedRowKeys.length < 1 ) || editDisabled || (visible && !permission['UPDATE']) || (!visible && !permission['ADD']))))}}
     >
       <Form
           id={'my-form'}

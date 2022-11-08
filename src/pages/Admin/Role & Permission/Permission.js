@@ -4,17 +4,69 @@ import { LoadingOutlined } from "@ant-design/icons"; //Icons
 import { updatePermission } from '../../../service/Roles-Apis';
 
 
-const constant = {
-    'ADMIN_OPTIONS': {label: 'Admin Options', len: 1, }, 
-    'CONTACT_PERSONS':{label: "Contact Persons", len:1},
-    'ORGANIZATIONS': {label: 'Organisations', len: 1, }, 
-    'USERS':{label: "Users", len:1},
-    'PROJECTS': {label: 'Projects', len: 3, }, 
-    'OPPORTUNITIES':{label: "Opportunities", len:3},
-    'TIMESHEETS': {label: 'Timesheets', len: 3, }, 
-    'LEAVE_REQUESTS': {label: 'Leave Requests', len: 3, }, 
-    'PROFILE':{label: "Profile", len:1},
-} 
+const permissionOptions = {
+  ADMIN_OPTIONS: {
+    ADD: ['ANY'],
+    UPDATE: ['ANY'],
+    READ: ['ANY'],
+    DELETE: ['ANY'],
+  },
+  CONTACT_PERSONS: {
+    ADD: ['ANY'],
+    UPDATE: ['ANY'],
+    READ: ['ANY'],
+    DELETE: ['ANY'],
+  },
+  ORGANIZATIONS: {
+    ADD: ['ANY'],
+    UPDATE: ['ANY'],
+    READ: ['ANY'],
+    DELETE: ['ANY'],
+  },
+  USERS: { 
+    ADD: ['ANY'], 
+    UPDATE: ['ANY'], 
+    READ: ['ANY'], 
+    DELETE: ['ANY'] 
+  },
+  PROJECTS: {
+    ADD: ['ANY'],
+    UPDATE: ['ANY', 'MANAGE'],
+    READ: ['ANY', 'MANAGE', 'OWN'],
+    DELETE: ['ANY'],
+  },
+  OPPORTUNITIES: {
+    ADD: ['ANY'],
+    UPDATE: ['ANY', 'MANAGE'],
+    READ: ['ANY', 'MANAGE'],
+    DELETE: ['ANY'],
+  },
+  TIMESHEETS: {
+    ADD: ['OWN'],
+    UPDATE: ['OWN'],
+    READ: ['ANY', 'MANAGE', 'OWN'],
+    DELETE: ['OWN'],
+    APPROVAL: ['ANY', 'MANAGE'],
+    UNAPPROVAL: ['ANY', 'MANAGE'],
+  },
+  LEAVE_REQUESTS: {
+    ADD: ['OWN'],
+    UPDATE: ['OWN'],
+    READ: ['OWN'],
+    DELETE: ['OWN'],
+    APPROVAL: ['ANY', 'MANAGE'],
+    UNAPPROVAL: ['ANY', 'MANAGE'],
+  },
+  EXPENSES: {
+    ADD: ['OWN'],
+    UPDATE: ['OWN'],
+    READ: ['OWN'],
+    DELETE: ['OWN'],
+    APPROVAL: ['ANY', 'MANAGE'],
+    UNAPPROVAL: ['ANY', 'MANAGE'],
+  },
+  PROFILE: { UPDATE: ['OWN'] },
+};
 
 class Permission extends Component {
     constructor(props) {
@@ -32,15 +84,16 @@ class Permission extends Component {
                 key: 'ADD',
                 dataIndex: 'ADD',
                 render: (text, record, rowIndex) => {
-                    {return <Form.Item noStyle name={[record.key, 'ADD']}>{  
-                        record.key === "TIMESHEETS" || record.key === "LEAVE_REQUESTS" ?
-                        <Checkbox.Group  options={['ANY', 'MANAGE', 'OWN']}  />
-                        : record.key === "PROFILE" ?
-                            null
-                        :
-                        // <Checkbox checked={'CREATE'} onChange={this.handleCheckboxChangeFactory(rowIndex, "READ")} >ANY</Checkbox>
-                        <Checkbox.Group  options={['ANY']}  />
-                        }</Form.Item>
+                    {
+                      return (
+                        <Form.Item noStyle name={[record.key, 'ADD']}>
+                          {permissionOptions[record.key]['ADD'] && (
+                            <Checkbox.Group
+                              options={permissionOptions[record.key]['ADD']}
+                            />
+                          )}
+                        </Form.Item>
+                      );
                     }
                 },
             },
@@ -49,16 +102,16 @@ class Permission extends Component {
                 key: 'UPDATE',
                 dataIndex: 'UPDATE',
                 render: (text, record, rowIndex) => {
-                    {return  <Form.Item noStyle name={[record.key, 'UPDATE']}>{  
-                            record.key === "PROJECTS" || record.key === "OPPORTUNITIES"?
-                            <Checkbox.Group  options={['ANY', 'MANAGE']}  />
-                            : record.key === "TIMESHEETS" || record.key === "LEAVE_REQUESTS"  ?
-                                <Checkbox.Group  options={['ANY', 'MANAGE', 'OWN']}  />
-                            : record.key === "PROFILE" ?
-                                <Checkbox.Group  options={['OWN']}  />
-                            :
-                                <Checkbox.Group  options={['ANY']}  />
-                        }</Form.Item>
+                    {
+                      return (
+                        <Form.Item noStyle name={[record.key, 'UPDATE']}>
+                          {permissionOptions[record.key]['UPDATE'] && (
+                            <Checkbox.Group
+                              options={permissionOptions[record.key]['UPDATE']}
+                            />
+                          )}
+                        </Form.Item>
+                      );
                     }
                 },
             },
@@ -67,16 +120,16 @@ class Permission extends Component {
                 key: 'READ',
                 dataIndex: 'READ',
                 render: (text, record,  rowIndex) => {
-                    {return  <Form.Item noStyle name={[record.key, 'READ']}>{
-                            record.key === "PROJECTS" || record.key === "TIMESHEETS"|| record.key === "LEAVE_REQUESTS"  ?
-                            <Checkbox.Group  options={['ANY', 'MANAGE', 'OWN']}  />
-                            : record.key === "OPPORTUNITIES"? 
-                                <Checkbox.Group  options={['ANY', 'MANAGE']}  />
-                                :record.key === "PROFILE" ?
-                                null
-                            :
-                            <Checkbox.Group  options={['ANY']}  />
-                        }</Form.Item>
+                    {
+                      return (
+                        <Form.Item noStyle name={[record.key, 'READ']}>
+                          {permissionOptions[record.key]['READ'] && (
+                            <Checkbox.Group
+                              options={permissionOptions[record.key]['READ']}
+                            />
+                          )}
+                        </Form.Item>
+                      );
                     }
                 },
             },
@@ -85,12 +138,15 @@ class Permission extends Component {
                 key: 'DELETE',
                 dataIndex: 'DELETE',
                 render: (text, record, rowIndex) => {
-                    {return  <Form.Item noStyle name={[record.key, 'DELETE']}>{ 
-                            record.key === "PROFILE" ?
-                            null 
-                            :
-                            <Checkbox.Group  options={['ANY', 'OWN']}  />
-                        }</Form.Item>
+                    {return (
+                      <Form.Item noStyle name={[record.key, 'DELETE']}>
+                        {permissionOptions[record.key]['DELETE'] && (
+                          <Checkbox.Group
+                            options={permissionOptions[record.key]['DELETE']}
+                          />
+                        )}
+                      </Form.Item>
+                    );
                     }
                 },
             },
@@ -99,11 +155,16 @@ class Permission extends Component {
                 key: 'APPROVAL',
                 dataIndex: 'APPROVAL',
                 render: (text, record, rowIndex) => {
-                    {return   <Form.Item noStyle name={[record.key, 'APPROVAL']}>{ 
-                            (record.key === "TIMESHEETS" || record.key === "LEAVE_REQUESTS" ) && (
-                            <Checkbox.Group  options={['ANY', 'MANAGE']}  />
-                            )
-                        }</Form.Item>
+                    {
+                      return (
+                        <Form.Item noStyle name={[record.key, 'APPROVAL']}>
+                          {permissionOptions[record.key]['APPROVAL'] && (
+                            <Checkbox.Group
+                              options={permissionOptions[record.key]['APPROVAL']}
+                            />
+                          )}
+                        </Form.Item>
+                      );
                     }
                 },
             },
@@ -112,11 +173,15 @@ class Permission extends Component {
                 key: 'UNAPPROVAL',
                 dataIndex: 'UNAPPROVAL',
                 render: (text, record, rowIndex) => {
-                    {return   <Form.Item noStyle name={[record.key, 'UNAPPROVAL']}>{ 
-                            (record.key === "TIMESHEETS" || record.key === "LEAVE_REQUESTS" ) && (
-                            <Checkbox.Group  options={['ANY', 'MANAGE']}  />
-                            )
-                        }</Form.Item>
+                    {return (
+                      <Form.Item noStyle name={[record.key, 'UNAPPROVAL']}>
+                        {permissionOptions[record.key]['UNAPPROVAL'] && (
+                          <Checkbox.Group
+                            options={permissionOptions[record.key]['UNAPPROVAL']}
+                          />
+                        )}
+                      </Form.Item>
+                    );
                     }
                 },
             },
@@ -125,7 +190,7 @@ class Permission extends Component {
         this.state = {
             loading: false,
             newPermission: {},
-            Rows: [
+            MODULES: [
                 {
                     key: 'ADMIN_OPTIONS',
                     category: "Admin Options",
@@ -140,7 +205,7 @@ class Permission extends Component {
                 },
                 {
                     key: 'USERS',
-                    category: "Users",
+                    category: "Resource",
                 },
                 {
                     key: 'PROJECTS',
@@ -159,13 +224,13 @@ class Permission extends Component {
                     category: "Leave Requests",
                 },
                 {
+                    key: 'EXPENSES',
+                    category: "Expenses",
+                },
+                {
                     key: 'PROFILE',
                     category: "Profile",
                 },
-                // {
-                //     key: 'UNAPPROVAL',
-                //     category: "Unapprove",
-                // },
             ],
         }
     }
@@ -195,7 +260,6 @@ class Permission extends Component {
     };
 
     onFinish = (value) => {
-        console.log('value', value)
         let valueObj = []
         const { eidtPer, Callback } = this.props
         for (const [resource, actions] of Object.entries(value)) {
@@ -222,7 +286,7 @@ class Permission extends Component {
     }
 
     render (){
-        const { loading, Rows } = this.state
+        const { loading, MODULES } = this.state
         const { closeModal, isSystem, isVisible } = this.props
         return (
                 <Modal
@@ -248,7 +312,7 @@ class Permission extends Component {
                             className='fs-small'
                             rowKey="key" 
                             columns={this.Columns} 
-                            dataSource={Rows} 
+                            dataSource={MODULES} 
                             pagination={false} 
                         />
                     </Form>

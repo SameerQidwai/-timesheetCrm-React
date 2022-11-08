@@ -56,9 +56,7 @@ class Contact extends Component {
         key: 'id',
         width: 115,
         render: (record) => `00${record}`,
-        // sorter: (a, b) => a.id - b.id,
         ...tableSorter('id', 'number', true),
-        // ...tableFilter('id', 'startsWith')
       },
       {
         title: 'First Name',
@@ -73,14 +71,12 @@ class Contact extends Component {
           </Link>
         ),
         ...tableSorter('firstName', 'string'),
-        // ...tableFilter('firstName', 'includes')
       },
       {
         title: 'Last Name',
         dataIndex: 'lastName',
         key: 'lastName',
         ...tableSorter('lastName', 'string'),
-        // ...tableFilter('firstName', 'includes')
       },
       {
         title: 'Gender',
@@ -88,20 +84,38 @@ class Contact extends Component {
         key: 'gender',
         width: 100,
         render: (value) => GENDER[value],
-        // ...tableFilter('firstName', 'includes')
       },
       {
         title: 'Email',
         dataIndex: 'email',
         key: 'email',
-        // ...tableFilter('firstName', 'includes')
       },
       {
         title: 'Phone',
         dataIndex: 'phoneNumber',
         key: 'phoneNumber',
         width: 150,
-        // ...tableFilter('firstName', 'startsWith')
+      },
+      {
+        title: 'Status',
+        dataIndex: 'employementStatus',
+        key: 'employementStatus',
+        render:(text, record)=>{
+          let endPoint =
+            text === 'Employee'
+              ? 'Employees'
+              : text === 'Sub Contractor'
+              ? 'sub-contractor'
+              : 'contacts';
+              
+          return endPoint !== 'contacts'? <Link
+            to={{ pathname: `/${endPoint}/${record?.employee?.id}/info` }}
+            className="nav-link"
+          >
+            {text}
+          </Link> : text
+        },
+        ...tableSorter('employementStatus', 'string')
       },
       {
         title: '...',

@@ -6,8 +6,8 @@ import { expensesData } from './DummyData';
 import { expenseSheetActions, getExpenseSheets } from '../../service/expenseSheet-Apis';
 import { getListOfExpenses } from '../../service/expense-Apis';
 import { generalDelete } from "../../service/delete-Api\'s";
-import { formatDate, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
-import { tableSorter } from '../../components/Core/Table/TableFilter';
+import { formatCurrency, formatDate, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
+import { tableCondSorter, tableSorter } from '../../components/Core/Table/TableFilter';
 import {Tag_s} from '../../components/Core/Custom/Index';
 
 const { Title } =  Typography
@@ -17,6 +17,7 @@ const ExpenseSheet = (props) => {
   const [openModal, setOpenModal] = useState(false);
   const [expenseSheet, setExpenseSheet] = useState([]);
   const [expenses, setExpenses] =  useState([])
+	const [permission, setPermission] = useState({});
   // const [disableSubmit, setDisableSubmit] = useState(true);
 
   const columns = [
@@ -40,6 +41,7 @@ const ExpenseSheet = (props) => {
       title: 'Amount',
       dataIndex: 'amount',
       align: 'center',
+      render:(text)=> (formatCurrency(text)),
       ...tableSorter('amount', 'number'),
     },
     {
@@ -56,7 +58,7 @@ const ExpenseSheet = (props) => {
           )}
         </div>
       ),
-      ...tableSorter('status', 'string'),
+      ...tableCondSorter('status', 'string', true, 'SB')
     },
     {
       title: 'Submited At',
@@ -78,7 +80,7 @@ const ExpenseSheet = (props) => {
               <Menu.Item
                 key="delete"
                 danger
-                disabled={['AP', 'SB'].includes(record.status)}
+                disabled={['AP', 'SB'].includes(record.status) || !permission['DELETE']}
                 className="pop-confirm-menu"
               >
                 <Popconfirm
@@ -98,7 +100,7 @@ const ExpenseSheet = (props) => {
                     
                   // })
                 }
-                // disabled={this.state && !this.state.permissions['UPDATE']}
+                // disabled={['AP', 'SB'].includes(record.status) || !permission['UPDATE']}
               >
                 Edit
               </Menu.Item>
@@ -123,6 +125,7 @@ const ExpenseSheet = (props) => {
 
   useEffect(() => {
     getData();
+    gettingPermissions();
   }, []);
 
   const getData = () => {
@@ -133,6 +136,13 @@ const ExpenseSheet = (props) => {
     })
   }
 
+  // my work 
+	const gettingPermissions = () => {
+		const { id, permissions} = localStore();
+		const { EXPENSES } = JSON.parse(permissions)
+		setPermission(EXPENSES);		
+  } 
+  
   const handleDelete = (id, index) => {
     const url = '/expense-sheets';
     const { history } = props;
@@ -141,7 +151,6 @@ const ExpenseSheet = (props) => {
         setExpenseSheet([...res.filterData]);
       }
     });
-    
 	}
   
   const onSelectChange = (newSelectedRowKeys, selectedRow) => {
@@ -239,7 +248,8 @@ const ExpenseSheet = (props) => {
           onClick={() => {
             onOpenModal(true)
           }}
-          // disabled={!permissions['ADD']}
+          // disabled={!permission['ADD']}
+            
         >
           <PlusSquareOutlined /> Add Expense Sheet
         </Button>
@@ -262,7 +272,7 @@ const ExpenseSheet = (props) => {
                 <Button 
                     type="primary" 
                     className={'success'}
-                    disabled={ (selectedRows.checkDisable || selectedRows['keys']?.length<1)}
+                    disabled={ (selectedRows.checkDisable || !permission['ADD'] || selectedRows['keys']?.length<1)}
                     // disabled={ sRequest.keys.length<1 || !permissions['APPROVAL'] || sRequest.cantReject}
                     onClick={()=>multiAction()}
                 > 

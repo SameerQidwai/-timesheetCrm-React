@@ -373,7 +373,8 @@ class AdminContent extends Component {
   //     // this.getPageLink()
   // }
   getPageLink = () => {
-    const permissions = JSON.parse(localStore().permissions);
+    let {permissions = `{}`} = localStore()
+    permissions = JSON.parse(permissions);
     let { allowedRoutes } = this.state;
     pageLinks.forEach((el) => {
       if (el.permission === 'ALLOWED') {
