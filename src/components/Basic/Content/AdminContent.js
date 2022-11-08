@@ -348,17 +348,20 @@ const pageLinks = [
   {
     component: ExpenseSheet,
     link: '/expense-sheets',
-    permission: 'ALLOWED',
+    key: 'EXPENSES',
+    permission: 'READ',
   },
   {
     component: Expense,
     link: '/expense',
-    permission: 'ALLOWED',
+    key: 'EXPENSES',
+    permission: 'READ',
   },
   {
     component: ExpenseApproval,
     link: '/expense-sheet-approval',
-    permission: 'ALLOWED',
+    key: 'EXPENSES',
+    permission: 'APPROVAL,UNAPPROVAL',
   },
 ];
 
