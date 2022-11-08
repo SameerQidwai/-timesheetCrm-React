@@ -1,12 +1,12 @@
 import { Button, Col, DatePicker, Dropdown, Menu, Popconfirm, Row, Select, Table, Tag, Typography,Modal, Form, Input, Tooltip, Checkbox} from 'antd';
 import { SettingOutlined, CheckCircleOutlined, AuditOutlined} from '@ant-design/icons'; //Icons
 import React, { useEffect, useState } from 'react'
-import { getProjects } from '../../service/constant-Apis';
+import { getManageProjects, getUserProjects } from '../../service/constant-Apis';
 import { expenseSheetActions, getExpenseSheets } from '../../service/expenseSheet-Apis';
-import { formatDate, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
+import { formatCurrency, formatDate, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
 // import { expensesData as dummyExpensesData } from '../DummyData';
 import ExpenseSheetModal from './Modals/ExpenseSheetModal';
-import { tableSorter } from '../../components/Core/Table/TableFilter';
+import { tableCondSorter, tableSorter } from '../../components/Core/Table/TableFilter';
 import {Tag_s} from '../../components/Core/Custom/Index';
 
 const { Title } = Typography
@@ -50,6 +50,7 @@ const ExpenseApproval = () => {
       title: 'Amount',
       dataIndex: 'amount',
       align: 'center',
+	  render: (text) => formatCurrency(text),
       ...tableSorter('amount', 'number'),
     },
     {
@@ -65,7 +66,7 @@ const ExpenseApproval = () => {
             </Tooltip>
           )}
         </span>,
-      ...tableSorter('status', 'string'),
+      ...tableCondSorter('status', 'string', true, 'SB')
 	},
     {
       title: 'Submitted At',
@@ -119,7 +120,6 @@ const ExpenseApproval = () => {
 
 	useEffect(() => {
 		gettingProject();
-		gettingPermissions();
 	}, []);
 
 	useEffect(() => {
@@ -127,13 +127,6 @@ const ExpenseApproval = () => {
 	}, [queryRequest]);
 
 	// my work 
-	const gettingPermissions = () => {
-		const { id, permissions} = localStore();
-		console.log("permissions", permissions);
-		const { EXPENSES = {}} = JSON.parse(permissions)
-		console.log("EXPENSE", EXPENSES);
-		setPermission(EXPENSES);		
-	} 
 	
 	const onSelectChange = (newSelectedRowKeys, selectedRow) => {
 		let cantApprove = false, cantUnapprove = false, cantReject = false
@@ -164,7 +157,10 @@ const ExpenseApproval = () => {
 
 	// for get all project 
 	const gettingProject = () => {
-		getProjects().then((res) => {
+		const { id, permissions} = localStore();
+		const { EXPENSES = {}} = JSON.parse(permissions)
+		setPermission(EXPENSES);		
+		getUserProjects(id, 'M', 0).then((res) => {
 			if (res.success) {
 				res.data.unshift({value:0, label: 'No Project'})
 				setProjects(res.data); 

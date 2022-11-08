@@ -6,8 +6,8 @@ import { expensesData } from './DummyData';
 import { expenseSheetActions, getExpenseSheets } from '../../service/expenseSheet-Apis';
 import { getListOfExpenses } from '../../service/expense-Apis';
 import { generalDelete } from "../../service/delete-Api\'s";
-import { formatDate, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
-import { tableSorter } from '../../components/Core/Table/TableFilter';
+import { formatCurrency, formatDate, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
+import { tableCondSorter, tableSorter } from '../../components/Core/Table/TableFilter';
 import {Tag_s} from '../../components/Core/Custom/Index';
 
 const { Title } =  Typography
@@ -41,6 +41,7 @@ const ExpenseSheet = (props) => {
       title: 'Amount',
       dataIndex: 'amount',
       align: 'center',
+      render:(text)=> (formatCurrency(text)),
       ...tableSorter('amount', 'number'),
     },
     {
@@ -57,7 +58,7 @@ const ExpenseSheet = (props) => {
           )}
         </div>
       ),
-      ...tableSorter('status', 'string'),
+      ...tableCondSorter('status', 'string', true, 'SB')
     },
     {
       title: 'Submited At',
@@ -138,9 +139,7 @@ const ExpenseSheet = (props) => {
   // my work 
 	const gettingPermissions = () => {
 		const { id, permissions} = localStore();
-		console.log("permissions", permissions);
 		const { EXPENSES } = JSON.parse(permissions)
-		// console.log("EXPENSE", EXPENSES);
 		setPermission(EXPENSES);		
   } 
   

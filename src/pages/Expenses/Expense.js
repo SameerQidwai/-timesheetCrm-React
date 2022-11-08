@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Button, Checkbox, Col, Dropdown, Menu, Popconfirm, Popover, Row, Table, Typography, Upload } from 'antd';
 import { SettingOutlined, PlusSquareOutlined, } from '@ant-design/icons'; //Icons
 import InfoModal from './Modals/InfoModal';
-import { Api, formatDate, localStore } from '../../service/constant';
+import { Api, formatCurrency, formatDate, localStore } from '../../service/constant';
 import { delExpense, getListOfExpenses } from '../../service/expense-Apis';
 import { generalDelete } from "../../service/delete-Api's";
 import { tableSorter } from '../../components/Core/Table/TableFilter';
@@ -43,6 +43,7 @@ const Expense = (props) => {
       title: 'Amount',
       dataIndex: 'amount',
       align: 'center',
+      render: (text) => formatCurrency(text),
       ...tableSorter('amount', 'number'),
     },
     // {
