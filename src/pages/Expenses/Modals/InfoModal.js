@@ -3,7 +3,7 @@ import { DatePicker, Form, Modal, Typography, Upload } from 'antd'
 import { PlusOutlined } from "@ant-design/icons"; //Icons
 import FormItems from '../../../components/Core/Forms/FormItems'
 
-import { getOrgPersons, getManageProjects } from '../../../service/constant-Apis'
+import { getOrgPersons, getManageProjects, getProjects } from '../../../service/constant-Apis'
 import { addFiles, getAttachments } from '../../../service/Attachment-Apis'
 import { Api, formatDate, localStore } from '../../../service/constant'
 import { addExpense, editExpense } from '../../../service/expense-Apis'
@@ -207,7 +207,12 @@ const InfoModal = ({ visible, close, callBack }) => {
     }
 
     const getData = () => {
-        Promise.all([getManageProjects('LEAVE_REQUESTS'), getExpenseTypeList(), visible !== true && getAttachments('EXP', visible.id)]).then((res) => {
+        const { id, permissions = ''} = localStore();
+		const { EXPENSES = {}} = JSON.parse(permissions)
+		setPermission(EXPENSES);		
+        Promise.all([getProjects(), getExpenseTypeList(), visible !== true && getAttachments('EXP', visible.id)]).then((res) => {
+        // Promise.all([getManageProjects(id, 'O', 0), getExpenseTypeList(), visible !== true && getAttachments('EXP', visible.id)]).then((res) => {
+        // Promise.all([getManageProjects('LEAVE_REQUESTS'), getExpenseTypeList(), visible !== true && getAttachments('EXP', visible.id)]).then((res) => {
             let basic = basicFields
             basic[11].data = res[0].success ? res[0].data : []
             basic[2].data = res[1].success ? res[1].data : []
@@ -264,7 +269,7 @@ const InfoModal = ({ visible, close, callBack }) => {
           width={650}
           onCancel={close}
           okText={"Save"}
-          okButtonProps={{ htmlType: 'submit', form: 'my-form', disabled: editDisabled || !permission['UPDATE'] || !permission['EDIT'] }}
+          okButtonProps={{ htmlType: 'submit', form: 'my-form', disabled: editDisabled || !permission['UPDATE'] || !permission['ADD'] }}
       >
           <Form
             id={'my-form'}

@@ -3,7 +3,7 @@ import { PlusOutlined } from "@ant-design/icons"; //Icons
 import React, { useEffect, useState } from 'react'
 import { formatDate, localStore } from '../../../service/constant';
 import FormItems from '../../../components/Core/Forms/FormItems';
-import { getUserProjects } from '../../../service/constant-Apis';
+import { getProjects, getUserProjects } from '../../../service/constant-Apis';
 // import { expensesData as dummyExpensesData } from '../../DummyData';
 import { addExpenseInSheet, addExpenseSheet, editExpenseSheet, manageExpenseSheet } from '../../../service/expenseSheet-Apis';
 import { addFiles, getAttachments } from '../../../service/Attachment-Apis';
@@ -12,10 +12,12 @@ const {Text, Title} = Typography;
 const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) => {
   let editDisabled = ['AP', 'SB'].includes(visible.status)
 
+  console.log("check->", editDisabled)
   const [form] = Form.useForm();
   const [filteredExpenses, setfilteredExpenses] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [progress, setProgress] = useState();
+  const [permission, setPermission] = useState({});
   const [fileList, setFileList] = useState([]);
   // fields of form
   const [basicFields, setBasicFields] = useState([
@@ -54,12 +56,12 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) =>
       disabled: adminView || editDisabled,  
       object: "basic",
       fieldCol: 12,
-      key: adminView? "projectName": "projectId", // when-api change it to projectId
+      key:  adminView ? "projectName" : "projectId" , // when-api change it to projectId
       size: "small",
       initialValue: null,
       data: [],
-      type: adminView ? "Input": "Select",
-    onChange: (projectId) => { selectedProjectExpenses(projectId) }
+      type: adminView ? "Input" : "Select",
+      onChange: (projectId) => { selectedProjectExpenses(projectId) }
   },
   {
       disabled : visible?.projectId === null,  
@@ -153,8 +155,9 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) =>
   const getData = () => {
     const { id, permissions = ''} = localStore();
 		const { EXPENSES = {}} = JSON.parse(permissions)
-		// setPermission(EXPENSES);		
-    Promise.all([getUserProjects(id, 'O', 0),  visible !== true && getAttachments('ESH', visible.id)]).then((res) => {
+		setPermission(EXPENSES);		
+    Promise.all([getProjects(), visible !== true && getAttachments('ESH', visible.id)]).then((res) => {
+    // Promise.all([getUserProjects(id, 'O', 0),  visible !== true && getAttachments('ESH', visible.id)]).then((res) => {
         let basic = basicFields
         basic[3].data = res[0].success ? res[0].data : []
         setBasicFields([...basic]); 
@@ -290,7 +293,8 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) =>
       onCancel={close}
       okText={"Save"}
       // adminView Prop add
-      okButtonProps={{ htmlType: 'submit', form: 'my-form', disabled: ((visible?.projectId === null && adminView)  || (selectedRowKeys.length < 1 && !adminView))}}
+      // okButtonProps={{ htmlType: 'submit', form: 'my-form', disabled: (( (visible?.projectId === null && adminView) || (selectedRowKeys.length < 1 && !adminView)) || !permission['UPDATE'] || !permission['ADD'])}}
+      okButtonProps={{ htmlType: 'submit', form: 'my-form', disabled: ((visible?.projectId === null && adminView) || (!adminView && ((selectedRowKeys.length < 1 ) || editDisabled || (visible && !permission['UPDATE']) || (!visible && !permission['ADD']))))}}
     >
       <Form
           id={'my-form'}

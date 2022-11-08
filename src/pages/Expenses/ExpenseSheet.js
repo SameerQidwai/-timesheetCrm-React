@@ -99,7 +99,7 @@ const ExpenseSheet = (props) => {
                     
                   // })
                 }
-                disabled={['AP', 'SB'].includes(record.status) || !permission['UPDATE']}
+                // disabled={['AP', 'SB'].includes(record.status) || !permission['UPDATE']}
               >
                 Edit
               </Menu.Item>
@@ -249,7 +249,7 @@ const ExpenseSheet = (props) => {
           onClick={() => {
             onOpenModal(true)
           }}
-          disabled={!permission['ADD']}
+          // disabled={!permission['ADD']}
             
         >
           <PlusSquareOutlined /> Add Expense Sheet

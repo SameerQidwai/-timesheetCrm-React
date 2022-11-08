@@ -66,7 +66,7 @@ const ExpenseApproval = () => {
           )}
         </span>,
       ...tableSorter('status', 'string'),
-    },
+	},
     {
       title: 'Submitted At',
       dataIndex: 'submittedAt',
@@ -81,14 +81,14 @@ const ExpenseApproval = () => {
       ...tableSorter('submittedBy', 'string'),
     },
 	{
-		title: 'b',
-		dataIndex: 'isBillable',
-		align: 'center',
-		render: (value) => (
-		  <Checkbox defaultChecked={false} checked={value} />
+	title: 'b',
+	dataIndex: 'isBillable',
+	align: 'center',
+	render: (value) => (
+		<Checkbox defaultChecked={false} checked={value} />
 		)
-	  },
-    {
+	},
+	{
       title: '...',
       key: 'action',
       align: 'center',
@@ -103,8 +103,6 @@ const ExpenseApproval = () => {
                 onClick={() =>
                   setOpenModal({ ...record, index, adminView: true })
                 }
-						//   need some confirmation 
-                disabled={!permission['UPDATE']}
               >
                 View
               </Menu.Item>
