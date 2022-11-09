@@ -59,13 +59,15 @@ import ExpenseSheet from '../../../pages/Expenses/ExpenseSheet';
 
 // import TimeSheetHTML from "../../Core/TimeSheetHTML"
 import { localStore } from '../../../service/constant';
+import { WorkInHand } from '../../Core/Reports';
 
 const { Content } = Layout;
 
 const pageLinks = [
   // Page link and router
   {
-    component: Dashboard,
+    // component: Dashboard,
+    component: WorkInHand,
     link: '/dashboard',
     key: 'DASHBOARD',
     permission: 'ALLOWED',

@@ -74,6 +74,15 @@ export const formatCurrency = (amount) => {
 //   return date && moment.utc(date).format(format ??'ddd DD MMM yyyy')
 // }
 
+export const parseDate = (date, format)=>{
+    if (date){
+        if (format){
+            return moment.parseZone(date).format(format === true ? 'ddd DD MMM yyyy' : format)
+        }
+        return moment.parseZone(date)
+    }
+}
+
 export const formatDate = (date, string, format) => {
   return (
     date && // check if date is not null or undefined
