@@ -2,7 +2,7 @@ import { Col, Row, Table, Typography } from 'antd'
 import React, { useState, useEffect } from 'react'
 import { formatCurrency, parseDate } from '../../../service/constant';
 import "../../Styles/table.css"
-import { income_revenue } from './WIHData';
+import { comunication_expenses, cost_of_sale, direct_overhead_expense, income_revenue, occupancy_expenses, other_general_expenses, outside_expenses, supplies_expenses, travel_entertainment_expenses } from './WIHData';
 const {Title} = Typography
 
 const column = [
@@ -41,6 +41,7 @@ const column = [
 function WorkInHand() {
     const [columns, setColumns] = useState(column)
     const [dataSource, setDataSource] = useState([])
+
     
     useEffect(() => {
         creatingCol()
@@ -61,19 +62,68 @@ function WorkInHand() {
         monthColumns.push(monthCol({year: 'FY21', era: 'Forcaste'}))
         newColumns[1]['children'][0]['children'] = monthColumns
         setColumns(newColumns)
-        console.log(monthColumns)
     }
 
     const dummyStructureData = () => {
         let totalIncome =  { className: 'total-row', name: 'TOTAL REVENUE', 'Jul-20': 0, 'Aug-20': 0, 'Sep-20': 0, 'Oct-20': 0, 'Nov-20': 0, 'Dec-20': 0, 'Jan-21': 0, 'Feb-21': 0, 'Mar-21': 0, 'Apr-21': 0, 'May-21': 0, 'Jun-21': 0, }
-        income_revenue.forEach(el=>{
+        let totalCos =  { className: 'total-row', name: 'TOTAL COST OF SALES - COS', 'Jul-20': 0, 'Aug-20': 0, 'Sep-20': 0, 'Oct-20': 0, 'Nov-20': 0, 'Dec-20': 0, 'Jan-21': 0, 'Feb-21': 0, 'Mar-21': 0, 'Apr-21': 0, 'May-21': 0, 'Jun-21': 0, }
+        let cosMargin =  { className: 'total-row', name: 'CONTRIBUTION MARGIN', 'Jul-20': 0, 'Aug-20': 0, 'Sep-20': 0, 'Oct-20': 0, 'Nov-20': 0, 'Dec-20': 0, 'Jan-21': 0, 'Feb-21': 0, 'Mar-21': 0, 'Apr-21': 0, 'May-21': 0, 'Jun-21': 0, }
+        let totalDOHExpense =  { className: 'total-row', name: 'TOTAL PERSONNEL EXPENSES', 'Jul-20': 0, 'Aug-20': 0, 'Sep-20': 0, 'Oct-20': 0, 'Nov-20': 0, 'Dec-20': 0, 'Jan-21': 0, 'Feb-21': 0, 'Mar-21': 0, 'Apr-21': 0, 'May-21': 0, 'Jun-21': 0, }
+        let totalOccupancy =  { className: 'total-row', name: 'TOTAL OCCUPANCY EXPENSES', 'Jul-20': 0, 'Aug-20': 0, 'Sep-20': 0, 'Oct-20': 0, 'Nov-20': 0, 'Dec-20': 0, 'Jan-21': 0, 'Feb-21': 0, 'Mar-21': 0, 'Apr-21': 0, 'May-21': 0, 'Jun-21': 0, }
+        let totalSupplies =  { className: 'total-row', name: 'TOTAL EQUIPMENT EXPENSES', 'Jul-20': 0, 'Aug-20': 0, 'Sep-20': 0, 'Oct-20': 0, 'Nov-20': 0, 'Dec-20': 0, 'Jan-21': 0, 'Feb-21': 0, 'Mar-21': 0, 'Apr-21': 0, 'May-21': 0, 'Jun-21': 0, }
+        let totalCommunication =  { className: 'total-row', name: 'TOTAL COMMUNICATION EXPENSES', 'Jul-20': 0, 'Aug-20': 0, 'Sep-20': 0, 'Oct-20': 0, 'Nov-20': 0, 'Dec-20': 0, 'Jan-21': 0, 'Feb-21': 0, 'Mar-21': 0, 'Apr-21': 0, 'May-21': 0, 'Jun-21': 0, }
+        let totalOutside =  { className: 'total-row', name: 'TOTAL OUTSIDE SERVICES EXPENSES', 'Jul-20': 0, 'Aug-20': 0, 'Sep-20': 0, 'Oct-20': 0, 'Nov-20': 0, 'Dec-20': 0, 'Jan-21': 0, 'Feb-21': 0, 'Mar-21': 0, 'Apr-21': 0, 'May-21': 0, 'Jun-21': 0, }
+        let totalEntertainment =  { className: 'total-row', name: 'TOTAL TRAVEL & ENTERTAINMENT EXPENSES', 'Jul-20': 0, 'Aug-20': 0, 'Sep-20': 0, 'Oct-20': 0, 'Nov-20': 0, 'Dec-20': 0, 'Jan-21': 0, 'Feb-21': 0, 'Mar-21': 0, 'Apr-21': 0, 'May-21': 0, 'Jun-21': 0, }
+        let totalGeneral =  { className: 'total-row', name: 'TOTAL OTHER GENERAL EXPENSES', 'Jul-20': 0, 'Aug-20': 0, 'Sep-20': 0, 'Oct-20': 0, 'Nov-20': 0, 'Dec-20': 0, 'Jan-21': 0, 'Feb-21': 0, 'Mar-21': 0, 'Apr-21': 0, 'May-21': 0, 'Jun-21': 0, }
+        
+        let max_length = Math.max(
+            income_revenue.length,
+            cost_of_sale.length,
+            direct_overhead_expense.length,
+            occupancy_expenses.length,
+            supplies_expenses.length,
+            comunication_expenses.length,
+            outside_expenses.length,
+            travel_entertainment_expenses.length,
+            other_general_expenses.length
+        );
+       
+        for (let i = 0; i< max_length; i++){
             for (var iDate = parseDate('07/01/2020'); iDate.isSameOrBefore('06/30/2021'); iDate.add(1, 'months')) {
                 let key = parseDate(iDate, 'MMM-YY')
-                totalIncome[key] += (el[key] ?? 0)
+                totalIncome[key] += (income_revenue?.[i]?.[key] ?? 0)
+                totalCos[key] += (cost_of_sale?.[i]?.[key] ?? 0)
+                cosMargin[key] += ((income_revenue?.[i]?.[key]?? 0) - (cost_of_sale?.[i]?.[key] ?? 0))
+                totalDOHExpense[key] += (direct_overhead_expense?.[i]?.[key] ?? 0)
+                totalOccupancy[key] += (occupancy_expenses?.[i]?.[key] ?? 0)
+                totalSupplies[key] += (supplies_expenses?.[i]?.[key] ?? 0)
+                totalCommunication[key] += (comunication_expenses?.[i]?.[key] ?? 0)
+                outside_expenses[key] += (outside_expenses?.[i]?.[key] ?? 0)
+                totalEntertainment[key] += (travel_entertainment_expenses?.[i]?.[key] ?? 0)
+                totalGeneral[key] += (other_general_expenses?.[i]?.[key] ?? 0)
             }
-        })
+        }
+
         income_revenue.push(totalIncome)
-        setDataSource(income_revenue)
+        cost_of_sale.push(totalCos)
+        direct_overhead_expense.push(totalDOHExpense)
+        occupancy_expenses.push(totalOccupancy)
+        supplies_expenses.push(totalSupplies)
+        comunication_expenses.push(totalCommunication)
+        outside_expenses.push(totalOutside)
+        travel_entertainment_expenses.push(totalEntertainment)
+        other_general_expenses.push(totalGeneral)
+        setDataSource([
+            ...income_revenue,
+            ...cost_of_sale,
+            ...direct_overhead_expense,
+            ...occupancy_expenses,
+            ...supplies_expenses,
+            ...comunication_expenses,
+            ...outside_expenses,
+            ...travel_entertainment_expenses,
+            ...other_general_expenses,
+        ]);
     }
     
   return (
@@ -100,7 +150,7 @@ function WorkInHand() {
                     scroll={{
                         // x: "calc(700px + 100%)",
                         x: "max-content",
-                        y: '60vh',
+                        y: '65vh',
                     }}
                 />
             </Col>
@@ -133,7 +183,7 @@ const monthCol = ({year, era, key})=>({
                     }
                     return totalYear ? formatCurrency(totalYear) : '-'
                 }
-                return text ? formatCurrency(text) : ''
+                return text ? formatCurrency(text) : record.className === 'total-row'? '-' : ''
             }
         }
     ],
