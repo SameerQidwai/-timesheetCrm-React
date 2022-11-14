@@ -155,7 +155,7 @@ class TimeSheetContact extends Component {
                     fixed: "left",
                     align: "center",
                     width: 100,
-                    render: (value) => ( formatFloat(value))
+                    render: (value, record) => ( !record.leaveRequest && formatFloat(value))
                 }
             ]
         };
