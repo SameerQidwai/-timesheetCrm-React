@@ -238,7 +238,7 @@ class FormItems extends Component {
                         showTime={showTime}
                         disabledDate={min ?? max}
                         size={size}
-                        style={style}
+                        style={{width: '100%',...style}}
                         onBlur={onBlur}
                         onChange={onChange}
                         format={'ddd DD MMM yyyy'} //donot change yet
@@ -252,7 +252,7 @@ class FormItems extends Component {
                         format={showTime}
                         use12Hours={mode === "use12Hours"}
                         size={size}
-                        style={style}
+                        style={{width: '100%',...style}}
                         disabled={disabled}
                     />
                 );

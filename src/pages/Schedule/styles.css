@@ -1,0 +1,7 @@
+.milestone-delete:hover {
+  color: red;
+  font-size: medium;
+}
+span.anticon[disabled].milestone-delete {
+  color: rgba(0, 0, 0, 0.428);
+}

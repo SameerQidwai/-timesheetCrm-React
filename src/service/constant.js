@@ -1,6 +1,6 @@
 import moment from 'moment';
 import { message as messageAlert } from 'antd';
-  // export const Api = 'http://localhost:3301/api/v1';
+export const Api = 'http://localhost:3301/api/v1';
 
 // export const Api = "http://onelmcrm.gaamatech.com:8000/api/v1";
 // export const Api = "http://192.168.0.243:3000/api/v1"; // Shahzaib/
@@ -38,7 +38,13 @@ export const R_STATUS = {
   R: 'Rejected',
   RJ: 'Rejected',
 }; //Request Status
-export const STATUS_COLOR = { CM: 'geekblue', AP: 'green', SB: 'cyan', RJ: 'red', R: 'red' }; //Request Status
+export const STATUS_COLOR = {
+  CM: 'geekblue',
+  AP: 'green',
+  SB: 'cyan',
+  RJ: 'red',
+  R: 'red',
+}; //Request Status
 export const O_TYPE = { 1: 'Milestone', 2: 'Time' };
 export const JOB_TYPE = { 1: 'Casual', 2: 'Part Time', 3: 'Full Time' };
 export const DURATION = {
@@ -52,12 +58,12 @@ export const GENDER = { M: 'Male', F: 'Female', O: 'Other' };
 export const STATES = {
   'Australian Capital Territory': 'ACT',
   'New South Wales': 'NSW',
-  'Victoria': 'VIC',
-  'Queensland': 'QLD',
+  Victoria: 'VIC',
+  Queensland: 'QLD',
   'South Australia': 'SA',
   'Western Australia': 'WA',
   'Northern Territory': 'NT',
-  'Tasmania': 'TSA',
+  Tasmania: 'TSA',
 };
 
 export const formatCurrency = (amount) => {

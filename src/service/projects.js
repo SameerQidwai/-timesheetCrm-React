@@ -241,7 +241,10 @@ export const getHierarchy = (projectId) => {
 };
 
 export const getProfitLoss = (projectId, dates) => {
-  const actualDate = moment().subtract(1, 'months').endOf('month').format('D-M-YYYY');
+  const actualDate = moment()
+    .subtract(1, 'months')
+    .endOf('month')
+    .format('D-M-YYYY');
   return axios
     .get(
       `${url}/${projectId}/profit-loss?startDate=${formatDate(
@@ -663,5 +666,91 @@ export const editMilestoneExpense = (crud, expenseId, data) => {
     })
     .catch((err) => {
       return apiErrorRes(err, expenseId, 5);
+    });
+};
+
+export const addSchedule = (proId, data) => {
+  messageAlert.loading({ content: 'Loading...', key: proId });
+  return axios
+    .post(url + `/${proId}/schedules`, data, { headers: headers() })
+    .then((res) => {
+      const { success, message, data } = res.data;
+      jwtExpired(message);
+      messageAlert.success({ content: message, key: proId });
+      if (success) setToken(res?.headers?.authorization);
+      return { success, data };
+    })
+    .catch((err) => {
+      return apiErrorRes(err, proId, 5);
+    });
+};
+
+export const getSchedules = (proId) => {
+  return axios
+    .get(url + `/${proId}/schedules`, { headers: headers() })
+    .then((res) => {
+      const { success, data, message } = res.data;
+      jwtExpired(message);
+      if (success) setToken(res?.headers?.authorization);
+      return { success: success, data: data };
+    })
+    .catch((err) => {
+      return {
+        error: 'Please login again!',
+        success: false,
+        message: err.message,
+      };
+    });
+};
+
+export const editSchedule = (proId, id, data) => {
+  messageAlert.loading({ content: 'Loading...', key: id });
+  return axios
+    .put(url + `/${proId}/schedules/${id}`, data, { headers: headers() })
+    .then((res) => {
+      const { success, message, data } = res.data;
+      jwtExpired(message);
+      messageAlert.success({ content: message, key: id });
+      if (success) setToken(res?.headers?.authorization);
+      return { success, data };
+    })
+    .catch((err) => {
+      return apiErrorRes(err, id, 5);
+    });
+};
+
+export const getSchedule = (proId, id) => {
+  return axios
+    .get(url + `/${proId}/schedules/${id}`, { headers: headers() })
+    .then((res) => {
+      let { success, data, message } = res.data;
+      jwtExpired(message);
+      if (success) {
+        setToken(res?.headers?.authorization);
+        return { success, data: data };
+      }
+      return { success };
+    })
+    .catch((err) => {
+      return {
+        error: 'Please login again!',
+        status: false,
+        message: err.message,
+      };
+    });
+};
+
+export const delSchedule = (proId, id) => {
+  return axios
+    .delete(url + `/${proId}/schedules/${id}`, { headers: headers() })
+    .then((res) => {
+      const { success, message } = res.data;
+      jwtExpired(message);
+      if (success) setToken(res?.headers?.authorization);
+
+      return { success };
+    })
+    .catch((err) => {
+      return apiErrorRes(err, id, 5);
     });
 };
