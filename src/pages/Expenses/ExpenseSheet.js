@@ -7,7 +7,7 @@ import { expenseSheetActions, getExpenseSheets } from '../../service/expenseShee
 import { getListOfExpenses } from '../../service/expense-Apis';
 import { generalDelete } from "../../service/delete-Api\'s";
 import { formatCurrency, formatDate, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
-import { tableCondSorter, tableSorter } from '../../components/Core/Table/TableFilter';
+import { tableCondSorter, tableSorter, tableTitleFilter } from '../../components/Core/Table/TableFilter';
 import {Tag_s} from '../../components/Core/Custom/Index';
 
 const { Title } =  Typography
@@ -15,7 +15,7 @@ const { Title } =  Typography
 const ExpenseSheet = (props) => {
   const [selectedRows, setSelectedRows] = useState({keys: [], data: []});
   const [openModal, setOpenModal] = useState(false);
-  const [expenseSheet, setExpenseSheet] = useState([]);
+  const [expenseSheet, setExpenseSheet] = useState({data:[], filtered: []});
   const [expenses, setExpenses] =  useState([])
 	const [permission, setPermission] = useState({});
   // const [disableSubmit, setDisableSubmit] = useState(true);
@@ -36,6 +36,11 @@ const ExpenseSheet = (props) => {
       title: 'Project',
       dataIndex: 'projectName',
       ...tableSorter('projectName', 'string'),
+    },
+    {
+      title: 'Employee Name',
+      dataIndex: 'createdBy',
+      ...tableSorter('createdBy', 'string'),
     },
     {
       title: 'Amount',
@@ -131,7 +136,7 @@ const ExpenseSheet = (props) => {
   const getData = () => {
     getExpenseSheets().then((res) => {
       if (res.success) {
-        setExpenseSheet(res.data);
+        setExpenseSheet({data: res?.data?? [], filtered: res?.data?? []});
       }
     })
   }
@@ -144,11 +149,12 @@ const ExpenseSheet = (props) => {
   } 
   
   const handleDelete = (id, index) => {
+    let {data, filtered} =  expenseSheet
     const url = '/expense-sheets';
     const { history } = props;
-    generalDelete(history, url, id, index, expenseSheet).then((res) => {
+    generalDelete(history, url, id, index, filtered, data).then((res) => {
       if (res.success) {
-        setExpenseSheet([...res.filterData]);
+        setExpenseSheet({filtered: [...res.filterData], data: [...res.data]});
       }
     });
 	}
@@ -169,15 +175,19 @@ const ExpenseSheet = (props) => {
     setOpenModal(false);
   }
 
-  const callBack = (data, index) => {
-		let exp = expenseSheet;
+  const callBack = (rowData, index) => {
+		let {data, filtered} =  expenseSheet;
     if (index >= 0) {
-			exp[index] = data; 
+			let findIndex = data.findIndex(el=> el.id === rowData.id)
+      let findFilteredIndex = filtered.findIndex(el=> el.id === rowData.id)
+      data[findIndex] = rowData;
+      filtered[findFilteredIndex] = rowData;
 		} else {
-			exp = [...expenseSheet, data]
+			data = [...data, rowData]
+      filtered = [...filtered, rowData]
 		}
     
-		setExpenseSheet([...exp]);  
+		setExpenseSheet({data: [...data], filtered: [...filtered]});  
 		setOpenModal(false);
   }
 
@@ -235,6 +245,42 @@ const ExpenseSheet = (props) => {
     })
   }
 
+  const generalFilter = (value) => {
+    if (value) {
+      value = value.replace(/\s+/g, '').toLowerCase()
+      setExpenseSheet(prev => ({
+        ...prev,
+        filtered: prev.data.filter((el) => {
+          // console.log(el.projectName && el.projectName.toLowerCase().replace(/\s+/g, '').includes(value))
+          return (
+            `00${el.id.toString().replace(/\s+/g, '')}`.includes(value) ||
+            (el.label &&
+              el.label.toLowerCase().replace(/\s+/g, '').includes(value)) ||
+            (el.projectName &&
+              el.projectName.toLowerCase().replace(/\s+/g, '').includes(value)) ||
+            (el.createdBy &&
+              el.createdBy.toLowerCase().replace(/\s+/g, '').includes(value)) ||
+            (el.status !== 'SV' &&
+              R_STATUS[el.status].toLowerCase().replace(/\s+/g, '').includes(value)) ||
+            (el.amount &&
+              `${formatCurrency(el.amount)}`
+                .toLowerCase().replace(/\s+/g, '')
+                .includes(value)) ||
+            (el.submittedAt &&
+              `${formatDate(el.submittedAt, true, true)}`
+                .toLowerCase().replace(/\s+/g, '')
+                .includes(value)) 
+            );
+        }),
+      }));
+    } else {
+      setExpenseSheet(prev => ({
+        ...prev,
+        filtered: prev.data,
+      }));
+    }
+  };
+
   return (
     <>
       <Row justify='space-between'>
@@ -256,6 +302,7 @@ const ExpenseSheet = (props) => {
         </Col>  
         <Col span={24}>
           <Table
+            title={() => tableTitleFilter(5, generalFilter)}
             size={'small'}
             bordered
             className='fs-small'
@@ -263,7 +310,7 @@ const ExpenseSheet = (props) => {
             rowKey={data=> data.id}
             rowSelection={rowSelection}
             columns={columns}
-            dataSource={expenseSheet}
+            dataSource={expenseSheet.filtered?? []}
           />
         </Col>
         <Col span={24} >

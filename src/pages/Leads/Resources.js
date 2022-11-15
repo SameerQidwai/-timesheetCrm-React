@@ -590,6 +590,7 @@ class Resources extends Component {
           rowKey={(record) => record.id}
           columns={this.columns}
           size="small"
+          className="fs-small"
           dataSource={filterData}
           expandable={{
             rowExpandable: (record) =>
@@ -612,7 +613,6 @@ class Resources extends Component {
                     long: record.panelSkillStandardLevel?.longTermCeil,
                   }}
                   permissions={permissions}
-                  className="fs-small"
                 />
               );
             },

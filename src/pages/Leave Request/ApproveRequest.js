@@ -143,7 +143,6 @@ class ApproveRequest extends Component {
         const { startDate, endDate, workId, userId } = this.state.queryRequest
         const query = { startDate: formatDate(startDate, true, 'DD-MM-YYYY'), endDate: formatDate(endDate, true, 'DD-MM-YYYY'), workId, userId, }
         const { id, permissions } = localStore()
-        console.log("permissions", permissions)
         const loginId = parseInt(id)
         const { LEAVE_REQUESTS } = JSON.parse(permissions)
         const queryParams = `startDate=${query?.startDate}&endDate=${query?.endDate}&userId=${query?.userId}&workId=${query?.workId}`
