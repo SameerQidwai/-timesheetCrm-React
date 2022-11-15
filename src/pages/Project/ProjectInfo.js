@@ -221,6 +221,18 @@ class ProjectInfo extends Component {
                     </Link>
                   </Menu.Item>
                 )}
+                {basic && basic.type === 1 ? (
+                  <Menu.Item key={'schedule'}>
+                    <Link
+                      to={{ pathname: `/projects/${leadId}/schedules` }}
+                      className="nav-link"
+                    >
+                      Schedules
+                    </Link>
+                  </Menu.Item>
+                ) : (
+                  ``
+                )}
               </Menu>
             }
           >

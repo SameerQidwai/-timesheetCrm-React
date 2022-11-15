@@ -33,6 +33,7 @@ import OpportunityResources from '../../../pages/Leads/Resources';
 import Projects from '../../../pages/Project/Projects';
 import ProjectInfo from '../../../pages/Project/ProjectInfo';
 import ProjectResources from '../../../pages/Project/Resources';
+import Schedule from '../../../pages/Schedule/Schedule';
 import ResourceHistory from '../../../pages/Project/ResourceHistory';
 import PurchaseOrder from '../../../pages/Project/PurchaseOrder';
 import OpportunityExpenses from '../../../pages/Project/Expenses';
@@ -287,6 +288,13 @@ const pageLinks = [
     permission: 'READ',
   },
   {
+    component: Schedule,
+    link: '/projects/:proId/schedules',
+    // link: "/projects/:id/resources",
+    key: 'PROJECTS',
+    permission: 'READ',
+  },
+  {
     component: MileCertificate,
     link: '/milestones-certificate',
     key: 'PROJECTS',
@@ -373,7 +381,7 @@ class AdminContent extends Component {
   //     // this.getPageLink()
   // }
   getPageLink = () => {
-    let {permissions = `{}`} = localStore()
+    let { permissions = `{}` } = localStore();
     permissions = JSON.parse(permissions);
     let { allowedRoutes } = this.state;
     pageLinks.forEach((el) => {
