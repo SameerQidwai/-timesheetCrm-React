@@ -209,6 +209,18 @@ class Projects extends Component {
                     View
                   </Link>
                 </Menu.Item>
+                {record.type === 1 ? (
+                  <Menu.Item key={'schedule'}>
+                    <Link
+                      to={{ pathname: `/projects/${record.id}/schedules` }}
+                      className="nav-link"
+                    >
+                      Schedules
+                    </Link>
+                  </Menu.Item>
+                ) : (
+                  ``
+                )}
               </Menu>
             }
           >
