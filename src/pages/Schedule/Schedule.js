@@ -10,6 +10,7 @@ import {
   Tag,
   Progress,
   Popconfirm,
+  Tooltip,
 } from 'antd';
 import { SettingOutlined, DownOutlined } from '@ant-design/icons'; //Icons
 import { Link } from 'react-router-dom';
@@ -79,18 +80,17 @@ class Schedule extends Component {
           render: (record) => record,
         },
         {
-          title: 'Project',
-          dataIndex: 'project',
-          key: 'project',
-          align: 'right',
-          render: (text) => text,
-        },
-        {
           title: 'Notes',
           dataIndex: 'notes',
           key: 'notes',
           align: 'right',
-          render: (text) => 'Hi',
+          render: (text) => (<Tooltip
+              placement="top" 
+              title={text}
+              destroyTooltipOnHide
+          >
+              {`${text.substr(0,20)}${text.length>30 ?'\u2026':''}`}
+          </Tooltip>),
         },
         {
           title: '...',
@@ -121,27 +121,7 @@ class Schedule extends Component {
                     }}
                     disabled={this.state && !this.state.permissions['UPDATE']}
                   >
-                    Edit Milestone
-                  </Menu.Item>
-                  <Menu.Item key="position">
-                    <Link
-                      to={{
-                        pathname: `milestones/${record.id}/resources`,
-                      }}
-                      className="nav-link"
-                    >
-                      Positions
-                    </Link>
-                  </Menu.Item>
-                  <Menu.Item key="expense">
-                    <Link
-                      to={{
-                        pathname: `milestones/${record.id}/expenses`,
-                      }}
-                      className="nav-link"
-                    >
-                      Expenses
-                    </Link>
+                    Edit
                   </Menu.Item>
                 </Menu>
               }
@@ -159,12 +139,6 @@ class Schedule extends Component {
   componentDidMount = () => {
     const { proId } = this.props.match.params;
     this.fetchAll(proId);
-  };
-
-  resRoute = (mileId) => {
-    let splitted = this.props.match.url;
-    splitted = splitted.split('/');
-    return `/${splitted[1]}/${splitted[2]}/${splitted[3]}/${mileId}/resources`;
   };
 
   fetchAll = (id) => {
@@ -211,8 +185,9 @@ class Schedule extends Component {
   };
 
   handleDelete = (id, index) => {
-    const { customUrl, data } = this.state;
+    const { data, proId } = this.state;
     const { history } = this.props;
+    let customUrl = `/projects/${proId}/schedules`
     generalDelete(history, customUrl, id, index, data, false).then((res) => {
       if (res.success) {
         this.setState({
@@ -229,10 +204,11 @@ class Schedule extends Component {
     } else {
       data.push(milestone);
     }
-
+    console.log(data)
     this.setState({
       data: [...data],
       infoModal: false,
+      editMile: false
     });
   };
 

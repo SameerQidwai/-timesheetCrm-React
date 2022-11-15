@@ -1,18 +1,7 @@
 import React, { Component } from 'react';
-import {
-  Modal,
-  Table,
-  Form,
-  Row,
-  Col,
-  Upload,
-  Typography,
-  Input,
-  InputNumber,
-  message,
-} from 'antd';
+import { Modal, Table, Form, Row, Col, Upload, Typography, Input, InputNumber, message, } from 'antd';
 import { PlusOutlined } from '@ant-design/icons'; //Icons
-import FormItems from '../../../components/Core/Forms/FormItems';
+import FormItems, { formatter, parser } from '../../../components/Core/Forms/FormItems';
 import { addFiles } from '../../../service/Attachment-Apis';
 import {
   getUserProjects,
@@ -24,9 +13,10 @@ import {
   getSingleRequest,
 } from '../../../service/leaveRequest-Apis';
 import moment from 'moment';
-import { formatDate, formatFloat, localStore } from '../../../service/constant';
+import { dateRange, formatCurrency, formatDate, formatFloat, localStore } from '../../../service/constant';
 
 import '../styles.css';
+import { addSchedule, editSchedule, getSchedule } from '../../../service/projects';
 
 const { Text } = Typography;
 
@@ -36,52 +26,15 @@ class AddScheduleModal extends Component {
     this.formRef = React.createRef();
     this.attachRef = React.createRef();
 
-    this.columns = [
-      {
-        title: 'Month',
-        dataIndex: 'month',
-        key: 'month',
-        render: (text, records) => (
-          <Row justify="space-between">
-            <Col> {formatDate(text, true, true)} </Col>
-            <Col style={{ marginLeft: 'auto', color: 'red' }}>
-              {records.disabled}
-            </Col>
-          </Row>
-        ),
-      },
-      {
-        title: 'Amount',
-        dataIndex: 'amount',
-        key: 'amount',
-        render: (text, records, index) => (
-          <Form.Item
-            noStyle
-            name={['amount', formatDate(records.date, true, 'M/D/YYYY')]}
-          >
-            <InputNumber
-              placeholder="Hours"
-              size="small"
-              disabled={props.readOnly}
-              onChange={(value) => {
-                this.setHours(records, value, index);
-              }}
-            />
-          </Form.Item>
-        ),
-      },
-    ];
-
     this.state = {
       data: [],
       reRender: false,
-      hoursEntry: {}, //need to remeber hours if date is change for now it is setting it to defualt if any date selected
+      amountEntry: {}, //need to remeber hours if date is change for now it is setting it to defualt if any date selected
       loading: false,
       fileList: [],
       fileIds: [],
       holidays: {},
       contractDetails: {},
-      LeaveRequestType: {},
       BasicFields: [
         {
           Placeholder: 'Start Date',
@@ -99,17 +52,15 @@ class AddScheduleModal extends Component {
           size: 'small',
           type: 'DatePicker',
           rules: [{ required: true, message: 'Start Date is Required' }],
-          fieldStyle: { width: '100%' },
           onChange: (value) => {
             const { dates } = this.formRef.current.getFieldsValue();
             const { startDate, endDate } = dates;
-            const { LeaveRequestType } = this.state;
-            this.getDateArray(startDate, endDate, LeaveRequestType);
+            this.getDateArray(startDate, endDate);
           },
           rangeMin: (current) => {
-            const { dates } = this.formRef.current.getFieldsValue();
+            const {dates} = this.formRef.current.getFieldsValue();
             const { endDate } = dates;
-            return endDate && current > endDate;
+            return dateRange(current, endDate, 'start', props.pDate)
           },
         },
         {
@@ -126,19 +77,35 @@ class AddScheduleModal extends Component {
           key: 'endDate',
           size: 'small',
           type: 'DatePicker',
-          fieldStyle: { width: '100%' },
-          disabled: false,
+          disabled: true,
           onChange: (value) => {
-            const { dates } = this.formRef.current.getFieldsValue();
+            const { dates } = this.formRef.current.getFieldValue();
             const { endDate, startDate } = dates;
             const { LeaveRequestType } = this.state;
             this.getDateArray(startDate, endDate, LeaveRequestType);
           },
           rangeMax: (current) => {
-            const { dates } = this.formRef.current.getFieldsValue();
-            const { startDate } = dates;
-            return startDate && current < startDate;
+            const {dates} = this.formRef.current.getFieldValue();
+            const {startDate} = dates
+            return dateRange(current, moment(startDate).add(1, 'M'), 'end', props.pDate)
           },
+        },
+        {
+          Placeholder: 'Amount',
+          fieldCol: 8,
+          size: 'small',
+          type: 'Text',
+          labelAlign: 'right',
+          itemStyle: { marginBottom: '10px' },
+        },
+        {
+          object: 'dates',
+          fieldCol: 16,
+          key: 'amount',
+          size: 'small',
+          type: "InputNumber",
+          shape: '$',
+          disabled: false,
         },
         {
           Placeholder: 'Description',
@@ -151,7 +118,7 @@ class AddScheduleModal extends Component {
         {
           object: 'dates',
           fieldCol: 24,
-          key: 'description',
+          key: 'notes',
           size: 'small',
           type: 'Textarea',
           mode: { minRows: 2, maxRows: 3 },
@@ -161,81 +128,40 @@ class AddScheduleModal extends Component {
     };
   }
   componentDidMount = () => {
-    const { approval } = this.props;
-    if (approval) {
-      this.getApprovingData();
-    } else {
+    const { editMile } = this.props;
+    if (editMile) {
       this.getSubmittedData();
     }
   };
 
   setHours = (record, value, index) => {
-    const { data, hoursEntry } = this.state;
-    data[index].hours = value;
-    hoursEntry[record.key] = value;
+    const { data, amountEntry } = this.state;
+    
+    data[index].amount = value;
+    amountEntry[record.key] = value;
     this.setState({
       data: [...data],
-      hoursEntry: { ...hoursEntry },
+      amountEntry: { ...amountEntry },
     });
   };
-
-  getLeaveDetail = (balance, minimum_balance, minimum_balance_required) => {
-    return {
-      Placeholder: (
-        <div>
-          <div>Current Balance: {balance}</div>
-          <div>Required Balance: {minimum_balance_required}</div>
-          <div>Overdraw Allowances: {minimum_balance}</div>
-        </div>
-      ),
-      fieldCol: 24,
-      note: true,
-      size: 'small',
-      type: 'Text',
-      labelAlign: 'right',
-      itemStyle: {
-        marginBottom: '10px',
-        border: '1px black solid',
-        paddingLeft: '10px',
-      },
-    };
-  };
-
   // this function is a mess right now need some fixes so it will be readable
-  getDateArray = (start, end, LeaveRequestType, entries) => {
+  getDateArray = (start, end, entries) => {
     //try to put your condition to put closer to eachother if they link to eachother
     //so it will be easy to track conditions
-    const { showDetails, readOnly } = this.props;
-    let { BasicFields, contractDetails, holidays, data, hoursEntry } =
-      this.state;
-    // const { readOnly } = this.props
-    let {
-      include_off_days,
-      balance = -1,
-      minimum_balance,
-      minimum_balance_required,
-      id: typeId,
-    } = LeaveRequestType ?? {};
-    var deFaulthours = contractDetails?.hoursPerDay ?? 0;
-    // if entries is sent it will only be send on open the modal on edit
+    let { BasicFields, data, amountEntry } = this.state;
+    BasicFields[3].disabled = false;
 
     if (entries) {
       var arr = new Array();
       data = entries.map((el) => {
-        var { date, hours } = el; // in this conditon this hours value will be replace
-        date = formatDate(date);
-        const disabled = false;
+        var { startDate, amount } = el; // in this conditon this hours value will be replace
+        let newDate = moment(startDate).format('MMM-YYYY');
 
-        if (showDetails) {
-          balance += hours;
-        }
-
-        hoursEntry[date.format('M/D/YYYY')] = `${hours}`; // setting the hours object before return
+        amountEntry[newDate]  = `${amount}`; // setting the hours object before return
         return {
-          key: date.format('M/D/YYYY'),
-          date: date.format('YYYY-MM-DD'),
-          hours: disabled ? 0 : `${hours}`,
-          disabled,
+          key: newDate,
+          month: newDate,
+          amount: amountEntry[newDate],
         };
       });
       // BasicFields[BasicFields[2].note ? 8 : 7].disabled = readOnly; // adding an object when select leavetype
@@ -245,207 +171,69 @@ class AddScheduleModal extends Component {
       var arr = new Array();
       while (start.isSameOrBefore(end)) {
         // need key to push in the table
-        const disabled = false;
         //hours are getting update on each call
-        let newDate = start.format('M/D/YYYY'); // newDate  = date for the new row
-        const hours = disabled ? 0 : hoursEntry[newDate] ?? deFaulthours;
+        let newDate = start.format('MMM-YYYY'); // newDate  = date for the new row
         // to set it in form for date
-        hoursEntry[newDate] = disabled
-          ? 0
-          : hoursEntry[newDate] ?? deFaulthours;
-
+        amountEntry[newDate]  = 0
         arr.push({
           key: newDate,
-          date: start.format('YYYY-MM-DD'),
-          hours,
-          disabled,
+          month: newDate,
+          amount: amountEntry[newDate],
         });
-        start = moment(start).add(1, 'd');
+        start = moment(start).add(1, 'M');
       }
       data = arr;
       // BasicFields[BasicFields[2].note ? 8 : 7].disabled = false; // adding an object when select leavetype
     } else if (start) {
       //if end date is not sent
-      const disabled = false;
-      let newDate = start.format('M/D/YYYY');
-      const hours = disabled ? 0 : hoursEntry[newDate] ?? deFaulthours;
-      // to set it in form for date
-      hoursEntry[newDate] = disabled ? 0 : hoursEntry[newDate] ?? deFaulthours;
-
+      let newDate = start.format('MMM-YYYY');
+      amountEntry[newDate]  = 0
       data = [
         {
           key: newDate,
-          date: start.format('YYYY-MM-DD'),
-          hours: disabled ? 0 : hours,
-          disabled,
+          month: newDate,
+          amount: amountEntry[newDate],
         },
       ];
-      // BasicFields[BasicFields[2].note ? 8 : 7].disabled = false; // // adding an object when select leavetype
     } else {
       this.formRef.current.setFieldsValue({
         dates: { startDate: null, endDate: null },
       });
-      // BasicFields[BasicFields[2].note ? 8 : 7].disabled = true; // adding an object when select leavetype
-      hoursEntry = {};
+      BasicFields[3].disabled = true; // adding an object when select leavetype
+      amountEntry = {};
       data = [];
     }
 
-    // set type detail note
-    if (typeId && balance >= 0 && showDetails) {
-      if (BasicFields[2].note) {
-        BasicFields[2] = this.getLeaveDetail(
-          balance,
-          minimum_balance,
-          minimum_balance_required
-        );
-      } else {
-        BasicFields.splice(
-          2,
-          0,
-          this.getLeaveDetail(
-            balance,
-            minimum_balance,
-            minimum_balance_required
-          )
-        );
-      }
-    } else if (BasicFields[2].note) {
-      BasicFields.splice(2, 1);
-    }
 
     this.setState({
       BasicFields: [...BasicFields],
-      data,
-      LeaveRequestType,
-      hoursEntry,
+      data: [...data],
+      amountEntry: {...amountEntry}
     });
-    this.formRef.current.setFieldsValue({ hours: hoursEntry });
+    this.formRef.current.setFieldsValue({ amount: amountEntry });
     //single hook cal for all the condition
   };
 
-  getApprovingData = () => {
-    //Need to be nerge with  getSubmittedData Function for code optimizaiton and ro avoid dupication of code...
-    const { BasicFields } = this.state;
-    const { edit } = this.props;
-    // const {id: userId} = localStore()
-    // Get Projects
-    getSingleRequest(edit).then((srRes) => {
-      if (srRes.success) {
-        const { employeeId } = srRes.data;
-        Promise.all([getUserProjects(employeeId, 'O', 0), getUserLeaveType()])
-          .then((proRes) => {
-            console.log(proRes);
-            //Destructure proRes[1] to avoid writing proRes[1] repeateadly
-            const {
-              success,
-              contractDetails,
-              holidays,
-              LeaveRequestTypes,
-              fileList,
-              fileIds,
-            } = proRes[1];
-            BasicFields.map((el) => {
-              if (el.type !== 'Text') {
-                el.disabled = true;
-              }
-              return el;
-            });
-
-            this.setState({
-              BasicFields,
-              holidays: success ? holidays ?? {} : {}, //holidays to cross of dates if type is not include holidays
-              contractDetails: success ? contractDetails ?? {} : {}, //cotract details
-              fileList: srRes.fileList ?? [],
-              fileIds: srRes.fileIds ?? [],
-            });
-            if (edit && srRes?.success) {
-              // run if modal is opened for editing
-              let { entries, data } = srRes;
-              //find holiday type to find if holidays are included or not
-              let selectedLeaveType = LeaveRequestTypes.find(
-                (x) => x.id === (data.typeId ?? 0)
-              );
-              const formValues = {
-                ...data,
-                description: data.desc,
-                typeId: selectedLeaveType?.id,
-                startDate: formatDate(entries[0].date),
-                endDate: formatDate(entries[entries.length - 1].date),
-              };
-              this.getDateArray(
-                formValues.startDate,
-                formValues.endDate,
-                selectedLeaveType,
-                entries
-              );
-              this.formRef.current.setFieldsValue({ dates: formValues });
-            }
-          })
-          .catch((e) => {
-            console.log(e);
-          });
-      }
-    });
-  };
-
   getSubmittedData = () => {
-    const { BasicFields } = this.state;
-    const { edit, readOnly } = this.props;
-    const { id: userId } = localStore();
     // Get Projects
-    Promise.all([
-      getUserProjects(userId, 'O', 0),
-      getUserLeaveType(),
-      edit && getSingleRequest(edit),
-    ])
+    const {proId, editMile} = this.props
+    getSchedule(proId, editMile.id)
       .then((res) => {
-        console.log(res);
         //Destructure res[1] to avoid writing res[1] repeateadly
-        const {
-          success,
-          contractDetails,
-          holidays,
-          LeaveRequestTypes,
-          fileList,
-          fileIds,
-        } = res[1];
-        BasicFields.map((el) => {
-          if (el.type !== 'Text') {
-            el.disabled = readOnly;
-          }
-          //Set type to default if it is created already
-          if (el.key === 'typeId' && res[2]) {
-            el.disabled = true; //res[2] is get id reaquest if it is false that means new request
-          } // don't wanna disable type
-          return el;
-        });
-
-        this.setState({
-          BasicFields,
-          holidays: success ? holidays ?? {} : {}, //holidays to cross of dates if type is not include holidays
-          contractDetails: success ? contractDetails ?? {} : {}, //cotract details
-          fileList: res[2].fileList ?? [],
-          fileIds: res[2].fileIds ?? [],
-        });
-        if (edit && res[2]?.success) {
+        if (res?.success) {
+          const {id, notes, amount, startDate, endDate, segments = []} = res.data
           // run if modal is opened for editing
-          let { entries, data } = res[2];
-          //find holiday type to find if holidays are included or not
-          let selectedLeaveType = LeaveRequestTypes.find(
-            (x) => x.id === (data.typeId ?? 0)
-          );
           const formValues = {
-            ...data,
-            description: data.desc,
-            typeId: selectedLeaveType?.id,
-            startDate: formatDate(entries[0].date),
-            endDate: formatDate(entries[entries.length - 1].date),
+            id: id,
+            notes: notes,
+            amount: amount,
+            startDate: formatDate(startDate),
+            endDate: formatDate(endDate),
           };
           this.getDateArray(
             formValues.startDate,
             formValues.endDate,
-            selectedLeaveType,
-            entries
+            segments
           );
           this.formRef.current.setFieldsValue({ dates: formValues });
         }
@@ -458,31 +246,31 @@ class AddScheduleModal extends Component {
   getFormValues = (val) => {
     this.setState({ loading: true });
     const { dates } = val;
-    const { edit, callBack } = this.props;
+    const { editMile, callBack, proId } = this.props;
     const { data, fileIds } = this.state;
-
     const newVal = {
-      description: dates.description ?? '',
-      typeId: dates.typeId || 0,
-      workId: dates.workId,
-      entries: data,
-      attachments: fileIds ?? [],
+      ...dates,
+      segments: data.map(el=>{
+        return {
+          startDate: moment(el.month, 'MMM/YYYY').startOf('month'),
+          endDate: moment(el.month, 'MMM/YYYY').endOf('month'),
+          amount: el.amount
+        }
+      }),
     };
-
-    console.log('newVal--->', newVal);
-    if (edit) {
-      editRequest(edit, newVal).then((res) => {
+    if (editMile) {
+      editSchedule(proId, editMile.id, newVal).then((res) => {
         this.setState({ loading: false });
         if (res.success) {
-          callBack();
+          callBack(res.data);
         }
       });
     } else {
       // console.log('newVal: ', newVal)
-      addRequest(newVal).then((res) => {
+      addSchedule(proId, newVal).then((res) => {
         this.setState({ loading: false });
         if (res.success) {
-          callBack();
+          callBack(res.data);
         }
       });
     }
@@ -490,8 +278,8 @@ class AddScheduleModal extends Component {
 
   getTableSummary = (data) => {
     let total = 0;
-    data.forEach(({ hours }) => {
-      total += parseFloat(hours ?? 0);
+    data.forEach(({ amount }) => {
+      total += parseFloat(amount ?? 0);
     });
 
     return (
@@ -499,62 +287,13 @@ class AddScheduleModal extends Component {
         <Table.Summary.Row>
           <Table.Summary.Cell index={0}>Total</Table.Summary.Cell>
           <Table.Summary.Cell index={1}>
-            {formatFloat(total)}
+            {formatCurrency(total)}
           </Table.Summary.Cell>
         </Table.Summary.Row>
       </Table.Summary>
     );
   };
-  //File
-  handleUpload = async (option) => {
-    const { onSuccess, onError, file, onProgress } = option;
-    const formData = new FormData();
-    const config = {
-      headers: { 'content-type': 'multipart/form-data' },
-      onUploadProgress: (event) => {
-        const percent = Math.floor((event.loaded / event.total) * 100);
-        this.setState({ progress: percent });
-        if (percent === 100) {
-          setTimeout(() => this.setState({ progres: 0 }), 1000);
-        }
-        onProgress({ percent: (event.loaded / event.total) * 100 });
-      },
-    };
-    formData.append('files', file);
-    addFiles(formData, config).then((res, err) => {
-      if (res.success) {
-        onSuccess('Ok');
-        this.setState({
-          fileList: [...this.state.fileList, res.file],
-          fileIds: [...this.state.fileIds, res.file.fileId],
-        });
-      } else {
-        console.log('Eroor: ', err);
-        const error = new Error('Some error');
-        onError({ err });
-      }
-    });
-  };
 
-  onRemove = (file) => {
-    this.setState((state) => {
-      const index = state.fileList.indexOf(file);
-      const newFileList = state.fileList.slice();
-      const fileIds = state.fileIds;
-      newFileList.splice(index, 1);
-      fileIds.splice(index, 1);
-      return {
-        fileIds,
-        fileList: newFileList,
-      };
-    });
-  };
-
-  checkFunc = (forms) => {
-    const { data } = this.state;
-    console.log({ forms });
-    console.log({ data });
-  };
   //File
   render() {
     const { visible, close, edit, readOnly } = this.props;
@@ -563,31 +302,30 @@ class AddScheduleModal extends Component {
     // for timeBeing
     let columns = [
       {
-        title: 'Date',
-        dataIndex: 'date',
-        key: 'date',
+        title: 'Month',
+        dataIndex: 'month',
+        key: 'month',
         render: (text, records) => (
           <Row justify="space-between">
-            <Col> {formatDate(text, true, true)} </Col>
-            <Col style={{ marginLeft: 'auto', color: 'red' }}>
-              {records.disabled}
-            </Col>
+            <Col> {text} </Col>
           </Row>
         ),
       },
       {
-        title: 'Hours',
-        dataIndex: 'hours',
-        key: 'hours',
+        title: 'Amount',
+        dataIndex: 'amount',
+        key: 'amount',
         render: (text, records, index) => (
           <Form.Item
             noStyle
-            name={['hours', formatDate(records.date, true, 'M/D/YYYY')]}
+            name={['amount', records.key]}
           >
             <InputNumber
-              max={contractDetails?.hoursPerDay ?? false}
               min={0}
-              placeholder="Hours"
+              placeholder="amount"
+              formatter={(value) => formatter(value, '$') }
+              parser={(value) => parser(value, '$') }
+              style={{width: '100%'}}
               size="small"
               disabled={records.disabled || readOnly}
               onChange={(value) => {
@@ -602,13 +340,7 @@ class AddScheduleModal extends Component {
     // For time bring
     return (
       <Modal
-        title={
-          readOnly
-            ? 'View Request'
-            : edit
-            ? 'Edit Leave Request'
-            : 'New Leave Request'
-        }
+        title={ readOnly ? 'View Schedule' : edit ? 'Edit Schedule' : 'New Schedule' }
         maskClosable
         destroyOnClose={true}
         visible={visible}
