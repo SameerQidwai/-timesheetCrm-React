@@ -2,7 +2,7 @@ import { Button, Col, DatePicker, Dropdown, Menu, Popconfirm, Row, Select, Table
 import { SettingOutlined, CheckCircleOutlined, AuditOutlined} from '@ant-design/icons'; //Icons
 import React, { useEffect, useState } from 'react'
 import { getManageProjects, getUserProjects } from '../../service/constant-Apis';
-import { expenseSheetActions, getExpenseSheets } from '../../service/expenseSheet-Apis';
+import { expenseSheetActions, getApprovalExpenseSheets } from '../../service/expenseSheet-Apis';
 import { formatCurrency, formatDate, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
 // import { expensesData as dummyExpensesData } from '../DummyData';
 import ExpenseSheetModal from './Modals/ExpenseSheetModal';
@@ -170,7 +170,7 @@ const ExpenseApproval = () => {
 	}
 
 	const gettingExpenseSheets = (filters) => {
-		getExpenseSheets(filters).then((res) => {
+		getApprovalExpenseSheets(filters).then((res) => {
 			if (res.success) {
 				setExpenseData(res.data); 
 			}
