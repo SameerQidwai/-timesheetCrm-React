@@ -229,8 +229,8 @@ export const getFiscalYear = (request) => {
 
 export const dateRangeAfter = (current, eDate, pDates) => {
   if (current) {
-    const startDate = pDates?.startDate ?? moment.subtract(10, 'years');
-    const endDate = pDates?.endDate ?? moment.add(10, 'years');
+    const startDate = pDates?.startDate ?? moment().subtract(10, 'years');
+    const endDate = pDates?.endDate ?? moment().add(10, 'years');
     //disable after                                     // disable Before, // disable After
     return (
       (eDate && current >= eDate) ||
@@ -241,8 +241,8 @@ export const dateRangeAfter = (current, eDate, pDates) => {
 
 export const dateRangeBefore = (current, sDate, pDates) => {
   if (current) {
-    const startDate = pDates?.startDate ?? moment.subtract(10, 'years');
-    const endDate = pDates?.endDate ?? moment.add(10, 'years');
+    const startDate = pDates?.startDate ?? moment().subtract(10, 'years');
+    const endDate = pDates?.endDate ?? moment().add(10, 'years');
     //disable Before                                      // disable Before, // disable After
     return (
       (sDate && current <= sDate) ||
