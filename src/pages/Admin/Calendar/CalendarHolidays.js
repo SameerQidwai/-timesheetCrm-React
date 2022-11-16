@@ -365,8 +365,8 @@ class CalendarHolidays extends Component {
               defaultValue={moment(new Date())}
             />
           </Col>
-          <Col style={{ textAlign: 'end' }} span="4">
-            <Row justify="space-between">
+          <Col >
+            <Row justify="space-between" gutter={10}>
               <Col>
                 <Button
                   type="default"
