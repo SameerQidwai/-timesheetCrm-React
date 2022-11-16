@@ -548,10 +548,6 @@ class Resources extends Component {
             <Item label="End Date">
               {formatDate(mileDesc.endDate, true, true)}
             </Item>
-            <Item label="Progress">{mileDesc.progress} %</Item>
-            <Item label="Approved">
-              {mileDesc.isApproved ? 'True' : 'False'}
-            </Item>
           </Descriptions>
         )}
         <Row justify="end" span={4} gutter={[30, 0]}>

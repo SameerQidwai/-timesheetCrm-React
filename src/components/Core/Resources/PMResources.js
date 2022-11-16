@@ -9,6 +9,7 @@ import {
 } from '../../../service/constant';
 import { tableSorter } from '../Table/TableFilter';
 import { getHierarchy } from '../../../service/projects';
+import { Tag_s } from '../Custom/Index';
 
 const milestoneColmuns = [
   {
@@ -46,10 +47,8 @@ const milestoneColmuns = [
     dataIndex: 'isApproved',
     key: 'isApproved',
     align: 'right',
-    render: (record) => (
-      <Tag color={record ? 'green' : 'volcano'} key={record}>
-        {record ? 'TRUE' : 'FALSE'}
-      </Tag>
+    render: (status) => (
+      <Tag_s text={status?? 'CM'}/>
     ),
   },
   // {

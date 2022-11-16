@@ -37,6 +37,7 @@ import { getPanelSkills } from '../../service/constant-Apis';
 import { generalDelete } from "../../service/delete-Api's";
 import { getMilestone } from '../../service/Milestone-Apis';
 import AuthError from '../../components/Core/AuthError';
+import { Tag_s } from '../../components/Core/Custom/Index';
 
 const { Item } = Descriptions;
 
@@ -613,7 +614,7 @@ class Resources extends Component {
             </Item>
             <Item label="Progress">{mileDesc.progress} %</Item>
             <Item label="Approved">
-              {mileDesc.isApproved ? 'True' : 'False'}
+              <Tag_s text={mileDesc.isApproved ?? 'CM'}/>
             </Item>
           </Descriptions>
         )}
