@@ -80,15 +80,15 @@ const Expense = (props) => {
       ),
       ...tableSorter(`isReimbursed`, 'string'),
     },
-    {
-      title: 'b',
-      dataIndex: 'isBillable',
-      align: 'center',
-      render: (value) => (
-        <Checkbox defaultChecked={false} checked={value} />
-      ),
-      ...tableSorter(`isBillable`, 'string'),
-    },
+    // {
+    //   title: 'b',
+    //   dataIndex: 'isBillable',
+    //   align: 'center',
+    //   render: (value) => (
+    //     <Checkbox defaultChecked={false} checked={value} />
+    //   ),
+    //   ...tableSorter(`isBillable`, 'string'),
+    // },
     {
       title: '...',
       key: 'action',

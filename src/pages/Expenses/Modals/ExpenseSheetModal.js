@@ -133,13 +133,13 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) =>
               <Checkbox defaultChecked={false} checked={value}  />
           )
       },
-      {
-          title: 'b',
-          dataIndex: 'isBillable',
-          render: (value) => (
-              <Checkbox defaultChecked={false} checked={value}/>
-          )
-      },
+      // {
+      //     title: 'b',
+      //     dataIndex: 'isBillable',
+      //     render: (value) => (
+      //         <Checkbox defaultChecked={false} checked={value}/>
+      //     )
+      // },
   ];  
 
   useEffect(() => {
@@ -344,16 +344,16 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) =>
                   <Table.Summary fixed="bottom">
                     <Table.Summary.Row>
                       <Table.Summary.Cell index={0}></Table.Summary.Cell>
-                      <Table.Summary.Cell index={1}>Total</Table.Summary.Cell>
+                      <Table.Summary.Cell  index={1}>Total:</Table.Summary.Cell>
                       <Table.Summary.Cell index={2}>
                         {formatCurrency(amount)}
                       </Table.Summary.Cell>
-                      <Table.Summary.Cell index={3} >Total Billable</Table.Summary.Cell>
+                      <Table.Summary.Cell  index={3} >Total Billable:</Table.Summary.Cell>
                       <Table.Summary.Cell index={4}>
                         {formatCurrency(billableAmount)}
                       </Table.Summary.Cell>
-                      <Table.Summary.Cell index={5}>Total Reimbursable</Table.Summary.Cell>
-                      <Table.Summary.Cell index={6} colSpan={2}>
+                      <Table.Summary.Cell  index={5}colSpan={2}>Total Reimbursable:</Table.Summary.Cell>
+                      <Table.Summary.Cell index={6}>
                         {formatCurrency(reimbursedAmount)}
                       </Table.Summary.Cell>
                       <Table.Summary.Cell index={7}></Table.Summary.Cell>

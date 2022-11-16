@@ -96,7 +96,7 @@ const InfoModal = ({ visible, close, callBack }) => {
         {
             Placeholder: "Reimbursable",
             // rangeMin: true,
-            fieldCol: 5,
+            fieldCol: 10,
             size: "small",
             type: "Text",
             // itemStyle:{marginBottom:'10px'},
@@ -109,8 +109,9 @@ const InfoModal = ({ visible, close, callBack }) => {
             disabled: editDisabled,
             size: "small",
             type: "Checkbox",
-            valuePropName: "checked"
-            // name:"billable",
+            valuePropName: "checked",
+            itemStyle:{display : 'none' }, // hide because they ask to hide,
+            // name:"billable", //not sure what to do about it for now
             // value: "billable"
             // checked: []
         },
@@ -120,7 +121,7 @@ const InfoModal = ({ visible, close, callBack }) => {
             fieldCol: 5,
             size: "small",
             type: "Text",
-            // itemStyle:{marginBottom:'10px'},
+            itemStyle:{display : 'none' },
         },
         {
             Placeholder: "Project",
