@@ -2,7 +2,7 @@ import React, { Component, useEffect, useState } from "react";
 import { Row, Col, Menu, Button, Dropdown, Descriptions, Table, Tag, Popconfirm } from "antd";
 import { SettingOutlined, DownOutlined } from "@ant-design/icons"; //Icons
 import { Link } from 'react-router-dom'
-import { formatDate, formatCurrency, localStore } from "../../../service/constant";
+import { formatDate, formatCurrency, localStore, formatFloat } from "../../../service/constant";
 import { tableSorter } from "../Table/TableFilter";
 import { getHierarchy } from "../../../service/opportunities";
 import { Tag_s } from "../Custom/Index";
@@ -114,6 +114,7 @@ const positionColumns = [
         title: "Total Hours",
         dataIndex: "billableHours",
         key: "billableHours",
+        render: (text)=> formatFloat(text),
         ...tableSorter('billableHours', 'number'),
     },
 ];

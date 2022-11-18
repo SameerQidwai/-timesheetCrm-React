@@ -26,6 +26,7 @@ import {
   formatCurrency,
   localStore,
   formatPercent,
+  formatFloat,
 } from '../../service/constant';
 import {
   Filtertags,
@@ -80,7 +81,7 @@ class Resources extends Component {
         title: 'Billable Hours',
         dataIndex: 'billableHours',
         key: 'billableHours',
-        sorter: (a, b) => a.billableHours - b.billableHours,
+        render: (text)=> formatFloat(text),
         ...tableSorter('billableHours', 'number'),
       },
       {
@@ -111,7 +112,7 @@ class Resources extends Component {
         title: 'CM %',
         dataIndex: ['opportunityResourceAllocations', '0', 'cmPercent'],
         key: 'opportunityResourceAllocationsPercent',
-        render: (record) => `${record} %`,
+        render: (record) => `${formatFloat(record)} %`,
         ...tableSorter('opportunityResourceAllocations.0.cmPercent', 'number'),
       },
       {

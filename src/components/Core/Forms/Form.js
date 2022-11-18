@@ -298,6 +298,7 @@ class Forms extends Component {
                         onBlur={onBlur}
                         onChange={onChange}
                         format={'ddd DD MMM yyyy'} //donot change yet
+                        disabled={disabled}
                     />
                 );
                 break;

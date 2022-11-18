@@ -6,6 +6,7 @@ import {
   formatDate,
   formatCurrency,
   localStore,
+  formatFloat,
 } from '../../../service/constant';
 import { tableSorter } from '../Table/TableFilter';
 import { getHierarchy } from '../../../service/projects';
@@ -111,7 +112,7 @@ const positionColumns = [
     title: 'Billable Hours',
     dataIndex: 'billableHours',
     key: 'billableHours',
-    sorter: (a, b) => a.billableHours - b.billableHours,
+    render: (text)=> formatFloat(text),
     ...tableSorter('billableHours', 'number'),
   },
   {

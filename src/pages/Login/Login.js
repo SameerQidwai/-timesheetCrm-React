@@ -64,7 +64,6 @@ function Login(props) {
               {...{ wrapperCol: 24 }}
               initialValues={{ remember: true }}
               onFinish={loginFunc}
-              // onFinishFailed={onFinishFailed}
               layout="vertical"
             >
               <Form.Item

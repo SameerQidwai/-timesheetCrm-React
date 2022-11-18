@@ -31,6 +31,7 @@ import {
   formatCurrency,
   localStore,
   O_STATUS,
+  formatFloat,
 } from '../../service/constant';
 import {
   Filtertags,
@@ -83,6 +84,7 @@ class Resources extends Component {
         title: 'Total Hours',
         dataIndex: 'billableHours',
         key: 'billableHours',
+        render: (text)=> formatFloat(text),
         ...tableSorter('billableHours', 'number'),
       },
 
