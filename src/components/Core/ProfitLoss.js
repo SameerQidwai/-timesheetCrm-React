@@ -250,7 +250,7 @@ class ProfitLoss extends Component {
         // const len = billing.totalMonths>0 ? billing.totalMonths : 0
         const len = 16
         let array = []
-
+        console.log(data)
         for (
             var iMonth = parseDate(fiscalYear['start']) ; // defination
             iMonth.isSameOrBefore(parseDate(fiscalYear['end']));  //condition
@@ -259,6 +259,7 @@ class ProfitLoss extends Component {
             let key = parseDate(iMonth, true, 'MMM YY')
                         //project can have green column if we are checking opportunity P&L there won't be actual
             let color = parent === 'P' ? iMonth.isSameOrAfter(parseDate(new Date()), 'month') ? '#ff7875' : '#a0df7d' : '#ff7875'
+            color = data[0][key]? color: ''
             array.push(
                 {
                     title: key,
@@ -267,16 +268,16 @@ class ProfitLoss extends Component {
                     key: key,
                     onCell: () => ({
                         style: {
-                        backgroundColor: data[1][key]? color: ''
+                        backgroundColor: color
                         }
                     }),
                     onHeaderCell: () => ({
                         style: {
-                        backgroundColor: data[1][key]? color: ''
+                        backgroundColor: color
                         }
                     }),
                     render: (record, records) =>{
-                        if (record){
+                        if (record >= 0 && !isNaN(data[0][key])){
                             if (records.key === 'W') {
                                 return <b>{record} </b>
                             }else if (records.key === 'R') {

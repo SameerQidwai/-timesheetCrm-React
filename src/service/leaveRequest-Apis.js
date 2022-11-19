@@ -151,7 +151,11 @@ export const manageLeaveRequests = (manage, data) => {
             .then((res) => {
                 const { success, data } = res.data;
                 setToken(res?.headers?.authorization)
-                if (success) return { success: success, data: data };
+                if (success) {
+                    let lastUpdate = new Date(Math.max(...data.map(e => new Date(e.updatedAt))));
+                    return { success: success, data: data, lastUpdate }
+                };
+                return { success }
             })
             .catch((err) => {
                 const message = err?.response?.data?.message
