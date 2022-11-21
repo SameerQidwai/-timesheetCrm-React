@@ -184,9 +184,13 @@ const InfoModal = ({ visible, close, callBack }) => {
     const onFinish = (data) => {
 
         let { basic } = data;
-        basic.attachments = fileList.map((file, index) => {
-            return file.fileId;
-        });
+        basic = {
+            ...basic,
+            projectId: basic.projectId ?? null,
+            attachments: fileList.map((file, index) => {
+                return file.fileId;
+            })
+        }
         if (visible === true) {
             addExpense(basic).then((res) => {
                 if (res.success) {
@@ -196,8 +200,6 @@ const InfoModal = ({ visible, close, callBack }) => {
                 }
             })
         } else {
-            //for some reason projectId key was being removed if it is undefined
-            basic.projectId = basic.projectId ?? null
             editExpense(visible.id,basic).then((res) => { 
                 if (res.success) {
                     callBack(res.data, visible?.index);
@@ -214,7 +216,7 @@ const InfoModal = ({ visible, close, callBack }) => {
 		setPermission(EXPENSES);		
         Promise.all([getUserProjects(id, 'O', 0), getExpenseTypeList(), visible !== true && getAttachments('EXP', visible.id)]).then((res) => {
             let basic = basicFields
-            basic[11].data = res[0].success ? res[0].data : []
+            basic[3].data = res[0].success ? res[0].data : []
             basic[2].data = res[1].success ? res[1].data : []
             setBasicFields([...basic]); 
             setFileList(res[2]?.success ? res[2].fileList : [])

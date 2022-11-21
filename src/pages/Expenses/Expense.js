@@ -72,8 +72,9 @@ const Expense = (props) => {
     //   }
     // },
     {
-      title: 'i',
+      title: 'Reimbursable',
       dataIndex: 'isReimbursed',
+      ellipsis: true,
       align: 'center',
       render: (value) => (
         <Checkbox defaultChecked={false} checked={value} />

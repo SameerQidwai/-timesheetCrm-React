@@ -238,7 +238,7 @@ class FormItems extends Component {
                         showTime={showTime}
                         disabledDate={min ?? max}
                         size={size}
-                        style={{marginBottom: '5px',...style}}
+                        style={{marginBottom: '5px', width: '100%',...style}}
                         onBlur={onBlur}
                         onChange={onChange}
                         format={'ddd DD MMM yyyy'} //donot change yet
