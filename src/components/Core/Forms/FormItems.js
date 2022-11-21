@@ -142,7 +142,7 @@ class FormItems extends Component {
                         // autoSize={mode}
                         autoSize={mode}
                         asize={size}
-                        style={style}
+                        style={{marginBottom: '5px', ...style}}
                         prefix={mode}
                         disabled={disabled}
                         readOnly={readOnly}
@@ -158,7 +158,7 @@ class FormItems extends Component {
                         size={size}
                         formatter={(value) => formatter(value, shape) }
                         parser={(value) => parser(value, shape) }
-                        style={{width: '100%',...style}}
+                        style={{marginBottom: '5px', width: '100%',...style}}
                         onBlur={onBlur}
                         onChange={onChange}
                         disabled={disabled}
@@ -178,7 +178,7 @@ class FormItems extends Component {
                         fieldNames={fieldNames}
                         onChange={onChange}
                         onClear={onClear}
-                        style={style}    //gotta tell the Select what keys should go in filterOption tag
+                        style={{marginBottom: '5px',...style}}    //gotta tell the Select what keys should go in filterOption tag
                         optionFilterProp={[fieldNames?.label??"label", fieldNames?.value??"value"]}
                         showSearch
                         filterOption={
@@ -238,7 +238,7 @@ class FormItems extends Component {
                         showTime={showTime}
                         disabledDate={min ?? max}
                         size={size}
-                        style={{width: '100%',...style}}
+                        style={{marginBottom: '5px', width: '100%',...style}}
                         onBlur={onBlur}
                         onChange={onChange}
                         format={'ddd DD MMM yyyy'} //donot change yet
@@ -330,7 +330,7 @@ class FormItems extends Component {
                 item = (
                     <Input
                         placeholder={placeholder}
-                        style={style}
+                        style={{marginBottom: '5px',...style}}
                         size={size}
                         disabled={disabled}
                         readOnly={readOnly}

@@ -32,8 +32,8 @@ const InfoModal = ({ visible, close, callBack }) => {
             // itemStyle:{marginBottom:'10px'},
         },
         {
-            Placeholder: "Date",
-            rangeMin: true,
+            Placeholder: "Project",
+            // rangeMin: true,
             fieldCol: 12,
             size: "small",
             type: "Text",
@@ -53,6 +53,33 @@ const InfoModal = ({ visible, close, callBack }) => {
         {
             object: "basic",
             fieldCol: 12,
+            key: "projectId", 
+            disabled: visible.isInSheet,
+            size: "small",
+            initialValue: null,
+            // rules:[{ required: true, message: 'Project is Required' }],
+            data: [],
+            type: "Select",
+        },
+        {
+            Placeholder: "Date",
+            rangeMin: true,
+            fieldCol: 12,
+            size: "small",
+            type: "Text",
+            // itemStyle:{marginBottom:'10px'},
+        },
+        {
+            Placeholder: "Amount",
+            rangeMin: true,
+            fieldCol: 12,
+            size: "small",
+            type: "Text",
+            // itemStyle:{marginBottom:'10px'},
+        },
+        {
+            object: "basic",
+            fieldCol: 12,
             key: "date", // when-api change it to projectId
             disabled: editDisabled,
             size: "small",
@@ -61,14 +88,6 @@ const InfoModal = ({ visible, close, callBack }) => {
             // customValue: (value, option) => option, // when-api remove this
             type: "DatePicker",
             fieldStyle:{width: '100%'}
-        },
-        {
-            Placeholder: "Amount",
-            rangeMin: true,
-            fieldCol: 24,
-            size: "small",
-            type: "Text",
-            // itemStyle:{marginBottom:'10px'},
         },
         {
             object: "basic",
@@ -88,7 +107,8 @@ const InfoModal = ({ visible, close, callBack }) => {
             size: "small",
             initialValue: false,
             type: "Checkbox",
-            valuePropName: "checked"
+            valuePropName: "checked",
+            itemStyle:{margin:'10px 0px'},
             // name:"reimbursed",
             // value:"reimbursed"
             // checked: []
@@ -99,49 +119,30 @@ const InfoModal = ({ visible, close, callBack }) => {
             fieldCol: 10,
             size: "small",
             type: "Text",
-            // itemStyle:{marginBottom:'10px'},
+            itemStyle:{margin:'10px 0px'},
         },
-        {
-            object: "basic",
-            fieldCol: 1,
-            key: "isBillable",
-            initialValue: false,
-            disabled: editDisabled,
-            size: "small",
-            type: "Checkbox",
-            valuePropName: "checked",
-            itemStyle:{display : 'none' }, // hide because they ask to hide,
-            // name:"billable", //not sure what to do about it for now
-            // value: "billable"
-            // checked: []
-        },
-        {
-            Placeholder: "Billable",
-            // rangeMin: true,
-            fieldCol: 5,
-            size: "small",
-            type: "Text",
-            itemStyle:{display : 'none' },
-        },
-        {
-            Placeholder: "Project",
-            // rangeMin: true,
-            fieldCol: 24,
-            size: "small",
-            type: "Text",
-            // itemStyle:{marginBottom:'10px'},
-        },
-        {
-            object: "basic",
-            fieldCol: 12,
-            key: "projectId", 
-            disabled: visible.isInSheet,
-            size: "small",
-            initialValue: null,
-            // rules:[{ required: true, message: 'Project is Required' }],
-            data: [],
-            type: "Select",
-        },
+        // {
+        //     object: "basic",
+        //     fieldCol: 1,
+        //     key: "isBillable",
+        //     initialValue: false,
+        //     disabled: editDisabled,
+        //     size: "small",
+        //     type: "Checkbox",
+        //     valuePropName: "checked",
+        //     itemStyle:{display : 'none' }, // hide because they ask to hide,
+        //     // name:"billable", //not sure what to do about it for now
+        //     // value: "billable"
+        //     // checked: []
+        // },
+        // {
+        //     Placeholder: "Billable",
+        //     // rangeMin: true,
+        //     fieldCol: 5,
+        //     size: "small",
+        //     type: "Text",
+        //     itemStyle:{display : 'none' },
+        // },
         {
             Placeholder: "Notes",
             // rangeMin: true,
