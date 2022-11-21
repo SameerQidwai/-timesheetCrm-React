@@ -55,10 +55,14 @@ class AddScheduleModal extends Component {
           onChange: (value) => {
             const { dates } = this.formRef.current.getFieldsValue();
             const { startDate, endDate } = dates;
+            this.formRef.current.setFieldsValue({
+              dates: { ...dates, endDate: null },
+            });
             this.getDateArray(startDate, endDate);
           },
           rangeMin: (current) => {
             const {dates} = this.formRef.current.getFieldsValue();
+
             const { endDate } = dates;
             return dateRange(current, endDate, 'start', props.pDate)
           },
@@ -81,8 +85,7 @@ class AddScheduleModal extends Component {
           onChange: (value) => {
             const { dates } = this.formRef.current.getFieldValue();
             const { endDate, startDate } = dates;
-            const { LeaveRequestType } = this.state;
-            this.getDateArray(startDate, endDate, LeaveRequestType);
+            this.getDateArray(startDate, endDate);
           },
           rangeMax: (current) => {
             const {dates} = this.formRef.current.getFieldValue();
@@ -92,6 +95,7 @@ class AddScheduleModal extends Component {
         },
         {
           Placeholder: 'Amount',
+          rangeMin: true,
           fieldCol: 8,
           size: 'small',
           type: 'Text',
@@ -105,7 +109,11 @@ class AddScheduleModal extends Component {
           size: 'small',
           type: "InputNumber",
           shape: '$',
+          rules: [{ required: true, message: 'Amount is Required' }],
           disabled: false,
+          onChange: (value)=>{
+            console.log(value)
+          }
         },
         {
           Placeholder: 'Description',
@@ -150,7 +158,7 @@ class AddScheduleModal extends Component {
     //so it will be easy to track conditions
     let { BasicFields, data, amountEntry } = this.state;
     BasicFields[3].disabled = false;
-
+    let { dates } = this.formRef.current.getFieldValue()
     if (entries) {
       var arr = new Array();
       data = entries.map((el) => {
@@ -249,7 +257,10 @@ class AddScheduleModal extends Component {
     const { editMile, callBack, proId } = this.props;
     const { data, fileIds } = this.state;
     const newVal = {
-      ...dates,
+      startDate: dates.startDate,
+      endDate: dates.endDate ?? moment(dates.startDate).endOf('month'),
+      amount: dates.amount,
+      notes: dates.notes ?? '',
       segments: data.map(el=>{
         return {
           startDate: moment(el.month, 'MMM/YYYY').startOf('month'),
