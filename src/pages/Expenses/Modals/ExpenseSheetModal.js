@@ -202,10 +202,14 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) =>
 
   const onFinish = (value) => {
     let { basic } = value;
-    basic.attachments = fileList.map((file, index) => {
-        return file.fileId;
-    });
-    basic.expenseSheetExpenses = selectedRowKeys
+    basic = {
+      ...basic,
+      projectId: basic.projectId ?? null,
+      expenseSheetExpenses: selectedRowKeys,
+      attachments: fileList.map((file, index) => {
+          return file.fileId;
+      })
+  }
     // basic.attachments= []
     if (visible?.id){
       editSheet(visible.id, basic)
