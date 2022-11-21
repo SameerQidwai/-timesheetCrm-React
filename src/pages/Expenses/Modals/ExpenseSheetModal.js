@@ -127,8 +127,9 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) =>
       )
       },
       {
-          title: 'i',
+          title: 'Reimbursable',
           dataIndex: 'isReimbursed',
+          ellipsis: true,
           render: (value) => (
               <Checkbox defaultChecked={false} checked={value}  />
           )
@@ -289,7 +290,7 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) =>
     <Modal
       title={`${adminView ? "Approve" : visible === true ? "Add" : "Edit"} Expense Sheet`}
       visible={visible}
-      width={850}
+      width={900}
       onCancel={close}
       okText={"Save"}
       // adminView Prop add
@@ -326,20 +327,21 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) =>
               columns={columns}
               dataSource={filteredExpenses}
               summary={(data) => {
-                console.log(selectedRowKeys)
                 let amount = 0;
                 let billableAmount = 0;
                 let reimbursedAmount = 0;
                 data.forEach((row) => {
-                  if (selectedRowKeys.includes(row.id)){
+                  if (!visible.adminView && selectedRowKeys.includes(row.id)){
                     // console.log(row.amount)
+                    amount += parseFloat(row.amount ?? 0);
+                    billableAmount += row.isBillable ? parseFloat(row.amount ?? 0): 0;
+                    reimbursedAmount += row.isReimbursed ? parseFloat(row.amount ?? 0): 0;
+                  }else if(visible.adminView){
                     amount += parseFloat(row.amount ?? 0);
                     billableAmount += row.isBillable ? parseFloat(row.amount ?? 0): 0;
                     reimbursedAmount += row.isReimbursed ? parseFloat(row.amount ?? 0): 0;
                   }
                 });
-                console.log(amount)
-                console.log()
                 return (
                   <Table.Summary fixed="bottom">
                     <Table.Summary.Row>
@@ -348,15 +350,15 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) =>
                       <Table.Summary.Cell index={2}>
                         {formatCurrency(amount)}
                       </Table.Summary.Cell>
-                      <Table.Summary.Cell  index={3} >Total Billable:</Table.Summary.Cell>
+                      {/* <Table.Summary.Cell  index={3} >Total Billable:</Table.Summary.Cell>
                       <Table.Summary.Cell index={4}>
                         {formatCurrency(billableAmount)}
-                      </Table.Summary.Cell>
-                      <Table.Summary.Cell  index={5}colSpan={2}>Total Reimbursable:</Table.Summary.Cell>
-                      <Table.Summary.Cell index={6}>
+                      </Table.Summary.Cell> */}
+                      <Table.Summary.Cell  index={3}colSpan={2}>Total Reimbursable:</Table.Summary.Cell>
+                      <Table.Summary.Cell index={4}>
                         {formatCurrency(reimbursedAmount)}
                       </Table.Summary.Cell>
-                      <Table.Summary.Cell index={7}></Table.Summary.Cell>
+                      <Table.Summary.Cell index={5}></Table.Summary.Cell>
                     </Table.Summary.Row>
                   </Table.Summary>
                 );

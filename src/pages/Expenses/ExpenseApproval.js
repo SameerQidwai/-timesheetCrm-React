@@ -82,7 +82,7 @@ const ExpenseApproval = () => {
       ...tableSorter('submittedBy', 'string'),
     },
 	{
-	title: 'b',
+	title: 'Billable',
 	dataIndex: 'isBillable',
 	align: 'center',
 	render: (value) => (
