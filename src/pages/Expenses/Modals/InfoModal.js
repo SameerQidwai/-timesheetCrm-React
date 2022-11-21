@@ -186,6 +186,7 @@ const InfoModal = ({ visible, close, callBack }) => {
         let { basic } = data;
         basic = {
             ...basic,
+            isBillable: false,
             projectId: basic.projectId ?? null,
             attachments: fileList.map((file, index) => {
                 return file.fileId;
