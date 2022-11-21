@@ -50,22 +50,22 @@ class AddScheduleModal extends Component {
           fieldCol: 16,
           key: 'startDate',
           size: 'small',
+          mode: 'month',
           type: 'DatePicker',
           rules: [{ required: true, message: 'Start Date is Required' }],
           onChange: (value) => {
             const { dates } = this.formRef.current.getFieldsValue();
             const { startDate, endDate } = dates;
             this.formRef.current.setFieldsValue({
-              dates: { ...dates, endDate: null },
+              dates: { ...dates, endDate: null, startDate: startDate.startOf('month') },
             });
-            this.getDateArray(startDate, endDate);
+            this.getDateArray(startDate);
           },
-          rangeMin: (current) => {
-            const {dates} = this.formRef.current.getFieldsValue();
-
-            const { endDate } = dates;
-            return dateRange(current, endDate, 'start', props.pDate)
-          },
+          // rangeMin: (current) => {
+          //   const {dates} = this.formRef.current.getFieldsValue();
+          //   const { endDate } = dates;
+          //   return dateRange(current, endDate, 'start', props.pDate)
+          // },
         },
         {
           Placeholder: 'End Date',
@@ -80,18 +80,22 @@ class AddScheduleModal extends Component {
           fieldCol: 16,
           key: 'endDate',
           size: 'small',
+          mode: 'month',
           type: 'DatePicker',
           disabled: true,
           onChange: (value) => {
             const { dates } = this.formRef.current.getFieldValue();
             const { endDate, startDate } = dates;
+            this.formRef.current.setFieldsValue({
+              dates: { ...dates, endDate: endDate.endOf('month') },
+            });
             this.getDateArray(startDate, endDate);
           },
-          rangeMax: (current) => {
-            const {dates} = this.formRef.current.getFieldValue();
-            const {startDate} = dates
-            return dateRange(current, moment(startDate).add(1, 'M'), 'end', props.pDate)
-          },
+          // rangeMax: (current) => {
+          //   const {dates} = this.formRef.current.getFieldValue();
+          //   const {startDate} = dates
+          //   return dateRange(current, moment(startDate).add(1, 'M'), 'end', props.pDate)
+          // },
         },
         {
           Placeholder: 'Amount',
@@ -111,8 +115,10 @@ class AddScheduleModal extends Component {
           shape: '$',
           rules: [{ required: true, message: 'Amount is Required' }],
           disabled: false,
-          onChange: (value)=>{
-            console.log(value)
+          onBlur: ()=>{
+            const { dates } = this.formRef.current.getFieldValue();
+            const { endDate, startDate } = dates;
+            this.getDateArray(startDate, endDate)
           }
         },
         {
@@ -152,6 +158,11 @@ class AddScheduleModal extends Component {
       amountEntry: { ...amountEntry },
     });
   };
+
+  equalDividingAmount = (start, end, amount) =>{
+    let numberofSegments = moment(end.endOf('month')).diff(start.startOf('month'), 'months')+1;
+    return parseFloat(formatFloat(amount/numberofSegments))
+  }  
   // this function is a mess right now need some fixes so it will be readable
   getDateArray = (start, end, entries) => {
     //try to put your condition to put closer to eachother if they link to eachother
@@ -162,10 +173,10 @@ class AddScheduleModal extends Component {
     if (entries) {
       var arr = new Array();
       data = entries.map((el) => {
-        var { startDate, amount } = el; // in this conditon this hours value will be replace
-        let newDate = moment(startDate).format('MMM-YYYY');
+        // var { startDate, amount } = el; // in this conditon this hours value will be replace
+        let newDate = moment(el.startDate).format('MMM-YYYY');
 
-        amountEntry[newDate]  = `${amount}`; // setting the hours object before return
+        amountEntry[newDate]  = `${el.amount}`; // setting the hours object before return
         return {
           key: newDate,
           month: newDate,
@@ -177,12 +188,15 @@ class AddScheduleModal extends Component {
     } else if (start && end) {
       //it will call on change of start and end date and found
       var arr = new Array();
+      //dividing equal amount to segments
+      let perSegmentAmount = this.equalDividingAmount(start, end, dates.amount)
+
       while (start.isSameOrBefore(end)) {
         // need key to push in the table
         //hours are getting update on each call
         let newDate = start.format('MMM-YYYY'); // newDate  = date for the new row
         // to set it in form for date
-        amountEntry[newDate]  = 0
+        amountEntry[newDate]  = perSegmentAmount
         arr.push({
           key: newDate,
           month: newDate,
@@ -195,7 +209,7 @@ class AddScheduleModal extends Component {
     } else if (start) {
       //if end date is not sent
       let newDate = start.format('MMM-YYYY');
-      amountEntry[newDate]  = 0
+      amountEntry[newDate]  = dates.amount
       data = [
         {
           key: newDate,
