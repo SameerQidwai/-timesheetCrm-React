@@ -5,7 +5,7 @@ import FormItems from "../../../components/Core/Forms/FormItems";
 
 import { addList, getRecord, editList, workWon } from "../../../service/opportunities";
 import { getOrganizations, getStates, getOrgPersons, getPanels, getProjects } from "../../../service/constant-Apis";
-import { formatDate } from "../../../service/constant";
+import { formatDate, formatFloat } from "../../../service/constant";
 
 const { TabPane } = Tabs;
 
@@ -282,9 +282,9 @@ class InfoModal extends Component {
                     type: "InputNumber",
                     onChange: (value)=> {
                         const {billing} = this.formRef.current.getFieldsValue();
-                        billing.cm$ =  (billing.cmPercentage? (value * billing.cmPercentage) /100 : 0).toFixed(2)
-                        billing.discount =  (billing.goget? (value * billing.goget) /100 : 0).toFixed(2)
-                        billing.upside =  (billing.discount? (value - billing.discount) : 0).toFixed(2)
+                        billing.cm$ =  formatFloat((billing.cmPercentage? (value * billing.cmPercentage) /100 : 0))
+                        billing.discount =  formatFloat((billing.goget? (value * billing.goget) /100 : 0))
+                        billing.upside =  formatFloat((billing.discount? (value - billing.discount) : 0))
                         this.formRef.current.setFieldsValue({ billing: billing, });
             
                     },
