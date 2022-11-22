@@ -115,17 +115,17 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) =>
         render: (text) => formatCurrency(text),
         ...tableSorter('amount', 'number'),
       },
-      {
-        title: 'Files',
-        dataIndex: 'files',
-      //   sorter: {
-      //     compare: (a, b) => a.files - b.files,
-      //     multiple: 1,
-      //   },
-      render: () => (
-          <Text>View</Text>
-      )
-      },
+      // {
+      //   title: 'Files',
+      //   dataIndex: 'files',
+      // //   sorter: {
+      // //     compare: (a, b) => a.files - b.files,
+      // //     multiple: 1,
+      // //   },
+      // render: () => (
+      //     <Text>View</Text>
+      // )
+      // },
       {
           title: 'Reimbursable',
           dataIndex: 'isReimbursed',
