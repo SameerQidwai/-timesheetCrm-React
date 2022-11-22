@@ -247,8 +247,8 @@ class AddScheduleModal extends Component {
             id: id,
             notes: notes,
             amount: amount,
-            startDate: formatDate(startDate),
-            endDate: formatDate(endDate),
+            startDate: formatDate(startDate)?.startOf('month'),
+            endDate: formatDate(endDate)?.endOf('month'),
           };
           this.getDateArray(
             formValues.startDate,
@@ -266,19 +266,37 @@ class AddScheduleModal extends Component {
   getFormValues = (val) => {
     this.setState({ loading: true });
     const { dates } = val;
-    const { editMile, callBack, proId } = this.props;
+    const { editMile, callBack, proId, pDates } = this.props;
     const { data, fileIds } = this.state;
     const newVal = {
-      startDate: formatDate(dates.startDate, true),
-      endDate: dates.endDate ?? formatDate(dates.startDate?.endOf('month')),
+      //if sameMonth got included as project save project date otherwise startdate 
+      startDate: dates.startDate.isSame(pDates.startDate, 'month')
+        ? formatDate(pDates.startDate, true)
+        : formatDate(dates.startDate, true),
+         //if end date is not selected make it as last date of startday month or project endDate
+      endDate: dates.endDate
+      //if sameMonth got included as project save project date otherwise endDate
+        ? dates.endDate.isSame(pDates.endDate, 'month')
+          ? formatDate(pDates.endDate, true)
+          : formatDate(dates.endDate, true)
+          //if sameMonth got included as project save project date otherwise startdate
+        : dates.startDate.isSame(pDates.startDate, 'month')
+        ? formatDate(pDates.startDate, true)
+        : formatDate(dates.startDate?.endOf('month'), true),
       amount: dates.amount,
       notes: dates.notes ?? '',
-      segments: data.map(el=>{
+      segments: data.map((el) => {
         return {
-          startDate: formatDate(moment(el.month, 'MMM/YYYY').startOf('month'), true),
-          endDate: formatDate(moment(el.month, 'MMM/YYYY').endOf('month'), true),
-          amount: el.amount
-        }
+          startDate: formatDate(
+            moment(el.month, 'MMM/YYYY').startOf('month'),
+            true
+          ),
+          endDate: formatDate(
+            moment(el.month, 'MMM/YYYY').endOf('month'),
+            true
+          ),
+          amount: el.amount,
+        };
       }),
     };
     if (editMile) {
