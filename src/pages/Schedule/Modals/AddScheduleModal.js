@@ -28,13 +28,9 @@ class AddScheduleModal extends Component {
 
     this.state = {
       data: [],
-      reRender: false,
       amountEntry: {}, //need to remeber hours if date is change for now it is setting it to defualt if any date selected
       loading: false,
-      fileList: [],
-      fileIds: [],
-      holidays: {},
-      contractDetails: {},
+      disabled: false,
       BasicFields: [
         {
           Placeholder: 'Start Date',
@@ -50,17 +46,21 @@ class AddScheduleModal extends Component {
           fieldCol: 16,
           key: 'startDate',
           size: 'small',
+          mode: 'month',
           type: 'DatePicker',
           rules: [{ required: true, message: 'Start Date is Required' }],
           onChange: (value) => {
             const { dates } = this.formRef.current.getFieldsValue();
             const { startDate, endDate } = dates;
-            this.getDateArray(startDate, endDate);
+            this.formRef.current.setFieldsValue({
+              dates: { ...dates, endDate: null, startDate: value && startDate.startOf('month') },
+            });
+            this.getDateArray(startDate);
           },
           rangeMin: (current) => {
             const {dates} = this.formRef.current.getFieldsValue();
             const { endDate } = dates;
-            return dateRange(current, endDate, 'start', props.pDate)
+            return dateRange(current, endDate, 'start', props.pDates)
           },
         },
         {
@@ -76,22 +76,28 @@ class AddScheduleModal extends Component {
           fieldCol: 16,
           key: 'endDate',
           size: 'small',
+          mode: 'month',
           type: 'DatePicker',
           disabled: true,
           onChange: (value) => {
             const { dates } = this.formRef.current.getFieldValue();
             const { endDate, startDate } = dates;
-            const { LeaveRequestType } = this.state;
-            this.getDateArray(startDate, endDate, LeaveRequestType);
+            if (value){
+              this.formRef.current.setFieldsValue({
+                dates: { ...dates, endDate: endDate.endOf('month') },
+              });
+            }
+            this.getDateArray(startDate, endDate);
           },
           rangeMax: (current) => {
             const {dates} = this.formRef.current.getFieldValue();
             const {startDate} = dates
-            return dateRange(current, moment(startDate).add(1, 'M'), 'end', props.pDate)
+            return dateRange(current, moment(startDate), 'end', props.pDates)
           },
         },
         {
           Placeholder: 'Amount',
+          rangeMin: true,
           fieldCol: 8,
           size: 'small',
           type: 'Text',
@@ -104,8 +110,16 @@ class AddScheduleModal extends Component {
           key: 'amount',
           size: 'small',
           type: "InputNumber",
+          rangeMin: 0,
+          rangeMax: props.accountedAmount(),
           shape: '$',
+          rules: [{ required: true, message: 'Amount is Required' }],
           disabled: false,
+          onBlur: ()=>{
+            const { dates ={} } = this.formRef.current.getFieldValue();
+            const { endDate, startDate } = dates;
+            this.getDateArray(startDate, endDate)
+          }
         },
         {
           Placeholder: 'Description',
@@ -128,6 +142,7 @@ class AddScheduleModal extends Component {
     };
   }
   componentDidMount = () => {
+    console.log(this.props.accountedAmount())
     const { editMile } = this.props;
     if (editMile) {
       this.getSubmittedData();
@@ -144,20 +159,21 @@ class AddScheduleModal extends Component {
       amountEntry: { ...amountEntry },
     });
   };
+
   // this function is a mess right now need some fixes so it will be readable
   getDateArray = (start, end, entries) => {
     //try to put your condition to put closer to eachother if they link to eachother
     //so it will be easy to track conditions
     let { BasicFields, data, amountEntry } = this.state;
     BasicFields[3].disabled = false;
-
+    let { dates } = this.formRef.current.getFieldValue()
     if (entries) {
       var arr = new Array();
       data = entries.map((el) => {
-        var { startDate, amount } = el; // in this conditon this hours value will be replace
-        let newDate = moment(startDate).format('MMM-YYYY');
+        // var { startDate, amount } = el; // in this conditon this hours value will be replace
+        let newDate = moment(el.startDate).format('MMM-YYYY');
 
-        amountEntry[newDate]  = `${amount}`; // setting the hours object before return
+        amountEntry[newDate]  = `${el.amount}`; // setting the hours object before return
         return {
           key: newDate,
           month: newDate,
@@ -169,12 +185,16 @@ class AddScheduleModal extends Component {
     } else if (start && end) {
       //it will call on change of start and end date and found
       var arr = new Array();
+      //dividing equal amount to segments
+      let numberofSegments = moment(end.endOf('month')).diff(start.startOf('month'), 'months')+1;
+      let perSegmentAmount = parseFloat(formatFloat(dates.amount/numberofSegments))
+
       while (start.isSameOrBefore(end)) {
         // need key to push in the table
         //hours are getting update on each call
         let newDate = start.format('MMM-YYYY'); // newDate  = date for the new row
         // to set it in form for date
-        amountEntry[newDate]  = 0
+        amountEntry[newDate]  = perSegmentAmount
         arr.push({
           key: newDate,
           month: newDate,
@@ -187,7 +207,7 @@ class AddScheduleModal extends Component {
     } else if (start) {
       //if end date is not sent
       let newDate = start.format('MMM-YYYY');
-      amountEntry[newDate]  = 0
+      amountEntry[newDate]  = dates.amount
       data = [
         {
           key: newDate,
@@ -249,11 +269,14 @@ class AddScheduleModal extends Component {
     const { editMile, callBack, proId } = this.props;
     const { data, fileIds } = this.state;
     const newVal = {
-      ...dates,
+      startDate: formatDate(dates.startDate, true),
+      endDate: dates.endDate ?? formatDate(dates.startDate?.endOf('month')),
+      amount: dates.amount,
+      notes: dates.notes ?? '',
       segments: data.map(el=>{
         return {
-          startDate: moment(el.month, 'MMM/YYYY').startOf('month'),
-          endDate: moment(el.month, 'MMM/YYYY').endOf('month'),
+          startDate: formatDate(moment(el.month, 'MMM/YYYY').startOf('month'), true),
+          endDate: formatDate(moment(el.month, 'MMM/YYYY').endOf('month'), true),
           amount: el.amount
         }
       }),
@@ -278,27 +301,44 @@ class AddScheduleModal extends Component {
 
   getTableSummary = (data) => {
     let total = 0;
+    let exceedAmount = ''
+    const {dates={}} = this.formRef?.current?.getFieldValue() ?? {};
     data.forEach(({ amount }) => {
       total += parseFloat(amount ?? 0);
     });
 
+    if ((dates.amount?? 0) < total){
+      exceedAmount = 'danger'
+    }
+
     return (
       <Table.Summary fixed="top">
         <Table.Summary.Row>
-          <Table.Summary.Cell index={0}>Total</Table.Summary.Cell>
-          <Table.Summary.Cell index={1}>
-            {formatCurrency(total)}
+          <Table.Summary.Cell index={0}>
+            Total
+          </Table.Summary.Cell>
+          <Table.Summary.Cell index={1} >
+          <Text type={exceedAmount}>{formatCurrency(total)}</Text>
           </Table.Summary.Cell>
         </Table.Summary.Row>
       </Table.Summary>
     );
   };
 
+  accountedSegAmount = () =>{
+    const {dates, amount} = this.formRef.current.getFieldValue();
+    if (dates && amount){
+      console.log(dates, amount)
+    }
+    // let schedualAmount = dates.amount
+
+  }
+
   //File
   render() {
-    const { visible, close, edit, readOnly } = this.props;
-    const { BasicFields, fileList, data, fileIds, loading, contractDetails } =
-      this.state;
+    const { visible, close, editMile, onHold } = this.props;
+    const { BasicFields, data, loading, disabled } = this.state;
+    
     // for timeBeing
     let columns = [
       {
@@ -325,9 +365,10 @@ class AddScheduleModal extends Component {
               placeholder="amount"
               formatter={(value) => formatter(value, '$') }
               parser={(value) => parser(value, '$') }
+              // max={()=>this.accountedSegAmount()}
               style={{width: '100%'}}
               size="small"
-              disabled={records.disabled || readOnly}
+              disabled={records.disabled}
               onChange={(value) => {
                 this.setHours(records, value, index);
               }}
@@ -340,14 +381,14 @@ class AddScheduleModal extends Component {
     // For time bring
     return (
       <Modal
-        title={ readOnly ? 'View Schedule' : edit ? 'Edit Schedule' : 'New Schedule' }
+        title={ editMile ? 'Edit Schedule' : 'New Schedule' }
         maskClosable
         destroyOnClose={true}
         visible={visible}
         okButtonProps={{
           htmlType: 'submit',
           form: 'my-form',
-          disabled: readOnly,
+          disabled: onHold || disabled,
           loading: loading,
         }}
         okText={'Submit'}
@@ -363,7 +404,6 @@ class AddScheduleModal extends Component {
           size="small"
           layout="inline"
           onFinish={this.getFormValues}
-          // onFinish={this.checkFunc}
         >
           <Row className="moz-width">
             <Col span={12}>

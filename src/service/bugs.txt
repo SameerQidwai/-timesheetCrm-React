@@ -1,4 +1,6 @@
 New bug Found
+    will need to make parseDate only in constant I did in bug-fixes branch but not here (HIGH)
+        
     Milestone Certification (status)
 
     Estimated Value update button (high)
