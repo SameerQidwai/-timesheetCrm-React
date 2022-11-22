@@ -108,7 +108,7 @@ const Expense = (props) => {
               >
                 <Popconfirm
                   disabled={record.isInSheet}
-                  title="Are you sure you want to delete"
+                  title="Are you sure you want to delete ?"
                   onConfirm={() => handleDelete(record.id, index)}
                 >
                   <div> Delete </div>

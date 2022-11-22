@@ -41,7 +41,7 @@ class HolidayTypes extends Component {
                                     className="pop-confirm-menu"
                                 >
                                     <Popconfirm
-                                        title="Are you sure you want to delete"
+                                        title="Are you sure you want to delete ?"
                                         onConfirm={() =>
                                             this.handleDelete(record.id)
                                         }
