@@ -23,16 +23,8 @@ import {
   R_STATUS,
   STATUS_COLOR,
 } from '../../service/constant';
-import {
-  getSchedules,
-  addSchedule,
-  getSchedule,
-  editSchedule,
-  delSchedule,
-  getProjec,
-} from '../../service/projects';
+import { getSchedules, } from '../../service/projects';
 import { getProjectDetail } from '../../service/Milestone-Apis';
-import { getRecord } from '../../service/opportunities';
 import { generalDelete } from "../../service/delete-Api's";
 import { tableSorter } from '../../components/Core/Table/TableFilter';
 import { Tag_s } from '../../components/Core/Custom/Index';
@@ -56,7 +48,6 @@ class Schedule extends Component {
         endDate: '',
       },
       permissions: {},
-      customUrl: 'opportunity',
       columns: [
         {
           title: 'Start Date',
@@ -144,26 +135,19 @@ class Schedule extends Component {
   fetchAll = (id) => {
     const { proId } = this.props.match.params;
     const { PROJECTS, OPPORTUNITIES } = JSON.parse(localStore().permissions);
-    const customUrl = this.props.match.url;
     let crud = this.props.match.url;
     crud = crud.split('/');
-    let work = crud[1];
     crud = `${crud[1]}/${crud[2]}`;
 
     Promise.all([getProjectDetail(crud), getSchedules(proId)])
       .then((res) => {
         let { columns } = this.state;
-        if (work === 'opportunities') {
-          columns.splice(3, 1);
-        }
         this.setState({
           desc: res[0].success && res[0].data,
           data: res[1].success && res[1].data,
           columns: [...columns],
           proId: id,
-          customUrl,
-          work,
-          permissions: work === 'opportunities' ? OPPORTUNITIES : PROJECTS,
+          permissions: PROJECTS,
         });
       })
       .catch((e) => {
@@ -198,7 +182,7 @@ class Schedule extends Component {
   };
 
   callBack = (milestone) => {
-    const { proId, editMile, data } = this.state;
+    const { editMile, data } = this.state;
     if (editMile) {
       data[editMile.rowIndex] = milestone;
     } else {
@@ -213,18 +197,7 @@ class Schedule extends Component {
   };
 
   render() {
-    const {
-      desc,
-      data,
-      infoModal,
-      editMile,
-      proId,
-      permissions,
-      columns,
-      customUrl,
-      pDates,
-      work,
-    } = this.state;
+    const { desc, data, infoModal, editMile, proId, permissions, columns, pDates } = this.state;
     return (
       <>
         <Descriptions
@@ -246,10 +219,18 @@ class Schedule extends Component {
           </Item>
           <Item label="Value">{formatCurrency(desc.value)}</Item>
           <Item label="Start Date">
-            {formatDate(desc.startDate, true, true)}{' '}
+            {formatDate(desc.startDate, true, true)}
           </Item>
           <Item label="End Date">{formatDate(desc.endDate, true, true)}</Item>
-          <Item label="Bid Date">{formatDate(desc.bidDate, true, true)}</Item>
+          <Item label="Status">
+            {
+              <Tag_s
+                text={desc.phase}
+                objName="O_PHASE"
+                colorName="O_PHASE_COLORS"
+              />
+            }
+          </Item>
           {/* <Item label="Gender">{data.gender}</Item> */}
         </Descriptions>
         <Row justify="end">
@@ -279,11 +260,18 @@ class Schedule extends Component {
           <AddScheduleModal
             visible={infoModal}
             editMile={editMile}
+            accountedAmount={()=>{
+              let pAmount = parseFloat(desc.value)
+              data.forEach(el=>{
+                console.log(el.amount)
+                pAmount -= parseFloat(el.amount)
+              })
+              console.log(pAmount)
+              return pAmount
+            }}
             onHold={desc?.phase === false} //checking if project is close
             pDates={pDates}
             proId={proId}
-            crud={customUrl}
-            work={work}
             close={this.closeModal}
             callBack={this.callBack}
           />

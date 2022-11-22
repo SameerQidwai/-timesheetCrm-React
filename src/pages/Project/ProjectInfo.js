@@ -273,11 +273,10 @@ class ProjectInfo extends Component {
             )}
           </Item>
           <Item label="Delegate Contact">
-            {' '}
             {basic ? basic.ContactName : null}
           </Item>
           <Item label="Start Date">
-            {formatDate(data.startDate, true, true)}{' '}
+            {formatDate(data.startDate, true, true)}
           </Item>
           <Item label="End Date">{formatDate(data.endDate, true, true)}</Item>
           {/* <Item label="Bid Date">{formatDate(data.bidDate, true, true)}</Item> */}

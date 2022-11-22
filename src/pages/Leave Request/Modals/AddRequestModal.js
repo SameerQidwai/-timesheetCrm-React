@@ -480,11 +480,6 @@ class AddRequestModal extends Component{
         })
     }
 
-    checkFunc = (forms) => {
-        const { data } = this.state
-        console.log({forms})
-        console.log({data})
-    }
     //File
     render(){
         const { visible, close, edit, readOnly } = this.props;
