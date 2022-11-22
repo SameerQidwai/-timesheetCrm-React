@@ -140,7 +140,7 @@ const positionColumns = [
     title: 'CM %',
     dataIndex: 'cmPercent',
     key: 'cmPercent',
-    render: (record) => `${record} %`,
+    render: (text) => `${formatFloat(text)} %`,
     ...tableSorter('cmPercent', 'number'),
   },
 ];
