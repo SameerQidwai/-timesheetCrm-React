@@ -144,7 +144,7 @@ const ExpenseSheet = (props) => {
   // my work 
 	const gettingPermissions = () => {
 		const { id, permissions} = localStore();
-		const { EXPENSES } = JSON.parse(permissions)
+		const { EXPENSES = {} } = JSON.parse(permissions)
 		setPermission(EXPENSES);		
   } 
   
