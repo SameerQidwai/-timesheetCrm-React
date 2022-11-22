@@ -216,8 +216,8 @@ class ResModal extends Component {
           fieldStyle: { width: "100%" },
           rangeMin: (current)=>{
             const { obj } = this.formRef.current.getFieldValue();
-            return dateRangeAfter(current, obj?.endDate, props.pDates)
-            // return dateRange(current, obj?.endDate, true, props.pDates)
+            // return dateRangeAfter(current, obj?.endDate, props.pDates)
+            return dateRange(current, obj?.endDate, 'start', props.pDates)
           }
         },
         {
@@ -230,8 +230,8 @@ class ResModal extends Component {
           fieldStyle: { width: "100%" },
           rangeMax: (current)=>{
             const { obj } = this.formRef.current.getFieldValue();
-            return dateRangeBefore(current, obj?.startDate, props.pDates)
-            // return dateRange(current, obj?.startDate, false, props.pDates)
+            // return dateRangeBefore(current, obj?.startDate, props.pDates)
+            return dateRange(current, obj?.startDate, 'end', props.pDates)
           }
         },
       ],

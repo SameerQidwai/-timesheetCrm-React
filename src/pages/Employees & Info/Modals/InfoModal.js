@@ -790,7 +790,7 @@ class InfoModal extends Component {
 
   fetchAll = (edit) => {
     const { editEmp } = this.props;
-    const managerUrl = `helpers/contact-persons?organizationId=1&employee=1`;
+    const managerUrl = `helpers/contact-persons?organizationId=1&active=1&associated=1`;
     const newConatactUrl = `helpers/contact-persons?organizationId=1&active=0&associated=1`;
     Promise.all([
       getStates(),

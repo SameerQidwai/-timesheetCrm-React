@@ -136,15 +136,15 @@ export class ContactInfo extends Component {
                 <TabPane tab="Opportunities" key="leads">
                     <Opportunities
                         targetId={userId}
-                        customUrl={`helpers/work?type=O&employee=${userId}`}
+                        customUrl={`helpers/work?type=O&contact=${userId}`}
                     />
                 </TabPane>
-                {data.employeeId && <TabPane tab="Projects" key="projects">
+                <TabPane tab="Projects" key="projects">
                     <Projects
-                        targetId={data.employeeId}
-                        customUrl={`helpers/work?type=P&employee=${data.employeeId}`}
+                        targetId={userId}
+                        customUrl={`helpers/work?type=P&contact=${userId}`}
                     />
-                </TabPane>}
+                </TabPane>
                 <TabPane tab="Comments" key="comments">
                     <Comments targetType="COP" targetId={userId} />
                 </TabPane>

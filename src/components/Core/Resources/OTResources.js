@@ -2,7 +2,7 @@ import React, { Component, useState } from "react";
 import { Menu, Button, Dropdown, Table} from "antd";
 import { SettingOutlined } from "@ant-design/icons"; //Icons
 import { Link } from 'react-router-dom'
-import { formatDate, formatCurrency, localStore } from "../../../service/constant";
+import { formatDate, formatCurrency, localStore, formatFloat } from "../../../service/constant";
 import { tableSorter } from "../Table/TableFilter";
 import { getHierarchy } from "../../../service/opportunities";
 
@@ -43,6 +43,7 @@ const positionColumns = (milestoneId) => [
         title: "Total Hours",
         dataIndex: "billableHours",
         key: "billableHours",
+        render: (text)=> formatFloat(text),
         ...tableSorter('billableHours', 'number'),
     },
     

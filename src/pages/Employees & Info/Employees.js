@@ -213,6 +213,14 @@ class Employees extends Component {
           showInColumn: false,
           disabled: false,
         },
+        clearanceLevel: {
+          type: 'none',
+          multi: true,
+          value: [],
+          label: 'clearanceLevel',
+          showInColumn: false,
+          disabled: false,
+        },
         gender: {
           type: 'Select',
           multi: true,
@@ -337,10 +345,16 @@ class Employees extends Component {
         },
         {
           Placeholder: 'Role',
-          fieldCol: 24,
+          fieldCol: 12,
           size: 'small',
           type: 'Text',
           labelAlign: 'right',
+        },
+        {
+          Placeholder: 'Clearance Level',
+          fieldCol: 12,
+          size: 'small',
+          type: 'Text',
         },
         {
           object: 'obj',
@@ -351,6 +365,22 @@ class Employees extends Component {
           size: 'small',
           type: 'Select',
           data: [],
+        },
+        {
+          object: 'obj',
+          fieldCol: 12,
+          key: 'clearanceLevel',
+          size: 'small',
+          mode: 'multiple',
+          customValue: (value, option) => option,
+          data: [
+            { label: 'BV - Baseline Vetting', value: 'BV' },
+            { label: 'NV1 - Negative Vetting 1', value: 'NV1' },
+            { label: 'NV2 - Negative Vetting 2', value: 'NV2' },
+            { label: 'PV - Positive Vetting', value: 'PV' },
+            { label: 'No clearance', value: 'NC' },
+          ],
+          type: 'Select',
         },
         {
           Placeholder: 'Residential Address',
@@ -415,17 +445,18 @@ class Employees extends Component {
   generalFilter = (value) => {
     const { data } = this.state;
     if (value) {
+      value = value.replace(/\s+/g, '').toLowerCase()
       this.setState({
         filterData: data.filter((el) => {
-          const { firstName, lastName, email, phoneNumber, id } =
+          let { firstName: elfirstName, lastName: ellastName, email, phoneNumber, id } =
             el.contactPersonOrganization.contactPerson;
+            let firstName = `${elfirstName ? elfirstName : ''} ${ellastName ? ellastName : ''}`
+            let lastName = `${ellastName ? ellastName : ''} ${elfirstName ? elfirstName : ''}`
           return (
-            `Emp-00${id.toString()}`.includes(value) ||
-            (firstName &&
-              firstName.toLowerCase().includes(value.toLowerCase())) ||
-            (lastName &&
-              lastName.toLowerCase().includes(value.toLowerCase())) ||
-            (email && email.toLowerCase().includes(value.toLowerCase())) ||
+            `Emp-00${id.toString()}`.replace(/\s+/g, '').includes(value) ||
+            (firstName.toLowerCase().replace(/\s+/g, '').includes(value.toLowerCase())) ||
+            (lastName.toLowerCase().replace(/\s+/g, '').includes(value.toLowerCase())) ||
+            (email && email.toLowerCase().replace(/\s+/g, '').includes(value.toLowerCase())) ||
             (phoneNumber && phoneNumber.startsWith(value))
           );
         }),
@@ -454,6 +485,7 @@ class Employees extends Component {
       search['gender']['value'].length > 0 ||
       search['stateId']['value'].length > 0 ||
       search['address']['value'] ||
+      search['clearanceLevel']['value'].length > 0 ||
       search['role']['value'].length > 0
     ) {
       this.setState({
@@ -468,6 +500,7 @@ class Employees extends Component {
             gender,
             stateId,
             address,
+            clearanceLevel
           } = el.contactPersonOrganization.contactPerson;
           return (
             `Emp-00${id.toString()}`.includes(search['id']['value']) &&
@@ -515,6 +548,15 @@ class Employees extends Component {
                 ? [el.roleId]
                 : [',']
               ).includes(s.value)
+            ) &&
+            (search['clearanceLevel']['value'].length > 0
+              ? search['clearanceLevel']['value']
+              : [{ value: ',' }]
+            ).some((s) =>
+              (search['clearanceLevel']['value'].length > 0
+                ? [clearanceLevel]
+                : [',']
+              ).includes(s.value)
             )
           );
         }),
@@ -535,7 +577,7 @@ class Employees extends Component {
       .then((res) => {
         const { filterFields } = this.state;
         filterFields[11].data = res[0].success ? res[0].data : [];
-        filterFields[13].data = res[1].success ? res[1].data : [];
+        filterFields[14].data = res[1].success ? res[1].data : [];
         this.setState({
           filterFields,
         });

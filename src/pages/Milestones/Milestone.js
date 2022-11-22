@@ -177,7 +177,7 @@ class Milestone extends Component {
       .then((res) => {
         let { columns } = this.state;
         if (work === 'opportunities') {
-          columns.splice(3, 1);
+          columns.splice(3, 2);
         }
         this.setState({
           desc: res[0].success && res[0].data,

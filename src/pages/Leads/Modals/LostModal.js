@@ -30,7 +30,7 @@ class LostModal extends Component {
                     // itemStyle:{marginBottom:'10px'},
                 },
                 {
-                    Placeholder: "Wining Price",
+                    Placeholder: "Winning Price",
                     fieldCol: 12,
                     size: "small",
                     type: "Text",
@@ -49,7 +49,7 @@ class LostModal extends Component {
                 {
                     object: "lost",
                     fieldCol: 12,
-                    key: "winingPrice",
+                    key: "winningPrice",
                     size: "small",
                     shape: '$',
                     // rules:[{ required: true }],

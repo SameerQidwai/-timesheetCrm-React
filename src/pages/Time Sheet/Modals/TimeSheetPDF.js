@@ -111,7 +111,7 @@ const TimeSheetPDF = (props) => {
                             <Row justify="space-between" align="middle" >
                                 <Col ><Typography.Title level={2} style={{margin: 0}}> Timesheet </Typography.Title></Col>
                                 <Col style={{ width: '60%', textAlign: 'right'}}><img src={'/z-cp-logo.png'} width={200} /></Col>
-                            </Row>
+                            </Row>                                                      {/* <!--Name__Logo-->*/}
                             <Row>
                                 {details &&<Descriptions column={2} bordered size={"small"} style={{margin:'15px 0px'}} className="describe">
                                     <Item label="Company" > {details.company}</Item>
