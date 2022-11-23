@@ -234,7 +234,8 @@ class CalendarHolidays extends Component {
     this.setState({ loading: true });
     addList(value).then((res) => {
       if (res) {
-        this.getData();
+        const { calendarId } = this.state;
+        this.getData(calendarId);
       }
     });
   };

@@ -1,22 +1,14 @@
 import React, { Component } from 'react';
-import { Modal, Table, Form, Row, Col, Upload, Typography, Input, InputNumber, message, } from 'antd';
-import { PlusOutlined } from '@ant-design/icons'; //Icons
+import { Modal, Table, Form, Row, Col, Typography, InputNumber, message, } from 'antd';
 import FormItems, { formatter, parser } from '../../../components/Core/Forms/FormItems';
-import { addFiles } from '../../../service/Attachment-Apis';
-import {
-  getUserProjects,
-  getUserLeaveType,
-} from '../../../service/constant-Apis';
-import {
-  addRequest,
-  editRequest,
-  getSingleRequest,
-} from '../../../service/leaveRequest-Apis';
 import moment from 'moment';
-import { dateRange, formatCurrency, formatDate, formatFloat, localStore } from '../../../service/constant';
+import { dateRange, formatCurrency, formatDate, formatFloat } from '../../../service/constant';
 
-import '../styles.css';
 import { addSchedule, editSchedule, getSchedule } from '../../../service/projects';
+import { getHolidays } from '../../../service/constant-Apis';
+
+import 'moment-weekday-calc';
+import '../styles.css';
 
 const { Text } = Typography;
 
@@ -24,13 +16,13 @@ class AddScheduleModal extends Component {
   constructor(props) {
     super(props);
     this.formRef = React.createRef();
-    this.attachRef = React.createRef();
 
     this.state = {
       data: [],
       amountEntry: {}, //need to remeber hours if date is change for now it is setting it to defualt if any date selected
       loading: false,
       disabled: false,
+      holidays: [],
       BasicFields: [
         {
           Placeholder: 'Start Date',
@@ -142,11 +134,15 @@ class AddScheduleModal extends Component {
     };
   }
   componentDidMount = () => {
-    console.log(this.props.accountedAmount())
     const { editMile } = this.props;
     if (editMile) {
       this.getSubmittedData();
     }
+    getHolidays(1).then(res=>{
+      if(res.success){
+        this.setState({holidays: res.data})
+      }
+    })
   };
 
   setHours = (record, value, index) => {
@@ -160,11 +156,23 @@ class AddScheduleModal extends Component {
     });
   };
 
+  getWeekdays = (startDate, endDate) =>{
+    const {holidays} = this.state
+     let days = moment().isoWeekdayCalc({  
+        rangeStart: startDate,
+        rangeEnd: endDate,
+        weekdays: [1,2,3,4,5],  
+        exclusions: holidays,
+        //when I get holidays
+    }) 
+    return days
+  }
   // this function is a mess right now need some fixes so it will be readable
   getDateArray = (start, end, entries) => {
     //try to put your condition to put closer to eachother if they link to eachother
     //so it will be easy to track conditions
     let { BasicFields, data, amountEntry } = this.state;
+    let {pDates} = this.props
     BasicFields[3].disabled = false;
     let { dates } = this.formRef.current.getFieldValue()
     if (entries) {
@@ -185,16 +193,21 @@ class AddScheduleModal extends Component {
     } else if (start && end) {
       //it will call on change of start and end date and found
       var arr = new Array();
-      //dividing equal amount to segments
-      let numberofSegments = moment(end.endOf('month')).diff(start.startOf('month'), 'months')+1;
-      let perSegmentAmount = parseFloat(formatFloat(dates.amount/numberofSegments))
-
+      //getting total Number of weekdays to work
+      let totalNumberOfWeekDays = this.getWeekdays(start, end)
+      // let numberofSegments = moment(end.endOf('month')).diff(start.startOf('month'), 'months')+1;
+      let perDayAmount = (dates.amount ?? 0)/totalNumberOfWeekDays
       while (start.isSameOrBefore(end)) {
         // need key to push in the table
         //hours are getting update on each call
         let newDate = start.format('MMM-YYYY'); // newDate  = date for the new row
         // to set it in form for date
-        amountEntry[newDate]  = perSegmentAmount
+        let numberOfWeekDays = this.getWeekdays(
+          start.isSame(pDates.startDate, 'month') ? pDates.startDate : start,
+          start.isSame(pDates.endDate, 'month') ? pDates.endDate : moment(start).endOf('month')
+        ); //checking if start date and end date ends early then end of month        
+        amountEntry[newDate]  = parseFloat(formatFloat(perDayAmount * numberOfWeekDays ))
+
         arr.push({
           key: newDate,
           month: newDate,
@@ -282,7 +295,7 @@ class AddScheduleModal extends Component {
           //if sameMonth got included as project save project date otherwise startdate
         : dates.startDate.isSame(pDates.startDate, 'month')
         ? formatDate(pDates.startDate, true)
-        : formatDate(dates.startDate?.endOf('month'), true),
+        : formatDate(moment.parseZone(dates.startDate?.endOf('month')), true),
       amount: dates.amount,
       notes: dates.notes ?? '',
       segments: data.map((el) => {
@@ -343,15 +356,6 @@ class AddScheduleModal extends Component {
     );
   };
 
-  accountedSegAmount = () =>{
-    const {dates, amount} = this.formRef.current.getFieldValue();
-    if (dates && amount){
-      console.log(dates, amount)
-    }
-    // let schedualAmount = dates.amount
-
-  }
-
   //File
   render() {
     const { visible, close, editMile, onHold } = this.props;
@@ -383,7 +387,6 @@ class AddScheduleModal extends Component {
               placeholder="amount"
               formatter={(value) => formatter(value, '$') }
               parser={(value) => parser(value, '$') }
-              // max={()=>this.accountedSegAmount()}
               style={{width: '100%'}}
               size="small"
               disabled={records.disabled}
