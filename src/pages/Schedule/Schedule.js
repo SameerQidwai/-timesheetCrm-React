@@ -263,10 +263,10 @@ class Schedule extends Component {
             accountedAmount={()=>{
               let pAmount = parseFloat(desc.value)
               data.forEach(el=>{
-                console.log(el.amount)
-                pAmount -= parseFloat(el.amount)
+                if (editMile?.id !== el.id){
+                  pAmount -= parseFloat(el.amount)
+                }
               })
-              console.log(pAmount)
               return pAmount
             }}
             onHold={desc?.phase === false} //checking if project is close
