@@ -1,6 +1,6 @@
 {
   "name": "onelm-crm",
-  "version": "0.1.20",
+  "version": "0.2.0",
   "private": true,
   "dependencies": {
     "@fontsource/poppins": "^4.5.8",
