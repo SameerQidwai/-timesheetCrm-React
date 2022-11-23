@@ -70,7 +70,7 @@ export const STATES = {
 };
 
 export const toTruncate = (num, fixed) => {
-  if (!isNaN(num)){
+  if (num && !isNaN(num)){
       return num.toString().match(new RegExp('^-?\\d+(?:\.\\d{0,' + (fixed || -1) + '})?'))?.[0] || '0.00'
   }
   return '0.00'
