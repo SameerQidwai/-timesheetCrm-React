@@ -178,9 +178,10 @@ const ExpenseApproval = () => {
 	}
 
 	const callBack = (data, index) => {
+		let fIndex = expenseData.findIndex(el=> el.id === data.id)
 		let exp = expenseData;
-    if (index >= 0) {
-			exp[index] = data; 
+   		 if (index >= 0) {
+			exp[fIndex] = data; 
 		}
 		setExpenseData([...exp]);  
 		setOpenModal(false);
