@@ -7,7 +7,7 @@ import TimeModal from "./Modals/TimeModal"
 import AttachModal from "./Modals/AttachModal";
 import {  getList, reviewTimeSheet, getUsers, deleteTime,  } from "../../service/timesheet"
 import { getUserMilestones } from "../../service/constant-Apis";
-import { localStore, Api, thumbUrl, STATUS_COLOR, R_STATUS, formatFloat } from "../../service/constant";
+import { localStore, Api, thumbUrl, STATUS_COLOR, R_STATUS, formatFloat, getModulePermissions } from "../../service/constant";
     
 import moment from "moment";
 import "../styles/button.css";
@@ -42,7 +42,6 @@ class TimeSheetContact extends Component {
             comments: null,
             sMilestone: {},
             permissions: {},
-            canApprove: false,
             milestones: [],
             sTMilestones: {
                 milestones: [],
@@ -169,9 +168,7 @@ class TimeSheetContact extends Component {
     fetchAll = () =>{
         getUsers().then(res => {
             let value = 0
-            const { id, permissions } = localStore()
-            const loginId = parseInt(id)
-            const { TIMESHEETS } = JSON.parse(permissions)
+            const {anyPermissions: permissions, userLoginId: loginId } = getModulePermissions('TIMESHEETS')
         
             if(res.success && res.data.length>0){
                 value = res.data.value
@@ -185,8 +182,7 @@ class TimeSheetContact extends Component {
             this.setState({
                 USERS: res.success? res.data : [],
                 sUser: value,
-                canApprove: TIMESHEETS['APPROVAL'] && TIMESHEETS['APPROVAL']['ANY'],
-                permissions: TIMESHEETS,
+                permissions: permissions,
                 loginId,
                 // USERS: res[1].success? res[1].data : [],
             },()=>{
@@ -294,9 +290,8 @@ class TimeSheetContact extends Component {
                             }
                         }else{
                             
-                            //checking delete permission   // only admin and loggedin user will see the menu icon
-                            const canDelete = permissions && permissions['DELETE'] && permissions['DELETE']['ANY'] || sUser === loginId    //checking if project is close
-                            const clickable = ((record.status === 'SV' || record.status === 'RJ' || !record.status)) && canDelete && !(record.phase===false)
+                            const canAdd = (!permissions?.['ADD'] || sUser === loginId) && (col.dateObj.isSameOrAfter(startDate)  && col.dateObj.isSameOrBefore(endDate))   //checking if project is close                            
+                            const clickable = ((record.status === 'SV' || record.status === 'RJ' || !record.status)) && record.phase!==false && sUser === loginId
                             if(value){ // I didn't put the conditon for column previos or next month because this column won't have any value for now
                                 let breakHours = moment.duration(value["breakHours"],'hours')
                                 breakHours = breakHours && moment(moment().hours(breakHours.hours()).minutes(breakHours.minutes())).format("HH:mm")
@@ -311,7 +306,7 @@ class TimeSheetContact extends Component {
                                     overlay={
                                         <Menu onClick={this.handleMenuClick}>
                                             <Menu.Item
-                                                disabled={sUser !== loginId}
+                                                disabled={!permissions?.['UPDATE'] || sUser === loginId}
                                                 key="Edit" 
                                                 onClick={()=>{     //data //index    //col key      //Col heading to show on Modal
                                                     this.getRecord(record,rowIndex, col.dataIndex, col.heading); // call function to save data in
@@ -320,8 +315,8 @@ class TimeSheetContact extends Component {
                                                 <EditOutlined />
                                             </Menu.Item>
                                                 <Menu.Item 
-                                                    key="delete"
-                                                    disabled={!permissions['DELETE']}
+                                                    key="delete"//checking delete permission   // only admin and loggedin user will see the menu  icon //checking if project is close
+                                                    disabled={!permissions?.['DELETE'] && sUser !== loginId}
                                                     onClick={()=>{
                                                         this.deleteRecord(value, rowIndex, col.dataIndex)
                                                     }} 
@@ -340,13 +335,13 @@ class TimeSheetContact extends Component {
                                 </Row>
                             </Tooltip>}
                             }else { // to not show add button if column month doesn't match with  selected month
-                                return clickable && col.dateObj.isSameOrAfter(startDate)  && col.dateObj.isSameOrBefore(endDate) &&
+                                return clickable && canAdd &&(
                                     <PlusCircleOutlined 
-                                    style={{fontSize: 24, color: '#1890ff'}} 
-                                    onClick={()=>{     //data //index    //col key      //Col heading to show on Modal
-                                        this.getRecord(record,rowIndex, col.dataIndex, col.heading); // call function to save data in
-                                    }}
-                                />
+                                        style={{fontSize: 24, color: '#1890ff'}} 
+                                        onClick={()=>{     //data //index    //col key      //Col heading to show on Modal
+                                            this.getRecord(record,rowIndex, col.dataIndex, col.heading); // call function to save data in
+                                        }}
+                                />)
                             }
                         }
                     },
@@ -641,7 +636,7 @@ class TimeSheetContact extends Component {
     render() {
         const { loading, data, isVisible, proVisible, columns, editTime, timeObj, sheetDates, milestones, sMilestone, isAttach, isDownload, eData, USERS, sUser, loginId, sTMilestones, permissions } = this.state
         // delete button disable condition
-        const canDelete = sTMilestones.keys.length<1 && (sUser !== loginId || !!permissions?.['DELETE']?.['ANY']) //Check this thing please if permission mei koi masla aye
+        const canDelete = sTMilestones.keys.length<1 && (sUser === loginId || !!permissions?.['DELETE']) //Check this thing please if permission mei koi masla aye
         const {sWeek, startDate, endDate } = this.state.sheetDates
         return (
             <>
@@ -730,7 +725,7 @@ class TimeSheetContact extends Component {
                     rowSelection={{ //multiple select commented
                         onChange:(selectedRowKeys, selectedRows)=>{this.milestoneSelect(selectedRowKeys, selectedRows )},
                         getCheckboxProps: (record) => ({                                                         //checking if project is close
-                            disabled: record.status === 'SB' || record.status === 'AP' || record.leaveRequest || (record.phase===false), 
+                            disabled: sUser !== loginId || record.status === 'SB' || record.status === 'AP' || record.leaveRequest || (record.phase===false), 
                             // Column configuration not to be checked
                           })
                     }}
