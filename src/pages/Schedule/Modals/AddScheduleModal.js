@@ -194,7 +194,9 @@ class AddScheduleModal extends Component {
       //it will call on change of start and end date and found
       var arr = new Array();
       //getting total Number of weekdays to work
-      let totalNumberOfWeekDays = this.getWeekdays(start, end)
+      let totalNumberOfWeekDays = this.getWeekdays(
+        start.isSame(pDates.startDate, 'month') ? pDates.startDate : start,
+        end.isSame(pDates.endDate, 'month') ? pDates.endDate : moment(end).endOf('month'))
       // let numberofSegments = moment(end.endOf('month')).diff(start.startOf('month'), 'months')+1;
       let perDayAmount = (dates.amount ?? 0)/totalNumberOfWeekDays
       while (start.isSameOrBefore(end)) {
