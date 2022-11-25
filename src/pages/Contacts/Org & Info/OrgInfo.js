@@ -93,7 +93,8 @@ class OrgInfo extends Component {
                                     <Popconfirm
                                         title="Are you sure you want to delete ?"
                                         onConfirm={() => this.handleDelete(data.id) }
-                                    >
+                                        okText="Yes"
+                                   >
                                        <div> Delete </div> 
                                     </Popconfirm>
                                 </Menu.Item>

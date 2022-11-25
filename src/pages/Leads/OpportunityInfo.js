@@ -208,6 +208,7 @@ class OpportunityInfo extends Component {
                   <Popconfirm
                     title="Are you sure you want to delete ?"
                     onConfirm={() => this.handleDelete(leadId)}
+                    okText="Yes"
                   >
                     <div> Delete </div>
                   </Popconfirm>

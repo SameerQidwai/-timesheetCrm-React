@@ -50,7 +50,8 @@ class LeavePolicies extends Component {
                                         onConfirm={() =>
                                             this.handleDelete(record.id)
                                         }
-                                    >
+                                        okText="Yes"
+                                     >
                                        <div> Delete </div>
                                     </Popconfirm>
                                 </Menu.Item>

@@ -110,6 +110,7 @@ const Expense = (props) => {
                   disabled={record.isInSheet}
                   title="Are you sure you want to delete ?"
                   onConfirm={() => handleDelete(record.id, index)}
+                  okText="Yes"
                 >
                   <div> Delete </div>
                 </Popconfirm>
