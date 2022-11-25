@@ -92,29 +92,29 @@ export const tableFilter = (dataIndex, searchFunction) => ({ // filter on the he
     },
 })
                         // Keys      //dataType  //defaultSortOrder
-export const tableSorter = (dataIndex, type, sortOrder) => ({ //sorter on the head
-    sorter: (a, b) => { 
-        let valueA = leaf(a, dataIndex)
-        let valueB = leaf(b, dataIndex) 
-        // if(valueA && valueB){
-            if(type=== 'number'){
-                return valueA -  valueB 
-            }else if(type === 'string'){
-                return `${valueA}`.localeCompare(`${valueB}`)
-            }else if (type === 'date'){
-                return moment(valueA ? valueA :'2011 11 10' ).unix() - moment(valueB ? valueB : '2011 11 10').unix()
-            }
-        // }
-    },
-    defaultSortOrder: sortOrder && 'ascend' 
-})
+// export const tableSorter = (dataIndex, type, sortOrder) => ({ //sorter on the head
+//     sorter: (a, b) => { 
+//         let valueA = leaf(a, dataIndex)
+//         let valueB = leaf(b, dataIndex) 
+//         // if(valueA && valueB){
+//             if(type=== 'number'){
+//                 return valueA -  valueB 
+//             }else if(type === 'string'){
+//                 return `${valueA}`.localeCompare(`${valueB}`)
+//             }else if (type === 'date'){
+//                 return moment(valueA ? valueA :'2011 11 10' ).unix() - moment(valueB ? valueB : '2011 11 10').unix()
+//             }
+//         // }
+//     },
+//     defaultSortOrder: sortOrder && 'ascend' 
+// })
                                     //filterObj    //filterFunction
-export const tableCondSorter = (dataIndex, type, sortOrder, pin) => ({ //sorter on the head
+export const tableSorter = (dataIndex, type, sortOrder, pin) => ({ //sorter on the head
     sorter: (a, b) => { 
         let valueA = leaf(a, dataIndex)
         let valueB = leaf(b, dataIndex) 
-        valueA = valueA === pin ? 'AA' : valueA
-        valueB = valueB === pin ? 'AA' : valueB
+        valueA = (pin && valueA === pin) ? 'AA' : valueA
+        valueB = (pin && valueB === pin) ? 'AA' : valueB
         // if(valueA && valueB){
             if(type=== 'number'){
                 return valueA -  valueB 

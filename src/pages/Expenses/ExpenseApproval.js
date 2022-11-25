@@ -6,7 +6,7 @@ import { expenseSheetActions, getApprovalExpenseSheets } from '../../service/exp
 import { formatCurrency, formatDate, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
 // import { expensesData as dummyExpensesData } from '../DummyData';
 import ExpenseSheetModal from './Modals/ExpenseSheetModal';
-import { tableCondSorter, tableSorter } from '../../components/Core/Table/TableFilter';
+import { tableSorter } from '../../components/Core/Table/TableFilter';
 import {Tag_s} from '../../components/Core/Custom/Index';
 
 const { Title } = Typography
@@ -66,7 +66,7 @@ const ExpenseApproval = () => {
             </Tooltip>
           )}
         </span>,
-      ...tableCondSorter('status', 'string', true, 'SB')
+      ...tableSorter('status', 'string', true, 'SB')
 	},
     {
       title: 'Submitted At',

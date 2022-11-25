@@ -225,7 +225,7 @@ class Schedule extends Component {
           <Item label="Status">
             {
               <Tag_s
-                text={desc.phase}
+                text={`${desc?.phase}`}
                 objName="O_PHASE"
                 colorName="O_PHASE_COLORS"
               />

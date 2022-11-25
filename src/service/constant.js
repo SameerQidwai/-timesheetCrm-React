@@ -32,7 +32,7 @@ export const O_STATUS = {
   C: 'Completed',
 };
 
-export const O_PHASE = { false: 'Close', true: 'Open' };
+export const O_PHASE = { false: 'Closed', true: 'Open' };
 export const O_PHASE_COLORS = { false: 'red', true: 'green' };
 export const R_STATUS = {
   CM: 'Completed',

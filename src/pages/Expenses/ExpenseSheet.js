@@ -7,7 +7,7 @@ import { expenseSheetActions, getExpenseSheets } from '../../service/expenseShee
 import { getListOfExpenses } from '../../service/expense-Apis';
 import { generalDelete } from "../../service/delete-Api\'s";
 import { formatCurrency, formatDate, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
-import { tableCondSorter, tableSorter, tableTitleFilter } from '../../components/Core/Table/TableFilter';
+import { tableSorter, tableTitleFilter } from '../../components/Core/Table/TableFilter';
 import {Tag_s} from '../../components/Core/Custom/Index';
 
 const { Title } =  Typography
@@ -63,7 +63,7 @@ const ExpenseSheet = (props) => {
           )}
         </div>
       ),
-      ...tableCondSorter('status', 'string', true, 'SB')
+      ...tableSorter('status', 'string', true, 'SB')
     },
     {
       title: 'Submited At',
