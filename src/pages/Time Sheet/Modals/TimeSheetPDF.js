@@ -107,7 +107,7 @@ const TimeSheetPDF = (props) => {
             <div ref={componentRef}  style={{margin:'2mm 10mm 0mm 10mm', size: 'A4'   }}>
                 {data.map((details, index) => {
                     return <div key={index}>
-                        <div className='sensitive'><p >Sensitive: Personal (after first entry)</p></div>
+                        <div className='sensitive'><p >I certify that the below entries are a true record of attendance.</p></div>
                             <Row justify="space-between" align="middle" >
                                 <Col ><Typography.Title level={2} style={{margin: 0}}> Timesheet </Typography.Title></Col>
                                 <Col style={{ width: '60%', textAlign: 'right'}}><img src={'/z-cp-logo.png'} width={200} /></Col>
@@ -133,17 +133,19 @@ const TimeSheetPDF = (props) => {
                                 dataSource={details.milestone && details.milestone.entries}
                                 style={{fontSize: '10px'}}
                             />
-                            <Descriptions column={3} bordered  style={{marginBottom:20, marginTop:20}} labelStyle={{padding: 5}} className="describe" >
+                            <Descriptions column={3} bordered  style={{marginBottom:10, marginTop:10}} labelStyle={{padding: 5}} className="describe" >
                                 <Item label="Hours in Day ">{details.milestone && parseFloat(details.milestone.hoursPerDay).toFixed( 2 ) }</Item>
                                 <Item label="Total Hours "> {details.milestone && parseFloat(details.milestone.totalHours).toFixed( 2 )} </Item>
                                 <Item label="Invoiced Days ">{details.milestone && parseFloat(details.milestone.invoicedDays).toFixed( 2 )}</Item>
                             </Descriptions>
                             <Row justify="space-between">
+                                {/* <Col span={24}>
+                                    <Typography.Text italic underline style={{textSize: 10, marginBottom: 0}}></Typography.Text>
+                                </Col> */}
                                 <Col span={11}>Employee Declaration</Col>
                                 <Col span={11}>Manager Approval</Col>
                             </Row>
                             <Row justify="space-between" >
-                                {/* <Col span={8} style={{border: 'solid black 1px', minHeight:35}}></Col> */}
                                 <Col span={11} style={{backgroundColor:'#deeaf6', minHeight:35}}></Col>
                                 <Col span={11} style={{backgroundColor:'#deeaf6', minHeight:35}}></Col>
                             </Row>
