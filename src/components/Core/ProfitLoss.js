@@ -40,8 +40,8 @@ class ProfitLoss extends Component {
         if (parent === 'P'){
             getProfitLoss(id, fiscalYear).then(res=>{
                 if(res.success){
-                    const {actualStatement, actualTotal, forecast, holidays} = res.data
-                    this.calculateProjectData(actualStatement, actualTotal, forecast ?? [], holidays)
+                    const {actualStatement, actualTotal, forecast, holidays, segmentsRevenue} = res.data
+                    this.calculateProjectData(actualStatement, actualTotal, forecast ?? [], segmentsRevenue,  holidays)
                 }
             })
         }else{
@@ -64,7 +64,7 @@ class ProfitLoss extends Component {
         }) 
     }
 
-    calculateProjectData = (actualStatement, actualTotal, forecast, holidays) =>{
+    calculateProjectData = (actualStatement, actualTotal, forecast, segmentsRevenue, holidays) =>{
         let { data, fiscalYear } = this.state
         const { billing, type: proType } = this.props
         let startDate = parseDate(billing.startDate)
@@ -78,6 +78,7 @@ class ProfitLoss extends Component {
         let forecastStartDate = startDate.isBefore(fiscalYear['start'], 'day') ? fiscalYear['start'] : startDate
         let forecastEndDate = endDate.isAfter(fiscalYear['end'], 'day') ? fiscalYear['end'] : endDate
         //Testing
+
        
         for (var iDate = parseDate(startDate); iDate.isSameOrBefore(endDate); iDate.add(1, 'days')) {
             if (iDate.isoWeekday() !== 6 && iDate.isoWeekday() !== 7 && !holidays[parseDate(iDate, true, 'M/D/YYYY')]){
@@ -85,16 +86,15 @@ class ProfitLoss extends Component {
                     console.log (parseDate(iDate, true, 'M/D/YYYY'))
                 }
                 let key = parseDate(iDate, true, 'MMM YY')
-                
                 if ( iDate.isSameOrAfter(forecastStartDate, 'day') && // finding Fiscal Months
-                    iDate.isSameOrBefore(forecastEndDate), 'day' ) {
+                iDate.isSameOrBefore(forecastEndDate), 'day' ) {
                     if (iDate.isSameOrAfter(parseDate(new Date()), 'month')){ 
+                        console.log(key)
                         //FORCASTING Future predictions
                         
                         forecast.forEach((el, index) =>{
-                          
-                            if ( iDate.isBetween(parseDate(el.con_startDate), parseDate(el.con_endDate) ??  tempEndDate, 'day', '[]') &&
-                            iDate.isBetween(parseDate(el.res_startDate), parseDate(el.res_endDate)??  tempEndDate , 'day', '[]') ){
+                            if ( iDate.isBetween(parseDate(el.con_startDate), parseDate(el.con_endDate ?? tempEndDate) , 'day', '[]') &&
+                            iDate.isBetween(parseDate(el.res_startDate), parseDate(el.con_endDate ?? tempEndDate) , 'day', '[]') ){
                                 if (forecastStatement[key]){
                                     forecastStatement[key].monthTotalBuy += el.forecastBuyRateDaily
                                     forecastStatement[key].monthTotalSell += el.forecastSellRateDaily
@@ -134,6 +134,7 @@ class ProfitLoss extends Component {
 
             revenuePerDay = (billing.value/noOfDays)
         }
+        console.log(forecastStatement)
         for (var iMonth = parseDate(fiscalYear['start']); iMonth.isSameOrBefore(fiscalYear['end']); iMonth.add(1, 'months')) {
             let key = parseDate(iMonth, true, 'MMM YY')
             let workDays = data[0][key]
@@ -145,14 +146,14 @@ class ProfitLoss extends Component {
                     revenueValue = actualStatement[key]?.['monthTotalSell'] ?? 0
                     //Not subtratcing actual month because it is already gets subtracted in totalRevnenue
                         //we are not doing it becuase all actual are being delete on assigning totalRevenue
-                     cos = actualStatement[key]?.['monthTotalBuy'] ?? 0
+                        cos = actualStatement[key]?.['monthTotalBuy'] ?? 0
 
                 }else if (forecastStatement[key]){ //If forcast is found
                     revenueValue = (totalRevenue - forecastStatement[key]?.['monthTotalSell']) < 0 ? totalRevenue ?? 0 :  forecastStatement[key]?.['monthTotalSell'] ?? 0
                     totalRevenue -= revenueValue // subtract this month revenuePerDay form revmonth
-
+                    
                     if (forecastStatement[key]?.['monthTotalSell'] > revenueValue){
-                            // checking total Revenue to get cos %
+                        // checking total Revenue to get cos %
                         let sellpercent = (revenueValue / forecastStatement[key]?.['monthTotalSell']) * 100
                         cos = (forecastStatement[key]?.['monthTotalBuy'] /100 )* sellpercent //to get percentage how much cos is needed to less amount sale
                     }else{
@@ -161,15 +162,15 @@ class ProfitLoss extends Component {
                 }
 
             }else if (proType === 1){ //For Project Base Project
-                revenueValue = isNaN(revenuePerDay * workDays) ? 0 : (revenuePerDay * workDays)
+                // revenueValue = isNaN(revenuePerDay * workDays) ? 0 : (revenuePerDay * workDays)
+                revenueValue = segmentsRevenue[key]
                 cos = actualStatement[key]?.['monthTotalBuy'] ?? forecastStatement[key]?.['monthTotalBuy']
-                
             }
                 //if revenue amount finish before project and fiscal year endDate
 
                 
             let cm = revenueValue - cos
-            
+            console.log(cos)
             data[1][key] = revenueValue   //revune
             data[2][key] = revenueValue ? cos : 0 //cos 
             data[3][key] = revenueValue ? cm: 0 //cm
@@ -277,7 +278,7 @@ class ProfitLoss extends Component {
                         }
                     }),
                     render: (record, records) =>{
-                        if (record >= 0 && !isNaN(data[0][key])){
+                        if (record && !isNaN(data[0][key])){
                             if (records.key === 'W') {
                                 return <b>{record} </b>
                             }else if (records.key === 'R') {
