@@ -139,7 +139,7 @@ class LeavePolicies extends Component {
                     layout: {
                         wrapperCol: { offset: 1 },
                     },
-                    Placeholder: "Rest Hours",
+                    Placeholder: "Reset Hours",
                     type: "Text",
                     size: "small",
                     style: {margin: 'auto 0'}
@@ -343,7 +343,6 @@ class LeavePolicies extends Component {
 
     editRecord = (value) => {
         value.id = this.state.editTimeoff;
-        console.log(value);
         this.setState({loading: true})
         editLabel(value).then((res) => {
             if (res) {

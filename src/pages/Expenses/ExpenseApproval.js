@@ -1,7 +1,7 @@
 import { Button, Col, DatePicker, Dropdown, Menu, Popconfirm, Row, Select, Table, Tag, Typography,Modal, Form, Input, Tooltip, Checkbox} from 'antd';
 import { SettingOutlined, CheckCircleOutlined, AuditOutlined} from '@ant-design/icons'; //Icons
 import React, { useEffect, useState } from 'react'
-import { getManageProjects, getUserProjects } from '../../service/constant-Apis';
+import { entityProjects, getManageProjects, getUserProjects } from '../../service/constant-Apis';
 import { expenseSheetActions, getApprovalExpenseSheets } from '../../service/expenseSheet-Apis';
 import { formatCurrency, formatDate, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
 // import { expensesData as dummyExpensesData } from '../DummyData';
@@ -159,8 +159,8 @@ const ExpenseApproval = () => {
 	const gettingProject = () => {
 		const { id, permissions} = localStore();
 		const { EXPENSES = {}} = JSON.parse(permissions)
-		setPermission(EXPENSES);		
-		getUserProjects(id, 'M', 0).then((res) => {
+		setPermission(EXPENSES);	
+		getManageProjects('LEAVE_REQUESTS').then((res) => {
 			if (res.success) {
 				res.data.unshift({value:0, label: 'No Project'})
 				setProjects(res.data); 
