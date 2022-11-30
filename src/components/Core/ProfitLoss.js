@@ -134,7 +134,6 @@ class ProfitLoss extends Component {
 
             revenuePerDay = (billing.value/noOfDays)
         }
-        console.log(forecastStatement)
         for (var iMonth = parseDate(fiscalYear['start']); iMonth.isSameOrBefore(fiscalYear['end']); iMonth.add(1, 'months')) {
             let key = parseDate(iMonth, true, 'MMM YY')
             let workDays = data[0][key]
@@ -170,7 +169,6 @@ class ProfitLoss extends Component {
 
                 
             let cm = revenueValue - cos
-            console.log(cos)
             data[1][key] = revenueValue   //revune
             data[2][key] = revenueValue ? cos : 0 //cos 
             data[3][key] = revenueValue ? cm: 0 //cm

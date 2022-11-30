@@ -23,6 +23,7 @@ class AddScheduleModal extends Component {
       loading: false,
       disabled: false,
       holidays: [],
+      accountedAmount: props.accountedAmount(),//Accoumanted amount remained amount left in project amount after removing previous schedule
       BasicFields: [
         {
           Placeholder: 'Start Date',
@@ -103,7 +104,7 @@ class AddScheduleModal extends Component {
           size: 'small',
           type: "InputNumber",
           rangeMin: 0,
-          rangeMax: props.accountedAmount(),
+          // rangeMax: props.accountedAmount(),//Accoumanted amount remained amount left in project amount after removing previous schedule
           shape: '$',
           rules: [{ required: true, message: 'Amount is Required' }],
           disabled: false,
@@ -171,10 +172,12 @@ class AddScheduleModal extends Component {
   getDateArray = (start, end, entries) => {
     //try to put your condition to put closer to eachother if they link to eachother
     //so it will be easy to track conditions
-    let { BasicFields, data, amountEntry } = this.state;
+    //Accoumanted amount remained amount left in project amount after removing previous schedule
+    let { BasicFields, data, amountEntry, accountedAmount } = this.state;
     let {pDates} = this.props
     BasicFields[3].disabled = false;
     let { dates } = this.formRef.current.getFieldValue()
+    let scheduleAmount = (dates?.amount??0) < accountedAmount ? dates?.amount : accountedAmount
     if (entries) {
       var arr = new Array();
       data = entries.map((el) => {
@@ -198,7 +201,8 @@ class AddScheduleModal extends Component {
         start.isSame(pDates.startDate, 'month') ? pDates.startDate : start,
         end.isSame(pDates.endDate, 'month') ? pDates.endDate : moment(end).endOf('month'))
       // let numberofSegments = moment(end.endOf('month')).diff(start.startOf('month'), 'months')+1;
-      let perDayAmount = (dates.amount ?? 0)/totalNumberOfWeekDays
+      let totalAmount = scheduleAmount
+      let perDayAmount = (totalAmount ?? 0)/totalNumberOfWeekDays
       while (start.isSameOrBefore(end)) {
         // need key to push in the table
         //hours are getting update on each call
@@ -208,7 +212,9 @@ class AddScheduleModal extends Component {
           start.isSame(pDates.startDate, 'month') ? pDates.startDate : start,
           start.isSame(pDates.endDate, 'month') ? pDates.endDate : moment(start).endOf('month')
         ); //checking if start date and end date ends early then end of month        
-        amountEntry[newDate]  = parseFloat(formatFloat(perDayAmount * numberOfWeekDays ))
+        let segmentAmount = parseFloat((perDayAmount * numberOfWeekDays ).toFixed(2))
+        totalAmount = totalAmount - segmentAmount
+        amountEntry[newDate]  = parseFloat((segmentAmount + (totalAmount <=1 ? totalAmount : 0)).toFixed(2))
 
         arr.push({
           key: newDate,
@@ -222,7 +228,7 @@ class AddScheduleModal extends Component {
     } else if (start) {
       //if end date is not sent
       let newDate = start.format('MMM-YYYY');
-      amountEntry[newDate]  = dates.amount
+      amountEntry[newDate]  = scheduleAmount
       data = [
         {
           key: newDate,
@@ -245,7 +251,7 @@ class AddScheduleModal extends Component {
       data: [...data],
       amountEntry: {...amountEntry}
     });
-    this.formRef.current.setFieldsValue({ amount: amountEntry });
+    this.formRef.current.setFieldsValue({ amount: amountEntry, dates:{...dates, amount: scheduleAmount} });
     //single hook cal for all the condition
   };
 
@@ -268,7 +274,7 @@ class AddScheduleModal extends Component {
           this.getDateArray(
             formValues.startDate,
             formValues.endDate,
-            segments
+            segments, 
           );
           this.formRef.current.setFieldsValue({ dates: formValues });
         }
@@ -340,10 +346,9 @@ class AddScheduleModal extends Component {
       total += parseFloat(amount ?? 0);
     });
 
-    if ((dates.amount?? 0) < total){
+    if ((dates.amount?? 0) < parseFloat(formatFloat(total))){
       exceedAmount = 'danger'
     }
-
     return (
       <Table.Summary fixed="top">
         <Table.Summary.Row>
