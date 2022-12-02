@@ -69,29 +69,45 @@ export const STATES = {
   Tasmania: 'TSA',
 };
 
-export const toTruncate = (num, fixed) => {
+export const toTruncate = (num, fixed) => { //not using as for now using INTL method
   if (num && !isNaN(num)){
       return num.toString().match(new RegExp('^-?\\d+(?:\.\\d{0,' + (fixed || -1) + '})?'))?.[0] || '0.00'
   }
   return '0.00'
 }
 
-export const formatCurrency = (amount) => {
+export const formatCurrency = (amount, fixed) => { 
   //console.log('=== === === formatCurrency === === ===');
-  var formatter = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  });
-  amount = toTruncate(amount, 2)
-  return formatter.format(amount).replace(/^(\D+)/, '$1 ');
+  if (!isNaN(amount)) {
+    var formatter = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      maximumFractionDigits: fixed??2, 
+      roundingMode: 'trunc'
+    });
+    return formatter.format(amount).replace(/^(\D+)/, '$1 ')
+  }
+  // amount = toTruncate(amount, 2)
+  return  '$ 0.00' ;
 }; //end
 
-export const formatFloat = (number, fixed, round) => {
-  if (round){
-    return !isNaN(parseFloat(number)) ? parseFloat(number).toFixed(2) : '0.00';
+// export const formatFloat = (number, fixed, round) => { //not using as for now using INTL method
+//   if (round){
+//     return !isNaN(parseFloat(number)) ? parseFloat(number).toFixed(2) : '0.00';
+//   }
+//   return toTruncate(number, fixed || 2 )
+// };
+
+export const formatFloat = (number, fixed, round)=>{
+  if (number && !isNaN(number)){
+    var formatter = new Intl.NumberFormat('en-US', {
+      maximumFractionDigits: fixed??2, 
+      roundingMode: round ?? 'trunc'
+    });  
+    return formatter.format(number)
   }
-  return toTruncate(number, fixed || 2 )
-};
+  return '0.00' 
+}
 
 
 // export const formatDate = (date, format) =>{

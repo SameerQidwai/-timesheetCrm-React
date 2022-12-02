@@ -89,7 +89,6 @@ class ProfitLoss extends Component {
                 if ( iDate.isSameOrAfter(forecastStartDate, 'day') && // finding Fiscal Months
                 iDate.isSameOrBefore(forecastEndDate), 'day' ) {
                     if (iDate.isSameOrAfter(parseDate(new Date()), 'month')){ 
-                        console.log(key)
                         //FORCASTING Future predictions
                         
                         forecast.forEach((el, index) =>{
@@ -162,23 +161,24 @@ class ProfitLoss extends Component {
 
             }else if (proType === 1){ //For Project Base Project
                 // revenueValue = isNaN(revenuePerDay * workDays) ? 0 : (revenuePerDay * workDays)
-                revenueValue = segmentsRevenue[key]
-                cos = actualStatement[key]?.['monthTotalBuy'] ?? forecastStatement[key]?.['monthTotalBuy']
+                revenueValue = parseFloat(segmentsRevenue[key]??0) 
+                cos = actualStatement[key]?.['monthTotalBuy'] ?? forecastStatement[key]?.['monthTotalBuy'] ?? 0
             }
                 //if revenue amount finish before project and fiscal year endDate
 
                 
             let cm = revenueValue - cos
             data[1][key] = revenueValue   //revune
-            data[2][key] = revenueValue ? cos : 0 //cos 
-            data[3][key] = revenueValue ? cm: 0 //cm
-            data[4][key] = revenueValue ? ((cm / revenueValue )*100): 0//cm percentage
+            data[2][key] = (revenueValue && cos) ? cos : 0 //cos 
+            data[3][key] = (revenueValue && cos) ? cm: 0 //cm
+            data[4][key] = (revenueValue && cos) ? ((cm / revenueValue )*100): 0//cm percentage
             
             //For Total Column 
             data[0]['total'] += data[0][key] ?? 0 //days
             data[1]['total'] += data[1][key] //SELL TOTAL WITH IN A FISCAL YEAR
             data[2]['total'] += data[2][key] //BUY TOTAL WITH IN A FISCAL YEAR
             data[3]['total'] += data[3][key] //CM
+
             // #a0df7d
         }
         //average Total cm %
@@ -280,11 +280,11 @@ class ProfitLoss extends Component {
                             if (records.key === 'W') {
                                 return <b>{record} </b>
                             }else if (records.key === 'R') {
-                                return ` ${formatCurrency(formatFloat(record))}`
+                                return ` ${formatCurrency(record)}`
                             }else if (records.key === 'C'){
-                                return ` ${formatCurrency(formatFloat(record))}`
+                                return ` ${formatCurrency(record)}`
                             }else if (records.key === '$'){
-                                return <b>{` ${formatCurrency(formatFloat(record))}`}</b>
+                                return <b>{` ${formatCurrency(record)}`}</b>
                             }else if (records.key === '%'){
                                 return <b>{` ${formatFloat(record)} %`}</b>
                             }
@@ -320,11 +320,11 @@ class ProfitLoss extends Component {
                         if (record.key === 'W') {
                             return <b>{text} </b>
                         }else if (record.key === 'R') {
-                            return ` ${formatCurrency(formatFloat(text))}`
+                            return ` ${formatCurrency(text)}`
                         }else if (record.key === 'C'){
-                            return ` ${formatCurrency(formatFloat(text))}`
+                            return ` ${formatCurrency(text)}`
                         }else if (record.key === '$'){
-                            return <b>{` ${formatCurrency(formatFloat(text))}`}</b>
+                            return <b>{` ${formatCurrency(text)}`}</b>
                         }else if (record.key === '%'){
                             return <b>{` ${formatFloat(text)} %`}</b>
                         }
