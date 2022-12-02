@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Modal, Table, Form, Row, Col, Typography, InputNumber, message, } from 'antd';
 import FormItems, { formatter, parser } from '../../../components/Core/Forms/FormItems';
 import moment from 'moment';
-import { dateRange, formatCurrency, formatDate, formatFloat } from '../../../service/constant';
+import { dateRange, formatCurrency, formatDate, formatFloat, toTruncate } from '../../../service/constant';
 
 import { addSchedule, editSchedule, getSchedule } from '../../../service/projects';
 import { getHolidays } from '../../../service/constant-Apis';
@@ -42,13 +42,13 @@ class AddScheduleModal extends Component {
           mode: 'month',
           type: 'DatePicker',
           rules: [{ required: true, message: 'Start Date is Required' }],
-          onChange: (value) => {
+          onChange: (value)  => {
             const { dates } = this.formRef.current.getFieldsValue();
-            const { startDate, endDate } = dates;
+            const { startDate, endDate } = _dateValidation(dates, props.pDates);
             this.formRef.current.setFieldsValue({
-              dates: { ...dates, endDate: null, startDate: value && startDate.startOf('month') },
+              dates: { ...dates, endDate: endDate, startDate: startDate},
             });
-            this.getDateArray(startDate);
+            this.getDateArray(startDate, endDate); //check it
           },
           rangeMin: (current) => {
             const {dates} = this.formRef.current.getFieldsValue();
@@ -74,13 +74,13 @@ class AddScheduleModal extends Component {
           disabled: true,
           onChange: (value) => {
             const { dates } = this.formRef.current.getFieldValue();
-            const { endDate, startDate } = dates;
+            const { endDate, startDate } = _dateValidation(dates, props.pDates);
             if (value){
               this.formRef.current.setFieldsValue({
-                dates: { ...dates, endDate: endDate.endOf('month') },
+                dates: { ...dates, endDate: endDate },
               });
             }
-            this.getDateArray(startDate, endDate);
+            this.getDateArray(startDate, endDate); //check it
           },
           rangeMax: (current) => {
             const {dates} = this.formRef.current.getFieldValue();
@@ -111,7 +111,7 @@ class AddScheduleModal extends Component {
           onBlur: ()=>{
             const { dates ={} } = this.formRef.current.getFieldValue();
             const { endDate, startDate } = dates;
-            this.getDateArray(startDate, endDate)
+            this.getDateArray(startDate, endDate) //check it
           }
         },
         {
@@ -178,13 +178,14 @@ class AddScheduleModal extends Component {
     BasicFields[3].disabled = false;
     let { dates } = this.formRef.current.getFieldValue()
     let scheduleAmount = (dates?.amount??0) < accountedAmount ? dates?.amount : accountedAmount
+
     if (entries) {
       var arr = new Array();
       data = entries.map((el) => {
         // var { startDate, amount } = el; // in this conditon this hours value will be replace
         let newDate = moment(el.startDate).format('MMM-YYYY');
 
-        amountEntry[newDate]  = `${el.amount}`; // setting the hours object before return
+        amountEntry[newDate]  = parseFloat(el.amount); // setting the hours object before return
         return {
           key: newDate,
           month: newDate,
@@ -197,9 +198,8 @@ class AddScheduleModal extends Component {
       //it will call on change of start and end date and found
       var arr = new Array();
       //getting total Number of weekdays to work
-      let totalNumberOfWeekDays = this.getWeekdays(
-        start.isSame(pDates.startDate, 'month') ? pDates.startDate : start,
-        end.isSame(pDates.endDate, 'month') ? pDates.endDate : moment(end).endOf('month'))
+      let totalNumberOfWeekDays = this.getWeekdays(start, end)
+      // console.log(start, end)
       // let numberofSegments = moment(end.endOf('month')).diff(start.startOf('month'), 'months')+1;
       let totalAmount = scheduleAmount
       let perDayAmount = (totalAmount ?? 0)/totalNumberOfWeekDays
@@ -208,22 +208,20 @@ class AddScheduleModal extends Component {
         //hours are getting update on each call
         let newDate = start.format('MMM-YYYY'); // newDate  = date for the new row
         // to set it in form for date
-        let numberOfWeekDays = this.getWeekdays(
-          start.isSame(pDates.startDate, 'month') ? pDates.startDate : start,
-          start.isSame(pDates.endDate, 'month') ? pDates.endDate : moment(start).endOf('month')
+        let numberOfWeekDays = this.getWeekdays(start,
+          start.isSame(end, 'month') ? end : moment(start).endOf('month')
         ); //checking if start date and end date ends early then end of month        
         let segmentAmount = parseFloat((perDayAmount * numberOfWeekDays ).toFixed(2))
         totalAmount = totalAmount - segmentAmount
         amountEntry[newDate]  = parseFloat((segmentAmount + (totalAmount <=1 ? totalAmount : 0)).toFixed(2))
-
         arr.push({
           key: newDate,
           month: newDate,
           amount: amountEntry[newDate],
         });
-        start = moment(start).add(1, 'M');
+        start = moment(start).set('date', 1).add(1, 'M');
       }
-      data = arr;
+      data = [...arr];
       // BasicFields[BasicFields[2].note ? 8 : 7].disabled = false; // adding an object when select leavetype
     } else if (start) {
       //if end date is not sent
@@ -268,15 +266,15 @@ class AddScheduleModal extends Component {
             id: id,
             notes: notes,
             amount: amount,
-            startDate: formatDate(startDate)?.startOf('month'),
-            endDate: formatDate(endDate)?.endOf('month'),
+            startDate: formatDate(startDate),
+            endDate: formatDate(endDate),
           };
+          this.formRef.current.setFieldsValue({ dates: formValues });
           this.getDateArray(
             formValues.startDate,
             formValues.endDate,
             segments, 
           );
-          this.formRef.current.setFieldsValue({ dates: formValues });
         }
       })
       .catch((e) => {
@@ -291,19 +289,10 @@ class AddScheduleModal extends Component {
     const { data, fileIds } = this.state;
     const newVal = {
       //if sameMonth got included as project save project date otherwise startdate 
-      startDate: dates.startDate.isSame(pDates.startDate, 'month')
-        ? formatDate(pDates.startDate, true)
-        : formatDate(dates.startDate, true),
+      startDate: moment.parseZone(dates.startDate),
          //if end date is not selected make it as last date of startday month or project endDate
-      endDate: dates.endDate
+      endDate: moment.parseZone(dates.endDate),
       //if sameMonth got included as project save project date otherwise endDate
-        ? dates.endDate.isSame(pDates.endDate, 'month')
-          ? formatDate(pDates.endDate, true)
-          : formatDate(dates.endDate, true)
-          //if sameMonth got included as project save project date otherwise startdate
-        : dates.startDate.isSame(pDates.startDate, 'month')
-        ? formatDate(pDates.startDate, true)
-        : formatDate(moment.parseZone(dates.startDate?.endOf('month')), true),
       amount: dates.amount,
       notes: dates.notes ?? '',
       segments: data.map((el) => {
@@ -328,7 +317,6 @@ class AddScheduleModal extends Component {
         }
       });
     } else {
-      // console.log('newVal: ', newVal)
       addSchedule(proId, newVal).then((res) => {
         this.setState({ loading: false });
         if (res.success) {
@@ -338,15 +326,15 @@ class AddScheduleModal extends Component {
     }
   };
 
-  getTableSummary = (data) => {
+  getTableSummary = () => {
+    const {data} = this.state
     let total = 0;
     let exceedAmount = ''
     const {dates={}} = this.formRef?.current?.getFieldValue() ?? {};
     data.forEach(({ amount }) => {
       total += parseFloat(amount ?? 0);
-    });
-
-    if ((dates.amount?? 0) < parseFloat(formatFloat(total))){
+    });                     //truncate used here becuase INTl was not working... 
+    if ((parseFloat(toTruncate(dates.amount?? 0,2))) != parseFloat(toTruncate(total,2))){
       exceedAmount = 'danger'
     }
     return (
@@ -465,3 +453,35 @@ class AddScheduleModal extends Component {
 }
 
 export default AddScheduleModal;
+
+// ----------->Helper<---------
+const _dateValidation = (scheduleDates, projectDates) => {
+  return {
+    /** key */
+    startDate: scheduleDates.startDate // if not available
+      ? moment.parseZone(
+          scheduleDates.startDate.isSame(projectDates.startDate, 'month') // if schedule start and end date is in same month
+            ? projectDates.startDate // if in same month take project startDate
+            : scheduleDates.startDate?.startOf('month')
+        ) // if not take schedule month's 1st day
+      : null, // if not available
+    /** key */
+    endDate: scheduleDates.startDate
+      ? scheduleDates.endDate // if not available
+        ? //if sameMonth got included as project save project date otherwise endDate
+          moment.parseZone(
+            scheduleDates.endDate.isSame(projectDates.endDate, 'month')
+              ? projectDates.endDate //if is in month take project date
+              : scheduleDates.endDate?.endOf('month')
+          ) // if is not in month take schedlue month last date
+        : //if endDate not icluded
+        scheduleDates.startDate // if statr date is not available
+        ? moment.parseZone(
+            scheduleDates.startDate.isSame(projectDates.endDate, 'month')
+              ? projectDates.startDate
+              : scheduleDates.startDate?.endOf('month')
+          )
+        : null
+      : null,
+  };
+};

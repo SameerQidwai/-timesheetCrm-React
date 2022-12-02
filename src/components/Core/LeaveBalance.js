@@ -66,8 +66,9 @@ const EditableCell = ({
 
   if (editable) {
     childNode = editing ? (
-      <Row>
-        <Col span={10}>
+      <Row >
+        {/* <Col span={10}> */}
+        <Col >
           <Form.Item
             style={{
               margin: 0,
@@ -87,7 +88,7 @@ const EditableCell = ({
             />
           </Form.Item>
         </Col>
-        <Col style={{ margin: 'auto 0' }} span={3}>
+        <Col style={{ margin: 'auto 0' }} >
           <CloseSquareFilled
             style={{ color: 'red', fontSize: 24 }}
             onClick={() => setEditing(!editing)}
