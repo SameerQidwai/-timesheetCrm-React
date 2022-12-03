@@ -6,7 +6,7 @@ import { addList, getRecord, editList } from "../../../service/contractors";
 import { getContactRecord } from "../../../service/conatct-person";
 import { getOrganizations, getOrgPersons, getRoles, getStates } from "../../../service/constant-Apis";
 import { addFiles } from "../../../service/Attachment-Apis";
-import { DURATION, formatDate } from "../../../service/constant";
+import { DURATION, formatDate, isPhone } from "../../../service/constant";
 
 const { TabPane } = Tabs;
 
@@ -132,7 +132,18 @@ class InfoModal extends Component {
                     fieldCol: 12,
                     key: "phoneNumber",
                     size: "small",
-                    // rules:[{ required: true }],
+                    rules:[
+                        ({ getFieldValue }) => ({
+                            validator(rules, value) {
+                                if (value){
+                                    if (!isPhone(value)) {
+                                        return Promise.reject(new Error('Must contain 11 digits'));
+                                    }
+                                    return Promise.resolve();
+                                }
+                            },
+                        }),
+                    ],
                     type: "input",
                     itemStyle: { marginBottom: 10 },
                 },
@@ -141,7 +152,10 @@ class InfoModal extends Component {
                     fieldCol: 12,
                     key: "email",
                     size: "small",
-                    // rules:[{ required: true }],
+                     rules:[ {
+                        type: 'email',
+                        message: 'The input is not valid E-mail!',
+                    }],
                     type: "Input",
                     disabled: false,
                     itemStyle: { marginBottom: 10 },
@@ -270,7 +284,18 @@ class InfoModal extends Component {
                     fieldCol: 12,
                     key: "nextOfKinPhoneNumber",
                     size: "small",
-                    
+                    rules:[
+                        ({ getFieldValue }) => ({
+                            validator(rules, value) {
+                                if (value){
+                                    if (!isPhone(value)) {
+                                        return Promise.reject(new Error('Must contain 11 digits'));
+                                    }
+                                    return Promise.resolve();
+                                }
+                            },
+                        }),
+                    ],
                     type: "input",
                     itemStyle: { marginBottom: 1 },
                 },
@@ -295,7 +320,10 @@ class InfoModal extends Component {
                     fieldCol: 12,
                     key: "nextOfKinEmail",
                     size: "small",
-                    
+                    rules:[ {
+                        type: 'email',
+                        message: 'The input is not valid E-mail!',
+                    }],
                     type: "input",
                     itemStyle:{marginBottom:10},
                 },
@@ -667,7 +695,6 @@ class InfoModal extends Component {
         })
     }
 
-
     //file upload testing
     handleUpload = async option=>{
         const { onSuccess, onError, file, onProgress } = option;
@@ -712,7 +739,6 @@ class InfoModal extends Component {
         })
     }
     
-
     //file upload testing
 
     render() {
@@ -795,8 +821,15 @@ class InfoModal extends Component {
                 </Col> }
                 <Col span={!editCont? 7: 8} style={{marginLeft: 'auto', marginBottom: 10}}>
                     <Form.Item
-                    name={['basic', 'username']}
-                    rules={[{required: true, type: 'email', message: 'Email is Required'}]}
+                        name={['basic', 'username']}
+                        rules={[
+                            {
+                            type: 'email',
+                            message: 'The input is not valid E-mail!',
+                            },
+                            {required: true, message: 'Email is Required'
+                            }
+                            ]}
                     >
                         <Input
                             placeholder="Email"

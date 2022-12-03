@@ -71,12 +71,10 @@ class BillModal extends Component {
                     key: "payslipEmail",
                     size: "small",
                     type: "input",
-                    // rules: [
-                    //     {
-                    //         required: true,
-                    //         message: "Payment Email is required",
-                    //     },
-                    // ],
+                    rules:[ {
+                        type: 'email',
+                        message: 'The input is not valid E-mail!',
+                      }],
                     itemStyle: { marginBottom: 1 },
                 },
                 {
