@@ -242,3 +242,10 @@ export const sorting = (data, key) => {
   );
   return sortData;
 };
+
+// for regex
+export const isPhone = (phoneNumber) => {
+  const cleanedPhoneNumber = phoneNumber.replace(/-|\s/g, ''); // Remove spaces and hyphens before performing test
+  const pattern = new RegExp('^(?:\\+?(61))? ?(?:\\((?=.*\\)))?(0?[2-57-8])\\)? ?(\\d\\d(?:[- ](?=\\d{3})|(?!\\d\\d[- ]?\\d[- ]))\\d\\d[- ]?\\d[- ]?\\d{3})$');
+  return pattern.test(cleanedPhoneNumber);
+};
