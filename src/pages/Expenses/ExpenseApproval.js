@@ -1,5 +1,5 @@
 import { Button, Col, DatePicker, Dropdown, Menu, Popconfirm, Row, Select, Table, Tag, Typography,Modal, Form, Input, Tooltip, Checkbox} from 'antd';
-import { SettingOutlined, CheckCircleOutlined, AuditOutlined} from '@ant-design/icons'; //Icons
+import { SettingOutlined, CheckCircleOutlined, AuditOutlined, CheckOutlined} from '@ant-design/icons'; //Icons
 import React, { useEffect, useState } from 'react'
 import { entityProjects, getManageProjects, getUserProjects } from '../../service/constant-Apis';
 import { expenseSheetActions, getApprovalExpenseSheets } from '../../service/expenseSheet-Apis';
@@ -82,11 +82,12 @@ const ExpenseApproval = () => {
       ...tableSorter('submittedBy', 'string'),
     },
 	{
-	title: 'Billable',
-	dataIndex: 'isBillable',
-	align: 'center',
-	render: (value) => (
-		<Checkbox defaultChecked={false} checked={value} />
+		title: 'Billable',
+		dataIndex: 'isBillable',
+		align: 'center',
+		render: (value) => (
+			value && <CheckOutlined />
+			// <Checkbox defaultChecked={false} checked={value} />
 		)
 	},
 	{

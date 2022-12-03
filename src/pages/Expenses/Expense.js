@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Checkbox, Col, Dropdown, Menu, Popconfirm, Popover, Row, Table, Typography, Upload } from 'antd';
-import { SettingOutlined, PlusSquareOutlined, } from '@ant-design/icons'; //Icons
+import { SettingOutlined, PlusSquareOutlined, CheckOutlined} from '@ant-design/icons'; //Icons
 import InfoModal from './Modals/InfoModal';
 import { Api, formatCurrency, formatDate, localStore } from '../../service/constant';
 import { delExpense, getListOfExpenses } from '../../service/expense-Apis';
@@ -77,7 +77,8 @@ const Expense = (props) => {
       align: 'center',
       width: '1%',
       render: (value) => (
-        <Checkbox defaultChecked={false} checked={value} />
+        value && <CheckOutlined />
+        // <Checkbox defaultChecked={false} checked={value} />
       ),
       ...tableSorter(`isReimbursed`, 'string'),
     },
