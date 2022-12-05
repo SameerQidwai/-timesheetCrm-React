@@ -100,21 +100,9 @@ class Contact extends Component {
         title: 'Status',
         dataIndex: 'employementStatus',
         key: 'employementStatus',
-        render:(text, record)=>{
-          let endPoint =
-            text === 'Employee'
-              ? 'Employees'
-              : text === 'Sub Contractor'
-              ? 'sub-contractor'
-              : 'contacts';
-              
-          return endPoint !== 'contacts'? <Link
-            to={{ pathname: `/${endPoint}/${record?.employee?.id}/info` }}
-            className="nav-link"
-          >
-            {text}
-          </Link> : text
-        },
+        render:(text, record)=>(
+          employementLink(text, record?.employee?.id)
+        ),
         ...tableSorter('employementStatus', 'string')
       },
       {
@@ -133,8 +121,9 @@ class Contact extends Component {
                   className="pop-confirm-menu"
                 >
                   <Popconfirm
-                    title="Are you sure you want to delete"
+                    title="Are you sure you want to delete ?"
                     onConfirm={() => this.handleDelete(record.id, index)}
+                    okText="Yes"
                   >
                     <div> Delete </div>
                   </Popconfirm>
@@ -709,3 +698,26 @@ class Contact extends Component {
 }
 
 export default Contact;
+
+
+//---->HELPER <-----
+
+function employementLink(status, employeeId){
+  let endPoint =
+    status === 'Employee'
+      ? 'Employees'
+      : status === 'Sub Contractor'
+      ? 'sub-contractors'
+      : 'contacts';
+
+  return employeeId ? (
+    <Link
+      to={{ pathname: `/${endPoint}/${employeeId}/info` }}
+      className="nav-link"
+    >
+      {status}
+    </Link>
+  ) : (
+    status
+  );
+}

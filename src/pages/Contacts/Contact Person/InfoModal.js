@@ -19,7 +19,7 @@ import {
   getOrganizations,
 } from '../../../service/constant-Apis';
 
-import { formatDate } from '../../../service/constant';
+import { formatDate, isPhone } from '../../../service/constant';
 
 const { TabPane } = Tabs;
 
@@ -100,6 +100,7 @@ class InfoModal extends Component {
           },
           {
             Placeholder: 'Email',
+            rangeMin: true,
             fieldCol: 12,
             size: 'small',
             type: 'Text',
@@ -111,7 +112,18 @@ class InfoModal extends Component {
             fieldCol: 12,
             key: 'phoneNumber',
             size: 'small',
-            // rules:[{ required: true }],
+            rules:[
+              ({ getFieldValue }) => ({
+                  validator(rules, value) {
+                      if (value){
+                          if (!isPhone(value)) {
+                              return Promise.reject(new Error('Must contain 11 digits'));
+                          }
+                          return Promise.resolve();
+                      }
+                  },
+              }),
+            ],
             type: 'input',
             labelAlign: 'right',
             itemStyle: { marginBottom: 10 },
@@ -124,6 +136,14 @@ class InfoModal extends Component {
             type: 'input',
             labelAlign: 'right',
             itemStyle: { marginBottom: 10 },
+            rules:[ {
+              type: 'email',
+              message: 'The input is not valid E-mail!',
+            },
+            {
+              required: true,
+              message: 'Please input your E-mail!',
+             }],
           },
           {
             Placeholder: 'Gender',
@@ -621,6 +641,7 @@ class InfoModal extends Component {
             },
           });
           let { asso } = this.associateRef.current.refs.associate_form.getFieldsValue(); // const
+          console.log("asso", asso);
           asso[`id${item_no}`] = undefined
           this.associateRef.current.refs.associate_form.setFieldsValue({asso})
         }
@@ -631,7 +652,6 @@ class InfoModal extends Component {
         layout: { wrapperCol: { span: 23 } },
         key: splice_key[1],
         size: 'small',
-        // rules:[{ required: true }],
         type: 'Input',
       },
       {

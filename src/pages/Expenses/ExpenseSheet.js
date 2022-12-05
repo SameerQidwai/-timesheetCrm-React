@@ -90,8 +90,9 @@ const ExpenseSheet = (props) => {
               >
                 <Popconfirm
                   disabled={['AP', 'SB'].includes(record.status)}
-                  title="Are you sure you want to delete"
+                  title="Are you sure you want to delete ?"
                   onConfirm={() => handleDelete(record.id, index)}
+                  okText="Yes"
                 >
                   <div> Delete </div>
                 </Popconfirm>

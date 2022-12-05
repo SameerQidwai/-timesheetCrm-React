@@ -83,8 +83,9 @@ export class ContactInfo extends Component {
                                     className="pop-confirm-menu"
                                 >
                                     <Popconfirm
-                                        title="Are you sure you want to delete"
+                                        title="Are you sure you want to delete ?"
                                         onConfirm={() => this.handleDelete() }
+                                        okText="Yes"
                                     >
                                     <div> Delete </div> 
                                     </Popconfirm>
@@ -139,12 +140,24 @@ export class ContactInfo extends Component {
                         customUrl={`helpers/work?type=O&contact=${userId}`}
                     />
                 </TabPane>
-                <TabPane tab="Projects" key="projects">
+                {/* <TabPane tab="Representative Opportunities" key="r-leads">
+                    <Opportunities
+                        targetId={userId}
+                        customUrl={`helpers/work?type=R&contact=${userId}`}
+                    />
+                </TabPane> */}
+                <TabPane tab="Projects" key="r-projects">
                     <Projects
                         targetId={userId}
                         customUrl={`helpers/work?type=P&contact=${userId}`}
                     />
                 </TabPane>
+                {/* <TabPane tab="Representative Projects" key="projects">
+                    <Projects
+                        targetId={userId}
+                        customUrl={`helpers/work?type=R&contact=${userId}`}
+                    />
+                </TabPane> */}
                 <TabPane tab="Comments" key="comments">
                     <Comments targetType="COP" targetId={userId} />
                 </TabPane>

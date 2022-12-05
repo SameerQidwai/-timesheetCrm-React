@@ -6,7 +6,7 @@ import { LoadingOutlined } from "@ant-design/icons"; //Icons
 import Form from "../../../components/Core/Forms/Form";
 import { addList, getOrgRecord, editList } from "../../../service/Organizations";
 import { getOrganizations, getOrgPersons } from "../../../service/constant-Apis";
-import { formatDate } from "../../../service/constant";
+import { formatDate, isPhone } from "../../../service/constant";
 
 const { TabPane } = Tabs;
 
@@ -101,6 +101,7 @@ class InfoModal extends Component {
                     },
                     {
                         Placeholder: "Email",
+                        rangeMin: true, 
                         fieldCol: 12,
                         size: "small",
                         type: "Text",
@@ -113,6 +114,18 @@ class InfoModal extends Component {
                         key: "phone",
                         size: "small",
                         // rules:[{ required: true }],
+                        rules:[
+                            ({ getFieldValue }) => ({
+                                validator(rules, value) {
+                                    if (value){
+                                        if (!isPhone(value)) {
+                                            return Promise.reject(new Error('Must contain 11 digits'));
+                                        }
+                                        return Promise.resolve();
+                                    }
+                                },
+                            }),
+                        ],
                         type: "Input",
                     },
                     {
@@ -120,7 +133,14 @@ class InfoModal extends Component {
                         fieldCol: 12,
                         key: "email",
                         size: "small",
-                        // rules:[{ required: true }],
+                        rules:[ {
+                            type: 'email',
+                            message: 'The input is not valid E-mail!',
+                          },
+                          {
+                            required: true,
+                            message: 'Please input your E-mail!',
+                          }],
                         type: "Input",
                     },
                     {
@@ -292,7 +312,10 @@ class InfoModal extends Component {
                         fieldCol: 12,
                         key: "invoice_email",
                         size: "small",
-                        // rules:[{ required: true }],
+                        rules:[{
+                            type: 'email',
+                            message: 'The input is not valid E-mail!',
+                            }],
                         type: "Input",
                     },
                     
@@ -1153,3 +1176,4 @@ class InfoModal extends Component {
 }
 
 export default InfoModal;
+

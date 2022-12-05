@@ -29,7 +29,7 @@ import {
 import { getContactRecord } from '../../../service/conatct-person';
 import { addList, getRecord, editList } from '../../../service/Employees';
 import { addAttachments, addFiles } from '../../../service/Attachment-Apis';
-import { formatDate } from '../../../service/constant';
+import { formatDate, isPhone } from '../../../service/constant';
 
 const { TabPane } = Tabs;
 
@@ -145,6 +145,7 @@ class InfoModal extends Component {
         {
           fieldCol: 12, // this is only label 4
           size: 'small',
+          // rangeMin: true,
           Placeholder: 'Personal Email',
           disabled: false,
           type: 'Text',
@@ -155,6 +156,18 @@ class InfoModal extends Component {
           fieldCol: 12,
           key: 'phoneNumber',
           size: 'small',
+          rules:[
+            ({ getFieldValue }) => ({
+                validator(rules, value) {
+                    if (value){
+                        if (!isPhone(value)) {
+                            return Promise.reject(new Error('Must contain 11 digits'));
+                        }
+                        return Promise.resolve();
+                    }
+                },
+            }),
+          ],
           type: 'input',
           itemStyle: { marginBottom: 10 },
         },
@@ -166,6 +179,11 @@ class InfoModal extends Component {
           type: 'Input',
           disabled: false,
           itemStyle: { marginBottom: 10 },
+          rules:[ {
+            type: 'email',
+            message: 'The input is not valid E-mail!',
+          }
+          ],
         },
         {
           Placeholder: 'Gender',
@@ -347,12 +365,18 @@ class InfoModal extends Component {
           size: 'small',
           // rules:[{ required: true }],
           type: 'input',
-          // rules: [
-          //     {
-          //         required: true,
-          //         message: "First Name is required",
-          //     },
-          // ],
+          rules:[
+            ({ getFieldValue }) => ({
+                validator(rules, value) {
+                    if (value){
+                        if (!isPhone(value)) {
+                            return Promise.reject(new Error('Must contain 11 digits'));
+                        }
+                        return Promise.resolve();
+                    }
+                },
+            }),
+        ],
           itemStyle: { marginBottom: 10 },
         },
         {
@@ -376,7 +400,10 @@ class InfoModal extends Component {
           fieldCol: 12,
           key: 'nextOfKinEmail',
           size: 'small',
-          // rules:[{ required: true }],
+          rules:[ {
+            type: 'email',
+            message: 'The input is not valid E-mail!',
+          }],
           type: 'input',
           itemStyle: { marginBottom: 10 },
         },
@@ -566,6 +593,10 @@ class InfoModal extends Component {
           size: 'small',
           type: 'input',
           itemStyle: { marginBottom: 10 },
+          rules:[ {
+            type: 'email',
+            message: 'The input is not valid E-mail!',
+          }]
         },
         {
           Placeholder: 'Work Hours In A Week',
@@ -1245,7 +1276,10 @@ class InfoModal extends Component {
             <Form.Item
               name={['basic', 'username']}
               rules={[
-                { required: true, message: 'Email/Username is requrired' },
+                { required: true, message: 'Email/Username is requrired' }, {
+                  type: 'email',
+                  message: 'The input is not valid E-mail!',
+                }
               ]}
             >
               <Input
@@ -1253,7 +1287,7 @@ class InfoModal extends Component {
                 size="small"
                 type="email"
                 style={{ width: '100%' }}
-              />
+                />
             </Form.Item>
           </Col>
           <Tabs

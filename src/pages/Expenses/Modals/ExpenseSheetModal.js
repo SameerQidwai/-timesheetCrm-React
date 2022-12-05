@@ -1,5 +1,5 @@
 import { Button, Checkbox, Col, Form, Modal, Row, Table, Typography, Upload } from 'antd'
-import { PlusOutlined } from "@ant-design/icons"; //Icons
+import { PlusOutlined, CheckOutlined } from "@ant-design/icons"; //Icons
 import React, { useEffect, useState } from 'react'
 import { formatCurrency, formatDate, formatFloat, localStore } from '../../../service/constant';
 import FormItems from '../../../components/Core/Forms/FormItems';
@@ -127,12 +127,13 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) =>
       // )
       // },
       {
-          title: 'Reimbursable',
-          dataIndex: 'isReimbursed',
-          ellipsis: true,
-          render: (value) => (
-              <Checkbox defaultChecked={false} checked={value}  />
-          )
+        title: 'Reimbursable',
+        dataIndex: 'isReimbursed',
+        ellipsis: true,
+        render: (value) => (
+          value && <CheckOutlined />
+            // <Checkbox defaultChecked={false} checked={value}  />
+        )
       },
       // {
       //     title: 'b',

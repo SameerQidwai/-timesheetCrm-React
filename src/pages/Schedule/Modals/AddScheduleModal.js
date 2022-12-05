@@ -478,7 +478,7 @@ const _dateValidation = (scheduleDates, projectDates) => {
         scheduleDates.startDate // if statr date is not available
         ? moment.parseZone(
             scheduleDates.startDate.isSame(projectDates.endDate, 'month')
-              ? projectDates.startDate
+              ? projectDates.endDate
               : scheduleDates.startDate?.endOf('month')
           )
         : null

@@ -14,7 +14,7 @@ import "../styles/button.css";
 import TimeSheetPDF from "./Modals/TimeSheetPDF";
 import { Tag_s } from "../../components/Core/Custom/Index";
 
-const { Title, Link: Tlink} = Typography;
+const { Title, Link: Tlink, Text} = Typography;
 //inTable insert
 
 class TimeSheetContact extends Component {
@@ -64,13 +64,11 @@ class TimeSheetContact extends Component {
                         return <Row gutter={[0, 10]} style={{height: 90}}>
                             <Col span={24}>
                                 <Row justify="space-between">
-                                    {/* <Col span={20}> {record.projectType ===1 ? `${value}
-                                            sdasd   (${record.milestone})` : 
-                                        <Link to={{ pathname: `/projects/${record.id}/info`}} className="nav-link"> {value} </Link>                                
-                                    } </Col> */}
                                     <Col span={20}> 
                                         <div>
-                                            <Link to={{ pathname: `/projects/${record.projectId}/info`}} className="nav-link"> {value} </Link> 
+                                            <Link to={{ pathname: `/projects/${record.projectId}/info`}} className="nav-link"> 
+                                                <Text ellipsis={{ tooltip: value }}>{value}</Text>  
+                                            </Link> 
                                         </div>
                                         {record.projectType ===1 &&
                                             <div>
@@ -78,10 +76,10 @@ class TimeSheetContact extends Component {
                                                     to={{ pathname: `/projects/${record.projectId}/milestones/${record.milestoneId}/resources`}} 
                                                     className="nav-link"
                                                 >
-                                                    ({record.milestone})
+                                                    <Text ellipsis={{ tooltip: record.milestone }}>({record.milestone})</Text>
                                                 </Link>
                                             </div>
-                                        }
+                                        } 
                                     </Col>
                                     {/* File_name and paperclip to show under project is in comment section line 156*/}
                                     <Col style={{marginLeft: 'auto'}}> 
@@ -117,20 +115,22 @@ class TimeSheetContact extends Component {
                                             download={record.attachment.name}
                                             target="_blank"
                                             rel="noopener noreferrer"
+                                            ellipsis={true}
                                         >
-                                            <PaperClipOutlined />
-                                                <Tooltip 
-                                                    placement="top" 
-                                                    title={record.attachment.name}
-                                                    destroyTooltipOnHide
-                                                >
-                                                    {`${record.attachment.name.substr(0,20)}${record.attachment.name.length>19 ?'\u2026':''}`}
-                                                </Tooltip>
+                                            
+                                            <Tooltip 
+                                                placement="topLeft" 
+                                                title={record.attachment.name}
+                                                destroyTooltipOnHide
+                                            >
+                                                <PaperClipOutlined />{" "}
+                                                {record.attachment?.name}
+                                                {/* {`${record.attachment.name.substr(0,20)}${record.attachment.name.length>19 ?'\u2026':''}`} */}
+                                            </Tooltip>
                                         </Tlink>
                                     </Col>}
                                     <Col style={{marginLeft:'auto'}} >
-                                            { record.status && <Tag_s text={record.status}/> 
-                                            }
+                                            { record.status && <Tag_s text={record.status}/> }
                                     </Col>
                                     <Col>
                                         <Tooltip 

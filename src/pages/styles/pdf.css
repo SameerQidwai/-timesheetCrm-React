@@ -1,8 +1,5 @@
 .bodyMargin{ 
-    margin: 10 
-}
-.sensitive{ 
-    color: #ff0000
+    margin: 10px
 }
 .textCenter{ 
     text-align:'center' 
@@ -12,16 +9,16 @@
     text-align: 'right' 
 }
 .marg20{ 
-    margin-bottom: 20 
+    margin-bottom: 20px
 }
 
 .signDiv { 
     border: 'solid black 1px'; 
-    min-height:35
+    min-height:35px
 }
 .fSensitive {
     text-align:'center';
-    margin-top: 100
+    margin-top: 100px
 }
 .weekendClass{
     background-color: #fafafa;
@@ -60,13 +57,10 @@
     padding: 2px 5px !important
 }
 
+
 .sensitive {
-    text-align:center;
-}
-.sensitive p {
-    color: #ff0000;
-    text-decoration: underline;
-    font-style: italic;
+    font-size: 12px;
+    margin-bottom: 0px;
 }
 
 .b-sensitive{
@@ -75,6 +69,11 @@
 }
 .b-sensitive-bottom{
     page-break-after :always;
+}
+
+.signature {
+    background-color: #deeaf6;
+    min-height: 35px
 }
 
 /* Certifacates Style */
