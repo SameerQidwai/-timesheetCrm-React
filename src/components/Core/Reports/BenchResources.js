@@ -42,9 +42,9 @@ function BenchResources() {
     useEffect(() => {
         let resource = []
         let resIndex = 0
-        data.forEach((el, index)=>{
+        data.forEach(async(el, index)=>{
             if (el.name !== data?.[index - 1]?.['name']){
-                resIndex = index
+                resIndex++
                 resource.push({...el, skill: [{...el}]})
             }else{
                 resource[resIndex]['skill'].push({...el})

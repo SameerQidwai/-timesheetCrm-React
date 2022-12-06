@@ -68,7 +68,7 @@ const pageLinks = [
   // Page link and router
   {
     // component: Dashboard,
-    component: BenchResources,
+    component: WorkforceSkills,
     link: '/dashboard',
     key: 'DASHBOARD',
     permission: 'ALLOWED',
