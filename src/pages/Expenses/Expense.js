@@ -112,6 +112,7 @@ const Expense = (props) => {
                   title="Are you sure you want to delete ?"
                   onConfirm={() => handleDelete(record.id, index)}
                   okText="Yes"
+                  cancelText="No"
                 >
                   <div> Delete </div>
                 </Popconfirm>

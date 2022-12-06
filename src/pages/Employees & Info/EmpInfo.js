@@ -121,6 +121,7 @@ class OrgInfo extends Component {
                     title="Are you sure you want to delete ?"
                     onConfirm={() => this.handleDelete(emp)}
                     okText="Yes"
+                    cancelText="No"
                   >
                     <div> Delete </div>
                   </Popconfirm>
@@ -164,6 +165,8 @@ class OrgInfo extends Component {
                       data.active ? 'Deactive' : 'Activate'
                     }`}
                     onConfirm={() => this.toggleActiveStatus(emp)}
+                    okText="Yes"
+                    cancelText="No"
                   >
                     <div> {data.active ? 'Deactivate' : 'Activate'} </div>
                   </Popconfirm>

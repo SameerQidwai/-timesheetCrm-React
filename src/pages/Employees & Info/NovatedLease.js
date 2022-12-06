@@ -69,7 +69,8 @@ class NovatedLease extends Component {
                                         title="Are you sure you want to delete ?"
                                         onConfirm={() => this.handleDelete(value, index) }
                                         okText="Yes"
-                                   >
+                                        cancelText="No"
+                                    >
                                         <div> Delete </div>
                                     </Popconfirm>
                                 </Menu.Item>

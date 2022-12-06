@@ -9,7 +9,7 @@ import InfoModal from './InfoModal';
 import Attachments from '../../../components/Core/Attachments';
 import Comments from '../../../components/Core/Comments';
 import Opportunities from '../../../components/Core/Opportunities';
-import { generalDelete } from '../../../service/delete-Api\'s';
+import { generalDelete } from "../../../service/delete-Api\'s";
 import Projects from '../../../components/Core/Projects';
 
 const {Item} = Descriptions 
@@ -86,7 +86,8 @@ export class ContactInfo extends Component {
                                         title="Are you sure you want to delete ?"
                                         onConfirm={() => this.handleDelete() }
                                         okText="Yes"
-                                    >
+                                        cancelText="No"
+                                        >
                                     <div> Delete </div> 
                                     </Popconfirm>
                                 </Menu.Item>
