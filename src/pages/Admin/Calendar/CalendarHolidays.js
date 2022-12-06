@@ -68,9 +68,10 @@ class CalendarHolidays extends Component {
               <Menu>
                 <Menu.Item key="Delete" danger className="pop-confirm-menu">
                   <Popconfirm
-                    title="Are you sure you want to delete"
+                    title="Are you sure you want to delete ?"
                     onConfirm={() => this.handleDelete(record.id)}
-                  >
+                    okText="Yes"
+                                   >
                     <div> Delete </div>
                   </Popconfirm>
                 </Menu.Item>
@@ -234,7 +235,8 @@ class CalendarHolidays extends Component {
     this.setState({ loading: true });
     addList(value).then((res) => {
       if (res) {
-        this.getData();
+        const { calendarId } = this.state;
+        this.getData(calendarId);
       }
     });
   };
@@ -365,8 +367,8 @@ class CalendarHolidays extends Component {
               defaultValue={moment(new Date())}
             />
           </Col>
-          <Col style={{ textAlign: 'end' }} span="4">
-            <Row justify="space-between">
+          <Col >
+            <Row justify="space-between" gutter={10}>
               <Col>
                 <Button
                   type="default"

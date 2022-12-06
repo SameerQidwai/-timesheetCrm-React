@@ -16,8 +16,8 @@ export const login = (data) => {
     .then((res) => {
       localStorage.clear();
       const { success, data, message } = res.data;
-      messageAlert.success({ content: message, key: 'logout' }, 5);
       if (success) {
+        messageAlert.success({ content: message, key: 'logout' }, 5);
         // let permissions = { DASHBOARD: {READ: {ANY: true } } }
         let permissions = {};
         let role = data.role;
@@ -41,6 +41,8 @@ export const login = (data) => {
           localStorage.setItem(key, data[key]);
         }
         return { success, data };
+      }else{
+        messageAlert.error({ content: message, key: 'logout' }, 5);
       }
     })
     .catch((err) => {

@@ -58,6 +58,36 @@ export const getExpenseSheets = (qureyFilters) => {
       };
     });
 };
+export const getApprovalExpenseSheets = (qureyFilters) => {
+  const {
+    filterSatrtDate: startDate,
+    filterEndDate: endDate,
+    filterProject: projectId,
+  } = qureyFilters ?? {};
+
+  let queryUrl = `${url}/approvalExpenseSheets?${
+    startDate ? `startDate=${formatDate(startDate, true, 'DD/MM/YYYY')}` : ''
+  }${
+    endDate ? `&endDate=${formatDate(endDate, true, 'DD/MM/YYYY')}` : ''
+  }&projectId=${projectId?? null}`;
+
+  return axios
+    .get(queryUrl, { headers: headers() })
+    .then((res) => {
+      const { success, data, message } = res.data;
+      jwtExpired(message);
+      setToken(res.headers && res.headers.authorization);
+
+      return { success, data };
+    })
+    .catch((err) => {
+      return {
+        error: 'Please login again!',
+        success: false,
+        message: err.message,
+      };
+    });
+};
 
 export const editExpenseSheet = (id,data) => {
   messageAlert.loading({ content: 'Loading...', key: id }); // this open toast

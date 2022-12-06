@@ -142,8 +142,9 @@ class ProjectInfo extends Component {
                 >
                   <Popconfirm
                     disabled={!permissions?.['DELETE'] || basic.phase === false}
-                    title="Are you sure you want to delete"
+                    title="Are you sure you want to delete ?"
                     onConfirm={() => this.handleDelete(leadId)}
+                    okText="Yes"
                   >
                     <div> Delete </div>
                   </Popconfirm>
@@ -221,6 +222,18 @@ class ProjectInfo extends Component {
                     </Link>
                   </Menu.Item>
                 )}
+                {basic && basic.type === 1 ? (
+                  <Menu.Item key={'schedule'}>
+                    <Link
+                      to={{ pathname: `/projects/${leadId}/schedules` }}
+                      className="nav-link"
+                    >
+                      Schedules
+                    </Link>
+                  </Menu.Item>
+                ) : (
+                  ``
+                )}
               </Menu>
             }
           >
@@ -261,11 +274,10 @@ class ProjectInfo extends Component {
             )}
           </Item>
           <Item label="Delegate Contact">
-            {' '}
             {basic ? basic.ContactName : null}
           </Item>
           <Item label="Start Date">
-            {formatDate(data.startDate, true, true)}{' '}
+            {formatDate(data.startDate, true, true)}
           </Item>
           <Item label="End Date">{formatDate(data.endDate, true, true)}</Item>
           {/* <Item label="Bid Date">{formatDate(data.bidDate, true, true)}</Item> */}

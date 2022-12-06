@@ -1,7 +1,7 @@
 import { Button, Checkbox, Col, Form, Modal, Row, Table, Typography, Upload } from 'antd'
-import { PlusOutlined } from "@ant-design/icons"; //Icons
+import { PlusOutlined, CheckOutlined } from "@ant-design/icons"; //Icons
 import React, { useEffect, useState } from 'react'
-import { formatCurrency, formatDate, localStore } from '../../../service/constant';
+import { formatCurrency, formatDate, formatFloat, localStore } from '../../../service/constant';
 import FormItems from '../../../components/Core/Forms/FormItems';
 import { getProjects, getUserProjects } from '../../../service/constant-Apis';
 // import { expensesData as dummyExpensesData } from '../../DummyData';
@@ -13,7 +13,6 @@ const {Text, Title} = Typography;
 const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) => {
   let editDisabled = ['AP', 'SB'].includes(visible.status)
 
-  console.log("check->", editDisabled)
   const [form] = Form.useForm();
   const [filteredExpenses, setfilteredExpenses] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -95,7 +94,7 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) =>
         ...tableSorter('id', 'number'),
       },
       {
-        title: 'TYPE',
+        title: 'Type',
         dataIndex: 'expenseTypeName',
         ...tableSorter('expenseTypeName', 'string'),
       },
@@ -106,36 +105,43 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) =>
         ...tableSorter('date', 'date'),
       },
       {
+        title: 'Project',
+        dataIndex: 'projectName', // when-api change it to [date,name] or dateName
+        ...tableSorter('projectName', 'string'),
+      },
+      {
         title: 'Amount',
         dataIndex: 'amount',
         render: (text) => formatCurrency(text),
         ...tableSorter('amount', 'number'),
       },
+      // {
+      //   title: 'Files',
+      //   dataIndex: 'files',
+      // //   sorter: {
+      // //     compare: (a, b) => a.files - b.files,
+      // //     multiple: 1,
+      // //   },
+      // render: () => (
+      //     <Text>View</Text>
+      // )
+      // },
       {
-        title: 'Files',
-        dataIndex: 'files',
-      //   sorter: {
-      //     compare: (a, b) => a.files - b.files,
-      //     multiple: 1,
-      //   },
-      render: () => (
-          <Text>View</Text>
-      )
+        title: 'Reimbursable',
+        dataIndex: 'isReimbursed',
+        ellipsis: true,
+        render: (value) => (
+          value && <CheckOutlined />
+            // <Checkbox defaultChecked={false} checked={value}  />
+        )
       },
-      {
-          title: 'i',
-          dataIndex: 'isReimbursed',
-          render: (value) => (
-              <Checkbox defaultChecked={false} checked={value}  />
-          )
-      },
-      {
-          title: 'b',
-          dataIndex: 'isBillable',
-          render: (value) => (
-              <Checkbox defaultChecked={false} checked={value}/>
-          )
-      },
+      // {
+      //     title: 'b',
+      //     dataIndex: 'isBillable',
+      //     render: (value) => (
+      //         <Checkbox defaultChecked={false} checked={value}/>
+      //     )
+      // },
   ];  
 
   useEffect(() => {
@@ -158,6 +164,7 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) =>
 
         if (adminView) {
         setfilteredExpenses(visible?.expenseSheetExpenses)
+        setSelectedRowKeys(visible?.expenseSheetExpensesIds)
       } else {
         selectedProjectExpenses(visible?.projectId)
       }
@@ -169,12 +176,14 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) =>
   const selectedProjectExpenses = (selectedProject) => {
     let projectId = selectedProject
     let codes = visible?.expenseSheetExpensesIds ?? []
-    let backupExpenses =  expenses
+    let filteredProject =  expenses
 
     // console.log("backupExpenses", backupExpenses);
-    let filteredProject = backupExpenses?.filter((ele) => {
-      return ele.projectId == projectId;
-    });
+    if (selectedProject){
+      filteredProject = expenses?.filter((ele) => {
+        return ele.projectId == projectId;
+      });
+    }
     setfilteredExpenses([...filteredProject]); 
     setSelectedRowKeys(codes)
   }
@@ -194,10 +203,14 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) =>
 
   const onFinish = (value) => {
     let { basic } = value;
-    basic.attachments = fileList.map((file, index) => {
-        return file.fileId;
-    });
-    basic.expenseSheetExpenses = selectedRowKeys
+    basic = {
+      ...basic,
+      projectId: basic.projectId ?? null,
+      expenseSheetExpenses: selectedRowKeys,
+      attachments: fileList.map((file, index) => {
+          return file.fileId;
+      })
+  }
     // basic.attachments= []
     if (visible?.id){
       editSheet(visible.id, basic)
@@ -282,7 +295,7 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) =>
     <Modal
       title={`${adminView ? "Approve" : visible === true ? "Add" : "Edit"} Expense Sheet`}
       visible={visible}
-      width={850}
+      width={900}
       onCancel={close}
       okText={"Save"}
       // adminView Prop add
@@ -308,7 +321,6 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) =>
               size={'small'}
               bordered
               className='fs-small'
-              // pagination={{pageSize: localStore().pageSize}}
               pagination={false}
               rowKey={data => data.id}
               scroll={{
@@ -319,8 +331,43 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) =>
               rowSelection={!visible.adminView && rowSelection}
               columns={columns}
               dataSource={filteredExpenses}
-              
-              // onChange={onChange} 
+              summary={(data) => {
+                let amount = 0;
+                let billableAmount = 0;
+                let reimbursedAmount = 0;
+                data.forEach((row) => {
+                  if (!visible.adminView && selectedRowKeys.includes(row.id)){
+                    // console.log(row.amount)
+                    amount += parseFloat(row.amount ?? 0);
+                    billableAmount += row.isBillable ? parseFloat(row.amount ?? 0): 0;
+                    reimbursedAmount += row.isReimbursed ? parseFloat(row.amount ?? 0): 0;
+                  }else if(visible.adminView){
+                    amount += parseFloat(row.amount ?? 0);
+                    billableAmount += row.isBillable ? parseFloat(row.amount ?? 0): 0;
+                    reimbursedAmount += row.isReimbursed ? parseFloat(row.amount ?? 0): 0;
+                  }
+                });
+                return (
+                  <Table.Summary fixed="bottom">
+                    <Table.Summary.Row>
+                      <Table.Summary.Cell index={0}></Table.Summary.Cell>
+                      <Table.Summary.Cell  index={1}>Total:</Table.Summary.Cell>
+                      <Table.Summary.Cell index={2}>
+                        {formatCurrency(amount)}
+                      </Table.Summary.Cell>
+                      {/* <Table.Summary.Cell  index={3} >Total Billable:</Table.Summary.Cell>
+                      <Table.Summary.Cell index={4}>
+                        {formatCurrency(billableAmount)}
+                      </Table.Summary.Cell> */}
+                      <Table.Summary.Cell  index={3}colSpan={2}>Total Reimbursable:</Table.Summary.Cell>
+                      <Table.Summary.Cell index={4}>
+                        {formatCurrency(reimbursedAmount)}
+                      </Table.Summary.Cell>
+                      <Table.Summary.Cell index={5}></Table.Summary.Cell>
+                    </Table.Summary.Row>
+                  </Table.Summary>
+                );
+              }}
               />
           </Col>
           <Col span={24}>

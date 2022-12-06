@@ -5,15 +5,16 @@ import React, {
   useEffect,
   useRef,
 } from 'react';
-import { Table, Row, Col, Form, Popconfirm, InputNumber } from 'antd';
+import { Table, Row, Col, Form, Popconfirm, InputNumber, Typography } from 'antd';
 import { CloseSquareFilled, CheckSquareFilled } from '@ant-design/icons'; //Icons
-import { formatFloat, localStore } from '../../service/constant';
+import { formatDate, formatFloat, localStore } from '../../service/constant';
 import {
   getLeaveBalance,
   updateLeavebalance,
 } from '../../service/leaveRequest-Apis';
 
 const EditableContext = React.createContext(null);
+const {Text} = Typography
 
 const EditableRow = ({ index, ...props }) => {
   const [form] = Form.useForm();
@@ -65,8 +66,9 @@ const EditableCell = ({
 
   if (editable) {
     childNode = editing ? (
-      <Row>
-        <Col span={10}>
+      <Row >
+        {/* <Col span={10}> */}
+        <Col >
           <Form.Item
             style={{
               margin: 0,
@@ -86,7 +88,7 @@ const EditableCell = ({
             />
           </Form.Item>
         </Col>
-        <Col style={{ margin: 'auto 0' }} span={3}>
+        <Col style={{ margin: 'auto 0' }} >
           <CloseSquareFilled
             style={{ color: 'red', fontSize: 24 }}
             onClick={() => setEditing(!editing)}
@@ -166,6 +168,7 @@ class LeaveBalance extends Component {
     this.state = {
       data: [],
       permissions: {},
+      lastUpdate: null
     };
   }
 
@@ -175,6 +178,7 @@ class LeaveBalance extends Component {
       if (res?.success) {
         this.setState({
           data: res.data,
+          lastUpdate: res.lastUpdate
         });
       }
     });
@@ -197,7 +201,7 @@ class LeaveBalance extends Component {
   };
 
   render() {
-    const { data } = this.state;
+    const { data, lastUpdate } = this.state;
     const { style } = this.props;
     const components = {
       body: {
@@ -233,6 +237,9 @@ class LeaveBalance extends Component {
             className="fs-small"
             tableLayout="fixed"
           />
+        </Col>
+        <Col>
+          <Text type="danger">Last Updated: {formatDate(lastUpdate,true,true)} </Text>
         </Col>
       </Row>
     );

@@ -27,8 +27,8 @@ class ProfitLoss extends Component {
         if (parent === 'P'){
             getProfitLoss(id, fiscalYear).then(res=>{
                 if(res.success){
-                    const {actualStatement, actualTotal, forecast, holidays} = res.data
-                    this.calculateProjectData(actualStatement, actualTotal, forecast ?? [], holidays)
+                    const {actualStatement, actualTotal, forecast, holidays, segmentsRevenue} = res.data
+                    this.calculateProjectData(actualStatement, actualTotal, forecast ?? [], segmentsRevenue,  holidays)
                 }
             })
         }else{
@@ -51,7 +51,7 @@ class ProfitLoss extends Component {
         }) 
     }
 
-    calculateProjectData = (actualStatement, actualTotal, forecast, holidays) =>{
+    calculateProjectData = (actualStatement, actualTotal, forecast, segmentsRevenue, holidays) =>{
         let { data, fiscalYear } = this.state
         const { billing, type: proType } = this.props
         let startDate = parseDate(billing.startDate)
@@ -65,23 +65,22 @@ class ProfitLoss extends Component {
         let forecastStartDate = startDate.isBefore(fiscalYear['start'], 'day') ? fiscalYear['start'] : startDate
         let forecastEndDate = endDate.isAfter(fiscalYear['end'], 'day') ? fiscalYear['end'] : endDate
         //Testing
+
        
         for (var iDate = parseDate(startDate); iDate.isSameOrBefore(endDate); iDate.add(1, 'days')) {
             if (iDate.isoWeekday() !== 6 && iDate.isoWeekday() !== 7 && !holidays[parseDate(iDate, 'M/D/YYYY')]){
                 if (holidays[parseDate(iDate, 'M/D/YYYY')]){
                     console.log (parseDate(iDate, 'M/D/YYYY'))
                 }
-                let key = parseDate(iDate, 'MMM YY')
-                
+                let key = parseDate(iDate, true, 'MMM YY')
                 if ( iDate.isSameOrAfter(forecastStartDate, 'day') && // finding Fiscal Months
-                    iDate.isSameOrBefore(forecastEndDate), 'day' ) {
+                iDate.isSameOrBefore(forecastEndDate), 'day' ) {
                     if (iDate.isSameOrAfter(parseDate(new Date()), 'month')){ 
-                        //FORCASTING Future predictions
+                        //FORCASTING Future predictionsW
                         
                         forecast.forEach((el, index) =>{
-                          
-                            if ( iDate.isBetween(parseDate(el.con_startDate), parseDate(el.con_endDate) ??  tempEndDate, 'day', '[]') &&
-                            iDate.isBetween(parseDate(el.res_startDate), parseDate(el.res_endDate)??  tempEndDate , 'day', '[]') ){
+                            if ( iDate.isBetween(parseDate(el.con_startDate), parseDate(el.con_endDate ?? tempEndDate) , 'day', '[]') &&
+                            iDate.isBetween(parseDate(el.res_startDate), parseDate(el.con_endDate ?? tempEndDate) , 'day', '[]') ){
                                 if (forecastStatement[key]){
                                     forecastStatement[key].monthTotalBuy += el.forecastBuyRateDaily
                                     forecastStatement[key].monthTotalSell += el.forecastSellRateDaily
@@ -132,14 +131,14 @@ class ProfitLoss extends Component {
                     revenueValue = actualStatement[key]?.['monthTotalSell'] ?? 0
                     //Not subtratcing actual month because it is already gets subtracted in totalRevnenue
                         //we are not doing it becuase all actual are being delete on assigning totalRevenue
-                     cos = actualStatement[key]?.['monthTotalBuy'] ?? 0
+                        cos = actualStatement[key]?.['monthTotalBuy'] ?? 0
 
                 }else if (forecastStatement[key]){ //If forcast is found
                     revenueValue = (totalRevenue - forecastStatement[key]?.['monthTotalSell']) < 0 ? totalRevenue ?? 0 :  forecastStatement[key]?.['monthTotalSell'] ?? 0
                     totalRevenue -= revenueValue // subtract this month revenuePerDay form revmonth
-
+                    
                     if (forecastStatement[key]?.['monthTotalSell'] > revenueValue){
-                            // checking total Revenue to get cos %
+                        // checking total Revenue to get cos %
                         let sellpercent = (revenueValue / forecastStatement[key]?.['monthTotalSell']) * 100
                         cos = (forecastStatement[key]?.['monthTotalBuy'] /100 )* sellpercent //to get percentage how much cos is needed to less amount sale
                     }else{
@@ -148,25 +147,25 @@ class ProfitLoss extends Component {
                 }
 
             }else if (proType === 1){ //For Project Base Project
-                revenueValue = isNaN(revenuePerDay * workDays) ? 0 : (revenuePerDay * workDays)
-                cos = actualStatement[key]?.['monthTotalBuy'] ?? forecastStatement[key]?.['monthTotalBuy']
-                
+                // revenueValue = isNaN(revenuePerDay * workDays) ? 0 : (revenuePerDay * workDays)
+                revenueValue = parseFloat(segmentsRevenue[key]??0) 
+                cos = actualStatement[key]?.['monthTotalBuy'] ?? forecastStatement[key]?.['monthTotalBuy'] ?? 0
             }
                 //if revenue amount finish before project and fiscal year endDate
 
                 
             let cm = revenueValue - cos
-            
             data[1][key] = revenueValue   //revune
-            data[2][key] = revenueValue ? cos : 0 //cos 
-            data[3][key] = revenueValue ? cm: 0 //cm
-            data[4][key] = revenueValue ? ((cm / revenueValue )*100): 0//cm percentage
+            data[2][key] = (revenueValue && cos) ? cos : 0 //cos 
+            data[3][key] = (revenueValue && cos) ? cm: 0 //cm
+            data[4][key] = (revenueValue && cos) ? ((cm / revenueValue )*100): 0//cm percentage
             
             //For Total Column 
             data[0]['total'] += data[0][key] ?? 0 //days
             data[1]['total'] += data[1][key] //SELL TOTAL WITH IN A FISCAL YEAR
             data[2]['total'] += data[2][key] //BUY TOTAL WITH IN A FISCAL YEAR
             data[3]['total'] += data[3][key] //CM
+
             // #a0df7d
         }
         //average Total cm %
@@ -237,7 +236,7 @@ class ProfitLoss extends Component {
         // const len = billing.totalMonths>0 ? billing.totalMonths : 0
         const len = 16
         let array = []
-
+        console.log(data)
         for (
             var iMonth = parseDate(fiscalYear['start']) ; // defination
             iMonth.isSameOrBefore(parseDate(fiscalYear['end']));  //condition
@@ -246,6 +245,7 @@ class ProfitLoss extends Component {
             let key = parseDate(iMonth, 'MMM YY')
                         //project can have green column if we are checking opportunity P&L there won't be actual
             let color = parent === 'P' ? iMonth.isSameOrAfter(parseDate(new Date()), 'month') ? '#ff7875' : '#a0df7d' : '#ff7875'
+            color = data[0][key]? color: ''
             array.push(
                 {
                     title: key,
@@ -254,24 +254,24 @@ class ProfitLoss extends Component {
                     key: key,
                     onCell: () => ({
                         style: {
-                        backgroundColor: data[1][key]? color: ''
+                        backgroundColor: color
                         }
                     }),
                     onHeaderCell: () => ({
                         style: {
-                        backgroundColor: data[1][key]? color: ''
+                        backgroundColor: color
                         }
                     }),
                     render: (record, records) =>{
-                        if (record){
+                        if (record && !isNaN(data[0][key])){
                             if (records.key === 'W') {
                                 return <b>{record} </b>
                             }else if (records.key === 'R') {
-                                return ` ${formatCurrency(formatFloat(record))}`
+                                return ` ${formatCurrency(record)}`
                             }else if (records.key === 'C'){
-                                return ` ${formatCurrency(formatFloat(record))}`
+                                return ` ${formatCurrency(record)}`
                             }else if (records.key === '$'){
-                                return <b>{` ${formatCurrency(formatFloat(record))}`}</b>
+                                return <b>{` ${formatCurrency(record)}`}</b>
                             }else if (records.key === '%'){
                                 return <b>{` ${formatFloat(record)} %`}</b>
                             }
@@ -307,11 +307,11 @@ class ProfitLoss extends Component {
                         if (record.key === 'W') {
                             return <b>{text} </b>
                         }else if (record.key === 'R') {
-                            return ` ${formatCurrency(formatFloat(text))}`
+                            return ` ${formatCurrency(text)}`
                         }else if (record.key === 'C'){
-                            return ` ${formatCurrency(formatFloat(text))}`
+                            return ` ${formatCurrency(text)}`
                         }else if (record.key === '$'){
-                            return <b>{` ${formatCurrency(formatFloat(text))}`}</b>
+                            return <b>{` ${formatCurrency(text)}`}</b>
                         }else if (record.key === '%'){
                             return <b>{` ${formatFloat(text)} %`}</b>
                         }

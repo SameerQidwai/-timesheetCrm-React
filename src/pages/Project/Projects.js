@@ -42,6 +42,7 @@ import {
   tableTitleFilter,
 } from '../../components/Core/Table/TableFilter';
 import { generalDelete } from "../../service/delete-Api's";
+import { Tag_s } from '../../components/Core/Custom/Index';
 const { Title } = Typography;
 
 class Projects extends Component {
@@ -55,7 +56,7 @@ class Projects extends Component {
         key: 'id',
         width: '1%',
         render: (record) => `00${record}`,
-        ...tableSorter('id', 'number', true),
+        ...tableSorter('id', 'number'),
       },
       {
         title: 'Title',
@@ -126,10 +127,14 @@ class Projects extends Component {
         dataIndex: 'phase',
         key: 'phase',
         width: '1%',
-        render: (record) => (
-          <Tag color={!record ? 'red' : 'green'}>{O_PHASE[record]}</Tag>
+        render: (text) => (
+          <Tag_s
+            text={`${text}`}
+            objName="O_PHASE"
+            colorName="O_PHASE_COLORS"
+          />
         ),
-        ...tableSorter('phase', 'string'),
+        ...tableSorter('phase', 'string', true, true),
       },
       {
         title: '...',
@@ -149,8 +154,9 @@ class Projects extends Component {
                   className="pop-confirm-menu"
                 >
                   <Popconfirm
-                    title="Are you sure you want to delete"
+                    title="Are you sure you want to delete ?"
                     onConfirm={() => this.handleDelete(record.id, index)}
+                    okText="Yes"
                   >
                     <div> Delete </div>
                   </Popconfirm>
@@ -209,6 +215,18 @@ class Projects extends Component {
                     View
                   </Link>
                 </Menu.Item>
+                {record.type === 1 ? (
+                  <Menu.Item key={'schedule'}>
+                    <Link
+                      to={{ pathname: `/projects/${record.id}/schedules` }}
+                      className="nav-link"
+                    >
+                      Schedules
+                    </Link>
+                  </Menu.Item>
+                ) : (
+                  ``
+                )}
               </Menu>
             }
           >

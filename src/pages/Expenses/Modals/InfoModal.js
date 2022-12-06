@@ -32,8 +32,8 @@ const InfoModal = ({ visible, close, callBack }) => {
             // itemStyle:{marginBottom:'10px'},
         },
         {
-            Placeholder: "Date",
-            rangeMin: true,
+            Placeholder: "Project",
+            // rangeMin: true,
             fieldCol: 12,
             size: "small",
             type: "Text",
@@ -53,6 +53,33 @@ const InfoModal = ({ visible, close, callBack }) => {
         {
             object: "basic",
             fieldCol: 12,
+            key: "projectId", 
+            disabled: visible.isInSheet,
+            size: "small",
+            initialValue: null,
+            // rules:[{ required: true, message: 'Project is Required' }],
+            data: [],
+            type: "Select",
+        },
+        {
+            Placeholder: "Date",
+            rangeMin: true,
+            fieldCol: 12,
+            size: "small",
+            type: "Text",
+            // itemStyle:{marginBottom:'10px'},
+        },
+        {
+            Placeholder: "Amount",
+            rangeMin: true,
+            fieldCol: 12,
+            size: "small",
+            type: "Text",
+            // itemStyle:{marginBottom:'10px'},
+        },
+        {
+            object: "basic",
+            fieldCol: 12,
             key: "date", // when-api change it to projectId
             disabled: editDisabled,
             size: "small",
@@ -61,14 +88,6 @@ const InfoModal = ({ visible, close, callBack }) => {
             // customValue: (value, option) => option, // when-api remove this
             type: "DatePicker",
             fieldStyle:{width: '100%'}
-        },
-        {
-            Placeholder: "Amount",
-            rangeMin: true,
-            fieldCol: 24,
-            size: "small",
-            type: "Text",
-            // itemStyle:{marginBottom:'10px'},
         },
         {
             object: "basic",
@@ -88,7 +107,8 @@ const InfoModal = ({ visible, close, callBack }) => {
             size: "small",
             initialValue: false,
             type: "Checkbox",
-            valuePropName: "checked"
+            valuePropName: "checked",
+            itemStyle:{margin:'10px 0px'},
             // name:"reimbursed",
             // value:"reimbursed"
             // checked: []
@@ -96,51 +116,33 @@ const InfoModal = ({ visible, close, callBack }) => {
         {
             Placeholder: "Reimbursable",
             // rangeMin: true,
-            fieldCol: 5,
+            fieldCol: 10,
             size: "small",
             type: "Text",
-            // itemStyle:{marginBottom:'10px'},
+            itemStyle:{margin:'10px 0px'},
         },
-        {
-            object: "basic",
-            fieldCol: 1,
-            key: "isBillable",
-            initialValue: false,
-            disabled: editDisabled,
-            size: "small",
-            type: "Checkbox",
-            valuePropName: "checked"
-            // name:"billable",
-            // value: "billable"
-            // checked: []
-        },
-        {
-            Placeholder: "Billable",
-            // rangeMin: true,
-            fieldCol: 5,
-            size: "small",
-            type: "Text",
-            // itemStyle:{marginBottom:'10px'},
-        },
-        {
-            Placeholder: "Project",
-            // rangeMin: true,
-            fieldCol: 24,
-            size: "small",
-            type: "Text",
-            // itemStyle:{marginBottom:'10px'},
-        },
-        {
-            object: "basic",
-            fieldCol: 12,
-            key: "projectId", 
-            disabled: visible.isInSheet,
-            size: "small",
-            initialValue: null,
-            // rules:[{ required: true, message: 'Project is Required' }],
-            data: [],
-            type: "Select",
-        },
+        // {
+        //     object: "basic",
+        //     fieldCol: 1,
+        //     key: "isBillable",
+        //     initialValue: false,
+        //     disabled: editDisabled,
+        //     size: "small",
+        //     type: "Checkbox",
+        //     valuePropName: "checked",
+        //     itemStyle:{display : 'none' }, // hide because they ask to hide,
+        //     // name:"billable", //not sure what to do about it for now
+        //     // value: "billable"
+        //     // checked: []
+        // },
+        // {
+        //     Placeholder: "Billable",
+        //     // rangeMin: true,
+        //     fieldCol: 5,
+        //     size: "small",
+        //     type: "Text",
+        //     itemStyle:{display : 'none' },
+        // },
         {
             Placeholder: "Notes",
             // rangeMin: true,
@@ -182,9 +184,14 @@ const InfoModal = ({ visible, close, callBack }) => {
     const onFinish = (data) => {
 
         let { basic } = data;
-        basic.attachments = fileList.map((file, index) => {
-            return file.fileId;
-        });
+        basic = {
+            ...basic,
+            isBillable: false,
+            projectId: basic.projectId ?? null,
+            attachments: fileList.map((file, index) => {
+                return file.fileId;
+            })
+        }
         if (visible === true) {
             addExpense(basic).then((res) => {
                 if (res.success) {
@@ -194,8 +201,6 @@ const InfoModal = ({ visible, close, callBack }) => {
                 }
             })
         } else {
-            //for some reason projectId key was being removed if it is undefined
-            basic.projectId = basic.projectId ?? null
             editExpense(visible.id,basic).then((res) => { 
                 if (res.success) {
                     callBack(res.data, visible?.index);
@@ -212,7 +217,7 @@ const InfoModal = ({ visible, close, callBack }) => {
 		setPermission(EXPENSES);		
         Promise.all([getUserProjects(id, 'O', 0), getExpenseTypeList(), visible !== true && getAttachments('EXP', visible.id)]).then((res) => {
             let basic = basicFields
-            basic[11].data = res[0].success ? res[0].data : []
+            basic[3].data = res[0].success ? res[0].data : []
             basic[2].data = res[1].success ? res[1].data : []
             setBasicFields([...basic]); 
             setFileList(res[2]?.success ? res[2].fileList : [])

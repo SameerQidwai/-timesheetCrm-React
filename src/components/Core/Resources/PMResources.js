@@ -6,9 +6,11 @@ import {
   formatDate,
   formatCurrency,
   localStore,
+  formatFloat,
 } from '../../../service/constant';
 import { tableSorter } from '../Table/TableFilter';
 import { getHierarchy } from '../../../service/projects';
+import { Tag_s } from '../Custom/Index';
 
 const milestoneColmuns = [
   {
@@ -46,10 +48,8 @@ const milestoneColmuns = [
     dataIndex: 'isApproved',
     key: 'isApproved',
     align: 'right',
-    render: (record) => (
-      <Tag color={record ? 'green' : 'volcano'} key={record}>
-        {record ? 'TRUE' : 'FALSE'}
-      </Tag>
+    render: (status) => (
+      <Tag_s text={status?? 'CM'}/>
     ),
   },
   // {
@@ -112,7 +112,7 @@ const positionColumns = [
     title: 'Billable Hours',
     dataIndex: 'billableHours',
     key: 'billableHours',
-    sorter: (a, b) => a.billableHours - b.billableHours,
+    render: (text)=> formatFloat(text),
     ...tableSorter('billableHours', 'number'),
   },
   {
@@ -140,7 +140,7 @@ const positionColumns = [
     title: 'CM %',
     dataIndex: 'cmPercent',
     key: 'cmPercent',
-    render: (record) => `${record} %`,
+    render: (text) => `${formatFloat(text)} %`,
     ...tableSorter('cmPercent', 'number'),
   },
 ];

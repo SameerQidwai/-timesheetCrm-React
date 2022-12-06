@@ -100,21 +100,9 @@ class Contact extends Component {
         title: 'Status',
         dataIndex: 'employementStatus',
         key: 'employementStatus',
-        render:(text, record)=>{
-          let endPoint =
-            text === 'Employee'
-              ? 'Employees'
-              : text === 'Sub Contractor'
-              ? 'sub-contractor'
-              : 'contacts';
-              
-          return endPoint !== 'contacts'? <Link
-            to={{ pathname: `/${endPoint}/${record?.employee?.id}/info` }}
-            className="nav-link"
-          >
-            {text}
-          </Link> : text
-        },
+        render:(text, record)=>(
+          employementLink(text, record?.employee?.id)
+        ),
         ...tableSorter('employementStatus', 'string')
       },
       {
@@ -133,8 +121,9 @@ class Contact extends Component {
                   className="pop-confirm-menu"
                 >
                   <Popconfirm
-                    title="Are you sure you want to delete"
+                    title="Are you sure you want to delete ?"
                     onConfirm={() => this.handleDelete(record.id, index)}
+                    okText="Yes"
                   >
                     <div> Delete </div>
                   </Popconfirm>
@@ -239,6 +228,14 @@ class Contact extends Component {
           showInColumn: false,
           disabled: false,
         },
+        clearanceLevel: {
+          type: 'none',
+          multi: true,
+          value: [],
+          label: 'clearanceLevel',
+          showInColumn: false,
+          disabled: false,
+        },
         association: {
           type: 'none',
           multi: true,
@@ -340,8 +337,30 @@ class Contact extends Component {
           // data: ,
         },
         {
-          Placeholder: 'Skill',
+          Placeholder: 'Clearance Level',
+          fieldCol: 24,
+          size: 'small',
+          type: 'Text',
+        },
+        {
+          object: 'obj',
           fieldCol: 12,
+          key: 'clearanceLevel',
+          size: 'small',
+          mode: 'multiple',
+          customValue: (value, option) => option,
+          data: [
+            { label: 'BV - Baseline Vetting', value: 'BV' },
+            { label: 'NV1 - Negative Vetting 1', value: 'NV1' },
+            { label: 'NV2 - Negative Vetting 2', value: 'NV2' },
+            { label: 'PV - Positive Vetting', value: 'PV' },
+            { label: 'No clearance', value: 'NC' },
+          ],
+          type: 'Select',
+        },
+        {
+          Placeholder: 'Skill',
+          fieldCol: 24,
           size: 'small',
           type: 'Text',
         },
@@ -437,17 +456,18 @@ class Contact extends Component {
   //Title bar filter for evey Coulmn showing
   generalFilter = (value) => {
     const { data } = this.state;
+    value = value.replace(/\s+/g, '').toLowerCase()
     if (value) {
       this.setState({
         filterData: data.filter((el) => {
+          let firstName = `${el.firstName ? el.firstName : ''} ${el.lastName ? el.lastName : ''}`
+          let lastName = `${el.lastName ? el.lastName : ''} ${el.firstName ? el.firstName : ''}`
           return (
             `00${el.id.toString()}`.includes(value) ||
-            (el.firstName &&
-              el.firstName.toLowerCase().includes(value.toLowerCase())) ||
-            (el.lastName &&
-              el.lastName.toLowerCase().includes(value.toLowerCase())) ||
+            (firstName.toLowerCase().replace(/\s+/g, '').includes(value.toLowerCase())) ||
+            (lastName.toLowerCase().replace(/\s+/g, '').includes(value.toLowerCase())) ||
             (el.email &&
-              el.email.toLowerCase().includes(value.toLowerCase())) ||
+              el.email.toLowerCase().replace(/\s+/g, '').includes(value.toLowerCase())) ||
             (el.gender &&
               GENDER[el.gender].toLowerCase().includes(value.toLowerCase())) ||
             (el.phoneNumber && el.phoneNumber.startsWith(value))
@@ -480,6 +500,7 @@ class Contact extends Component {
       search['stateId']['value'].length > 0 ||
       search['address']['value'] ||
       search['skill']['value'].length > 0 ||
+      search['clearanceLevel']['value'].length > 0 ||
       search['association']['value'].length > 0
     ) {
 
@@ -521,6 +542,16 @@ class Contact extends Component {
             ).some((s) =>
               (search['stateId']['value'].length > 0
                 ? [el.stateId]
+                : [',']
+              ).includes(s.value)
+            ) &&
+
+            (search['clearanceLevel']['value'].length > 0
+              ? search['clearanceLevel']['value']
+              : [{ value: ',' }]
+            ).some((s) =>
+              (search['clearanceLevel']['value'].length > 0
+                ? [el.clearanceLevel]
                 : [',']
               ).includes(s.value)
             ) &&
@@ -567,8 +598,8 @@ class Contact extends Component {
       .then((res) => {
         const { filterFields } = this.state;
         filterFields[11].data = res[0].success ? res[0].data : [];
-        filterFields[13].data = res[1].success ? res[1].data : [];
-        filterFields[15].data = res[2].success ? res[2].data : [];
+        filterFields[15].data = res[1].success ? res[1].data : [];
+        filterFields[17].data = res[2].success ? res[2].data : [];
         this.setState({
           filterFields,
         });
@@ -667,3 +698,26 @@ class Contact extends Component {
 }
 
 export default Contact;
+
+
+//---->HELPER <-----
+
+function employementLink(status, employeeId){
+  let endPoint =
+    status === 'Employee'
+      ? 'Employees'
+      : status === 'Sub Contractor'
+      ? 'sub-contractors'
+      : 'contacts';
+
+  return employeeId ? (
+    <Link
+      to={{ pathname: `/${endPoint}/${employeeId}/info` }}
+      className="nav-link"
+    >
+      {status}
+    </Link>
+  ) : (
+    status
+  );
+}

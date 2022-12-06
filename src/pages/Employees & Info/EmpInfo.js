@@ -31,6 +31,7 @@ import {
 import AuthError from '../../components/Core/AuthError';
 import EmployeeCalculator from '../../components/Core/Cost Calculator/EmployeeCalculator';
 import { generalDelete } from "../../service/delete-Api's";
+import Opportunities from '../../components/Core/Opportunities';
 
 const { Item } = Descriptions;
 const { TabPane } = Tabs;
@@ -117,8 +118,9 @@ class OrgInfo extends Component {
                   className="pop-confirm-menu"
                 >
                   <Popconfirm
-                    title="Are you sure you want to delete"
+                    title="Are you sure you want to delete ?"
                     onConfirm={() => this.handleDelete(emp)}
+                    okText="Yes"
                   >
                     <div> Delete </div>
                   </Popconfirm>
@@ -202,6 +204,12 @@ class OrgInfo extends Component {
             style={{ marginTop: '50px' }}
             // defaultActiveKey="cost-calculator"
           >
+            <TabPane tab="Opportunities" key="leads">
+              <Opportunities
+                  targetId={emp}
+                  customUrl={`helpers/work?type=O&employee=${emp}`}
+              />
+            </TabPane>
             <TabPane tab="Project" key="project">
               <Projects
                 targetId={emp}

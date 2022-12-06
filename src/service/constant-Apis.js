@@ -444,6 +444,30 @@ export const getManageProjects = (resourcePermission) =>{
     });
 }
 
+export const getHolidays = (id) => {
+    return axios
+        .get(`${Api}/calendar-holidays` + `?calendarId=${id}`, {headers:headers()})
+        .then((res) => {
+            let { success, data, message } = res.data;
+            jwtExpired(message)
+            if (success) {
+                data = data.map((el) => {
+                    return el.date 
+                });
+                setToken(res?.headers?.authorization)
+            }
+            return { success: success, data: data, };
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                success: false,
+                message: err.message,
+            };
+        });
+};
+
+
 export const buyCost = (url, id, searchIn) => {
     return axios
         .get(`${Api}/${url}/${id}/buy-cost?searchIn=${searchIn}`, {headers:headers()})

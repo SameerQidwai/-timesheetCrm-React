@@ -59,7 +59,6 @@ function ForgotPassword(props) {
               {...{ wrapperCol: 24 }}
               initialValues={{ remember: true }}
               onFinish={forgotPasswordFunc}
-              // onFinishFailed={onFinishFailed}
               layout="vertical"
             >
               <Form.Item

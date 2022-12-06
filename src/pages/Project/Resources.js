@@ -26,6 +26,7 @@ import {
   formatCurrency,
   localStore,
   formatPercent,
+  formatFloat,
 } from '../../service/constant';
 import {
   Filtertags,
@@ -37,6 +38,7 @@ import { getPanelSkills } from '../../service/constant-Apis';
 import { generalDelete } from "../../service/delete-Api's";
 import { getMilestone } from '../../service/Milestone-Apis';
 import AuthError from '../../components/Core/AuthError';
+import { Tag_s } from '../../components/Core/Custom/Index';
 
 const { Item } = Descriptions;
 
@@ -79,7 +81,7 @@ class Resources extends Component {
         title: 'Billable Hours',
         dataIndex: 'billableHours',
         key: 'billableHours',
-        sorter: (a, b) => a.billableHours - b.billableHours,
+        render: (text)=> formatFloat(text),
         ...tableSorter('billableHours', 'number'),
       },
       {
@@ -110,7 +112,7 @@ class Resources extends Component {
         title: 'CM %',
         dataIndex: ['opportunityResourceAllocations', '0', 'cmPercent'],
         key: 'opportunityResourceAllocationsPercent',
-        render: (record) => `${record} %`,
+        render: (record) => `${formatFloat(record)} %`,
         ...tableSorter('opportunityResourceAllocations.0.cmPercent', 'number'),
       },
       {
@@ -129,8 +131,9 @@ class Resources extends Component {
                   className="pop-confirm-menu"
                 >
                   <Popconfirm
-                    title="Are you sure you want to delete"
+                    title="Are you sure you want to delete ?"
                     onConfirm={() => this.handleDelete(record.id, index)}
+                    okText="Yes"
                   >
                     <div> Delete </div>
                   </Popconfirm>
@@ -613,7 +616,7 @@ class Resources extends Component {
             </Item>
             <Item label="Progress">{mileDesc.progress} %</Item>
             <Item label="Approved">
-              {mileDesc.isApproved ? 'True' : 'False'}
+              <Tag_s text={mileDesc.isApproved ?? 'CM'}/>
             </Item>
           </Descriptions>
         )}

@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Checkbox, Col, Dropdown, Menu, Popconfirm, Popover, Row, Table, Typography, Upload } from 'antd';
-import { SettingOutlined, PlusSquareOutlined, } from '@ant-design/icons'; //Icons
+import { SettingOutlined, PlusSquareOutlined, CheckOutlined} from '@ant-design/icons'; //Icons
 import InfoModal from './Modals/InfoModal';
 import { Api, formatCurrency, formatDate, localStore } from '../../service/constant';
 import { delExpense, getListOfExpenses } from '../../service/expense-Apis';
 import { generalDelete } from "../../service/delete-Api's";
-import { tableSorter } from '../../components/Core/Table/TableFilter';
+import { tableSorter, tableTitleFilter } from '../../components/Core/Table/TableFilter';
   
 const {Text, Title} = Typography;
 const Expense = (props) => {
 
     
   const [openModal, setOpenModal] = useState(false);
-  const [expenseData, setExpenseData] = useState([]);
+  const [expenseData, setExpenseData] = useState({data:[], filtered: []});
 	const [permission, setPermission] = useState({});
     
   const columns = [
@@ -72,21 +72,25 @@ const Expense = (props) => {
     //   }
     // },
     {
-      title: 'i',
+      title: 'Reimbursable',
       dataIndex: 'isReimbursed',
       align: 'center',
+      width: '1%',
       render: (value) => (
-        <Checkbox defaultChecked={false} checked={value} />
-      )
+        value && <CheckOutlined />
+        // <Checkbox defaultChecked={false} checked={value} />
+      ),
+      ...tableSorter(`isReimbursed`, 'string'),
     },
-    {
-      title: 'b',
-      dataIndex: 'isBillable',
-      align: 'center',
-      render: (value) => (
-        <Checkbox defaultChecked={false} checked={value} />
-      )
-    },
+    // {
+    //   title: 'b',
+    //   dataIndex: 'isBillable',
+    //   align: 'center',
+    //   render: (value) => (
+    //     <Checkbox defaultChecked={false} checked={value} />
+    //   ),
+    //   ...tableSorter(`isBillable`, 'string'),
+    // },
     {
       title: '...',
       key: 'action',
@@ -105,8 +109,9 @@ const Expense = (props) => {
               >
                 <Popconfirm
                   disabled={record.isInSheet}
-                  title="Are you sure you want to delete"
+                  title="Are you sure you want to delete ?"
                   onConfirm={() => handleDelete(record.id, index)}
+                  okText="Yes"
                 >
                   <div> Delete </div>
                 </Popconfirm>
@@ -138,7 +143,7 @@ const Expense = (props) => {
   const getData = () => {
     getListOfExpenses().then((res) => {
       if(res?.success){
-        setExpenseData(res?.data?? []);
+        setExpenseData({data: res?.data?? [], filtered: res?.data?? []});
       }
     })
   }
@@ -150,15 +155,18 @@ const Expense = (props) => {
 		setPermission(EXPENSES);		
   } 
   
-  const callBack = (data, index) => {
-    let exp = expenseData;
+  const callBack = (rowData, index) => {
+    let {data, filtered} = expenseData;
     if (index >= 0) {
-      let findIndex = expenseData.findIndex(el=> el.id === data.id)
-      exp[findIndex] = data;
+      let findIndex = data.findIndex(el=> el.id === rowData.id)
+      let findFilteredIndex = filtered.findIndex(el=> el.id === rowData.id)
+      data[findIndex] = rowData;
+      filtered[findFilteredIndex] = rowData;
     } else {
-      exp = [...expenseData, data]
+      data = [...data, rowData]
+      filtered = [...filtered, rowData]
     }
-    setExpenseData([...exp]);
+    setExpenseData({data: [...data], filtered: [...filtered]});
     setOpenModal(false);
   }
       
@@ -167,15 +175,47 @@ const Expense = (props) => {
   }
 
   const handleDelete = (id, index) => {
+    let {data, filtered} =  expenseData
     const url = '/expenses';
     const { history } = props;
-    generalDelete(history, url, id, index, expenseData).then((res) => {
+    generalDelete(history, url, id, index, filtered, data).then((res) => {
       if (res.success) {
-        setExpenseData([...res.filterData]);
+        setExpenseData({filtered: [...res.filterData], data: [...res.data]});
       }
     });
     
 	}
+
+  const generalFilter = (value) => {
+    if (value) {
+      value = value.replace(/\s+/g, '').toLowerCase()
+      setExpenseData(prev => ({
+        ...prev,
+        filtered: prev.data.filter((el) => {
+          return (
+            `00${el.id.toString().replace(/\s+/g, '')}`.includes(value) ||
+            (el.expenseTypeName &&
+              el.expenseTypeName.toLowerCase().replace(/\s+/g, '').includes(value)) ||
+            (el.projectName &&
+              el.projectName.toLowerCase().replace(/\s+/g, '').includes(value)) ||
+            (el.amount &&
+              `${formatCurrency(el.amount)}`
+                .toLowerCase().replace(/\s+/g, '')
+                .includes(value)) ||
+            (el.date &&
+              `${formatDate(el.date, true, true)}`
+                .toLowerCase().replace(/\s+/g, '')
+                .includes(value)) 
+            );
+        }),
+      }));
+    } else {
+      setExpenseData(prev => ({
+        ...prev,
+        filtered: prev.data,
+      }));
+    }
+  };
   
   return (
     <>
@@ -197,13 +237,14 @@ const Expense = (props) => {
       </Col>  
       <Col span={24}>
         <Table
+          title={() => tableTitleFilter(5, generalFilter)}
           size={'small'}
           bordered
           className='fs-small'
           pagination={{pageSize: localStore().pageSize}}
           rowKey={data=> data.id}
           columns={columns}
-          dataSource={expenseData}
+          dataSource={expenseData?.filtered?? []}
           />
         </Col>
     </Row>

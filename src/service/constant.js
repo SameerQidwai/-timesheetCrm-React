@@ -1,14 +1,14 @@
 import moment from 'moment';
 import { message as messageAlert } from 'antd';
-  // export const Api = 'http://localhost:3301/api/v1';
+// export const Api = 'http://localhost:3301/api/v1';
 
 // export const Api = "http://onelmcrm.gaamatech.com:8000/api/v1";
 // export const Api = "http://192.168.0.243:3000/api/v1"; // Shahzaib/
 // export const Api = "http://192.168.43.207:3000/api/v1"; // new Shahzaib/
 // export const Api = "https://a067-111-88-150-124.ngrok.io/api/v1"; // Shahzaib/ tunnel
-export const Api = 'http://192.168.0.147:3301/api/v1'; // Me
+// export const Api = 'http://192.168.0.147:3301/api/v1'; // Me
 
-// export const Api = 'http://54.91.49.138:8000/api/v1'; //Test
+export const Api = 'http://54.91.49.138:8000/api/v1'; //Test
 // export const Api = 'http://54.174.229.28:8000/api/v1'; //Demo...
 
 // export const Api = "http://192.168.0.110:3301/api/v1"; // TrunRajPal Home
@@ -22,6 +22,7 @@ export const O_STAGE = {
   BS: 'Bid Submitted',
   BD: 'Bid Development',
 };
+
 export const O_STATUS = {
   O: 'Open',
   L: 'Lost',
@@ -30,7 +31,9 @@ export const O_STATUS = {
   DNP: 'Did Not Proceed',
   C: 'Completed',
 };
-export const O_PHASE = { false: 'Close', true: 'Open' };
+
+export const O_PHASE = { false: 'Closed', true: 'Open' };
+export const O_PHASE_COLORS = { false: 'red', true: 'green' };
 export const R_STATUS = {
   CM: 'Completed',
   AP: 'Approved',
@@ -38,9 +41,13 @@ export const R_STATUS = {
   R: 'Rejected',
   RJ: 'Rejected',
 }; //Request Status
+
 export const STATUS_COLOR = { CM: 'geekblue', AP: 'green', SB: 'cyan', RJ: 'red', R: 'red' }; //Request Status
+
 export const O_TYPE = { 1: 'Milestone', 2: 'Time' };
+
 export const JOB_TYPE = { 1: 'Casual', 2: 'Part Time', 3: 'Full Time' };
+
 export const DURATION = {
   1: 'Hourly',
   2: 'Daily',
@@ -48,26 +55,60 @@ export const DURATION = {
   4: 'Fortnightly',
   5: 'Monthly',
 };
+
 export const GENDER = { M: 'Male', F: 'Female', O: 'Other' };
+
 export const STATES = {
   'Australian Capital Territory': 'ACT',
   'New South Wales': 'NSW',
-  'Victoria': 'VIC',
-  'Queensland': 'QLD',
+  Victoria: 'VIC',
+  Queensland: 'QLD',
   'South Australia': 'SA',
   'Western Australia': 'WA',
   'Northern Territory': 'NT',
-  'Tasmania': 'TSA',
+  Tasmania: 'TSA',
 };
 
-export const formatCurrency = (amount) => {
+export const toTruncate = (num, fixed) => { //not using as for now using INTL method
+  if (num && !isNaN(num)){
+      return num.toString().match(new RegExp('^-?\\d+(?:\.\\d{0,' + (fixed || -1) + '})?'))?.[0] || '0.00'
+  }
+  return '0.00'
+}
+
+export const formatCurrency = (amount, fixed) => { 
   //console.log('=== === === formatCurrency === === ===');
-  var formatter = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  });
-  return formatter.format(amount).replace(/^(\D+)/, '$1 ');
+  if (!isNaN(amount)) {
+    var formatter = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      maximumFractionDigits: fixed??2, 
+      roundingMode: 'trunc'
+    });
+    return formatter.format(amount).replace(/^(\D+)/, '$1 ')
+  }
+  // amount = toTruncate(amount, 2)
+  return  '$ 0.00' ;
 }; //end
+
+// export const formatFloat = (number, fixed, round) => { //not using as for now using INTL method
+//   if (round){
+//     return !isNaN(parseFloat(number)) ? parseFloat(number).toFixed(2) : '0.00';
+//   }
+//   return toTruncate(number, fixed || 2 )
+// };
+
+export const formatFloat = (number, fixed, round)=>{
+  if (number && !isNaN(number)){
+    var formatter = new Intl.NumberFormat('en-US', {
+      maximumFractionDigits: fixed??2, 
+      roundingMode: round ?? 'trunc'
+    });  
+    return formatter.format(number)
+  }
+  return '0.00' 
+}
+
 
 // export const formatDate = (date, format) =>{
 //   // return date && moment(date).format(format ??'ddd DD MMM yyyy')
@@ -99,10 +140,6 @@ export const formatDate = (date, string, format) => {
 //   return date && moment.utc(date)
 // }
 
-export const formatFloat = (number) => {
-  return !isNaN(parseFloat(number)) ? parseFloat(number).toFixed(2) : '0.00';
-};
-
 // Login and Api's
 
 export const setToken = (token) => {
@@ -120,6 +157,22 @@ export const localStore = () => {
   }
   return archive;
 };
+
+// helper gunction will be using this for permissions and will change everywhere
+export const getModulePermissions = (module) =>{
+  let { id, permissions } = localStore() 
+  const { [module]: modulePermission } = JSON.parse(permissions)
+  let anyPermissions = {}
+  Object.entries(modulePermission).map( ([actionKey, action]) => {
+    for (const [roleKey, role] of Object.entries(action)) {
+      anyPermissions[actionKey] = role
+        if (role){
+            break;
+        }
+      }
+  });
+  return {anyPermissions, modulePermission, userLoginId: parseInt(id)}
+}
 
 export const jwtExpired = (message) => {
   // Authentication Expired or Invalid
@@ -217,8 +270,8 @@ export const getFiscalYear = (request) => {
 
 export const dateRangeAfter = (current, eDate, pDates) => {
   if (current) {
-    const startDate = pDates?.startDate ?? moment.subtract(10, 'years');
-    const endDate = pDates?.endDate ?? moment.add(10, 'years');
+    const startDate = pDates?.startDate ?? moment().subtract(10, 'years');
+    const endDate = pDates?.endDate ?? moment().add(10, 'years');
     //disable after                                     // disable Before, // disable After
     return (
       (eDate && current >= eDate) ||
@@ -229,8 +282,8 @@ export const dateRangeAfter = (current, eDate, pDates) => {
 
 export const dateRangeBefore = (current, sDate, pDates) => {
   if (current) {
-    const startDate = pDates?.startDate ?? moment.subtract(10, 'years');
-    const endDate = pDates?.endDate ?? moment.add(10, 'years');
+    const startDate = pDates?.startDate ?? moment().subtract(10, 'years');
+    const endDate = pDates?.endDate ?? moment().add(10, 'years');
     //disable Before                                      // disable Before, // disable After
     return (
       (sDate && current <= sDate) ||
@@ -244,4 +297,11 @@ export const sorting = (data, key) => {
     (a?.[key]?.toLowerCase() ?? '').localeCompare(b?.[key]?.toLowerCase() ?? '')
   );
   return sortData;
+};
+
+// for regex
+export const isPhone = (phoneNumber) => {
+  const cleanedPhoneNumber = phoneNumber.replace(/-|\s/g, ''); // Remove spaces and hyphens before performing test
+  const pattern = new RegExp('^(?:\\+?(61))? ?(?:\\((?=.*\\)))?(0?[2-57-8])\\)? ?(\\d\\d(?:[- ](?=\\d{3})|(?!\\d\\d[- ]?\\d[- ]))\\d\\d[- ]?\\d[- ]?\\d{3})$');
+  return pattern.test(cleanedPhoneNumber);
 };

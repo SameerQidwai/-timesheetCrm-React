@@ -5,10 +5,11 @@ import { getPdf } from '../../../service/timesheet';
 import '../../styles/pdf.css'
 // import logoImage from './icons/onelm.png'
 const Item = Descriptions
+const { Text } = Typography
 
 const TimeSheetPDF = (props) => {
     const componentRef = useRef();
-
+    
     const [data, setData] = useState([])
     const [details, setDetail] = useState({})
     const column = [
@@ -68,7 +69,8 @@ const TimeSheetPDF = (props) => {
             dataIndex: 'notes',
             key: 'notes',
             align: 'center',
-            render: (value)=> value && <Typography.Text ellipsis>{value}</Typography.Text>
+            // width: 10,
+            render: (value)=> ellipsis(value, 65)
         }
     ]
     
@@ -106,19 +108,19 @@ const TimeSheetPDF = (props) => {
             {/* style={{marginLeft:10,marginRight:10}} */}
             <div ref={componentRef}  style={{margin:'2mm 10mm 0mm 10mm', size: 'A4'   }}>
                 {data.map((details, index) => {
-                    return <div key={index}>
-                        <div className='sensitive'><p >Sensitive: Personal (after first entry)</p></div>
+                    return <div key={index} style={{marginTop: 20}}>
+                        {/* <div className='sensitive'><p >I certify that the below entries are a true record of attendance.</p></div> */}
                             <Row justify="space-between" align="middle" >
                                 <Col ><Typography.Title level={2} style={{margin: 0}}> Timesheet </Typography.Title></Col>
                                 <Col style={{ width: '60%', textAlign: 'right'}}><img src={'/z-cp-logo.png'} width={200} /></Col>
                             </Row>                                                      {/* <!--Name__Logo-->*/}
                             <Row>
-                                {details &&<Descriptions column={2} bordered size={"small"} style={{margin:'15px 0px'}} className="describe">
+                                {details &&<Descriptions column={2} bordered size={"small"} style={{margin:'15px 0px', width: '100%'}} className="describe">
                                     <Item label="Company" > {details.company}</Item>
                                     <Item label="Employee" >{details.employee}</Item>
-                                    <Item label="Client" span={2}> {details.milestone  && details.milestone.client}</Item>
-                                    <Item label="Project" span={2}>{details.milestone  && details.milestone.name}</Item>
-                                    <Item label="Client Contact" >{details.milestone  && details.milestone.contact}</Item>
+                                    <Item label="Client" span={2}>{ellipsis(details?.milestone?.client, 78)}</Item>
+                                    <Item label="Project" span={2}>{ellipsis(details?.milestone?.name, 78)}</Item>
+                                    <Item label="Client Contact" >{details?.milestone?.contact}</Item>
                                     <Item label="Timesheet Period " >{details.period}</Item>
                                 </Descriptions>}
                             </Row>
@@ -133,19 +135,21 @@ const TimeSheetPDF = (props) => {
                                 dataSource={details.milestone && details.milestone.entries}
                                 style={{fontSize: '10px'}}
                             />
-                            <Descriptions column={3} bordered  style={{marginBottom:20, marginTop:20}} labelStyle={{padding: 5}} className="describe" >
+                            <Descriptions column={3} bordered  style={{marginBottom:10, marginTop:10}} labelStyle={{padding: 5}} className="describe" >
                                 <Item label="Hours in Day ">{details.milestone && parseFloat(details.milestone.hoursPerDay).toFixed( 2 ) }</Item>
                                 <Item label="Total Hours "> {details.milestone && parseFloat(details.milestone.totalHours).toFixed( 2 )} </Item>
                                 <Item label="Invoiced Days ">{details.milestone && parseFloat(details.milestone.invoicedDays).toFixed( 2 )}</Item>
                             </Descriptions>
-                            <Row justify="space-between">
+                            <Row justify="space-between" gutter={[0, 15]}>
+                                <Col span={24}>
+                                    <Text type='danger' italic underline className='sensitive'>I certify that the below entries are a true record of attendance.</Text>
+                                </Col>
                                 <Col span={11}>Employee Declaration</Col>
                                 <Col span={11}>Manager Approval</Col>
                             </Row>
                             <Row justify="space-between" >
-                                {/* <Col span={8} style={{border: 'solid black 1px', minHeight:35}}></Col> */}
-                                <Col span={11} style={{backgroundColor:'#deeaf6', minHeight:35}}></Col>
-                                <Col span={11} style={{backgroundColor:'#deeaf6', minHeight:35}}></Col>
+                                <Col span={11} className="signature"></Col>
+                                <Col span={11} className="signature"></Col>
                             </Row>
                             <Row justify="space-between">
                                 <Col span={6}>Signature</Col>
@@ -162,3 +166,12 @@ const TimeSheetPDF = (props) => {
     )
 }
 export default TimeSheetPDF
+
+//--------> Helper <-------
+const ellipsis = (str, fixed)=>{
+    if (str){
+        str = `${str}`
+        return `${str.substring(0,fixed)}${`${str}`.length>fixed ?'\u2026':''}`
+    }
+    return '--'
+}

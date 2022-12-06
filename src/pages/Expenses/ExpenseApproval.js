@@ -1,12 +1,12 @@
 import { Button, Col, DatePicker, Dropdown, Menu, Popconfirm, Row, Select, Table, Tag, Typography,Modal, Form, Input, Tooltip, Checkbox} from 'antd';
-import { SettingOutlined, CheckCircleOutlined, AuditOutlined} from '@ant-design/icons'; //Icons
+import { SettingOutlined, CheckCircleOutlined, AuditOutlined, CheckOutlined} from '@ant-design/icons'; //Icons
 import React, { useEffect, useState } from 'react'
-import { getManageProjects, getUserProjects } from '../../service/constant-Apis';
-import { expenseSheetActions, getExpenseSheets } from '../../service/expenseSheet-Apis';
+import { entityProjects, getManageProjects, getUserProjects } from '../../service/constant-Apis';
+import { expenseSheetActions, getApprovalExpenseSheets } from '../../service/expenseSheet-Apis';
 import { formatCurrency, formatDate, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
 // import { expensesData as dummyExpensesData } from '../DummyData';
 import ExpenseSheetModal from './Modals/ExpenseSheetModal';
-import { tableCondSorter, tableSorter } from '../../components/Core/Table/TableFilter';
+import { tableSorter } from '../../components/Core/Table/TableFilter';
 import {Tag_s} from '../../components/Core/Custom/Index';
 
 const { Title } = Typography
@@ -66,7 +66,7 @@ const ExpenseApproval = () => {
             </Tooltip>
           )}
         </span>,
-      ...tableCondSorter('status', 'string', true, 'SB')
+      ...tableSorter('status', 'string', true, 'SB')
 	},
     {
       title: 'Submitted At',
@@ -82,11 +82,12 @@ const ExpenseApproval = () => {
       ...tableSorter('submittedBy', 'string'),
     },
 	{
-	title: 'b',
-	dataIndex: 'isBillable',
-	align: 'center',
-	render: (value) => (
-		<Checkbox defaultChecked={false} checked={value} />
+		title: 'Billable',
+		dataIndex: 'isBillable',
+		align: 'center',
+		render: (value) => (
+			value && <CheckOutlined />
+			// <Checkbox defaultChecked={false} checked={value} />
 		)
 	},
 	{
@@ -159,8 +160,8 @@ const ExpenseApproval = () => {
 	const gettingProject = () => {
 		const { id, permissions} = localStore();
 		const { EXPENSES = {}} = JSON.parse(permissions)
-		setPermission(EXPENSES);		
-		getUserProjects(id, 'M', 0).then((res) => {
+		setPermission(EXPENSES);	
+		getManageProjects('LEAVE_REQUESTS').then((res) => {
 			if (res.success) {
 				res.data.unshift({value:0, label: 'No Project'})
 				setProjects(res.data); 
@@ -170,7 +171,7 @@ const ExpenseApproval = () => {
 	}
 
 	const gettingExpenseSheets = (filters) => {
-		getExpenseSheets(filters).then((res) => {
+		getApprovalExpenseSheets(filters).then((res) => {
 			if (res.success) {
 				setExpenseData(res.data); 
 			}
@@ -178,9 +179,10 @@ const ExpenseApproval = () => {
 	}
 
 	const callBack = (data, index) => {
+		let fIndex = expenseData.findIndex(el=> el.id === data.id)
 		let exp = expenseData;
-    if (index >= 0) {
-			exp[index] = data; 
+   		 if (index >= 0) {
+			exp[fIndex] = data; 
 		}
 		setExpenseData([...exp]);  
 		setOpenModal(false);

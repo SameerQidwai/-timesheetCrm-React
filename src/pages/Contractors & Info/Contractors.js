@@ -130,8 +130,9 @@ class Contractors extends Component {
                   className="pop-confirm-menu"
                 >
                   <Popconfirm
-                    title="Are you sure you want to delete"
+                    title="Are you sure you want to delete ?"
                     onConfirm={() => this.handleDelete(record.id, index)}
+                    okText="Yes"
                   >
                     <div> Delete </div>
                   </Popconfirm>
@@ -223,6 +224,14 @@ class Contractors extends Component {
           multi: true,
           value: [],
           label: 'State',
+          showInColumn: false,
+          disabled: false,
+        },
+        clearanceLevel: {
+          type: 'none',
+          multi: true,
+          value: [],
+          label: 'clearanceLevel',
           showInColumn: false,
           disabled: false,
         },
@@ -383,6 +392,28 @@ class Contractors extends Component {
           data: [],
         },
         {
+          Placeholder: 'Clearance Level',
+          fieldCol: 24,
+          size: 'small',
+          type: 'Text',
+        },
+        {
+          object: 'obj',
+          fieldCol: 12,
+          key: 'clearanceLevel',
+          size: 'small',
+          mode: 'multiple',
+          customValue: (value, option) => option,
+          data: [
+            { label: 'BV - Baseline Vetting', value: 'BV' },
+            { label: 'NV1 - Negative Vetting 1', value: 'NV1' },
+            { label: 'NV2 - Negative Vetting 2', value: 'NV2' },
+            { label: 'PV - Positive Vetting', value: 'PV' },
+            { label: 'No clearance', value: 'NC' },
+          ],
+          type: 'Select',
+        },
+        {
           Placeholder: 'Address',
           fieldCol: 24,
           size: 'small',
@@ -491,6 +522,7 @@ class Contractors extends Component {
       search['stateId']['value'].length > 0 ||
       search['address']['value'] ||
       search['role']['value'].length > 0 ||
+      search['clearanceLevel']['value'].length > 0 ||
       search['organization']['value'].length > 0
     ) {
       this.setState({
@@ -504,6 +536,7 @@ class Contractors extends Component {
             id,
             gender,
             stateId,
+            clearanceLevel,
             address,
           } = el.contactPersonOrganization.contactPerson;
           const { organizationId } = el.contactPersonOrganization;
@@ -559,6 +592,15 @@ class Contractors extends Component {
             ).some((s) =>
               (search['organization']['value'].length > 0
                 ? [organizationId]
+                : [',']
+              ).includes(s.value)
+            )&&
+            (search['clearanceLevel']['value'].length > 0
+              ? search['clearanceLevel']['value']
+              : [{ value: ',' }]
+            ).some((s) =>
+              (search['clearanceLevel']['value'].length > 0
+                ? [clearanceLevel]
                 : [',']
               ).includes(s.value)
             )

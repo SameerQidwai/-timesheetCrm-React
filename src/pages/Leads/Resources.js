@@ -31,6 +31,7 @@ import {
   formatCurrency,
   localStore,
   O_STATUS,
+  formatFloat,
 } from '../../service/constant';
 import {
   Filtertags,
@@ -83,6 +84,7 @@ class Resources extends Component {
         title: 'Total Hours',
         dataIndex: 'billableHours',
         key: 'billableHours',
+        render: (text)=> formatFloat(text),
         ...tableSorter('billableHours', 'number'),
       },
 
@@ -102,8 +104,9 @@ class Resources extends Component {
                   className="pop-confirm-menu"
                 >
                   <Popconfirm
-                    title="Are you sure you want to delete"
+                    title="Are you sure you want to delete ?"
                     onConfirm={() => this.handleDelete(record.id, index)}
+                    okText="Yes"
                   >
                     <div> Delete </div>
                   </Popconfirm>
@@ -548,10 +551,6 @@ class Resources extends Component {
             <Item label="End Date">
               {formatDate(mileDesc.endDate, true, true)}
             </Item>
-            <Item label="Progress">{mileDesc.progress} %</Item>
-            <Item label="Approved">
-              {mileDesc.isApproved ? 'True' : 'False'}
-            </Item>
           </Descriptions>
         )}
         <Row justify="end" span={4} gutter={[30, 0]}>
@@ -590,6 +589,7 @@ class Resources extends Component {
           rowKey={(record) => record.id}
           columns={this.columns}
           size="small"
+          className="fs-small"
           dataSource={filterData}
           expandable={{
             rowExpandable: (record) =>
@@ -612,7 +612,6 @@ class Resources extends Component {
                     long: record.panelSkillStandardLevel?.longTermCeil,
                   }}
                   permissions={permissions}
-                  className="fs-small"
                 />
               );
             },
@@ -705,8 +704,9 @@ function NestedTable(props) {
                 className="pop-confirm-menu"
               >
                 <Popconfirm
-                  title="Are you sure you want to delete"
+                  title="Are you sure you want to delete?"
                   onConfirm={() => handleDelete(record.id, index)}
+                  okText="Yes"
                 >
                   <div> Delete </div>
                 </Popconfirm>
