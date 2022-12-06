@@ -7,7 +7,8 @@ import { localStore } from '../../../service/constant';
 
 
 //an idea for small data 
-const ATable = ({size= 'small', title, columns=[], dataSource=[], rowKey='id', rowSelection=false, bordered=true, className= 'fs-small' , pagination, rowClassName})=>{
+const ATable = ({size= 'small', title, columns=[], dataSource=[], rowKey='id', rowSelection=false, bordered=true, className= 'fs-small', style , pagination, rowClassName, ...rest})=>{
+    console.log(rest)
     let {
         current: pageNo =1,
         onChange: onPaginationChange = false,
@@ -23,11 +24,13 @@ const ATable = ({size= 'small', title, columns=[], dataSource=[], rowKey='id', r
 
 
     return <Table
+    {...rest}
     title={title}
     size={size}
     bordered={bordered}
     className={className }
     rowClassName={rowClassName}
+    style={style}
     pagination={
         {
             onChange:  (current, pageSize) =>{
@@ -309,7 +312,6 @@ export const Filtertags = ({filters, filterFunction}) =>{
         ))}
     </Col>
 }
-
 
 export const leaf = (obj, path) => (path.split('.').reduce((value, el) => value[el]?? '', obj))
 

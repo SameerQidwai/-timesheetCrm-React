@@ -1061,3 +1061,46 @@ export const other_general_expenses = [
     },
     {},
 ]
+
+export const BencheResData = [
+    {
+        id :1,
+        name: 'sameer',
+        type: '1',
+        skill: 'Dev',
+        level: 'sadasd',
+        buyRate: 'sadasd',
+    },
+    {
+        id :2,
+        name: 'sameer',
+        type: '1',
+        skill: 'design',
+        level: 'sadasd',
+        buyRate: 'sadasd',
+    },
+    {
+        id :3,
+        name: 'sameer',
+        type: '1',
+        skill: 'tech guy',
+        level: 'sadasd',
+        buyRate: 'sadasd',
+    },
+    {
+        id :4,
+        name: 'shenbaz',
+        type: '1',
+        skill: 'contracting',
+        level: 'sadasd',
+        buyRate: 'sadasd',
+    },
+    {
+        id :5,
+        name: 'salman',
+        type: '1',
+        skill: 'sqa',
+        level: 'sadasd',
+        buyRate: 'sadasd',
+    },
+]
