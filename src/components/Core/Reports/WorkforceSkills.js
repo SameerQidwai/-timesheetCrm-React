@@ -1,33 +1,32 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Col, Row, Typography } from 'antd'
+import { Button, Col, Row, Typography, Table as Atable } from 'antd'
 import Table, { tableTitleFilter } from '../Table/TableFilter'
 import { BencheResData } from './WIHData'
 
 const {Title, Text} = Typography
-const resourceColumn = [
-    {
-        key: 'name',
-        dataIndex: 'name',
-        title: 'Resource Name',
-    },
-    {
-        key: 'type',
-        dataIndex: 'type',
-        title: 'Resource Type',
-    },
-    // Atable.EXPAND_COLUMN
-]
-
 const skillColumn = [
     {
         key: 'skill',
         dataIndex: 'skill',
-        title: 'Skill'
+        title: 'Skill',
     },
     {
         key: 'level',
         dataIndex: 'level',
-        title: 'skill Level'
+        title: 'Skill Level',
+    },
+]
+
+const resourceColumn = [
+    {
+        key: 'name',
+        dataIndex: 'name',
+        title: 'Resource Name'
+    },
+    {
+        key: 'type',
+        dataIndex: 'type',
+        title: 'Resource Type'
     },
     {
         key: 'buyRate',
@@ -36,21 +35,21 @@ const skillColumn = [
     },
 ]
 
-function BenchResources() {
+function WorkforceSkills() {
     const [data, setData] = useState(BencheResData)
 
     useEffect(() => {
-        let resource = []
+        let skills = []
         let resIndex = 0
         data.forEach((el, index)=>{
-            if (el.name !== data?.[index - 1]?.['name']){
+            if (el.skill !== data?.[index - 1]?.['skill'] || el.level !== data?.[index - 1]?.['level']){
                 resIndex = index
-                resource.push({...el, skill: [{...el}]})
+                skills.push({...el, resources: [{...el}], skill: data?.[index - 1]?.['skill']  !== el.skill? el.skill : ''})
             }else{
-                resource[resIndex]['skill'].push({...el})
+                skills[resIndex]['resources'].push({...el})
             }
         })
-        setData(resource)
+        setData(skills)
     }, [])
 
     const generalFilter = () =>{
@@ -71,7 +70,7 @@ function BenchResources() {
                     </Col>
                 </Row> 
                 }
-                columns={resourceColumn}
+                columns={skillColumn}
                 // dataSource={()=>{
                     //     let resource = []
                 //     data.forEach((el, index)=>{
@@ -83,12 +82,12 @@ function BenchResources() {
                 // }}
                 dataSource={data}
                 expandable={{
-                    rowExpandable: record => record?.skill?.length > 0,
+                    rowExpandable: record => record?.resources?.length > 0,
                     expandedRowRender: record => {
                         return (
                             <Table 
                             style={{paddingLeft: 150, paddingRight: 50}}
-                            dataSource={record.skill} 
+                            dataSource={record.resources} 
                             // dataSource={()=>{
                                 //     let skills = []
                                 //     data.forEach((el, index)=>{
@@ -98,7 +97,7 @@ function BenchResources() {
                                         //     })
                                         //     return skills
                                         // }} 
-                                        columns={skillColumn}
+                                        columns={resourceColumn}
                                         />)
                                     },
                                 }}
@@ -108,4 +107,4 @@ function BenchResources() {
     )
 }
 
-export default BenchResources
+export default WorkforceSkills

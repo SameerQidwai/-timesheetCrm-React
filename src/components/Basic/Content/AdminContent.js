@@ -60,7 +60,7 @@ import ExpenseSheet from '../../../pages/Expenses/ExpenseSheet';
 
 // import TimeSheetHTML from "../../Core/TimeSheetHTML"
 import { localStore } from '../../../service/constant';
-import { BenchResources, WorkInHand } from '../../Core/Reports';
+import { BenchResources, WorkforceSkills, WorkInHand } from '../../Core/Reports';
 
 const { Content } = Layout;
 

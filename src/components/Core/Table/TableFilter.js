@@ -8,7 +8,6 @@ import { localStore } from '../../../service/constant';
 
 //an idea for small data 
 const ATable = ({size= 'small', title, columns=[], dataSource=[], rowKey='id', rowSelection=false, bordered=true, className= 'fs-small', style , pagination, rowClassName, ...rest})=>{
-    console.log(rest)
     let {
         current: pageNo =1,
         onChange: onPaginationChange = false,
