@@ -16,6 +16,11 @@ const resourceColumn = [
         dataIndex: 'type',
         title: 'Resource Type',
     },
+    {
+        key: 'buyRate',
+        dataIndex: 'buyRate',
+        title: 'Buy Rate'
+    },
     // Atable.EXPAND_COLUMN
 ]
 
@@ -29,11 +34,6 @@ const skillColumn = [
         key: 'level',
         dataIndex: 'level',
         title: 'skill Level'
-    },
-    {
-        key: 'buyRate',
-        dataIndex: 'buyRate',
-        title: 'Buy Rate'
     },
 ]
 
@@ -93,12 +93,12 @@ function BenchResources() {
                 // }}
                 dataSource={data}
                 expandable={{
-                    rowExpandable: record => record?.skill?.length > 0,
+                    rowExpandable: record => record?.skills?.length > 0,
                     expandedRowRender: record => {
                         return (
                             <Table 
                             style={{paddingLeft: 150, paddingRight: 50}}
-                            dataSource={record.skill} 
+                            dataSource={record.skills} 
                             // dataSource={()=>{
                                 //     let skills = []
                                 //     data.forEach((el, index)=>{
