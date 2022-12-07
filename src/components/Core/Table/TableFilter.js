@@ -31,7 +31,7 @@ const ATable = ({size= 'small', title, columns=[], dataSource=[], rowKey='id', r
     rowClassName={rowClassName}
     style={style}
     pagination={
-        {
+        pagination !== false ?{
             onChange:  (current, pageSize) =>{
                 if (onPaginationChange){
                     onPaginationChange(current, pageSize)
@@ -46,7 +46,7 @@ const ATable = ({size= 'small', title, columns=[], dataSource=[], rowKey='id', r
             responsive: paginationResponsive, 
             size: paginationSize,
             disabled: paginationDisabled
-        }
+        } : false
     }
     rowKey={data=> data[rowKey]}
     rowSelection={rowSelection}

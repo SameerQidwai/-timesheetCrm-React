@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Button, Col, Row, Typography } from 'antd'
 import Table, { tableTitleFilter } from '../Table/TableFilter'
 import { BencheResData } from './WIHData'
+import { getBenchResources } from '../../../service/reports-Apis'
 
 const {Title, Text} = Typography
 const resourceColumn = [
@@ -40,18 +41,27 @@ function BenchResources() {
     const [data, setData] = useState(BencheResData)
 
     useEffect(() => {
-        let resource = []
-        let resIndex = 0
-        data.forEach(async(el, index)=>{
-            if (el.name !== data?.[index - 1]?.['name']){
-                resIndex++
-                resource.push({...el, skill: [{...el}]})
-            }else{
-                resource[resIndex]['skill'].push({...el})
+        getData()
+    //     let resource = []
+    //     let resIndex = 0
+    //     data.forEach(async(el, index)=>{
+    //         if (el.name !== data?.[index - 1]?.['name']){
+    //             resIndex++
+    //             resource.push({...el, skill: [{...el}]})
+    //         }else{
+    //             resource[resIndex]['skill'].push({...el})
+    //         }
+    //     })
+    //     setData(resource)
+    }, [])
+
+    const getData = () =>{
+        getBenchResources().then(res=>{
+            if (res.success){
+                setData(res.data)
             }
         })
-        setData(resource)
-    }, [])
+    }
 
     const generalFilter = () =>{
         return
@@ -63,7 +73,7 @@ function BenchResources() {
             <Table
                 title={()=> <Row justify='space-between'>
                     <Col flex={5}>
-                        <Title level={3}>Resources on the bench </Title>
+                        <Title level={5}>Resources on the bench </Title>
                     </Col>
                     <Col flex={1}><Button size='small'>Filter</Button></Col>
                     <Col span={5}>

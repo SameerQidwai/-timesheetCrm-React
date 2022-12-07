@@ -60,7 +60,7 @@ import ExpenseSheet from '../../../pages/Expenses/ExpenseSheet';
 
 // import TimeSheetHTML from "../../Core/TimeSheetHTML"
 import { localStore } from '../../../service/constant';
-import { BenchResources, WorkforceSkills, WorkInHand } from '../../Core/Reports';
+import { BenchResources, WorkAllocation, WorkforceSkills, WorkInHand } from '../../Core/Reports';
 
 const { Content } = Layout;
 
@@ -68,7 +68,7 @@ const pageLinks = [
   // Page link and router
   {
     // component: Dashboard,
-    component: WorkforceSkills,
+    component: BenchResources,
     link: '/dashboard',
     key: 'DASHBOARD',
     permission: 'ALLOWED',

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Col, Row, Typography, Table as Atable } from 'antd'
 import Table, { tableTitleFilter } from '../Table/TableFilter'
-import { BencheResData, WorkforceData } from './WIHData'
+import { WorkforceData } from './WIHData'
 
 const {Title, Text} = Typography
 
@@ -9,7 +9,7 @@ const {Title, Text} = Typography
 function WorkforceSkills() {
     const [data, setData] = useState(WorkforceData||[])
 
-    const skillColumn = [
+    const columns = [
         {
             key: 'skill',
             dataIndex: 'skill',
@@ -43,22 +43,28 @@ function WorkforceSkills() {
     const generalFilter = () =>{
         return
     }
+
+    const tableTitle = () =>{
+        return(
+        <Row justify='space-between'>
+            <Col flex={5}>
+                <Title level={5}>Workforce Skill </Title>
+            </Col>
+            <Col flex={1}><Button size='small'>Filter</Button></Col>
+            <Col span={5}>
+                {tableTitleFilter(24, generalFilter)}
+            </Col>
+        </Row>
+        )
+    }
     
     return (
         <Row>
             <Col span={24}>
             <Table
-                title={()=> <Row justify='space-between'>
-                    <Col flex={5}>
-                        <Title level={3}>Workforce Skill </Title>
-                    </Col>
-                    <Col flex={1}><Button size='small'>Filter</Button></Col>
-                    <Col span={5}>
-                        {tableTitleFilter(24, generalFilter)}
-                    </Col>
-                </Row> 
-                }
-                columns={skillColumn}
+                title={()=>tableTitle()}
+                // pagination={false}
+                columns={columns}
                 // dataSource={()=>{
                     //     let resource = []
                 //     data.forEach((el, index)=>{
