@@ -5,9 +5,9 @@ import { Api, headers, jwtExpired, setToken } from "./constant";
 
 const url = `${Api}/reports`;
 
-export const getBenchResources = () => {
+export const getBenchResources = (queryParam) => {
     return axios
-        .get(`${url}/bench-resources`, {headers:headers()})
+        .get(`${url}/bench-resources${queryParam? '?'+ queryParam: ''}`, {headers:headers()})
         .then((res) => {
             const { success, data } = res.data;
             setToken(res?.headers?.authorization)

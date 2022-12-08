@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Col, Row, Typography } from 'antd'
-import Table, { tableTitleFilter } from '../Table/TableFilter'
+import { Button, Col, Row, Typography, Table as Atable } from 'antd'
+import Table, { Filtertags, FiltertagsNew, TableModalFilter, tableTitleFilter } from '../Table/TableFilter'
 import { BencheResData } from './WIHData'
 import { getBenchResources } from '../../../service/reports-Apis'
+import ReportsFilters from './ReportsFilters'
 
 const {Title, Text} = Typography
 const resourceColumn = [
@@ -11,54 +12,54 @@ const resourceColumn = [
         dataIndex: 'name',
         title: 'Resource Name',
     },
+    Atable.EXPAND_COLUMN,
     {
         key: 'type',
         dataIndex: 'type',
         title: 'Resource Type',
+        width: '30.22%'
     },
     {
         key: 'buyRate',
         dataIndex: 'buyRate',
-        title: 'Buy Rate'
+        title: 'Buy Rate',
+        width: '23.79%'
     },
-    // Atable.EXPAND_COLUMN
 ]
 
 const skillColumn = [
     {
         key: 'skill',
         dataIndex: 'skill',
-        title: 'Skill'
+        title: 'Skill',
+        width: '30.22%'
     },
     {
         key: 'level',
         dataIndex: 'level',
-        title: 'skill Level'
+        title: 'skill Level',
+        width: '23.79%'
     },
 ]
 
 function BenchResources() {
     const [data, setData] = useState(BencheResData)
+    const [visible, setVisible] = useState(false)
+    const [tags, setTags] = useState({})
+
 
     useEffect(() => {
         getData()
-    //     let resource = []
-    //     let resIndex = 0
-    //     data.forEach(async(el, index)=>{
-    //         if (el.name !== data?.[index - 1]?.['name']){
-    //             resIndex++
-    //             resource.push({...el, skill: [{...el}]})
-    //         }else{
-    //             resource[resIndex]['skill'].push({...el})
-    //         }
-    //     })
-    //     setData(resource)
     }, [])
 
-    const getData = () =>{
-        getBenchResources().then(res=>{
+    const getData = (queryParam, tagsValues) =>{
+        getBenchResources(queryParam).then(res=>{
             if (res.success){
                 setData(res.data)
+                if(queryParam){
+                  setVisible(false)
+                  setTags(tagsValues)
+                }
             }
         })
     }
@@ -68,54 +69,56 @@ function BenchResources() {
     }
     
     return (
-        <Row>
-            <Col span={24}>
-            <Table
-                title={()=> <Row justify='space-between'>
-                    <Col flex={5}>
-                        <Title level={5}>Resources on the bench </Title>
+      <Row>
+        <Col span={24}>
+          <Table
+            title={() => (
+              <Row justify="space-between">
+                <Col >
+                  <Title level={5}>Resources on the bench </Title>
+                </Col>
+                <Col >
+                  <Button size="small" onClick={()=>setVisible(true)}>Filters</Button>
+                </Col>
+                <Col span={24}>
+                <FiltertagsNew
+                  filters={tags}
+                  filterFunction={()=>{setTags({});getData()}}
+                />
+        </Col>
+              </Row>
+            )}
+            columns={resourceColumn}
+            rowKey={'index'}
+            dataSource={data}
+            expandable={{
+              rowExpandable: (record) => record?.skills?.length > 0,
+              expandedRowRender: (record) => {
+                return (
+                  <Row justify='end' >
+                    <Col span={13}>
+                      <Table
+                      dataSource={record.skills}
+                      columns={skillColumn}
+                      className="expandtable-margin"
+                      />
                     </Col>
-                    <Col flex={1}><Button size='small'>Filter</Button></Col>
-                    <Col span={5}>
-                        {tableTitleFilter(24, generalFilter)}
-                    </Col>
-                </Row> 
-                }
-                columns={resourceColumn}
-                // dataSource={()=>{
-                    //     let resource = []
-                //     data.forEach((el, index)=>{
-                    //         if (el.name !== data?.[index - 1]?.['name']){
-                //             resource.push(el)
-                //         }
-                //     })
-                //     return resource
-                // }}
-                dataSource={data}
-                expandable={{
-                    rowExpandable: record => record?.skills?.length > 0,
-                    expandedRowRender: record => {
-                        return (
-                            <Table 
-                            style={{paddingLeft: 150, paddingRight: 50}}
-                            dataSource={record.skills} 
-                            // dataSource={()=>{
-                                //     let skills = []
-                                //     data.forEach((el, index)=>{
-                                    //         if (record.name === (data?.[index - 1]?.['name'] ?? record.name)){
-                                        //             skills.push(el)
-                                        //         }
-                                        //     })
-                                        //     return skills
-                                        // }} 
-                                        columns={skillColumn}
-                                        />)
-                                    },
-                                }}
-                                />
-            </Col>
-        </Row>
-    )
+                  </Row>
+                );
+              },
+            }}
+          />
+        </Col>
+        <ReportsFilters
+            compName={'Bench Resources Filter'}
+            compKey={'bench'}
+            tags={tags}
+            visible={visible}
+            getCompData={getData}
+            invisible={()=>setVisible(false)}
+        />
+      </Row>
+    );
 }
 
 export default BenchResources

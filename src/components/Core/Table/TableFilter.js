@@ -48,7 +48,7 @@ const ATable = ({size= 'small', title, columns=[], dataSource=[], rowKey='id', r
             disabled: paginationDisabled
         } : false
     }
-    rowKey={data=> data[rowKey]}
+    rowKey={(data, index)=> rowKey === 'index'? index: data[rowKey]}
     rowSelection={rowSelection}
     columns={columns}
     dataSource={dataSource}
@@ -202,7 +202,7 @@ export const tableTitleFilter = (colSpan, filterFunction) =>{ // table filter on
         </Row>
 }
 
-export const TableModalFilter = ({title, visible, onClose, filters, filterFunction, filterFields, effectRender, effectFunction}) =>{
+export const TableModalFilter = ({title, visible, onClose, filters, filterFunction, filterFields, effectRender, effectFunction, destroyOnClose=true}) =>{
     const [form] = Form.useForm();
 
     useEffect(() => {
@@ -210,12 +210,14 @@ export const TableModalFilter = ({title, visible, onClose, filters, filterFuncti
         if(effectRender){
             effectFunction()
         }
-        for (let el in filters) {
-            if (filters[el].type === 'Date'){
-                const rangeValue = filters[el].value 
-                obj[el] = rangeValue &&[moment(rangeValue[0]), moment(rangeValue[1])]
-            }else{
-                obj[el] = filters[el].value  ?? ''
+        if (filters){
+            for (let el in filters) {
+                if (filters[el].type === 'Date'){
+                    const rangeValue = filters[el].value 
+                    obj[el] = rangeValue &&[moment(rangeValue[0]), moment(rangeValue[1])]
+                }else{
+                    obj[el] = filters[el].value  ?? ''
+                }
             }
         }
         form.setFieldsValue({obj});
@@ -232,8 +234,9 @@ export const TableModalFilter = ({title, visible, onClose, filters, filterFuncti
                 filters[el].value = values[el] ?? ''
             }
         }
+        
                 //single value/name   //value+name
-        filterFunction(false, false, filters)
+        filterFunction(false, false, filters, values)
     }
 
     return <Modal
@@ -242,7 +245,7 @@ export const TableModalFilter = ({title, visible, onClose, filters, filterFuncti
         centered
         width={750}
         visible={visible}
-        destroyOnClose
+        destroyOnClose={destroyOnClose}
         onOk={() => { form.submit()}}
         onCancel={()=>onClose()}
     >
