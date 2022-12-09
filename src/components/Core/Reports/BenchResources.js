@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Col, Row, Typography, Table as Atable } from 'antd'
-import Table, { Filtertags, FiltertagsNew, TableModalFilter, tableTitleFilter } from '../Table/TableFilter'
-import { BencheResData } from './WIHData'
+import Table, { FiltertagsNew } from '../Table/TableFilter'
 import { getBenchResources } from '../../../service/reports-Apis'
 import ReportsFilters from './ReportsFilters'
 
@@ -43,82 +42,84 @@ const skillColumn = [
 ]
 
 function BenchResources() {
-    const [data, setData] = useState(BencheResData)
-    const [visible, setVisible] = useState(false)
-    const [tags, setTags] = useState({})
+  const [data, setData] = useState([])
+  const [visible, setVisible] = useState(false)
+  const [tags, setTags] = useState({})
 
 
-    useEffect(() => {
-        getData()
-    }, [])
+  useEffect(() => {
+      getData()
+  }, [])
 
-    const getData = (queryParam, tagsValues) =>{
-        getBenchResources(queryParam).then(res=>{
-            if (res.success){
-                setData(res.data)
-                if(queryParam){
-                  setVisible(false)
-                  setTags(tagsValues)
-                }
-            }
-        })
-    }
+  const getData = (queryParam, tagsValues) =>{
+      getBenchResources(queryParam).then(res=>{
+          if (res.success){
+              setData(res.data)
+              if(queryParam){
+                setVisible(false)
+                setTags(tagsValues)
+              }
+          }
+      })
+  }
 
-    const generalFilter = () =>{
-        return
-    }
-    
-    return (
-      <Row>
-        <Col span={24}>
-          <Table
-            title={() => (
-              <Row justify="space-between">
-                <Col >
-                  <Title level={5}>Resources on the bench </Title>
-                </Col>
-                <Col >
-                  <Button size="small" onClick={()=>setVisible(true)}>Filters</Button>
-                </Col>
-                <Col span={24}>
-                <FiltertagsNew
-                  filters={tags}
-                  filterFunction={()=>{setTags({});getData()}}
-                />
+  const tableTitle = () =>{
+    return(
+      <Row justify="space-between">
+        <Col >
+          <Title level={5}>Resources on the bench </Title>
         </Col>
-              </Row>
-            )}
-            columns={resourceColumn}
-            rowKey={'index'}
-            dataSource={data}
-            expandable={{
-              rowExpandable: (record) => record?.skills?.length > 0,
-              expandedRowRender: (record) => {
-                return (
-                  <Row justify='end' >
-                    <Col span={13}>
-                      <Table
-                      dataSource={record.skills}
-                      columns={skillColumn}
-                      className="expandtable-margin"
-                      />
-                    </Col>
-                  </Row>
-                );
-              },
-            }}
+        <Col >
+          <Button size="small" onClick={()=>setVisible(true)}>Filters</Button>
+        </Col>
+        <Col span={24}>
+          <FiltertagsNew
+            filters={tags}
+            filterFunction={()=>{setTags({});getData()}}
           />
         </Col>
-        <ReportsFilters
-            compName={'Bench Resources Filter'}
-            compKey={'bench'}
-            tags={tags}
-            visible={visible}
-            getCompData={getData}
-            invisible={()=>setVisible(false)}
+    </Row>
+  )
+}
+
+  
+  return (
+    <Row>
+      <Col span={24}>
+        <Table
+          title={() => tableTitle()}
+          columns={resourceColumn}
+          rowKey={'name'}
+          dataSource={data}
+          expandable={{
+            rowExpandable: (record) => record?.skills?.length > 0,
+            expandedRowRender: (record) => {
+              return (
+                <Row justify='end' >
+                  <Col span={13}>
+                    <Table
+                      dataSource={record.skills}
+                      rowKey={'skill'}
+                      columns={skillColumn}
+                      className="expandtable-margin"
+                    />
+                  </Col>
+                </Row>
+              );
+            },
+          }}
         />
-      </Row>
-    );
+      </Col>
+      <ReportsFilters
+          compName={'Bench Resources Filter'}
+          compKey={'bench'}
+          tags={tags}
+          visible={visible}
+          getCompData={getData}
+          invisible={()=>setVisible(false)}
+      />
+    </Row>
+  );
 }
 
 export default BenchResources

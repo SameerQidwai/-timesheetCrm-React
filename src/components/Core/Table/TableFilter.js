@@ -18,8 +18,8 @@ const ATable = ({size= 'small', title, columns=[], dataSource=[], rowKey='id', r
         disabled: paginationDisabled = false,
     } = pagination ?? {};
 
-    const [pageNoState, setpageNoState] = useState(pageNo);
-    const [pageSizeState, setPageSizeState] = useState(pageSize);
+    const [page, setpage] = useState({pageSize, pageNo});
+    // const [pageSizeState, setPageSizeState] = useState(pageSize);
 
 
     return <Table
@@ -32,16 +32,16 @@ const ATable = ({size= 'small', title, columns=[], dataSource=[], rowKey='id', r
     style={style}
     pagination={
         pagination !== false ?{
-            onChange:  (current, pageSize) =>{
+            onChange:  (pageNo, pageSize) =>{
                 if (onPaginationChange){
-                    onPaginationChange(current, pageSize)
-                }else{
-                    setpageNoState(current);
-                    setPageSizeState(pageSize)
+                    onPaginationChange(pageNo, pageSize)
                 }
+                // else{
+                    setpage({pageSize, pageNo});
+                // }
             },
-            current: pageNoState,
-            pageSize: pageSizeState, 
+            current: page.pageNo,
+            pageSize: page.pageSize, 
             hideOnSinglePage, 
             responsive: paginationResponsive, 
             size: paginationSize,

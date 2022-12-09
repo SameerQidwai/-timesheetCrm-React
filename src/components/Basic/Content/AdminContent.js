@@ -67,8 +67,7 @@ const { Content } = Layout;
 const pageLinks = [
   // Page link and router
   {
-    // component: Dashboard,
-    component: BenchResources,
+    component: Dashboard,
     link: '/dashboard',
     key: 'DASHBOARD',
     permission: 'ALLOWED',
@@ -372,6 +371,24 @@ const pageLinks = [
     link: '/expense-sheet-approval',
     key: 'EXPENSES',
     permission: 'APPROVAL,UNAPPROVAL',
+  },
+  {
+    component: BenchResources,
+    link: '/bench-resources',
+    key: 'REPORTS',
+    permission: 'ALLOWED',
+  },
+  {
+    component: WorkAllocation,
+    link: '/allocations',
+    key: 'REPORTS',
+    permission: 'ALLOWED',
+  },
+  {
+    component: WorkforceSkills,
+    link: '/workforce-skills',
+    key: 'REPORTS',
+    permission: 'ALLOWED',
   },
 ];
 

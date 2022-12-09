@@ -21,3 +21,37 @@ export const getBenchResources = (queryParam) => {
             };
         });
 };
+
+export const getWorkforceSkills = (queryParam) => {
+    return axios
+        .get(`${url}/workforce-skills${queryParam? '?'+ queryParam: ''}`, {headers:headers()})
+        .then((res) => {
+            const { success, data } = res.data;
+            setToken(res?.headers?.authorization)
+            if (success) return { success: success, data: data };
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                success: false,
+                message: err.message,
+            };
+        });
+};
+
+export const getAllocations = (queryParam) => {
+    return axios
+        .get(`${url}/allocations${queryParam? '?'+ queryParam: ''}`, {headers:headers()})
+        .then((res) => {
+            const { success, data } = res.data;
+            setToken(res?.headers?.authorization)
+            if (success) return { success: success, data: data };
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                success: false,
+                message: err.message,
+            };
+        });
+};

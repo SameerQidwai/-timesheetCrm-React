@@ -1,44 +1,68 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Col, Row, Typography, Table as Atable } from 'antd'
-import Table, { tableTitleFilter } from '../Table/TableFilter'
-import { BencheResData, workAllocationData, WorkforceData } from './WIHData'
-import { formatDate } from '../../../service/constant'
+import Table, { FiltertagsNew } from '../Table/TableFilter'
+import {  workAllocationData } from './WIHData'
+import { formatDate, localStore } from '../../../service/constant'
+import ReportsFilters from './ReportsFilters'
+import { getAllocations } from '../../../service/reports-Apis'
 
 const {Title, Text} = Typography
 
 
 function WorkAllocation() {
-    const [data, setData] = useState(workAllocationData||[])
-    			 									
+    const [data, setData] = useState([])
+    const [visible, setVisible] = useState(false)
+    const [page, setPage] = useState({pNo:1, pSize: localStore().pageSize})
+    const [tags, setTags] = useState({})
 
     const columns = [
         {
-            key: 'work',
-            dataIndex: 'work',
+            key: 'workType',
+            dataIndex: 'workType',
             fixed: true,
             title: 'Opportunity/Project',
-            render:(text, record, index)=> text === data?.[index-1 ]?.['work'] ? '' : text
+            width: 100,
+            render:(text, record, index)=> {
+                let { pNo, pSize } = page
+                let dataSourceIndex = ((pNo - 1) * pSize + index)
+                return (text === data?.[dataSourceIndex-1 ]?.['workType'] && index) ? '' : text
+            }
         },
         {
             key: 'title',
             dataIndex: 'title',
             fixed: true,
             title: 'Title',
-            render:(text, record, index)=> text === data?.[index-1 ]?.['title'] ? '' : text
+            width: 200,
+            render:(text, record, index)=> {
+                let { pNo, pSize } = page
+                let dataSourceIndex = ((pNo - 1) * pSize + index)
+                return (text === data?.[dataSourceIndex-1 ]?.['title'] && index) ? '' : text
+            }
         },
         {
-            key: 'organisation',
-            dataIndex: 'organisation',
+            key: 'organization',
+            dataIndex: 'organization',
             fixed: true,
             title: 'Organisation Name',
-            render:(text, record, index)=> text === data?.[index-1 ]?.['organisation'] ? '' : text
+            width: 200,
+            render:(text, record, index)=> {
+                let { pNo, pSize } = page
+                let dataSourceIndex = ((pNo - 1) * pSize + index)
+                return (text === data?.[dataSourceIndex-1 ]?.['organization'] && index) ? '' : text
+            }
         },
         {
             key: 'milestone',
             dataIndex: 'milestone',
             fixed: true,
             title: 'Milestone',
-            render:(text, record, index)=> text === data?.[index-1 ]?.['milestone'] ? '' : text
+            width: 100,
+            render:(text, record, index)=> {
+                let { pNo, pSize } = page
+                let dataSourceIndex = ((pNo - 1) * pSize + index)
+                return (text === data?.[dataSourceIndex-1 ]?.['milestone'] && index) ? '' : text
+            }
         },
         {
             key: 'position',
@@ -51,13 +75,13 @@ function WorkAllocation() {
             title: 'Skill'
         },
         {
-            key: 'level',
-            dataIndex: 'level',
+            key: 'skillLevel',
+            dataIndex: 'skillLevel',
             title: 'Skill Level'
         },
         {
-            key: 'resource',
-            dataIndex: 'resource',
+            key: 'name',
+            dataIndex: 'name',
             title: 'Resource Name'
         },
         {
@@ -81,8 +105,8 @@ function WorkAllocation() {
             title: 'Sell Rate'
         },
         {
-            key: 'cm',
-            dataIndex: 'cm',
+            key: 'CMPercent',
+            dataIndex: 'CMPercent',
             title: 'CM%'
         },
         {
@@ -92,31 +116,51 @@ function WorkAllocation() {
             render: (text) => formatDate(text, true, true),
         },
         {
-            key: 'finishDate',
-            dataIndex: 'finishDate',
-            title: 'Finish Date',
+            key: 'endDate',
+            dataIndex: 'endDate',
+            title: 'End Date',
             render: (text) => formatDate(text, true, true),
         },
     ]
+
+    useEffect(() => {
+        getData()
+    }, [])
+
+    const getData = (queryParam, tagsValues) =>{
+        getAllocations(queryParam).then(res=>{
+            if (res.success){
+                setData(res.data)
+                if(queryParam){
+                  setVisible(false)
+                  setTags(tagsValues)
+                }
+            }
+        })
+    }
     
 
-    const generalFilter = () =>{
-        return
-    }
-
-    const tableTitle = () =>{
-        return(
-        <Row justify='space-between'>
-            <Col flex={5}>
-                <Title level={5}>Opportunity & Project Position Allocations </Title>
-            </Col>
-            <Col flex={1}><Button size='small'>Filter</Button></Col>
-            <Col span={5}>
-                {tableTitleFilter(24, generalFilter)}
-            </Col>
+    const tableTitle = () => {
+      return (
+        <Row justify="space-between">
+          <Col>
+            <Title level={5}>Opportunity & Project Position Allocations </Title>
+          </Col>
+          <Col>
+            <Button size="small" onClick={() => setVisible(true)}> Filters </Button>
+          </Col>
+          <Col span={24}>
+            <FiltertagsNew
+              filters={tags}
+              filterFunction={() => {
+                setTags({});
+                getData();
+              }}
+            />
+          </Col>
         </Row>
-        )
-    }
+      );
+    };
     
     return (
         <Row>
@@ -125,12 +169,25 @@ function WorkAllocation() {
                     title={()=>tableTitle()}
                     columns={columns}
                     dataSource={data}
-                    pagination={false}
+                    pagination={{
+                        hideOnSinglePage: false,
+                        onChange:(pNo, pSize)=> {
+                            setPage({pNo, pSize})
+                        }
+                    }}
                     scroll={{
                         x:  'max-content'
                     }}
                 />
             </Col>
+            {/* <ReportsFilters
+                compName={'Position Allocations Resources Filter'}
+                compKey={'allocated'}
+                tags={tags}
+                visible={visible}
+                getCompData={getData}
+                invisible={()=>setVisible(false)}
+            /> */}
         </Row>
     )
 }

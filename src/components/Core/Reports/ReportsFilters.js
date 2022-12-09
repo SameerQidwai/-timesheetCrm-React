@@ -6,7 +6,7 @@ import { TableModalFilter } from '../Table/TableFilter'
 
 
 
-function ReportsFilters({compName, compKey ,visible, invisible, callFilters, getCompData, tags}) {
+function ReportsFilters({compName, compKey ,visible, invisible, getCompData, tags}) {
   const bench = {
     fields: [
       {
