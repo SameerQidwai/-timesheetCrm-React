@@ -122,7 +122,7 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) =>
         render: (files, records, index) => {
           let display = files?.length
           return display ? <Popover
-            title={`00${records.id}`}
+            title={`Files`}
             destroyTooltipOnHide
             overlayStyle={{maxWidth: 300}}
             trigger="hover"

@@ -58,6 +58,27 @@ export const getExpenseSheets = (qureyFilters) => {
       };
     });
 };
+
+export const getExpenseSheet = (id) => {
+
+  return axios
+    .get(`${url}/${id}`, { headers: headers() })
+    .then((res) => {
+      const { success, data, message } = res.data;
+      jwtExpired(message);
+      setToken(res.headers && res.headers.authorization);
+
+      return { success, data };
+    })
+    .catch((err) => {
+      return {
+        error: 'Please login again!',
+        success: false,
+        message: err.message,
+      };
+    });
+};
+
 export const getApprovalExpenseSheets = (qureyFilters) => {
   const {
     filterSatrtDate: startDate,
