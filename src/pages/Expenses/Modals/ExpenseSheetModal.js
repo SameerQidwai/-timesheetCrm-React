@@ -1,7 +1,7 @@
-import { Button, Checkbox, Col, Form, Modal, Row, Table, Typography, Upload } from 'antd'
+import { Button, Checkbox, Col, Form, Modal, Popover, Row, Table, Typography, Upload } from 'antd'
 import { PlusOutlined, CheckOutlined } from "@ant-design/icons"; //Icons
 import React, { useEffect, useState } from 'react'
-import { formatCurrency, formatDate, formatFloat, localStore } from '../../../service/constant';
+import { Api, formatCurrency, formatDate, formatFloat, localStore } from '../../../service/constant';
 import FormItems from '../../../components/Core/Forms/FormItems';
 import { getProjects, getUserProjects } from '../../../service/constant-Apis';
 // import { expensesData as dummyExpensesData } from '../../DummyData';
@@ -115,17 +115,31 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) =>
         render: (text) => formatCurrency(text),
         ...tableSorter('amount', 'number'),
       },
-      // {
-      //   title: 'Files',
-      //   dataIndex: 'files',
-      // //   sorter: {
-      // //     compare: (a, b) => a.files - b.files,
-      // //     multiple: 1,
-      // //   },
-      // render: () => (
-      //     <Text>View</Text>
-      // )
-      // },
+      {
+        title: 'Files',
+        dataIndex: 'attachments',
+        align: 'center',
+        render: (files, records, index) => {
+          let display = files?.length
+          return display ? <Popover
+            title={`00${records.id}`}
+            destroyTooltipOnHide
+            overlayStyle={{maxWidth: 300}}
+            trigger="hover"
+            content={<div>
+               <Upload
+                  listType="text"
+                  openFileDialogOnClick={true}
+                  maxCount={4}
+                  fileList={files.map(el=>{el.url = `${Api}/files/${el.uid}`; return el})}
+                  disabled
+                />
+            </div>}
+          >
+            <Text underline italic>View</Text>
+          </Popover>: null
+        }
+      },
       {
         title: 'Reimbursable',
         dataIndex: 'isReimbursed',
