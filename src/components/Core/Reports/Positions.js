@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Col, Row, Typography, Table as Atable } from 'antd'
 import Table, { FiltertagsNew } from '../Table/TableFilter'
-import {  workAllocationData } from './WIHData'
 import { formatDate, localStore } from '../../../service/constant'
 import ReportsFilters from './ReportsFilters'
-import { getAllocations } from '../../../service/reports-Apis'
+import { getPositions } from '../../../service/reports-Apis'
 
 const {Title, Text} = Typography
 
 
-function WorkAllocation() {
+function Positions() {
     const [data, setData] = useState([])
     const [visible, setVisible] = useState(false)
     const [page, setPage] = useState({pNo:1, pSize: localStore().pageSize})
@@ -22,11 +21,7 @@ function WorkAllocation() {
             fixed: true,
             title: 'Opportunity/Project',
             width: 100,
-            render:(text, record, index)=> {
-                let { pNo, pSize } = page
-                let dataSourceIndex = ((pNo - 1) * pSize + index)
-                return (text === data?.[dataSourceIndex-1 ]?.['workType'] && index) ? '' : text
-            }
+            render:(text, record, index)=> {return _nextCellRender(text, index, 'workType')}
         },
         {
             key: 'title',
@@ -34,11 +29,7 @@ function WorkAllocation() {
             fixed: true,
             title: 'Title',
             width: 200,
-            render:(text, record, index)=> {
-                let { pNo, pSize } = page
-                let dataSourceIndex = ((pNo - 1) * pSize + index)
-                return (text === data?.[dataSourceIndex-1 ]?.['title'] && index) ? '' : text
-            }
+            render:(text, record, index)=> _nextCellRender(text, index, 'title')
         },
         {
             key: 'organization',
@@ -46,11 +37,7 @@ function WorkAllocation() {
             fixed: true,
             title: 'Organisation Name',
             width: 200,
-            render:(text, record, index)=> {
-                let { pNo, pSize } = page
-                let dataSourceIndex = ((pNo - 1) * pSize + index)
-                return (text === data?.[dataSourceIndex-1 ]?.['organization'] && index) ? '' : text
-            }
+            render:(text, record, index)=> _nextCellRender(text, index, 'organization')
         },
         {
             key: 'milestone',
@@ -58,11 +45,7 @@ function WorkAllocation() {
             fixed: true,
             title: 'Milestone',
             width: 100,
-            render:(text, record, index)=> {
-                let { pNo, pSize } = page
-                let dataSourceIndex = ((pNo - 1) * pSize + index)
-                return (text === data?.[dataSourceIndex-1 ]?.['milestone'] && index) ? '' : text
-            }
+            render:(text, record, index)=> _nextCellRender(text, index, 'milestone')
         },
         {
             key: 'position',
@@ -128,7 +111,7 @@ function WorkAllocation() {
     }, [])
 
     const getData = (queryParam, tagsValues) =>{
-        getAllocations(queryParam).then(res=>{
+        getPositions(queryParam).then(res=>{
             if (res.success){
                 setData(res.data)
                 if(queryParam){
@@ -138,7 +121,6 @@ function WorkAllocation() {
             }
         })
     }
-    
 
     const tableTitle = () => {
       return (
@@ -161,6 +143,13 @@ function WorkAllocation() {
         </Row>
       );
     };
+
+    //-------------> HELPER <----------
+    const _nextCellRender = (text, index, key)=>{
+        let { pNo, pSize } = page
+        let dataSourceIndex = ((pNo - 1) * pSize + index)
+        return (text === data?.[dataSourceIndex-1 ]?.[key] && index) ? '' : text
+    }
     
     return (
         <Row>
@@ -180,16 +169,17 @@ function WorkAllocation() {
                     }}
                 />
             </Col>
-            {/* <ReportsFilters
-                compName={'Position Allocations Resources Filter'}
-                compKey={'allocated'}
+            <ReportsFilters
+                compName={'Position Allocations Resources Filters'}
+                compKey={'positions'}
                 tags={tags}
                 visible={visible}
                 getCompData={getData}
                 invisible={()=>setVisible(false)}
-            /> */}
+            />
         </Row>
     )
 }
 
-export default WorkAllocation
+export default Positions
+

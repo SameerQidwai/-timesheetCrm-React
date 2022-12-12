@@ -39,7 +39,7 @@ export const getWorkforceSkills = (queryParam) => {
         });
 };
 
-export const getAllocations = (queryParam) => {
+export const getPositions = (queryParam) => {
     return axios
         .get(`${url}/allocations${queryParam? '?'+ queryParam: ''}`, {headers:headers()})
         .then((res) => {

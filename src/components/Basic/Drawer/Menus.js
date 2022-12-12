@@ -108,21 +108,28 @@ const listData = [
             {
                 text: "Resources on the bench",
                 icon: <ExceptionOutlined />,
-                link: "/bench-resources",
+                link: "/report/bench-resources",
                 key: "BENCH",
                 permissions: {module: "TIMESHEETS", key: 'READ'}
             },
             {
                 text: "Workforce Skills",
                 icon: <ApartmentOutlined />,
-                link: "/workforce-skills",
+                link: "/report/workforce-skills",
                 key: "WORKFORCE",
                 permissions: {module: "TIMESHEETS", key: 'READ'}
             },
             {
                 text: "Position & Resources",
                 icon: <FileDoneOutlined />,
-                link: "/allocations",
+                link: "/report/positions",
+                key: "ALLOCATIONS ",
+                permissions: {module: "TIMESHEETS", key: 'READ'}
+            },
+            {
+                text: "Workforce Allocation",
+                icon: <FileDoneOutlined />,
+                link: "/report/workforce-allocations",
                 key: "ALLOCATIONS ",
                 permissions: {module: "TIMESHEETS", key: 'READ'}
             },

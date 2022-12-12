@@ -1,5 +1,5 @@
 export {default as WorkInHand} from './WorkInHand'
 export {default as BenchResources} from './BenchResources'
 export {default as WorkforceSkills} from './WorkforceSkills'
-export {default as WorkAllocation} from './WorkAllocation'
+export {default as Positions} from './Positions'
 export {default as WorkForceAllocation} from './WorkForceAllocation'
