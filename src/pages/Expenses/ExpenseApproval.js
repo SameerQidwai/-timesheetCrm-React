@@ -2,7 +2,7 @@ import { Button, Col, DatePicker, Dropdown, Menu, Popconfirm, Row, Select, Table
 import { SettingOutlined, CheckCircleOutlined, AuditOutlined, CheckOutlined} from '@ant-design/icons'; //Icons
 import React, { useEffect, useState } from 'react'
 import { entityProjects, getManageProjects, getUserProjects } from '../../service/constant-Apis';
-import { expenseSheetActions, getApprovalExpenseSheets } from '../../service/expenseSheet-Apis';
+import { expenseSheetActions, getApprovalExpenseSheets, getExpenseSheet } from '../../service/expenseSheet-Apis';
 import { formatCurrency, formatDate, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
 // import { expensesData as dummyExpensesData } from '../DummyData';
 import ExpenseSheetModal from './Modals/ExpenseSheetModal';
@@ -97,13 +97,16 @@ const ExpenseApproval = () => {
       width: '1%',
       // width: '155',
       render: (value, record, index) => (
-        <Dropdown
+        
+		<Dropdown
           overlay={
             <Menu>
               <Menu.Item
                 key="edit"
                 onClick={() =>
-                  setOpenModal({ ...record, index, adminView: true })
+					onOpenModal(record.id, index)
+				// setOpenModal({ ...record.id, index, adminView: true })
+                //   setOpenModal({ ...record, index, adminView: true })
                 }
               >
                 View
@@ -193,7 +196,16 @@ const ExpenseApproval = () => {
 		setOpenModal(false);
 	}
 
-	// for filter 
+	// for getting expense approval
+	const onOpenModal = (id, index) =>{
+		//send true if you need to call expenses for expense sheet
+		
+		getExpenseSheet(id).then(res=>{
+		  if (res.success){
+			setOpenModal({ ...res.data, index, adminView: true })
+		  }
+		})
+	  } 
 	
 
 	const multiAction = (stage)=> {
