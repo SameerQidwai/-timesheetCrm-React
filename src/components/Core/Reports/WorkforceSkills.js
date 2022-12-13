@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Col, Row, Typography, Table as Atable } from 'antd'
-import Table, { FiltertagsNew, tableTitleFilter } from '../Table/TableFilter'
-import { WorkforceData } from './WIHData'
+import Table, { FiltertagsNew } from '../Table/TableFilter'
 import ReportsFilters from './ReportsFilters'
 import { getWorkforceSkills } from '../../../service/reports-Apis'
 import { localStore } from '../../../service/constant'
@@ -51,17 +50,24 @@ function WorkforceSkills() {
   }, [])
 
   const getData = (queryParam, tagsValues) =>{
-      getWorkforceSkills(queryParam).then(res=>{
-          if (res.success){
-              setData(res.data)
-              if(queryParam){
-                setVisible(false)
-                setTags(tagsValues)
-              }
-          }
-      })
+    getWorkforceSkills(queryParam).then(res=>{
+        if (res.success){
+            setData(res.data)
+            if(queryParam){
+              setVisible(false)
+              setTags(tagsValues)
+            }
+        }
+    })
   }
 
+  // const updateFilters = ()=>{
+  //   let qurey  = ''
+  //   Object.entries(tags).map(([key, {value, type}])=>{
+  //     console.log(key, value)
+  //   })
+  // }
+  
   const tableTitle = () => {
     return (
       <Row justify="space-between">
@@ -76,7 +82,10 @@ function WorkforceSkills() {
         <Col span={24}>
           <FiltertagsNew
             filters={tags}
-            filterFunction={() => {
+            filterFunction={(updatedValue, el) => {
+              let TAGS = {...tags}
+              TAGS[el]['value'] = updatedValue; 
+              // updateFilters(TAGS)
               setTags({});
               getData();
             }}
@@ -99,6 +108,7 @@ function WorkforceSkills() {
           <Col span={24}>
               <Table
                   title={()=>tableTitle()}
+                  rowKey={'index'}
                   columns={columns}
                   pagination={{
                       hideOnSinglePage: false,

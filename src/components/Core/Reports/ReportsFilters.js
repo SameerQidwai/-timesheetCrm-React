@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { formatDate } from '../../../service/constant'
-import { getStandardLevels } from '../../../service/constant-Apis'
+import { getStandardLevels, getStandardSkills } from '../../../service/constant-Apis'
 import { TableModalFilter } from '../Table/TableFilter'
 
 
@@ -51,22 +51,25 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
   const skillResources = {
     effectRender: true,
     filterModalUseEffect: () => {
-      getStandardLevels().then((res) => {
-        if (res.success) {
-          let tempFields = [...fields]
-          //setting up fields
-          tempFields[1].data = res.data
-          tempFields[1].onChange = skillLevelSelection
-          let levels = res.data.map(el=>{
-            return {
-              label: el.label,
-              options: el.levels || []
-            }
-          })
-          //setting level value
-          tempFields[3].data = levels
-          setFields([...tempFields])
-        }
+      Promise.all([getStandardSkills(), getStandardLevels()]).then((res) => {
+        let tempFields = [...fields];
+        // if (res[0].success) {
+        //setting up skill data 
+        tempFields[1].data = res[0].success ? res[0].data : [];
+        //setting up level data 
+        tempFields[3].data = res[1].success ? res[1].data : [];
+        // tempFields[1].onChange = skillLevelSelection
+        // let levels = res.data.map(el=>{
+        //   return {
+        //     label: el.label,
+        //     options: el.levels || []
+        //   }
+        // })
+        // //setting level value
+        // tempFields[3].data = levels
+        // }
+
+        setFields([...tempFields]);
       });
     },
     fields: [
@@ -81,7 +84,9 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         fieldCol: 24,
         key: 'skill',
         size: 'small',
-        mode: 'multiple',
+        // mode: 'multiple',
+        // customValue: (value, option) => ({selectedIds: value, option}),
+        // getValueProps: (value)=> value?.option,
         customValue: (value, option) => option,
         data: [],
         type: 'Select',
@@ -97,7 +102,9 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         fieldCol: 24,
         key: 'level',
         size: 'small',
-        mode: 'multiple',
+        // mode: 'multiple',
+        // customValue: (value, option) => ({selectedIds: value, option}),
+        // getValueProps: (value)=> value?.option,
         customValue: (value, option) => option,
         data: [],
         type: 'Select',
@@ -105,16 +112,16 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
     ],
     searchValue: {
       skill: {
-        type: 'none',
-        multi: true,
+        type: 'Select',
+        // multi: true,
         value: [],
         label: 'Skill',
         showInColumn: false,
         disabled: false,
       },
       level: {
-        type: 'none',
-        multi: true,
+        type: 'Select',
+        // multi: true,
         value: [],
         label: 'Level',
         showInColumn: false,
@@ -122,43 +129,43 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
       },
     },
     callFilters: (value1, value2, filters, formData) => {
-      let {skills, levels} = formData || [];
-      console.log(skills, levels)
-      // if (!true){
-      //   let qurey = `${startDate ? 'startDate=' + startDate : ''}&${
-      //     endDate ? 'endDate=' + endDate : ''
-      //   }`;
-      //   getCompData(qurey, filters);
-      // }
+      let {skill, level} = formData || {}
+      //for multi select
+      // let qurey = `${skill?.selectedIds?.length ? 'skillId=' + skill?.selectedIds?.[0] : ''}&${
+      //   level?.selectedIds?.length ? 'levelId=' + level?.selectedIds?.[0] : ''
+      // }`;
+      let qurey = `${skill ? 'skillId=' + skill.value: ''}${ //for single select
+        level ? '&levelId=' + level.value: ''
+      }`;
+      console.log(filters, qurey)
+      getCompData(qurey, filters);
     },
   };
 
 
   const positions = {
-    effectRender: false,
+    effectRender: true,
     filterModalUseEffect: () => {
+      Promise.all([getStandardSkills(), getStandardLevels()]).then((res) => {
+        let tempFields = [...fields];
+        // if (res[0].success) {
+        //setting up skill data 
+        tempFields[9].data = res[0].success ? res[0].data : [];
+        //setting up level data 
+        tempFields[11].data = res[1].success ? res[1].data : [];
+        // tempFields[1].onChange = skillLevelSelection
+        // let levels = res.data.map(el=>{
+        //   return {
+        //     label: el.label,
+        //     options: el.levels || []
+        //   }
+        // })
+        // //setting level value
+        // tempFields[3].data = levels
+        // }
 
-      // Promise.all(proje ,getStandardLevels()).then(res=>{
-      //   if(res){}
-      // })
-
-      // getStandardLevels().then((res) => {
-      //   if (res.success) {
-      //     let tempFields = [...fields]
-      //     //setting up fields
-      //     tempFields[1].data = res.data
-      //     tempFields[1].onChange = skillLevelSelection
-      //     let levels = res.data.map(el=>{
-      //       return {
-      //         label: el.label,
-      //         options: el.levels || []
-      //       }
-      //     })
-      //     //setting level value
-      //     tempFields[3].data = levels
-      //     setFields([...tempFields])
-      //   }
-      // });
+        setFields([...tempFields]);
+      });
     },
     fields: [
       {
@@ -184,18 +191,20 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
       {
         object: 'obj',
         fieldCol: 24,
-        key: 'projectType',
+        key: 'workType',
         size: 'small',
-        mode: 'multiple',
+        // mode: 'multiple',
+        // customValue: (value, option) => ({ selectedIds: value, option }),
         customValue: (value, option) => option,
+        // getValueProps: (value) => value?.option,
         data: [
-          {label: 'Milestone', value: 1},
-          {label: 'Time & Materials', value: 2}
+          { label: 'Milestone', value: 1 },
+          { label: 'Time & Materials', value: 2 },
         ],
         type: 'Select',
       },
       {
-        Placeholder: 'Project',
+        Placeholder: 'Opportunity/Project',
         fieldCol: 12,
         size: 'small',
         type: 'Text',
@@ -203,11 +212,16 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
       {
         object: 'obj',
         fieldCol: 24,
-        key: 'project',
+        key: 'workStatus',
         size: 'small',
-        mode: 'multiple',
+        // mode: 'multiple',
+        // customValue: (value, option) => ({ selectedIds: value, option }),
         customValue: (value, option) => option,
-        data: [],
+        // getValueProps: (value) => value?.option,
+        data: [
+          { value: 0, label: 'Opportunity' },
+          { value: 1, label: 'Project' },
+        ],
         type: 'Select',
       },
       {
@@ -219,29 +233,35 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
       {
         object: 'obj',
         fieldCol: 24,
-        key: 'booking',
+        key: 'resourceType',
         size: 'small',
-        mode: 'multiple',
+        // mode: 'multiple',
+        // customValue: (value, option) => ({ selectedIds: value, option }),
         customValue: (value, option) => option,
-        data: [],
+        // getValueProps: (value) => value?.option,
+        data: [
+          { value: 0, label: 'Softbooked' },
+          { value: 1, label: 'Allocated' },
+          { value: 2, label: 'Assigned' },
+        ],
         type: 'Select',
       },
-      {
-        Placeholder: 'Resources',
-        fieldCol: 12,
-        size: 'small',
-        type: 'Text',
-      },
-      {
-        object: 'obj',
-        fieldCol: 24,
-        key: 'resource',
-        size: 'small',
-        mode: 'multiple',
-        customValue: (value, option) => option,
-        data: [],
-        type: 'Select',
-      },
+      // {
+      //   Placeholder: 'Resources',
+      //   fieldCol: 12,
+      //   size: 'small',
+      //   type: 'Text',
+      // },
+      // {
+      //   object: 'obj',
+      //   fieldCol: 24,
+      //   key: 'resource',
+      //   size: 'small',
+        // mode: 'multiple',
+      //   customValue: (value, option) => option,
+      //   data: [],
+      //   type: 'Select',
+      // },
       {
         Placeholder: 'Skill',
         fieldCol: 12,
@@ -253,8 +273,10 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         fieldCol: 24,
         key: 'skill',
         size: 'small',
-        mode: 'multiple',
-        customValue: (value, option) => option,
+        // mode: 'multiple',
+        // customValue: (value, option) => ({ selectedIds: value, option }),
+        customValue: (value, option) => option ,
+        // getValueProps: (value) => value?.option,
         data: [],
         type: 'Select',
       },
@@ -269,8 +291,10 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         fieldCol: 24,
         key: 'level',
         size: 'small',
-        mode: 'multiple',
+        // mode: 'multiple',
+        // customValue: (value, option) => ({ selectedIds: value, option }),
         customValue: (value, option) => option,
+        // getValueProps: (value) => value?.option,
         data: [],
         type: 'Select',
       },
@@ -284,86 +308,105 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         disabled: true,
       },
       skill: {
-        type: 'none',
-        multi: true,
+        type: 'Select',
+        // multi: true,
         value: [],
         label: 'Skill',
         showInColumn: false,
         disabled: false,
       },
       level: {
-        type: 'none',
-        multi: true,
+        type: 'Select',
+        // multi: true,
         value: [],
         label: 'Level',
         showInColumn: false,
         disabled: false,
       },
-      projectType: {
-        type: 'none',
-        multi: true,
+      workType: {
+        type: 'Select',
+        // multi: true,
         value: [],
-        label: 'projectType',
+        label: 'Project Type',
         showInColumn: false,
         disabled: false,
       },
-      project: {
-        type: 'none',
-        multi: true,
+      workStatus: {
+        type: 'Select',
+        // multi: true,
         value: [],
-        label: 'Project',
+        label: 'Opportunity/Project',
         showInColumn: false,
         disabled: false,
       },
-      resource: {
-        type: 'none',
-        multi: true,
+      resourceType: {
+        type: 'Select',
+        // multi: true,
         value: [],
-        label: 'Project',
+        label: 'Booking Type',
         showInColumn: false,
         disabled: false,
       },
     },
-    // callFilters: (value1, value2, filters, formData) => {
-    //   let [startDate, endDate] = formData?.dates || [];
-    //   startDate = formatDate(startDate, true);
-    //   endDate = formatDate(endDate, true);
-    //   let qurey = `${startDate ? 'startDate=' + startDate : ''}&${
-    //     endDate ? 'endDate=' + endDate : ''
-    //   }`;
-    //   getCompData(qurey, filters);
-    // },
+
+    callFilters: (value1, value2, filters, formData) => {
+      let {
+        dates: [startDate, endDate] = [],
+        skillId,
+        levelId,
+        resourceType,
+        workStatus,
+        workType,
+      } = formData || {};
+      startDate = formatDate(startDate, true);
+      endDate = formatDate(endDate, true);
+      //for multiselect
+      // let qurey = `${startDate ? 'startDate=' + startDate : ''}
+      // ${endDate ? '&endDate=' + endDate : ''}
+      // ${skillId.selectedIds.length ? '&skillId=' + skillId?.selectedIds : ''}
+      // ${levelId.selectedIds.length ? '&levelId=' + levelId?.selectedIds : ''}
+      // ${workStatus.selectedIds.length ? '&workStatus=' + workStatus?.selectedIds : ''}
+      // ${workType.selectedIds.length ? '&workType=' + workType?.selectedIds : ''}
+      // ${resourceType.selectedIds.length ? '&resourceType=' + resourceType?.selectedIds : ''}`;
+      //for single select
+      let qurey = `${startDate ? 'startDate=' + startDate : ''}${
+        endDate ? '&endDate=' + endDate : ''
+      }${skillId ? '&skillId=' + skillId.value : ''}${
+        levelId ? '&levelId=' + levelId.value : ''
+      }${workStatus ? '&workStatus=' + workStatus.value : ''}${
+        workType ? '&workType=' + workType.value : ''
+      }${resourceType ? '&resourceType=' + resourceType.value : ''}`;
+      getCompData(qurey, filters);
+    },
   };
 
   const allocations = {
-    effectRender: false,
+    effectRender: true,
     filterModalUseEffect: () => {
+      Promise.all([getStandardSkills(), getStandardLevels()]).then((res) => {
+        let tempFields = [...fields];
+        // if (res[0].success) {
+        //setting up skill data
+        tempFields[1].data = res[0].success ? res[0].data : [];
+        //setting up level data
+        tempFields[3].data = res[1].success ? res[1].data : [];
+        // tempFields[1].onChange = skillLevelSelection
+        // let levels = res.data.map(el=>{
+        //   return {
+        //     label: el.label,
+        //     options: el.levels || []
+        //   }
+        // })
+        // //setting level value
+        // tempFields[3].data = levels
+        // }
 
-      // Promise.all(proje ,getStandardLevels()).then(res=>{
-      //   if(res){}
-      // })
-
-      // getStandardLevels().then((res) => {
-      //   if (res.success) {
-      //     let tempFields = [...fields]
-      //     //setting up fields
-      //     tempFields[1].data = res.data
-      //     tempFields[1].onChange = skillLevelSelection
-      //     let levels = res.data.map(el=>{
-      //       return {
-      //         label: el.label,
-      //         options: el.levels || []
-      //       }
-      //     })
-      //     //setting level value
-      //     tempFields[3].data = levels
-      //     setFields([...tempFields])
-      //   }
-      // });
+        setFields([...tempFields]);
+      });
     },
     fields: [
       {
-        Placeholder: 'Date Range',
+        Placeholder: 'Date Allocation Range',
         fieldCol: 24,
         size: 'small',
         type: 'Text',
@@ -385,18 +428,20 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
       {
         object: 'obj',
         fieldCol: 24,
-        key: 'projectType',
+        key: 'workType',
         size: 'small',
-        mode: 'multiple',
+        // mode: 'multiple',
+        // customValue: (value, option) => ({ selectedIds: value, option }),
         customValue: (value, option) => option,
+        // getValueProps: (value) => value?.option,
         data: [
-          {label: 'Milestone', value: 1},
-          {label: 'Time & Materials', value: 2}
+          { label: 'Milestone', value: 1 },
+          { label: 'Time & Materials', value: 2 },
         ],
         type: 'Select',
       },
       {
-        Placeholder: 'Project',
+        Placeholder: 'Opportunity/Project',
         fieldCol: 12,
         size: 'small',
         type: 'Text',
@@ -404,13 +449,56 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
       {
         object: 'obj',
         fieldCol: 24,
-        key: 'project',
+        key: 'workStatus',
         size: 'small',
-        mode: 'multiple',
+        // mode: 'multiple',
+        // customValue: (value, option) => ({ selectedIds: value, option }),
         customValue: (value, option) => option,
-        data: [],
+        // getValueProps: (value) => value?.option,
+        data: [
+          { value: 0, label: 'Opportunity' },
+          { value: 1, label: 'Project' },
+        ],
         type: 'Select',
       },
+      {
+        Placeholder: 'Booking Type',
+        fieldCol: 12,
+        size: 'small',
+        type: 'Text',
+      },
+      {
+        object: 'obj',
+        fieldCol: 24,
+        key: 'resourceType',
+        size: 'small',
+        // mode: 'multiple',
+        // customValue: (value, option) => ({ selectedIds: value, option }),
+        customValue: (value, option) => option,
+        // getValueProps: (value) => value?.option,
+        data: [
+          { value: 0, label: 'Softbooked' },
+          { value: 1, label: 'Allocated' },
+          { value: 2, label: 'Assigned' },
+        ],
+        type: 'Select',
+      },
+      // {
+      //   Placeholder: 'Resources',
+      //   fieldCol: 12,
+      //   size: 'small',
+      //   type: 'Text',
+      // },
+      // {
+      //   object: 'obj',
+      //   fieldCol: 24,
+      //   key: 'resource',
+      //   size: 'small',
+      // mode: 'multiple',
+      //   customValue: (value, option) => option,
+      //   data: [],
+      //   type: 'Select',
+      // },
       {
         Placeholder: 'Skill',
         fieldCol: 12,
@@ -422,8 +510,10 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         fieldCol: 24,
         key: 'skill',
         size: 'small',
-        mode: 'multiple',
+        // mode: 'multiple',
+        // customValue: (value, option) => ({ selectedIds: value, option }),
         customValue: (value, option) => option,
+        // getValueProps: (value) => value?.option,
         data: [],
         type: 'Select',
       },
@@ -438,8 +528,10 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         fieldCol: 24,
         key: 'level',
         size: 'small',
-        mode: 'multiple',
+        // mode: 'multiple',
+        // customValue: (value, option) => ({ selectedIds: value, option }),
         customValue: (value, option) => option,
+        // getValueProps: (value) => value?.option,
         data: [],
         type: 'Select',
       },
@@ -453,71 +545,75 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         disabled: true,
       },
       skill: {
-        type: 'none',
-        multi: true,
+        type: 'Select',
+        // multi: true,
         value: [],
         label: 'Skill',
         showInColumn: false,
         disabled: false,
       },
       level: {
-        type: 'none',
-        multi: true,
+        type: 'Select',
+        // multi: true,
         value: [],
         label: 'Level',
         showInColumn: false,
         disabled: false,
       },
-      projectType: {
-        type: 'none',
-        multi: true,
+      workType: {
+        type: 'Select',
+        // multi: true,
         value: [],
-        label: 'projectType',
+        label: 'Project Type',
         showInColumn: false,
         disabled: false,
       },
-      project: {
-        type: 'none',
-        multi: true,
+      workStatus: {
+        type: 'Select',
+        // multi: true,
         value: [],
-        label: 'Project',
-        showInColumn: false,
-        disabled: false,
-      },
-      booking: {
-        type: 'none',
-        multi: true,
-        value: [],
-        label: 'Project',
+        label: 'Opportunity/Project',
         showInColumn: false,
         disabled: false,
       },
       resourceType: {
-        type: 'none',
-        multi: true,
+        type: 'Select',
+        // multi: true,
         value: [],
-        label: 'Project',
-        showInColumn: false,
-        disabled: false,
-      },
-      workType: {
-        type: 'none',
-        multi: true,
-        value: [],
-        label: 'Project',
+        label: 'Booking Type',
         showInColumn: false,
         disabled: false,
       },
     },
-    // callFilters: (value1, value2, filters, formData) => {
-    //   let [startDate, endDate] = formData?.dates || [];
-    //   startDate = formatDate(startDate, true);
-    //   endDate = formatDate(endDate, true);
-    //   let qurey = `${startDate ? 'startDate=' + startDate : ''}&${
-    //     endDate ? 'endDate=' + endDate : ''
-    //   }`;
-    //   getCompData(qurey, filters);
-    // },
+    callFilters: (value1, value2, filters, formData) => {
+      let {
+        dates: [startDate, endDate] = [],
+        skillId,
+        levelId,
+        resourceType,
+        workStatus,
+        workType,
+      } = formData || {};
+      startDate = formatDate(startDate, true);
+      endDate = formatDate(endDate, true);
+      //for multiselect
+      // let qurey = `${startDate ? 'startDate=' + startDate : ''}
+      // ${endDate ? '&endDate=' + endDate : ''}
+      // ${skillId.selectedIds.length ? '&skillId=' + skillId?.selectedIds : ''}
+      // ${levelId.selectedIds.length ? '&levelId=' + levelId?.selectedIds : ''}
+      // ${workStatus.selectedIds.length ? '&workStatus=' + workStatus?.selectedIds : ''}
+      // ${workType.selectedIds.length ? '&workType=' + workType?.selectedIds : ''}
+      // ${resourceType.selectedIds.length ? '&resourceType=' + resourceType?.selectedIds : ''}`;
+      //for single select
+      let qurey = `${startDate ? 'startDate=' + startDate : ''}${
+        endDate ? '&endDate=' + endDate : ''
+      }${skillId ? '&skillId=' + skillId.value : ''}${
+        levelId ? '&levelId=' + levelId.value : ''
+      }${workStatus ? '&workStatus=' + workStatus.value : ''}${
+        workType ? '&workType=' + workType.value : ''
+      }${resourceType ? '&resourceType=' + resourceType.value : ''}`;
+      getCompData(qurey, filters);
+    },
   };
 
   const reportsFilter = {

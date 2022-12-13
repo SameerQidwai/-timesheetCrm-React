@@ -4,7 +4,7 @@ import Table, { FiltertagsNew, tableTitleFilter } from '../Table/TableFilter'
 import { BencheResData,  WorkforceData } from './WIHData'
 import { formatDate, localStore } from '../../../service/constant'
 import ReportsFilters from './ReportsFilters'
-import { getPositions } from '../../../service/reports-Apis'
+import { getAllocations } from '../../../service/reports-Apis'
 
 const {Title, Text} = Typography
 
@@ -31,8 +31,8 @@ function WorkForceAllocation() {
             render:(text, record, index)=> _nextCellRender(text, index, 'type')
         },
         {
-            key: 'work',
-            dataIndex: 'work',
+            key: 'workType',
+            dataIndex: 'workType',
             fixed: true,
             title: 'Opportunity/Project',
             render:(text, record, index)=> _nextCellRender(text, index, 'work')
@@ -48,7 +48,7 @@ function WorkForceAllocation() {
             key: 'organization',
             dataIndex: 'organization',
             // fixed: true,
-            title: 'Opportunity/Project',
+            title: 'organization Title',
             render:(text, record, index)=> _nextCellRender(text, index, 'organization')
         },
         {
@@ -95,9 +95,9 @@ function WorkForceAllocation() {
             render: (text) => formatDate(text, true, true),
         },
         {
-            key: 'finishDate',
-            dataIndex: 'finishDate',
-            title: 'Finish Date',
+            key: 'endDate',
+            dataIndex: 'endDate',
+            title: 'End Date',
             render: (text) => formatDate(text, true, true),
         },
     ]
@@ -108,7 +108,7 @@ function WorkForceAllocation() {
     }, [])
 
     const getData = (queryParam, tagsValues) =>{
-        getPositions(queryParam).then(res=>{
+        getAllocations(queryParam).then(res=>{
             if (res.success){
                 setData(res.data)
                 if(queryParam){
@@ -153,6 +153,7 @@ function WorkForceAllocation() {
             <Col span={24}>
                 <Table
                     title={()=>tableTitle()}
+                    rowKey={'index'}
                     columns={columns}
                     dataSource={data}
                     pagination={{

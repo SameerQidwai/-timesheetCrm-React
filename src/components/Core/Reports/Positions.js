@@ -156,6 +156,7 @@ function Positions() {
             <Col span={24}>
                 <Table
                     title={()=>tableTitle()}
+                    rowKey={'index'}
                     columns={columns}
                     dataSource={data}
                     pagination={{

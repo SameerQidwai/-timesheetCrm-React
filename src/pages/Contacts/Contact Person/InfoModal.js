@@ -15,7 +15,7 @@ import {
 } from '../../../service/conatct-person';
 import {
   getStates,
-  getStandardLevels,
+  getStandardSkills,
   getOrganizations,
 } from '../../../service/constant-Apis';
 
@@ -461,7 +461,7 @@ class InfoModal extends Component {
   };
   fetchAll = () => {
     const { editCP } = this.props;
-    Promise.all([getStates(), getStandardLevels(), getOrganizations()])
+    Promise.all([getStates(), getStandardSkills(), getOrganizations()])
       .then((res) => {
         const { BasicFields, SecurityFields } = this.state;
         BasicFields.fields[11].data = res[0].data;

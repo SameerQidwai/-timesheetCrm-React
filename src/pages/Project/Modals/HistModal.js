@@ -4,7 +4,7 @@ import { LoadingOutlined } from "@ant-design/icons"; //Icons
 import Form from "../../../components/Core/Forms/Form";
 
 import { addLeadSkill, getLeadSkills, editLeadSkill } from "../../../service/opportunities";
-import { getPanelSkills, getStandardLevels, getContactPersons  } from "../../../service/constant-Apis";
+import { getPanelSkills, getStandardSkills, getContactPersons  } from "../../../service/constant-Apis";
 import { formatDate } from "../../../service/constant";
 
 

@@ -281,7 +281,7 @@ export const Filtertags = ({filters, filterFunction}) =>{
                     >{filters[el].value}</Tag> 
                     :   filters[el].type === 'Date' ?
                         <Tag 
-                            key={filters[el].value[0]}
+                            key={filters[el]?.value?.[0]}
                             color="lime" 
                             closable 
                             onClose={()=>{
@@ -327,8 +327,9 @@ export const FiltertagsNew = ({filters, filterFunction}) =>{ //should make it wo
     }, []);
     return <Col span={24}> 
         {filterKeys.map(el=>{
-            const { value, label, type, multi } = filters[el]
-            return value && value.length>0 &&<span key={el}>
+            let { value, label, type, multi } = filters[el] ?? {}
+            value = value && (value?.selectedIds? value.option: (value.length>0 || value.value ) && value)
+            return value &&<span key={el}>
                 <Tag color="magenta" key={el}>{label}: </Tag>
                 {
                     type === 'Date' ? //String field search Tag
@@ -343,7 +344,7 @@ export const FiltertagsNew = ({filters, filterFunction}) =>{ //should make it wo
                             > {`${value[0]}=>${value[1]}`} </Tag>
 
                     :   type === 'Select' ?
-                            multi ? value && value.map(elValue=> <Tag 
+                            multi ? value.map(elValue=> <Tag 
                                 key={`${el}${elValue.value}`}
                                 color="lime" 
                                 closable 

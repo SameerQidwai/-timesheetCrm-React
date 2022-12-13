@@ -89,7 +89,7 @@ function BenchResources() {
         <Table
           title={() => tableTitle()}
           columns={resourceColumn}
-          rowKey={'name'}
+          rowKey={'index'}
           dataSource={data}
           expandable={{
             rowExpandable: (record) => record?.skills?.length > 0,
