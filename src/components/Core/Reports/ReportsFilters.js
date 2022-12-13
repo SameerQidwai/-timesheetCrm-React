@@ -84,10 +84,10 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         fieldCol: 24,
         key: 'skill',
         size: 'small',
-        // mode: 'multiple',
-        // customValue: (value, option) => ({selectedIds: value, option}),
-        // getValueProps: (value)=> value?.option,
-        customValue: (value, option) => option,
+        mode: 'multiple',
+        customValue: (value, option) => ({selectedIds: value, option}),
+        getValueProps: (value)=> value?.option,
+        // customValue: (value, option) => option,
         data: [],
         type: 'Select',
       },
@@ -102,10 +102,10 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         fieldCol: 24,
         key: 'level',
         size: 'small',
-        // mode: 'multiple',
-        // customValue: (value, option) => ({selectedIds: value, option}),
-        // getValueProps: (value)=> value?.option,
-        customValue: (value, option) => option,
+        mode: 'multiple',
+        customValue: (value, option) => ({selectedIds: value, option}),
+        getValueProps: (value)=> value?.option,
+        // customValue: (value, option) => option,
         data: [],
         type: 'Select',
       },
@@ -113,7 +113,7 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
     searchValue: {
       skill: {
         type: 'Select',
-        // multi: true,
+        multi: true,
         value: [],
         label: 'Skill',
         showInColumn: false,
@@ -121,7 +121,7 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
       },
       level: {
         type: 'Select',
-        // multi: true,
+        multi: true,
         value: [],
         label: 'Level',
         showInColumn: false,
@@ -131,12 +131,12 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
     callFilters: (value1, value2, filters, formData) => {
       let {skill, level} = formData || {}
       //for multi select
-      // let qurey = `${skill?.selectedIds?.length ? 'skillId=' + skill?.selectedIds?.[0] : ''}&${
-      //   level?.selectedIds?.length ? 'levelId=' + level?.selectedIds?.[0] : ''
-      // }`;
-      let qurey = `${skill ? 'skillId=' + skill.value: ''}${ //for single select
-        level ? '&levelId=' + level.value: ''
+      let qurey = `${skill?.selectedIds?.length ? 'skillId=' + skill?.selectedIds : ''}&${
+        level?.selectedIds?.length ? 'levelId=' + level?.selectedIds : ''
       }`;
+      // let qurey = `${skill ? 'skillId=' + skill.value: ''}${ //for single select
+      //   level ? '&levelId=' + level.value: ''
+      // }`;
       console.log(filters, qurey)
       getCompData(qurey, filters);
     },
@@ -193,10 +193,10 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         fieldCol: 24,
         key: 'workType',
         size: 'small',
-        // mode: 'multiple',
-        // customValue: (value, option) => ({ selectedIds: value, option }),
-        customValue: (value, option) => option,
-        // getValueProps: (value) => value?.option,
+        mode: 'multiple',
+        customValue: (value, option) => ({ selectedIds: value, option }),
+        getValueProps: (value) => value?.option,
+        // customValue: (value, option) => option,
         data: [
           { label: 'Milestone', value: 1 },
           { label: 'Time & Materials', value: 2 },
@@ -214,10 +214,10 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         fieldCol: 24,
         key: 'workStatus',
         size: 'small',
-        // mode: 'multiple',
-        // customValue: (value, option) => ({ selectedIds: value, option }),
-        customValue: (value, option) => option,
-        // getValueProps: (value) => value?.option,
+        mode: 'multiple',
+        customValue: (value, option) => ({ selectedIds: value, option }),
+        getValueProps: (value) => value?.option,
+        // customValue: (value, option) => option,
         data: [
           { value: 0, label: 'Opportunity' },
           { value: 1, label: 'Project' },
@@ -235,10 +235,10 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         fieldCol: 24,
         key: 'resourceType',
         size: 'small',
-        // mode: 'multiple',
-        // customValue: (value, option) => ({ selectedIds: value, option }),
-        customValue: (value, option) => option,
-        // getValueProps: (value) => value?.option,
+        mode: 'multiple',
+        customValue: (value, option) => ({ selectedIds: value, option }),
+        getValueProps: (value) => value?.option,
+        // customValue: (value, option) => option,
         data: [
           { value: 0, label: 'Softbooked' },
           { value: 1, label: 'Allocated' },
@@ -273,10 +273,10 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         fieldCol: 24,
         key: 'skill',
         size: 'small',
-        // mode: 'multiple',
-        // customValue: (value, option) => ({ selectedIds: value, option }),
-        customValue: (value, option) => option ,
-        // getValueProps: (value) => value?.option,
+        mode: 'multiple',
+        customValue: (value, option) => ({ selectedIds: value, option }),
+        getValueProps: (value) => value?.option,
+        // customValue: (value, option) => option ,
         data: [],
         type: 'Select',
       },
@@ -291,10 +291,10 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         fieldCol: 24,
         key: 'level',
         size: 'small',
-        // mode: 'multiple',
-        // customValue: (value, option) => ({ selectedIds: value, option }),
-        customValue: (value, option) => option,
-        // getValueProps: (value) => value?.option,
+        mode: 'multiple',
+        customValue: (value, option) => ({ selectedIds: value, option }),
+        getValueProps: (value) => value?.option,
+        // customValue: (value, option) => option,
         data: [],
         type: 'Select',
       },
@@ -309,7 +309,7 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
       },
       skill: {
         type: 'Select',
-        // multi: true,
+        multi: true,
         value: [],
         label: 'Skill',
         showInColumn: false,
@@ -317,7 +317,7 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
       },
       level: {
         type: 'Select',
-        // multi: true,
+        multi: true,
         value: [],
         label: 'Level',
         showInColumn: false,
@@ -325,7 +325,7 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
       },
       workType: {
         type: 'Select',
-        // multi: true,
+        multi: true,
         value: [],
         label: 'Project Type',
         showInColumn: false,
@@ -333,7 +333,7 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
       },
       workStatus: {
         type: 'Select',
-        // multi: true,
+        multi: true,
         value: [],
         label: 'Opportunity/Project',
         showInColumn: false,
@@ -341,7 +341,7 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
       },
       resourceType: {
         type: 'Select',
-        // multi: true,
+        multi: true,
         value: [],
         label: 'Booking Type',
         showInColumn: false,
@@ -361,21 +361,21 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
       startDate = formatDate(startDate, true);
       endDate = formatDate(endDate, true);
       //for multiselect
-      // let qurey = `${startDate ? 'startDate=' + startDate : ''}
-      // ${endDate ? '&endDate=' + endDate : ''}
-      // ${skillId.selectedIds.length ? '&skillId=' + skillId?.selectedIds : ''}
-      // ${levelId.selectedIds.length ? '&levelId=' + levelId?.selectedIds : ''}
-      // ${workStatus.selectedIds.length ? '&workStatus=' + workStatus?.selectedIds : ''}
-      // ${workType.selectedIds.length ? '&workType=' + workType?.selectedIds : ''}
-      // ${resourceType.selectedIds.length ? '&resourceType=' + resourceType?.selectedIds : ''}`;
+      let qurey = `${startDate ? 'startDate=' + startDate : ''}
+      ${endDate ? '&endDate=' + endDate : ''}
+      ${skillId.selectedIds.length ? '&skillId=' + skillId?.selectedIds : ''}
+      ${levelId.selectedIds.length ? '&levelId=' + levelId?.selectedIds : ''}
+      ${workStatus.selectedIds.length ? '&workStatus=' + workStatus?.selectedIds : ''}
+      ${workType.selectedIds.length ? '&workType=' + workType?.selectedIds : ''}
+      ${resourceType.selectedIds.length ? '&resourceType=' + resourceType?.selectedIds : ''}`;
       //for single select
-      let qurey = `${startDate ? 'startDate=' + startDate : ''}${
-        endDate ? '&endDate=' + endDate : ''
-      }${skillId ? '&skillId=' + skillId.value : ''}${
-        levelId ? '&levelId=' + levelId.value : ''
-      }${workStatus ? '&workStatus=' + workStatus.value : ''}${
-        workType ? '&workType=' + workType.value : ''
-      }${resourceType ? '&resourceType=' + resourceType.value : ''}`;
+      // let qurey = `${startDate ? 'startDate=' + startDate : ''}${
+      //   endDate ? '&endDate=' + endDate : ''
+      // }${skillId ? '&skillId=' + skillId.value : ''}${
+      //   levelId ? '&levelId=' + levelId.value : ''
+      // }${workStatus ? '&workStatus=' + workStatus.value : ''}${
+      //   workType ? '&workType=' + workType.value : ''
+      // }${resourceType ? '&resourceType=' + resourceType.value : ''}`;
       getCompData(qurey, filters);
     },
   };
@@ -430,10 +430,10 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         fieldCol: 24,
         key: 'workType',
         size: 'small',
-        // mode: 'multiple',
-        // customValue: (value, option) => ({ selectedIds: value, option }),
-        customValue: (value, option) => option,
-        // getValueProps: (value) => value?.option,
+        mode: 'multiple',
+        customValue: (value, option) => ({ selectedIds: value, option }),
+        getValueProps: (value) => value?.option,
+        // customValue: (value, option) => option,
         data: [
           { label: 'Milestone', value: 1 },
           { label: 'Time & Materials', value: 2 },
@@ -451,10 +451,10 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         fieldCol: 24,
         key: 'workStatus',
         size: 'small',
-        // mode: 'multiple',
-        // customValue: (value, option) => ({ selectedIds: value, option }),
-        customValue: (value, option) => option,
-        // getValueProps: (value) => value?.option,
+        mode: 'multiple',
+        customValue: (value, option) => ({ selectedIds: value, option }),
+        getValueProps: (value) => value?.option,
+        // customValue: (value, option) => option,
         data: [
           { value: 0, label: 'Opportunity' },
           { value: 1, label: 'Project' },
@@ -472,10 +472,10 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         fieldCol: 24,
         key: 'resourceType',
         size: 'small',
-        // mode: 'multiple',
-        // customValue: (value, option) => ({ selectedIds: value, option }),
-        customValue: (value, option) => option,
-        // getValueProps: (value) => value?.option,
+        mode: 'multiple',
+        customValue: (value, option) => ({ selectedIds: value, option }),
+        getValueProps: (value) => value?.option,
+        // customValue: (value, option) => option,
         data: [
           { value: 0, label: 'Softbooked' },
           { value: 1, label: 'Allocated' },
@@ -510,10 +510,10 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         fieldCol: 24,
         key: 'skill',
         size: 'small',
-        // mode: 'multiple',
-        // customValue: (value, option) => ({ selectedIds: value, option }),
-        customValue: (value, option) => option,
-        // getValueProps: (value) => value?.option,
+        mode: 'multiple',
+        customValue: (value, option) => ({ selectedIds: value, option }),
+        getValueProps: (value) => value?.option,
+        // customValue: (value, option) => option,
         data: [],
         type: 'Select',
       },
@@ -528,10 +528,10 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         fieldCol: 24,
         key: 'level',
         size: 'small',
-        // mode: 'multiple',
-        // customValue: (value, option) => ({ selectedIds: value, option }),
-        customValue: (value, option) => option,
-        // getValueProps: (value) => value?.option,
+        mode: 'multiple',
+        customValue: (value, option) => ({ selectedIds: value, option }),
+        getValueProps: (value) => value?.option,
+        // customValue: (value, option) => option,
         data: [],
         type: 'Select',
       },
@@ -546,7 +546,7 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
       },
       skill: {
         type: 'Select',
-        // multi: true,
+        multi: true,
         value: [],
         label: 'Skill',
         showInColumn: false,
@@ -554,7 +554,7 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
       },
       level: {
         type: 'Select',
-        // multi: true,
+        multi: true,
         value: [],
         label: 'Level',
         showInColumn: false,
@@ -562,7 +562,7 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
       },
       workType: {
         type: 'Select',
-        // multi: true,
+        multi: true,
         value: [],
         label: 'Project Type',
         showInColumn: false,
@@ -570,7 +570,7 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
       },
       workStatus: {
         type: 'Select',
-        // multi: true,
+        multi: true,
         value: [],
         label: 'Opportunity/Project',
         showInColumn: false,
@@ -578,7 +578,7 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
       },
       resourceType: {
         type: 'Select',
-        // multi: true,
+        multi: true,
         value: [],
         label: 'Booking Type',
         showInColumn: false,
@@ -597,21 +597,21 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
       startDate = formatDate(startDate, true);
       endDate = formatDate(endDate, true);
       //for multiselect
-      // let qurey = `${startDate ? 'startDate=' + startDate : ''}
-      // ${endDate ? '&endDate=' + endDate : ''}
-      // ${skillId.selectedIds.length ? '&skillId=' + skillId?.selectedIds : ''}
-      // ${levelId.selectedIds.length ? '&levelId=' + levelId?.selectedIds : ''}
-      // ${workStatus.selectedIds.length ? '&workStatus=' + workStatus?.selectedIds : ''}
-      // ${workType.selectedIds.length ? '&workType=' + workType?.selectedIds : ''}
-      // ${resourceType.selectedIds.length ? '&resourceType=' + resourceType?.selectedIds : ''}`;
+      let qurey = `${startDate ? 'startDate=' + startDate : ''}
+      ${endDate ? '&endDate=' + endDate : ''}
+      ${skillId.selectedIds.length ? '&skillId=' + skillId?.selectedIds : ''}
+      ${levelId.selectedIds.length ? '&levelId=' + levelId?.selectedIds : ''}
+      ${workStatus.selectedIds.length ? '&workStatus=' + workStatus?.selectedIds : ''}
+      ${workType.selectedIds.length ? '&workType=' + workType?.selectedIds : ''}
+      ${resourceType.selectedIds.length ? '&resourceType=' + resourceType?.selectedIds : ''}`;
       //for single select
-      let qurey = `${startDate ? 'startDate=' + startDate : ''}${
-        endDate ? '&endDate=' + endDate : ''
-      }${skillId ? '&skillId=' + skillId.value : ''}${
-        levelId ? '&levelId=' + levelId.value : ''
-      }${workStatus ? '&workStatus=' + workStatus.value : ''}${
-        workType ? '&workType=' + workType.value : ''
-      }${resourceType ? '&resourceType=' + resourceType.value : ''}`;
+      // let qurey = `${startDate ? 'startDate=' + startDate : ''}${
+      //   endDate ? '&endDate=' + endDate : ''
+      // }${skillId ? '&skillId=' + skillId.value : ''}${
+      //   levelId ? '&levelId=' + levelId.value : ''
+      // }${workStatus ? '&workStatus=' + workStatus.value : ''}${
+      //   workType ? '&workType=' + workType.value : ''
+      // }${resourceType ? '&resourceType=' + resourceType.value : ''}`;
       getCompData(qurey, filters);
     },
   };
