@@ -3,7 +3,7 @@ import { Button, Col, Row, Typography, Table as Atable } from 'antd'
 import Table, { FiltertagsNew, tableSorter } from '../Table/TableFilter'
 import ReportsFilters, { _createQuery } from './ReportsFilters'
 import { getWorkforceSkills } from '../../../service/reports-Apis'
-import { localStore } from '../../../service/constant'
+import { formatCurrency, localStore } from '../../../service/constant'
 
 const {Title, Text} = Typography
 
@@ -44,7 +44,8 @@ function WorkforceSkills() {
       {
           key: 'buyRate',
           dataIndex: 'buyRate',
-          title: 'Buy Rate'
+          title: 'Buy Rate',
+          render: (text)=> formatCurrency(text)
       },
   ]
   

@@ -363,13 +363,16 @@ export const getRoles = () =>{
         });
 }
 
-export const entityProjects = (url) =>{
+export const entityProjects = (url, options) =>{
     return axios
     .get(`${Api}/${url}`, {headers:headers()})
     .then((res) => {
         const { success, data } = res.data;
         setToken(res?.headers?.authorization)
-        if (success) return { success: success, data: data };
+        if (options) {
+            options = data.map((el) => ({ value: el.id, label: el.title}));
+        }
+        if (success) return { success: success, data: data, options};
     })
     .catch((err) => {
         return {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Col, Row, Typography, Table as Atable } from 'antd'
 import Table, { FiltertagsNew } from '../Table/TableFilter'
-import { formatDate, localStore } from '../../../service/constant'
+import { formatCurrency, formatDate, localStore } from '../../../service/constant'
 import ReportsFilters, { _createQuery } from './ReportsFilters'
 import { getPositions } from '../../../service/reports-Apis'
 
@@ -80,12 +80,14 @@ function Positions() {
         {
             key: 'buyRate',
             dataIndex: 'buyRate',
-            title: 'Buy Rate'
+            title: 'Buy Rate',
+            render: (text)=> formatCurrency(text)
         },
         {
             key: 'sellRate',
             dataIndex: 'sellRate',
-            title: 'Sell Rate'
+            title: 'Sell Rate',
+            render: (text)=> formatCurrency(text)
         },
         {
             key: 'CMPercent',

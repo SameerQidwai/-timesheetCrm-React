@@ -3,6 +3,7 @@ import { Button, Col, Row, Typography, Table as Atable } from 'antd'
 import Table, { FiltertagsNew } from '../Table/TableFilter'
 import { getBenchResources } from '../../../service/reports-Apis'
 import ReportsFilters from './ReportsFilters'
+import { formatCurrency } from '../../../service/constant'
 
 const {Title, Text} = Typography
 const resourceColumn = [
@@ -22,7 +23,8 @@ const resourceColumn = [
         key: 'buyRate',
         dataIndex: 'buyRate',
         title: 'Buy Rate',
-        width: '23.79%'
+        width: '23.79%',
+        render: (text)=> formatCurrency(text)
     },
 ]
 

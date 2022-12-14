@@ -170,7 +170,6 @@ export const tableSummaryFilter = (filters, filterFunction) =>{ // filter on foo
                                         format={'ddd DD MMM yyyy'} //donot change yet
                                         disabled={filters[el].disabled} 
                                         onChange={(value)=>{
-                                            console.log(value);
                                             filterFunction(value?? '', el)
                                         }}
                                     />
@@ -214,21 +213,17 @@ export const TableModalFilter = ({title, visible, onClose, filters, filterFuncti
     useEffect(()=>{
         let obj = {}
         if (filters && visible){
-            console.log(filters)
             for (let el in filters) {
                 if (filters[el].type === 'Date'){
                     const rangeValue = filters[el].value 
-                    console.log(rangeValue)
-                    obj[el] = rangeValue ? [moment(rangeValue[0]), moment(rangeValue[1])] : [null, null]
+                    obj[el] = rangeValue && [moment(rangeValue[0]), moment(rangeValue[1])] 
                 }else
                 if (filters[el].type === 'Select' && filters[el].multi){
-                    console.log(filters[el].value)
                     obj[el] = filters[el].value  ?? ''
                 }else{
                     obj[el] = filters[el].value  ?? ''
                 }
             }
-            console.log(obj)
             form.setFieldsValue({obj});
         }
     },[visible])
@@ -347,7 +342,7 @@ export const FiltertagsNew = ({filters, filterFunction}) =>{ //should make it wo
                   ? value.option // assign this value
                   : [] // or not 
                   // will check all values 'number, string or array'
-                : (value.length > 0 || value.value) && value);
+                : ((value.length > 0 && value[0]) || value.value ) && value);
                                     // if value is a single select value  
             return value &&<span key={el}>
                 <Tag color="magenta" key={el}>{label}: </Tag>
