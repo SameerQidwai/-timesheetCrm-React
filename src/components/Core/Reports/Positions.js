@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Col, Row, Typography, Table as Atable } from 'antd'
 import Table, { FiltertagsNew } from '../Table/TableFilter'
-import { formatCurrency, formatDate, localStore } from '../../../service/constant'
+import { formatCurrency, formatDate, formatFloat, localStore } from '../../../service/constant'
 import ReportsFilters, { _createQuery } from './ReportsFilters'
 import { getPositions } from '../../../service/reports-Apis'
 
@@ -15,98 +15,107 @@ function Positions() {
     const [tags, setTags] = useState(null)
 
     const columns = [
-        {
-            key: 'workType',
-            dataIndex: 'workType',
-            fixed: true,
-            title: 'Opportunity/Project',
-            width: 100,
-            render:(text, record, index)=> _nextCellRender(text, index, 'title', record)
-        },
-        {
-            key: 'title',
-            dataIndex: 'title',
-            fixed: true,
-            title: 'Title',
-            width: 200,
-            render:(text, record, index)=> _nextCellRender(text, index, 'title')
-        },
-        {
-            key: 'organization',
-            dataIndex: 'organization',
-            fixed: true,
-            title: 'Organisation Name',
-            width: 200,
-            render:(text, record, index)=> _nextCellRender(text, index, 'title', record)
-        },
-        {
-            key: 'milestone',
-            dataIndex: 'milestone',
-            fixed: true,
-            title: 'Milestone',
-            width: 100,
-            render:(text, record, index)=> _nextCellRender(text, index, 'title', record)
-        },
-        {
-            key: 'position',
-            dataIndex: 'position',
-            title: 'Position Title'
-        },
-        {
-            key: 'skill',
-            dataIndex: 'skill',
-            title: 'Skill'
-        },
-        {
-            key: 'skillLevel',
-            dataIndex: 'skillLevel',
-            title: 'Skill Level'
-        },
-        {
-            key: 'name',
-            dataIndex: 'name',
-            title: 'Resource Name'
-        },
-        {
-            key: 'type',
-            dataIndex: 'type',
-            title: 'Resource Type'
-        },
-        {
-            key: 'booking',
-            dataIndex: 'booking',
-            title: 'Booking Type'
-        },
-        {
-            key: 'buyRate',
-            dataIndex: 'buyRate',
-            title: 'Buy Rate',
-            render: (text)=> formatCurrency(text)
-        },
-        {
-            key: 'sellRate',
-            dataIndex: 'sellRate',
-            title: 'Sell Rate',
-            render: (text)=> formatCurrency(text)
-        },
-        {
-            key: 'CMPercent',
-            dataIndex: 'CMPercent',
-            title: 'CM%'
-        },
-        {
-            key: 'startDate',
-            dataIndex: 'startDate',
-            title: 'Start Date',
-            render: (text) => formatDate(text, true, true),
-        },
-        {
-            key: 'endDate',
-            dataIndex: 'endDate',
-            title: 'End Date',
-            render: (text) => formatDate(text, true, true),
-        },
-    ]
+      {
+        key: 'workType',
+        dataIndex: 'workType',
+        fixed: true,
+        title: 'Opportunity/Project',
+        width: 100,
+        render: (text, record, index) =>
+          _nextCellRender(text, index, 'title', record),
+      },
+      {
+        key: 'title',
+        dataIndex: 'title',
+        fixed: true,
+        title: 'Title',
+        width: 200,
+        render: (text, record, index) => _nextCellRender(text, index, 'title'),
+      },
+      {
+        key: 'organization',
+        dataIndex: 'organization',
+        fixed: true,
+        title: 'Organisation Name',
+        width: 200,
+        render: (text, record, index) =>
+          _nextCellRender(text, index, 'title', record),
+      },
+      {
+        key: 'milestone',
+        dataIndex: 'milestone',
+        fixed: true,
+        title: 'Milestone',
+        width: 100,
+        render: (text, record, index) =>
+          _nextCellRender(text, index, 'title', record),
+      },
+      {
+        key: 'position',
+        dataIndex: 'position',
+        title: 'Position Title',
+      },
+      {
+        key: 'skill',
+        dataIndex: 'skill',
+        title: 'Skill',
+      },
+      {
+        key: 'skillLevel',
+        dataIndex: 'skillLevel',
+        title: 'Skill Level',
+      },
+      {
+        key: 'name',
+        dataIndex: 'name',
+        title: 'Resource Name',
+      },
+      {
+        key: 'type',
+        dataIndex: 'type',
+        title: 'Resource Type',
+      },
+      {
+        key: 'booking',
+        dataIndex: 'booking',
+        title: 'Booking Type',
+      },
+      {
+        key: 'buyRate',
+        dataIndex: 'buyRate',
+        title: 'Buy Rate',
+        render: (text) => formatCurrency(text),
+      },
+      {
+        key: 'sellRate',
+        dataIndex: 'sellRate',
+        title: 'Sell Rate',
+        render: (text) => formatCurrency(text),
+      },
+      {
+        key: 'CMPercent',
+        dataIndex: 'CMPercent',
+        title: 'CM%',
+        render: (_, record) =>
+          `${formatFloat(
+            record.sellRate
+              ? ((record.sellRate - record.buyRate) / record.sellRate) * 100
+              : 0
+          )} %`,
+      },
+      {
+        key: 'startDate',
+        dataIndex: 'startDate',
+        title: 'Start Date',
+        render: (text) => formatDate(text, true, true),
+      },
+      {
+        key: 'endDate',
+        dataIndex: 'endDate',
+        title: 'End Date',
+        render: (text) => formatDate(text, true, true),
+      },
+    ];
 
     useEffect(() => {
         getData()
