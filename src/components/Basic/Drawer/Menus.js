@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Menu } from "antd";
 import { Link, withRouter } from "react-router-dom";
 
-import { ClockCircleOutlined, CheckCircleOutlined , HomeOutlined, CalendarOutlined , CarryOutOutlined , SolutionOutlined, RestOutlined, CheckSquareOutlined, SnippetsOutlined, DiffOutlined  } from "@ant-design/icons"; //Icons
+import { ClockCircleOutlined, CheckCircleOutlined , HomeOutlined, CalendarOutlined , CarryOutOutlined , SolutionOutlined, RestOutlined, CheckSquareOutlined, SnippetsOutlined, DiffOutlined, ApartmentOutlined, ExceptionOutlined, ContainerOutlined, FileDoneOutlined  } from "@ant-design/icons"; //Icons
 
 import "../../Styles/Menus.css";
 import { localStore } from "../../../service/constant";
@@ -79,6 +79,62 @@ const listData = [
         key: "EXPENSE Approval",
         permissions: {module: "EXPENSES", key: 'APPROVAL,UNAPPROVAL'}
     },
+    // {
+    //     text: "Resources on the bench",
+    //     icon: <ExceptionOutlined />,
+    //     link: "/bench-resources",
+    //     key: "BENCH",
+    //     permissions: {module: "TIMESHEETS", key: 'READ'}
+    // },
+    // {
+    //     text: "Workforce Skills",
+    //     icon: <ApartmentOutlined />,
+    //     link: "/workforce-skills",
+    //     key: "WORKFORCE",
+    //     permissions: {module: "TIMESHEETS", key: 'READ'}
+    // },
+    // {
+    //     text: "Position & Resources",
+    //     icon: <FileDoneOutlined />,
+    //     link: "/allocations",
+    //     key: "ALLOCATIONS ",
+    //     permissions: {module: "TIMESHEETS", key: 'READ'}
+    // },
+    {
+        text: "REPORTS",
+        icon: <ContainerOutlined />,
+        key: "REPORTS",
+        subMenu: [
+            {
+                text: "Resources on the bench",
+                icon: <ExceptionOutlined />,
+                link: "/report/bench-resources",
+                key: "BENCH",
+                permissions: {module: "TIMESHEETS", key: 'READ'}
+            },
+            {
+                text: "Workforce Skills",
+                icon: <ApartmentOutlined />,
+                link: "/report/workforce-skills",
+                key: "WORKFORCE",
+                permissions: {module: "TIMESHEETS", key: 'READ'}
+            },
+            {
+                text: "Position & Resources",
+                icon: <FileDoneOutlined />,
+                link: "/report/positions",
+                key: "ALLOCATIONS ",
+                permissions: {module: "TIMESHEETS", key: 'READ'}
+            },
+            {
+                text: "Workforce Allocation",
+                icon: <FileDoneOutlined />,
+                link: "/report/workforce-allocations",
+                key: "ALLOCATIONS ",
+                permissions: {module: "TIMESHEETS", key: 'READ'}
+            },
+        ],
+    },
 ];
 
 const subListData = [
@@ -92,14 +148,14 @@ const subListData = [
                 icon: <CheckCircleOutlined />,
                 link: "/time-sheet-approval",
                 key: "TIMESHEETS APPROVAl",
-                permissions: {module: "TIMESHEETS", key: 'APPROVAL'}
+                permissions: {module: "TIMESHEETS", key: 'APPROVAL,UNAPPROVAL'}
             },
             {
                 text: "Leave Approval ",
                 icon: <CarryOutOutlined />,
                 link: "/approve-request",
                 key: "APPROVE REQUEST",
-                permissions: {module: "LEAVE_REQUESTS", key: 'APPROVAL'}
+                permissions: {module: "LEAVE_REQUESTS", key: 'APPROVAL,UNAPPROVAL'}
             },
             {
                 text: "Milestone Approval",
@@ -113,7 +169,7 @@ const subListData = [
                 icon: <SolutionOutlined  />,
                 link: "/expense-sheet-approval",
                 key: "EXPENSE Approval",
-                permissions: {module: "TIMESHEETS", key: 'READ'}
+                permissions: {module: "EXPENSES", key: 'APPROVAL,UNAPPROVAL'}
             },
         ],
     },
@@ -141,6 +197,34 @@ const subListData = [
                 icon: <SnippetsOutlined/>,
                 link: "/expense-sheets",
                 key: "EXPENSE SHEET ",
+                permissions: {module: "EXPENSES", key: 'READ'}
+            },
+        ],
+    },
+    {
+        text: "REPORTS",
+        icon: <ContainerOutlined />,
+        key: "REPORTS",
+        subMenu: [
+            {
+                text: "Resources on the bench",
+                icon: <ExceptionOutlined />,
+                link: "/bench-resources",
+                key: "BENCH",
+                permissions: {module: "TIMESHEETS", key: 'READ'}
+            },
+            {
+                text: "Workforce Skills",
+                icon: <ApartmentOutlined />,
+                link: "/workforce-skills",
+                key: "WORKFORCE",
+                permissions: {module: "TIMESHEETS", key: 'READ'}
+            },
+            {
+                text: "Position & Resources",
+                icon: <FileDoneOutlined />,
+                link: "/allocations",
+                key: "ALLOCATIONS ",
                 permissions: {module: "TIMESHEETS", key: 'READ'}
             },
         ],
@@ -150,7 +234,7 @@ const subListData = [
         icon: <DiffOutlined />,
         link: "/expense",
         key: "EXPENSE",
-        permissions: {module: "TIMESHEETS", key: 'READ'}
+        permissions: {module: "EXPENSES", key: 'READ'}
     },
     {
         text: "Training",

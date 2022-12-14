@@ -60,6 +60,7 @@ import ExpenseSheet from '../../../pages/Expenses/ExpenseSheet';
 
 // import TimeSheetHTML from "../../Core/TimeSheetHTML"
 import { localStore } from '../../../service/constant';
+import { BenchResources, Positions, WorkForceAllocation, WorkforceSkills, WorkInHand } from '../../Core/Reports';
 
 const { Content } = Layout;
 
@@ -370,6 +371,30 @@ const pageLinks = [
     link: '/expense-sheet-approval',
     key: 'EXPENSES',
     permission: 'APPROVAL,UNAPPROVAL',
+  },
+  {
+    component: BenchResources,
+    link: '/report/bench-resources',
+    key: 'REPORTS',
+    permission: 'ALLOWED',
+  },
+  {
+    component: Positions,
+    link: '/report/positions',
+    key: 'REPORTS',
+    permission: 'ALLOWED',
+  },
+  {
+    component: WorkforceSkills,
+    link: '/report/workforce-skills',
+    key: 'REPORTS',
+    permission: 'ALLOWED',
+  },
+  {
+    component: WorkForceAllocation,
+    link: '/report/workforce-allocations',
+    key: 'REPORTS',
+    permission: 'ALLOWED',
   },
 ];
 

@@ -37,7 +37,7 @@ import {
 } from '../../../components/Core/Table/TableFilter';
 import {
   getOrganizations,
-  getStandardLevels,
+  getStandardSkills,
   getStates,
 } from '../../../service/constant-Apis';
 import { generalDelete } from "../../../service/delete-Api's";
@@ -594,7 +594,7 @@ class Contact extends Component {
   };
 
   filterModalUseEffect = () => {
-    Promise.all([getStates(), getStandardLevels(), getOrganizations()])
+    Promise.all([getStates(), getStandardSkills(), getOrganizations()])
       .then((res) => {
         const { filterFields } = this.state;
         filterFields[11].data = res[0].success ? res[0].data : [];

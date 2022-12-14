@@ -3,6 +3,50 @@
     font-size: medium;
 }
 
+/* .total-row{
+    background-color: #C5D9F1 ;
+    font-weight: 600;
+} */
+.wih-report div.ant-table-container table{
+    border-color: #000 !important;
+}
+.wih-report div.ant-table-container table > thead > tr > th.ant-table-cell{
+    background-color: #8DB4E2;
+    border-color: #000 !important;
+    padding: 0px 
+}
+.wih-report div.ant-table-container table > tbody > tr > td.ant-table-cell{
+    padding-top: 0px; 
+    padding-bottom: 0px; 
+    padding-right: 0px; 
+}
+
+/* tr.title-row > td.ant-table-cell-fix-left{
+    background-color: #C5D9F1; */
+/* } */
+/* tr.total-row > td.ant-table-cell-fix-left{
+    background-color: #C5D9F1;
+} */
+th.ant-table-cell.whole { 
+    text-align: center;
+}
+tr.data-title-row > td.ant-table-cell.data-title-row{
+    padding-left: 20px !important;
+}
+tr.title-row > td.ant-table-cell{
+    font-weight: 600;
+}
+td.fin-total.ant-table-cell {
+    background-color: #C5D9F1;
+} 
+
+tr.total-row > td.ant-table-cell{
+    background-color: #C5D9F1;
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+    font-weight: 600;
+}
+
 /* .ant-table-wrapper.TimeSheetTable {
     height: 75vh;
 } */
@@ -70,3 +114,6 @@ border-radius: 2px;
 border: 1px solid #434343;
 }
   
+.expandtable-margin .ant-table.ant-table-small.ant-table-bordered{
+    margin-left: 0px !important;
+}

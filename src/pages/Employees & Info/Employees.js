@@ -400,7 +400,7 @@ class Employees extends Component {
       ],
     };
   }
-
+  
   componentDidMount = () => {
     this.getList();
   };

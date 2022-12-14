@@ -85,6 +85,7 @@ class FormItems extends Component {
                         labelCol={item.labelCol}
                         wrapperCol={item.wrapperCol}
                         rules={item.rules}
+                        getValueProps={item.getValueProps}
                         valuePropName={item.valuePropName}
                         getValueFromEvent={item.customValue}
                         hidden={item.hidden === true}

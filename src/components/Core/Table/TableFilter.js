@@ -7,7 +7,7 @@ import { localStore } from '../../../service/constant';
 
 
 //an idea for small data 
-const ATable = ({size= 'small', title, columns=[], dataSource=[], rowKey='id', rowSelection=false, bordered=true, className= 'fs-small' , pagination, rowClassName})=>{
+const ATable = ({size= 'small', title, columns=[], dataSource=[], rowKey='id', rowSelection=false, bordered=true, className= 'fs-small', style , pagination, rowClassName, ...rest})=>{
     let {
         current: pageNo =1,
         onChange: onPaginationChange = false,
@@ -18,35 +18,37 @@ const ATable = ({size= 'small', title, columns=[], dataSource=[], rowKey='id', r
         disabled: paginationDisabled = false,
     } = pagination ?? {};
 
-    const [pageNoState, setpageNoState] = useState(pageNo);
-    const [pageSizeState, setPageSizeState] = useState(pageSize);
+    const [page, setpage] = useState({pageSize, pageNo});
+    // const [pageSizeState, setPageSizeState] = useState(pageSize);
 
 
     return <Table
+    {...rest}
     title={title}
     size={size}
     bordered={bordered}
     className={className }
     rowClassName={rowClassName}
+    style={style}
     pagination={
-        {
-            onChange:  (current, pageSize) =>{
+        pagination !== false ?{
+            onChange:  (pageNo, pageSize) =>{
                 if (onPaginationChange){
-                    onPaginationChange(current, pageSize)
-                }else{
-                    setpageNoState(current);
-                    setPageSizeState(pageSize)
+                    onPaginationChange(pageNo, pageSize)
                 }
+                // else{
+                    setpage({pageSize, pageNo});
+                // }
             },
-            current: pageNoState,
-            pageSize: pageSizeState, 
+            current: page.pageNo,
+            pageSize: page.pageSize, 
             hideOnSinglePage, 
             responsive: paginationResponsive, 
             size: paginationSize,
             disabled: paginationDisabled
-        }
+        } : false
     }
-    rowKey={data=> data[rowKey]}
+    rowKey={(data, index)=> rowKey === 'index'? index: data[rowKey]}
     rowSelection={rowSelection}
     columns={columns}
     dataSource={dataSource}
@@ -168,7 +170,6 @@ export const tableSummaryFilter = (filters, filterFunction) =>{ // filter on foo
                                         format={'ddd DD MMM yyyy'} //donot change yet
                                         disabled={filters[el].disabled} 
                                         onChange={(value)=>{
-                                            console.log(value);
                                             filterFunction(value?? '', el)
                                         }}
                                     />
@@ -200,25 +201,32 @@ export const tableTitleFilter = (colSpan, filterFunction) =>{ // table filter on
         </Row>
 }
 
-export const TableModalFilter = ({title, visible, onClose, filters, filterFunction, filterFields, effectRender, effectFunction}) =>{
+export const TableModalFilter = ({title, visible, onClose, filters, filterFunction, filterFields, effectRender, effectFunction, destroyOnClose=true}) =>{
     const [form] = Form.useForm();
-
+    
     useEffect(() => {
-        let obj = {}
         if(effectRender){
             effectFunction()
         }
-        for (let el in filters) {
-            if (filters[el].type === 'Date'){
-                const rangeValue = filters[el].value 
-                obj[el] = rangeValue &&[moment(rangeValue[0]), moment(rangeValue[1])]
-            }else{
-                obj[el] = filters[el].value  ?? ''
-            }
-        }
-        form.setFieldsValue({obj});
-        
     }, [])
+
+    useEffect(()=>{
+        let obj = {}
+        if (filters && visible){
+            for (let el in filters) {
+                if (filters[el].type === 'Date'){
+                    const rangeValue = filters[el].value 
+                    obj[el] = rangeValue && [moment(rangeValue[0]), moment(rangeValue[1])] 
+                }else
+                if (filters[el].type === 'Select' && filters[el].multi){
+                    obj[el] = filters[el].value  ?? ''
+                }else{
+                    obj[el] = filters[el].value  ?? ''
+                }
+            }
+            form.setFieldsValue({obj});
+        }
+    },[visible])
 
     const onFinish = (values) =>{
         values = values.obj
@@ -226,12 +234,14 @@ export const TableModalFilter = ({title, visible, onClose, filters, filterFuncti
             if (filters[el].type === 'Date'){
                 const rangeValue = values[el]
                 filters[el].value = rangeValue&&[rangeValue[0]?.format('YYYY-MM-DD'), rangeValue[1]?.format('YYYY-MM-DD')]
-            }else{
+            }
+            else{
                 filters[el].value = values[el] ?? ''
             }
         }
+        
                 //single value/name   //value+name
-        filterFunction(false, false, filters)
+        filterFunction(false, false, filters, values)
     }
 
     return <Modal
@@ -240,7 +250,7 @@ export const TableModalFilter = ({title, visible, onClose, filters, filterFuncti
         centered
         width={750}
         visible={visible}
-        destroyOnClose
+        destroyOnClose={destroyOnClose}
         onOk={() => { form.submit()}}
         onCancel={()=>onClose()}
     >
@@ -276,7 +286,7 @@ export const Filtertags = ({filters, filterFunction}) =>{
                     >{filters[el].value}</Tag> 
                     :   filters[el].type === 'Date' ?
                         <Tag 
-                            key={filters[el].value[0]}
+                            key={filters[el]?.value?.[0]}
                             color="lime" 
                             closable 
                             onClose={()=>{
@@ -310,11 +320,10 @@ export const Filtertags = ({filters, filterFunction}) =>{
     </Col>
 }
 
-
 export const leaf = (obj, path) => (path.split('.').reduce((value, el) => value[el]?? '', obj))
 
 export const FiltertagsNew = ({filters, filterFunction}) =>{ //should make it work to show in tags in future
-    let filterKeys = Object.keys(filters)
+    let filterKeys = filters ?  Object.keys(filters) : []
     const [state, setState] = useState({});
     useEffect(() => {
         return () => {
@@ -323,11 +332,22 @@ export const FiltertagsNew = ({filters, filterFunction}) =>{ //should make it wo
     }, []);
     return <Col span={24}> 
         {filterKeys.map(el=>{
-            const { value, label, type, multi } = filters[el]
-            return value && value.length>0 &&<span key={el}>
+            let { value, label, type, multi } = filters[el] ?? {}
+            //for multi 
+            let selectedIds = value?.selectedIds ?? []
+            value =
+              value && // check if filter has value set
+              (value?.selectedIds // check if filter is a multi select Object
+                ? value?.selectedIds.length // check if filter has any object select
+                  ? value.option // assign this value
+                  : [] // or not 
+                  // will check all values 'number, string or array'
+                : ((value.length > 0 && value[0]) || value.value ) && value);
+                                    // if value is a single select value  
+            return value &&<span key={el}>
                 <Tag color="magenta" key={el}>{label}: </Tag>
                 {
-                    type === 'Date' ? //String field search Tag
+                    type === 'Date' ? //Date field search Tag
                             <Tag 
                                 key={value[0]}
                                 color="lime" 
@@ -338,25 +358,31 @@ export const FiltertagsNew = ({filters, filterFunction}) =>{ //should make it wo
                                 }}
                             > {`${value[0]}=>${value[1]}`} </Tag>
 
-                    :   type === 'Select' ?
-                            multi ? value && value.map(elValue=> <Tag 
+                    :   type === 'Select' ? //Select fields tags
+                            multi ? value.map(elValue=> <Tag  // multi Select field rags
                                 key={`${el}${elValue.value}`}
                                 color="lime" 
                                 closable 
                                 onClose={()=>{
-                                    let remove = value.filter(elem=> elem.value !== elValue.value)
+                                    let remove = selectedIds.length ? {
+                                          option: value.filter( (elem) => elem.value !== elValue.value ),
+                                          selectedIds: selectedIds.filter( (elem) => elem !== elValue.value ),
+                                        }
+                                      : value.filter( (elem) => elem.value !== elValue.value );
+                                      //if remove last filter 
+                                     remove =  remove.length || remove.selectedIds.length ? remove: null
                                     filterFunction(remove, el)
                                 }}
                                 >{elValue.label}</Tag>)
-                            : <Tag 
+                            : <Tag // Signle Select field Tags
                                 key={`${el}${value.value}`}
                                 color="lime" 
                                 closable 
                                 onClose={()=>{
-                                    filterFunction({}, el)
+                                    filterFunction(null, el)
                                 }}
                             >{value.label}</Tag>
-                    :  <Tag 
+                    :  <Tag  // STRING, NUMBER TAGS
                             key={`${el}value`}
                             color="lime" 
                             closable 

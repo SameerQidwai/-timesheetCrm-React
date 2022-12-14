@@ -1,22 +1,9 @@
 import React, { Component } from "react";
 import { Col, Row, Table, Tag, Typography } from "antd";
-import { formatCurrency, formatDate, formatFloat, getFiscalYear } from "../../service/constant";
+import { formatCurrency, formatDate, formatFloat, getFiscalYear, parseDate } from "../../service/constant";
 import 'moment-weekday-calc';
 import { getProfitLoss } from "../../service/projects";
 import { getHolidays } from "../../service/opportunities";
-
-import moment from 'moment';
-
-
-const parseDate = (date, string, format)=>{
-    if (date){
-        if (string){
-            return moment.parseZone(date).format(format === true ? 'ddd DD MMM yyyy' : format)
-        }
-        return moment.parseZone(date)
-    }
-  }
-
 
 class ProfitLoss extends Component {
     constructor(props){
@@ -81,15 +68,15 @@ class ProfitLoss extends Component {
 
        
         for (var iDate = parseDate(startDate); iDate.isSameOrBefore(endDate); iDate.add(1, 'days')) {
-            if (iDate.isoWeekday() !== 6 && iDate.isoWeekday() !== 7 && !holidays[parseDate(iDate, true, 'M/D/YYYY')]){
-                if (holidays[parseDate(iDate, true, 'M/D/YYYY')]){
-                    console.log (parseDate(iDate, true, 'M/D/YYYY'))
+            if (iDate.isoWeekday() !== 6 && iDate.isoWeekday() !== 7 && !holidays[parseDate(iDate, 'M/D/YYYY')]){
+                if (holidays[parseDate(iDate, 'M/D/YYYY')]){
+                    console.log (parseDate(iDate, 'M/D/YYYY'))
                 }
                 let key = parseDate(iDate, true, 'MMM YY')
                 if ( iDate.isSameOrAfter(forecastStartDate, 'day') && // finding Fiscal Months
                 iDate.isSameOrBefore(forecastEndDate), 'day' ) {
                     if (iDate.isSameOrAfter(parseDate(new Date()), 'month')){ 
-                        //FORCASTING Future predictions
+                        //FORCASTING Future predictionsW
                         
                         forecast.forEach((el, index) =>{
                             if ( iDate.isBetween(parseDate(el.con_startDate), parseDate(el.con_endDate ?? tempEndDate) , 'day', '[]') &&
@@ -134,7 +121,7 @@ class ProfitLoss extends Component {
             revenuePerDay = (billing.value/noOfDays)
         }
         for (var iMonth = parseDate(fiscalYear['start']); iMonth.isSameOrBefore(fiscalYear['end']); iMonth.add(1, 'months')) {
-            let key = parseDate(iMonth, true, 'MMM YY')
+            let key = parseDate(iMonth, 'MMM YY')
             let workDays = data[0][key]
             let revenueValue = 0
             let cos = 0
@@ -204,7 +191,7 @@ class ProfitLoss extends Component {
             endDate = i===len ? billing.endDate: parseDate(startDate).endOf('month');
             const workDays = this.getWeekdays(startDate, endDate, holidays)
             noOfDays = noOfDays + workDays
-            let key = parseDate(startDate, true, 'MMM YY')
+            let key = parseDate(startDate, 'MMM YY')
             data[0][key]= workDays
             startDate = parseDate(startDate).add(1, 'months')
         }
@@ -216,7 +203,7 @@ class ProfitLoss extends Component {
             startDate = i===1 ? billing.startDate  : parseDate(startDate).set('date', 1); 
             endDate = i===len ? billing.endDate: parseDate(startDate).endOf('month');
             // let workDays = this.getWeekdays(startDate, endDate)
-            let key = parseDate(startDate, true, 'MMM YY')
+            let key = parseDate(startDate, 'MMM YY')
             let workDays = data[0][key]
             data[1][key] = revenue * workDays
             data[2][key] = cos * workDays
@@ -255,7 +242,7 @@ class ProfitLoss extends Component {
             iMonth.isSameOrBefore(parseDate(fiscalYear['end']));  //condition
             iMonth.add(1, 'months') //itrerater
         ){
-            let key = parseDate(iMonth, true, 'MMM YY')
+            let key = parseDate(iMonth, 'MMM YY')
                         //project can have green column if we are checking opportunity P&L there won't be actual
             let color = parent === 'P' ? iMonth.isSameOrAfter(parseDate(new Date()), 'month') ? '#ff7875' : '#a0df7d' : '#ff7875'
             color = data[0][key]? color: ''

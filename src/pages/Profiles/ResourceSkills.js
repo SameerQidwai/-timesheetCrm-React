@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Col, Form, Row, Select, Space } from 'antd';
 import { MinusCircleFilled, PlusSquareFilled } from "@ant-design/icons"; //Icons
-import { getStandardLevels } from '../../service/constant-Apis';
+import { getStandardSkills } from '../../service/constant-Apis';
 import { addNewSill } from '../../service/Login-Apis';
 
 
@@ -14,7 +14,7 @@ const ResourceSkills = (props) =>{
     const [saveDisabled, setSaveDisabled] =useState(true)
 
     useEffect(() => {
-        getStandardLevels().then(res=>{
+        getStandardSkills().then(res=>{
             if(res.success){
                 setSkillArray(res.data)
                 let levels = {}

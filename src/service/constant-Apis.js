@@ -43,7 +43,7 @@ export const getleaveRequestTypes = () => {
         });
 };
 
-export const getStandardLevels = () => {
+export const getStandardSkills = () => {
     return axios
         .get(`${Api}/standard-skills`, {headers:headers()})
         .then((res) => {
@@ -54,6 +54,27 @@ export const getStandardLevels = () => {
             });
             setToken(res?.headers?.authorization)
             if (success) return { success: success, data: sorting(standlevel, 'label') };
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                success: false,
+                message: err.message,
+            };
+        });
+};
+
+export const getStandardLevels = () => {
+    return axios
+        .get(`${Api}/standard-levels`, {headers:headers()})
+        .then((res) => {
+            let { success, data, message } = res.data;
+            
+            if (success){
+                data = data.map((el) => ({ value: el.id, label: el.label }));
+            }  
+            setToken(res?.headers?.authorization)
+            return { success: success, data: data };
         })
         .catch((err) => {
             return {
@@ -342,13 +363,16 @@ export const getRoles = () =>{
         });
 }
 
-export const entityProjects = (url) =>{
+export const entityProjects = (url, options) =>{
     return axios
     .get(`${Api}/${url}`, {headers:headers()})
     .then((res) => {
         const { success, data } = res.data;
         setToken(res?.headers?.authorization)
-        if (success) return { success: success, data: data };
+        if (options) {
+            options = data.map((el) => ({ value: el.id, label: el.title}));
+        }
+        if (success) return { success: success, data: data, options};
     })
     .catch((err) => {
         return {
