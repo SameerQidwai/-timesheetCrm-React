@@ -47,6 +47,7 @@ function BenchResources() {
   const [data, setData] = useState([])
   const [visible, setVisible] = useState(false)
   const [tags, setTags] = useState(null)
+  const [loading, setLoading] = useState(false)
 
 
   useEffect(() => {
@@ -54,15 +55,17 @@ function BenchResources() {
   }, [])
 
   const getData = (queryParam, tagsValues) =>{
-      getBenchResources(queryParam).then(res=>{
-          if (res.success){
-              setData(res.data)
-              if(queryParam){
-                setVisible(false)
-                setTags(tagsValues)
-              }
-          }
-      })
+    setLoading(true)
+    getBenchResources(queryParam).then(res=>{
+      if (res.success){
+        setData(res.data)
+        if(queryParam){
+          setVisible(false)
+          setTags(tagsValues)
+        }
+      }
+      setLoading(false)
+    })
   }
 
   const tableTitle = () =>{
@@ -91,6 +94,7 @@ function BenchResources() {
         <Table
           title={() => tableTitle()}
           columns={resourceColumn}
+          loading={loading}
           rowKey={'index'}
           dataSource={data}
           expandable={{

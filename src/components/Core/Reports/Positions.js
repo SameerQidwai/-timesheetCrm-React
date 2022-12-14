@@ -13,6 +13,7 @@ function Positions() {
     const [visible, setVisible] = useState(false)
     const [page, setPage] = useState({pNo:1, pSize: localStore().pageSize})
     const [tags, setTags] = useState(null)
+    const [loading, setLoading] = useState(false)
 
     const columns = [
       {
@@ -122,6 +123,7 @@ function Positions() {
     }, [])
 
     const getData = (queryParam, tagsValues) =>{
+        setLoading(true)
         getPositions(queryParam).then(res=>{
             if (res.success){
                 setData(res.data)
@@ -130,6 +132,7 @@ function Positions() {
                   setTags(tagsValues)
                 }
             }
+            setLoading(false)
         })
     }
 
@@ -170,6 +173,7 @@ function Positions() {
                 <Table
                     title={()=>tableTitle()}
                     rowKey={'index'}
+                    loading={loading}
                     columns={columns}
                     dataSource={data}
                     pagination={{
