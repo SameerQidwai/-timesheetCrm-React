@@ -13,6 +13,7 @@ function WorkforceSkills() {
   const [page, setPage] = useState({pNo:1, pSize: localStore().pageSize??25})
   const [visible, setVisible] = useState(false)
   const [tags, setTags] = useState(null)
+  const [loading, setLoading] = useState(false)
 
   const columns = [
       {
@@ -54,6 +55,7 @@ function WorkforceSkills() {
   }, [])
 
   const getData = (queryParam, tagsValues) =>{
+    setLoading(true)
     getWorkforceSkills(queryParam).then(res=>{
         if (res.success){
             setData(res.data)
@@ -62,6 +64,7 @@ function WorkforceSkills() {
               setTags({...tagsValues})
             }
         }
+        setLoading(false)
     })
   }
   
@@ -104,6 +107,7 @@ function WorkforceSkills() {
               <Table
                   title={()=>tableTitle()}
                   rowKey={'index'}
+                  loading={loading}
                   columns={columns}
                   pagination={{
                       hideOnSinglePage: false,

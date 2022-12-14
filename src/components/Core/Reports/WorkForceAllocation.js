@@ -13,7 +13,8 @@ function WorkForceAllocation() {
     const [data, setData] = useState()
     const [visible, setVisible] = useState(false)
     const [page, setPage] = useState({pNo:1, pSize: localStore().pageSize})
-    const [tags, setTags] = useState(null)				
+    const [tags, setTags] = useState(null)	
+    const [loading, setLoading] = useState(false)			
 
     const columns = [
         {
@@ -114,6 +115,7 @@ function WorkForceAllocation() {
     }, [])
 
     const getData = (queryParam, tagsValues) =>{
+        setLoading(true)
         getAllocations(queryParam).then(res=>{
             if (res.success){
                 setData(res.data)
@@ -122,6 +124,7 @@ function WorkForceAllocation() {
                   setTags(tagsValues)
                 }
             }
+            setLoading(false)
         })
     }
 
@@ -162,6 +165,7 @@ function WorkForceAllocation() {
                 <Table
                     title={()=>tableTitle()}
                     rowKey={'index'}
+                    loading={loading}
                     columns={columns}
                     dataSource={data}
                     pagination={{
