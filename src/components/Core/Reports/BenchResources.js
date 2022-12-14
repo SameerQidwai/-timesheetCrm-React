@@ -44,7 +44,7 @@ const skillColumn = [
 function BenchResources() {
   const [data, setData] = useState([])
   const [visible, setVisible] = useState(false)
-  const [tags, setTags] = useState({})
+  const [tags, setTags] = useState(null)
 
 
   useEffect(() => {
@@ -75,7 +75,7 @@ function BenchResources() {
         <Col span={24}>
           <FiltertagsNew
             filters={tags}
-            filterFunction={()=>{setTags({});getData()}}
+            filterFunction={()=>{setTags(null);getData()}}
           />
         </Col>
     </Row>
@@ -111,7 +111,7 @@ function BenchResources() {
         />
       </Col>
       <ReportsFilters
-          compName={'Bench Resources Filter'}
+          compName={'Bench Resources Filters'}
           compKey={'bench'}
           tags={tags}
           visible={visible}

@@ -204,25 +204,34 @@ export const tableTitleFilter = (colSpan, filterFunction) =>{ // table filter on
 
 export const TableModalFilter = ({title, visible, onClose, filters, filterFunction, filterFields, effectRender, effectFunction, destroyOnClose=true}) =>{
     const [form] = Form.useForm();
-
+    
     useEffect(() => {
-        let obj = {}
         if(effectRender){
             effectFunction()
         }
-        if (filters){
+    }, [])
+
+    useEffect(()=>{
+        let obj = {}
+        if (filters && visible){
+            console.log(filters)
             for (let el in filters) {
                 if (filters[el].type === 'Date'){
                     const rangeValue = filters[el].value 
-                    obj[el] = rangeValue &&[moment(rangeValue[0]), moment(rangeValue[1])]
+                    console.log(rangeValue)
+                    obj[el] = rangeValue ? [moment(rangeValue[0]), moment(rangeValue[1])] : [null, null]
+                }else
+                if (filters[el].type === 'Select' && filters[el].multi){
+                    console.log(filters[el].value)
+                    obj[el] = filters[el].value  ?? ''
                 }else{
                     obj[el] = filters[el].value  ?? ''
                 }
             }
+            console.log(obj)
+            form.setFieldsValue({obj});
         }
-        form.setFieldsValue({obj});
-        
-    }, [])
+    },[visible])
 
     const onFinish = (values) =>{
         values = values.obj
@@ -230,7 +239,8 @@ export const TableModalFilter = ({title, visible, onClose, filters, filterFuncti
             if (filters[el].type === 'Date'){
                 const rangeValue = values[el]
                 filters[el].value = rangeValue&&[rangeValue[0]?.format('YYYY-MM-DD'), rangeValue[1]?.format('YYYY-MM-DD')]
-            }else{
+            }
+            else{
                 filters[el].value = values[el] ?? ''
             }
         }
@@ -318,7 +328,7 @@ export const Filtertags = ({filters, filterFunction}) =>{
 export const leaf = (obj, path) => (path.split('.').reduce((value, el) => value[el]?? '', obj))
 
 export const FiltertagsNew = ({filters, filterFunction}) =>{ //should make it work to show in tags in future
-    let filterKeys = Object.keys(filters)
+    let filterKeys = filters ?  Object.keys(filters) : []
     const [state, setState] = useState({});
     useEffect(() => {
         return () => {
@@ -328,11 +338,21 @@ export const FiltertagsNew = ({filters, filterFunction}) =>{ //should make it wo
     return <Col span={24}> 
         {filterKeys.map(el=>{
             let { value, label, type, multi } = filters[el] ?? {}
-            value = value && (value?.selectedIds? value.option: (value.length>0 || value.value ) && value)
+            //for multi 
+            let selectedIds = value?.selectedIds ?? []
+            value =
+              value && // check if filter has value set
+              (value?.selectedIds // check if filter is a multi select Object
+                ? value?.selectedIds.length // check if filter has any object select
+                  ? value.option // assign this value
+                  : [] // or not 
+                  // will check all values 'number, string or array'
+                : (value.length > 0 || value.value) && value);
+                                    // if value is a single select value  
             return value &&<span key={el}>
                 <Tag color="magenta" key={el}>{label}: </Tag>
                 {
-                    type === 'Date' ? //String field search Tag
+                    type === 'Date' ? //Date field search Tag
                             <Tag 
                                 key={value[0]}
                                 color="lime" 
@@ -343,25 +363,31 @@ export const FiltertagsNew = ({filters, filterFunction}) =>{ //should make it wo
                                 }}
                             > {`${value[0]}=>${value[1]}`} </Tag>
 
-                    :   type === 'Select' ?
-                            multi ? value.map(elValue=> <Tag 
+                    :   type === 'Select' ? //Select fields tags
+                            multi ? value.map(elValue=> <Tag  // multi Select field rags
                                 key={`${el}${elValue.value}`}
                                 color="lime" 
                                 closable 
                                 onClose={()=>{
-                                    let remove = value.filter(elem=> elem.value !== elValue.value)
+                                    let remove = selectedIds.length ? {
+                                          option: value.filter( (elem) => elem.value !== elValue.value ),
+                                          selectedIds: selectedIds.filter( (elem) => elem !== elValue.value ),
+                                        }
+                                      : value.filter( (elem) => elem.value !== elValue.value );
+                                      //if remove last filter 
+                                     remove =  remove.length || remove.selectedIds.length ? remove: null
                                     filterFunction(remove, el)
                                 }}
                                 >{elValue.label}</Tag>)
-                            : <Tag 
+                            : <Tag // Signle Select field Tags
                                 key={`${el}${value.value}`}
                                 color="lime" 
                                 closable 
                                 onClose={()=>{
-                                    filterFunction({}, el)
+                                    filterFunction(null, el)
                                 }}
                             >{value.label}</Tag>
-                    :  <Tag 
+                    :  <Tag  // STRING, NUMBER TAGS
                             key={`${el}value`}
                             color="lime" 
                             closable 

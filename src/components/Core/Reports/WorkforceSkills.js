@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Col, Row, Typography, Table as Atable } from 'antd'
-import Table, { FiltertagsNew } from '../Table/TableFilter'
-import ReportsFilters from './ReportsFilters'
+import Table, { FiltertagsNew, tableSorter } from '../Table/TableFilter'
+import ReportsFilters, { _createQuery } from './ReportsFilters'
 import { getWorkforceSkills } from '../../../service/reports-Apis'
 import { localStore } from '../../../service/constant'
 
@@ -12,7 +12,7 @@ function WorkforceSkills() {
   const [data, setData] = useState([])
   const [page, setPage] = useState({pNo:1, pSize: localStore().pageSize??25})
   const [visible, setVisible] = useState(false)
-  const [tags, setTags] = useState({})
+  const [tags, setTags] = useState(null)
 
   const columns = [
       {
@@ -20,18 +20,21 @@ function WorkforceSkills() {
         dataIndex: 'skill',
         title: 'Skill',
         width: '25%',
-        render:(text, record, index)=> _nextCellRender(text, index, 'skill')
+        // render:(text, record, index)=> _nextCellRender(text, index, 'skill'),
+        ...tableSorter('skill', 'string', true),
       },
       {
           key: 'skillLevel',
           dataIndex: 'skillLevel',
           title: 'Skill Level',
-          render:(text, record, index)=> _nextCellRender(text, index, 'skillLevel')
+          render:(text, record, index)=> _nextCellRender(text, index, 'skillLevel'),
+          ...tableSorter('skill', 'string', true),
       },
       {
           key: 'name',
           dataIndex: 'name',
-          title: 'Resource Name'
+          title: 'Resource Name',
+          ...tableSorter('skill', 'string', true),
       },
       {
           key: 'type',
@@ -53,20 +56,13 @@ function WorkforceSkills() {
     getWorkforceSkills(queryParam).then(res=>{
         if (res.success){
             setData(res.data)
+            setVisible(false)
             if(queryParam){
-              setVisible(false)
-              setTags(tagsValues)
+              setTags({...tagsValues})
             }
         }
     })
   }
-
-  // const updateFilters = ()=>{
-  //   let qurey  = ''
-  //   Object.entries(tags).map(([key, {value, type}])=>{
-  //     console.log(key, value)
-  //   })
-  // }
   
   const tableTitle = () => {
     return (
@@ -85,9 +81,8 @@ function WorkforceSkills() {
             filterFunction={(updatedValue, el) => {
               let TAGS = {...tags}
               TAGS[el]['value'] = updatedValue; 
-              // updateFilters(TAGS)
-              setTags({});
-              getData();
+              let query = _createQuery(TAGS)
+              getData(query, tags)
             }}
           />
         </Col>
@@ -101,7 +96,6 @@ function WorkforceSkills() {
     let dataSourceIndex = ((pNo - 1) * pSize + index)
     return (text === data?.[dataSourceIndex-1 ]?.[key] && index) ? '' : text
   }
-
   
   return (
       <Row>

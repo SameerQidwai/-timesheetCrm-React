@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Button, Col, Row, Typography, Table as Atable } from 'antd'
 import Table, { FiltertagsNew } from '../Table/TableFilter'
 import { formatDate, localStore } from '../../../service/constant'
-import ReportsFilters from './ReportsFilters'
+import ReportsFilters, { _createQuery } from './ReportsFilters'
 import { getPositions } from '../../../service/reports-Apis'
 
 const {Title, Text} = Typography
@@ -12,7 +12,7 @@ function Positions() {
     const [data, setData] = useState([])
     const [visible, setVisible] = useState(false)
     const [page, setPage] = useState({pNo:1, pSize: localStore().pageSize})
-    const [tags, setTags] = useState({})
+    const [tags, setTags] = useState(null)
 
     const columns = [
         {
@@ -21,7 +21,7 @@ function Positions() {
             fixed: true,
             title: 'Opportunity/Project',
             width: 100,
-            render:(text, record, index)=> {return _nextCellRender(text, index, 'workType')}
+            render:(text, record, index)=> _nextCellRender(text, index, 'title', record)
         },
         {
             key: 'title',
@@ -37,7 +37,7 @@ function Positions() {
             fixed: true,
             title: 'Organisation Name',
             width: 200,
-            render:(text, record, index)=> _nextCellRender(text, index, 'organization')
+            render:(text, record, index)=> _nextCellRender(text, index, 'title', record)
         },
         {
             key: 'milestone',
@@ -45,7 +45,7 @@ function Positions() {
             fixed: true,
             title: 'Milestone',
             width: 100,
-            render:(text, record, index)=> _nextCellRender(text, index, 'milestone')
+            render:(text, record, index)=> _nextCellRender(text, index, 'title', record)
         },
         {
             key: 'position',
@@ -134,9 +134,11 @@ function Positions() {
           <Col span={24}>
             <FiltertagsNew
               filters={tags}
-              filterFunction={() => {
-                setTags({});
-                getData();
+              filterFunction={(updatedValue, el) => {
+                let TAGS = {...tags}
+                TAGS[el]['value'] = updatedValue; 
+                let query = _createQuery(TAGS)
+                getData(query, tags)
               }}
             />
           </Col>
@@ -145,10 +147,10 @@ function Positions() {
     };
 
     //-------------> HELPER <----------
-    const _nextCellRender = (text, index, key)=>{
+    const _nextCellRender = (text, index, key, record)=>{
         let { pNo, pSize } = page
         let dataSourceIndex = ((pNo - 1) * pSize + index)
-        return (text === data?.[dataSourceIndex-1 ]?.[key] && index) ? '' : text
+        return ((record?.[key] ?? text) === data?.[dataSourceIndex-1 ]?.[key] && index) ? '' : text
     }
     
     return (
