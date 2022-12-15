@@ -21,32 +21,32 @@ function WorkforceSkills() {
         dataIndex: 'skill',
         title: 'Skill',
         width: '25%',
-        // render:(text, record, index)=> _nextCellRender(text, index, 'skill'),
         ...tableSorter('skill', 'string', true),
       },
       {
           key: 'skillLevel',
           dataIndex: 'skillLevel',
           title: 'Skill Level',
-          render:(text, record, index)=> _nextCellRender(text, index, 'skillLevel'),
-          ...tableSorter('skill', 'string', true),
+          ...tableSorter('skillLevel', 'string'),
       },
       {
           key: 'name',
           dataIndex: 'name',
           title: 'Resource Name',
-          ...tableSorter('skill', 'string', true),
+          ...tableSorter('name', 'string'),
       },
       {
           key: 'type',
           dataIndex: 'type',
-          title: 'Resource Type'
+          title: 'Resource Type',
+          ...tableSorter('type', 'string'),
       },
       {
           key: 'buyRate',
           dataIndex: 'buyRate',
           title: 'Buy Rate',
-          render: (text)=> formatCurrency(text)
+          render: (text)=> formatCurrency(text),
+          ...tableSorter('buyRate', 'string'),
       },
   ]
   

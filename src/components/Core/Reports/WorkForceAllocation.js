@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Col, Row, Typography, Table as Atable } from 'antd'
-import Table, { FiltertagsNew, tableTitleFilter } from '../Table/TableFilter'
+import Table, { FiltertagsNew, tableSorter, tableTitleFilter } from '../Table/TableFilter'
 import { BencheResData,  WorkforceData } from './WIHData'
 import { formatCurrency, formatDate, localStore } from '../../../service/constant'
 import ReportsFilters, { _createQuery } from './ReportsFilters'
@@ -23,7 +23,7 @@ function WorkForceAllocation() {
             fixed: true,
             title: 'Resource Name',
             width: 200,
-            render:(text, record, index)=> _nextCellRender(text, index, 'name')
+            ...tableSorter('name', 'string', true),
         },
         {
             key: 'type',
@@ -31,81 +31,91 @@ function WorkForceAllocation() {
             fixed: true,
             title: 'Resource Type',
             width: 100,
-            render:(text, record, index)=> _nextCellRender(text, index, 'type')
+            ...tableSorter('type', 'string'),
+        },
+       
+        {
+            key: 'title',
+            dataIndex: 'title',
+            fixed: true,
+            title: 'Title',
+            width: 200,
+            ...tableSorter('title', 'string'),
         },
         {
             key: 'workType',
             dataIndex: 'workType',
             fixed: true,
-            title: 'Opportunity/Project',
+            title: 'Type',
             width: 100,
-            render:(text, record, index)=> _nextCellRender(text, index, 'work')
-        },
-        {
-            key: 'title',
-            dataIndex: 'title',
-            fixed: true,
-            title: 'Project Title',
-            width: 200,
-            render:(text, record, index)=> _nextCellRender(text, index, 'title')
+            ...tableSorter('workType', 'string'),
         },
         {
             key: 'organization',
             dataIndex: 'organization',
             // fixed: true,
             title: 'organization Title',
-            render:(text, record, index)=> _nextCellRender(text, index, 'organization')
+            ...tableSorter('organization', 'string'),
         },
         {
             key: 'milestone',
             dataIndex: 'milestone',
             // fixed: true,
-            title: 'Title',
-            render:(text, record, index)=> _nextCellRender(text, index, 'milestone')
+            title: 'Milestone',
+            ...tableSorter('milestone', 'string'),
         },
         {
             key: 'position',
             dataIndex: 'position',
             title: 'position',
+            ...tableSorter('position', 'string'),
         },
         {
             key: 'booking',
             dataIndex: 'booking',
             title: 'Booking Type',
+            ...tableSorter('booking', 'string'),
         },
         {
             key: 'skill',
             dataIndex: 'skill',
             title: 'skill',
+            ...tableSorter('skill', 'string'),
         },
         {
             key: 'skillLevel',
             dataIndex: 'skillLevel',
             title: 'Skill Level',
+            ...tableSorter('skillLevel', 'string'),
         },
         {
             key: 'buyRate',
             dataIndex: 'buyRate',
-            title: 'Buy Rate',
-            render: (text)=> formatCurrency(text)
+            title: 'Buy Rate (Hourly)',
+            render: (text)=> formatCurrency(text),
+            ...tableSorter('buyRate', 'string'),
+
         },
         {
             key: 'sellRate',
             dataIndex: 'sellRate',
-            title: 'Sell Rate',
-            render: (text)=> formatCurrency(text)
+            title: 'Sell Rate (Hourly)',
+            render: (text)=> formatCurrency(text),
+            ...tableSorter('buyRate', 'string'),
         },
         {
             key: 'startDate',
             dataIndex: 'startDate',
-            title: 'Start Date',
+            title: 'Position Start Date',
             render: (text) => formatDate(text, true, true),
+            ...tableSorter('startDate', 'date'),
         },
         {
             key: 'endDate',
             dataIndex: 'endDate',
-            title: 'End Date',
+            title: 'Position End Date',
             render: (text) => formatDate(text, true, true),
+            ...tableSorter('endDate', 'date'),
         },
     ]
     
