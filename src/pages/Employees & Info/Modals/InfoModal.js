@@ -164,7 +164,8 @@ class InfoModal extends Component {
                             return Promise.reject(new Error('Must contain 11 digits'));
                         }
                         return Promise.resolve();
-                    }
+                      }
+                      return Promise.resolve();
                 },
             }),
           ],
@@ -374,6 +375,7 @@ class InfoModal extends Component {
                         }
                         return Promise.resolve();
                     }
+                      return Promise.resolve();
                 },
             }),
         ],

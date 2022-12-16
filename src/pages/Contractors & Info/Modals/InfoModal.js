@@ -141,6 +141,7 @@ class InfoModal extends Component {
                                     }
                                     return Promise.resolve();
                                 }
+                                return Promise.resolve();
                             },
                         }),
                     ],
@@ -293,6 +294,7 @@ class InfoModal extends Component {
                                     }
                                     return Promise.resolve();
                                 }
+                                return Promise.resolve();
                             },
                         }),
                     ],

@@ -59,7 +59,7 @@ class Roles extends Component {
         this.state = {
             data: [ ],
             
-
+            label:"",
             openModal: false,
             editRole: false,
             perModal: false,
@@ -165,7 +165,8 @@ class Roles extends Component {
 
     callPermission = (record, index) => {//record.isSystem
         console.log(record);
-        this.setState({ perModal: true, editRole: record.id,  roleIndex: index, permissions: record.permissions??[], isSystem: record.isSystem});
+        this.setState({ perModal: true, editRole: record.id,  roleIndex: index, permissions: record.permissions??[], isSystem: record.isSystem, label: record.label});
+        // this.setState({ perModal: true, editRole: record.id,  roleIndex: index, permissions: record.permissions??[], isSystem: record.isSystem});
     };
 
     updatePermission = (value) =>{
@@ -190,7 +191,7 @@ class Roles extends Component {
     }
 
     render() {
-        const {data, openModal, editRole, FormFields, perModal, loading, permissions, isSystem} = this.state;
+        const {data, openModal, editRole, FormFields, perModal, loading, permissions, isSystem, label} = this.state;
         const columns = this.columns;
         return (
             <>
@@ -242,6 +243,7 @@ class Roles extends Component {
                     isSystem={isSystem}
                     eidtPer={editRole}
                     closeModal={this.perColse}
+                    label={label}
                 />}
             </>
         );

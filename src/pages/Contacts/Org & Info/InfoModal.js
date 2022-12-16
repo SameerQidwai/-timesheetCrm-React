@@ -123,6 +123,7 @@ class InfoModal extends Component {
                                         }
                                         return Promise.resolve();
                                     }
+                                    return Promise.resolve();
                                 },
                             }),
                         ],

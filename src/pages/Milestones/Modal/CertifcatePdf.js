@@ -23,7 +23,7 @@ const CertificatePdf = (props) =>{
 
     const handlePrint = useReactToPrint({
         content: () => componentRef.current,
-        documentTitle: `Certificate`,
+        documentTitle: `Milestone Certificate`,
         removeAfterPrint: true,
         // onAfterPrint: props.close()
     })
