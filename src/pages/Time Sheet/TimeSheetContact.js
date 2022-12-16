@@ -289,7 +289,6 @@ class TimeSheetContact extends Component {
                                 </Tooltip>}
                             }
                         }else{
-                            
                             const canAdd = (!permissions?.['ADD'] || sUser === loginId) && (col.dateObj.isSameOrAfter(startDate)  && col.dateObj.isSameOrBefore(endDate))   //checking if project is close                            
                             const clickable = ((record.status === 'SV' || record.status === 'RJ' || !record.status)) && record.phase!==false && sUser === loginId
                             if(value){ // I didn't put the conditon for column previos or next month because this column won't have any value for now
@@ -306,7 +305,7 @@ class TimeSheetContact extends Component {
                                     overlay={
                                         <Menu onClick={this.handleMenuClick}>
                                             <Menu.Item
-                                                disabled={!permissions?.['UPDATE'] || sUser === loginId}
+                                                disabled={!permissions?.['UPDATE'] && sUser !== loginId}
                                                 key="Edit" 
                                                 onClick={()=>{     //data //index    //col key      //Col heading to show on Modal
                                                     this.getRecord(record,rowIndex, col.dataIndex, col.heading); // call function to save data in
