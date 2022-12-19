@@ -73,9 +73,16 @@ function Positions() {
             ...tableSorter('name', 'string')
         },
         {
+            key: 'employeeStatus',
+            dataIndex: 'employeeStatus',
+            title: 'Resource Type',
+            width: 100,
+            ...tableSorter('employeeStatus', 'string'),
+        },
+        {
             key: 'type',
             dataIndex: 'type',
-            title: 'Resource Type',
+            title: 'Employee Status',
             ...tableSorter('type', 'string')
         },
         {

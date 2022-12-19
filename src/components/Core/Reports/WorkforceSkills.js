@@ -36,9 +36,15 @@ function WorkforceSkills() {
           ...tableSorter('name', 'string'),
       },
       {
+        key: 'employeeStatus',
+        dataIndex: 'employeeStatus',
+        title: 'Resource Type',
+        ...tableSorter('employeeStatus', 'string'),
+      },
+      {
           key: 'type',
           dataIndex: 'type',
-          title: 'Resource Type',
+          title: 'Employee Status',
           ...tableSorter('type', 'string'),
       },
       {

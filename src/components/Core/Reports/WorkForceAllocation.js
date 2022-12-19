@@ -26,18 +26,25 @@ function WorkForceAllocation() {
             ...tableSorter('name', 'string', true),
         },
         {
+            key: 'employeeStatus',
+            dataIndex: 'employeeStatus',
+            title: 'Resource Type',
+            width: 100,
+            ...tableSorter('employeeStatus', 'string'),
+        },
+        {
             key: 'type',
             dataIndex: 'type',
-            fixed: true,
-            title: 'Resource Type',
+            // fixed: true,
+            title: 'Employee Status',
             width: 100,
             ...tableSorter('type', 'string'),
         },
-       
+        
         {
             key: 'title',
             dataIndex: 'title',
-            fixed: true,
+            // fixed: true,
             title: 'Title',
             width: 200,
             ...tableSorter('title', 'string'),
@@ -45,7 +52,7 @@ function WorkForceAllocation() {
         {
             key: 'workType',
             dataIndex: 'workType',
-            fixed: true,
+            // fixed: true,
             title: 'Type',
             width: 100,
             ...tableSorter('workType', 'string'),

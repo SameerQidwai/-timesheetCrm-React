@@ -12,11 +12,17 @@ const resourceColumn = [
         dataIndex: 'name',
         title: 'Resource Name',
     },
+    {
+      key: 'employeeStatus',
+      dataIndex: 'employeeStatus',
+      title: 'Resource Type',
+      width: '23.79%'
+    },
     Atable.EXPAND_COLUMN,
     {
         key: 'type',
         dataIndex: 'type',
-        title: 'Resource Type',
+        title: 'Employee Status',
         width: '30.22%'
     },
     {

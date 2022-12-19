@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { formatDate } from '../../../service/constant'
-import { entityProjects, getContactPersons, getStandardLevels, getStandardSkills } from '../../../service/constant-Apis'
+import { entityProjects, getContactPersons, getOrganizations, getStandardLevels, getStandardSkills } from '../../../service/constant-Apis'
 import { TableModalFilter } from '../Table/TableFilter'
 
 
@@ -27,6 +27,28 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         type: 'RangePicker',
         fieldStyle: { width: '100%' },
       },
+      {
+        Placeholder: 'Resorce',
+        fieldCol: 24,
+        size: 'small',
+        type: 'Text',
+      },
+      {
+        object: 'obj',
+        fieldCol: 24,
+        key: 'employeeStatus',
+        size: 'small',
+        mode: 'multiple',
+        customValue: (value, option) => ({ selectedIds: value, option }),
+        getValueProps: (value)=>  ({value: value?.selectedIds}),
+        // customValue: (value, option) => option,
+        data: [
+          { label: 'Employee', value: 1 },
+          { label: 'Sub Contractor', value: 2 },
+          { label: 'Contact Person', value: 3 },
+        ],
+        type: 'Select',
+      },
     ],
     searchValue: {
       dates: {
@@ -35,6 +57,14 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         label: 'Dates',
         showInColumn: true,
         disabled: true,
+      },
+      employeeStatus: {
+        type: 'Select',
+        multi: true,
+        value: [],
+        label: 'Employee Status',
+        showInColumn: false,
+        disabled: false,
       },
     },
     callFilters: (value1, value2, filters, formData) => {
@@ -111,6 +141,28 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         data: [],
         type: 'Select',
       },
+      {
+        Placeholder: 'Employee Status',
+        fieldCol: 24,
+        size: 'small',
+        type: 'Text',
+      },
+      {
+        object: 'obj',
+        fieldCol: 24,
+        key: 'employeeStatus',
+        size: 'small',
+        mode: 'multiple',
+        customValue: (value, option) => ({ selectedIds: value, option }),
+        getValueProps: (value)=>  ({value: value?.selectedIds}),
+        // customValue: (value, option) => option,
+        data: [
+          { label: 'Employee', value: 1 },
+          { label: 'Sub Contractor', value: 2 },
+          { label: 'Contact Person', value: 3 },
+        ],
+        type: 'Select',
+      },
     ],
     searchValue: {
       skillId: {
@@ -126,6 +178,14 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         multi: true,
         value: [],
         label: 'Level',
+        showInColumn: false,
+        disabled: false,
+      },
+      employeeStatus: {
+        type: 'Select',
+        multi: true,
+        value: [],
+        label: 'Employee Status',
         showInColumn: false,
         disabled: false,
       },
@@ -151,16 +211,24 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
   const positions = {
     effectRender: true,
     filterModalUseEffect: () => {
-      Promise.all([entityProjects('helpers/work', true), getContactPersons(), getStandardSkills(), getStandardLevels()]).then((res) => {
+      Promise.all([
+        getOrganizations(),
+        entityProjects('helpers/work', true),
+        getContactPersons(),
+        getStandardSkills(),
+        getStandardLevels(),
+      ]).then((res) => {
         let tempFields = [...fields];
+        //setting organization
+        tempFields[3].data = res[0].success ? res[0].data : [];
         //setting projects
-        tempFields[7].data = res[0].success ? res[0].options : [];
+        tempFields[9].data = res[1].success ? res[1].options : [];
         //setting contact persons
-        tempFields[11].data = res[1].success ? res[1].options : [];
-        //setting up skill data 
         tempFields[13].data = res[2].success ? res[2].data : [];
-        //setting up level data 
-        tempFields[15].data = res[3].success ? res[3].data : [];
+        //setting up skill data
+        tempFields[17].data = res[3].success ? res[3].data : [];
+        //setting up level data
+        tempFields[19].data = res[4].success ? res[4].data : [];
 
         setFields([...tempFields]);
       });
@@ -179,6 +247,24 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         size: 'small',
         type: 'RangePicker',
         fieldStyle: { width: '100%' },
+      },
+      {
+        Placeholder: 'Organisation',
+        fieldCol: 12,
+        size: 'small',
+        type: 'Text',
+      },
+      {
+        object: 'obj',
+        fieldCol: 24,
+        key: 'organizationId',
+        size: 'small',
+        mode: 'multiple',
+        customValue: (value, option) => ({ selectedIds: value, option }),
+        getValueProps: (value)=>  ({value: value?.selectedIds}),
+        // customValue: (value, option) => option,
+        data: [],
+        type: 'Select',
       },
       {
         Placeholder: 'Project Type',
@@ -280,6 +366,28 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         type: 'Select',
       },
       {
+        Placeholder: 'Employee Status',
+        fieldCol: 12,
+        size: 'small',
+        type: 'Text',
+      },
+      {
+        object: 'obj',
+        fieldCol: 24,
+        key: 'employeeStatus',
+        size: 'small',
+        mode: 'multiple',
+        customValue: (value, option) => ({ selectedIds: value, option }),
+        getValueProps: (value)=>  ({value: value?.selectedIds}),
+        // customValue: (value, option) => option,
+        data: [
+          { label: 'Employee', value: 1 },
+          { label: 'Sub Contractor', value: 2 },
+          { label: 'Contact Person', value: 3 },
+        ],
+        type: 'Select',
+      },
+      {
         Placeholder: 'Skill',
         fieldCol: 12,
         size: 'small',
@@ -324,6 +432,14 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         showInColumn: true,
         disabled: true,
       },
+      organizationId: {
+        type: 'Select',
+        multi: true,
+        value: [],
+        label: 'Resources',
+        showInColumn: false,
+        disabled: false,
+      },
       workType: {
         type: 'Select',
         multi: true,
@@ -344,7 +460,15 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         type: 'Select',
         multi: true,
         value: [],
-        label: 'Opportunity/Project',
+        label: 'Project',
+        showInColumn: false,
+        disabled: false,
+      },
+      contactPersonId: {
+        type: 'Select',
+        multi: true,
+        value: [],
+        label: 'Resources',
         showInColumn: false,
         disabled: false,
       },
@@ -411,16 +535,18 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
   const allocations = {
     effectRender: true,
     filterModalUseEffect: () => {
-      Promise.all([entityProjects('helpers/work', true), getContactPersons(), getStandardSkills(), getStandardLevels()]).then((res) => {
+      Promise.all([getOrganizations(),entityProjects('helpers/work', true), getContactPersons(), getStandardSkills(), getStandardLevels()]).then((res) => {
         let tempFields = [...fields];
+       //setting organization
+       tempFields[3].data = res[0].success ? res[0].data : [];
        //setting projects
-       tempFields[7].data = res[0].success ? res[0].options : [];
+       tempFields[9].data = res[1].success ? res[1].options : [];
        //setting contact persons
-       tempFields[11].data = res[1].success ? res[1].data : [];
-       //setting up skill data 
        tempFields[13].data = res[2].success ? res[2].data : [];
-       //setting up level data 
-       tempFields[15].data = res[3].success ? res[3].data : [];
+       //setting up skill data
+       tempFields[17].data = res[3].success ? res[3].data : [];
+       //setting up level data
+       tempFields[19].data = res[4].success ? res[4].data : [];
 
         setFields([...tempFields]);
       });
@@ -439,6 +565,24 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         size: 'small',
         type: 'RangePicker',
         fieldStyle: { width: '100%' },
+      },
+      {
+        Placeholder: 'Organisation',
+        fieldCol: 12,
+        size: 'small',
+        type: 'Text',
+      },
+      {
+        object: 'obj',
+        fieldCol: 24,
+        key: 'organizationId',
+        size: 'small',
+        mode: 'multiple',
+        customValue: (value, option) => ({ selectedIds: value, option }),
+        getValueProps: (value)=>  ({value: value?.selectedIds}),
+        // customValue: (value, option) => option,
+        data: [],
+        type: 'Select',
       },
       {
         Placeholder: 'Project Type',
@@ -540,6 +684,28 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         type: 'Select',
       },
       {
+        Placeholder: 'Employee Status',
+        fieldCol: 12,
+        size: 'small',
+        type: 'Text',
+      },
+      {
+        object: 'obj',
+        fieldCol: 24,
+        key: 'employeeStatus',
+        size: 'small',
+        mode: 'multiple',
+        customValue: (value, option) => ({ selectedIds: value, option }),
+        getValueProps: (value)=>  ({value: value?.selectedIds}),
+        // customValue: (value, option) => option,
+        data: [
+          { label: 'Employee', value: 1 },
+          { label: 'Sub Contractor', value: 2 },
+          { label: 'Contact Person', value: 3 },
+        ],
+        type: 'Select',
+      },
+      {
         Placeholder: 'Skill',
         fieldCol: 12,
         size: 'small',
@@ -585,7 +751,14 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         showInColumn: true,
         disabled: true,
       },
-      
+      organizationId: {
+        type: 'Select',
+        multi: true,
+        value: [],
+        label: 'Resources',
+        showInColumn: false,
+        disabled: false,
+      },
       workType: {
         type: 'Select',
         multi: true,
@@ -607,6 +780,14 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         multi: true,
         value: [],
         label: 'Opportunity/Project',
+        showInColumn: false,
+        disabled: false,
+      },
+      contactPersonId: {
+        type: 'Select',
+        multi: true,
+        value: [],
+        label: 'Resources',
         showInColumn: false,
         disabled: false,
       },
