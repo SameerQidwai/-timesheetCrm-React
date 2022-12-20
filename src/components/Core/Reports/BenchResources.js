@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Button, Col, Row, Typography, Table as Atable } from 'antd'
 import Table, { FiltertagsNew } from '../Table/TableFilter'
 import { getBenchResources } from '../../../service/reports-Apis'
-import ReportsFilters from './ReportsFilters'
+import ReportsFilters, { _createQuery } from './ReportsFilters'
 import { formatCurrency } from '../../../service/constant'
 
 const {Title, Text} = Typography
@@ -20,8 +20,8 @@ const resourceColumn = [
     },
     Atable.EXPAND_COLUMN,
     {
-        key: 'type',
-        dataIndex: 'type',
+        key: 'employmentType',
+        dataIndex: 'employmentType',
         title: 'Employee Status',
         width: '30.22%'
     },
@@ -78,7 +78,7 @@ function BenchResources() {
     return(
       <Row justify="space-between">
         <Col >
-          <Title level={5}>Resources on the bench </Title>
+          <Title level={5}>Resources On The Bench</Title>
         </Col>
         <Col >
           <Button size="small" onClick={()=>setVisible(true)}>Filters</Button>
@@ -86,7 +86,12 @@ function BenchResources() {
         <Col span={24}>
           <FiltertagsNew
             filters={tags}
-            filterFunction={()=>{setTags(null);getData()}}
+            filterFunction={(updatedValue, el)=>{
+              let TAGS = {...tags}
+              TAGS[el]['value'] = updatedValue; 
+              let query = _createQuery(TAGS)
+              getData(query, tags)
+            }}
           />
         </Col>
     </Row>

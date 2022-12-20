@@ -21,7 +21,7 @@ function Positions() {
             dataIndex: 'title',
             fixed: true,
             title: 'Title',
-            width: 200,
+            width: 260,
             ...tableSorter('title', 'string', true),
         },
         {
@@ -52,49 +52,56 @@ function Positions() {
             key: 'position',
             dataIndex: 'position',
             title: 'Position Title',
+            width: 100,
             ...tableSorter('position', 'string')
         },
         {
             key: 'skill',
             dataIndex: 'skill',
             title: 'Skill',
+            width: 250,
             ...tableSorter('skill', 'string')
         },
         {
             key: 'skillLevel',
             dataIndex: 'skillLevel',
             title: 'Skill Level',
+            width: 80,
             ...tableSorter('skillLevel', 'string')
         },
         {
             key: 'name',
             dataIndex: 'name',
             title: 'Resource Name',
+            width: 180,
             ...tableSorter('name', 'string')
         },
         {
             key: 'resourceType',
             dataIndex: 'resourceType',
             title: 'Resource Type',
-            width: 100,
+            width: 80,
             ...tableSorter('resourceType', 'string'),
         },
         {
             key: 'employmentType',
             dataIndex: 'employmentType',
             title: 'Employee Status',
+            width: 80,
             ...tableSorter('type', 'string')
         },
         {
             key: 'bookingType',
             dataIndex: 'bookingType',
             title: 'Booking Type',
+            width: 80,
             ...tableSorter('booking', 'string')
         },
         {
             key: 'buyRate',
             dataIndex: 'buyRate',
             title: 'Buy Rate',
+            width: 80,
             render: (text)=> formatCurrency(text),
             ...tableSorter('buyRate', 'string')
         },
@@ -102,6 +109,7 @@ function Positions() {
             key: 'sellRate',
             dataIndex: 'sellRate',
             title: 'Sell Rate',
+            width: 80,
             render: (text)=> formatCurrency(text),
             ...tableSorter('sellRate', 'string')
         },
@@ -109,6 +117,7 @@ function Positions() {
             key: 'CMPercent',
             dataIndex: 'CMPercent',
             title: 'CM%',
+            width: 80,
             render: (text)=> formatFloat(text) + ' %',
             ...tableSorter('CMPercent', 'string')
         },
@@ -116,6 +125,7 @@ function Positions() {
             key: 'startDate',
             dataIndex: 'startDate',
             title: 'Position Start Date',
+            width: 130,
             render: (text) => formatDate(text, true, true),
             ...tableSorter('startDate', 'date')
         },
@@ -123,6 +133,7 @@ function Positions() {
             key: 'endDate',
             dataIndex: 'endDate',
             title: 'Position End Date',
+            width: 130,
             render: (text) => formatDate(text, true, true),
             ...tableSorter('endDate', 'date')
         },

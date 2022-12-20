@@ -16,44 +16,44 @@ function WorkforceSkills() {
   const [loading, setLoading] = useState(false)
 
   const columns = [
-      {
-        key: 'skill',
-        dataIndex: 'skill',
-        title: 'Skill',
-        width: '25%',
-        ...tableSorter('skill', 'string', true),
-      },
-      {
-          key: 'skillLevel',
-          dataIndex: 'skillLevel',
-          title: 'Skill Level',
-          ...tableSorter('skillLevel', 'string'),
-      },
-      {
-          key: 'name',
-          dataIndex: 'name',
-          title: 'Resource Name',
-          ...tableSorter('name', 'string'),
-      },
-      {
-        key: 'resourceType',
-        dataIndex: 'resourceType',
-        title: 'Resource Type',
-        ...tableSorter('employeeStatus', 'string'),
-      },
-      {
-          key: 'employmentType',
-          dataIndex: 'employmentType',
-          title: 'Employee Status',
-          ...tableSorter('type', 'string'),
-      },
-      {
-          key: 'buyRate',
-          dataIndex: 'buyRate',
-          title: 'Buy Rate',
-          render: (text)=> formatCurrency(text),
-          ...tableSorter('buyRate', 'string'),
-      },
+    {
+      key: 'skill',
+      dataIndex: 'skill',
+      title: 'Skill',
+      width: '25%',
+      ...tableSorter('skill', 'string', true),
+    },
+    {
+        key: 'skillLevel',
+        dataIndex: 'skillLevel',
+        title: 'Skill Level',
+        ...tableSorter('skillLevel', 'string'),
+    },
+    {
+        key: 'name',
+        dataIndex: 'name',
+        title: 'Resource Name',
+        ...tableSorter('name', 'string'),
+    },
+    {
+      key: 'resourceType',
+      dataIndex: 'resourceType',
+      title: 'Resource Type',
+      ...tableSorter('employeeStatus', 'string'),
+    },
+    {
+        key: 'employmentType',
+        dataIndex: 'employmentType',
+        title: 'Employee Status',
+        ...tableSorter('type', 'string'),
+    },
+    {
+        key: 'buyRate',
+        dataIndex: 'buyRate',
+        title: 'Buy Rate',
+        render: (text)=> formatCurrency(text),
+        ...tableSorter('buyRate', 'string'),
+    },
   ]
   
   useEffect(() => {

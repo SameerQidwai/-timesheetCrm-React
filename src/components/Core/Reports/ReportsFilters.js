@@ -42,7 +42,7 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         customValue: (value, option) => ({ selectedIds: value, option }),
         getValueProps: (value)=>  ({value: value?.selectedIds}),
         data: [
-          { label: 'Contact Person', value: 0 },
+          // { label: 'Contact Person', value: 0 },
           { label: 'Employee', value: 1 },
           { label: 'Sub Contractor', value: 2 },
         ],
@@ -152,7 +152,7 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         customValue: (value, option) => ({ selectedIds: value, option }),
         getValueProps: (value)=>  ({value: value?.selectedIds}),
         data: [
-          { label: 'Contact Person', value: 0 },
+          // { label: 'Contact Person', value: 0 },
           { label: 'Employee', value: 1 },
           { label: 'Sub Contractor', value: 2 },
         ],
@@ -219,11 +219,11 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         //setting projects
         tempFields[9].data = res[1].success ? res[1].options : [];
         //setting contact persons
-        tempFields[13].data = res[2].success ? res[2].data : [];
+        tempFields[11].data = res[2].success ? res[2].data : [];
         //setting up skill data
-        tempFields[17].data = res[3].success ? res[3].data : [];
+        tempFields[15].data = res[3].success ? res[3].data : [];
         //setting up level data
-        tempFields[19].data = res[4].success ? res[4].data : [];
+        tempFields[17].data = res[4].success ? res[4].data : [];
 
         setFields([...tempFields]);
       });
@@ -317,28 +317,28 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         data: [],
         type: 'Select',
       },
-      {
-        Placeholder: 'Booking Type',
-        fieldCol: 12,
-        size: 'small',
-        type: 'Text',
-      },
-      {
-        object: 'obj',
-        fieldCol: 24,
-        key: 'bookingType',
-        size: 'small',
-        mode: 'multiple',
-        customValue: (value, option) => ({ selectedIds: value, option }),
-        getValueProps: (value)=>  ({value: value?.selectedIds}),
-        data: [
-          { value: 0, label: 'Softbooked' },
-          { value: 1, label: 'Allocated' },
-          { value: 2, label: 'Assigned' },
-          { value: 3, label: 'Unallocated' },
-        ],
-        type: 'Select',
-      },
+      // {
+      //   Placeholder: 'Booking Type',
+      //   fieldCol: 12,
+      //   size: 'small',
+      //   type: 'Text',
+      // },
+      // {
+      //   object: 'obj',
+      //   fieldCol: 24,
+      //   key: 'bookingType',
+      //   size: 'small',
+      //   mode: 'multiple',
+      //   customValue: (value, option) => ({ selectedIds: value, option }),
+      //   getValueProps: (value)=>  ({value: value?.selectedIds}),
+      //   data: [
+      //     { value: 0, label: 'Softbooked' },
+      //     { value: 1, label: 'Allocated' },
+      //     { value: 2, label: 'Assigned' },
+      //     { value: 3, label: 'Unallocated' },
+      //   ],
+      //   type: 'Select',
+      // },
       {
         Placeholder: 'Resources',
         fieldCol: 12,
@@ -468,14 +468,14 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         showInColumn: false,
         disabled: false,
       },
-      bookingType: {
-        type: 'Select',
-        multi: true,
-        value: [],
-        label: 'Booking Type',
-        showInColumn: false,
-        disabled: false,
-      },
+      // bookingType: {
+      //   type: 'Select',
+      //   multi: true,
+      //   value: [],
+      //   label: 'Booking Type',
+      //   showInColumn: false,
+      //   disabled: false,
+      // },
       skillId: {
         type: 'Select',
         multi: true,
@@ -538,15 +538,15 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
        //setting projects
        tempFields[9].data = res[1].success ? res[1].options : [];
        //setting contact persons
-       tempFields[13].data = res[2].success ? res[2].data : [];
+       tempFields[11].data = res[2].success ? res[2].data : [];
        //setting up skill data
-       tempFields[17].data = res[3].success ? res[3].data : [];
+       tempFields[15].data = res[3].success ? res[3].data : [];
        //setting up level data
-       tempFields[19].data = res[4].success ? res[4].data : [];
+       tempFields[17].data = res[4].success ? res[4].data : [];
 
         setFields([...tempFields]);
       });
-    },
+  },
     fields: [
       {
         Placeholder: 'Date Allocation Range',
@@ -636,28 +636,28 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         data: [],
         type: 'Select',
       },
-      {
-        Placeholder: 'Booking Type',
-        fieldCol: 12,
-        size: 'small',
-        type: 'Text',
-      },
-      {
-        object: 'obj',
-        fieldCol: 24,
-        key: 'bookingType',
-        size: 'small',
-        mode: 'multiple',
-        customValue: (value, option) => ({ selectedIds: value, option }),
-        getValueProps: (value)=>  ({value: value?.selectedIds}),
-        data: [
-          { value: 0, label: 'Softbooked' },
-          { value: 1, label: 'Allocated' },
-          { value: 2, label: 'Assigned' },
-          { value: 3, label: 'Unallocated' },
-        ],
-        type: 'Select',
-      },
+      // {
+      //   Placeholder: 'Booking Type',
+      //   fieldCol: 12,
+      //   size: 'small',
+      //   type: 'Text',
+      // },
+      // {
+      //   object: 'obj',
+      //   fieldCol: 24,
+      //   key: 'bookingType',
+      //   size: 'small',
+      //   mode: 'multiple',
+      //   customValue: (value, option) => ({ selectedIds: value, option }),
+      //   getValueProps: (value)=>  ({value: value?.selectedIds}),
+      //   data: [
+      //     { value: 0, label: 'Softbooked' },
+      //     { value: 1, label: 'Allocated' },
+      //     { value: 2, label: 'Assigned' },
+      //     { value: 3, label: 'Unallocated' },
+      //   ],
+      //   type: 'Select',
+      // },
       {
         Placeholder: 'Resources',
         fieldCol: 12,
@@ -788,14 +788,14 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         showInColumn: false,
         disabled: false,
       },
-      bookingType: {
-        type: 'Select',
-        multi: true,
-        value: [],
-        label: 'Booking Type',
-        showInColumn: false,
-        disabled: false,
-      },
+      // bookingType: {
+      //   type: 'Select',
+      //   multi: true,
+      //   value: [],
+      //   label: 'Booking Type',
+      //   showInColumn: false,
+      //   disabled: false,
+      // },
       skillId: {
         type: 'Select',
         multi: true,
