@@ -13,8 +13,8 @@ const resourceColumn = [
         title: 'Resource Name',
     },
     {
-      key: 'employeeStatus',
-      dataIndex: 'employeeStatus',
+      key: 'resourceType',
+      dataIndex: 'resourceType',
       title: 'Resource Type',
       width: '23.79%'
     },

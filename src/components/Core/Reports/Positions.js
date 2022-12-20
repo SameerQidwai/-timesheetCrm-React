@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Col, Row, Typography, Table as Atable } from 'antd'
 import Table, { FiltertagsNew, tableSorter } from '../Table/TableFilter'
-import { formatCurrency, formatDate, localStore } from '../../../service/constant'
+import { formatCurrency, formatDate, formatFloat, localStore } from '../../../service/constant'
 import ReportsFilters, { _createQuery } from './ReportsFilters'
 import { getPositions } from '../../../service/reports-Apis'
 
@@ -73,21 +73,21 @@ function Positions() {
             ...tableSorter('name', 'string')
         },
         {
-            key: 'employeeStatus',
-            dataIndex: 'employeeStatus',
+            key: 'resourceType',
+            dataIndex: 'resourceType',
             title: 'Resource Type',
             width: 100,
-            ...tableSorter('employeeStatus', 'string'),
+            ...tableSorter('resourceType', 'string'),
         },
         {
-            key: 'type',
-            dataIndex: 'type',
+            key: 'employmentType',
+            dataIndex: 'employmentType',
             title: 'Employee Status',
             ...tableSorter('type', 'string')
         },
         {
-            key: 'booking',
-            dataIndex: 'booking',
+            key: 'bookingType',
+            dataIndex: 'bookingType',
             title: 'Booking Type',
             ...tableSorter('booking', 'string')
         },
@@ -109,6 +109,7 @@ function Positions() {
             key: 'CMPercent',
             dataIndex: 'CMPercent',
             title: 'CM%',
+            render: (text)=> formatFloat(text) + ' %',
             ...tableSorter('CMPercent', 'string')
         },
         {
@@ -180,6 +181,7 @@ function Positions() {
         <Row>
             <Col span={24}>
                 <Table
+                    sticky
                     title={()=>tableTitle()}
                     rowKey={'index'}
                     loading={loading}

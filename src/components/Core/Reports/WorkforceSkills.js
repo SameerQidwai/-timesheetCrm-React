@@ -36,14 +36,14 @@ function WorkforceSkills() {
           ...tableSorter('name', 'string'),
       },
       {
-        key: 'employeeStatus',
-        dataIndex: 'employeeStatus',
+        key: 'resourceType',
+        dataIndex: 'resourceType',
         title: 'Resource Type',
         ...tableSorter('employeeStatus', 'string'),
       },
       {
-          key: 'type',
-          dataIndex: 'type',
+          key: 'employmentType',
+          dataIndex: 'employmentType',
           title: 'Employee Status',
           ...tableSorter('type', 'string'),
       },
@@ -99,19 +99,13 @@ function WorkforceSkills() {
       </Row>
     );
   };
-
-    //-------------> HELPER <----------
-    const _nextCellRender = (text, index, key)=>{
-    let { pNo, pSize } = page
-    let dataSourceIndex = ((pNo - 1) * pSize + index)
-    return (text === data?.[dataSourceIndex-1 ]?.[key] && index) ? '' : text
-  }
   
   return (
       <Row>
           <Col span={24}>
               <Table
                   title={()=>tableTitle()}
+                  sticky
                   rowKey={'index'}
                   loading={loading}
                   columns={columns}

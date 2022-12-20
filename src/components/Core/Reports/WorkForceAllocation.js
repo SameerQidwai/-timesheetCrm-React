@@ -26,18 +26,18 @@ function WorkForceAllocation() {
             ...tableSorter('name', 'string', true),
         },
         {
-            key: 'employeeStatus',
-            dataIndex: 'employeeStatus',
+            key: 'resourceType',
+            dataIndex: 'resourceType',
             title: 'Resource Type',
-            width: 100,
+            // width: 100,
             ...tableSorter('employeeStatus', 'string'),
         },
         {
-            key: 'type',
-            dataIndex: 'type',
+            key: 'employmentType',
+            dataIndex: 'employmentType',
             // fixed: true,
             title: 'Employee Status',
-            width: 100,
+            // width: 100,
             ...tableSorter('type', 'string'),
         },
         
@@ -46,7 +46,7 @@ function WorkForceAllocation() {
             dataIndex: 'title',
             // fixed: true,
             title: 'Title',
-            width: 200,
+            width: 300,
             ...tableSorter('title', 'string'),
         },
         {
@@ -54,14 +54,15 @@ function WorkForceAllocation() {
             dataIndex: 'workType',
             // fixed: true,
             title: 'Type',
-            width: 100,
+            // width: 100,
             ...tableSorter('workType', 'string'),
         },
         {
             key: 'organization',
             dataIndex: 'organization',
             // fixed: true,
-            title: 'organization Title',
+            width: 200,
+            title: 'organization Name',
             ...tableSorter('organization', 'string'),
         },
         {
@@ -78,8 +79,8 @@ function WorkForceAllocation() {
             ...tableSorter('position', 'string'),
         },
         {
-            key: 'booking',
-            dataIndex: 'booking',
+            key: 'bookingType',
+            dataIndex: 'bookingType',
             title: 'Booking Type',
             ...tableSorter('booking', 'string'),
         },
@@ -180,6 +181,7 @@ function WorkForceAllocation() {
         <Row>
             <Col span={24}>
                 <Table
+                    sticky
                     title={()=>tableTitle()}
                     rowKey={'index'}
                     loading={loading}
