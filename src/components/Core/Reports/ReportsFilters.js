@@ -690,7 +690,7 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         customValue: (value, option) => ({ selectedIds: value, option }),
         getValueProps: (value)=>  ({value: value?.selectedIds}),
         data: [
-          { label: 'Contact Person', value: 0 },
+          // { label: 'Contact Person', value: 0 },
           { label: 'Employee', value: 1 },
           { label: 'Sub Contractor', value: 2 },
         ],
