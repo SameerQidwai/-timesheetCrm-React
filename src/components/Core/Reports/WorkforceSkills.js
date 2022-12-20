@@ -16,38 +16,44 @@ function WorkforceSkills() {
   const [loading, setLoading] = useState(false)
 
   const columns = [
-      {
-        key: 'skill',
-        dataIndex: 'skill',
-        title: 'Skill',
-        width: '25%',
-        // render:(text, record, index)=> _nextCellRender(text, index, 'skill'),
-        ...tableSorter('skill', 'string', true),
-      },
-      {
-          key: 'skillLevel',
-          dataIndex: 'skillLevel',
-          title: 'Skill Level',
-          render:(text, record, index)=> _nextCellRender(text, index, 'skillLevel'),
-          ...tableSorter('skill', 'string', true),
-      },
-      {
-          key: 'name',
-          dataIndex: 'name',
-          title: 'Resource Name',
-          ...tableSorter('skill', 'string', true),
-      },
-      {
-          key: 'type',
-          dataIndex: 'type',
-          title: 'Resource Type'
-      },
-      {
-          key: 'buyRate',
-          dataIndex: 'buyRate',
-          title: 'Buy Rate',
-          render: (text)=> formatCurrency(text)
-      },
+    {
+      key: 'skill',
+      dataIndex: 'skill',
+      title: 'Skill',
+      width: '25%',
+      ...tableSorter('skill', 'string', true),
+    },
+    {
+        key: 'skillLevel',
+        dataIndex: 'skillLevel',
+        title: 'Skill Level',
+        ...tableSorter('skillLevel', 'string'),
+    },
+    {
+        key: 'name',
+        dataIndex: 'name',
+        title: 'Resource Name',
+        ...tableSorter('name', 'string'),
+    },
+    {
+      key: 'resourceType',
+      dataIndex: 'resourceType',
+      title: 'Resource Type',
+      ...tableSorter('employeeStatus', 'string'),
+    },
+    {
+        key: 'employmentType',
+        dataIndex: 'employmentType',
+        title: 'Employee Status',
+        ...tableSorter('type', 'string'),
+    },
+    {
+        key: 'buyRate',
+        dataIndex: 'buyRate',
+        title: 'Buy Rate',
+        render: (text)=> formatCurrency(text),
+        ...tableSorter('buyRate', 'string'),
+    },
   ]
   
   useEffect(() => {
@@ -93,19 +99,13 @@ function WorkforceSkills() {
       </Row>
     );
   };
-
-    //-------------> HELPER <----------
-    const _nextCellRender = (text, index, key)=>{
-    let { pNo, pSize } = page
-    let dataSourceIndex = ((pNo - 1) * pSize + index)
-    return (text === data?.[dataSourceIndex-1 ]?.[key] && index) ? '' : text
-  }
   
   return (
       <Row>
           <Col span={24}>
               <Table
                   title={()=>tableTitle()}
+                  sticky
                   rowKey={'index'}
                   loading={loading}
                   columns={columns}

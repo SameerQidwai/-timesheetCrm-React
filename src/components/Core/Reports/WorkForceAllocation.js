@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Col, Row, Typography, Table as Atable } from 'antd'
-import Table, { FiltertagsNew, tableTitleFilter } from '../Table/TableFilter'
+import Table, { FiltertagsNew, tableSorter, tableTitleFilter } from '../Table/TableFilter'
 import { BencheResData,  WorkforceData } from './WIHData'
 import { formatCurrency, formatDate, localStore } from '../../../service/constant'
 import ReportsFilters, { _createQuery } from './ReportsFilters'
@@ -22,90 +22,117 @@ function WorkForceAllocation() {
             dataIndex: 'name',
             fixed: true,
             title: 'Resource Name',
-            width: 200,
-            render:(text, record, index)=> _nextCellRender(text, index, 'name')
+            width: 260,
+            ...tableSorter('name', 'string', true),
         },
         {
-            key: 'type',
-            dataIndex: 'type',
-            fixed: true,
+            key: 'resourceType',
+            dataIndex: 'resourceType',
             title: 'Resource Type',
-            width: 100,
-            render:(text, record, index)=> _nextCellRender(text, index, 'type')
+            width: 80,
+            ...tableSorter('resourceType', 'string'),
+        },
+        {
+            key: 'employmentType',
+            dataIndex: 'employmentType',
+            // fixed: true,
+            title: 'Employee Status',
+            width: 80,
+            ...tableSorter('employmentType', 'string'),
+        },
+        
+        {
+            key: 'title',
+            dataIndex: 'title',
+            // fixed: true,
+            title: 'Title',
+            width: 250,
+            ...tableSorter('title', 'string'),
         },
         {
             key: 'workType',
             dataIndex: 'workType',
-            fixed: true,
-            title: 'Opportunity/Project',
+            // fixed: true,
+            title: 'Type',
             width: 100,
-            render:(text, record, index)=> _nextCellRender(text, index, 'work')
-        },
-        {
-            key: 'title',
-            dataIndex: 'title',
-            fixed: true,
-            title: 'Project Title',
-            width: 200,
-            render:(text, record, index)=> _nextCellRender(text, index, 'title')
+            ...tableSorter('workType', 'string'),
         },
         {
             key: 'organization',
             dataIndex: 'organization',
             // fixed: true,
-            title: 'organization Title',
-            render:(text, record, index)=> _nextCellRender(text, index, 'organization')
+            width: 200,
+            title: 'Organization Name',
+            ...tableSorter('organization', 'string'),
         },
         {
             key: 'milestone',
             dataIndex: 'milestone',
             // fixed: true,
-            title: 'Title',
-            render:(text, record, index)=> _nextCellRender(text, index, 'milestone')
+            title: 'Milestone',
+            width: 100,
+            ...tableSorter('milestone', 'string'),
         },
         {
             key: 'position',
             dataIndex: 'position',
-            title: 'position',
+            title: 'Position Title',
+            width: 100,
+            ...tableSorter('position', 'string'),
         },
         {
-            key: 'booking',
-            dataIndex: 'booking',
+            key: 'bookingType',
+            dataIndex: 'bookingType',
             title: 'Booking Type',
+            width: 80,
+            ...tableSorter('booking', 'string'),
         },
         {
             key: 'skill',
             dataIndex: 'skill',
-            title: 'skill',
+            title: 'Skill',
+            width: 250,
+            ...tableSorter('skill', 'string'),
         },
         {
             key: 'skillLevel',
             dataIndex: 'skillLevel',
             title: 'Skill Level',
+            width: 80,
+            ...tableSorter('skillLevel', 'string'),
         },
         {
             key: 'buyRate',
             dataIndex: 'buyRate',
-            title: 'Buy Rate',
-            render: (text)=> formatCurrency(text)
+            title: 'Buy Rate (Hourly)',
+            width: 80,
+            render: (text)=> formatCurrency(text),
+            ...tableSorter('buyRate', 'string'),
+
         },
         {
             key: 'sellRate',
             dataIndex: 'sellRate',
-            title: 'Sell Rate',
-            render: (text)=> formatCurrency(text)
+            title: 'Sell Rate (Hourly)',
+            width: 80,
+            render: (text)=> formatCurrency(text),
+            ...tableSorter('buyRate', 'string'),
         },
         {
             key: 'startDate',
             dataIndex: 'startDate',
-            title: 'Start Date',
+            title: 'Position Start Date',
+            width: 130,
             render: (text) => formatDate(text, true, true),
+            ...tableSorter('startDate', 'date'),
         },
         {
             key: 'endDate',
             dataIndex: 'endDate',
-            title: 'End Date',
+            title: 'Position End Date',
+            width: 130,
             render: (text) => formatDate(text, true, true),
+            ...tableSorter('endDate', 'date'),
         },
     ]
     
@@ -163,6 +190,7 @@ function WorkForceAllocation() {
         <Row>
             <Col span={24}>
                 <Table
+                    sticky
                     title={()=>tableTitle()}
                     rowKey={'index'}
                     loading={loading}

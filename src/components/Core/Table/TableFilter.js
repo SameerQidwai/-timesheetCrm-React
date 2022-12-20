@@ -340,7 +340,7 @@ export const FiltertagsNew = ({filters, filterFunction}) =>{ //should make it wo
               (value?.selectedIds // check if filter is a multi select Object
                 ? value?.selectedIds.length // check if filter has any object select
                   ? value.option // assign this value
-                  : [] // or not 
+                  : null // or not 
                   // will check all values 'number, string or array'
                 : ((value.length > 0 && value[0]) || value.value ) && value);
                                     // if value is a single select value  

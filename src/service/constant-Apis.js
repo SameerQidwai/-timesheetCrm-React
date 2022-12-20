@@ -372,7 +372,7 @@ export const entityProjects = (url, options) =>{
         if (options) {
             options = data.map((el) => ({ value: el.id, label: el.title}));
         }
-        if (success) return { success: success, data: data, options};
+        if (success) return { success: success, data: data??[], options: options?? []};
     })
     .catch((err) => {
         return {
