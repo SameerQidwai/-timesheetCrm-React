@@ -78,7 +78,7 @@ function BenchResources() {
     return(
       <Row justify="space-between">
         <Col >
-          <Title level={5}>Resources On The Bench</Title>
+          <Title level={5}>Unallocated Resources</Title>
         </Col>
         <Col >
           <Button size="small" onClick={()=>setVisible(true)}>Filters</Button>
