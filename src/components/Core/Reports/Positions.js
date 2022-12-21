@@ -100,7 +100,7 @@ function Positions() {
         {
             key: 'buyRate',
             dataIndex: 'buyRate',
-            title: 'Buy Rate',
+            title: 'Buy Rate (Hourly)',
             width: 80,
             render: (text)=> formatCurrency(text),
             ...tableSorter('buyRate', 'string')
@@ -108,7 +108,7 @@ function Positions() {
         {
             key: 'sellRate',
             dataIndex: 'sellRate',
-            title: 'Sell Rate',
+            title: 'Sell Rate (Hourly)',
             width: 80,
             render: (text)=> formatCurrency(text),
             ...tableSorter('sellRate', 'string')

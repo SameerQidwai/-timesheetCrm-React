@@ -28,7 +28,7 @@ const resourceColumn = [
     {
         key: 'buyRate',
         dataIndex: 'buyRate',
-        title: 'Buy Rate',
+        title: 'Buy Rate (Hourly)',
         width: '23.79%',
         render: (text)=> formatCurrency(text)
     },

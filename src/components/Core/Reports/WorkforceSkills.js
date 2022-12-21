@@ -50,7 +50,7 @@ function WorkforceSkills() {
     {
         key: 'buyRate',
         dataIndex: 'buyRate',
-        title: 'Buy Rate',
+        title: 'Buy Rate (Hourly)',
         render: (text)=> formatCurrency(text),
         ...tableSorter('buyRate', 'string'),
     },

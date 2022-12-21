@@ -85,7 +85,7 @@ function WorkForceAllocation() {
             dataIndex: 'bookingType',
             title: 'Booking Type',
             width: 80,
-            ...tableSorter('booking', 'string'),
+            ...tableSorter('bookingType', 'string'),
         },
         {
             key: 'skill',
