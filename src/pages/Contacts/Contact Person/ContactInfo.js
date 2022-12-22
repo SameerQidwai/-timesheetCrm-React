@@ -140,7 +140,7 @@ export class ContactInfo extends Component {
                         customUrl={`helpers/work?type=O&contact=${userId}`}
                     />
                 </TabPane>
-                <TabPane tab="Representative Opportunities" key="r-leads">
+                <TabPane tab="Opportunity Representative" key="r-leads">
                     <Opportunities
                         targetId={userId}
                         customUrl={`helpers/work?type=O&delegate=${userId}`}
@@ -152,7 +152,7 @@ export class ContactInfo extends Component {
                         customUrl={`helpers/work?type=P&contact=${userId}`}
                     />
                 </TabPane>
-                <TabPane tab="Representative Projects" key="r-projects">
+                <TabPane tab="Project Representative" key="r-projects">
                     <Projects
                         targetId={userId}
                         customUrl={`helpers/work?type=P&delegate=${userId}`}
