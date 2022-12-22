@@ -88,14 +88,14 @@ function Positions() {
             dataIndex: 'employmentType',
             title: 'Employee Status',
             width: 80,
-            ...tableSorter('type', 'string')
+            ...tableSorter('employmentType', 'string')
         },
         {
             key: 'bookingType',
             dataIndex: 'bookingType',
             title: 'Booking Type',
             width: 80,
-            ...tableSorter('booking', 'string')
+            ...tableSorter('bookingType', 'string')
         },
         {
             key: 'buyRate',

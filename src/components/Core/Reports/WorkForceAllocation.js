@@ -116,7 +116,7 @@ function WorkForceAllocation() {
             title: 'Sell Rate (Hourly)',
             width: 80,
             render: (text)=> formatCurrency(text),
-            ...tableSorter('buyRate', 'string'),
+            ...tableSorter('sellRate', 'string'),
         },
         {
             key: 'startDate',

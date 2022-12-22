@@ -39,13 +39,13 @@ function WorkforceSkills() {
       key: 'resourceType',
       dataIndex: 'resourceType',
       title: 'Resource Type',
-      ...tableSorter('employeeStatus', 'string'),
+      ...tableSorter('resourceType', 'string'),
     },
     {
         key: 'employmentType',
         dataIndex: 'employmentType',
         title: 'Employee Status',
-        ...tableSorter('type', 'string'),
+        ...tableSorter('employmentType', 'string'),
     },
     {
         key: 'buyRate',

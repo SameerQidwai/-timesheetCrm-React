@@ -11,7 +11,16 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
   const [open, setOpen] = useState(false)
 
   const bench = {
-    effectRender: false,
+    effectRender: true,
+    filterModalUseEffect: () => {
+      entityProjects('helpers/work', true).then(res=>{
+        let tempFields = [...fields];
+        // if (res[0].success) {
+        //projects  data 
+        tempFields[5].data = res.success ? res.options : [];
+        setFields([...tempFields]);
+      })
+    },
     fields: [
       {
         Placeholder: 'Date Range',
@@ -48,6 +57,23 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         ],
         type: 'Select',
       },
+      {
+        Placeholder: 'Exculde Projects',
+        fieldCol: 24,
+        size: 'small',
+        type: 'Text',
+      },
+      {
+        object: 'obj',
+        fieldCol: 24,
+        key: 'excludeProject',
+        size: 'small',
+        mode: 'multiple',
+        customValue: (value, option) => ({ selectedIds: value, option }),
+        getValueProps: (value)=>  ({value: value?.selectedIds}),
+        data: [],
+        type: 'Select',
+      },
     ],
     searchValue: {
       dates: {
@@ -58,6 +84,14 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         disabled: true,
       },
       resourceType: {
+        type: 'Select',
+        multi: true,
+        value: [],
+        label: 'Resource Type',
+        showInColumn: false,
+        disabled: false,
+      },
+      exculdeProject: {
         type: 'Select',
         multi: true,
         value: [],
@@ -318,6 +352,26 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         type: 'Select',
       },
       // {
+      //   Placeholder: 'Project Status',
+      //   fieldCol: 12,
+      //   size: 'small',
+      //   type: 'Text',
+      // },
+      // {
+      //   object: 'obj',
+      //   fieldCol: 24,
+      //   key: 'projectStatus',
+      //   size: 'small',
+      //   mode: 'multiple',
+      //   customValue: (value, option) => ({ selectedIds: value, option }),
+      //   getValueProps: (value)=>  ({value: value?.selectedIds}),
+      //   data: [
+      //     { value: 0, label: 'Closed' },
+      //     { value: 1, label: 'Open' },
+      //   ],
+      //   type: 'Select',
+      // },
+      // {
       //   Placeholder: 'Booking Type',
       //   fieldCol: 12,
       //   size: 'small',
@@ -334,7 +388,7 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
       //   data: [
       //     { value: 0, label: 'Softbooked' },
       //     { value: 1, label: 'Allocated' },
-      //     { value: 2, label: 'Assigned' },
+      //     { value: 2, label: 'Reserve' },
       //     { value: 3, label: 'Unallocated' },
       //   ],
       //   type: 'Select',
@@ -469,6 +523,14 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         disabled: false,
       },
       // bookingType: {
+      //   type: 'Select',
+      //   multi: true,
+      //   value: [],
+      //   label: 'Booking Type',
+      //   showInColumn: false,
+      //   disabled: false,
+      // },
+      // projectStatus: {
       //   type: 'Select',
       //   multi: true,
       //   value: [],
@@ -637,6 +699,26 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         type: 'Select',
       },
       // {
+      //   Placeholder: 'Project Status',
+      //   fieldCol: 12,
+      //   size: 'small',
+      //   type: 'Text',
+      // },
+      // {
+      //   object: 'obj',
+      //   fieldCol: 24,
+      //   key: 'projectStatus',
+      //   size: 'small',
+      //   mode: 'multiple',
+      //   customValue: (value, option) => ({ selectedIds: value, option }),
+      //   getValueProps: (value)=>  ({value: value?.selectedIds}),
+      //   data: [
+      //     { value: 0, label: 'Closed' },
+      //     { value: 1, label: 'Open' },
+      //   ],
+      //   type: 'Select',
+      // },
+      // {
       //   Placeholder: 'Booking Type',
       //   fieldCol: 12,
       //   size: 'small',
@@ -653,7 +735,7 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
       //   data: [
       //     { value: 0, label: 'Softbooked' },
       //     { value: 1, label: 'Allocated' },
-      //     { value: 2, label: 'Assigned' },
+      //     { value: 2, label: 'Reserve' },
       //     { value: 3, label: 'Unallocated' },
       //   ],
       //   type: 'Select',
@@ -789,6 +871,14 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         disabled: false,
       },
       // bookingType: {
+      //   type: 'Select',
+      //   multi: true,
+      //   value: [],
+      //   label: 'Booking Type',
+      //   showInColumn: false,
+      //   disabled: false,
+      // },
+      // projectStatus: {
       //   type: 'Select',
       //   multi: true,
       //   value: [],
