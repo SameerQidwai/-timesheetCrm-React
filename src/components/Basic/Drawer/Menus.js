@@ -133,6 +133,13 @@ const listData = [
                 key: "ALLOCATIONS ",
                 permissions: {module: "TIMESHEETS", key: 'READ'}
             },
+            {
+                text: "Project Revenue Analyis",
+                icon: <FileDoneOutlined />,
+                link: "/report/project-revenue-analyis",
+                key: "ALLOCATIONS ",
+                permissions: {module: "TIMESHEETS", key: 'READ'}
+            },
         ],
     },
 ];

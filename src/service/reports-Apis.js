@@ -11,7 +11,7 @@ export const getBenchResources = (queryParam) => {
         .then((res) => {
             const { success, data } = res.data;
             setToken(res?.headers?.authorization)
-            if (success) return { success: success, data: data };
+             return { success: success, data: data };
         })
         .catch((err) => {
             return {
@@ -28,7 +28,7 @@ export const getWorkforceSkills = (queryParam) => {
         .then((res) => {
             const { success, data } = res.data;
             setToken(res?.headers?.authorization)
-            if (success) return { success: success, data: data };
+             return { success: success, data: data };
         })
         .catch((err) => {
             return {
@@ -45,7 +45,7 @@ export const getPositions = (queryParam) => {
         .then((res) => {
             const { success, data } = res.data;
             setToken(res?.headers?.authorization)
-            if (success) return { success: success, data: data };
+             return { success: success, data: data };
         })
         .catch((err) => {
             return {
@@ -62,7 +62,24 @@ export const getAllocations = (queryParam) => {
         .then((res) => {
             const { success, data } = res.data;
             setToken(res?.headers?.authorization)
-            if (success) return { success: success, data: data };
+             return { success: success, data: data };
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                success: false,
+                message: err.message,
+            };
+        });
+};
+
+export const getProjectRevenueAnalysis = (queryParam) => {
+    return axios
+        .get(`${url}/project-revenue-analysis${queryParam? '?'+ queryParam: ''}`, {headers:headers()})
+        .then((res) => {
+            const { success, data } = res.data;
+            setToken(res?.headers?.authorization)
+            return { success: success, data: data };
         })
         .catch((err) => {
             return {
