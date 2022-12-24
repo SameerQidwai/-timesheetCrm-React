@@ -1,7 +1,7 @@
 import axios from "axios";
 import { message as messageAlert } from "antd";
 
-import { Api, headers, jwtExpired, setToken } from "./constant";
+import { Api, getFiscalYear, headers, jwtExpired, setToken } from "./constant";
 
 const url = `${Api}/reports`;
 
@@ -74,18 +74,26 @@ export const getAllocations = (queryParam) => {
 };
 
 export const getProjectRevenueAnalysis = (queryParam) => {
+    let {start, end} = getFiscalYear('dates')
     return axios
-        .get(`${url}/project-revenue-analysis${queryParam? '?'+ queryParam: ''}`, {headers:headers()})
-        .then((res) => {
-            const { success, data } = res.data;
-            setToken(res?.headers?.authorization)
-            return { success: success, data: data };
-        })
-        .catch((err) => {
-            return {
-                error: "Please login again!",
-                success: false,
-                message: err.message,
-            };
-        });
+      .get(
+        `${url}/project-revenue-analysis?fiscalYearStart=${start.format(
+          'YYYY-MM-DD'
+        )}&fiscalYearEnd=${end.format('YYYY-MM-DD')}${
+          queryParam ? '&' + queryParam : ''
+        }`,
+        { headers: headers() }
+      )
+      .then((res) => {
+        const { success, data } = res.data;
+        setToken(res?.headers?.authorization);
+        return { success: success, data: data };
+      })
+      .catch((err) => {
+        return {
+          error: 'Please login again!',
+          success: false,
+          message: err.message,
+        };
+      });
 };

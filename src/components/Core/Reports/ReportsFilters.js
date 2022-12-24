@@ -91,11 +91,11 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         showInColumn: false,
         disabled: false,
       },
-      exculdeProject: {
+      excludeProject: {
         type: 'Select',
         multi: true,
         value: [],
-        label: 'Resource Type',
+        label: 'Exculde Projects',
         showInColumn: false,
         disabled: false,
       },
@@ -937,12 +937,138 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
     },
   };
 
+  const projectRevenue = {
+    effectRender: true,
+    filterModalUseEffect: () => {
+      Promise.all([getOrganizations(), entityProjects('helpers/work?type=P', true)]).then((res) => {
+
+        let tempFields = [...fields];
+        //setting organization
+        tempFields[1].data = res[0].success ? res[0].data : [];
+        //setting projects
+        tempFields[3].data = res[1].success ? res[1].options : [];
+        //setting exclude projects
+        tempFields[5].data = res[1].success ? res[1].options : [];
+        setFields([...tempFields]);
+      })
+    },
+    fields: [
+      // {
+      //   Placeholder: 'Select Financial Year',
+      //   fieldCol: 24,
+      //   size: 'small',
+      //   type: 'Text',
+      // },
+      // {
+      //   object: 'obj',
+      //   fieldCol: 24,
+      //   key: 'date',
+      //   size: 'small',
+      //   mode: "year",
+      //   format:"YYYY",
+      //   type: 'DatePicker',
+      //   fieldStyle: { width: '100%' },
+      // },
+      {
+        Placeholder: 'Organisation',
+        fieldCol: 24,
+        size: 'small',
+        type: 'Text',
+      },
+      {
+        object: 'obj',
+        fieldCol: 24,
+        key: 'organizationId',
+        size: 'small',
+        mode: 'multiple',
+        customValue: (value, option) => ({ selectedIds: value, option }),
+        getValueProps: (value)=>  ({value: value?.selectedIds}),
+        data: [],
+        type: 'Select',
+      },
+      {
+        Placeholder: 'Projects',
+        fieldCol: 24,
+        size: 'small',
+        type: 'Text',
+      },
+      {
+        object: 'obj',
+        fieldCol: 24,
+        key: 'projectId',
+        size: 'small',
+        mode: 'multiple',
+        customValue: (value, option) => ({ selectedIds: value, option }),
+        getValueProps: (value)=>  ({value: value?.selectedIds}),
+        data: [],
+        type: 'Select',
+      },
+      {
+        Placeholder: 'Exculde Projects',
+        fieldCol: 24,
+        size: 'small',
+        type: 'Text',
+      },
+      {
+        object: 'obj',
+        fieldCol: 24,
+        key: 'excludeProjectId',
+        size: 'small',
+        mode: 'multiple',
+        customValue: (value, option) => ({ selectedIds: value, option }),
+        getValueProps: (value)=>  ({value: value?.selectedIds}),
+        data: [],
+        type: 'Select',
+      },
+    ],
+    searchValue: {
+      // date: {
+      //   type: 'Date',
+      //   mode: 'Year',
+      //   value: null,
+      //   label: 'Selected Financial Year',
+      //   showInColumn: true,
+      //   disabled: true,
+      // },
+      organizationId: {
+        type: 'Select',
+        multi: true,
+        value: [],
+        label: 'Organisation',
+        showInColumn: false,
+        disabled: false,
+      },
+      projectId: {
+        type: 'Select',
+        multi: true,
+        value: [],
+        label: 'Projects',
+        showInColumn: false,
+        disabled: false,
+      },
+      excludeProjectId: {
+        type: 'Select',
+        multi: true,
+        value: [],
+        label: 'Exculde Projects',
+        showInColumn: false,
+        disabled: false,
+      },
+    },
+    callFilters: (value1, value2, filters, formData) => {
+      let query = _createQuery(filters)
+      getCompData(query, filters);
+    },
+  };
+  
   const reportsFilter = {
     bench,
     skillResources,
     positions,
-    allocations
+    allocations,
+    projectRevenue
   };
+
 
   const {searchValue, callFilters, filterModalUseEffect, effectRender} = reportsFilter?.[compKey] ||{}
   useEffect(() => {

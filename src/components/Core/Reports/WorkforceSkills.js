@@ -111,6 +111,7 @@ function WorkforceSkills() {
                   columns={columns}
                   pagination={{
                       hideOnSinglePage: false,
+                      showPageSizeChanger: true,
                       onChange:(pNo, pSize)=> {
                           setPage({pNo, pSize})
                       }

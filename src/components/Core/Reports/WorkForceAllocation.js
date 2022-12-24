@@ -198,6 +198,7 @@ function WorkForceAllocation() {
                     dataSource={data}
                     pagination={{
                         hideOnSinglePage: false,
+                        showPageSizeChanger: true,
                         onChange:(pNo, pSize)=> {
                             setPage({pNo, pSize})
                         }

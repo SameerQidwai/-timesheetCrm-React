@@ -3,7 +3,7 @@ import { Button, Col, Input, Modal, Row, Space, Table, Form, Select, Tag, DatePi
 import FormItems from '../Forms/FormItems';
 import { SearchOutlined } from "@ant-design/icons";
 import moment from "moment";
-import { localStore } from '../../../service/constant';
+import { getFiscalYear, localStore } from '../../../service/constant';
 
 
 //an idea for small data 
@@ -16,6 +16,7 @@ const ATable = ({size= 'small', title, columns=[], dataSource=[], rowKey='id', r
         responsive: paginationResponsive = true,
         size: paginationSize = 'small',
         disabled: paginationDisabled = false,
+        showPageSizeChanger = false
     } = pagination ?? {};
 
     const [page, setpage] = useState({pageSize, pageNo});
@@ -45,7 +46,8 @@ const ATable = ({size= 'small', title, columns=[], dataSource=[], rowKey='id', r
             hideOnSinglePage, 
             responsive: paginationResponsive, 
             size: paginationSize,
-            disabled: paginationDisabled
+            disabled: paginationDisabled,
+            showSizeChanger: showPageSizeChanger
         } : false
     }
     rowKey={(data, index)=> rowKey === 'index'? index: data[rowKey]}
@@ -215,8 +217,12 @@ export const TableModalFilter = ({title, visible, onClose, filters, filterFuncti
         if (filters && visible){
             for (let el in filters) {
                 if (filters[el].type === 'Date'){
-                    const rangeValue = filters[el].value 
-                    obj[el] = rangeValue && [moment(rangeValue[0]), moment(rangeValue[1])] 
+                    const rangeValue = filters[el].value
+                    if (filters[el].mode === 'Year'){
+                        obj[el] = rangeValue && moment(rangeValue[0])
+                    }else{
+                        obj[el] = rangeValue && [moment(rangeValue[0]), moment(rangeValue[1])] 
+                    }
                 }else
                 if (filters[el].type === 'Select' && filters[el].multi){
                     obj[el] = filters[el].value  ?? ''
@@ -232,8 +238,14 @@ export const TableModalFilter = ({title, visible, onClose, filters, filterFuncti
         values = values.obj
         for (let el in filters) {
             if (filters[el].type === 'Date'){
-                const rangeValue = values[el]
-                filters[el].value = rangeValue&&[rangeValue[0]?.format('YYYY-MM-DD'), rangeValue[1]?.format('YYYY-MM-DD')]
+                if (filters[el].mode === 'Year'){
+                    let {start, end} = getFiscalYear('dates', values[el])
+                    console.log({start, end})
+                    filters[el].value = [start?.format('YYYY-MM-DD'), end?.format('YYYY-MM-DD')]
+                }else{
+                    const rangeValue = values[el]
+                    filters[el].value = rangeValue&&[rangeValue[0]?.format('YYYY-MM-DD'), rangeValue[1]?.format('YYYY-MM-DD')]
+                }
             }
             else{
                 filters[el].value = values[el] ?? ''
@@ -332,9 +344,13 @@ export const FiltertagsNew = ({filters, filterFunction}) =>{ //should make it wo
     }, []);
     return <Col span={24}> 
         {filterKeys.map(el=>{
-            let { value, label, type, multi } = filters[el] ?? {}
+            let { value, label, type, multi, mode } = filters[el] ?? {}
             //for multi 
             let selectedIds = value?.selectedIds ?? []
+            // if (mode === 'Year'){
+            //     let {start, end} = getFiscalYear('dates', value)
+            //     value = [start, end]
+            // }
             value =
               value && // check if filter has value set
               (value?.selectedIds // check if filter is a multi select Object

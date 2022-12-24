@@ -100,9 +100,9 @@ function BenchResources() {
             }}
           />
         </Col>
-    </Row>
-  )
-}
+      </Row>
+    )
+  }
 
   
   return (

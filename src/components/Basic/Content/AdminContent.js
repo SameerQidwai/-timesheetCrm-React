@@ -398,7 +398,7 @@ const pageLinks = [
   },
   {
     component: ProjectRevenueAnalyis,
-    link: '/report/project-revenue-analyis',
+    link: '/report/project-revenue-analysis',
     key: 'REPORTS',
     permission: 'ALLOWED',
   },
