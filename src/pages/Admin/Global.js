@@ -375,7 +375,7 @@ function GlobalVars(props) {
         // let variable = {}
         let variable = []
         Object.entries(childData).map( ([key, val]) => {
-            if (val.value){
+            if (val.value !== undefined && val.value !== null){
                 // variable = {...val, name: key}
                 variable.push({
                     ...val, 
