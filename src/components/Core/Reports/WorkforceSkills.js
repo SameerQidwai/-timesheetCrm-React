@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Col, Row, Typography, Table as Atable } from 'antd'
 import Table, { FiltertagsNew, tableSorter } from '../Table/TableFilter'
-import ReportsFilters, { _createQuery } from './ReportsFilters'
 import { getWorkforceSkills } from '../../../service/reports-Apis'
 import { formatCurrency, localStore } from '../../../service/constant'
+import { ReportsFilters, _createQuery } from './Filters'
 
 const {Title, Text} = Typography
 
@@ -39,18 +39,18 @@ function WorkforceSkills() {
       key: 'resourceType',
       dataIndex: 'resourceType',
       title: 'Resource Type',
-      ...tableSorter('employeeStatus', 'string'),
+      ...tableSorter('resourceType', 'string'),
     },
     {
         key: 'employmentType',
         dataIndex: 'employmentType',
         title: 'Employee Status',
-        ...tableSorter('type', 'string'),
+        ...tableSorter('employmentType', 'string'),
     },
     {
         key: 'buyRate',
         dataIndex: 'buyRate',
-        title: 'Buy Rate',
+        title: 'Buy Rate (Hourly)',
         render: (text)=> formatCurrency(text),
         ...tableSorter('buyRate', 'string'),
     },
@@ -111,6 +111,7 @@ function WorkforceSkills() {
                   columns={columns}
                   pagination={{
                       hideOnSinglePage: false,
+                      showPageSizeChanger: true,
                       onChange:(pNo, pSize)=> {
                           setPage({pNo, pSize})
                       }

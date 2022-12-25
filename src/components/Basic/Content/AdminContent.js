@@ -60,7 +60,7 @@ import ExpenseSheet from '../../../pages/Expenses/ExpenseSheet';
 
 // import TimeSheetHTML from "../../Core/TimeSheetHTML"
 import { localStore } from '../../../service/constant';
-import { BenchResources, Positions, WorkForceAllocation, WorkforceSkills, WorkInHand } from '../../Core/Reports';
+import { BenchResources, Positions, WorkForceAllocation, WorkforceSkills, ProjectRevenueAnalyis, ClientRevenueAnalyis } from '../../Core/Reports';
 
 const { Content } = Layout;
 
@@ -393,6 +393,18 @@ const pageLinks = [
   {
     component: WorkForceAllocation,
     link: '/report/workforce-allocations',
+    key: 'REPORTS',
+    permission: 'ALLOWED',
+  },
+  {
+    component: ProjectRevenueAnalyis,
+    link: '/report/project-revenue-analysis',
+    key: 'REPORTS',
+    permission: 'ALLOWED',
+  },
+  {
+    component: ClientRevenueAnalyis,
+    link: '/report/client-revenue-analysis',
     key: 'REPORTS',
     permission: 'ALLOWED',
   },

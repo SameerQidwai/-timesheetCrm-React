@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react'
 import { Button, Col, Row, Typography, Table as Atable } from 'antd'
 import Table, { FiltertagsNew, tableSorter } from '../Table/TableFilter'
 import { formatCurrency, formatDate, formatFloat, localStore } from '../../../service/constant'
-import ReportsFilters, { _createQuery } from './ReportsFilters'
+
+
 import { getPositions } from '../../../service/reports-Apis'
+import { ReportsFilters, _createQuery } from './Filters'
 
 const {Title, Text} = Typography
 
@@ -88,30 +90,30 @@ function Positions() {
             dataIndex: 'employmentType',
             title: 'Employee Status',
             width: 80,
-            ...tableSorter('type', 'string')
+            ...tableSorter('employmentType', 'string')
         },
         {
             key: 'bookingType',
             dataIndex: 'bookingType',
             title: 'Booking Type',
             width: 80,
-            ...tableSorter('booking', 'string')
+            ...tableSorter('bookingType', 'string')
         },
         {
             key: 'buyRate',
             dataIndex: 'buyRate',
-            title: 'Buy Rate',
+            title: 'Buy Rate (Hourly)',
             width: 80,
             render: (text)=> formatCurrency(text),
-            ...tableSorter('buyRate', 'string')
+            ...tableSorter('buyRate', 'number')
         },
         {
             key: 'sellRate',
             dataIndex: 'sellRate',
-            title: 'Sell Rate',
+            title: 'Sell Rate (Hourly)',
             width: 80,
             render: (text)=> formatCurrency(text),
-            ...tableSorter('sellRate', 'string')
+            ...tableSorter('sellRate', 'number')
         },
         {
             key: 'CMPercent',
@@ -119,7 +121,7 @@ function Positions() {
             title: 'CM%',
             width: 80,
             render: (text)=> formatFloat(text) + ' %',
-            ...tableSorter('CMPercent', 'string')
+            ...tableSorter('CMPercent', 'number')
         },
         {
             key: 'startDate',
@@ -200,6 +202,7 @@ function Positions() {
                     dataSource={data}
                     pagination={{
                         hideOnSinglePage: false,
+                        showPageSizeChanger: true,
                         onChange:(pNo, pSize)=> {
                             setPage({pNo, pSize})
                         }

@@ -1,51 +1,59 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Col, Row, Typography, Table as Atable } from 'antd'
-import Table, { FiltertagsNew } from '../Table/TableFilter'
+import Table, { FiltertagsNew, tableSorter } from '../Table/TableFilter'
 import { getBenchResources } from '../../../service/reports-Apis'
-import ReportsFilters, { _createQuery } from './ReportsFilters'
+
+
 import { formatCurrency } from '../../../service/constant'
+import { ReportsFilters, _createQuery } from './Filters'
 
 const {Title, Text} = Typography
 const resourceColumn = [
     {
-        key: 'name',
-        dataIndex: 'name',
-        title: 'Resource Name',
+      key: 'name',
+      dataIndex: 'name',
+      title: 'Resource Name',
+      ...tableSorter('name', 'string')
     },
     {
       key: 'resourceType',
       dataIndex: 'resourceType',
       title: 'Resource Type',
-      width: '23.79%'
+      width: '23.79%',
+      ...tableSorter('resourceType', 'string')
     },
     Atable.EXPAND_COLUMN,
     {
-        key: 'employmentType',
-        dataIndex: 'employmentType',
-        title: 'Employee Status',
-        width: '30.22%'
+      key: 'employmentType',
+      dataIndex: 'employmentType',
+      title: 'Employee Status',
+      width: '30.22%',
+      ...tableSorter('employmentType', 'string')
     },
     {
         key: 'buyRate',
         dataIndex: 'buyRate',
-        title: 'Buy Rate',
+        title: 'Buy Rate (Hourly)',
         width: '23.79%',
+        ...tableSorter('buyRate', 'number'),
         render: (text)=> formatCurrency(text)
     },
 ]
 
 const skillColumn = [
     {
-        key: 'skill',
-        dataIndex: 'skill',
-        title: 'Skill',
-        width: '30.22%'
+      key: 'skill',
+      dataIndex: 'skill',
+      title: 'Skill',
+      width: '30.22%',
+      ...tableSorter('skill', 'string'),
     },
     {
-        key: 'level',
-        dataIndex: 'level',
-        title: 'skill Level',
-        width: '23.79%'
+      key: 'level',
+      dataIndex: 'level',
+      title: 'skill Level',
+      width: '23.79%',
+      ...tableSorter('level', 'string'),
     },
 ]
 
@@ -78,7 +86,7 @@ function BenchResources() {
     return(
       <Row justify="space-between">
         <Col >
-          <Title level={5}>Resources On The Bench</Title>
+          <Title level={5}>Unallocated Resources</Title>
         </Col>
         <Col >
           <Button size="small" onClick={()=>setVisible(true)}>Filters</Button>
@@ -94,9 +102,9 @@ function BenchResources() {
             }}
           />
         </Col>
-    </Row>
-  )
-}
+      </Row>
+    )
+  }
 
   
   return (

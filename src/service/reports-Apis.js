@@ -1,7 +1,7 @@
 import axios from "axios";
 import { message as messageAlert } from "antd";
 
-import { Api, headers, jwtExpired, setToken } from "./constant";
+import { Api, getFiscalYear, headers, jwtExpired, setToken } from "./constant";
 
 const url = `${Api}/reports`;
 
@@ -11,7 +11,7 @@ export const getBenchResources = (queryParam) => {
         .then((res) => {
             const { success, data } = res.data;
             setToken(res?.headers?.authorization)
-            if (success) return { success: success, data: data };
+             return { success: success, data: data };
         })
         .catch((err) => {
             return {
@@ -28,7 +28,7 @@ export const getWorkforceSkills = (queryParam) => {
         .then((res) => {
             const { success, data } = res.data;
             setToken(res?.headers?.authorization)
-            if (success) return { success: success, data: data };
+             return { success: success, data: data };
         })
         .catch((err) => {
             return {
@@ -45,7 +45,7 @@ export const getPositions = (queryParam) => {
         .then((res) => {
             const { success, data } = res.data;
             setToken(res?.headers?.authorization)
-            if (success) return { success: success, data: data };
+             return { success: success, data: data };
         })
         .catch((err) => {
             return {
@@ -62,7 +62,7 @@ export const getAllocations = (queryParam) => {
         .then((res) => {
             const { success, data } = res.data;
             setToken(res?.headers?.authorization)
-            if (success) return { success: success, data: data };
+             return { success: success, data: data };
         })
         .catch((err) => {
             return {
@@ -71,4 +71,54 @@ export const getAllocations = (queryParam) => {
                 message: err.message,
             };
         });
+};
+
+export const getProjectRevenueAnalysis = (queryParam) => {
+    let {start, end} = getFiscalYear('dates')
+    return axios
+      .get(
+        `${url}/project-revenue-analysis?fiscalYearStart=${start.format(
+          'YYYY-MM-DD'
+        )}&fiscalYearEnd=${end.format('YYYY-MM-DD')}${
+          queryParam ? '&' + queryParam : ''
+        }`,
+        { headers: headers() }
+      )
+      .then((res) => {
+        const { success, data } = res.data;
+        setToken(res?.headers?.authorization);
+        return { success: success, data: data };
+      })
+      .catch((err) => {
+        return {
+          error: 'Please login again!',
+          success: false,
+          message: err.message,
+        };
+      });
+};
+
+export const getClientRevenueAnalysis = (queryParam) => {
+    let {start, end} = getFiscalYear('dates')
+    return axios
+      .get(
+        `${url}/client-revenue-analysis?fiscalYearStart=${start.format(
+          'YYYY-MM-DD'
+        )}&fiscalYearEnd=${end.format('YYYY-MM-DD')}${
+          queryParam ? '&' + queryParam : ''
+        }`,
+        { headers: headers() }
+      )
+      .then((res) => {
+        const { success, data } = res.data;
+        setToken(res?.headers?.authorization);
+        return { success: success, data: data };
+      })
+      .catch((err) => {
+        return {
+          error: 'Please login again!',
+          success: false,
+          message: err.message,
+        };
+      });
 };

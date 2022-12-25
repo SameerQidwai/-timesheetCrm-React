@@ -96,7 +96,7 @@ class FormItems extends Component {
                             this.filedformat( 
                                 item.type, item.Placeholder, item.data, item.mode, item.rangeMin, item.rangeMax, item.showTime, item.shape, 
                                 item.size, item.fieldStyle, item.disabled, item.readOnly, item.onChange, item.onClick, item.onBlur, 
-                                item.onClear, item.tooltip, item.tooltipTitle, item.tooltipTrigger, item.fieldNames, item.suggestion
+                                item.onClear, item.tooltip, item.tooltipTitle, item.tooltipTrigger, item.fieldNames, item.suggestion, item.format
                             )
                         }
                     </Item>
@@ -106,7 +106,7 @@ class FormItems extends Component {
         );
     };
 
-    filedformat = ( type, placeholder, data, mode, min, max, showTime, shape, size, style, disabled, readOnly, onChange, onClick, onBlur, onClear, tooltip, tTitle, tTrigger, fieldNames, suggestion ) => {
+    filedformat = ( type, placeholder, data, mode, min, max, showTime, shape, size, style, disabled, readOnly, onChange, onClick, onBlur, onClear, tooltip, tTitle, tTrigger, fieldNames, suggestion, format ) => {
         let item = null;
         switch (type) {
             case "Title":
@@ -242,7 +242,7 @@ class FormItems extends Component {
                         style={{marginBottom: '5px', width: '100%',...style}}
                         onBlur={onBlur}
                         onChange={onChange}
-                        format={'ddd DD MMM yyyy'} //donot change yet
+                        format={format??'ddd DD MMM yyyy'} //donot change yet
                         disabled={disabled}
                     />
                 );

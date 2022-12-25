@@ -3,8 +3,10 @@ import { Button, Col, Row, Typography, Table as Atable } from 'antd'
 import Table, { FiltertagsNew, tableSorter, tableTitleFilter } from '../Table/TableFilter'
 import { BencheResData,  WorkforceData } from './WIHData'
 import { formatCurrency, formatDate, localStore } from '../../../service/constant'
-import ReportsFilters, { _createQuery } from './ReportsFilters'
+
+
 import { getAllocations } from '../../../service/reports-Apis'
+import { ReportsFilters, _createQuery } from './Filters'
 
 const {Title, Text} = Typography
 
@@ -85,7 +87,7 @@ function WorkForceAllocation() {
             dataIndex: 'bookingType',
             title: 'Booking Type',
             width: 80,
-            ...tableSorter('booking', 'string'),
+            ...tableSorter('bookingType', 'string'),
         },
         {
             key: 'skill',
@@ -107,7 +109,7 @@ function WorkForceAllocation() {
             title: 'Buy Rate (Hourly)',
             width: 80,
             render: (text)=> formatCurrency(text),
-            ...tableSorter('buyRate', 'string'),
+            ...tableSorter('buyRate', 'number'),
 
         },
         {
@@ -116,7 +118,7 @@ function WorkForceAllocation() {
             title: 'Sell Rate (Hourly)',
             width: 80,
             render: (text)=> formatCurrency(text),
-            ...tableSorter('buyRate', 'string'),
+            ...tableSorter('sellRate', 'number'),
         },
         {
             key: 'startDate',
@@ -198,6 +200,7 @@ function WorkForceAllocation() {
                     dataSource={data}
                     pagination={{
                         hideOnSinglePage: false,
+                        showPageSizeChanger: true,
                         onChange:(pNo, pSize)=> {
                             setPage({pNo, pSize})
                         }

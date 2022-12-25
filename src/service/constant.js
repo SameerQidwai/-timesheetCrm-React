@@ -247,17 +247,39 @@ export const dateRange = (current, selectedDate, isDate, pDates) => {
   }
 };
 
-export const getFiscalYear = (request) => {
+// export const getFiscalYear = (request) => {
+//   let fiscalStartYear = undefined;
+//   if (parseInt(moment().format('M')) < 7) {
+//     fiscalStartYear = moment().subtract(1, 'y').format('YYYY');
+//   } else {
+//     fiscalStartYear = moment().format('YYYY');
+//   }
+//   let fiscalYear = {
+//     dates: {
+//       start: moment().set({ month: 6, date: 1, year: fiscalStartYear }),
+//       end: moment().set({
+//         month: 5,
+//         date: 30,
+//         year: parseInt(fiscalStartYear) + 1,
+//       }),
+//     },
+//     years: { start: fiscalStartYear, end: parseInt(fiscalStartYear) + 1 },
+//   };
+//   return fiscalYear[request];
+// };
+
+export const getFiscalYear = (request, date, dateFormat) => {
   let fiscalStartYear = undefined;
-  if (parseInt(moment().format('M')) < 7) {
-    fiscalStartYear = moment().subtract(1, 'y').format('YYYY');
+  date = date ? moment(date, dateFormat) :moment()
+  if (parseInt(moment(date).format('M')) < 7) {
+    fiscalStartYear = moment(date).subtract(1, 'y').format('YYYY');
   } else {
-    fiscalStartYear = moment().format('YYYY');
+    fiscalStartYear = moment(date).format('YYYY');
   }
   let fiscalYear = {
     dates: {
-      start: moment().set({ month: 6, date: 1, year: fiscalStartYear }),
-      end: moment().set({
+      start: moment(date).set({ month: 6, date: 1, year: fiscalStartYear }),
+      end: moment(date).set({
         month: 5,
         date: 30,
         year: parseInt(fiscalStartYear) + 1,

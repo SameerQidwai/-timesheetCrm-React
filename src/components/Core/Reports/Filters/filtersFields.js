@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from 'react'
-import { formatDate } from '../../../service/constant'
-import { entityProjects, getContactPersons, getOrganizations, getStandardLevels, getStandardSkills } from '../../../service/constant-Apis'
-import { TableModalFilter } from '../Table/TableFilter'
+import { _createQuery } from '.';
+import { entityProjects, getContactPersons, getOrganizations, getStandardLevels, getStandardSkills } from '../../../../service/constant-Apis'
 
-
-
-
-function ReportsFilters({compName, compKey, visible, invisible, getCompData, tags}) {
-  const [fields, setFields] = useState([]);
-  const [open, setOpen] = useState(false)
-
-  const bench = {
-    effectRender: false,
+export const bench =({fields,setFields, getCompData})=> ({
+    effectRender: true,
+    filterModalUseEffect: () => {
+      entityProjects('helpers/work', true).then(res=>{
+        let tempFields = [...fields];
+        // if (res[0].success) {
+        //projects  data 
+        tempFields[5].data = res.success ? res.options : [];
+        setFields([...tempFields]);
+      })
+    },
     fields: [
       {
         Placeholder: 'Date Range',
@@ -48,6 +48,23 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         ],
         type: 'Select',
       },
+      {
+        Placeholder: 'Exculde Projects',
+        fieldCol: 24,
+        size: 'small',
+        type: 'Text',
+      },
+      {
+        object: 'obj',
+        fieldCol: 24,
+        key: 'excludeProject',
+        size: 'small',
+        mode: 'multiple',
+        customValue: (value, option) => ({ selectedIds: value, option }),
+        getValueProps: (value)=>  ({value: value?.selectedIds}),
+        data: [],
+        type: 'Select',
+      },
     ],
     searchValue: {
       dates: {
@@ -65,6 +82,14 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         showInColumn: false,
         disabled: false,
       },
+      excludeProject: {
+        type: 'Select',
+        multi: true,
+        value: [],
+        label: 'Exculde Projects',
+        showInColumn: false,
+        disabled: false,
+      },
     },
     callFilters: (value1, value2, filters, formData) => {
       // let [startDate, endDate] = formData?.dates || [];
@@ -76,9 +101,9 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
       let query = _createQuery(filters)
       getCompData(query, filters);
     },
-  };
+});
 
-  const skillResources = {
+export const skillResources =({fields,setFields, getCompData})=> ({
     effectRender: true,
     filterModalUseEffect: () => {
       Promise.all([getStandardSkills(), getStandardLevels()]).then((res) => {
@@ -187,23 +212,12 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
     },
     callFilters: (value1, value2, filters, formData) => {
       let {skillId, levelId} = formData || {}
-      //for multi select
-      // let query = `${
-      //   skillId?.selectedIds?.length ? 'skillId=' + skillId?.selectedIds : ''
-      // }${skillId?.selectedIds?.length && levelId?.selectedIds?.length ? '&' : ''}${
-      //   levelId?.selectedIds?.length ? 'levelId=' + levelId?.selectedIds : ''
-      // }`;
-      //for single query
-      // let query = `${skill ? 'skillId=' + skill.value: ''}${ //for single select
-      //   level ? '&levelId=' + level.value: ''
-      // }`;
       let query = _createQuery(filters)
       getCompData(query, filters);
     },
-  };
+});
 
-
-  const positions = {
+export const positions =({fields,setFields, getCompData})=> ({
     effectRender: true,
     filterModalUseEffect: () => {
       Promise.all([
@@ -219,11 +233,11 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         //setting projects
         tempFields[9].data = res[1].success ? res[1].options : [];
         //setting contact persons
-        tempFields[11].data = res[2].success ? res[2].data : [];
+        tempFields[15].data = res[2].success ? res[2].data : [];
         //setting up skill data
-        tempFields[15].data = res[3].success ? res[3].data : [];
+        tempFields[19].data = res[3].success ? res[3].data : [];
         //setting up level data
-        tempFields[17].data = res[4].success ? res[4].data : [];
+        tempFields[21].data = res[4].success ? res[4].data : [];
 
         setFields([...tempFields]);
       });
@@ -261,7 +275,7 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         type: 'Select',
       },
       {
-        Placeholder: 'Project Type',
+        Placeholder: 'Opportunity/Project Type',
         fieldCol: 12,
         size: 'small',
         type: 'Text',
@@ -281,7 +295,7 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         type: 'Select',
       },
       {
-        Placeholder: 'Opportunity/Project',
+        Placeholder: 'Type',
         fieldCol: 12,
         size: 'small',
         type: 'Text',
@@ -301,7 +315,7 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         type: 'Select',
       },
       {
-        Placeholder: 'Project',
+        Placeholder: 'Opportunity/Project',
         fieldCol: 12,
         size: 'small',
         type: 'Text',
@@ -317,28 +331,48 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         data: [],
         type: 'Select',
       },
-      // {
-      //   Placeholder: 'Booking Type',
-      //   fieldCol: 12,
-      //   size: 'small',
-      //   type: 'Text',
-      // },
-      // {
-      //   object: 'obj',
-      //   fieldCol: 24,
-      //   key: 'bookingType',
-      //   size: 'small',
-      //   mode: 'multiple',
-      //   customValue: (value, option) => ({ selectedIds: value, option }),
-      //   getValueProps: (value)=>  ({value: value?.selectedIds}),
-      //   data: [
-      //     { value: 0, label: 'Softbooked' },
-      //     { value: 1, label: 'Allocated' },
-      //     { value: 2, label: 'Assigned' },
-      //     { value: 3, label: 'Unallocated' },
-      //   ],
-      //   type: 'Select',
-      // },
+      {
+        Placeholder: 'Project Status',
+        fieldCol: 12,
+        size: 'small',
+        type: 'Text',
+      },
+      {
+        object: 'obj',
+        fieldCol: 24,
+        key: 'workPhase',
+        size: 'small',
+        mode: 'multiple',
+        customValue: (value, option) => ({ selectedIds: value, option }),
+        getValueProps: (value)=>  ({value: value?.selectedIds}),
+        data: [
+          { value: 0, label: 'Closed' },
+          { value: 1, label: 'Open' },
+        ],
+        type: 'Select',
+      },
+      {
+        Placeholder: 'Booking Type',
+        fieldCol: 12,
+        size: 'small',
+        type: 'Text',
+      },
+      {
+        object: 'obj',
+        fieldCol: 24,
+        key: 'bookingType',
+        size: 'small',
+        mode: 'multiple',
+        customValue: (value, option) => ({ selectedIds: value, option }),
+        getValueProps: (value)=>  ({value: value?.selectedIds}),
+        data: [
+          { value: 0, label: 'Reserved' },
+          { value: 1, label: 'Soft-booked' },
+          { value: 2, label: 'Allocated' },
+          { value: 3, label: 'Unallocated' },
+        ],
+        type: 'Select',
+      },
       {
         Placeholder: 'Resources',
         fieldCol: 12,
@@ -424,7 +458,7 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         type: 'Select',
         multi: true,
         value: [],
-        label: 'Resources',
+        label: 'Organisation',
         showInColumn: false,
         disabled: false,
       },
@@ -432,7 +466,7 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         type: 'Select',
         multi: true,
         value: [],
-        label: 'Project Type',
+        label: 'Opportunity/Project Type',
         showInColumn: false,
         disabled: false,
       },
@@ -440,7 +474,7 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         type: 'Select',
         multi: true,
         value: [],
-        label: 'Opportunity/Project',
+        label: 'Type',
         showInColumn: false,
         disabled: false,
       },
@@ -448,7 +482,7 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         type: 'Select',
         multi: true,
         value: [],
-        label: 'Project',
+        label: 'Opportunity/Project',
         showInColumn: false,
         disabled: false,
       },
@@ -464,18 +498,26 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         type: 'Select',
         multi: true,
         value: [],
+        label: 'Resource Type',
+        showInColumn: false,
+        disabled: false,
+      },
+      bookingType: {
+        type: 'Select',
+        multi: true,
+        value: [],
         label: 'Booking Type',
         showInColumn: false,
         disabled: false,
       },
-      // bookingType: {
-      //   type: 'Select',
-      //   multi: true,
-      //   value: [],
-      //   label: 'Booking Type',
-      //   showInColumn: false,
-      //   disabled: false,
-      // },
+      workPhase: {
+        type: 'Select',
+        multi: true,
+        value: [],
+        label: 'Project Status',
+        showInColumn: false,
+        disabled: false,
+      },
       skillId: {
         type: 'Select',
         multi: true,
@@ -526,9 +568,9 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
       let query = _createQuery(filters)
       getCompData(query, filters);
     },
-  };
+});
 
-  const allocations = {
+export const allocations =({fields,setFields, getCompData})=> ({
     effectRender: true,
     filterModalUseEffect: () => {
       Promise.all([getOrganizations(), entityProjects('helpers/work', true), getContactPersons(), getStandardSkills(), getStandardLevels()]).then((res) => {
@@ -637,6 +679,26 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
         type: 'Select',
       },
       // {
+      //   Placeholder: 'Project Status',
+      //   fieldCol: 12,
+      //   size: 'small',
+      //   type: 'Text',
+      // },
+      // {
+      //   object: 'obj',
+      //   fieldCol: 24,
+      //   key: 'projectStatus',
+      //   size: 'small',
+      //   mode: 'multiple',
+      //   customValue: (value, option) => ({ selectedIds: value, option }),
+      //   getValueProps: (value)=>  ({value: value?.selectedIds}),
+      //   data: [
+      //     { value: 0, label: 'Closed' },
+      //     { value: 1, label: 'Open' },
+      //   ],
+      //   type: 'Select',
+      // },
+      // {
       //   Placeholder: 'Booking Type',
       //   fieldCol: 12,
       //   size: 'small',
@@ -653,7 +715,7 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
       //   data: [
       //     { value: 0, label: 'Softbooked' },
       //     { value: 1, label: 'Allocated' },
-      //     { value: 2, label: 'Assigned' },
+      //     { value: 2, label: 'Reserve' },
       //     { value: 3, label: 'Unallocated' },
       //   ],
       //   type: 'Select',
@@ -796,6 +858,14 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
       //   showInColumn: false,
       //   disabled: false,
       // },
+      // projectStatus: {
+      //   type: 'Select',
+      //   multi: true,
+      //   value: [],
+      //   label: 'Booking Type',
+      //   showInColumn: false,
+      //   disabled: false,
+      // },
       skillId: {
         type: 'Select',
         multi: true,
@@ -845,111 +915,227 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
       let query = _createQuery(filters)
       getCompData(query, filters);
     },
-  };
+});
 
-  const reportsFilter = {
-    bench,
-    skillResources,
-    positions,
-    allocations
-  };
+export const projectRevenue =({fields,setFields, getCompData})=> ({
+    effectRender: true,
+    filterModalUseEffect: () => {
+      Promise.all([getOrganizations(), entityProjects('helpers/work?type=P', true)]).then((res) => {
 
-  const {searchValue, callFilters, filterModalUseEffect, effectRender} = reportsFilter?.[compKey] ||{}
-  useEffect(() => {
-    setFields(reportsFilter[compKey]?.['fields'])
-    
-    return () => {
-      // setSearchedColumn({})
-    };
-  }, []);
+        let tempFields = [...fields];
+        //setting organization
+        tempFields[1].data = res[0].success ? res[0].data : [];
+        //setting projects
+        tempFields[3].data = res[1].success ? res[1].options : [];
+        //setting exclude projects
+        tempFields[5].data = res[1].success ? res[1].options : [];
+        setFields([...tempFields]);
+      })
+    },
+    fields: [
+      // {
+      //   Placeholder: 'Select Financial Year',
+      //   fieldCol: 24,
+      //   size: 'small',
+      //   type: 'Text',
+      // },
+      // {
+      //   object: 'obj',
+      //   fieldCol: 24,
+      //   key: 'date',
+      //   size: 'small',
+      //   mode: "year",
+      //   format:"YYYY",
+      //   type: 'DatePicker',
+      //   fieldStyle: { width: '100%' },
+      // },
+      {
+        Placeholder: 'Organisation',
+        fieldCol: 24,
+        size: 'small',
+        type: 'Text',
+      },
+      {
+        object: 'obj',
+        fieldCol: 24,
+        key: 'organizationId',
+        size: 'small',
+        mode: 'multiple',
+        customValue: (value, option) => ({ selectedIds: value, option }),
+        getValueProps: (value)=>  ({value: value?.selectedIds}),
+        data: [],
+        type: 'Select',
+      },
+      {
+        Placeholder: 'Projects',
+        fieldCol: 24,
+        size: 'small',
+        type: 'Text',
+      },
+      {
+        object: 'obj',
+        fieldCol: 24,
+        key: 'projectId',
+        size: 'small',
+        mode: 'multiple',
+        customValue: (value, option) => ({ selectedIds: value, option }),
+        getValueProps: (value)=>  ({value: value?.selectedIds}),
+        data: [],
+        type: 'Select',
+      },
+      {
+        Placeholder: 'Exculde Projects',
+        fieldCol: 24,
+        size: 'small',
+        type: 'Text',
+      },
+      {
+        object: 'obj',
+        fieldCol: 24,
+        key: 'excludeProjectId',
+        size: 'small',
+        mode: 'multiple',
+        customValue: (value, option) => ({ selectedIds: value, option }),
+        getValueProps: (value)=>  ({value: value?.selectedIds}),
+        data: [],
+        type: 'Select',
+      },
+    ],
+    searchValue: {
+      // date: {
+      //   type: 'Date',
+      //   mode: 'Year',
+      //   value: null,
+      //   label: 'Selected Financial Year',
+      //   showInColumn: true,
+      //   disabled: true,
+      // },
+      organizationId: {
+        type: 'Select',
+        multi: true,
+        value: [],
+        label: 'Organisation',
+        showInColumn: false,
+        disabled: false,
+      },
+      projectId: {
+        type: 'Select',
+        multi: true,
+        value: [],
+        label: 'Projects',
+        showInColumn: false,
+        disabled: false,
+      },
+      excludeProjectId: {
+        type: 'Select',
+        multi: true,
+        value: [],
+        label: 'Exculde Projects',
+        showInColumn: false,
+        disabled: false,
+      },
+    },
+    callFilters: (value1, value2, filters, formData) => {
+      let query = _createQuery(filters)
+      getCompData(query, filters);
+    },
+});
 
-  useEffect(() => {
-    if (!open){
-      setOpen(visible)
-    }
-  }, [visible]);
+export const clientRevenue =({fields,setFields, getCompData})=> ({
+    effectRender: true,
+    filterModalUseEffect: () => {
+        console.log(fields)
+      getOrganizations().then((res) => {
 
-  // const workForceSkills = {
-    // const skillLevelSelection = (selectedValues, selectedOptions)=>{
-    //   let levelFieldKey =
-    //     compKey === 'skillResources' ? 1 : compKey === 'position' ? 9 : 0;
+        let tempFields = [...fields];
+        //setting organization
+        tempFields[1].data = res.success ? res.data : [];
+        //setting exclude organization
+        tempFields[3].data = res.success ? res.data : [];
 
-    //   let selectedLabel =[]
-    //   if (selectedValues?.length){
-    //     selectedLabel  = selectedOptions.map(el=>{
-    //       return{
-    //         label: el.label, 
-    //         value: el.value, 
-    //         options: el.levels || []
-    //       }
-    //     })
-    //   }else{
-    //     selectedLabel = fields[1].data.map(el=>{
-    //       return {
-    //         label: el.label,
-    //         options: el.levels || []
-    //       }
-    //     })
-    //   }
-
-    //   let tempFields = fields
-    //   tempFields[3].data = selectedLabel
-    //   setFields([...tempFields])
-
-    // }
-  // }
-
-  return (
-    open && <TableModalFilter
-      title={compName}
-      visible={visible}
-      filters={tags ?? searchValue}
-      filterFields={fields || []}
-      filterFunction={callFilters}
-      destroyOnClose={true}
-      effectFunction={filterModalUseEffect}
-      effectRender={effectRender}
-      onClose={() => invisible()}
-    />
-  );
-}
-
-export default ReportsFilters
-
-//------------->HELPER<-------
-
-export const _createQuery = (searchColumn = {})=>{
-  let query  = ''
-  let filters = Object.entries(searchColumn)
-  let lastIndex = filters.length
-  filters.map(([key, {value, type, multi}], index)=>{
-
-    if (query && (value?.selectedIds?.length || value?.value || value?.length )){
-      query += '&'
-    }
-
-    if (type === 'Select' && multi){
-
-      query += `${value?.selectedIds?.length ? `${key}=` + `${value?.selectedIds}` : ''}`
-
-    }else if (type === 'Select'){
-
-      query += `${`${key}=`+`${value?.value}`}`
-      
-    }else if (type === 'Date'){
-
-      let [startDate, endDate] = value || [];
-
-      query += `${startDate ? 'startDate=' + startDate : ''}${
-        startDate && endDate ? '&' : ''
-      }${endDate ? 'endDate=' + endDate : ''}`;
-
-    }else{
-
-      query += `${value ? `${key}=` + `${value}` : ''}`
-
-    }    
-  })
-
-  return query
-}
+        setFields([...tempFields]);
+      })
+    },
+    fields: [
+      // {
+      //   Placeholder: 'Select Financial Year',
+      //   fieldCol: 24,
+      //   size: 'small',
+      //   type: 'Text',
+      // },
+      // {
+      //   object: 'obj',
+      //   fieldCol: 24,
+      //   key: 'date',
+      //   size: 'small',
+      //   mode: "year",
+      //   format:"YYYY",
+      //   type: 'DatePicker',
+      //   fieldStyle: { width: '100%' },
+      // },
+      {
+        Placeholder: 'Organisation',
+        fieldCol: 24,
+        size: 'small',
+        type: 'Text',
+      },
+      {
+        object: 'obj',
+        fieldCol: 24,
+        key: 'organizationId',
+        size: 'small',
+        mode: 'multiple',
+        customValue: (value, option) => ({ selectedIds: value, option }),
+        getValueProps: (value)=>  ({value: value?.selectedIds}),
+        data: [],
+        type: 'Select',
+      },
+      {
+        Placeholder: 'Exclude Organisation',
+        fieldCol: 24,
+        size: 'small',
+        type: 'Text',
+      },
+      {
+        object: 'obj',
+        fieldCol: 24,
+        key: 'excludeOrganizationId',
+        size: 'small',
+        mode: 'multiple',
+        customValue: (value, option) => ({ selectedIds: value, option }),
+        getValueProps: (value)=>  ({value: value?.selectedIds}),
+        data: [],
+        type: 'Select',
+      },
+    ],
+    searchValue: {
+      // date: {
+      //   type: 'Date',
+      //   mode: 'Year',
+      //   value: null,
+      //   label: 'Selected Financial Year',
+      //   showInColumn: true,
+      //   disabled: true,
+      // },
+      organizationId: {
+        type: 'Select',
+        multi: true,
+        value: [],
+        label: 'Organisation',
+        showInColumn: false,
+        disabled: false,
+      },
+      excludeOrganizationId: {
+        type: 'Select',
+        multi: true,
+        value: [],
+        label: 'Exclude Organisation',
+        showInColumn: false,
+        disabled: false,
+      },
+    },
+    callFilters: (value1, value2, filters, formData) => {
+      let query = _createQuery(filters)
+      getCompData(query, filters);
+    },
+});
