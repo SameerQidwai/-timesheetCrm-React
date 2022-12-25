@@ -154,7 +154,7 @@ class InfoModal extends Component {
                     size: "small",
                      rules:[ {
                         type: 'email',
-                        message: 'The input is not valid E-mail!',
+                        message: 'The input is not valid e-mail!',
                     }],
                     type: "Input",
                     disabled: false,
@@ -322,7 +322,7 @@ class InfoModal extends Component {
                     size: "small",
                     rules:[ {
                         type: 'email',
-                        message: 'The input is not valid E-mail!',
+                        message: 'The input is not valid e-mail!',
                     }],
                     type: "input",
                     itemStyle:{marginBottom:10},
@@ -825,7 +825,7 @@ class InfoModal extends Component {
                         rules={[
                             {
                             type: 'email',
-                            message: 'The input is not valid E-mail!',
+                            message: 'The input is not valid e-mail!',
                             },
                             {required: true, message: 'Email is Required'
                             }

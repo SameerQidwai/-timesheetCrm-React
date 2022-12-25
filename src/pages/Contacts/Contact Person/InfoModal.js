@@ -116,10 +116,10 @@ class InfoModal extends Component {
               ({ getFieldValue }) => ({
                   validator(rules, value) {
                       if (value){
-                          if (!isPhone(value)) {
-                              return Promise.reject(new Error('Must contain 11 digits'));
-                          }
-                          return Promise.resolve();
+                        if (!isPhone(value)) {
+                            return Promise.reject(new Error('Must contain 11 digits'));
+                        }
+                        return Promise.resolve();
                       }
                   },
               }),
@@ -138,7 +138,7 @@ class InfoModal extends Component {
             itemStyle: { marginBottom: 10 },
             rules:[ {
               type: 'email',
-              message: 'The input is not valid E-mail!',
+              message: 'The input is not valid e-mail!',
             },
             {
               required: true,
