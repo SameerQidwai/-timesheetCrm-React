@@ -379,8 +379,8 @@ class TimeSheetProject extends Component {
           icon: stage=== 'Reject' ? <ExclamationCircleOutlined /> : <CheckCircleOutlined />,
           content: content,
           okButtonProps: {danger: stage === 'Delete'??true, htmlType: 'submit', form: 'my-form'  },
-          okText: 'Okay',
-          cancelText: 'Cancel',
+          okText: 'Yes',
+          cancelText: 'No',
         });
     }
 

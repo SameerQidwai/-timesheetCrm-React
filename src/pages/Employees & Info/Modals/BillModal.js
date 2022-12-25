@@ -73,7 +73,7 @@ class BillModal extends Component {
                     type: "input",
                     rules:[ {
                         type: 'email',
-                        message: 'The input is not valid E-mail!',
+                        message: 'The input is not valid e-mail!',
                       }],
                     itemStyle: { marginBottom: 1 },
                 },

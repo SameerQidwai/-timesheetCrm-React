@@ -12,7 +12,7 @@ import {
   getLeaveBalance,
   updateLeavebalance,
 } from '../../service/leaveRequest-Apis';
-
+import moment from 'moment';
 const EditableContext = React.createContext(null);
 const {Text} = Typography
 
@@ -171,14 +171,16 @@ class LeaveBalance extends Component {
       lastUpdate: null
     };
   }
-
+  
   componentDidMount = () => {
     const { empId } = this.props;
     getLeaveBalance(empId).then((res) => {
       if (res?.success) {
         this.setState({
           data: res.data,
-          lastUpdate: res.lastUpdate
+          lastUpdate: moment().isBefore(moment().set({ date: 15 }))
+            ? moment().set({ date: 15, month: moment().month() - 1 })
+            : moment().set({ date: 15 }),
         });
       }
     });
@@ -239,7 +241,7 @@ class LeaveBalance extends Component {
           />
         </Col>
         <Col>
-          <Text type="danger">Last Updated: {formatDate(lastUpdate,true,true)} </Text>
+          <Text type="danger">Last Updated: {formatDate(lastUpdate, true,true)} </Text>
         </Col>
       </Row>
     );

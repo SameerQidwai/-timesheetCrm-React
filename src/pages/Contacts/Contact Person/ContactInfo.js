@@ -9,7 +9,7 @@ import InfoModal from './InfoModal';
 import Attachments from '../../../components/Core/Attachments';
 import Comments from '../../../components/Core/Comments';
 import Opportunities from '../../../components/Core/Opportunities';
-import { generalDelete } from '../../../service/delete-Api\'s';
+import { generalDelete } from "../../../service/delete-Api\'s";
 import Projects from '../../../components/Core/Projects';
 
 const {Item} = Descriptions 
@@ -86,7 +86,8 @@ export class ContactInfo extends Component {
                                         title="Are you sure you want to delete ?"
                                         onConfirm={() => this.handleDelete() }
                                         okText="Yes"
-                                    >
+                                        cancelText="No"
+                                        >
                                     <div> Delete </div> 
                                     </Popconfirm>
                                 </Menu.Item>
@@ -140,19 +141,19 @@ export class ContactInfo extends Component {
                         customUrl={`helpers/work?type=O&contact=${userId}`}
                     />
                 </TabPane>
-                {/* <TabPane tab="Representative Opportunities" key="r-leads">
+                <TabPane tab="Opportunity Representative" key="r-leads">
                     <Opportunities
                         targetId={userId}
-                        customUrl={`helpers/work?type=R&contact=${userId}`}
+                        customUrl={`helpers/work?type=O&delegate=${userId}`}
                     />
-                </TabPane> */}
+                </TabPane>
                 <TabPane tab="Projects" key="projects">
                     <Projects
                         targetId={userId}
                         customUrl={`helpers/work?type=P&contact=${userId}`}
                     />
                 </TabPane>
-                <TabPane tab="Representative Projects" key="r-projects">
+                <TabPane tab="Project Representative" key="r-projects">
                     <Projects
                         targetId={userId}
                         customUrl={`helpers/work?type=P&delegate=${userId}`}

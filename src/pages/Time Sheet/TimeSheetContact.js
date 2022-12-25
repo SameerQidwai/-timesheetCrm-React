@@ -597,8 +597,8 @@ class TimeSheetContact extends Component {
           icon: stage=== 'Delete' ? <ExclamationCircleOutlined /> : <CheckCircleOutlined />,
           content: content,
           okButtonProps: {danger: stage === 'Delete'??true},
-          okText: 'Okay',
-          cancelText: 'Cancel',
+          okText: 'Yes',
+          cancelText: 'No',
           onOk:()=>{
               this.actionTimeSheet(stage) 
               modal.destroy();
@@ -754,7 +754,7 @@ class TimeSheetContact extends Component {
                         <Button 
                             type="primary" 
                             danger
-                            disabled={canDelete}
+                            disabled={sTMilestones.keys.length<1 && (sUser !== loginId || !permissions?.['DELETE']?.['ANY'])}
                             onClick={()=>this.multiAction('Delete')}
                         > 
                             Delete

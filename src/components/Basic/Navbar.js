@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { Menu, Dropdown, Row, Col, Space, message } from "antd";
-import { CaretDownOutlined, DownOutlined, SettingOutlined, LogoutOutlined, ProfileOutlined } from "@ant-design/icons"; //Icons
+import { Menu, Dropdown, Row, Col, Space, message, Tooltip } from "antd";
+import { CaretDownOutlined, DownOutlined, SettingOutlined, LogoutOutlined, ProfileOutlined, QuestionOutlined } from "@ant-design/icons"; //Icons
 import { Link, Redirect, withRouter } from "react-router-dom";
 
 import "../Styles/Navbar.css";
@@ -143,6 +143,15 @@ class Navbar extends Component {
                         {permissions['ADMIN_OPTIONS'] && permissions['ADMIN_OPTIONS']['READ'] ? <Col xs={{ span: 2 }} md={{ span: 2 }}>
                             <Space size="large">
                                 <Link
+                                    to={{ pathname:"https://timewize.au/help-centre/"}}
+                                    target='_blank'
+                                    // className="nav-drop"
+                                >
+                                    <Tooltip title="Help Centre – Timewize">
+                                        <QuestionOutlined />
+                                    </Tooltip>
+                                </Link>
+                                <Link
                                     to="/admin/global-settings"
                                     // className="nav-drop"
                                 >
@@ -154,9 +163,18 @@ class Navbar extends Component {
                             </Space>
                         </Col>: 
                         <Col xs={{ span: 1 }} md={{ span: 1 }}>
-                            <Dropdown overlay={options} placement="bottomCenter" >
-                                <DownOutlined style={{color: '#1890ff', cursor:'pointer'}} />
-                            </Dropdown>
+                            <Space size="large">
+                                <Link
+                                    to= {{ pathname:"https://timewize.au/help-centre/"}}
+                                    target='_blank'
+                                    // className="nav-drop"
+                                >
+                                    <QuestionOutlined />
+                                </Link>
+                                <Dropdown overlay={options} placement="bottomCenter" >
+                                    <DownOutlined style={{color: '#1890ff', cursor:'pointer'}} />
+                                </Dropdown>
+                            </Space>
                         </Col>}
                         
                     </Row>

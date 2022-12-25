@@ -45,6 +45,7 @@ class Levels extends Component {
                                             this.handleDelete(record.id)
                                         }
                                         okText="Yes"
+                                        cancelText="No"
                                            >
                                         <div> Delete </div>
                                     </Popconfirm>

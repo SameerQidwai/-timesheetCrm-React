@@ -105,6 +105,7 @@ class Organizations extends Component {
                     title="Are you sure you want to delete ?"
                     onConfirm={() => this.handleDelete(record.id, index)}
                     okText="Yes"
+                    cancelText="No"
                   >
                     <div> Delete </div>
                   </Popconfirm>

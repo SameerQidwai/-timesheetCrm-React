@@ -78,6 +78,7 @@ class TimeOff extends Component {
                                             this.handleDelete(record.code)
                                         }
                                         okText="Yes"
+                                        cancelText="No"
                                     >
                                         Delete
                                     </Popconfirm>

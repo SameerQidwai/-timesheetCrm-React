@@ -236,8 +236,8 @@ const ExpenseApproval = () => {
 		  icon: <CheckCircleOutlined />,
 		  content: content,
 		  // okButtonProps: {danger: stage === 'unapprove'??true},
-		  okText: 'Okay',
-		  cancelText: 'Cancel',
+		  okText: 'Yes',
+		  cancelText: 'No',
 		  okButtonProps: {danger: stage === 'reject'??true, htmlType: 'submit', form: 'my-form'  },
 		  // onOk:()=>{
 		  //   //   this.actionTimeSheet(stage) 

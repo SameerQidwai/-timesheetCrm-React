@@ -114,6 +114,7 @@ class ContInfo extends Component {
                     title="Are you sure you want to delete ?"
                     onConfirm={() => this.handleDelete(editCont)}
                     okText="Yes"
+                    cancelText="No"
                   >
                     <div> Delete </div>
                   </Popconfirm>
@@ -147,6 +148,9 @@ class ContInfo extends Component {
                       data.active ? 'Deactive' : 'Activate'
                     }`}
                     onConfirm={() => this.toggleActiveStatus(editCont)}
+                    okText="Yes"
+                    cancelText="No"
+
                   >
                     <div> {data.active ? 'Deactivate' : 'Activate'} </div>
                   </Popconfirm>

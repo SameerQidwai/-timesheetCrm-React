@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Modal, Table, Checkbox,Form } from 'antd'
+import {Modal, Table, Checkbox,Form, Row, Col, Typography } from 'antd'
 import { LoadingOutlined } from "@ant-design/icons"; //Icons
 import { updatePermission } from '../../../service/Roles-Apis';
 
@@ -285,12 +285,22 @@ class Permission extends Component {
         })
     }
 
+
     render (){
         const { loading, MODULES } = this.state
-        const { closeModal, isSystem, isVisible } = this.props
+      const { closeModal, isSystem, isVisible, label } = this.props
+      console.log("modules", label);
         return (
-                <Modal
-                    title="Edit Permission"
+          <Modal
+            // title={<Row>
+            //   <Col flex={2}>
+            //     <Typography.Title level={5} style={{marginBottom:0}}>Edit Permission Of</Typography.Title>  
+            //   </Col>
+            //   <Col flex={3}>
+            //     <Typography.Title level={5} style={{marginBottom:0}}>{label}</Typography.Title>  
+            //   </Col>
+            //       </Row>}
+            title={`Edit Permission Of ${label}`}
                     maskClosable={false}
                     centered
                     visible={isVisible}
