@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Menu, Dropdown, Row, Col, Space, message } from "antd";
+import { Menu, Dropdown, Row, Col, Space, message, Tooltip } from "antd";
 import { CaretDownOutlined, DownOutlined, SettingOutlined, LogoutOutlined, ProfileOutlined, QuestionOutlined } from "@ant-design/icons"; //Icons
 import { Link, Redirect, withRouter } from "react-router-dom";
 
@@ -147,7 +147,9 @@ class Navbar extends Component {
                                     target='_blank'
                                     // className="nav-drop"
                                 >
-                                    <QuestionOutlined />
+                                    <Tooltip title="Help Centre – Timewize">
+                                        <QuestionOutlined />
+                                    </Tooltip>
                                 </Link>
                                 <Link
                                     to="/admin/global-settings"
