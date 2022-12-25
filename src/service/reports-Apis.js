@@ -97,3 +97,28 @@ export const getProjectRevenueAnalysis = (queryParam) => {
         };
       });
 };
+
+export const getClientRevenueAnalysis = (queryParam) => {
+    let {start, end} = getFiscalYear('dates')
+    return axios
+      .get(
+        `${url}/client-revenue-analysis?fiscalYearStart=${start.format(
+          'YYYY-MM-DD'
+        )}&fiscalYearEnd=${end.format('YYYY-MM-DD')}${
+          queryParam ? '&' + queryParam : ''
+        }`,
+        { headers: headers() }
+      )
+      .then((res) => {
+        const { success, data } = res.data;
+        setToken(res?.headers?.authorization);
+        return { success: success, data: data };
+      })
+      .catch((err) => {
+        return {
+          error: 'Please login again!',
+          success: false,
+          message: err.message,
+        };
+      });
+};

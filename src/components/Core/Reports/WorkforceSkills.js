@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Col, Row, Typography, Table as Atable } from 'antd'
 import Table, { FiltertagsNew, tableSorter } from '../Table/TableFilter'
-import ReportsFilters, { _createQuery } from './ReportsFilters'
 import { getWorkforceSkills } from '../../../service/reports-Apis'
 import { formatCurrency, localStore } from '../../../service/constant'
+import { ReportsFilters, _createQuery } from './Filters'
 
 const {Title, Text} = Typography
 

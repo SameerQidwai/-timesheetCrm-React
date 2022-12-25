@@ -1,21 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Col, Row, Typography } from 'antd'
 import Table, { FiltertagsNew, tableSorter } from '../Table/TableFilter'
-import { getProjectRevenueAnalysis } from '../../../service/reports-Apis'
+import { getClientRevenueAnalysis } from '../../../service/reports-Apis'
 
 
 import { formatCurrency, formatFloat, getFiscalYear, localStore, parseDate } from '../../../service/constant'
-import moment from 'moment'
 import { ReportsFilters, _createQuery } from './Filters'
 
 const contantColmuns = [
-  {
-    key: 'projectTitle',
-    dataIndex: 'projectTitle',
-    title: 'Project Name',
-    width: '10%',
-    ...tableSorter('projectTitle', 'string'),
-  },
   {
     key: 'organizationName',
     dataIndex: 'organizationName',
@@ -24,20 +16,13 @@ const contantColmuns = [
     ...tableSorter('organizationName', 'string'),
   },
   {
-    key: 'projectManagerName',
-    dataIndex: 'projectManagerName',
-    title: 'Project Manager Name',
-    width: '6%',
-    ...tableSorter('projectManagerName', 'string'),
-  },
-  {
-    key: 'projectId',
-    dataIndex: 'projectId',
-    title: 'Project Code',
+    key: 'organizationId',
+    dataIndex: 'organizationId',
+    title: 'Organisation Code',
     align: 'center',
     width: '4%',
     render: (text)=> (`00${text}`), 
-    ...tableSorter('projectId', 'number'),
+    ...tableSorter('organizationId', 'number'),
   },
   {
     key: 'totalSell',
@@ -61,24 +46,24 @@ const contantColmuns = [
     width: '1%'
   },
   {
-    key: 'projectValue',
-    dataIndex: 'projectValue',
+    key: 'projectsValue',
+    dataIndex: 'projectsValue',
     title: 'Total Contract Value',
     width: '4%',
     render: (value)=> (formatCurrency(value??0)),
-    ...tableSorter('projectValue', 'number'),
+    ...tableSorter('projectsValue', 'number'),
   },
   {
     key: 'residualedRevenue',
     dataIndex: 'residualedRevenue',
     title: 'Residual Contract Value',
     width: '4%',
-    render: (_, record)=> formatCurrency(parseFloat(record.projectValue??0) - parseFloat(record.totalSell??0)),
+    render: (_, record)=> formatCurrency(parseFloat(record.projectsValue??0) - parseFloat(record.totalSell??0)),
     ...tableSorter('residualedRevenue', 'number'),
   },
 ]
 
-function ProjectRevenueAnalyis() {
+function ClientRevenueAnalyis() {
   const [data, setData] = useState([])
   const [columns, setColumn] = useState([])
   const [visible, setVisible] = useState(false)
@@ -112,13 +97,13 @@ function ProjectRevenueAnalyis() {
         })
       }
       let creatingColumn = contantColmuns
-      creatingColumn.splice(6, 0 , ...monthlyColumn);
+      creatingColumn.splice(4, 0 , ...monthlyColumn);
       setColumn([...creatingColumn])
   }
 
   const getData = (queryParam, tagsValues) =>{
     setLoading(true)
-    getProjectRevenueAnalysis(queryParam).then(res=>{
+    getClientRevenueAnalysis(queryParam).then(res=>{
       if (res.success){
         // console.log(res.data)
         setData(res.data)
@@ -135,7 +120,7 @@ function ProjectRevenueAnalyis() {
     return(
       <Row justify="space-between">
         <Col >
-          <Typography.Title level={5}>Project Revenue Analysis</Typography.Title>
+          <Typography.Title level={5}>Client Revenue Analysis</Typography.Title>
         </Col>
         <Col >
           <Button size="small" onClick={()=>setVisible(true)}>Filters</Button>
@@ -164,7 +149,7 @@ function ProjectRevenueAnalyis() {
           title={() => tableTitle()}
           columns={columns}
           loading={loading}
-          rowKey={'projectId'}
+          rowKey={'organizationId'}
           dataSource={data}
           pagination={{
             hideOnSinglePage: false,
@@ -180,8 +165,8 @@ function ProjectRevenueAnalyis() {
         />
       </Col>
       <ReportsFilters
-          compName={'Project Revenue Analysis Filters'}
-          compKey={'projectRevenue'}
+          compName={'Client Revenue Analysis Filters'}
+          compKey={'clientRevenue'}
           tags={tags}
           visible={visible}
           getCompData={getData}
@@ -191,4 +176,4 @@ function ProjectRevenueAnalyis() {
   );
 }
 
-export default ProjectRevenueAnalyis
+export default ClientRevenueAnalyis

@@ -3,8 +3,10 @@ import { Button, Col, Row, Typography, Table as Atable } from 'antd'
 import Table, { FiltertagsNew, tableSorter, tableTitleFilter } from '../Table/TableFilter'
 import { BencheResData,  WorkforceData } from './WIHData'
 import { formatCurrency, formatDate, localStore } from '../../../service/constant'
-import ReportsFilters, { _createQuery } from './ReportsFilters'
+
+
 import { getAllocations } from '../../../service/reports-Apis'
+import { ReportsFilters, _createQuery } from './Filters'
 
 const {Title, Text} = Typography
 

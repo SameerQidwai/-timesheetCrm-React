@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react'
 import { Button, Col, Row, Typography, Table as Atable } from 'antd'
 import Table, { FiltertagsNew, tableSorter } from '../Table/TableFilter'
 import { formatCurrency, formatDate, formatFloat, localStore } from '../../../service/constant'
-import ReportsFilters, { _createQuery } from './ReportsFilters'
+
+
 import { getPositions } from '../../../service/reports-Apis'
+import { ReportsFilters, _createQuery } from './Filters'
 
 const {Title, Text} = Typography
 
