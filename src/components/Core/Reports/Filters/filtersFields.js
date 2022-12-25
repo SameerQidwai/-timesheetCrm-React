@@ -233,11 +233,11 @@ export const positions =({fields,setFields, getCompData})=> ({
         //setting projects
         tempFields[9].data = res[1].success ? res[1].options : [];
         //setting contact persons
-        tempFields[11].data = res[2].success ? res[2].data : [];
+        tempFields[15].data = res[2].success ? res[2].data : [];
         //setting up skill data
-        tempFields[15].data = res[3].success ? res[3].data : [];
+        tempFields[19].data = res[3].success ? res[3].data : [];
         //setting up level data
-        tempFields[17].data = res[4].success ? res[4].data : [];
+        tempFields[21].data = res[4].success ? res[4].data : [];
 
         setFields([...tempFields]);
       });
@@ -275,7 +275,7 @@ export const positions =({fields,setFields, getCompData})=> ({
         type: 'Select',
       },
       {
-        Placeholder: 'Project Type',
+        Placeholder: 'Opportunity/Project Type',
         fieldCol: 12,
         size: 'small',
         type: 'Text',
@@ -295,7 +295,7 @@ export const positions =({fields,setFields, getCompData})=> ({
         type: 'Select',
       },
       {
-        Placeholder: 'Opportunity/Project',
+        Placeholder: 'Type',
         fieldCol: 12,
         size: 'small',
         type: 'Text',
@@ -315,7 +315,7 @@ export const positions =({fields,setFields, getCompData})=> ({
         type: 'Select',
       },
       {
-        Placeholder: 'Project',
+        Placeholder: 'Opportunity/Project',
         fieldCol: 12,
         size: 'small',
         type: 'Text',
@@ -331,48 +331,48 @@ export const positions =({fields,setFields, getCompData})=> ({
         data: [],
         type: 'Select',
       },
-      // {
-      //   Placeholder: 'Project Status',
-      //   fieldCol: 12,
-      //   size: 'small',
-      //   type: 'Text',
-      // },
-      // {
-      //   object: 'obj',
-      //   fieldCol: 24,
-      //   key: 'projectStatus',
-      //   size: 'small',
-      //   mode: 'multiple',
-      //   customValue: (value, option) => ({ selectedIds: value, option }),
-      //   getValueProps: (value)=>  ({value: value?.selectedIds}),
-      //   data: [
-      //     { value: 0, label: 'Closed' },
-      //     { value: 1, label: 'Open' },
-      //   ],
-      //   type: 'Select',
-      // },
-      // {
-      //   Placeholder: 'Booking Type',
-      //   fieldCol: 12,
-      //   size: 'small',
-      //   type: 'Text',
-      // },
-      // {
-      //   object: 'obj',
-      //   fieldCol: 24,
-      //   key: 'bookingType',
-      //   size: 'small',
-      //   mode: 'multiple',
-      //   customValue: (value, option) => ({ selectedIds: value, option }),
-      //   getValueProps: (value)=>  ({value: value?.selectedIds}),
-      //   data: [
-      //     { value: 0, label: 'Softbooked' },
-      //     { value: 1, label: 'Allocated' },
-      //     { value: 2, label: 'Reserve' },
-      //     { value: 3, label: 'Unallocated' },
-      //   ],
-      //   type: 'Select',
-      // },
+      {
+        Placeholder: 'Project Status',
+        fieldCol: 12,
+        size: 'small',
+        type: 'Text',
+      },
+      {
+        object: 'obj',
+        fieldCol: 24,
+        key: 'workPhase',
+        size: 'small',
+        mode: 'multiple',
+        customValue: (value, option) => ({ selectedIds: value, option }),
+        getValueProps: (value)=>  ({value: value?.selectedIds}),
+        data: [
+          { value: 0, label: 'Closed' },
+          { value: 1, label: 'Open' },
+        ],
+        type: 'Select',
+      },
+      {
+        Placeholder: 'Booking Type',
+        fieldCol: 12,
+        size: 'small',
+        type: 'Text',
+      },
+      {
+        object: 'obj',
+        fieldCol: 24,
+        key: 'bookingType',
+        size: 'small',
+        mode: 'multiple',
+        customValue: (value, option) => ({ selectedIds: value, option }),
+        getValueProps: (value)=>  ({value: value?.selectedIds}),
+        data: [
+          { value: 0, label: 'Reserved' },
+          { value: 1, label: 'Soft-booked' },
+          { value: 2, label: 'Allocated' },
+          { value: 3, label: 'Unallocated' },
+        ],
+        type: 'Select',
+      },
       {
         Placeholder: 'Resources',
         fieldCol: 12,
@@ -458,7 +458,7 @@ export const positions =({fields,setFields, getCompData})=> ({
         type: 'Select',
         multi: true,
         value: [],
-        label: 'Resources',
+        label: 'Organisation',
         showInColumn: false,
         disabled: false,
       },
@@ -466,7 +466,7 @@ export const positions =({fields,setFields, getCompData})=> ({
         type: 'Select',
         multi: true,
         value: [],
-        label: 'Project Type',
+        label: 'Opportunity/Project Type',
         showInColumn: false,
         disabled: false,
       },
@@ -474,7 +474,7 @@ export const positions =({fields,setFields, getCompData})=> ({
         type: 'Select',
         multi: true,
         value: [],
-        label: 'Opportunity/Project',
+        label: 'Type',
         showInColumn: false,
         disabled: false,
       },
@@ -482,7 +482,7 @@ export const positions =({fields,setFields, getCompData})=> ({
         type: 'Select',
         multi: true,
         value: [],
-        label: 'Project',
+        label: 'Opportunity/Project',
         showInColumn: false,
         disabled: false,
       },
@@ -498,26 +498,26 @@ export const positions =({fields,setFields, getCompData})=> ({
         type: 'Select',
         multi: true,
         value: [],
+        label: 'Resource Type',
+        showInColumn: false,
+        disabled: false,
+      },
+      bookingType: {
+        type: 'Select',
+        multi: true,
+        value: [],
         label: 'Booking Type',
         showInColumn: false,
         disabled: false,
       },
-      // bookingType: {
-      //   type: 'Select',
-      //   multi: true,
-      //   value: [],
-      //   label: 'Booking Type',
-      //   showInColumn: false,
-      //   disabled: false,
-      // },
-      // projectStatus: {
-      //   type: 'Select',
-      //   multi: true,
-      //   value: [],
-      //   label: 'Booking Type',
-      //   showInColumn: false,
-      //   disabled: false,
-      // },
+      workPhase: {
+        type: 'Select',
+        multi: true,
+        value: [],
+        label: 'Project Status',
+        showInColumn: false,
+        disabled: false,
+      },
       skillId: {
         type: 'Select',
         multi: true,

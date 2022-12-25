@@ -105,7 +105,7 @@ function Positions() {
             title: 'Buy Rate (Hourly)',
             width: 80,
             render: (text)=> formatCurrency(text),
-            ...tableSorter('buyRate', 'string')
+            ...tableSorter('buyRate', 'number')
         },
         {
             key: 'sellRate',
@@ -113,7 +113,7 @@ function Positions() {
             title: 'Sell Rate (Hourly)',
             width: 80,
             render: (text)=> formatCurrency(text),
-            ...tableSorter('sellRate', 'string')
+            ...tableSorter('sellRate', 'number')
         },
         {
             key: 'CMPercent',
@@ -121,7 +121,7 @@ function Positions() {
             title: 'CM%',
             width: 80,
             render: (text)=> formatFloat(text) + ' %',
-            ...tableSorter('CMPercent', 'string')
+            ...tableSorter('CMPercent', 'number')
         },
         {
             key: 'startDate',

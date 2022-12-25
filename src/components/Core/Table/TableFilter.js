@@ -131,6 +131,7 @@ export const tableSorter = (dataIndex, type, sortOrder, pin) => ({ //sorter on t
     },
     defaultSortOrder: sortOrder && 'ascend' 
 })
+
                                     //filterObj    //filterFunction
 export const tableSummaryFilter = (filters, filterFunction) =>{ // filter on footer
     let keys = Object.keys(filters)

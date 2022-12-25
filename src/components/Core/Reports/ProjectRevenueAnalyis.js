@@ -45,7 +45,7 @@ const contantColmuns = [
     title: 'Total Completed Revenue',
     width: '5%',
     render: (value)=> (formatCurrency(value??0)),
-    ...tableSorter('yieldedRevenue', 'number'),
+    ...tableSorter('totalSell', 'number'),
   },
   {
     key: 'YTDTotalSell',
@@ -74,7 +74,7 @@ const contantColmuns = [
     title: 'Residual Contract Value',
     width: '4%',
     render: (_, record)=> formatCurrency(parseFloat(record.projectValue??0) - parseFloat(record.totalSell??0)),
-    ...tableSorter('residualedRevenue', 'number'),
+    // ...tableSorter({key1: projectValue, key2: totalSell, operator: '-'}, 'number'),
   },
 ]
 
@@ -107,8 +107,8 @@ function ProjectRevenueAnalyis() {
           title: key,
           align: 'center',
           width: '4%',
-          render: (value)=> (formatCurrency(value?.monthTotalSell??0))
-          // ...tableSorter('projectValue', 'number'),
+          render: (value)=> (formatCurrency(value?.monthTotalSell??0)),
+          ...tableSorter(`${key}.monthTotalSell`, 'number'),
         })
       }
       let creatingColumn = contantColmuns
