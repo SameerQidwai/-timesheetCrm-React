@@ -178,7 +178,9 @@ class LeaveBalance extends Component {
       if (res?.success) {
         this.setState({
           data: res.data,
-          lastUpdate: res.lastUpdate
+          lastUpdate: moment().isBefore(moment().set({ date: 15 }))
+            ? moment().set({ date: 15, month: moment().month() - 1 })
+            : moment().set({ date: 15 }),
         });
       }
     });
@@ -203,7 +205,6 @@ class LeaveBalance extends Component {
   render() {
     const { data, lastUpdate } = this.state;
     const { style } = this.props;
-    let udapteDate =  moment().isBefore(moment().set({date: 15})) ? moment().set({date:15, month: moment().month()-1}) : moment().set({date:15})
     const components = {
       body: {
         row: EditableRow,
@@ -240,7 +241,7 @@ class LeaveBalance extends Component {
           />
         </Col>
         <Col>
-          <Text type="danger">Last Updated: {formatDate(udapteDate, true,true)} </Text>
+          <Text type="danger">Last Updated: {formatDate(lastUpdate, true,true)} </Text>
         </Col>
       </Row>
     );
