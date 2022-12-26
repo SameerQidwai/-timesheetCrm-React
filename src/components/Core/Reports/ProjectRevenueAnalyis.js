@@ -153,7 +153,11 @@ function ProjectRevenueAnalyis() {
               columnFound = true;
               data.forEach((rowData, index) => {
                 //calculation for total hours and actual hours for footer to show
-                value += (rowData[key]??0);
+                if(key === 'residualedRevenue'){
+                  value += ((rowData['projectValue'] - rowData['totalSell'])??0);
+                }else{
+                  value += (rowData[key]??0);
+                }
               });
             }
             //Title of the projct show column for title

@@ -215,7 +215,7 @@ function TimesheetSummary() {
             )}
             columns={columns}
             loading={loading}
-            rowKey={'projectId'}
+            rowKey={'index'}
             dataSource={data}
             pagination={{
               hideOnSinglePage: false,
@@ -238,7 +238,7 @@ function TimesheetSummary() {
             )}
             columns={columns}
             loading={loading}
-            rowKey={'projectId'}
+            rowKey={'index'}
             dataSource={data}
             pagination={{
               hideOnSinglePage: false,

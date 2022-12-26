@@ -82,7 +82,7 @@ const listData = [
     // {
     //     text: "Resources on the bench",
     //     icon: <ExceptionOutlined />,
-    //     link: "/bench-resources",
+    //     link: "/unallocated-resources",
     //     key: "BENCH",
     //     permissions: {module: "TIMESHEETS", key: 'READ'}
     // },
@@ -106,9 +106,9 @@ const listData = [
         key: "REPORTS",
         subMenu: [
             {
-                text: "Resources on the bench",
+                text: "Unallocated Resources",
                 icon: <ExceptionOutlined />,
-                link: "/report/bench-resources",
+                link: "/report/unallocated-resources",
                 key: "BENCH",
                 permissions: {module: "TIMESHEETS", key: 'READ'}
             },
@@ -230,7 +230,7 @@ const subListData = [
             {
                 text: "Resources on the bench",
                 icon: <ExceptionOutlined />,
-                link: "/bench-resources",
+                link: "/unallocated-resources",
                 key: "BENCH",
                 permissions: {module: "TIMESHEETS", key: 'READ'}
             },

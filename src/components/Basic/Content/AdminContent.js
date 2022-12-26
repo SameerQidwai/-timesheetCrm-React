@@ -374,7 +374,7 @@ const pageLinks = [
   },
   {
     component: BenchResources,
-    link: '/report/bench-resources',
+    link: '/report/unallocated-resources',
     key: 'REPORTS',
     permission: 'ALLOWED',
   },

@@ -49,7 +49,7 @@ const contantColmuns = [
     key: 'projectsValue',
     dataIndex: 'projectsValue',
     title: 'Total Contract Value',
-    width: '4%',
+    width: '5%',
     render: (value)=> (formatCurrency(value??0)),
     ...tableSorter('projectsValue', 'number'),
   },
@@ -57,7 +57,7 @@ const contantColmuns = [
     key: 'residualedRevenue',
     dataIndex: 'residualedRevenue',
     title: 'Residual Contract Value',
-    width: '4%',
+    width: '5%',
     render: (_, record)=> formatCurrency(parseFloat(record.projectsValue??0) - parseFloat(record.totalSell??0)),
     // ...tableSorter('residualedRevenue', 'number'),
   },
@@ -135,7 +135,11 @@ function ClientRevenueAnalyis() {
               columnFound = true;
               data.forEach((rowData, index) => {
                 //calculation for total hours and actual hours for footer to show
-                value += (rowData[key]??0);
+                if(key === 'residualedRevenue'){
+                  value += ((rowData['projectsValue'] - rowData['totalSell'])??0);
+                }else{
+                  value += (rowData[key]??0);
+                }
               });
             }
             //Title of the projct show column for title
