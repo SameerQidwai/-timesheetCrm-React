@@ -211,7 +211,7 @@ function WorkForceAllocation() {
                 />
             </Col>
             <ReportsFilters
-                compName={'Workforce Allocation Filters'}
+                compName={'Filters'}
                 compKey={'allocations'}
                 tags={tags}
                 visible={visible}

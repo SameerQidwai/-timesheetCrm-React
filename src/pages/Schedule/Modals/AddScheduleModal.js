@@ -287,7 +287,7 @@ class AddScheduleModal extends Component {
     const { dates } = val;
     const { editMile, callBack, proId, pDates } = this.props;
     const { data, fileIds } = this.state;
-    console.log(dates.startDate, dates.endDate)
+
     const newVal = {
       //if sameMonth got included as project save project date otherwise startdate 
       startDate: formatDate(dates.startDate, true),
@@ -310,7 +310,7 @@ class AddScheduleModal extends Component {
         };
       }),
     };
-    console.log(newVal)
+
     if (editMile) {
       editSchedule(proId, editMile.id, newVal).then((res) => {
         this.setState({ loading: false });

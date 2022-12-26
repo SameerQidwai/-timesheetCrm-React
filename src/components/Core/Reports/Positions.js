@@ -213,7 +213,7 @@ function Positions() {
                 />
             </Col>
             <ReportsFilters
-                compName={'Position Allocations Resources Filters'}
+                compName={'Filters'}
                 compKey={'positions'}
                 tags={tags}
                 visible={visible}

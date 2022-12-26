@@ -573,18 +573,24 @@ export const positions =({fields,setFields, getCompData})=> ({
 export const allocations =({fields,setFields, getCompData})=> ({
     effectRender: true,
     filterModalUseEffect: () => {
-      Promise.all([getOrganizations(), entityProjects('helpers/work', true), getContactPersons(), getStandardSkills(), getStandardLevels()]).then((res) => {
+      Promise.all([
+        getOrganizations(),
+        entityProjects('helpers/work', true),
+        getContactPersons(),
+        getStandardSkills(),
+        getStandardLevels(),
+      ]).then((res) => {
         let tempFields = [...fields];
-       //setting organization
-       tempFields[3].data = res[0].success ? res[0].data : [];
-       //setting projects
-       tempFields[9].data = res[1].success ? res[1].options : [];
-       //setting contact persons
-       tempFields[11].data = res[2].success ? res[2].data : [];
-       //setting up skill data
-       tempFields[15].data = res[3].success ? res[3].data : [];
-       //setting up level data
-       tempFields[17].data = res[4].success ? res[4].data : [];
+        //setting organization
+        tempFields[3].data = res[0].success ? res[0].data : [];
+        //setting projects
+        tempFields[9].data = res[1].success ? res[1].options : [];
+        //setting contact persons
+        tempFields[15].data = res[2].success ? res[2].data : [];
+        //setting up skill data
+        tempFields[19].data = res[3].success ? res[3].data : [];
+        //setting up level data
+        tempFields[21].data = res[4].success ? res[4].data : [];
 
         setFields([...tempFields]);
       });
@@ -622,7 +628,7 @@ export const allocations =({fields,setFields, getCompData})=> ({
         type: 'Select',
       },
       {
-        Placeholder: 'Project Type',
+        Placeholder: 'Opportunity/Project Type',
         fieldCol: 12,
         size: 'small',
         type: 'Text',
@@ -642,7 +648,7 @@ export const allocations =({fields,setFields, getCompData})=> ({
         type: 'Select',
       },
       {
-        Placeholder: 'Opportunity/Project',
+        Placeholder: 'Type',
         fieldCol: 12,
         size: 'small',
         type: 'Text',
@@ -662,7 +668,7 @@ export const allocations =({fields,setFields, getCompData})=> ({
         type: 'Select',
       },
       {
-        Placeholder: 'Project',
+        Placeholder: 'Opportunity/Project',
         fieldCol: 12,
         size: 'small',
         type: 'Text',
@@ -678,48 +684,48 @@ export const allocations =({fields,setFields, getCompData})=> ({
         data: [],
         type: 'Select',
       },
-      // {
-      //   Placeholder: 'Project Status',
-      //   fieldCol: 12,
-      //   size: 'small',
-      //   type: 'Text',
-      // },
-      // {
-      //   object: 'obj',
-      //   fieldCol: 24,
-      //   key: 'projectStatus',
-      //   size: 'small',
-      //   mode: 'multiple',
-      //   customValue: (value, option) => ({ selectedIds: value, option }),
-      //   getValueProps: (value)=>  ({value: value?.selectedIds}),
-      //   data: [
-      //     { value: 0, label: 'Closed' },
-      //     { value: 1, label: 'Open' },
-      //   ],
-      //   type: 'Select',
-      // },
-      // {
-      //   Placeholder: 'Booking Type',
-      //   fieldCol: 12,
-      //   size: 'small',
-      //   type: 'Text',
-      // },
-      // {
-      //   object: 'obj',
-      //   fieldCol: 24,
-      //   key: 'bookingType',
-      //   size: 'small',
-      //   mode: 'multiple',
-      //   customValue: (value, option) => ({ selectedIds: value, option }),
-      //   getValueProps: (value)=>  ({value: value?.selectedIds}),
-      //   data: [
-      //     { value: 0, label: 'Softbooked' },
-      //     { value: 1, label: 'Allocated' },
-      //     { value: 2, label: 'Reserve' },
-      //     { value: 3, label: 'Unallocated' },
-      //   ],
-      //   type: 'Select',
-      // },
+      {
+        Placeholder: 'Project Status',
+        fieldCol: 12,
+        size: 'small',
+        type: 'Text',
+      },
+      {
+        object: 'obj',
+        fieldCol: 24,
+        key: 'workPhase',
+        size: 'small',
+        mode: 'multiple',
+        customValue: (value, option) => ({ selectedIds: value, option }),
+        getValueProps: (value)=>  ({value: value?.selectedIds}),
+        data: [
+          { value: 0, label: 'Closed' },
+          { value: 1, label: 'Open' },
+        ],
+        type: 'Select',
+      },
+      {
+        Placeholder: 'Booking Type',
+        fieldCol: 12,
+        size: 'small',
+        type: 'Text',
+      },
+      {
+        object: 'obj',
+        fieldCol: 24,
+        key: 'bookingType',
+        size: 'small',
+        mode: 'multiple',
+        customValue: (value, option) => ({ selectedIds: value, option }),
+        getValueProps: (value)=>  ({value: value?.selectedIds}),
+        data: [
+          { value: 0, label: 'Reserved' },
+          { value: 1, label: 'Soft-booked' },
+          { value: 2, label: 'Allocated' },
+          { value: 3, label: 'Unallocated' },
+        ],
+        type: 'Select',
+      },
       {
         Placeholder: 'Resources',
         fieldCol: 12,
@@ -806,7 +812,7 @@ export const allocations =({fields,setFields, getCompData})=> ({
         type: 'Select',
         multi: true,
         value: [],
-        label: 'Resources',
+        label: 'Organisation',
         showInColumn: false,
         disabled: false,
       },
@@ -814,7 +820,7 @@ export const allocations =({fields,setFields, getCompData})=> ({
         type: 'Select',
         multi: true,
         value: [],
-        label: 'Project Type',
+        label: 'Opportunity/Project Type',
         showInColumn: false,
         disabled: false,
       },
@@ -822,7 +828,7 @@ export const allocations =({fields,setFields, getCompData})=> ({
         type: 'Select',
         multi: true,
         value: [],
-        label: 'Opportunity/Project',
+        label: 'Type',
         showInColumn: false,
         disabled: false,
       },
@@ -846,26 +852,26 @@ export const allocations =({fields,setFields, getCompData})=> ({
         type: 'Select',
         multi: true,
         value: [],
+        label: 'Resource Type',
+        showInColumn: false,
+        disabled: false,
+      },
+      bookingType: {
+        type: 'Select',
+        multi: true,
+        value: [],
         label: 'Booking Type',
         showInColumn: false,
         disabled: false,
       },
-      // bookingType: {
-      //   type: 'Select',
-      //   multi: true,
-      //   value: [],
-      //   label: 'Booking Type',
-      //   showInColumn: false,
-      //   disabled: false,
-      // },
-      // projectStatus: {
-      //   type: 'Select',
-      //   multi: true,
-      //   value: [],
-      //   label: 'Booking Type',
-      //   showInColumn: false,
-      //   disabled: false,
-      // },
+      workPhase: {
+        type: 'Select',
+        multi: true,
+        value: [],
+        label: 'Project Status',
+        showInColumn: false,
+        disabled: false,
+      },
       skillId: {
         type: 'Select',
         multi: true,
@@ -884,34 +890,6 @@ export const allocations =({fields,setFields, getCompData})=> ({
       },
     },
     callFilters: (value1, value2, filters, formData) => {
-      // let {
-        //   dates: [startDate, endDate] = [],
-      //   skillId,
-      //   levelId,
-      //   resourceType,
-      //   workStatus,
-      //   workType,
-      // } = formData || {};
-      // startDate = formatDate(startDate, true);
-      // endDate = formatDate(endDate, true);
-      // //for multiselect
-      // let query = `${startDate ? 'startDate=' + startDate : ''}
-      // ${endDate ? '&endDate=' + endDate : ''}
-      // ${skillId.selectedIds.length ? '&skillId=' + skillId?.selectedIds : ''}
-      // ${levelId.selectedIds.length ? '&levelId=' + levelId?.selectedIds : ''}
-      // ${workStatus.selectedIds.length ? '&workStatus=' + workStatus?.selectedIds : ''}
-      // ${workType.selectedIds.length ? '&workType=' + workType?.selectedIds : ''}
-      // ${resourceType.selectedIds.length ? '&resourceType=' + resourceType?.selectedIds : ''}`;
-
-
-      //for single select
-      // let query = `${startDate ? 'startDate=' + startDate : ''}${
-        //   endDate ? '&endDate=' + endDate : ''
-        // }${skillId ? '&skillId=' + skillId.value : ''}${
-          //   levelId ? '&levelId=' + levelId.value : ''
-          // }${workStatus ? '&workStatus=' + workStatus.value : ''}${
-            //   workType ? '&workType=' + workType.value : ''
-            // }${resourceType ? '&resourceType=' + resourceType.value : ''}`;
       let query = _createQuery(filters)
       getCompData(query, filters);
     },
