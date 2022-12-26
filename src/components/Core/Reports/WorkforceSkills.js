@@ -52,7 +52,7 @@ function WorkforceSkills() {
         dataIndex: 'buyRate',
         title: 'Buy Rate (Hourly)',
         render: (text)=> formatCurrency(text),
-        ...tableSorter('buyRate', 'string'),
+        ...tableSorter('buyRate', 'number'),
     },
   ]
   
@@ -120,7 +120,7 @@ function WorkforceSkills() {
               />
           </Col>
           <ReportsFilters
-              compName={'Workforce Skill Filters'}
+              compName={'Filters'}
               compKey={'skillResources'}
               tags={tags}
               visible={visible}

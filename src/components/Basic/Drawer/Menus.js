@@ -123,7 +123,7 @@ const listData = [
                 text: "Position & Resources",
                 icon: <FileDoneOutlined />,
                 link: "/report/positions",
-                key: "ALLOCATIONS ",
+                key: "POSITIONS ",
                 permissions: {module: "TIMESHEETS", key: 'READ'}
             },
             {
@@ -137,14 +137,21 @@ const listData = [
                 text: "Project Revenue Analyis",
                 icon: <FileDoneOutlined />,
                 link: "/report/project-revenue-analysis",
-                key: "ALLOCATIONS ",
+                key: "PROJECTREVENUE ",
                 permissions: {module: "TIMESHEETS", key: 'READ'}
             },
             {
                 text: "Client Revenue Analyis",
                 icon: <FileDoneOutlined />,
                 link: "/report/client-revenue-analysis",
-                key: "ALLOCATIONS ",
+                key: "CLIENTREVENUE ",
+                permissions: {module: "TIMESHEETS", key: 'READ'}
+            },
+            {
+                text: "Timesheet Summary",
+                icon: <FileDoneOutlined />,
+                link: "/report/timesheet-summary",
+                key: "TIMESHEETSUMMARY",
                 permissions: {module: "TIMESHEETS", key: 'READ'}
             },
         ],

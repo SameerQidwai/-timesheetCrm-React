@@ -7,6 +7,7 @@ import { getProjectRevenueAnalysis } from '../../../service/reports-Apis'
 import { formatCurrency, formatFloat, getFiscalYear, localStore, parseDate } from '../../../service/constant'
 import moment from 'moment'
 import { ReportsFilters, _createQuery } from './Filters'
+import { _generateMonthlyColumns } from '.'
 
 const contantColmuns = [
   {
@@ -88,33 +89,17 @@ function ProjectRevenueAnalyis() {
 
 
   useEffect(() => {
-    generateColumns()
+    _generateMonthlyColumns({
+      contantColmuns,
+      setColumn,
+      spliceBtw: 6,
+      colRender: 'monthTotalSell',
+      format: 'currency'
+    });
     getData()
   }, [])
 
-  const generateColumns = (date)=>{
-    let {start, end} = getFiscalYear('dates',date)
-    let monthlyColumn = []
-    for (
-      var iMonth = parseDate(start) ; // defination
-      iMonth.isSameOrBefore(parseDate(end));  //condition
-      iMonth.add(1, 'months') //itrerater
-      ){
-        let key = parseDate(iMonth, 'MMM YY')
-        monthlyColumn.push({
-          key: key,
-          dataIndex: key,
-          title: key,
-          align: 'center',
-          width: '4%',
-          render: (value)=> (formatCurrency(value?.monthTotalSell??0)),
-          ...tableSorter(`${key}.monthTotalSell`, 'number'),
-        })
-      }
-      let creatingColumn = contantColmuns
-      creatingColumn.splice(6, 0 , ...monthlyColumn);
-      setColumn([...creatingColumn])
-  }
+  
 
   const getData = (queryParam, tagsValues) =>{
     setLoading(true)
@@ -180,7 +165,7 @@ function ProjectRevenueAnalyis() {
         />
       </Col>
       <ReportsFilters
-          compName={'Project Revenue Analysis Filters'}
+          compName={'Filters'}
           compKey={'projectRevenue'}
           tags={tags}
           visible={visible}

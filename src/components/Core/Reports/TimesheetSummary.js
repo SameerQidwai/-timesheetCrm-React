@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Col, Descriptions, Row, Select, Typography } from 'antd'
+import { Button, Col, DatePicker, Descriptions, Row, Select, Typography } from 'antd'
 import Table, { FiltertagsNew, tableSorter } from '../Table/TableFilter'
-import { getProjectRevenueAnalysis } from '../../../service/reports-Apis'
+import { getTimesheetSummary } from '../../../service/reports-Apis'
 
 
-import { formatCurrency, formatFloat, getFiscalYear, localStore, parseDate } from '../../../service/constant'
+import { formatCurrency, formatFloat, getFiscalYear, localStore } from '../../../service/constant'
 import moment from 'moment'
 import { ReportsFilters, _createQuery } from './Filters'
+import { _generateMonthlyColumns } from '.'
 
 const contantColmuns = [
   {
@@ -20,7 +21,8 @@ const contantColmuns = [
     key: 'employeeCode',
     dataIndex: 'employeeCode',
     title: 'Employee Code',
-    width: '10%',
+    width: '4%',
+    render: (text)=> (`00${text}`),
     ...tableSorter('employeeCode', 'string'),
   },
   {
@@ -31,12 +33,12 @@ const contantColmuns = [
     ...tableSorter('projectName', 'string'),
   },
   {
-    key: 'projectId',
-    dataIndex: 'projectId',
+    key: 'projectCode',
+    dataIndex: 'projectCode',
     title: 'Project Code',
-    width: '6%',
+    width: '4%',
     render: (text)=> (`00${text}`), 
-    ...tableSorter('projectId', 'string'),
+    ...tableSorter('projectCode', 'string'),
   },
   {
     key: 'poNo',
@@ -47,42 +49,34 @@ const contantColmuns = [
     ...tableSorter('poNo', 'number'),
   },
   {
-    key: 'organizationId',
-    dataIndex: 'organizationId',
+    key: 'organizationName',
+    dataIndex: 'organizationName',
     title: 'Organisation',
     width: '5%',
-    render: (value)=> (formatCurrency(value??0)),
-    ...tableSorter('yieldedRevenue', 'number'),
+    ...tableSorter('organizationName', 'number'),
   },
   {
-    key: 'YTDTotalSell',
-    dataIndex: 'YTDTotalSell',
+    key: 'entry',
+    dataIndex: ['currentMonth', 'approvedHours'],
+    title: 'Sheet Hours Submit This Month',
+    width: '5%',
+    render: (value)=> (formatFloat(value??0)),
+    ...tableSorter('entry', 'number'),
+  },
+  {
+    key: 'YTDHours',
+    dataIndex: 'YTDHours',
     title: 'YTD Completed Work',
     width: '5%',
     render: (value)=> (formatCurrency(value??0)),
-    ...tableSorter('YTDTotalSell', 'number'),
+    ...tableSorter('YTDHours', 'number'),
   },
   {
     key: 'empty',
     dataIndex: 'empty',
     width: '1%'
   },
-  {
-    key: 'projectValue',
-    dataIndex: 'projectValue',
-    title: 'Total Contract Value',
-    width: '4%',
-    render: (value)=> (formatCurrency(value??0)),
-    ...tableSorter('projectValue', 'number'),
-  },
-  {
-    key: 'residualedRevenue',
-    dataIndex: 'residualedRevenue',
-    title: 'Residual Contract Value',
-    width: '4%',
-    render: (_, record)=> formatCurrency(parseFloat(record.projectValue??0) - parseFloat(record.totalSell??0)),
-    ...tableSorter('residualedRevenue', 'number'),
-  },
+  
 ]
 
 function TimesheetSummary() {
@@ -94,66 +88,128 @@ function TimesheetSummary() {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    generateColumns()
-    getData()
+    let {start, end} = getFiscalYear('dates')
+    let query = `timesheet-summary?startDate=${start.format(
+      'YYYY-MM-DD'
+    )}&endDate=${end.format(
+      'YYYY-MM-DD'
+    )}`;
+    _generateMonthlyColumns({
+      contantColmuns,
+      setColumn,
+      spliceBtw: 9,
+      format: 'float',
+      colRender: 'approvedHours',
+      dataIndex: ['months']
+    });
+    getData(query)
   }, [])
+
+  const getData = (queryParam, tagsValues) =>{
+    setLoading(true)
+    getTimesheetSummary(queryParam).then(res=>{
+      if (res.success){
+        // console.log(res.data)
+        setData(res.data)
+        if(queryParam){
+          setVisible(false)
+          // setTags(tagsValues)
+        }
+      }
+      setLoading(false)
+    })
+  }
+
   return (
-    <Row gutter={[0,24]}>
+    <div>
+      <Typography.Title level={4}>Timesheets Summary</Typography.Title>
+      <Row gutter={[0, 100]}>
         <Col span={24}>
-            <Typography.Title level={4}>Timesheets Summary</Typography.Title>
+          <Descriptions
+            title="YTD Completed Hours"
+            bordered
+            column={1}
+            size="small"
+            style={{ width: '40%' }}
+            className="describe"
+          >
+            <Descriptions.Item label="">
+              <DatePicker
+                defaultValue={moment()}
+                picker="month"
+                style={{ width: 200 }}
+                size="small"
+                format="MMM YYYY"
+                onChange={(value, valu1, value2) => {
+                  value = value ?? moment()
+                  let {start, end} = getFiscalYear('dates',value)
+                  let query = `timesheet-summary?startDate=${start.format(
+                    'YYYY-MM-DD'
+                  )}&endDate=${end.format(
+                    'YYYY-MM-DD'
+                  )}&currentDate=${value.format('YYYY-MM-DD')}`;
+                  getData(query)
+                }}
+              />
+            </Descriptions.Item>
+            <Descriptions.Item label="T&M"></Descriptions.Item>
+            <Descriptions.Item label="Milestone"></Descriptions.Item>
+            <Descriptions.Item label="Total Completed Hours"></Descriptions.Item>
+          </Descriptions>
         </Col>
         <Col span={24}>
-            <Descriptions title="YTD Completed Hours" bordered column={1}>
-                <Descriptions.Item label=""><Select/></Descriptions.Item>
-                <Descriptions.Item label="T&M"></Descriptions.Item>
-                <Descriptions.Item label="Milestone"></Descriptions.Item>
-                <Descriptions.Item label="Total Completed Hours"></Descriptions.Item>
-            </Descriptions>
+          <Table
+            sticky
+            title={() => (
+              <Typography.Title level={5}>
+                Timesheet Data - T&M
+              </Typography.Title>
+            )}
+            columns={columns}
+            loading={loading}
+            rowKey={'projectId'}
+            dataSource={data}
+            pagination={{
+              hideOnSinglePage: false,
+              showPageSizeChanger: true,
+              onChange: (pNo, pSize) => {
+                setPage({ pNo, pSize });
+              },
+            }}
+            scroll={{
+              // x:  'max-content'
+              x: '210vw',
+            }}
+          />
         </Col>
         <Col span={24}>
-            <Table
-                sticky
-                title={() => 'Timesheet Data - T&M'}
-                columns={columns}
-                loading={loading}
-                rowKey={'projectId'}
-                dataSource={data}
-                pagination={{
-                    hideOnSinglePage: false,
-                    showPageSizeChanger: true,
-                    onChange:(pNo, pSize)=> {
-                        setPage({pNo, pSize})
-                    }
-                }}
-                scroll={{
-                    // x:  'max-content'
-                    x:  '300vw'
-                }}
-            />
+          <Table
+            sticky
+            title={() => (
+              <Typography.Title level={5}>
+                Timesheet Data - Milestone
+              </Typography.Title>
+            )}
+            columns={columns}
+            loading={loading}
+            rowKey={'projectId'}
+            dataSource={data}
+            pagination={{
+              hideOnSinglePage: false,
+              showPageSizeChanger: true,
+              onChange: (pNo, pSize) => {
+                setPage({ pNo, pSize });
+              },
+            }}
+            scroll={{
+              // x:  'max-content'
+              x: '210vw',
+            }}
+          />
         </Col>
-        <Col span={24}>
-            <Table
-                sticky
-                title={() => 'Timesheet Data - Milestone'}
-                columns={columns}
-                loading={loading}
-                rowKey={'projectId'}
-                dataSource={data}
-                pagination={{
-                    hideOnSinglePage: false,
-                    showPageSizeChanger: true,
-                    onChange:(pNo, pSize)=> {
-                        setPage({pNo, pSize})
-                    }
-                }}
-                scroll={{
-                    // x:  'max-content'
-                    x:  '300vw'
-                }}
-            />
-        </Col>
-    </Row>
-  )
+      </Row>
+    </div>
+  );
 }
 
 export default TimesheetSummary

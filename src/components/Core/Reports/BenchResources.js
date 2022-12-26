@@ -136,7 +136,7 @@ function BenchResources() {
         />
       </Col>
       <ReportsFilters
-          compName={'Bench Resources Filters'}
+          compName={'Filters'}
           compKey={'bench'}
           tags={tags}
           visible={visible}

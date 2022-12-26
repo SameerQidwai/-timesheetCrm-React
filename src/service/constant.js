@@ -86,6 +86,7 @@ export const formatCurrency = (amount, fixed) => {
       roundingMode: 'trunc'
     });
     return formatter.format(amount).replace(/^(\D+)/, '$1 ')
+    // .replace(/\D00(?=\D*$)/, ''))
   }
   // amount = toTruncate(amount, 2)
   return  '$ 0.00' ;
@@ -100,10 +101,13 @@ export const formatCurrency = (amount, fixed) => {
 
 export const formatFloat = (number, fixed, round)=>{
   if (number && !isNaN(number)){
-    var formatter = new Intl.NumberFormat('en-US', {
+    var formatter = new Intl.NumberFormat('en', {
+      // notation: "compact",
+      // compactDisplay: "long",
       maximumFractionDigits: fixed ?? 2, 
       roundingMode: round ?? 'trunc'
     });  
+    return formatter.format(number)
     return formatter.format(number)
   }
   return '0.00' 
