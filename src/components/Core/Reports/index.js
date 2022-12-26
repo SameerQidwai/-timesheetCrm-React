@@ -11,7 +11,7 @@ export {default as ClientRevenueAnalyis} from './ClientRevenueAnalyis'
 export {default as TimesheetSummary} from './TimesheetSummary'
 
 //-----------------> HelperFunction <---------------
-export const _generateMonthlyColumns = ({date, contantColmuns, setColumn, spliceBtw, colRender, format, dataIndex})=>{
+export const _generateMonthlyColumns = ({date, contantColmuns, setColumn, spliceBtw, colRender, format, dataIndex, width="5%"})=>{
     format = format === 'currency' ? formatCurrency : format === 'float' ? formatFloat: null //render format
     let {start, end} = getFiscalYear('dates',date)
     let monthlyColumn = []
@@ -26,7 +26,7 @@ export const _generateMonthlyColumns = ({date, contantColmuns, setColumn, splice
             dataIndex: dataIndex ? [...dataIndex, key] :key ,
             title: key,
             align: 'center',
-            width: '4%',
+            width: width,
             render: (value) =>{
                 value = colRender ? value?.[colRender] : value                
                 return ( //amount render

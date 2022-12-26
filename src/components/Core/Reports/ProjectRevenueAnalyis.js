@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Col, Row, Typography } from 'antd'
+import { Button, Col, Row, Typography, Table as ATable } from 'antd'
 import Table, { FiltertagsNew, tableSorter } from '../Table/TableFilter'
 import { getProjectRevenueAnalysis } from '../../../service/reports-Apis'
 
@@ -65,7 +65,7 @@ const contantColmuns = [
     key: 'projectValue',
     dataIndex: 'projectValue',
     title: 'Total Contract Value',
-    width: '4%',
+    width: '5%',
     render: (value)=> (formatCurrency(value??0)),
     ...tableSorter('projectValue', 'number'),
   },
@@ -73,7 +73,7 @@ const contantColmuns = [
     key: 'residualedRevenue',
     dataIndex: 'residualedRevenue',
     title: 'Residual Contract Value',
-    width: '4%',
+    width: '5%',
     render: (_, record)=> formatCurrency(parseFloat(record.projectValue??0) - parseFloat(record.totalSell??0)),
     // ...tableSorter({key1: projectValue, key2: totalSell, operator: '-'}, 'number'),
   },
@@ -93,7 +93,7 @@ function ProjectRevenueAnalyis() {
       contantColmuns,
       setColumn,
       spliceBtw: 6,
-      colRender: 'monthTotalSell',
+      // colRender: 'monthTotalSell',
       format: 'currency'
     });
     getData()
@@ -140,7 +140,49 @@ function ProjectRevenueAnalyis() {
     )
   }
 
-  
+  const summaryFooter = (data) =>{
+    let excludeColumns = ['projectTitle', 'organizationName', 'projectManagerName', 'projectId', 'empty']
+    if(data.length>0)
+    return (
+      <ATable.Summary fixed="bottom">
+        <ATable.Summary.Row>
+          {columns.map(({ key }, kIndex) => {
+            let value = 0;
+            let columnFound = false;
+            if (!excludeColumns.includes(key)) {
+              columnFound = true;
+              data.forEach((rowData, index) => {
+                //calculation for total hours and actual hours for footer to show
+                value += (rowData[key]??0);
+              });
+            }
+            //Title of the projct show column for title
+            return key === 'projectId' ? (
+              <ATable.Summary.Cell
+                index={key + 1}
+                key={key + 1}
+                style={{ fontWeight: 600 }}
+              >
+                <Typography.Text strong>Total</Typography.Text> 
+              </ATable.Summary.Cell>
+            ) : columnFound ? ( // show total and normal background if the column month is same as selected month or the key is totalHours of the month
+              <ATable.Summary.Cell
+                index={key + 1}
+                key={key + 1}
+                align="center"
+                style={{ fontWeight: 600 }}
+              >
+                <Typography.Text strong>{formatFloat(value)}</Typography.Text>
+              </ATable.Summary.Cell>
+            ) : (
+              <ATable.Summary.Cell index={key + 1} key={key + 1}></ATable.Summary.Cell>
+            );
+          })}
+        </ATable.Summary.Row>
+      </ATable.Summary>
+    );
+  }
+
   return (
     <Row>
       <Col span={24}>
@@ -158,10 +200,8 @@ function ProjectRevenueAnalyis() {
                 setPage({pNo, pSize})
             }
           }}
-          scroll={{
-            // x:  'max-content'
-            x:  '170vw'
-          }}
+          scroll={{ x:  '180vw' }}
+          summary={ columnData => summaryFooter(columnData)}
         />
       </Col>
       <ReportsFilters

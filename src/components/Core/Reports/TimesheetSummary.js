@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Col, DatePicker, Descriptions, Row, Select, Typography } from 'antd'
+import { Button, Col, DatePicker, Descriptions, Row, Select, Typography, Table as ATable } from 'antd'
 import Table, { FiltertagsNew, tableSorter } from '../Table/TableFilter'
 import { getTimesheetSummary } from '../../../service/reports-Apis'
 
@@ -14,14 +14,14 @@ const contantColmuns = [
     key: 'employeeName',
     dataIndex: 'employeeName',
     title: 'Employee Name',
-    width: '10%',
+    width: '6%',
     ...tableSorter('employeeName', 'string'),
   },
   {
     key: 'employeeCode',
     dataIndex: 'employeeCode',
     title: 'Employee Code',
-    width: '4%',
+    width: '3%',
     render: (text)=> (`00${text}`),
     ...tableSorter('employeeCode', 'string'),
   },
@@ -29,14 +29,14 @@ const contantColmuns = [
     key: 'projectName',
     dataIndex: 'projectName',
     title: 'Project Name',
-    width: '10%',
+    width: '8%',
     ...tableSorter('projectName', 'string'),
   },
   {
     key: 'projectCode',
     dataIndex: 'projectCode',
     title: 'Project Code',
-    width: '4%',
+    width: '3%',
     render: (text)=> (`00${text}`), 
     ...tableSorter('projectCode', 'string'),
   },
@@ -52,14 +52,14 @@ const contantColmuns = [
     key: 'organizationName',
     dataIndex: 'organizationName',
     title: 'Organisation',
-    width: '5%',
+    width: '8%',
     ...tableSorter('organizationName', 'number'),
   },
   {
     key: 'entry',
     dataIndex: ['currentMonth', 'approvedHours'],
     title: 'Sheet Hours Submit This Month',
-    width: '5%',
+    width: '4%',
     render: (value)=> (formatFloat(value??0)),
     ...tableSorter('entry', 'number'),
   },
@@ -67,7 +67,7 @@ const contantColmuns = [
     key: 'YTDHours',
     dataIndex: 'YTDHours',
     title: 'YTD Completed Work',
-    width: '5%',
+    width: '4%',
     render: (value)=> (formatCurrency(value??0)),
     ...tableSorter('YTDHours', 'number'),
   },
@@ -98,6 +98,7 @@ function TimesheetSummary() {
       contantColmuns,
       setColumn,
       spliceBtw: 9,
+      width: '3%',
       format: 'float',
       colRender: 'approvedHours',
       dataIndex: ['months']
@@ -118,6 +119,53 @@ function TimesheetSummary() {
       }
       setLoading(false)
     })
+  }
+
+  const summaryFooter = (data) =>{
+    let excludeColumns = ['employeeName', 'employeeCode', 'projectName', 'projectCode', 'poNo', 'organizationName', 'empty',]
+    if(data.length>0)
+    return (
+      <ATable.Summary fixed="bottom">
+        <ATable.Summary.Row>
+          {columns.map(({ key }, kIndex) => {
+            let value = 0;
+            let columnFound = false;
+            if (!excludeColumns.includes(key)) {
+              columnFound = true;
+              data.forEach((rowData, index) => {
+                if (key[0].length === 2){
+                  value += (rowData[key[0]][key[1]]??0);
+                }else{
+                  value += (rowData[key]??0);
+                  //calculation for total hours and actual hours for footer to show
+                }
+              });
+            }
+            //Title of the projct show column for title
+            return key === 'organizationName' ? (
+              <ATable.Summary.Cell
+                index={key + 1}
+                key={key + 1}
+                style={{ fontWeight: 600 }}
+              >
+                <Typography.Text strong>Total</Typography.Text> 
+              </ATable.Summary.Cell>
+            ) : columnFound ? ( // show total and normal background if the column month is same as selected month or the key is totalHours of the month
+              <ATable.Summary.Cell
+                index={key + 1}
+                key={key + 1}
+                align="center"
+                style={{ fontWeight: 600 }}
+              >
+                <Typography.Text strong>{formatFloat(value)}</Typography.Text>
+              </ATable.Summary.Cell>
+            ) : (
+              <ATable.Summary.Cell index={key + 1} key={key + 1}></ATable.Summary.Cell>
+            );
+          })}
+        </ATable.Summary.Row>
+      </ATable.Summary>
+    );
   }
 
   return (
@@ -176,10 +224,8 @@ function TimesheetSummary() {
                 setPage({ pNo, pSize });
               },
             }}
-            scroll={{
-              // x:  'max-content'
-              x: '210vw',
-            }}
+            scroll={{ x: '170vw' }}
+            summary={ columnData => summaryFooter(columnData)}
           />
         </Col>
         <Col span={24}>
@@ -201,10 +247,9 @@ function TimesheetSummary() {
                 setPage({ pNo, pSize });
               },
             }}
-            scroll={{
-              // x:  'max-content'
-              x: '210vw',
-            }}
+            scroll={{ x: '170vw', }}
+            summary={ columnData => summaryFooter(columnData)}
+
           />
         </Col>
       </Row>

@@ -101,7 +101,7 @@ export const formatCurrency = (amount, fixed) => {
 
 export const formatFloat = (number, fixed, round)=>{
   if (number && !isNaN(number)){
-    var formatter = new Intl.NumberFormat('en', {
+    var formatter = new Intl.NumberFormat('en-US', {
       // notation: "compact",
       // compactDisplay: "long",
       maximumFractionDigits: fixed ?? 2, 

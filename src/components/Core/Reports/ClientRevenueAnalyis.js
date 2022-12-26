@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Col, Row, Typography } from 'antd'
+import { Button, Col, Row, Typography, Table as ATable } from 'antd'
 import Table, { FiltertagsNew, tableSorter } from '../Table/TableFilter'
-import { formatCurrency, localStore } from '../../../service/constant'
+import { formatCurrency, formatFloat, localStore } from '../../../service/constant'
 import { ReportsFilters, _createQuery } from './Filters'
 
 import { getClientRevenueAnalysis } from '../../../service/reports-Apis'
@@ -77,7 +77,7 @@ function ClientRevenueAnalyis() {
       contantColmuns,
       setColumn,
       spliceBtw: 4,
-      colRender: 'monthTotalSell',
+      // colRender: 'monthTotalSell',
       format: 'currency'
     });
     getData()
@@ -121,8 +121,50 @@ function ClientRevenueAnalyis() {
       </Row>
     )
   }
-
   
+  const summaryFooter = (data) =>{
+    let excludeColumns = ['organizationName', 'organizationId', 'empty']
+    if(data.length>0)
+    return (
+      <ATable.Summary fixed="bottom">
+        <ATable.Summary.Row>
+          {columns.map(({ key }, kIndex) => {
+            let value = 0;
+            let columnFound = false;
+            if (!excludeColumns.includes(key)) {
+              columnFound = true;
+              data.forEach((rowData, index) => {
+                //calculation for total hours and actual hours for footer to show
+                value += (rowData[key]??0);
+              });
+            }
+            //Title of the projct show column for title
+            return key === 'organizationId' ? (
+              <ATable.Summary.Cell
+                index={key + 1}
+                key={key + 1}
+                style={{ fontWeight: 600 }}
+              >
+                <Typography.Text strong>Total</Typography.Text> 
+              </ATable.Summary.Cell>
+            ) : columnFound ? ( // show total and normal background if the column month is same as selected month or the key is totalHours of the month
+              <ATable.Summary.Cell
+                index={key + 1}
+                key={key + 1}
+                align="center"
+                style={{ fontWeight: 600 }}
+              >
+                <Typography.Text strong>{formatFloat(value)}</Typography.Text>
+              </ATable.Summary.Cell>
+            ) : (
+              <ATable.Summary.Cell index={key + 1} key={key + 1}></ATable.Summary.Cell>
+            );
+          })}
+        </ATable.Summary.Row>
+      </ATable.Summary>
+    );
+  }
+
   return (
     <Row>
       <Col span={24}>
@@ -140,10 +182,8 @@ function ClientRevenueAnalyis() {
                 setPage({pNo, pSize})
             }
           }}
-          scroll={{
-            // x:  'max-content'
-            x:  '170vw'
-          }}
+          scroll={{ x:  '170vw' }}
+          summary={ columnData => summaryFooter(columnData)}
         />
       </Col>
       <ReportsFilters
