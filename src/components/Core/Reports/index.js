@@ -9,6 +9,7 @@ export {default as WorkForceAllocation} from './WorkForceAllocation'
 export {default as ProjectRevenueAnalyis} from './ProjectRevenueAnalyis'
 export {default as ClientRevenueAnalyis} from './ClientRevenueAnalyis'
 export {default as TimesheetSummary} from './TimesheetSummary'
+export {default as LeaveSummary} from './LeaveSummary'
 
 //-----------------> HelperFunction <---------------
 export const _generateMonthlyColumns = ({date, contantColmuns, setColumn, spliceBtw, colRender, format, dataIndex, width="5%"})=>{

@@ -5,7 +5,7 @@ export const _createQuery = (searchColumn = {})=>{
     let query  = ''
     let filters = Object.entries(searchColumn)
     let lastIndex = filters.length
-    filters.map(([key, {value, type, multi}], index)=>{
+    filters.map(([key, {value, type, multi, mode}], index)=>{
   
       if (query && (value?.selectedIds?.length || value?.value || value?.length )){
         query += '&'
@@ -20,13 +20,12 @@ export const _createQuery = (searchColumn = {})=>{
         query += `${`${key}=`+`${value?.value}`}`
         
       }else if (type === 'Date'){
-  
         let [startDate, endDate] = value || [];
   
         query += `${startDate ? 'startDate=' + startDate : ''}${
           startDate && endDate ? '&' : ''
-        }${endDate ? 'endDate=' + endDate : ''}`;
-  
+        }${endDate ? 'endDate=' + endDate : ''}`; 
+         
       }else{
   
         query += `${value ? `${key}=` + `${value}` : ''}`

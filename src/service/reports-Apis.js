@@ -90,6 +90,23 @@ export const getTimesheetSummary = (queryParam) => {
         });
 };
 
+export const getLeaveSummary = (queryParam) => {
+    return axios
+        .get(`${url}/leave-request-summary-view${queryParam? '?'+ queryParam: ''}`, {headers:headers()})
+        .then((res) => {
+            const { success, data } = res.data;
+            setToken(res?.headers?.authorization)
+             return { success: success, data: data };
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                success: false,
+                message: err.message,
+            };
+        });
+};
+
 export const getProjectRevenueAnalysis = (queryParam) => {
     let {start, end} = getFiscalYear('dates')
     return axios

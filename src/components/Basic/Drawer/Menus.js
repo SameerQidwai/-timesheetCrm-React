@@ -154,6 +154,13 @@ const listData = [
                 key: "TIMESHEETSUMMARY",
                 permissions: {module: "TIMESHEETS", key: 'READ'}
             },
+            {
+                text: "Leave Summary",
+                icon: <FileDoneOutlined />,
+                link: "/report/leave-summary",
+                key: "LEAVESUMMARY",
+                permissions: {module: "TIMESHEETS", key: 'READ'}
+            },
         ],
     },
 ];
