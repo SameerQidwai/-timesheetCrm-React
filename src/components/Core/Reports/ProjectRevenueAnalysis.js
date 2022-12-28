@@ -41,17 +41,37 @@ const contantColmuns = [
     ...tableSorter('projectId', 'number'),
   },
   {
+    key: 'projectValue',
+    dataIndex: 'projectValue',
+    title: 'Total Contract Value',
+    width: '5%',
+    render: (value)=> (formatCurrency(value??0)),
+    ...tableSorter('projectValue', 'number'),
+  },
+  {
     key: 'totalSell',
     dataIndex: 'totalSell',
-    title: 'Total Completed Revenue',
+    title: 'Total Actual Revenue',
     width: '5%',
     render: (value)=> (formatCurrency(value??0)),
     ...tableSorter('totalSell', 'number'),
   },
   {
+    key: 'residualedRevenue',
+    dataIndex: 'residualedRevenue',
+    title: 'Residual Contract Value',
+    width: '5%',
+    render: (_, record)=> formatCurrency(parseFloat(record.projectValue??0) - parseFloat(record.totalSell??0)),
+    sorter: (current, previous) => { 
+      let valueA = (parseFloat(current.projectValue??0) - parseFloat(current.totalSell??0))??0;
+      let valueB = (parseFloat(previous.projectValue??0) - parseFloat(previous.totalSell??0)) ??0;
+      return valueA -  valueB 
+    },
+  },
+  {
     key: 'YTDTotalSell',
     dataIndex: 'YTDTotalSell',
-    title: 'YTD Completed Work',
+    title: 'YTD Actual Revenue',
     width: '5%',
     render: (value)=> (formatCurrency(value??0)),
     ...tableSorter('YTDTotalSell', 'number'),
@@ -61,29 +81,12 @@ const contantColmuns = [
     dataIndex: 'empty',
     width: '1%'
   },
-  {
-    key: 'projectValue',
-    dataIndex: 'projectValue',
-    title: 'Total Contract Value',
-    width: '5%',
-    render: (value)=> (formatCurrency(value??0)),
-    ...tableSorter('projectValue', 'number'),
-  },
-  {
-    key: 'residualedRevenue',
-    dataIndex: 'residualedRevenue',
-    title: 'Residual Contract Value',
-    width: '5%',
-    render: (_, record)=> formatCurrency(parseFloat(record.projectValue??0) - parseFloat(record.totalSell??0)),
-    // ...tableSorter({key1: projectValue, key2: totalSell, operator: '-'}, 'number'),
-  },
 ]
 
-function ProjectRevenueAnalyis() {
+function ProjectRevenueAnalysis() {
   const [data, setData] = useState([])
   const [columns, setColumn] = useState([])
   const [visible, setVisible] = useState(false)
-  const [page, setPage] = useState({pNo:1, pSize: localStore().pageSize})
   const [tags, setTags] = useState(null)
   const [loading, setLoading] = useState(false)
 
@@ -92,7 +95,7 @@ function ProjectRevenueAnalyis() {
     _generateMonthlyColumns({
       contantColmuns,
       setColumn,
-      spliceBtw: 6,
+      spliceBtw: 9,
       // colRender: 'monthTotalSell',
       format: 'currency'
     });
@@ -197,13 +200,7 @@ function ProjectRevenueAnalyis() {
           loading={loading}
           rowKey={'projectId'}
           dataSource={data}
-          pagination={{
-            hideOnSinglePage: false,
-            showPageSizeChanger: true,
-            onChange:(pNo, pSize)=> {
-                setPage({pNo, pSize})
-            }
-          }}
+          pagination={false}
           scroll={{ x:  '180vw' }}
           summary={ columnData => summaryFooter(columnData)}
         />
@@ -220,4 +217,4 @@ function ProjectRevenueAnalyis() {
   );
 }
 
-export default ProjectRevenueAnalyis
+export default ProjectRevenueAnalysis

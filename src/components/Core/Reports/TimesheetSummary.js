@@ -56,20 +56,20 @@ const contantColmuns = [
     ...tableSorter('organizationName', 'number'),
   },
   {
-    key: 'entry',
-    dataIndex: ['currentMonth', 'approvedHours'],
+    key: 'currentMonth',
+    dataIndex: 'currentMonth',
     title: 'Sheet Hours Submit This Month',
     width: '4%',
     render: (value)=> (formatFloat(value??0)),
-    ...tableSorter('entry', 'number'),
+    ...tableSorter('currentMonth', 'number'),
   },
   {
-    key: 'YTDHours',
-    dataIndex: 'YTDHours',
+    key: 'currentYear',
+    dataIndex: 'currentYear',
     title: 'YTD Completed Work',
     width: '4%',
-    render: (value)=> (formatCurrency(value??0)),
-    ...tableSorter('YTDHours', 'number'),
+    render: (value)=> (formatFloat(value??0)),
+    ...tableSorter('currentYear', 'number'),
   },
   {
     key: 'empty',
@@ -80,15 +80,16 @@ const contantColmuns = [
 ]
 
 function TimesheetSummary() {
-  const [data, setData] = useState([])
+  const [data, setData] = useState({})
   const [columns, setColumn] = useState([])
   const [visible, setVisible] = useState(false)
-  const [page, setPage] = useState({pNo:1, pSize: localStore().pageSize})
   const [tags, setTags] = useState(null)
   const [loading, setLoading] = useState(false)
+  let fiscalYear = getFiscalYear() 
 
   useEffect(() => {
-    let {start, end} = getFiscalYear('dates')
+    let {dates: {start, end}} = fiscalYear
+    
     let query = `timesheet-summary?startDate=${start.format(
       'YYYY-MM-DD'
     )}&endDate=${end.format(
@@ -178,31 +179,42 @@ function TimesheetSummary() {
             bordered
             column={1}
             size="small"
-            style={{ width: '40%' }}
+            style={{ width: '35%' }}
             className="describe"
           >
             <Descriptions.Item label="">
+              {/* {moment().format('MMM YYYY')} */}
               <DatePicker
                 defaultValue={moment()}
                 picker="month"
                 style={{ width: 200 }}
+                // disabledDate={(date)=> }
                 size="small"
                 format="MMM YYYY"
                 onChange={(value, valu1, value2) => {
-                  value = value ?? moment()
-                  let {start, end} = getFiscalYear('dates',value)
+                  value = value ?? moment();
+                  let { start, end } = getFiscalYear('dates', value);
                   let query = `timesheet-summary?startDate=${start.format(
                     'YYYY-MM-DD'
                   )}&endDate=${end.format(
                     'YYYY-MM-DD'
                   )}&currentDate=${value.format('YYYY-MM-DD')}`;
-                  getData(query)
+                  getData(query);
                 }}
               />
             </Descriptions.Item>
-            <Descriptions.Item label="T&M"></Descriptions.Item>
-            <Descriptions.Item label="Milestone"></Descriptions.Item>
-            <Descriptions.Item label="Total Completed Hours"></Descriptions.Item>
+            <Descriptions.Item label="T&M">
+              {formatFloat(data?.timeProjectTotalHours)}
+            </Descriptions.Item>
+            <Descriptions.Item label="Milestone">
+              {formatFloat(data?.milestoneProjectTotalHours)}
+            </Descriptions.Item>
+            <Descriptions.Item label="Total Completed Hours">
+              {formatFloat(
+                (data?.timeProjectTotalHours ?? 0) +
+                  (data?.milestoneProjectTotalHours ?? 0)
+              )}
+            </Descriptions.Item>
           </Descriptions>
         </Col>
         <Col span={24}>
@@ -216,16 +228,10 @@ function TimesheetSummary() {
             columns={columns}
             loading={loading}
             rowKey={'index'}
-            dataSource={data}
-            pagination={{
-              hideOnSinglePage: false,
-              showPageSizeChanger: true,
-              onChange: (pNo, pSize) => {
-                setPage({ pNo, pSize });
-              },
-            }}
+            dataSource={data?.timeProjectSummary ?? []}
+            pagination={false}
             scroll={{ x: '170vw' }}
-            summary={ columnData => summaryFooter(columnData)}
+            summary={(columnData) => summaryFooter(columnData)}
           />
         </Col>
         <Col span={24}>
@@ -239,17 +245,10 @@ function TimesheetSummary() {
             columns={columns}
             loading={loading}
             rowKey={'index'}
-            dataSource={data}
-            pagination={{
-              hideOnSinglePage: false,
-              showPageSizeChanger: true,
-              onChange: (pNo, pSize) => {
-                setPage({ pNo, pSize });
-              },
-            }}
-            scroll={{ x: '170vw', }}
-            summary={ columnData => summaryFooter(columnData)}
-
+            dataSource={data?.milestoneProjectSummary ?? []}
+            pagination={false}
+            scroll={{ x: '170vw' }}
+            summary={(columnData) => summaryFooter(columnData)}
           />
         </Col>
       </Row>

@@ -60,6 +60,14 @@ function WorkForceAllocation() {
             ...tableSorter('workType', 'string'),
         },
         {
+            key: 'workStatus',
+            dataIndex: 'workStatus',
+            // fixed: true,
+            title: 'Status',
+            width: 100,
+            ...tableSorter('workStatus', 'string'),
+        },
+        {
             key: 'organization',
             dataIndex: 'organization',
             // fixed: true,
@@ -198,13 +206,7 @@ function WorkForceAllocation() {
                     loading={loading}
                     columns={columns}
                     dataSource={data}
-                    pagination={{
-                        hideOnSinglePage: false,
-                        showPageSizeChanger: true,
-                        onChange:(pNo, pSize)=> {
-                            setPage({pNo, pSize})
-                        }
-                    }}
+                    pagination={false}
                     scroll={{
                         x:  'max-content'
                     }}

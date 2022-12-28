@@ -85,7 +85,6 @@ const requestsColumn = [
 function LeaveSummary() {
     const [data, setData] = useState([])
     const [visible, setVisible] = useState(false)
-    const [page, setPage] = useState({pNo:1, pSize: localStore().pageSize})
     const [tags, setTags] = useState(null)
     const [loading, setLoading] = useState(false)
 
@@ -158,13 +157,7 @@ function LeaveSummary() {
                           );
                         },
                       }}
-                    pagination={{
-                        hideOnSinglePage: false,
-                        showPageSizeChanger: true,
-                        onChange:(pNo, pSize)=> {
-                            setPage({pNo, pSize})
-                        }
-                    }}
+                    pagination={false}
                 />
             </Col>
             <ReportsFilters

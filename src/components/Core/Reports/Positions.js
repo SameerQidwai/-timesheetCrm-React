@@ -13,7 +13,6 @@ const {Title, Text} = Typography
 function Positions() {
     const [data, setData] = useState([])
     const [visible, setVisible] = useState(false)
-    const [page, setPage] = useState({pNo:1, pSize: localStore().pageSize})
     const [tags, setTags] = useState(null)
     const [loading, setLoading] = useState(false)
 
@@ -33,6 +32,14 @@ function Positions() {
             title: 'Type',
             width: 100,
             ...tableSorter('workType', 'string')
+        },
+        {
+            key: 'workStatus',
+            dataIndex: 'workStatus',
+            // fixed: true,
+            title: 'Status',
+            width: 100,
+            ...tableSorter('workStatus', 'string'),
         },
         {
             key: 'organization',
@@ -182,13 +189,6 @@ function Positions() {
         </Row>
       );
     };
-
-    //-------------> HELPER <----------
-    const _nextCellRender = (text, index, key, record)=>{
-        let { pNo, pSize } = page
-        let dataSourceIndex = ((pNo - 1) * pSize + index)
-        return ((record?.[key] ?? text) === data?.[dataSourceIndex-1 ]?.[key] && index) ? '' : text
-    }
     
     return (
         <Row>
@@ -200,13 +200,7 @@ function Positions() {
                     loading={loading}
                     columns={columns}
                     dataSource={data}
-                    pagination={{
-                        hideOnSinglePage: false,
-                        showPageSizeChanger: true,
-                        onChange:(pNo, pSize)=> {
-                            setPage({pNo, pSize})
-                        }
-                    }}
+                    pagination={false}
                     scroll={{
                         x:  'max-content'
                     }}

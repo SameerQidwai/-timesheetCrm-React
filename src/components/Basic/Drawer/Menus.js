@@ -134,14 +134,14 @@ const listData = [
                 permissions: {module: "TIMESHEETS", key: 'READ'}
             },
             {
-                text: "Project Revenue Analyis",
+                text: "FY Project Revenue Analysis",
                 icon: <FileDoneOutlined />,
                 link: "/report/project-revenue-analysis",
                 key: "PROJECTREVENUE ",
                 permissions: {module: "TIMESHEETS", key: 'READ'}
             },
             {
-                text: "Client Revenue Analyis",
+                text: "FY Client Revenue Analysis",
                 icon: <FileDoneOutlined />,
                 link: "/report/client-revenue-analysis",
                 key: "CLIENTREVENUE ",

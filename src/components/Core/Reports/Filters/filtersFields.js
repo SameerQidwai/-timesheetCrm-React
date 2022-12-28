@@ -1,5 +1,5 @@
 import { _createQuery } from '.';
-import { entityProjects, getContactPersons, getEmpPersons, getOrganizations, getStandardLevels, getStandardSkills, getUserLeaveType } from '../../../../service/constant-Apis'
+import { entityProjects, getContactPersons, getEmpPersons, getleaveRequestTypes, getOrganizations, getStandardLevels, getStandardSkills, getUserLeaveType } from '../../../../service/constant-Apis'
 
 export const bench =({fields,setFields, getCompData})=> ({
     effectRender: true,
@@ -341,7 +341,7 @@ export const positions =({fields,setFields, getCompData})=> ({
         type: 'Select',
       },
       {
-        Placeholder: 'Project Status',
+        Placeholder: 'Opportunity/Project Status',
         fieldCol: 12,
         size: 'small',
         type: 'Text',
@@ -529,7 +529,7 @@ export const positions =({fields,setFields, getCompData})=> ({
         type: 'Select',
         multi: true,
         value: [],
-        label: 'Project Status',
+        label: 'Opportunity/Project Status',
         showInColumn: false,
         disabled: false,
       },
@@ -644,27 +644,6 @@ export const allocations =({fields,setFields, getCompData})=> ({
         type: 'Select',
       },
       {
-        Placeholder: 'Opportunity/Project Type',
-        fieldCol: 12,
-        size: 'small',
-        type: 'Text',
-      },
-      {
-        object: 'obj',
-        fieldCol: 24,
-        key: 'workType',
-        size: 'small',
-        mode: 'multiple',
-        rangeMax:'responsive',
-        customValue: (value, option) => ({ selectedIds: value, option }),
-        getValueProps: (value)=>  ({value: value?.selectedIds}),
-        data: [
-          { label: 'Milestone', value: 1 },
-          { label: 'Time & Materials', value: 2 },
-        ],
-        type: 'Select',
-      },
-      {
         Placeholder: 'Type',
         fieldCol: 12,
         size: 'small',
@@ -682,6 +661,27 @@ export const allocations =({fields,setFields, getCompData})=> ({
         data: [
           { value: 0, label: 'Opportunity' },
           { value: 1, label: 'Project' },
+        ],
+        type: 'Select',
+      },
+      {
+        Placeholder: 'Opportunity/Project Type',
+        fieldCol: 12,
+        size: 'small',
+        type: 'Text',
+      },
+      {
+        object: 'obj',
+        fieldCol: 24,
+        key: 'workType',
+        size: 'small',
+        mode: 'multiple',
+        rangeMax:'responsive',
+        customValue: (value, option) => ({ selectedIds: value, option }),
+        getValueProps: (value)=>  ({value: value?.selectedIds}),
+        data: [
+          { label: 'Milestone', value: 1 },
+          { label: 'Time & Materials', value: 2 },
         ],
         type: 'Select',
       },
@@ -704,7 +704,7 @@ export const allocations =({fields,setFields, getCompData})=> ({
         type: 'Select',
       },
       {
-        Placeholder: 'Project Status',
+        Placeholder: 'Opportunity/Project Status',
         fieldCol: 12,
         size: 'small',
         type: 'Text',
@@ -822,8 +822,7 @@ export const allocations =({fields,setFields, getCompData})=> ({
         getValueProps: (value)=>  ({value: value?.selectedIds}),
         data: [],
         type: 'Select',
-      },
-      
+      },      
     ],
     searchValue: {
       dates: {
@@ -846,6 +845,14 @@ export const allocations =({fields,setFields, getCompData})=> ({
         multi: true,
         value: [],
         label: 'Opportunity/Project Type',
+        showInColumn: false,
+        disabled: false,
+      },
+      workPhase: {
+        type: 'Select',
+        multi: true,
+        value: [],
+        label: 'Opportunity/Project Status',
         showInColumn: false,
         disabled: false,
       },
@@ -886,14 +893,6 @@ export const allocations =({fields,setFields, getCompData})=> ({
         multi: true,
         value: [],
         label: 'Booking Type',
-        showInColumn: false,
-        disabled: false,
-      },
-      workPhase: {
-        type: 'Select',
-        multi: true,
-        value: [],
-        label: 'Project Status',
         showInColumn: false,
         disabled: false,
       },
@@ -1006,6 +1005,27 @@ export const projectRevenue =({fields,setFields, getCompData})=> ({
         data: [],
         type: 'Select',
       },
+      {
+        Placeholder: 'Project Status',
+        fieldCol: 12,
+        size: 'small',
+        type: 'Text',
+      },
+      {
+        object: 'obj',
+        fieldCol: 24,
+        key: 'workPhase',
+        size: 'small',
+        mode: 'multiple',
+        rangeMax:'responsive',
+        customValue: (value, option) => ({ selectedIds: value, option }),
+        getValueProps: (value)=>  ({value: value?.selectedIds}),
+        data: [
+          {value: 0, label: 'Closed'},
+          {value: 1, label: 'Open'},
+        ],
+        type: 'Select',
+      },
     ],
     searchValue: {
       // date: {
@@ -1029,6 +1049,14 @@ export const projectRevenue =({fields,setFields, getCompData})=> ({
         multi: true,
         value: [],
         label: 'Projects',
+        showInColumn: false,
+        disabled: false,
+      },
+      workPhase: {
+        type: 'Select',
+        multi: true,
+        value: [],
+        label: 'Opportunity/Project Status',
         showInColumn: false,
         disabled: false,
       },
@@ -1150,15 +1178,15 @@ export const clientRevenue =({fields,setFields, getCompData})=> ({
 export const leave_summary =({fields,setFields, getCompData})=> ({
     effectRender: true,
     filterModalUseEffect: () => {
-      Promise.all([getEmpPersons(), getUserLeaveType(), entityProjects('helpers/work?type=P', true)]).then((res) => {
+      Promise.all([getEmpPersons(), getleaveRequestTypes(), entityProjects('helpers/work?type=P', true)]).then((res) => {
 
         let tempFields = [...fields];
         //setting organization
         tempFields[3].data = res[0].success ? res[0].data : [];
         //setting projects
-        tempFields[5].data = res[1].success ? res[1].LeaveRequestTypes : [];
+        tempFields[5].data = res[1].success ? res[1].data : [];
         //setting exclude projects
-        tempFields[7].data = res[2].success ? res[2].options : [];
+        tempFields[9].data = res[2].success ? res[2].options : [];
         setFields([...tempFields]);
       })
     },
@@ -1209,11 +1237,32 @@ export const leave_summary =({fields,setFields, getCompData})=> ({
         key: 'leaveTypeId',
         size: 'small',
         mode: 'multiple',
-        fieldNames: {label: 'name', value: 'id'},
         rangeMax:'responsive',
         customValue: (value, option) => ({ selectedIds: value, option }),
         getValueProps: (value)=>  ({value: value?.selectedIds}),
         data: [],
+        type: 'Select',
+      },
+      {
+        Placeholder: 'Leave Status',
+        fieldCol: 22,
+        size: 'small',
+        type: 'Text',
+      },
+      {
+        object: 'obj',
+        fieldCol: 24,
+        key: 'leaveStatus',
+        size: 'small',
+        mode: 'multiple',
+        rangeMax:'responsive',
+        customValue: (value, option) => ({ selectedIds: value, option }),
+        getValueProps: (value)=>  ({value: value?.selectedIds}),
+        data: [
+          {value: 0, label: 'Saved'},
+          {value: 1, label: 'Submitted'},
+          {value: 2, label: 'Approved'},
+        ],
         type: 'Select',
       },
       {
@@ -1257,6 +1306,14 @@ export const leave_summary =({fields,setFields, getCompData})=> ({
         multi: true,
         value: [],
         label: 'Leave Types',
+        showInColumn: false,
+        disabled: false,
+      },
+      leaveStatus: {
+        type: 'Select',
+        multi: true,
+        value: [],
+        label: 'Leave Status',
         showInColumn: false,
         disabled: false,
       },

@@ -59,6 +59,7 @@ export const getPositions = (queryParam) => {
 export const getAllocations = (queryParam) => {
     return axios
         .get(`${url}/allocations-all${queryParam? '?'+ queryParam: ''}`, {headers:headers()})
+        // .get(`${url}/allocations-all?bookingType=4`, {headers:headers()})
         .then((res) => {
             const { success, data } = res.data;
             setToken(res?.headers?.authorization)

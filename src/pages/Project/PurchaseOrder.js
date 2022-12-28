@@ -394,7 +394,7 @@ class PurchaseOrder extends Component {
                     layout="horizontal"
                     // extra={<Button type="primary">Edit</Button>}
                 >
-                    <Item label="Project Name">{desc.title}</Item>
+                    <Item label="Project Name" style={{width:250}} >{desc.title}</Item>
                     <Item label="Estimated Value">{`${formatCurrency(desc.value)}`}</Item>
                     <Item label="Organisation">{
                         desc.organization ? 
