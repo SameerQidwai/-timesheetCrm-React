@@ -41,12 +41,12 @@ const contantColmuns = [
     ...tableSorter('projectCode', 'string'),
   },
   {
-    key: 'poNo',
-    dataIndex: 'poNo',
+    key: 'purchaseOrder',
+    dataIndex: 'purchaseOrder',
     title: 'PO No',
     align: 'center',
     width: '4%',
-    ...tableSorter('poNo', 'number'),
+    ...tableSorter('purchaseOrder', 'number'),
   },
   {
     key: 'organizationName',
@@ -101,7 +101,7 @@ function TimesheetSummary() {
       spliceBtw: 9,
       width: '3%',
       format: 'float',
-      colRender: 'approvedHours',
+      colRender: 'filteredHours',
       dataIndex: ['months']
     });
     getData(query)
@@ -123,45 +123,45 @@ function TimesheetSummary() {
   }
 
   const summaryFooter = (data) =>{
-    let excludeColumns = ['employeeName', 'employeeCode', 'projectName', 'projectCode', 'poNo', 'organizationName', 'empty',]
+    let excludeColumns = ['employeeName', 'employeeCode', 'projectName', 'projectCode', 'purchaseOrder', 'organizationName', 'empty',]
     if(data.length>0)
     return (
       <ATable.Summary fixed="bottom">
         <ATable.Summary.Row>
-          {columns.map(({ key }, kIndex) => {
+          {columns.map(({ dataIndex }, kIndex) => {
             let value = 0;
             let columnFound = false;
-            if (!excludeColumns.includes(key)) {
+            if (!excludeColumns.includes(dataIndex)) {
               columnFound = true;
               data.forEach((rowData, index) => {
-                if (key[0].length === 2){
-                  value += (rowData[key[0]][key[1]]??0);
+                if (dataIndex.length === 2){
+                  value += (rowData[dataIndex[0]][dataIndex[1]]?.['filteredHours']??0);
                 }else{
-                  value += (rowData[key]??0);
+                  value += (rowData[dataIndex]??0);
                   //calculation for total hours and actual hours for footer to show
                 }
               });
             }
             //Title of the projct show column for title
-            return key === 'organizationName' ? (
+            return dataIndex === 'organizationName' ? (
               <ATable.Summary.Cell
-                index={key + 1}
-                key={key + 1}
+                index={dataIndex + kIndex}
+                key={dataIndex + kIndex}
                 style={{ fontWeight: 600 }}
               >
                 <Typography.Text strong>Total</Typography.Text> 
               </ATable.Summary.Cell>
             ) : columnFound ? ( // show total and normal background if the column month is same as selected month or the key is totalHours of the month
               <ATable.Summary.Cell
-                index={key + 1}
-                key={key + 1}
+                index={dataIndex + kIndex}
+                key={dataIndex + kIndex}
                 align="center"
                 style={{ fontWeight: 600 }}
               >
                 <Typography.Text strong>{formatFloat(value)}</Typography.Text>
               </ATable.Summary.Cell>
             ) : (
-              <ATable.Summary.Cell index={key + 1} key={key + 1}></ATable.Summary.Cell>
+              <ATable.Summary.Cell index={dataIndex + kIndex} key={dataIndex + kIndex}></ATable.Summary.Cell>
             );
           })}
         </ATable.Summary.Row>

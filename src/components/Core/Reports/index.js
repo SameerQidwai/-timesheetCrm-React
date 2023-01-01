@@ -37,7 +37,7 @@ export const _generateMonthlyColumns = ({date, contantColmuns, setColumn, splice
                     value
                 )
             },
-            ...tableSorter(`${key}.${colRender}`, 'number'), //sort
+            ...tableSorter(dataIndex ? `${dataIndex[0]}.${key}.${colRender}` : `${key}.${colRender}`, 'number'), //sort
         });
       }
     let creatingColumn = [...contantColmuns]
