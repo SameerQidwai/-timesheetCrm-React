@@ -60,7 +60,7 @@ import ExpenseSheet from '../../../pages/Expenses/ExpenseSheet';
 
 // import TimeSheetHTML from "../../Core/TimeSheetHTML"
 import { localStore } from '../../../service/constant';
-import { BenchResources, Positions, WorkForceAllocation, WorkforceSkills, ProjectRevenueAnalyis, ClientRevenueAnalyis, TimesheetSummary } from '../../Core/Reports';
+import { BenchResources, Positions, WorkForceAllocation, WorkforceSkills, ProjectRevenueAnalysis, ClientRevenueAnalysis, TimesheetSummary, LeaveSummary, WorkInHand } from '../../Core/Reports';
 
 const { Content } = Layout;
 
@@ -397,13 +397,13 @@ const pageLinks = [
     permission: 'ALLOWED',
   },
   {
-    component: ProjectRevenueAnalyis,
+    component: ProjectRevenueAnalysis,
     link: '/report/project-revenue-analysis',
     key: 'REPORTS',
     permission: 'ALLOWED',
   },
   {
-    component: ClientRevenueAnalyis,
+    component: ClientRevenueAnalysis,
     link: '/report/client-revenue-analysis',
     key: 'REPORTS',
     permission: 'ALLOWED',
@@ -411,6 +411,18 @@ const pageLinks = [
   {
     component: TimesheetSummary,
     link: '/report/timesheet-summary',
+    key: 'REPORTS',
+    permission: 'ALLOWED',
+  },
+  {
+    component: LeaveSummary,
+    link: '/report/leave-summary',
+    key: 'REPORTS',
+    permission: 'ALLOWED',
+  },
+  {
+    component: WorkInHand,
+    link: '/report/work-in-hand',
     key: 'REPORTS',
     permission: 'ALLOWED',
   },

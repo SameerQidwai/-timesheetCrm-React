@@ -1,5 +1,5 @@
 import { _createQuery } from '.';
-import { entityProjects, getContactPersons, getOrganizations, getStandardLevels, getStandardSkills } from '../../../../service/constant-Apis'
+import { entityProjects, getContactPersons, getEmpPersons, getleaveRequestTypes, getOrganizations, getStandardLevels, getStandardSkills, getUserLeaveType } from '../../../../service/constant-Apis'
 
 export const bench =({fields,setFields, getCompData})=> ({
     effectRender: true,
@@ -39,6 +39,7 @@ export const bench =({fields,setFields, getCompData})=> ({
         key: 'resourceType',
         size: 'small',
         mode: 'multiple',
+        rangeMax:'responsive',
         customValue: (value, option) => ({ selectedIds: value, option }),
         getValueProps: (value)=>  ({value: value?.selectedIds}),
         data: [
@@ -60,6 +61,7 @@ export const bench =({fields,setFields, getCompData})=> ({
         key: 'excludeProject',
         size: 'small',
         mode: 'multiple',
+        rangeMax:'responsive',
         customValue: (value, option) => ({ selectedIds: value, option }),
         getValueProps: (value)=>  ({value: value?.selectedIds}),
         data: [],
@@ -140,6 +142,7 @@ export const skillResources =({fields,setFields, getCompData})=> ({
         key: 'skillId',
         size: 'small',
         mode: 'multiple',
+        rangeMax:'responsive',
         customValue: (value, option) => ({selectedIds: value, option}),
         getValueProps: (value)=>  ({value: value?.selectedIds}),
         data: [],
@@ -157,6 +160,7 @@ export const skillResources =({fields,setFields, getCompData})=> ({
         key: 'levelId',
         size: 'small',
         mode: 'multiple',
+        rangeMax:'responsive',
         customValue: (value, option) => ({selectedIds: value, option}),
         getValueProps: (value)=>  ({value: value?.selectedIds}),
         data: [],
@@ -174,6 +178,7 @@ export const skillResources =({fields,setFields, getCompData})=> ({
         key: 'resourceType',
         size: 'small',
         mode: 'multiple',
+        rangeMax:'responsive',
         customValue: (value, option) => ({ selectedIds: value, option }),
         getValueProps: (value)=>  ({value: value?.selectedIds}),
         data: [
@@ -269,6 +274,7 @@ export const positions =({fields,setFields, getCompData})=> ({
         key: 'organizationId',
         size: 'small',
         mode: 'multiple',
+        rangeMax:'responsive',
         customValue: (value, option) => ({ selectedIds: value, option }),
         getValueProps: (value)=>  ({value: value?.selectedIds}),
         data: [],
@@ -286,6 +292,7 @@ export const positions =({fields,setFields, getCompData})=> ({
         key: 'workType',
         size: 'small',
         mode: 'multiple',
+        rangeMax:'responsive',
         customValue: (value, option) => ({ selectedIds: value, option }),
         getValueProps: (value)=>  ({value: value?.selectedIds}),
         data: [
@@ -306,6 +313,7 @@ export const positions =({fields,setFields, getCompData})=> ({
         key: 'workStatus',
         size: 'small',
         mode: 'multiple',
+        rangeMax:'responsive',
         customValue: (value, option) => ({ selectedIds: value, option }),
         getValueProps: (value)=>  ({value: value?.selectedIds}),
         data: [
@@ -326,13 +334,14 @@ export const positions =({fields,setFields, getCompData})=> ({
         key: 'workId',
         size: 'small',
         mode: 'multiple',
+        rangeMax:'responsive',
         customValue: (value, option) => ({ selectedIds: value, option }),
         getValueProps: (value)=>  ({value: value?.selectedIds}),
         data: [],
         type: 'Select',
       },
       {
-        Placeholder: 'Project Status',
+        Placeholder: 'Opportunity/Project Status',
         fieldCol: 12,
         size: 'small',
         type: 'Text',
@@ -343,6 +352,7 @@ export const positions =({fields,setFields, getCompData})=> ({
         key: 'workPhase',
         size: 'small',
         mode: 'multiple',
+        rangeMax:'responsive',
         customValue: (value, option) => ({ selectedIds: value, option }),
         getValueProps: (value)=>  ({value: value?.selectedIds}),
         data: [
@@ -363,6 +373,7 @@ export const positions =({fields,setFields, getCompData})=> ({
         key: 'bookingType',
         size: 'small',
         mode: 'multiple',
+        rangeMax:'responsive',
         customValue: (value, option) => ({ selectedIds: value, option }),
         getValueProps: (value)=>  ({value: value?.selectedIds}),
         data: [
@@ -385,6 +396,7 @@ export const positions =({fields,setFields, getCompData})=> ({
         key: 'contactPersonId',
         size: 'small',
         mode: 'multiple',
+        rangeMax:'responsive',
         customValue: (value, option) => ({ selectedIds: value, option }),
         getValueProps: (value)=>  ({value: value?.selectedIds}),
         data: [],
@@ -402,6 +414,7 @@ export const positions =({fields,setFields, getCompData})=> ({
         key: 'resourceType',
         size: 'small',
         mode: 'multiple',
+        rangeMax:'responsive',
         customValue: (value, option) => ({ selectedIds: value, option }),
         getValueProps: (value)=>  ({value: value?.selectedIds}),
         data: [
@@ -423,6 +436,7 @@ export const positions =({fields,setFields, getCompData})=> ({
         key: 'skillId',
         size: 'small',
         mode: 'multiple',
+        rangeMax:'responsive',
         customValue: (value, option) => ({ selectedIds: value, option }),
         getValueProps: (value)=>  ({value: value?.selectedIds}),
         data: [],
@@ -440,6 +454,7 @@ export const positions =({fields,setFields, getCompData})=> ({
         key: 'levelId',
         size: 'small',
         mode: 'multiple',
+        rangeMax:'responsive',
         customValue: (value, option) => ({ selectedIds: value, option }),
         getValueProps: (value)=>  ({value: value?.selectedIds}),
         data: [],
@@ -514,7 +529,7 @@ export const positions =({fields,setFields, getCompData})=> ({
         type: 'Select',
         multi: true,
         value: [],
-        label: 'Project Status',
+        label: 'Opportunity/Project Status',
         showInColumn: false,
         disabled: false,
       },
@@ -622,29 +637,10 @@ export const allocations =({fields,setFields, getCompData})=> ({
         key: 'organizationId',
         size: 'small',
         mode: 'multiple',
+        rangeMax:'responsive',
         customValue: (value, option) => ({ selectedIds: value, option }),
         getValueProps: (value)=>  ({value: value?.selectedIds}),
         data: [],
-        type: 'Select',
-      },
-      {
-        Placeholder: 'Opportunity/Project Type',
-        fieldCol: 12,
-        size: 'small',
-        type: 'Text',
-      },
-      {
-        object: 'obj',
-        fieldCol: 24,
-        key: 'workType',
-        size: 'small',
-        mode: 'multiple',
-        customValue: (value, option) => ({ selectedIds: value, option }),
-        getValueProps: (value)=>  ({value: value?.selectedIds}),
-        data: [
-          { label: 'Milestone', value: 1 },
-          { label: 'Time & Materials', value: 2 },
-        ],
         type: 'Select',
       },
       {
@@ -659,11 +655,33 @@ export const allocations =({fields,setFields, getCompData})=> ({
         key: 'workStatus',
         size: 'small',
         mode: 'multiple',
+        rangeMax:'responsive',
         customValue: (value, option) => ({ selectedIds: value, option }),
         getValueProps: (value)=>  ({value: value?.selectedIds}),
         data: [
           { value: 0, label: 'Opportunity' },
           { value: 1, label: 'Project' },
+        ],
+        type: 'Select',
+      },
+      {
+        Placeholder: 'Opportunity/Project Type',
+        fieldCol: 12,
+        size: 'small',
+        type: 'Text',
+      },
+      {
+        object: 'obj',
+        fieldCol: 24,
+        key: 'workType',
+        size: 'small',
+        mode: 'multiple',
+        rangeMax:'responsive',
+        customValue: (value, option) => ({ selectedIds: value, option }),
+        getValueProps: (value)=>  ({value: value?.selectedIds}),
+        data: [
+          { label: 'Milestone', value: 1 },
+          { label: 'Time & Materials', value: 2 },
         ],
         type: 'Select',
       },
@@ -679,13 +697,14 @@ export const allocations =({fields,setFields, getCompData})=> ({
         key: 'workId',
         size: 'small',
         mode: 'multiple',
+        rangeMax:'responsive',
         customValue: (value, option) => ({ selectedIds: value, option }),
         getValueProps: (value)=>  ({value: value?.selectedIds}),
         data: [],
         type: 'Select',
       },
       {
-        Placeholder: 'Project Status',
+        Placeholder: 'Opportunity/Project Status',
         fieldCol: 12,
         size: 'small',
         type: 'Text',
@@ -696,6 +715,7 @@ export const allocations =({fields,setFields, getCompData})=> ({
         key: 'workPhase',
         size: 'small',
         mode: 'multiple',
+        rangeMax:'responsive',
         customValue: (value, option) => ({ selectedIds: value, option }),
         getValueProps: (value)=>  ({value: value?.selectedIds}),
         data: [
@@ -716,6 +736,7 @@ export const allocations =({fields,setFields, getCompData})=> ({
         key: 'bookingType',
         size: 'small',
         mode: 'multiple',
+        rangeMax:'responsive',
         customValue: (value, option) => ({ selectedIds: value, option }),
         getValueProps: (value)=>  ({value: value?.selectedIds}),
         data: [
@@ -738,6 +759,7 @@ export const allocations =({fields,setFields, getCompData})=> ({
         key: 'contactPersonId',
         size: 'small',
         mode: 'multiple',
+        rangeMax:'responsive',
         customValue: (value, option) => ({ selectedIds: value, option }),
         getValueProps: (value)=>  ({value: value?.selectedIds}),
         data: [],
@@ -755,6 +777,7 @@ export const allocations =({fields,setFields, getCompData})=> ({
         key: 'resourceType',
         size: 'small',
         mode: 'multiple',
+        rangeMax:'responsive',
         customValue: (value, option) => ({ selectedIds: value, option }),
         getValueProps: (value)=>  ({value: value?.selectedIds}),
         data: [
@@ -776,6 +799,7 @@ export const allocations =({fields,setFields, getCompData})=> ({
         key: 'skillId',
         size: 'small',
         mode: 'multiple',
+        rangeMax:'responsive',
         customValue: (value, option) => ({ selectedIds: value, option }),
         getValueProps: (value)=>  ({value: value?.selectedIds}),
         data: [],
@@ -793,12 +817,12 @@ export const allocations =({fields,setFields, getCompData})=> ({
         key: 'levelId',
         size: 'small',
         mode: 'multiple',
+        rangeMax:'responsive',
         customValue: (value, option) => ({ selectedIds: value, option }),
         getValueProps: (value)=>  ({value: value?.selectedIds}),
         data: [],
         type: 'Select',
-      },
-      
+      },      
     ],
     searchValue: {
       dates: {
@@ -821,6 +845,14 @@ export const allocations =({fields,setFields, getCompData})=> ({
         multi: true,
         value: [],
         label: 'Opportunity/Project Type',
+        showInColumn: false,
+        disabled: false,
+      },
+      workPhase: {
+        type: 'Select',
+        multi: true,
+        value: [],
+        label: 'Opportunity/Project Status',
         showInColumn: false,
         disabled: false,
       },
@@ -861,14 +893,6 @@ export const allocations =({fields,setFields, getCompData})=> ({
         multi: true,
         value: [],
         label: 'Booking Type',
-        showInColumn: false,
-        disabled: false,
-      },
-      workPhase: {
-        type: 'Select',
-        multi: true,
-        value: [],
-        label: 'Project Status',
         showInColumn: false,
         disabled: false,
       },
@@ -939,6 +963,7 @@ export const projectRevenue =({fields,setFields, getCompData})=> ({
         key: 'organizationId',
         size: 'small',
         mode: 'multiple',
+        rangeMax:'responsive',
         customValue: (value, option) => ({ selectedIds: value, option }),
         getValueProps: (value)=>  ({value: value?.selectedIds}),
         data: [],
@@ -956,6 +981,7 @@ export const projectRevenue =({fields,setFields, getCompData})=> ({
         key: 'projectId',
         size: 'small',
         mode: 'multiple',
+        rangeMax:'responsive',
         customValue: (value, option) => ({ selectedIds: value, option }),
         getValueProps: (value)=>  ({value: value?.selectedIds}),
         data: [],
@@ -973,9 +999,31 @@ export const projectRevenue =({fields,setFields, getCompData})=> ({
         key: 'excludeProjectId',
         size: 'small',
         mode: 'multiple',
+        rangeMax:'responsive',
         customValue: (value, option) => ({ selectedIds: value, option }),
         getValueProps: (value)=>  ({value: value?.selectedIds}),
         data: [],
+        type: 'Select',
+      },
+      {
+        Placeholder: 'Project Status',
+        fieldCol: 12,
+        size: 'small',
+        type: 'Text',
+      },
+      {
+        object: 'obj',
+        fieldCol: 24,
+        key: 'workPhase',
+        size: 'small',
+        mode: 'multiple',
+        rangeMax:'responsive',
+        customValue: (value, option) => ({ selectedIds: value, option }),
+        getValueProps: (value)=>  ({value: value?.selectedIds}),
+        data: [
+          {value: 0, label: 'Closed'},
+          {value: 1, label: 'Open'},
+        ],
         type: 'Select',
       },
     ],
@@ -1004,6 +1052,14 @@ export const projectRevenue =({fields,setFields, getCompData})=> ({
         showInColumn: false,
         disabled: false,
       },
+      workPhase: {
+        type: 'Select',
+        multi: true,
+        value: [],
+        label: 'Opportunity/Project Status',
+        showInColumn: false,
+        disabled: false,
+      },
       excludeProjectId: {
         type: 'Select',
         multi: true,
@@ -1022,7 +1078,6 @@ export const projectRevenue =({fields,setFields, getCompData})=> ({
 export const clientRevenue =({fields,setFields, getCompData})=> ({
     effectRender: true,
     filterModalUseEffect: () => {
-        console.log(fields)
       getOrganizations().then((res) => {
 
         let tempFields = [...fields];
@@ -1063,6 +1118,7 @@ export const clientRevenue =({fields,setFields, getCompData})=> ({
         key: 'organizationId',
         size: 'small',
         mode: 'multiple',
+        rangeMax:'responsive',
         customValue: (value, option) => ({ selectedIds: value, option }),
         getValueProps: (value)=>  ({value: value?.selectedIds}),
         data: [],
@@ -1080,6 +1136,7 @@ export const clientRevenue =({fields,setFields, getCompData})=> ({
         key: 'excludeOrganizationId',
         size: 'small',
         mode: 'multiple',
+        rangeMax:'responsive',
         customValue: (value, option) => ({ selectedIds: value, option }),
         getValueProps: (value)=>  ({value: value?.selectedIds}),
         data: [],
@@ -1108,6 +1165,163 @@ export const clientRevenue =({fields,setFields, getCompData})=> ({
         multi: true,
         value: [],
         label: 'Exclude Organisation',
+        showInColumn: false,
+        disabled: false,
+      },
+    },
+    callFilters: (value1, value2, filters, formData) => {
+      let query = _createQuery(filters)
+      getCompData(query, filters);
+    },
+});
+
+export const leave_summary =({fields,setFields, getCompData})=> ({
+    effectRender: true,
+    filterModalUseEffect: () => {
+      Promise.all([getEmpPersons(), getleaveRequestTypes(), entityProjects('helpers/work?type=P', true)]).then((res) => {
+
+        let tempFields = [...fields];
+        //setting organization
+        tempFields[3].data = res[0].success ? res[0].data : [];
+        //setting projects
+        tempFields[5].data = res[1].success ? res[1].data : [];
+        //setting exclude projects
+        tempFields[9].data = res[2].success ? res[2].options : [];
+        setFields([...tempFields]);
+      })
+    },
+    fields: [
+      {
+        Placeholder: 'Select Month',
+        fieldCol: 24,
+        size: 'small',
+        type: 'Text',
+      },
+      {
+        object: 'obj',
+        fieldCol: 24,
+        key: 'date',
+        size: 'small',
+        mode: "month",
+        format:"MMM YYYY",
+        type: 'DatePicker',
+        fieldStyle: { width: '100%' },
+      },
+      {
+        Placeholder: 'Employee',
+        fieldCol: 24,
+        size: 'small',
+        type: 'Text',
+      },
+      {
+        object: 'obj',
+        fieldCol: 24,
+        key: 'contactPersonId',
+        size: 'small',
+        mode: 'multiple',
+        rangeMax:'responsive',
+        customValue: (value, option) => ({ selectedIds: value, option }),
+        getValueProps: (value)=>  ({value: value?.selectedIds}),
+        data: [],
+        type: 'Select',
+      },
+      {
+        Placeholder: 'Leave Type',
+        fieldCol: 22,
+        size: 'small',
+        type: 'Text',
+      },
+      {
+        object: 'obj',
+        fieldCol: 24,
+        key: 'leaveTypeId',
+        size: 'small',
+        mode: 'multiple',
+        rangeMax:'responsive',
+        customValue: (value, option) => ({ selectedIds: value, option }),
+        getValueProps: (value)=>  ({value: value?.selectedIds}),
+        data: [],
+        type: 'Select',
+      },
+      {
+        Placeholder: 'Leave Status',
+        fieldCol: 22,
+        size: 'small',
+        type: 'Text',
+      },
+      {
+        object: 'obj',
+        fieldCol: 24,
+        key: 'leaveStatus',
+        size: 'small',
+        mode: 'multiple',
+        rangeMax:'responsive',
+        customValue: (value, option) => ({ selectedIds: value, option }),
+        getValueProps: (value)=>  ({value: value?.selectedIds}),
+        data: [
+          {value: 0, label: 'Saved'},
+          {value: 1, label: 'Submitted'},
+          {value: 2, label: 'Approved'},
+        ],
+        type: 'Select',
+      },
+      {
+        Placeholder: 'Project',
+        fieldCol: 24,
+        size: 'small',
+        type: 'Text',
+      },
+      {
+        object: 'obj',
+        fieldCol: 24,
+        key: 'projectId',
+        size: 'small',
+        mode: 'multiple',
+        rangeMax:'responsive',
+        customValue: (value, option) => ({ selectedIds: value, option }),
+        getValueProps: (value)=>  ({value: value?.selectedIds}),
+        data: [],
+        type: 'Select',
+      },
+    ],
+    searchValue: {
+      date: {
+        type: 'Date',
+        mode: 'monthRange',
+        value: null,
+        label: 'Selected Month',
+        showInColumn: true,
+        disabled: true,
+      },
+      contactPersonId: {
+        type: 'Select',
+        multi: true,
+        value: [],
+        label: 'Employee',
+        showInColumn: false,
+        disabled: false,
+      },
+      leaveTypeId: {
+        type: 'Select',
+        multi: true,
+        value: [],
+        label: 'Leave Types',
+        showInColumn: false,
+        disabled: false,
+      },
+      leaveStatus: {
+        type: 'Select',
+        multi: true,
+        value: [],
+        label: 'Leave Status',
+        showInColumn: false,
+        disabled: false,
+      },
+      projectId: {
+        type: 'Select',
+        multi: true,
+        value: [],
+        label: 'Projects',
         showInColumn: false,
         disabled: false,
       },

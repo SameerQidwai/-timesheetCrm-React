@@ -1,6 +1,7 @@
 import { Col, Row, Table, Typography } from 'antd'
 import React, { useState, useEffect } from 'react'
 import { formatCurrency, parseDate } from '../../../service/constant';
+import { getWorkInHandForecast } from '../../../service/reports-Apis';
 import "../../Styles/table.css"
 import { comunication_expenses, cost_of_sale, direct_overhead_expense, income_revenue, occupancy_expenses, other_general_expenses, outside_expenses, supplies_expenses, travel_entertainment_expenses } from './WIHData';
 const {Title} = Typography
@@ -44,8 +45,9 @@ function WorkInHand() {
 
     
     useEffect(() => {
-        creatingCol()
-        dummyStructureData()
+        getWorkInHandForecast()
+        // creatingCol()
+        // dummyStructureData()
     }, [])
 
     const creatingCol = () =>{

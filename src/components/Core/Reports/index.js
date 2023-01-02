@@ -6,9 +6,10 @@ export {default as BenchResources} from './BenchResources'
 export {default as WorkforceSkills} from './WorkforceSkills'
 export {default as Positions} from './Positions'
 export {default as WorkForceAllocation} from './WorkForceAllocation'
-export {default as ProjectRevenueAnalyis} from './ProjectRevenueAnalyis'
-export {default as ClientRevenueAnalyis} from './ClientRevenueAnalyis'
+export {default as ProjectRevenueAnalysis} from './ProjectRevenueAnalysis'
+export {default as ClientRevenueAnalysis} from './ClientRevenueAnalysis'
 export {default as TimesheetSummary} from './TimesheetSummary'
+export {default as LeaveSummary} from './LeaveSummary'
 
 //-----------------> HelperFunction <---------------
 export const _generateMonthlyColumns = ({date, contantColmuns, setColumn, spliceBtw, colRender, format, dataIndex, width="5%"})=>{
@@ -36,7 +37,7 @@ export const _generateMonthlyColumns = ({date, contantColmuns, setColumn, splice
                     value
                 )
             },
-            ...tableSorter(`${key}.${colRender}`, 'number'), //sort
+            ...tableSorter(dataIndex ? `${dataIndex[0]}.${key}.${colRender}` : `${key}.${colRender}`, 'number'), //sort
         });
       }
     let creatingColumn = [...contantColmuns]

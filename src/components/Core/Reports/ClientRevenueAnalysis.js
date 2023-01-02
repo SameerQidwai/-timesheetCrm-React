@@ -24,18 +24,18 @@ const contantColmuns = [
     render: (text)=> (`00${text}`), 
     ...tableSorter('organizationId', 'number'),
   },
-  {
-    key: 'totalSell',
-    dataIndex: 'totalSell',
-    title: 'Total Completed Revenue',
-    width: '5%',
-    render: (value)=> (formatCurrency(value??0)),
-    ...tableSorter('totalSell', 'number'),
-  },
+  // { // will need when doing financial year iplementation
+  //   key: 'totalSell',
+  //   dataIndex: 'totalSell',
+  //   title: 'Total Completed Revenue',
+  //   width: '5%',
+  //   render: (value)=> (formatCurrency(value??0)),
+  //   ...tableSorter('totalSell', 'number'),
+  // },
   {
     key: 'YTDTotalSell',
     dataIndex: 'YTDTotalSell',
-    title: 'YTD Completed Work',
+    title: 'YTD Actual Revenue',
     width: '5%',
     render: (value)=> (formatCurrency(value??0)),
     ...tableSorter('YTDTotalSell', 'number'),
@@ -45,29 +45,28 @@ const contantColmuns = [
     dataIndex: 'empty',
     width: '1%'
   },
-  {
-    key: 'projectsValue',
-    dataIndex: 'projectsValue',
-    title: 'Total Contract Value',
-    width: '5%',
-    render: (value)=> (formatCurrency(value??0)),
-    ...tableSorter('projectsValue', 'number'),
-  },
-  {
-    key: 'residualedRevenue',
-    dataIndex: 'residualedRevenue',
-    title: 'Residual Contract Value',
-    width: '5%',
-    render: (_, record)=> formatCurrency(parseFloat(record.projectsValue??0) - parseFloat(record.totalSell??0)),
-    // ...tableSorter('residualedRevenue', 'number'),
-  },
+  // // will need when doing financial year iplementation{
+  //   key: 'projectsValue',
+  //   dataIndex: 'projectsValue',
+  //   title: 'Total Contract Value',
+  //   width: '5%',
+  //   render: (value)=> (formatCurrency(value??0)),
+  //   ...tableSorter('projectsValue', 'number'),
+  // },
+  // { // will need when doing financial year iplementation
+  //   key: 'residualedRevenue',
+  //   dataIndex: 'residualedRevenue',
+  //   title: 'Residual Contract Value',
+  //   width: '5%',
+  //   render: (_, record)=> formatCurrency(parseFloat(record.projectsValue??0) - parseFloat(record.totalSell??0)),
+  //   // ...tableSorter('residualedRevenue', 'number'),
+  // },
 ]
 
-function ClientRevenueAnalyis() {
+function ClientRevenueAnalysis() {
   const [data, setData] = useState([])
   const [columns, setColumn] = useState([])
   const [visible, setVisible] = useState(false)
-  const [page, setPage] = useState({pNo:1, pSize: localStore().pageSize})
   const [tags, setTags] = useState(null)
   const [loading, setLoading] = useState(false)
 
@@ -179,13 +178,7 @@ function ClientRevenueAnalyis() {
           loading={loading}
           rowKey={'organizationId'}
           dataSource={data}
-          pagination={{
-            hideOnSinglePage: false,
-            showPageSizeChanger: true,
-            onChange:(pNo, pSize)=> {
-                setPage({pNo, pSize})
-            }
-          }}
+          pagination={false}
           scroll={{ x:  '170vw' }}
           summary={ columnData => summaryFooter(columnData)}
         />
@@ -202,4 +195,4 @@ function ClientRevenueAnalyis() {
   );
 }
 
-export default ClientRevenueAnalyis
+export default ClientRevenueAnalysis

@@ -333,9 +333,10 @@ class ProjectInfo extends Component {
                 <PTResources id={leadId} data={data} />
               )}
             </TabPane>
+            {basic.type === 2 && (
             <TabPane tab="Project Tracking" key="projectTracking">
               <ProjectTracking id={leadId} data={data} />
-            </TabPane>
+            </TabPane>)}
           </Tabs>
         )}
         {infoModal && (

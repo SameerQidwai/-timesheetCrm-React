@@ -41,12 +41,12 @@ const contantColmuns = [
     ...tableSorter('projectCode', 'string'),
   },
   {
-    key: 'poNo',
-    dataIndex: 'poNo',
+    key: 'purchaseOrder',
+    dataIndex: 'purchaseOrder',
     title: 'PO No',
     align: 'center',
     width: '4%',
-    ...tableSorter('poNo', 'number'),
+    ...tableSorter('purchaseOrder', 'number'),
   },
   {
     key: 'organizationName',
@@ -56,20 +56,20 @@ const contantColmuns = [
     ...tableSorter('organizationName', 'number'),
   },
   {
-    key: 'entry',
-    dataIndex: ['currentMonth', 'approvedHours'],
+    key: 'currentMonth',
+    dataIndex: 'currentMonth',
     title: 'Sheet Hours Submit This Month',
     width: '4%',
     render: (value)=> (formatFloat(value??0)),
-    ...tableSorter('entry', 'number'),
+    ...tableSorter('currentMonth', 'number'),
   },
   {
-    key: 'YTDHours',
-    dataIndex: 'YTDHours',
+    key: 'currentYear',
+    dataIndex: 'currentYear',
     title: 'YTD Completed Work',
     width: '4%',
-    render: (value)=> (formatCurrency(value??0)),
-    ...tableSorter('YTDHours', 'number'),
+    render: (value)=> (formatFloat(value??0)),
+    ...tableSorter('currentYear', 'number'),
   },
   {
     key: 'empty',
@@ -80,16 +80,17 @@ const contantColmuns = [
 ]
 
 function TimesheetSummary() {
-  const [data, setData] = useState([])
+  const [data, setData] = useState({})
   const [columns, setColumn] = useState([])
   const [visible, setVisible] = useState(false)
-  const [page, setPage] = useState({pNo:1, pSize: localStore().pageSize})
   const [tags, setTags] = useState(null)
   const [loading, setLoading] = useState(false)
+  let fiscalYear = getFiscalYear() 
 
   useEffect(() => {
-    let {start, end} = getFiscalYear('dates')
-    let query = `timesheet-summary?startDate=${start.format(
+    let {dates: {start, end}} = fiscalYear
+    
+    let query = `startDate=${start.format(
       'YYYY-MM-DD'
     )}&endDate=${end.format(
       'YYYY-MM-DD'
@@ -100,7 +101,7 @@ function TimesheetSummary() {
       spliceBtw: 9,
       width: '3%',
       format: 'float',
-      colRender: 'approvedHours',
+      colRender: 'filteredHours',
       dataIndex: ['months']
     });
     getData(query)
@@ -122,45 +123,45 @@ function TimesheetSummary() {
   }
 
   const summaryFooter = (data) =>{
-    let excludeColumns = ['employeeName', 'employeeCode', 'projectName', 'projectCode', 'poNo', 'organizationName', 'empty',]
+    let excludeColumns = ['employeeName', 'employeeCode', 'projectName', 'projectCode', 'purchaseOrder', 'organizationName', 'empty',]
     if(data.length>0)
     return (
       <ATable.Summary fixed="bottom">
         <ATable.Summary.Row>
-          {columns.map(({ key }, kIndex) => {
+          {columns.map(({ dataIndex }, kIndex) => {
             let value = 0;
             let columnFound = false;
-            if (!excludeColumns.includes(key)) {
+            if (!excludeColumns.includes(dataIndex)) {
               columnFound = true;
               data.forEach((rowData, index) => {
-                if (key[0].length === 2){
-                  value += (rowData[key[0]][key[1]]??0);
+                if (dataIndex.length === 2){
+                  value += (rowData[dataIndex[0]][dataIndex[1]]?.['filteredHours']??0);
                 }else{
-                  value += (rowData[key]??0);
+                  value += (rowData[dataIndex]??0);
                   //calculation for total hours and actual hours for footer to show
                 }
               });
             }
             //Title of the projct show column for title
-            return key === 'organizationName' ? (
+            return dataIndex === 'organizationName' ? (
               <ATable.Summary.Cell
-                index={key + 1}
-                key={key + 1}
+                index={dataIndex + kIndex}
+                key={dataIndex + kIndex}
                 style={{ fontWeight: 600 }}
               >
                 <Typography.Text strong>Total</Typography.Text> 
               </ATable.Summary.Cell>
             ) : columnFound ? ( // show total and normal background if the column month is same as selected month or the key is totalHours of the month
               <ATable.Summary.Cell
-                index={key + 1}
-                key={key + 1}
+                index={dataIndex + kIndex}
+                key={dataIndex + kIndex}
                 align="center"
                 style={{ fontWeight: 600 }}
               >
                 <Typography.Text strong>{formatFloat(value)}</Typography.Text>
               </ATable.Summary.Cell>
             ) : (
-              <ATable.Summary.Cell index={key + 1} key={key + 1}></ATable.Summary.Cell>
+              <ATable.Summary.Cell index={dataIndex + kIndex} key={dataIndex + kIndex}></ATable.Summary.Cell>
             );
           })}
         </ATable.Summary.Row>
@@ -178,31 +179,42 @@ function TimesheetSummary() {
             bordered
             column={1}
             size="small"
-            style={{ width: '40%' }}
+            style={{ width: '35%' }}
             className="describe"
           >
             <Descriptions.Item label="">
+              {/* {moment().format('MMM YYYY')} */}
               <DatePicker
                 defaultValue={moment()}
                 picker="month"
                 style={{ width: 200 }}
+                // disabledDate={(date)=> }
                 size="small"
                 format="MMM YYYY"
                 onChange={(value, valu1, value2) => {
-                  value = value ?? moment()
-                  let {start, end} = getFiscalYear('dates',value)
-                  let query = `timesheet-summary?startDate=${start.format(
+                  value = value ?? moment();
+                  let { start, end } = getFiscalYear('dates', value);
+                  let query = `startDate=${start.format(
                     'YYYY-MM-DD'
                   )}&endDate=${end.format(
                     'YYYY-MM-DD'
                   )}&currentDate=${value.format('YYYY-MM-DD')}`;
-                  getData(query)
+                  getData(query);
                 }}
               />
             </Descriptions.Item>
-            <Descriptions.Item label="T&M"></Descriptions.Item>
-            <Descriptions.Item label="Milestone"></Descriptions.Item>
-            <Descriptions.Item label="Total Completed Hours"></Descriptions.Item>
+            <Descriptions.Item label="T&M">
+              {formatFloat(data?.timeProjectTotalHours)}
+            </Descriptions.Item>
+            <Descriptions.Item label="Milestone">
+              {formatFloat(data?.milestoneProjectTotalHours)}
+            </Descriptions.Item>
+            <Descriptions.Item label="Total Completed Hours">
+              {formatFloat(
+                (data?.timeProjectTotalHours ?? 0) +
+                  (data?.milestoneProjectTotalHours ?? 0)
+              )}
+            </Descriptions.Item>
           </Descriptions>
         </Col>
         <Col span={24}>
@@ -216,16 +228,10 @@ function TimesheetSummary() {
             columns={columns}
             loading={loading}
             rowKey={'index'}
-            dataSource={data}
-            pagination={{
-              hideOnSinglePage: false,
-              showPageSizeChanger: true,
-              onChange: (pNo, pSize) => {
-                setPage({ pNo, pSize });
-              },
-            }}
+            dataSource={data?.timeProjectSummary ?? []}
+            pagination={false}
             scroll={{ x: '170vw' }}
-            summary={ columnData => summaryFooter(columnData)}
+            summary={(columnData) => summaryFooter(columnData)}
           />
         </Col>
         <Col span={24}>
@@ -239,17 +245,10 @@ function TimesheetSummary() {
             columns={columns}
             loading={loading}
             rowKey={'index'}
-            dataSource={data}
-            pagination={{
-              hideOnSinglePage: false,
-              showPageSizeChanger: true,
-              onChange: (pNo, pSize) => {
-                setPage({ pNo, pSize });
-              },
-            }}
-            scroll={{ x: '170vw', }}
-            summary={ columnData => summaryFooter(columnData)}
-
+            dataSource={data?.milestoneProjectSummary ?? []}
+            pagination={false}
+            scroll={{ x: '170vw' }}
+            summary={(columnData) => summaryFooter(columnData)}
           />
         </Col>
       </Row>

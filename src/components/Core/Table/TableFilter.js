@@ -219,7 +219,7 @@ export const TableModalFilter = ({title, visible, onClose, filters, filterFuncti
             for (let el in filters) {
                 if (filters[el].type === 'Date'){
                     const rangeValue = filters[el].value
-                    if (filters[el].mode === 'Year'){
+                    if (filters[el].mode){
                         obj[el] = rangeValue && moment(rangeValue[0])
                     }else{
                         obj[el] = rangeValue && [moment(rangeValue[0]), moment(rangeValue[1])] 
@@ -241,9 +241,11 @@ export const TableModalFilter = ({title, visible, onClose, filters, filterFuncti
             if (filters[el].type === 'Date'){
                 if (filters[el].mode === 'Year'){
                     let {start, end} = getFiscalYear('dates', values[el])
-                    console.log({start, end})
                     filters[el].value = [start?.format('YYYY-MM-DD'), end?.format('YYYY-MM-DD')]
-                }else{
+                }if (filters[el].mode === 'monthRange'){
+                    filters[el].value = [values[el]?.startOf('month')?.format('YYYY-MM-DD'), values[el]?.endOf('month')?.format('YYYY-MM-DD')]
+                }
+                else{
                     const rangeValue = values[el]
                     filters[el].value = rangeValue&&[rangeValue[0]?.format('YYYY-MM-DD'), rangeValue[1]?.format('YYYY-MM-DD')]
                 }

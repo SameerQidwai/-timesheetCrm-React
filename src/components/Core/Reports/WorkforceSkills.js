@@ -10,7 +10,6 @@ const {Title, Text} = Typography
 
 function WorkforceSkills() {
   const [data, setData] = useState([])
-  const [page, setPage] = useState({pNo:1, pSize: localStore().pageSize??25})
   const [visible, setVisible] = useState(false)
   const [tags, setTags] = useState(null)
   const [loading, setLoading] = useState(false)
@@ -109,13 +108,15 @@ function WorkforceSkills() {
                   rowKey={'index'}
                   loading={loading}
                   columns={columns}
-                  pagination={{
-                      hideOnSinglePage: false,
-                      showPageSizeChanger: true,
-                      onChange:(pNo, pSize)=> {
-                          setPage({pNo, pSize})
-                      }
-                  }}
+                  pagination={false}
+                  //for pagination
+                //   {
+                //     hideOnSinglePage: false,
+                //     showPageSizeChanger: true,
+                //     onChange:(pNo, pSize)=> {
+                //         setPage({pNo, pSize})
+                //     }
+                // }
                   dataSource={data}
               />
           </Col>

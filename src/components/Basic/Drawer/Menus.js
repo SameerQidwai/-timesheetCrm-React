@@ -134,14 +134,14 @@ const listData = [
                 permissions: {module: "TIMESHEETS", key: 'READ'}
             },
             {
-                text: "Project Revenue Analyis",
+                text: "FY Project Revenue Analysis",
                 icon: <FileDoneOutlined />,
                 link: "/report/project-revenue-analysis",
                 key: "PROJECTREVENUE ",
                 permissions: {module: "TIMESHEETS", key: 'READ'}
             },
             {
-                text: "Client Revenue Analyis",
+                text: "FY Client Revenue Analysis",
                 icon: <FileDoneOutlined />,
                 link: "/report/client-revenue-analysis",
                 key: "CLIENTREVENUE ",
@@ -152,6 +152,13 @@ const listData = [
                 icon: <FileDoneOutlined />,
                 link: "/report/timesheet-summary",
                 key: "TIMESHEETSUMMARY",
+                permissions: {module: "TIMESHEETS", key: 'READ'}
+            },
+            {
+                text: "Leave Summary",
+                icon: <FileDoneOutlined />,
+                link: "/report/leave-summary",
+                key: "LEAVESUMMARY",
                 permissions: {module: "TIMESHEETS", key: 'READ'}
             },
         ],

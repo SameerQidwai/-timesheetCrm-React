@@ -175,6 +175,7 @@ class FormItems extends Component {
                         mode={mode}
                         showArrow
                         size={size}
+                        maxTagCount ={max}
                         allowClear
                         fieldNames={fieldNames}
                         onChange={onChange}

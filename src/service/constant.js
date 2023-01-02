@@ -291,7 +291,7 @@ export const getFiscalYear = (request, date, dateFormat) => {
     },
     years: { start: fiscalStartYear, end: parseInt(fiscalStartYear) + 1 },
   };
-  return fiscalYear[request];
+  return request? fiscalYear[request] : fiscalYear;
 };
 
 export const dateRangeAfter = (current, eDate, pDates) => {
