@@ -198,14 +198,19 @@ class TimeSheetContact extends Component {
         })
     }
 
-    getProjects = (value) =>{
-        getUserMilestones(value, 0).then(res=>{
-            if(res.success){
-                this.setState({
-                    milestones: res.data
-                })
-            }
-        })
+    getProjects = (userId, startDate, endDate) =>{
+        getUserMilestones({
+          userId: userId,
+          phase: 0,
+          startDate: startDate.format('DD-MM-YYYY'),
+          endDate: endDate.format('DD-MM-YYYY'),
+        }).then((res) => {
+          if (res.success) {
+            this.setState({
+              milestones: res.data,
+            });
+          }
+        });
 
     }
 
@@ -692,7 +697,7 @@ class TimeSheetContact extends Component {
                             type="primary"
                             disabled={sUser !== loginId}
                             onClick={() => {
-                                this.getProjects(sUser)
+                                this.getProjects(sUser, startDate, endDate)
                                 this.setState({proVisible: true}) 
                             }}
                         >

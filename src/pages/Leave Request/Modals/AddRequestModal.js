@@ -167,7 +167,7 @@ class AddRequestModal extends Component{
                 {
                     object: "dates",
                     fieldCol: 24,
-                    key: "description",
+                    key: "desc",
                     size: "small",
                     type: "Textarea",
                     mode:{ minRows: 2, maxRows:3},
@@ -212,6 +212,7 @@ class AddRequestModal extends Component{
     getDateArray = (start, end, LeaveRequestType, entries) => {
         //try to put your condition to put closer to eachother if they link to eachother
             //so it will be easy to track conditions
+            console.log({LeaveRequestType})
         const { showDetails, readOnly } = this.props
         let { BasicFields, contractDetails, holidays, data, hoursEntry } = this.state;
         // const { readOnly } = this.props
@@ -291,47 +292,58 @@ class AddRequestModal extends Component{
         // Get Projects
         getSingleRequest(edit).then(srRes=> {
             if (srRes.success){
-                const { employeeId } = srRes.data
-                Promise.all([getUserProjects(employeeId, 'O', 0), getUserLeaveType()])
-                .then((proRes) => {
-                    console.log(proRes);
-                    //Destructure proRes[1] to avoid writing proRes[1] repeateadly
-                    const {success, contractDetails, holidays, LeaveRequestTypes, fileList, fileIds} = proRes[1] 
-                    BasicFields[3].data = proRes[0].success ? proRes[0].data : []; //set projects to select box
-                    BasicFields[1].data = success ? LeaveRequestTypes : [] //set LeaveTypes to select box
-                    BasicFields.map(el => {
-                        if (el.type !== "Text"){
-                            el.disabled = true 
-                        }
-                        return el
-                    })
+              const {
+                data,
+                data: {
+                  workId,
+                  typeId,
+                  work,
+                  type,
+                  holidays,
+                  contractDetails,
+                  startDate,
+                  endDate,
+                },
+                entries,
+                fileIds,
+                fileList,
+              } = srRes;
+              console.log(type);
+              BasicFields[3].data = workId
+                ? [{ value: workId, label: work?.title }]
+                : []; //set projects to select box
+              BasicFields[1].data = typeId
+                ? [
+                    { id: 0, name: 'Unpaid', include_off_days: false },
+                    { ...type, name: type.leave_request_type?.label },
+                  ]
+                : []; //set LeaveTypes to select box
+              BasicFields.map((el) => {
+                if (el.type !== 'Text') {
+                  el.disabled = true;
+                }
+                return el;
+              });
 
-                    this.setState({ 
-                        BasicFields,
-                        holidays: success ? holidays ?? {} :{}, //holidays to cross of dates if type is not include holidays
-                        contractDetails: success ? contractDetails?? {} :{}, //cotract details
-                        fileList: srRes.fileList ?? [],
-                        fileIds: srRes.fileIds ?? [],
-                    });
-                    if (edit && srRes?.success){ // run if modal is opened for editing
-                        let { entries, data } = srRes 
-                        //find holiday type to find if holidays are included or not
-                        let selectedLeaveType = LeaveRequestTypes.find(x=> x.id === (data.typeId ?? 0))
-                        const formValues = {
-                            ...data,
-                            description: data.desc,
-                            typeId: selectedLeaveType?.id,
-                            startDate: formatDate(entries[0].date),
-                            endDate: formatDate(entries[entries.length-1].date),
-                        }
-                        this.getDateArray(formValues.startDate, formValues.endDate, selectedLeaveType, entries)
-                        this.formRef.current.setFieldsValue({dates: formValues})
-                    }
-
-                })
-                .catch((e) => {
-                    console.log(e);
-                });
+              this.setState({
+                BasicFields,
+                holidays: holidays ?? {}, //holidays to cross of dates if type is not include holidays
+                contractDetails: contractDetails ?? {}, //cotract details
+                fileList: fileList ?? [],
+                fileIds: fileIds ?? [],
+              });
+              const formValues = {
+                ...data,
+                startDate: formatDate(startDate),
+                endDate: formatDate(endDate),
+              };
+              this.getDateArray(
+                formValues.startDate,
+                formValues.endDate,
+                type,
+                entries
+              );
+              this.formRef.current.setFieldsValue({ dates: formValues });
             }
         })
     }
@@ -372,7 +384,7 @@ class AddRequestModal extends Component{
                 let selectedLeaveType = LeaveRequestTypes.find(x=> x.id === (data.typeId ?? 0))
                 const formValues = {
                     ...data,
-                    description: data.desc,
+                    desc: data.desc,
                     typeId: selectedLeaveType?.id,
                     startDate: formatDate(entries[0].date),
                     endDate: formatDate(entries[entries.length-1].date),
@@ -394,7 +406,7 @@ class AddRequestModal extends Component{
         const { data, fileIds } = this.state
         
         const newVal = {
-                description: dates.description ?? '',
+                desc: dates.desc ?? '',
                 typeId: dates.typeId || 0,
                 workId: dates.workId,
                 entries: data,

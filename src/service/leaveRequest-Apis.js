@@ -57,7 +57,7 @@ export const getSingleRequest = (id) => {
                 let attachments = data?.attachments ?? []
                 var fileIds = []
                 var fileList = []
-                attachments.map((el) => {
+                data.attachments = attachments.map((el) => {
                     fileIds.push(el.fileId)
                     fileList.push({
                         id: el.id,
@@ -73,6 +73,12 @@ export const getSingleRequest = (id) => {
                         thumbUrl: thumbUrl(el.file.type)
                     })
                 });
+                let type = {} //to make type with ddashes
+                Object.entries(data.type??{}).forEach(([key, value]) => {
+                    var camelToSnakeKey = key.replace(/([A-Z])/g, "_$1").toLowerCase();
+                    type[camelToSnakeKey]= value
+                })
+                data.type= type
                 return { success, data, entries, fileIds, fileList }
             }
             return {success, data }
