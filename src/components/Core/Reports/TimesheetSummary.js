@@ -90,7 +90,7 @@ function TimesheetSummary() {
   useEffect(() => {
     let {dates: {start, end}} = fiscalYear
     
-    let query = `timesheet-summary?startDate=${start.format(
+    let query = `startDate=${start.format(
       'YYYY-MM-DD'
     )}&endDate=${end.format(
       'YYYY-MM-DD'
@@ -194,7 +194,7 @@ function TimesheetSummary() {
                 onChange={(value, valu1, value2) => {
                   value = value ?? moment();
                   let { start, end } = getFiscalYear('dates', value);
-                  let query = `timesheet-summary?startDate=${start.format(
+                  let query = `startDate=${start.format(
                     'YYYY-MM-DD'
                   )}&endDate=${end.format(
                     'YYYY-MM-DD'
