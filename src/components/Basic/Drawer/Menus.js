@@ -147,13 +147,13 @@ const listData = [
                 key: "CLIENTREVENUE ",
                 permissions: {module: "TIMESHEETS", key: 'READ'}
             },
-            {
-                text: "Timesheet Summary",
-                icon: <FileDoneOutlined />,
-                link: "/report/timesheet-summary",
-                key: "TIMESHEETSUMMARY",
-                permissions: {module: "TIMESHEETS", key: 'READ'}
-            },
+            // {
+            //     text: "Timesheet Summary",
+            //     icon: <FileDoneOutlined />,
+            //     link: "/report/timesheet-summary",
+            //     key: "TIMESHEETSUMMARY",
+            //     permissions: {module: "TIMESHEETS", key: 'READ'}
+            // },
             {
                 text: "Leave Summary",
                 icon: <FileDoneOutlined />,
