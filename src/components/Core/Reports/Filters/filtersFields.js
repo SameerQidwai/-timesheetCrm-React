@@ -58,7 +58,7 @@ export const bench =({fields,setFields, getCompData})=> ({
       {
         object: 'obj',
         fieldCol: 24,
-        key: 'excludeProject',
+        key: 'excludeWorkId',
         size: 'small',
         mode: 'multiple',
         rangeMax:'responsive',
@@ -84,7 +84,7 @@ export const bench =({fields,setFields, getCompData})=> ({
         showInColumn: false,
         disabled: false,
       },
-      excludeProject: {
+      excludeWorkId: {
         type: 'Select',
         multi: true,
         value: [],
@@ -1259,7 +1259,7 @@ export const leave_summary =({fields,setFields, getCompData})=> ({
         customValue: (value, option) => ({ selectedIds: value, option }),
         getValueProps: (value)=>  ({value: value?.selectedIds}),
         data: [
-          {value: 0, label: 'Saved'},
+          {value: 0, label: 'Rejected'},
           {value: 1, label: 'Submitted'},
           {value: 2, label: 'Approved'},
         ],
