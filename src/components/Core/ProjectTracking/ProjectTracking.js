@@ -7,6 +7,7 @@ import {
   formatCurrency,
   localStore,
   formatFloat,
+  getFiscalYear,
 } from '../../../service/constant';
 import { tableSorter } from '../Table/TableFilter';
 import { getHierarchy, getProjectTracking } from '../../../service/projects';
@@ -195,13 +196,13 @@ class ProjectTracking extends Component {
 
   componentDidMount = () => {
     const { id } = this.props;
+    const {start, end} = getFiscalYear('dates')
     getProjectTracking(id, {
-      startDate: moment().format('01-07-YYYY'),
-      endDate: moment().add(1, 'year').format('30-06-YYYY'),
+      startDate:start.format('DD-MM-YYYY'),
+      endDate: end.format('DD-MM-YYYY'),
     }).then((res) => {
       if (res) {
         const { success, data } = res;
-        console.log(data);
         this.setState({
           leadId: id,
           data: success ? data : [],
