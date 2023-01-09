@@ -11,6 +11,7 @@ const contantColmuns = [
   {
     key: 'organizationName',
     dataIndex: 'organizationName',
+    fixed: true,
     title: 'Organisation',
     width: '10%',
     ...tableSorter('organizationName', 'string'),
@@ -101,7 +102,7 @@ function ClientRevenueAnalysis() {
     return(
       <Row justify="space-between">
         <Col >
-          <Typography.Title level={5}>Client Revenue Analysis</Typography.Title>
+          <Typography.Title level={5}>FY Client Revenue Analysis</Typography.Title>
         </Col>
         <Col >
           <Button size="small" onClick={()=>setVisible(true)}>Filters</Button>
