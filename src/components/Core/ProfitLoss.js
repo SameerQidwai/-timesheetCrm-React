@@ -236,7 +236,6 @@ class ProfitLoss extends Component {
         // const len = billing.totalMonths>0 ? billing.totalMonths : 0
         const len = 16
         let array = []
-        console.log(data)
         for (
             var iMonth = parseDate(fiscalYear['start']) ; // defination
             iMonth.isSameOrBefore(parseDate(fiscalYear['end']));  //condition
