@@ -228,8 +228,9 @@ class AddRequestModal extends Component{
                     
                 if(showDetails ){ balance += hours}
 
-                hoursEntry[date.format('M/D/YYYY')] = `${hours}` // setting the hours object before return 
-                return {key: date.format('M/D/YYYY'), date: date.format('YYYY-MM-DD'), hours: disabled? 0: `${hours}`, disabled}
+                hoursEntry[date.format('M/D/YYYY')] = `${hours}` // setting the hours object before return
+                                                                                        //hours: disabled? 0: `${hours}`  this need to be added if apporve not wotk
+                return {key: date.format('M/D/YYYY'), date: date.format('YYYY-MM-DD'), hours:  `${hours}`, disabled}
             })
             BasicFields[BasicFields[2].note ? 8: 7].disabled = readOnly // adding an object when select leavetype
                                                                         // and disabling endDate
