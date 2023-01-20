@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import { Row, Col, Table, Button, Select, Typography, Modal, DatePicker, Space, Tag, Tooltip, Input, Form} from "antd";
 import { DownloadOutlined, SaveOutlined, ExclamationCircleOutlined, PaperClipOutlined, CheckCircleOutlined, AuditOutlined } from "@ant-design/icons"; //Icons
 import moment from "moment";
@@ -10,7 +11,7 @@ import "../styles/button.css";
 import TimeSheetPDF from "./Modals/TimeSheetPDF";
 import { Tag_s } from "../../components/Core/Custom/Index";
 
-const { Title, Link, Text } = Typography;
+const { Title, Link: Tlink, Text } = Typography;
 //inTable insert
 
 let modal = ""
@@ -50,24 +51,28 @@ class TimeSheetProject extends Component {
                         <Row gutter={[0, 10]} style={{height: 90}}>
                             <Col span={24}>
                                 <Row justify="space-between">
-                                    <Col span={20}> {`${value}`} </Col>
-                                        {!this?.state?.sMilestone &&<Col span={20}> 
+                                    <Col span={20}> 
+                                        <Link to={{ pathname: `/Employees/${record.userId}/info`}} className="nav-Tlink">
+                                            <Text>{`${value}`} </Text>
+                                        </Link>
+                                    </Col>
+                                        {/* {!this?.state?.sMilestone &&<Col span={20}> 
                                             {record.projectType === 2 ? record.project && <div>
-                                                    <Link to={{ pathname: `/projects/${record.projectId}/info`}} className="nav-link"> 
+                                                    <Tlink to={{ pathname: `/projects/${record.projectId}/info`}} className="nav-Tlink"> 
                                                         <Text ellipsis={{ tooltip: value }}>{record.project}</Text>  
-                                                    </Link> 
+                                                    </Tlink> 
                                                 </div>
                                                     :
                                                 record.milestone && <div>
-                                                    <Link 
+                                                    <Tlink 
                                                         to={{ pathname: `/projects/${record.projectId}/milestones/${record.milestoneId}/resources`}} 
-                                                        className="nav-link"
+                                                        className="nav-Tlink"
                                                     >
                                                         <Text ellipsis={{ tooltip: record.milestone }}>({record.milestone})</Text>
-                                                    </Link>
+                                                    </Tlink>
                                                 </div>
                                             } 
-                                        </Col>}
+                                        </Col>} */}
                                      <Col style={{marginLeft: 'auto'}}> 
                                      <Tooltip 
                                             placement="top"
@@ -94,7 +99,7 @@ class TimeSheetProject extends Component {
                             <Col span={24}>
                                 <Row justify="space-between">
                                     {record.attachment &&<Col span={16}>
-                                        <Link
+                                        <Tlink
                                             href={`${Api}/files/${record.attachment.uid}`}
                                             download={record.attachment.name}
                                             target="_blank"
@@ -108,7 +113,7 @@ class TimeSheetProject extends Component {
                                                 >
                                                     {`${record.attachment.name.substr(0,20)}${record.attachment.name.length>19 ?'\u2026':''}`}
                                                 </Tooltip>
-                                        </Link>
+                                        </Tlink>
                                     </Col>}
                                     <Col style={{marginLeft:'auto'}} >
                                         {/* <Space  align="end"> */}
@@ -171,9 +176,7 @@ class TimeSheetProject extends Component {
                 loginId,
             },()=>{
                 this.columns() 
-                // if(this.state.sMilestone){
-                    this.getSheet()
-                // }
+                this.getSheet()
             })
             
         })
@@ -185,7 +188,7 @@ class TimeSheetProject extends Component {
     getSheet = () =>{
         const { sMilestone } = this.state
         const { startDate, endDate } = this.state.sheetDates
-        // if(sMilestone){
+        if(sMilestone){
             getUsersTimesheet({mileId: sMilestone, startDate: startDate.format('DD-MM-YYYY'), endDate: endDate.format('DD-MM-YYYY')}).then(res=>{
                 this.setState({
                     // timesheet: res.success ? res.data: {},
@@ -196,7 +199,7 @@ class TimeSheetProject extends Component {
                     },
                 })
             })
-        // }
+        }
         this.columns()
     }
 
@@ -425,7 +428,7 @@ class TimeSheetProject extends Component {
                         <Select
                             placeholder="Select Project"
                             style={{ width: 300 }}
-                            allowClear
+                            // allowClear
                             options={milestones}
                             value={sMilestone}           
                             showSearch
@@ -437,7 +440,7 @@ class TimeSheetProject extends Component {
                                         return label || value
                                 }
                             }
-                            onChange={(value, option)=>{
+                            onSelect={(value, option)=>{
                                 this.setState({
                                     sMilestone: value
                                 },()=>{
