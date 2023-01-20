@@ -51,6 +51,23 @@ class TimeSheetProject extends Component {
                             <Col span={24}>
                                 <Row justify="space-between">
                                     <Col span={20}> {`${value}`} </Col>
+                                        {!this?.state?.sMilestone &&<Col span={20}> 
+                                            {record.projectType === 2 ? record.project && <div>
+                                                    <Link to={{ pathname: `/projects/${record.projectId}/info`}} className="nav-link"> 
+                                                        <Text ellipsis={{ tooltip: value }}>{record.project}</Text>  
+                                                    </Link> 
+                                                </div>
+                                                    :
+                                                record.milestone && <div>
+                                                    <Link 
+                                                        to={{ pathname: `/projects/${record.projectId}/milestones/${record.milestoneId}/resources`}} 
+                                                        className="nav-link"
+                                                    >
+                                                        <Text ellipsis={{ tooltip: record.milestone }}>({record.milestone})</Text>
+                                                    </Link>
+                                                </div>
+                                            } 
+                                        </Col>}
                                      <Col style={{marginLeft: 'auto'}}> 
                                      <Tooltip 
                                             placement="top"
@@ -154,9 +171,9 @@ class TimeSheetProject extends Component {
                 loginId,
             },()=>{
                 this.columns() 
-                if(this.state.sMilestone){
+                // if(this.state.sMilestone){
                     this.getSheet()
-                }
+                // }
             })
             
         })
@@ -168,7 +185,7 @@ class TimeSheetProject extends Component {
     getSheet = () =>{
         const { sMilestone } = this.state
         const { startDate, endDate } = this.state.sheetDates
-        if(sMilestone){
+        // if(sMilestone){
             getUsersTimesheet({mileId: sMilestone, startDate: startDate.format('DD-MM-YYYY'), endDate: endDate.format('DD-MM-YYYY')}).then(res=>{
                 this.setState({
                     // timesheet: res.success ? res.data: {},
@@ -179,7 +196,7 @@ class TimeSheetProject extends Component {
                     },
                 })
             })
-        }
+        // }
         this.columns()
     }
 
@@ -408,6 +425,7 @@ class TimeSheetProject extends Component {
                         <Select
                             placeholder="Select Project"
                             style={{ width: 300 }}
+                            allowClear
                             options={milestones}
                             value={sMilestone}           
                             showSearch
@@ -419,11 +437,10 @@ class TimeSheetProject extends Component {
                                         return label || value
                                 }
                             }
-                            onSelect={(value, option)=>{
+                            onChange={(value, option)=>{
                                 this.setState({
                                     sMilestone: value
                                 },()=>{
-
                                     this.getSheet()
                                 })
                             }}
