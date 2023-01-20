@@ -287,7 +287,7 @@ const ExpenseSheet = (props) => {
     <>
       <Row justify='space-between'>
         <Col>
-          <Title level={4}>Expenses Sheets</Title>
+          <Title level={4}>Expense Sheets</Title>
         </Col>
         <Col>
         <Button
