@@ -221,7 +221,7 @@ const Expense = (props) => {
     <>
     <Row justify='space-between'>
       <Col>
-        <Title level={4}>Expenses</Title>
+        <Title level={4}>Expense Items</Title>
       </Col>
       <Col>
       <Button

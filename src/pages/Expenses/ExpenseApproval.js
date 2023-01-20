@@ -268,7 +268,7 @@ const ExpenseApproval = () => {
 	return (<>
 		<Row justify='space-between'>
 			<Col>
-				<Title level={4}>Expense Approval</Title>
+				<Title level={4}>Expense Sheet Approval</Title>
 			</Col>
 			<Col >
 				<Select

@@ -59,21 +59,21 @@ const listData = [
         permissions: {module: "TIMESHEETS", key: 'READ'}
     },
     {
-        text: "Expense Sheet",
+        text: "Expense Sheets",
         icon: <SnippetsOutlined/>,
         link: "/expense-sheets",
         key: "EXPENSE SHEET ",
         permissions: {module: "EXPENSES", key: 'READ'}
     },
     {
-        text: "Expense",
+        text: "Expense Items",
         icon: <DiffOutlined />,
         link: "/expense",
         key: "EXPENSE",
         permissions: {module: "EXPENSES", key: 'READ'}
     },
     {
-        text: "Expense Approval",
+        text: "Expense Sheet Approval",
         icon: <SolutionOutlined  />,
         link: "/expense-sheet-approval",
         key: "EXPENSE Approval",
