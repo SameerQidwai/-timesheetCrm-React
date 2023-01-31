@@ -4,7 +4,7 @@ import Table, { FiltertagsNew, tableSorter } from '../Table/TableFilter'
 import { getTimesheetSummary } from '../../../service/reports-Apis'
 
 
-import { formatCurrency, formatFloat, getFiscalYear, localStore } from '../../../service/constant'
+import { Api, formatCurrency, formatFloat, getFiscalYear, localStore } from '../../../service/constant'
 import moment from 'moment'
 import { ReportsFilters, _createQuery } from './Filters'
 import { _generateMonthlyColumns } from '.'
@@ -127,7 +127,7 @@ function TimesheetSummary() {
     let query = _createQuery(tags??{})
     getTimesheetSummary(query, '/export').then(res=>{
       if (res.success){
-        window.open(res.data, '_blank', 'noreferrer');
+        window.open(`${Api}${res.data}`, '_blank', 'noreferrer');
       }
       setLoading(false)
     })

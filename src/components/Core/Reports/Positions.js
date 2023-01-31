@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Col, Row, Typography, Table as Atable } from 'antd'
 import Table, { FiltertagsNew, tableSorter } from '../Table/TableFilter'
-import { formatCurrency, formatDate, formatFloat, localStore } from '../../../service/constant'
+import { Api, formatCurrency, formatDate, formatFloat, localStore } from '../../../service/constant'
 
 
 import { getPositions } from '../../../service/reports-Apis'
@@ -171,7 +171,7 @@ function Positions() {
         let query = _createQuery(tags??{})
         getPositions(query, '/export').then(res=>{
           if (res.success){
-            window.open(res.data, '_blank', 'noreferrer');
+            window.open(`${Api}${res.data}`, '_blank', 'noreferrer');
           }
           setLoading(false)
         })

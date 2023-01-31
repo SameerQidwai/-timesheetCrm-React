@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Button, Col, Row, Typography, Table as Atable } from 'antd'
 import Table, { FiltertagsNew, tableSorter } from '../Table/TableFilter'
 import { getWorkforceSkills } from '../../../service/reports-Apis'
-import { formatCurrency, localStore } from '../../../service/constant'
+import { Api, formatCurrency, localStore } from '../../../service/constant'
 import { ReportsFilters, _createQuery } from './Filters'
 
 const {Title, Text} = Typography
@@ -78,7 +78,7 @@ function WorkforceSkills() {
     let query = _createQuery(tags??{})
     getWorkforceSkills(query, '/export').then(res=>{
       if (res.success){
-        window.open(res.data, '_blank', 'noreferrer');
+        window.open(`${Api}${res.data}`, '_blank', 'noreferrer');
       }
       setLoading(false)
     })

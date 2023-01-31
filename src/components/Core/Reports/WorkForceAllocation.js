@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Button, Col, Row, Typography, Table as Atable } from 'antd'
 import Table, { FiltertagsNew, tableSorter, tableTitleFilter } from '../Table/TableFilter'
 import { BencheResData,  WorkforceData } from './WIHData'
-import { formatCurrency, formatDate, localStore } from '../../../service/constant'
+import { Api, formatCurrency, formatDate, localStore } from '../../../service/constant'
 
 
 import { getAllocations } from '../../../service/reports-Apis'
@@ -170,7 +170,7 @@ function WorkForceAllocation() {
         let query = _createQuery(tags??{})
         getAllocations(query, '/export').then(res=>{
           if (res.success){
-            window.open(res.data, '_blank', 'noreferrer');
+            window.open(`${Api}${res.data}`, '_blank', 'noreferrer');
           }
           setLoading(false)
         })

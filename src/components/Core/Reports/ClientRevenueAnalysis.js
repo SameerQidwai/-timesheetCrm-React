@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Col, Row, Typography, Table as ATable } from 'antd'
 import Table, { FiltertagsNew, tableSorter } from '../Table/TableFilter'
-import { formatCurrency, formatFloat, localStore } from '../../../service/constant'
+import { Api, formatCurrency, formatFloat, localStore } from '../../../service/constant'
 import { ReportsFilters, _createQuery } from './Filters'
 
 import { getClientRevenueAnalysis } from '../../../service/reports-Apis'
@@ -103,7 +103,7 @@ function ClientRevenueAnalysis() {
     let query = _createQuery(tags??{})
     getClientRevenueAnalysis(query, '/export').then(res=>{
       if (res.success){
-        window.open(res.data, '_blank', 'noreferrer');
+        window.open(`${Api}${res.data}`, '_blank', 'noreferrer');
       }
       setLoading(false)
     })

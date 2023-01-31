@@ -4,7 +4,7 @@ import Table, { FiltertagsNew, tableSorter } from '../Table/TableFilter'
 import { getProjectRevenueAnalysis } from '../../../service/reports-Apis'
 
 
-import { formatCurrency, formatFloat, getFiscalYear, localStore, parseDate } from '../../../service/constant'
+import { Api, formatCurrency, formatFloat, getFiscalYear, localStore, parseDate } from '../../../service/constant'
 import moment from 'moment'
 import { ReportsFilters, _createQuery } from './Filters'
 import { _generateMonthlyColumns } from '.'
@@ -125,7 +125,7 @@ function ProjectRevenueAnalysis() {
     let query = _createQuery(tags??{})
     getProjectRevenueAnalysis(query, '/export').then(res=>{
       if (res.success){
-        window.open(res.data, '_blank', 'noreferrer');
+        window.open(`${Api}${res.data}`, '_blank', 'noreferrer');
       }
       setLoading(false)
     })

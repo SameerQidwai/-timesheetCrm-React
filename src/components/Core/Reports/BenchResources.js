@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Button, Col, Row, Typography, Table as Atable } from 'antd'
 import Table, { FiltertagsNew, tableSorter } from '../Table/TableFilter'
 import { getBenchResources } from '../../../service/reports-Apis'
-import { formatCurrency } from '../../../service/constant'
+import { Api, formatCurrency } from '../../../service/constant'
 import { ReportsFilters, _createQuery } from './Filters'
 
 const {Title, Text} = Typography
@@ -85,7 +85,7 @@ function BenchResources() {
     let query = _createQuery(tags??{})
     getBenchResources(query, '/export').then(res=>{
       if (res.success){
-        window.open(res.data, '_blank', 'noreferrer');
+        window.open(`${Api}/${res.data}`, '_blank', 'noreferrer');
       }
       setLoading(false)
     })
