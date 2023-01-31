@@ -3,43 +3,46 @@ import React, { useState, useEffect } from 'react'
 import { formatCurrency, getFiscalYear, parseDate } from '../../../service/constant';
 import { getWorkInHandForecast } from '../../../service/reports-Apis';
 import "../../Styles/table.css"
-import { comunication_expenses, cost_of_sale, direct_overhead_expense, income_revenue, occupancy_expenses, other_general_expenses, outside_expenses, supplies_expenses, travel_entertainment_expenses } from './WIHData';
+import { comunication_expenses, contribution_margin, cost_of_sale, direct_overhead_expense, income_revenue, occupancy_expenses, other_general_expenses, outside_expenses, supplies_expenses, travel_entertainment_expenses } from './WIHData';
 import moment from 'moment'
 const {Title} = Typography
 
-const column = [
-    {
-        title: '1LM - Whole A$',
-        dataIndex: 'name',
-        key: 'name',
-        width: 250,
-        onHeaderCell: ()=> {
-            return {
-                className: 'whole'
-            }
-        },
-        onCell: ({className})=>{
-            return {
-                className: className
-            }
-        },
-        // align: 'center',
-        fixed: 'left',
-    },
-    {
-        title: 'FY21 Forecast',
-        children: [
-            {
-                title: 'Revenue AU$',
-                children: []
-            }
-        ]
-    }
-] 
+
 
 function WorkInHand() {
-    const [columns, setColumns] = useState(column)
+    const fiscal = getFiscalYear('dates').end.format('[FY]YY')
+    const forecastMonth = moment().subtract(1, 'month').endOf("month")
+
     const [dataSource, setDataSource] = useState([])
+    const [columns, setColumns] = useState([
+        {
+            title: '1LM - Whole A$',
+            dataIndex: 'name',
+            key: 'name',
+            width: 250,
+            onHeaderCell: ()=> {
+                return {
+                    className: 'whole'
+                }
+            },
+            onCell: ({className})=>{
+                return {
+                    className: className
+                }
+            },
+            // align: 'center',
+            fixed: 'left',
+        },
+        {
+            title: `${fiscal} Forecast`,
+            children: [
+                {
+                    title: 'Revenue AU$',
+                    children: []
+                }
+            ]
+        }
+    ] )
 
     
     useEffect(() => {
@@ -64,7 +67,7 @@ function WorkInHand() {
             };
             monthColumns.push(monthCol(el))
         }
-        monthColumns.push(monthCol({year: 'FY21', era: 'Forcaste'}))
+        monthColumns.push(monthCol({year: fiscal, era: 'Forcaste'}))
         newColumns[1]['children'][0]['children'] = monthColumns
         setColumns(newColumns)
     }
@@ -95,13 +98,13 @@ function WorkInHand() {
         cost_of_sale[5] = { ...cost_of_sale[5], ...CASUAL_SUPER };
         cost_of_sale[5] = { ...cost_of_sale[5], ...CASUAL_SUPER };
         cost_of_sale[21] = { ...cost_of_sale[21], ...TOTAL_COST };
+        contribution_margin[1] = {...contribution_margin[1], TOTAL_COST, TOTAL_REVENUE}
+        contribution_margin[3] = {...contribution_margin[3], TOTAL_COST, TOTAL_REVENUE}
+
 
         direct_overhead_expense[3] = { ...direct_overhead_expense[3], ...DOH_SALARIES };
         direct_overhead_expense[4] = { ...direct_overhead_expense[4], ...DOH_SUPER };
         direct_overhead_expense[18] = { ...direct_overhead_expense[18], ...TOTAL_DOH };
-
-        console.log(cost_of_sale.length,
-            direct_overhead_expense.length)
 
         // income_revenue.push(totalIncome)
         // cost_of_sale.push(totalCos)
@@ -110,6 +113,7 @@ function WorkInHand() {
         setDataSource([
             ...income_revenue,
             ...cost_of_sale,
+            ...contribution_margin,
             ...direct_overhead_expense,
             // ...occupancy_expenses,
             // ...supplies_expenses,
@@ -186,10 +190,10 @@ function WorkInHand() {
     <>
         <Row style={{backgroundColor: '#0463AC'}}>
             <Col span={24}>
-                <Title level={5} style={{color: '#fff', marginBottom: 0, paddingLeft: 5 }}> 1LM Forecast FY21 - September Month End</Title>
+                <Title level={5} style={{color: '#fff', marginBottom: 0, paddingLeft: 5 }}> 1LM Forecast {fiscal} - {forecastMonth.format('MMMM')} Month End</Title>
             </Col>
             <Col span={24}>
-                <Title level={5} style={{color: '#fff', marginBottom: 0, paddingLeft: 5 }}>Profit & Loss Statement - 30 September 2020</Title>
+                <Title level={5} style={{color: '#fff', marginBottom: 0, paddingLeft: 5 }}>Profit & Loss Statement - {forecastMonth.format('DD MMMM YYYY')}</Title>
             </Col>
         </Row>
         <Row>
@@ -232,6 +236,9 @@ const monthCol = ({year, era, key})=>({
                 return {className: year.startsWith('FY') ? 'fin-total': ''} 
             },
             render: (text,record) =>{
+                if(record.render){
+                    return record.render(year, record)
+                }
                 if(year.startsWith('FY')){
                     // let totalYear = 0
                     // for (var iDate = parseDate('07/01/2020'); iDate.isSameOrBefore('06/30/2021'); iDate.add(1, 'months')) {

@@ -1,3 +1,5 @@
+import { formatCurrency, formatFloat } from "../../../service/constant";
+
 export const income_revenue = [
   { name: 'INCOME/REVENUE', className: 'title-row' },
   {
@@ -72,18 +74,10 @@ export const income_revenue = [
   {
     className: 'total-row',
     name: 'TOTAL REVENUE',
-    'Jul 20': 0,
-    'Aug 20': 0,
-    'Sep 20': 0,
-    'Oct 20': 0,
-    'Nov 20': 0,
-    'Dec 20': 0,
-    'Jan 21': 0,
-    'Feb 21': 0,
-    'Mar 21': 0,
-    'Apr 21': 0,
-    'May 21': 0,
-    'Jun 21': 0,
+    render:(key, record)=>{
+      key = key.startsWith('FY')? 'total' : key
+      return record[key] ? formatCurrency(record[key]) : '-'
+    }
   },
 ];
 
@@ -380,20 +374,36 @@ export const cost_of_sale = [
   {
     className: 'total-row',
     name: 'TOTAL COST OF SALES - COS',
-    'Jul 20': 0,
-    'Aug 20': 0,
-    'Sep 20': 0,
-    'Oct 20': 0,
-    'Nov 20': 0,
-    'Dec 20': 0,
-    'Jan 21': 0,
-    'Feb 21': 0,
-    'Mar 21': 0,
-    'Apr 21': 0,
-    'May 21': 0,
-    'Jun 21': 0,
+    render:(key, record)=>{
+      key = key.startsWith('FY')? 'total' : key
+      return record[key] ? formatCurrency(record[key]) : '-'
+    }
   },
 ];
+
+export const contribution_margin = [
+  {},
+  {
+    className: 'total-row',
+    name: 'CONTRIBUTION MARGIN',
+    joinRow: "CM",
+    render:(key, record)=>{
+      key = key.startsWith('FY')? 'total' : key
+      return formatFloat(record['TOTAL_REVENUE'][key] - (record['TOTAL_COST'][key]))
+    }
+  },
+  {},
+  {
+    className: 'total-row',
+    name: 'C.M. %',
+    joinRow: "CM%",
+    render:(key, record)=>{
+      key = key.startsWith('FY')? 'total' : key
+      return `${formatFloat(((record['TOTAL_REVENUE'][key] - (record['TOTAL_COST'][key])) /record['TOTAL_REVENUE'][key]) *100)} %`
+    }
+  },
+  {}
+]
 
 export const direct_overhead_expense = [
   {},
@@ -622,19 +632,19 @@ export const direct_overhead_expense = [
   {},
   {
     className: 'total-row',
-    name: 'TOTAL COST OF SALES - COS',
-    'Jul 20': 0,
-    'Aug 20': 0,
-    'Sep 20': 0,
-    'Oct 20': 0,
-    'Nov 20': 0,
-    'Dec 20': 0,
-    'Jan 21': 0,
-    'Feb 21': 0,
-    'Mar 21': 0,
-    'Apr 21': 0,
-    'May 21': 0,
-    'Jun 21': 0,
+    name: 'TOTAL PERSONNEL EXPENSES',
+    // 'Jul 20': 0,
+    // 'Aug 20': 0,
+    // 'Sep 20': 0,
+    // 'Oct 20': 0,
+    // 'Nov 20': 0,
+    // 'Dec 20': 0,
+    // 'Jan 21': 0,
+    // 'Feb 21': 0,
+    // 'Mar 21': 0,
+    // 'Apr 21': 0,
+    // 'May 21': 0,
+    // 'Jun 21': 0,
   },
 ];
 
