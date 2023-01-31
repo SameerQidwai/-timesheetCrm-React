@@ -99,7 +99,7 @@ function Login(props) {
               <Form.Item noStyle>
                 <Text type="danger">
                   If you are experiencing any problems, please contact
-                  support@timewize.com.au
+                  support@timewize.au
                 </Text>
               </Form.Item>
             </Form>

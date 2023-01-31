@@ -198,14 +198,19 @@ class TimeSheetContact extends Component {
         })
     }
 
-    getProjects = (value) =>{
-        getUserMilestones(value, 0).then(res=>{
-            if(res.success){
-                this.setState({
-                    milestones: res.data
-                })
-            }
-        })
+    getProjects = (userId, startDate, endDate) =>{
+        getUserMilestones({
+          userId: userId,
+          phase: 0,
+          startDate: startDate.format('DD-MM-YYYY'),
+          endDate: endDate.format('DD-MM-YYYY'),
+        }).then((res) => {
+          if (res.success) {
+            this.setState({
+              milestones: res.data,
+            });
+          }
+        });
 
     }
 
@@ -289,7 +294,6 @@ class TimeSheetContact extends Component {
                                 </Tooltip>}
                             }
                         }else{
-                            
                             const canAdd = (!permissions?.['ADD'] || sUser === loginId) && (col.dateObj.isSameOrAfter(startDate)  && col.dateObj.isSameOrBefore(endDate))   //checking if project is close                            
                             const clickable = ((record.status === 'SV' || record.status === 'RJ' || !record.status)) && record.phase!==false && sUser === loginId
                             if(value){ // I didn't put the conditon for column previos or next month because this column won't have any value for now
@@ -306,7 +310,7 @@ class TimeSheetContact extends Component {
                                     overlay={
                                         <Menu onClick={this.handleMenuClick}>
                                             <Menu.Item
-                                                disabled={!permissions?.['UPDATE'] || sUser === loginId}
+                                                disabled={!permissions?.['UPDATE'] && sUser !== loginId}
                                                 key="Edit" 
                                                 onClick={()=>{     //data //index    //col key      //Col heading to show on Modal
                                                     this.getRecord(record,rowIndex, col.dataIndex, col.heading); // call function to save data in
@@ -598,8 +602,8 @@ class TimeSheetContact extends Component {
           icon: stage=== 'Delete' ? <ExclamationCircleOutlined /> : <CheckCircleOutlined />,
           content: content,
           okButtonProps: {danger: stage === 'Delete'??true},
-          okText: 'Okay',
-          cancelText: 'Cancel',
+          okText: 'Yes',
+          cancelText: 'No',
           onOk:()=>{
               this.actionTimeSheet(stage) 
               modal.destroy();
@@ -693,7 +697,7 @@ class TimeSheetContact extends Component {
                             type="primary"
                             disabled={sUser !== loginId}
                             onClick={() => {
-                                this.getProjects(sUser)
+                                this.getProjects(sUser, startDate, endDate)
                                 this.setState({proVisible: true}) 
                             }}
                         >
@@ -755,7 +759,7 @@ class TimeSheetContact extends Component {
                         <Button 
                             type="primary" 
                             danger
-                            disabled={canDelete}
+                            disabled={sTMilestones.keys.length<1 && (sUser !== loginId || !permissions?.['DELETE']?.['ANY'])}
                             onClick={()=>this.multiAction('Delete')}
                         > 
                             Delete

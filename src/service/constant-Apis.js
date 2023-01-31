@@ -305,9 +305,10 @@ export const getUserProjects = (userId, mod, phase) => {
         });
 };
 
-export const getUserMilestones = (userId, phase) => {
+export const getUserMilestones = (query) => {
+    const {userId, phase, startDate, endDate,} = query
     return axios
-        .get(`${Api}/helpers/milestones?userId=${userId}&phase=${phase}`, { headers: headers() })
+        .get(`${Api}/helpers/milestones?userId=${userId}&phase=${phase}&startDate=${startDate}&endDate=${endDate}`, { headers: headers() })
         .then((res) => {
             const { success, data } = res.data;
             if (success) {

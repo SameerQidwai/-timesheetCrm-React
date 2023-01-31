@@ -5,9 +5,10 @@ import { Api, getFiscalYear, headers, jwtExpired, setToken } from "./constant";
 
 const url = `${Api}/reports`;
 
-export const getBenchResources = (queryParam) => {
+export const getBenchResources = (queryParam, exporting) => {
+  exporting = exporting? exporting: ''
     return axios
-        .get(`${url}/bench-resources${queryParam? '?'+ queryParam: ''}`, {headers:headers()})
+        .get(`${url}${exporting??''}/bench-resources${queryParam? '?'+ queryParam: ''}`, {headers:headers()})
         .then((res) => {
             const { success, data } = res.data;
             setToken(res?.headers?.authorization)
@@ -22,9 +23,9 @@ export const getBenchResources = (queryParam) => {
         });
 };
 
-export const getWorkforceSkills = (queryParam) => {
+export const getWorkforceSkills = (queryParam, exporting) => {
     return axios
-        .get(`${url}/workforce-skills${queryParam? '?'+ queryParam: ''}`, {headers:headers()})
+        .get(`${url}${exporting??''}/workforce-skills${queryParam? '?'+ queryParam: ''}`, {headers:headers()})
         .then((res) => {
             const { success, data } = res.data;
             setToken(res?.headers?.authorization)
@@ -39,9 +40,9 @@ export const getWorkforceSkills = (queryParam) => {
         });
 };
 
-export const getPositions = (queryParam) => {
+export const getPositions = (queryParam, exporting) => {
     return axios
-        .get(`${url}/allocations${queryParam? '?'+ queryParam: ''}`, {headers:headers()})
+        .get(`${url}${exporting??''}/allocations${queryParam? '?'+ queryParam: ''}`, {headers:headers()})
         .then((res) => {
             const { success, data } = res.data;
             setToken(res?.headers?.authorization)
@@ -56,9 +57,9 @@ export const getPositions = (queryParam) => {
         });
 };
 
-export const getAllocations = (queryParam) => {
+export const getAllocations = (queryParam, exporting) => {
     return axios
-        .get(`${url}/allocations-all${queryParam? '?'+ queryParam: ''}`, {headers:headers()})
+        .get(`${url}${exporting??''}/allocations-all${queryParam? '?'+ queryParam: ''}`, {headers:headers()})
         // .get(`${url}/allocations-all?bookingType=4`, {headers:headers()})
         .then((res) => {
             const { success, data } = res.data;
@@ -74,9 +75,9 @@ export const getAllocations = (queryParam) => {
         });
 };
 
-export const getTimesheetSummary = (queryParam) => {
+export const getTimesheetSummary = (queryParam, exporting) => {
     return axios
-        .get(`${url}/timesheet-summary${queryParam? '?'+ queryParam: ''}`, {headers:headers()})
+        .get(`${url}${exporting??''}/timesheet-summary${queryParam? '?'+ queryParam: ''}`, {headers:headers()})
         .then((res) => {
             const { success, data } = res.data;
             setToken(res?.headers?.authorization)
@@ -91,9 +92,9 @@ export const getTimesheetSummary = (queryParam) => {
         });
 };
 
-export const getLeaveSummary = (queryParam) => {
+export const getLeaveSummary = (queryParam, exporting) => {
     return axios
-        .get(`${url}/leave-request-summary-view${queryParam? '?'+ queryParam: ''}`, {headers:headers()})
+        .get(`${url}${exporting??''}/leave-request-summary-view${queryParam? '?'+ queryParam: ''}`, {headers:headers()})
         .then((res) => {
             const { success, data } = res.data;
             setToken(res?.headers?.authorization)
@@ -108,11 +109,11 @@ export const getLeaveSummary = (queryParam) => {
         });
 };
 
-export const getProjectRevenueAnalysis = (queryParam) => {
+export const getProjectRevenueAnalysis = (queryParam, exporting) => {
     let {start, end} = getFiscalYear('dates')
     return axios
       .get(
-        `${url}/project-revenue-analysis?fiscalYearStart=${start.format(
+        `${url}${exporting??''}/project-revenue-analysis?fiscalYearStart=${start.format(
           'YYYY-MM-DD'
         )}&fiscalYearEnd=${end.format('YYYY-MM-DD')}${
           queryParam ? '&' + queryParam : ''
@@ -133,11 +134,11 @@ export const getProjectRevenueAnalysis = (queryParam) => {
       });
 };
 
-export const getClientRevenueAnalysis = (queryParam) => {
+export const getClientRevenueAnalysis = (queryParam, exporting) => {
     let {start, end} = getFiscalYear('dates')
     return axios
       .get(
-        `${url}/client-revenue-analysis?fiscalYearStart=${start.format(
+        `${url}${exporting??''}/client-revenue-analysis?fiscalYearStart=${start.format(
           'YYYY-MM-DD'
         )}&fiscalYearEnd=${end.format('YYYY-MM-DD')}${
           queryParam ? '&' + queryParam : ''

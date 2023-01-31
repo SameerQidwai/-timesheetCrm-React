@@ -209,6 +209,7 @@ class OpportunityInfo extends Component {
                     title="Are you sure you want to delete ?"
                     onConfirm={() => this.handleDelete(leadId)}
                     okText="Yes"
+                    cancelText="No"
                   >
                     <div> Delete </div>
                   </Popconfirm>
@@ -306,6 +307,7 @@ class OpportunityInfo extends Component {
                       calculatedValue
                     )}`}
                     okText="Update"
+                    cancelText="No"
                     onConfirm={() => {
                       this.updateOpportunityValue(leadId);
                     }}

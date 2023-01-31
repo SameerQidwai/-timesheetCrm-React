@@ -72,6 +72,17 @@ function WorkforceSkills() {
         setLoading(false)
     })
   }
+
+  const exportData = () =>{
+    setLoading(true)
+    let query = _createQuery(tags??{})
+    getWorkforceSkills(query, '/export').then(res=>{
+      if (res.success){
+        window.open(res.data, '_blank', 'noreferrer');
+      }
+      setLoading(false)
+    })
+  }
   
   const tableTitle = () => {
     return (
@@ -80,9 +91,17 @@ function WorkforceSkills() {
           <Title level={5}>Workforce Skill </Title>
         </Col>
         <Col>
-          <Button size="small" onClick={() => setVisible(true)}>
+        <Row justify="end" gutter={5}>
+            <Col >
+            <Button size="small" onClick={exportData}>Download CSV</Button>
+            </Col>
+            <Col>
+            <Button size="small" onClick={() => setVisible(true)}>
             Filters
-          </Button>
+            </Button>
+            </Col>
+          </Row>
+          
         </Col>
         <Col span={24}>
           <FiltertagsNew

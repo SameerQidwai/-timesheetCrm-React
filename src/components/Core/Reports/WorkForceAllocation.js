@@ -165,6 +165,17 @@ function WorkForceAllocation() {
         })
     }
 
+    const exportData = () =>{
+        setLoading(true)
+        let query = _createQuery(tags??{})
+        getAllocations(query, '/export').then(res=>{
+          if (res.success){
+            window.open(res.data, '_blank', 'noreferrer');
+          }
+          setLoading(false)
+        })
+      }
+
     const tableTitle = () => {
         return (
           <Row justify="space-between">
@@ -172,7 +183,16 @@ function WorkForceAllocation() {
               <Title level={5}>Workforce Allocations</Title>
             </Col>
             <Col>
-              <Button size="small" onClick={() => setVisible(true)}> Filters </Button>
+                <Row justify="end" gutter={5}>
+                    <Col >
+                        <Button size="small" onClick={exportData}>Download CSV</Button>
+                    </Col>
+                    <Col>
+                        <Button size="small" onClick={() => setVisible(true)}>
+                        Filters
+                        </Button>
+                    </Col>
+                </Row>
             </Col>
             <Col span={24}>
               <FiltertagsNew

@@ -220,7 +220,7 @@ export const getMilestones = () => {
 
 export const getUsersTimesheet = (keys) => {
     return axios
-        .get(`${url}milestone` +`/${keys.startDate}&${keys.endDate}&${keys.mileId}`, { headers: headers() })
+        .get(`${url}milestone` +`/${keys.startDate}&${keys.endDate}&${keys.mileId??0}`, { headers: headers() })
         .then((res) => {
             const { success, data } = res.data;
             let newData = []

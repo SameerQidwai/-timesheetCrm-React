@@ -262,8 +262,8 @@ class ApproveRequest extends Component {
           icon: manage=== 'leaveRequestsReject' ? <ExclamationCircleOutlined style={{color: 'red' }} /> : <CheckCircleOutlined style={{color: 'green' }}/>,
           content: content,
           okButtonProps: { htmlType: 'submit', form: 'my-form'  },
-          okText: 'Okay',
-          cancelText: 'Cancel',
+          okText: 'Yes',
+          cancelText: 'No',
         });
     }
 

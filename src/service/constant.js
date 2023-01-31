@@ -8,7 +8,7 @@ export const Api = 'http://localhost:3301/api/v1';
 // export const Api = "https://a067-111-88-150-124.ngrok.io/api/v1"; // Shahzaib/ tunnel
 // export const Api = 'http://192.168.0.147:3301/api/v1'; // Me
 
-// export const Api = 'http://54.91.49.138:8000/api/v1'; //Test
+// export const Api = 'http://3.89.162.49:8000/api/v1'; //Test
 // export const Api = 'http://54.174.229.28:8000/api/v1'; //Demo...
 
 // export const Api = "http://192.168.0.110:3301/api/v1"; // TrunRajPal Home

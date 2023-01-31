@@ -46,31 +46,31 @@ const Expense = (props) => {
       render: (text) => formatCurrency(text),
       ...tableSorter('amount', 'number'),
     },
-    // {
-    //   title: 'Files',
-    //   dataIndex: 'attachments',
-    //   align: 'center',
-    //   render: (files, records, index) => {
-    //      files = files.map(el=>{el.url = `${Api}/files/${el.uid}`; return el})
-    //     let display = files.length
-    //     return display ? <Popover
-    //       title={`00${records.id}`}
-    //       destroyTooltipOnHide
-    //       overlayStyle={{maxWidth: 300}}
-    //       trigger="hover"
-    //       content={<div>
-    //          <Upload
-    //             listType="text"
-    //             maxCount={4}
-    //             fileList={files}
-    //             disabled
-    //           />
-    //       </div>}
-    //     >
-    //       <Text underline italic>View</Text>
-    //     </Popover>: null
-    //   }
-    // },
+    {
+      title: 'Files',
+      dataIndex: 'attachments',
+      align: 'center',
+      render: (files, records, index) => {
+        let display = files?.length
+        return display ? <Popover
+          title={'Files'}
+          destroyTooltipOnHide
+          overlayStyle={{maxWidth: 300}}
+          trigger="hover"
+          content={<div>
+             <Upload
+                listType="text"
+                openFileDialogOnClick={true}
+                maxCount={4}
+                fileList={files.map(el=>{el.url = `${Api}/files/${el.uid}`; return el})}
+                disabled
+              />
+          </div>}
+        >
+          <Text underline italic>View</Text>
+        </Popover>: null
+      }
+    },
     {
       title: 'Reimbursable',
       dataIndex: 'isReimbursed',
@@ -112,6 +112,7 @@ const Expense = (props) => {
                   title="Are you sure you want to delete ?"
                   onConfirm={() => handleDelete(record.id, index)}
                   okText="Yes"
+                  cancelText="No"
                 >
                   <div> Delete </div>
                 </Popconfirm>
@@ -221,7 +222,7 @@ const Expense = (props) => {
     <>
     <Row justify='space-between'>
       <Col>
-        <Title level={4}>Expenses</Title>
+        <Title level={4}>Expense Lines</Title>
       </Col>
       <Col>
       <Button

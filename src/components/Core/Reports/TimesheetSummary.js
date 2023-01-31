@@ -122,6 +122,17 @@ function TimesheetSummary() {
     })
   }
 
+  const exportData = () =>{
+    setLoading(true)
+    let query = _createQuery(tags??{})
+    getTimesheetSummary(query, '/export').then(res=>{
+      if (res.success){
+        window.open(res.data, '_blank', 'noreferrer');
+      }
+      setLoading(false)
+    })
+  }
+
   const summaryFooter = (data) =>{
     let excludeColumns = ['employeeName', 'employeeCode', 'projectName', 'projectCode', 'purchaseOrder', 'organizationName', 'empty',]
     if(data.length>0)
@@ -171,7 +182,15 @@ function TimesheetSummary() {
 
   return (
     <div>
-      <Typography.Title level={4}>Timesheets Summary</Typography.Title>
+      <Row justify='space-between'>
+        <Col>
+        <Typography.Title level={4}>Timesheets Summary</Typography.Title>
+        </Col>
+        <Col>
+          {/* need changes on action */}
+        <Button size="small" onClick={exportData} gutter={5}>Download CSV</Button>
+        </Col>
+      </Row>
       <Row gutter={[0, 100]}>
         <Col span={24}>
           <Descriptions

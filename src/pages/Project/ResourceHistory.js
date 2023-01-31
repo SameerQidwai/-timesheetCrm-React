@@ -58,6 +58,7 @@ class ResourceHistory extends Component {
                                         title="Are you sure you want to delete ?"
                                         onConfirm={() => this.handleDelete(record.id) }
                                         okText="Yes"
+                                        cancelText="No"
                                     >
                                         <div> Delete </div>
                                     </Popconfirm>

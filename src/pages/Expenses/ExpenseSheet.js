@@ -93,6 +93,7 @@ const ExpenseSheet = (props) => {
                   title="Are you sure you want to delete ?"
                   onConfirm={() => handleDelete(record.id, index)}
                   okText="Yes"
+                  cancelText="No"
                 >
                   <div> Delete </div>
                 </Popconfirm>
@@ -224,8 +225,8 @@ const ExpenseSheet = (props) => {
       icon: <CheckCircleOutlined />,
       content: content,
       // okButtonProps: {danger: stage === 'unapprove'??true},
-      okText: 'Okay',
-      cancelText: 'Cancel',
+      okText: 'Yes',
+      cancelText: 'No',
       onOk:()=>{
         //   this.actionTimeSheet(stage) 
           OutcomeAction()
@@ -286,7 +287,7 @@ const ExpenseSheet = (props) => {
     <>
       <Row justify='space-between'>
         <Col>
-          <Title level={4}>Expenses Sheets</Title>
+          <Title level={4}>Expense Sheets</Title>
         </Col>
         <Col>
         <Button

@@ -164,7 +164,8 @@ class InfoModal extends Component {
                             return Promise.reject(new Error('Must contain 11 digits'));
                         }
                         return Promise.resolve();
-                    }
+                      }
+                      return Promise.resolve();
                 },
             }),
           ],
@@ -181,7 +182,7 @@ class InfoModal extends Component {
           itemStyle: { marginBottom: 10 },
           rules:[ {
             type: 'email',
-            message: 'The input is not valid E-mail!',
+            message: 'The input is not valid e-mail!',
           }
           ],
         },
@@ -374,6 +375,7 @@ class InfoModal extends Component {
                         }
                         return Promise.resolve();
                     }
+                      return Promise.resolve();
                 },
             }),
         ],
@@ -402,7 +404,7 @@ class InfoModal extends Component {
           size: 'small',
           rules:[ {
             type: 'email',
-            message: 'The input is not valid E-mail!',
+            message: 'The input is not valid e-mail!',
           }],
           type: 'input',
           itemStyle: { marginBottom: 10 },
@@ -595,7 +597,7 @@ class InfoModal extends Component {
           itemStyle: { marginBottom: 10 },
           rules:[ {
             type: 'email',
-            message: 'The input is not valid E-mail!',
+            message: 'The input is not valid e-mail!',
           }]
         },
         {
@@ -1278,7 +1280,7 @@ class InfoModal extends Component {
               rules={[
                 { required: true, message: 'Email/Username is requrired' }, {
                   type: 'email',
-                  message: 'The input is not valid E-mail!',
+                  message: 'The input is not valid e-mail!',
                 }
               ]}
             >

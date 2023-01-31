@@ -106,6 +106,17 @@ function LeaveSummary() {
         })
     }
 
+    const exportData = () =>{
+      setLoading(true)
+      let query = _createQuery(tags??{})
+      getLeaveSummary(query, '/export').then(res=>{
+        if (res.success){
+          window.open(res.data, '_blank', 'noreferrer');
+        }
+        setLoading(false)
+      })
+    }
+
     const tableTitle = () => {
       return (
         <Row justify="space-between">
@@ -113,7 +124,16 @@ function LeaveSummary() {
             <Title level={5}>Leave Request Summary</Title>
           </Col>
           <Col>
-            <Button size="small" onClick={() => setVisible(true)}> Filters </Button>
+            <Row justify="end" gutter={5}>
+                <Col >
+                <Button size="small" onClick={exportData}>Download CSV</Button>
+                </Col>
+                <Col>
+                <Button size="small" onClick={() => setVisible(true)}>
+                Filters
+                </Button>
+                </Col>
+            </Row>
           </Col>
           <Col span={24}>
             <FiltertagsNew
