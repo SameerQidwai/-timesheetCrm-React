@@ -80,9 +80,17 @@ function WorkforceSkills() {
           <Title level={5}>Workforce Skill </Title>
         </Col>
         <Col>
-          <Button size="small" onClick={() => setVisible(true)}>
+        <Row justify="end">
+            <Col >
+            <Button size="small" onClick={()=>console.log('press')}>Download CSV</Button>
+            </Col>
+            <Col>
+            <Button size="small" onClick={() => setVisible(true)}>
             Filters
-          </Button>
+            </Button>
+            </Col>
+          </Row>
+          
         </Col>
         <Col span={24}>
           <FiltertagsNew

@@ -88,8 +88,15 @@ function BenchResources() {
         <Col >
           <Title level={5}>Unallocated Resources</Title>
         </Col>
-        <Col >
+        <Col span={6}>
+          <Row justify="end">
+            <Col >
+            <Button size="small" onClick={()=>console.log('press')}>Download CSV</Button>
+            </Col>
+            <Col>
           <Button size="small" onClick={()=>setVisible(true)}>Filters</Button>
+            </Col>
+          </Row>
         </Col>
         <Col span={24}>
           <FiltertagsNew

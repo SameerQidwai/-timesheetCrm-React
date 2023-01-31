@@ -172,7 +172,16 @@ function WorkForceAllocation() {
               <Title level={5}>Workforce Allocations</Title>
             </Col>
             <Col>
-              <Button size="small" onClick={() => setVisible(true)}> Filters </Button>
+                <Row justify="end">
+                    <Col >
+                        <Button size="small" onClick={()=>console.log('press')}>Download CSV</Button>
+                    </Col>
+                    <Col>
+                        <Button size="small" onClick={() => setVisible(true)}>
+                        Filters
+                        </Button>
+                    </Col>
+                </Row>
             </Col>
             <Col span={24}>
               <FiltertagsNew

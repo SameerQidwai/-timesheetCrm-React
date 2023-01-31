@@ -172,9 +172,18 @@ function Positions() {
           <Col>
             <Title level={5}>Opportunity & Project Position Allocations </Title>
           </Col>
-          <Col>
-            <Button size="small" onClick={() => setVisible(true)}> Filters </Button>
-          </Col>
+            <Col>
+                <Row justify="end">
+                    <Col >
+                    <Button size="small" onClick={()=>setVisible(true)}>Download CSV</Button>
+                    </Col>
+                    <Col>
+                    <Button size="small" onClick={() => setVisible(true)}>
+                    Filters
+                    </Button>
+                    </Col>
+                </Row>
+            </Col>
           <Col span={24}>
             <FiltertagsNew
               filters={tags}

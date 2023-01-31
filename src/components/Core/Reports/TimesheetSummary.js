@@ -171,7 +171,15 @@ function TimesheetSummary() {
 
   return (
     <div>
-      <Typography.Title level={4}>Timesheets Summary</Typography.Title>
+      <Row justify='space-between'>
+        <Col>
+        <Typography.Title level={4}>Timesheets Summary</Typography.Title>
+        </Col>
+        <Col>
+          {/* need changes on action */}
+        <Button size="small" onClick={()=>console.log('press')}>Download CSV</Button>
+        </Col>
+      </Row>
       <Row gutter={[0, 100]}>
         <Col span={24}>
           <Descriptions

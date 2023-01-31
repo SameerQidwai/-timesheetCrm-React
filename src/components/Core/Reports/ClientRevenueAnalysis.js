@@ -104,8 +104,17 @@ function ClientRevenueAnalysis() {
         <Col >
           <Typography.Title level={5}>FY Client Revenue Analysis</Typography.Title>
         </Col>
-        <Col >
-          <Button size="small" onClick={()=>setVisible(true)}>Filters</Button>
+        <Col>
+            <Row justify="end">
+                <Col >
+                    <Button size="small" onClick={()=>console.log('press')}>Download CSV</Button>
+                </Col>
+                <Col>
+                    <Button size="small" onClick={() => setVisible(true)}>
+                    Filters
+                    </Button>
+                </Col>
+            </Row>
         </Col>
         <Col span={24}>
           <FiltertagsNew

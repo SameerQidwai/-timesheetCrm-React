@@ -126,9 +126,18 @@ function ProjectRevenueAnalysis() {
         <Col >
           <Typography.Title level={5}>FY Project Revenue Analysis</Typography.Title>
         </Col>
-        <Col >
-          <Button size="small" onClick={()=>setVisible(true)}>Filters</Button>
-        </Col>
+        <Col>
+            <Row justify="end">
+                <Col >
+                    <Button size="small" onClick={()=>console.log('press')}>Download CSV</Button>
+                </Col>
+                <Col>
+                    <Button size="small" onClick={() => setVisible(true)}>
+                    Filters
+                    </Button>
+                </Col>
+            </Row>
+          </Col>
         <Col span={24}>
           <FiltertagsNew
             filters={tags}
