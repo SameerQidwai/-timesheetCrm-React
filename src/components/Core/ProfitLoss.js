@@ -93,7 +93,7 @@ class ProfitLoss extends Component {
                         
                         forecast.forEach((el, index) =>{
                             if ( iDate.isBetween(parseDate(el.con_startDate), parseDate(el.con_endDate ?? tempEndDate) , 'day', '[]') &&
-                            iDate.isBetween(parseDate(el.res_startDate), parseDate(el.con_endDate ?? tempEndDate) , 'day', '[]') ){
+                            iDate.isBetween(parseDate(el.res_startDate), parseDate(el.res_endDate ?? tempEndDate) , 'day', '[]') ){
                                 if (forecastStatement[key]){
                                     forecastStatement[key].monthTotalBuy += el.forecastBuyRateDaily
                                     forecastStatement[key].monthTotalSell += el.forecastSellRateDaily

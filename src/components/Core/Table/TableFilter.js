@@ -95,6 +95,7 @@ export const tableFilter = (dataIndex, searchFunction) => ({ // filter on the he
             : searchFunction === 'includes' && record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
     },
 })
+
                         // Keys      //dataType  //defaultSortOrder
 // export const tableSorter = (dataIndex, type, sortOrder) => ({ //sorter on the head
 //     sorter: (a, b) => { 

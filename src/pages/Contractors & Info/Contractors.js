@@ -35,6 +35,7 @@ import {
   tableTitleFilter,
 } from '../../components/Core/Table/TableFilter';
 import { generalDelete } from "../../service/delete-Api's";
+import { Tag_s } from '../../components/Core/Custom/Index';
 
 const { Title } = Typography;
 
@@ -113,6 +114,17 @@ class Contractors extends Component {
         title: 'Email',
         dataIndex: ['contactPersonOrganization', 'contactPerson', 'email'],
         key: 'email',
+      },
+      {
+        title: 'Status',
+        dataIndex: "active",
+        key: 'status',
+        width: '8%',
+        render: (text)=>  <Tag_s  
+          text={`${text}`}
+          objName="ACTIVE_STATUS"
+          colorName="ACTIVE_STATUS_COLORS"
+        />
       },
       {
         title: '...',

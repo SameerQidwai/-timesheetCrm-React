@@ -6,7 +6,7 @@ import { DeleteOutlined, DeleteFilled, SendOutlined, PaperClipOutlined, } from "
 import { addFiles } from "../../service/Attachment-Apis";
 import { getComments, addComment, delComments, } from "../../service/comment-Apis";
 import { Api, formatDate, localStore } from "../../service/constant";
-
+import moment from "moment"
 import "../Styles/comment.css";
 
 const { TextArea } = Input;
@@ -237,7 +237,7 @@ class Comments extends Component {
                             // title={moment(item.createdAt).format( "ddd DD MMM yyyy HH:mm:ss" )}
                             title={formatDate(item.createdAt, true, "ddd DD MMM yyyy HH:mm:ss")}
                         >
-                            <span>{formatDate(formatDate(item.createdAt, true, "ddd DD MMM yyyy HH:mm:ss")).fromNow()}</span>
+                            <span>{moment(formatDate(item.createdAt, true, "YYYY-MM-DDTHH:mm:ss")).fromNow()}</span>
                         </Tooltip>
                         {(item.authorId === loginId && !onHold )&&<Tooltip key="comment-basic-delete" title="Delete">
                             <span
