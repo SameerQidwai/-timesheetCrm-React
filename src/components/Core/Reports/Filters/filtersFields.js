@@ -1,5 +1,6 @@
 import { _createQuery } from '.';
 import { entityProjects, getContactPersons, getEmpPersons, getleaveRequestTypes, getOrganizations, getStandardLevels, getStandardSkills, getUserLeaveType } from '../../../../service/constant-Apis'
+import { getUsers } from '../../../../service/timesheet';
 
 export const bench =({fields,setFields, getCompData})=> ({
     effectRender: true,
@@ -1329,5 +1330,139 @@ export const leave_summary =({fields,setFields, getCompData})=> ({
     callFilters: (value1, value2, filters, formData) => {
       let query = _createQuery(filters)
       getCompData(query, filters);
+    },
+});
+
+export const timesheet_summary =({fields,setFields, getCompData})=> ({
+    effectRender: true,
+    filterModalUseEffect: () => {
+      Promise.all([getUsers(), entityProjects('helpers/work?type=P', true), getOrganizations()]).then((res) => {
+
+        let tempFields = [...fields];
+        //setting organization
+        tempFields[1].data = res[0].success ? res[0].data : [];
+        //setting projects
+        tempFields[3].data = res[1].success ? res[1].options : [];
+        //setting exclude projects
+        tempFields[5].data = res[2].success ? res[2].data : [];
+        setFields([...tempFields]);
+      })
+    },
+    fields: [
+      {
+        Placeholder: 'Employee',
+        fieldCol: 24,
+        size: 'small',
+        type: 'Text',
+      },
+      {
+        object: 'obj',
+        fieldCol: 24,
+        key: 'employeeId',
+        size: 'small',
+        mode: 'multiple',
+        rangeMax:'responsive',
+        customValue: (value, option) => ({ selectedIds: value, option }),
+        getValueProps: (value)=>  ({value: value?.selectedIds}),
+        data: [],
+        type: 'Select',
+      },
+      {
+        Placeholder: 'Project',
+        fieldCol: 24,
+        size: 'small',
+        type: 'Text',
+      },
+      {
+        object: 'obj',
+        fieldCol: 24,
+        key: 'projectId',
+        size: 'small',
+        mode: 'multiple',
+        rangeMax:'responsive',
+        customValue: (value, option) => ({ selectedIds: value, option }),
+        getValueProps: (value)=>  ({value: value?.selectedIds}),
+        data: [],
+        type: 'Select',
+      },
+      {
+        Placeholder: 'Organisation',
+        fieldCol: 22,
+        size: 'small',
+        type: 'Text',
+      },
+      {
+        object: 'obj',
+        fieldCol: 24,
+        key: 'organizationId',
+        size: 'small',
+        mode: 'multiple',
+        rangeMax:'responsive',
+        customValue: (value, option) => ({ selectedIds: value, option }),
+        getValueProps: (value)=>  ({value: value?.selectedIds}),
+        data: [],
+        type: 'Select',
+      },
+      {
+        Placeholder: 'Timesheet Status',
+        fieldCol: 22,
+        size: 'small',
+        type: 'Text',
+      },
+      {
+        object: 'obj',
+        fieldCol: 24,
+        key: 'status',
+        size: 'small',
+        mode: 'multiple',
+        rangeMax:'responsive',
+        customValue: (value, option) => ({ selectedIds: value, option }),
+        getValueProps: (value)=>  ({value: value?.selectedIds}),
+        data: [
+          {value: 0, label: 'Not Applicable'},
+          {value: 1, label: 'Not Submitted'},
+          {value: 2, label: 'Submitted'},
+          {value: 3, label: 'Approved'},
+        ],
+        type: 'Select',
+      },
+    ],
+    searchValue: {
+      employeeId: {
+        type: 'Select',
+        multi: true,
+        value: [],
+        label: 'Employees',
+        showInColumn: false,
+        disabled: false,
+      },
+      organizationId: {
+        type: 'Select',
+        multi: true,
+        value: [],
+        label: 'Organisations',
+        showInColumn: false,
+        disabled: false,
+      },
+      status: {
+        type: 'Select',
+        multi: true,
+        value: [],
+        label: 'Status',
+        showInColumn: false,
+        disabled: false,
+      },
+      projectId: {
+        type: 'Select',
+        multi: true,
+        value: [],
+        label: 'Projects',
+        showInColumn: false,
+        disabled: false,
+      },
+    },
+    callFilters: (value1, value2, filters, formData) => {
+      let query = _createQuery(filters)
+      getCompData({queryParam: query, tagsValues: filters});
     },
 });

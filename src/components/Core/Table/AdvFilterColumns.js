@@ -85,6 +85,14 @@ export const EmployeeFilterColumns= {
       showInColumn: false,
       disabled: false,
     },
+    isActive: {
+      type: 'none',
+      multi: true,
+      value: [],
+      label: 'Status',
+      showInColumn: false,
+      disabled: false,
+    },
     contractStartDate: {
       type: 'Date',
       value: null,

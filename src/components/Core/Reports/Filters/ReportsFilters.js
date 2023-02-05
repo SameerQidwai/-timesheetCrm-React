@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { TableModalFilter } from '../../Table/TableFilter'
-import {bench, skillResources, positions, allocations, projectRevenue, clientRevenue, leave_summary } from "./filtersFields"
+import {bench, skillResources, positions, allocations, projectRevenue, clientRevenue, leave_summary, timesheet_summary } from "./filtersFields"
 
 function ReportsFilters({compName, compKey, visible, invisible, getCompData, tags}) {
   const [fields, setFields] = useState([]);
@@ -14,6 +14,7 @@ function ReportsFilters({compName, compKey, visible, invisible, getCompData, tag
     projectRevenue: projectRevenue({fields,setFields, getCompData}),
     clientRevenue: clientRevenue({fields,setFields, getCompData}),
     leave_summary: leave_summary({fields,setFields, getCompData}),
+    timesheet_summary: timesheet_summary({fields,setFields, getCompData}),
   };
   const {searchValue, callFilters, filterModalUseEffect, effectRender} = reportsFilter?.[compKey] ||{}
 

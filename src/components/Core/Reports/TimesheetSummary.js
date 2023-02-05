@@ -81,20 +81,16 @@ const contantColmuns = [
 
 function TimesheetSummary() {
   const [data, setData] = useState({})
+  const [selectedMonth, setSelectedMonth] = useState(moment())
   const [columns, setColumn] = useState([])
   const [visible, setVisible] = useState(false)
   const [tags, setTags] = useState(null)
   const [loading, setLoading] = useState(false)
-  let fiscalYear = getFiscalYear() 
+  let { start: fiscalYearStart, end: fiscalYearEnd } = getFiscalYear('dates');
 
   useEffect(() => {
-    let {dates: {start, end}} = fiscalYear
     
-    let query = `startDate=${start.format(
-      'YYYY-MM-DD'
-    )}&endDate=${end.format(
-      'YYYY-MM-DD'
-    )}`;
+    
     _generateMonthlyColumns({
       contantColmuns,
       setColumn,
@@ -104,7 +100,7 @@ function TimesheetSummary() {
       colRender: 'filteredHours',
       dataIndex: ['months']
     });
-    getData(query)
+    mergeFilter({})
   }, [])
 
   const getData = (queryParam, tagsValues) =>{
@@ -115,7 +111,7 @@ function TimesheetSummary() {
         setData(res.data)
         if(queryParam){
           setVisible(false)
-          // setTags(tagsValues)
+          setTags(tagsValues)
         }
       }
       setLoading(false)
@@ -169,9 +165,31 @@ function TimesheetSummary() {
     );
   }
 
+  const mergeFilter = ({month, queryParam='', tagsValues}) =>{
+
+    queryParam = !queryParam? _createQuery(tags??{}): queryParam
+    month = month ?? selectedMonth
+    // let { start, end } = getFiscalYear('dates', month);
+
+    let query = `startDate=${fiscalYearStart.format('YYYY-MM-DD')}&endDate=${fiscalYearEnd.format(
+      'YYYY-MM-DD'
+    )}&currentDate=${month.format('YYYY-MM-DD')}${
+      queryParam ? `&${queryParam}` : ''
+    }`;
+
+    getData(query, tagsValues)
+  }
+
   return (
     <div>
-      <Typography.Title level={4}>Timesheets Summary</Typography.Title>
+      <Row justify="space-between">
+        <Col>
+          <Typography.Title level={4}>Timesheets Summary</Typography.Title>
+        </Col>
+        <Col>
+          <Button size="small" onClick={()=>setVisible(true)}>Filters</Button>
+        </Col>
+      </Row>
       <Row gutter={[0, 100]}>
         <Col span={24}>
           <Descriptions
@@ -183,23 +201,21 @@ function TimesheetSummary() {
             className="describe"
           >
             <Descriptions.Item label="">
-              {/* {moment().format('MMM YYYY')} */}
               <DatePicker
-                defaultValue={moment()}
                 picker="month"
+                value={selectedMonth}
                 style={{ width: 200 }}
-                // disabledDate={(date)=> }
+                disabledDate={(current)=>{
+                  return current && 
+                    current <= fiscalYearStart ||
+                      current >= fiscalYearEnd;
+                }}
                 size="small"
                 format="MMM YYYY"
-                onChange={(value, valu1, value2) => {
-                  value = value ?? moment();
-                  let { start, end } = getFiscalYear('dates', value);
-                  let query = `startDate=${start.format(
-                    'YYYY-MM-DD'
-                  )}&endDate=${end.format(
-                    'YYYY-MM-DD'
-                  )}&currentDate=${value.format('YYYY-MM-DD')}`;
-                  getData(query);
+                onChange={(month) => {
+                  month = month ?? moment();
+                  setSelectedMonth(month)
+                  mergeFilter({month});
                 }}
               />
             </Descriptions.Item>
@@ -252,6 +268,14 @@ function TimesheetSummary() {
           />
         </Col>
       </Row>
+        <ReportsFilters
+          compName={'Filters'}
+          compKey={'timesheet_summary'}
+          tags={tags}
+          visible={visible}
+          getCompData={mergeFilter}
+          invisible={()=>setVisible(false)}
+      />
     </div>
   );
 }

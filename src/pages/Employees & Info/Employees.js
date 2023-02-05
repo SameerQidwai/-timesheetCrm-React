@@ -13,6 +13,7 @@ import { Filtertags, TableModalFilter, tableSorter, tableSummaryFilter, tableTit
 import { generalDelete } from "../../service/delete-Api's";
 import { Tag_s } from '../../components/Core/Custom/Index';
 import { EmployeeAdvaceFilter, EmployeeFilterColumns, EmployeeFilterFields, EmployeeModalUseEffect } from '../../components/Core/Table/';
+import { getRoles, getStates } from '../../service/constant-Apis';
 
 const { Title } = Typography;
 
@@ -644,152 +645,135 @@ class Employees extends Component {
   };
   // will remove if seperate component works fine
   //summary or modal filter
-  // advancefilter = (value, column, advSearch) => {
-  //   let { data, searchedColumn: search } = this.state;
-  //   if (column) {
-  //     search[column]['value'] = value; // this will need in column filter
-  //   } else {
-  //     search = advSearch;
-  //   }
+  advancefilter = (value, column, advSearch) => {
+    let { data, searchedColumn: search } = this.state;
+    if (column) {
+      search[column]['value'] = value; // this will need in column filter
+    } else {
+      search = advSearch;
+    }
 
-  //   if (
-  //     search['id']['value'] ||
-  //     search['firstName']['value'] ||
-  //     search['lastName']['value'] ||
-  //     search['email']['value'] ||
-  //     search['phoneNumber']['value'] ||
-  //     search['gender']['value'].length > 0 ||
-  //     search['stateId']['value'].length > 0 ||
-  //     search['address']['value'] ||
-  //     search['clearanceLevel']['value'].length > 0 ||
-  //     search['role']['value'].length > 0 ||
-  //     search['employeeStatus']['value'].length > 0 
-  //   ) {
-  //     this.setState({
-  //       filterData: data.filter((el) => {
-  //         // method one which have mutliple if condition for every multiple search
-  //         const {
-  //           firstName,
-  //           lastName,
-  //           email,
-  //           phoneNumber,
-  //           id,
-  //           gender,
-  //           stateId,
-  //           address,
-  //           clearanceLevel
-  //         } = el.contactPersonOrganization.contactPerson;
-  //         console.log(el.employmentContracts.map((p, index) => {
-  //           if(moment().isBetween(moment(p.startDate), moment(p.endDate?? moment().add(10, 'years'))) ){
-  //             return p.type
-  //           }
-  //           if(index === el.employmentContracts.length -1 ){
-  //             return p.type
-  //           }
-  //         })
-  //       )
-  //         return (
-  //           `Emp-00${id.toString()}`.includes(search['id']['value']) &&
-  //           `${firstName ?? ''}`
-  //             .toLowerCase()
-  //             .includes(search['firstName']['value'].toLowerCase()) &&
-  //           `${lastName ?? ''}`
-  //             .toLowerCase()
-  //             .includes(search['lastName']['value'].toLowerCase()) &&
-  //           `${email ?? ''}`
-  //             .toLowerCase()
-  //             .includes(search['email']['value'].toLowerCase()) &&
-  //           `${phoneNumber ?? ''}`
-  //             .toLowerCase()
-  //             .includes(search['phoneNumber']['value'].toLowerCase()) &&
-  //           `${address ?? ''}`
-  //             .toLowerCase()
-  //             .includes(search['address']['value'].toLowerCase()) &&
-  //           //Creating an string using reduce of all the String array and searching sting in the function
+    if (
+      search['id']['value'] ||
+      search['firstName']['value'] ||
+      search['lastName']['value'] ||
+      search['email']['value'] ||
+      search['phoneNumber']['value'] ||
+      search['gender']['value'].length > 0 ||
+      search['stateId']['value'].length > 0 ||
+      search['isActive']['value'].length > 0 ||
+      search['address']['value']
+      // search['clearanceLevel']['value'].length > 0 ||
+      // search['role']['value'].length > 0 ||
+      // search['employeeStatus']['value'].length > 0 
+    ) {
+      this.setState({
+        filterData: data.filter((el) => {
+          // method one which have mutliple if condition for every multiple search
+          const {
+            firstName,
+            lastName,
+            email,
+            phoneNumber,
+            id,
+            gender,
+            stateId,
+            address,
+            clearanceLevel
+          } = el.contactPersonOrganization.contactPerson;
+          return (
+            `Emp-00${id.toString()}`.includes(search['id']['value']) &&
+            `${firstName ?? ''}`
+              .toLowerCase()
+              .includes(search['firstName']['value'].toLowerCase()) &&
+            `${lastName ?? ''}`
+              .toLowerCase()
+              .includes(search['lastName']['value'].toLowerCase()) &&
+            `${email ?? ''}`
+              .toLowerCase()
+              .includes(search['email']['value'].toLowerCase()) &&
+            `${phoneNumber ?? ''}`
+              .toLowerCase()
+              .includes(search['phoneNumber']['value'].toLowerCase()) &&
+            `${address ?? ''}`
+              .toLowerCase()
+              .includes(search['address']['value'].toLowerCase()) &&
+            //Creating an string using reduce of all the String array and searching sting in the function
 
-  //           //Define  ====  //Reducing and creating the array        // but gotta check if the array is not empty otherwise gender value can't be found in emptySrting
-  //           (search['gender']['value'].length > 0
-  //             ? search['gender']['value']
-  //             : [{ value: ',' }]
-  //           ).some((s) =>
-  //             (search['gender']['value'].length > 0
-  //               ? [gender]
-  //               : [',']
-  //             ).includes(s.value)
-  //           ) &&
-  //           (search['stateId']['value'].length > 0
-  //             ? search['stateId']['value']
-  //             : [{ value: ',' }]
-  //           ).some((s) =>
-  //             (search['stateId']['value'].length > 0
-  //               ? [stateId]
-  //               : [',']
-  //             ).includes(s.value)
-  //           ) &&
-  //           (search['role']['value'].length > 0
-  //             ? search['role']['value']
-  //             : [{ value: ',' }]
-  //           ).some((s) =>
-  //             (search['role']['value'].length > 0
-  //               ? [el.roleId]
-  //               : [',']
-  //             ).includes(s.value)
-  //           ) &&
-  //           (search['employeeStatus']['value'].length > 0
-  //             ? search['employeeStatus']['value']
-  //             : [{ value: ',' }]
-  //           ).some((s) =>
-  //           (el.employmentContracts &&
-  //             el.employmentContracts.length > 0 &&
-  //             search['employeeStatus']['value'].length > 0
-  //               ? el.employmentContracts.map((p, index) => {
-  //                 if(moment().isBetween(moment(p.startDate), moment(p.endDate?? moment().add(10, 'years'))) ){
-  //                   return p.type
-  //                 }
-  //                 if(index === el.employmentContracts.length -1 ){
-  //                   return p.type
-  //                 }
-  //               })
-  //               : [',']
-  //             ).includes(s.value)
-  //           ) &&
-  //           (search['clearanceLevel']['value'].length > 0
-  //             ? search['clearanceLevel']['value']
-  //             : [{ value: ',' }]
-  //           ).some((s) =>
-  //             (search['clearanceLevel']['value'].length > 0
-  //               ? [clearanceLevel]
-  //               : [',']
-  //             ).includes(s.value)
-  //           )
-  //         );
-  //       }),
-  //       searchedColumn: search,
-  //       openSearch: false,
-  //     });
-  //   } else {
-  //     this.setState({
-  //       searchedColumn: search,
-  //       filterData: data,
-  //       openSearch: false,
-  //     });
-  //   }
-  // };
- // will remove if seperate component works fine
-  // filterModalUseEffect = () => {
-  //   Promise.all([getStates(), getRoles()])
-  //     .then((res) => {
-  //       const { filterFields } = this.state;
-  //       filterFields[11].data = res[0].success ? res[0].data : [];
-  //       filterFields[14].data = res[1].success ? res[1].data : [];
-  //       this.setState({
-  //         filterFields,
-  //       });
-  //     })
-  //     .catch((e) => {
-  //       console.log(e);
-  //     });
-  // };
+            //Define  ====  //Reducing and creating the array        // but gotta check if the array is not empty otherwise gender value can't be found in emptySrting
+            (search['gender']['value'].length > 0
+              ? search['gender']['value']
+              : [{ value: ',' }]
+            ).some((s) =>
+              (search['gender']['value'].length > 0
+                ? [gender]
+                : [',']
+              ).includes(s.value)
+            ) &&
+            (search['stateId']['value'].length > 0
+              ? search['stateId']['value']
+              : [{ value: ',' }]
+            ).some((s) =>
+              (search['stateId']['value'].length > 0
+                ? [stateId]
+                : [',']
+              ).includes(s.value)
+            ) &&
+            (search['role']['value'].length > 0
+              ? search['role']['value']
+              : [{ value: ',' }]
+            ).some((s) =>
+              (search['role']['value'].length > 0
+                ? [el.roleId]
+                : [',']
+              ).includes(s.value)
+            ) &&
+            (search['isActive']['value'].length > 0
+              ? search['isActive']['value']
+              : [{ value: ',' }]
+            ).some((s) =>
+              (search['isActive']['value'].length > 0
+                ? [el.active]
+                : [',']
+              ).includes(s.value)
+            ) &&
+            (search['clearanceLevel']['value'].length > 0
+              ? search['clearanceLevel']['value']
+              : [{ value: ',' }]
+            ).some((s) =>
+              (search['clearanceLevel']['value'].length > 0
+                ? [clearanceLevel]
+                : [',']
+              ).includes(s.value)
+            )
+          );
+        }),
+        searchedColumn: search,
+        openSearch: false,
+      });
+    } else {
+      this.setState({
+        searchedColumn: search,
+        filterData: data,
+        openSearch: false,
+      });
+    }
+  };
+//  will remove if seperate component works fine
+  filterModalUseEffect = () => {
+    Promise.all([getStates(), getRoles()])
+      .then((res) => {
+        const { filterFields } = this.state;
+        filterFields[11].data = res[0].success ? res[0].data : [];
+        filterFields[14].data = res[1].success ? res[1].data : [];
+        this.setState({
+          filterFields,
+        });
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
 
   render() {
     const {
@@ -838,7 +822,7 @@ class Employees extends Component {
           </Col>
           <Filtertags
             filters={searchedColumn}
-            filterFunction={(value, column)=>EmployeeAdvaceFilter(value, column, this.state, this.setState.bind(this))}
+            filterFunction={(value, column)=>this.advancefilter(value, column)}
           />
           <Col span={24}>
             <Table
@@ -855,8 +839,8 @@ class Employees extends Component {
             />
           </Col>
         </Row>
-        {/* // will remove if seperate component works fine */}
-        {/* {openSearch && (
+        {/* //  will remove if seperate component works fine */}
+        {openSearch && (
           <TableModalFilter
             title={'Filter Employees'}
             visible={openSearch}
@@ -867,8 +851,9 @@ class Employees extends Component {
             effectRender={true}
             onClose={() => this.setState({ openSearch: false })}
           />
-        )} */}
-        {openSearch && (
+        )}
+        {/* // seperate function for filter.. */}
+        {/* {openSearch && (
           <TableModalFilter
             title={'Filter Employees'}
             visible={openSearch}
@@ -879,7 +864,7 @@ class Employees extends Component {
             effectRender={true}
             onClose={() => this.setState({ openSearch: false })}
           />
-        )}
+        )} */}
         {infoModal && (
           <InfoModal
             visible={infoModal}
