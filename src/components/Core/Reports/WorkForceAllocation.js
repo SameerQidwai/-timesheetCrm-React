@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Col, Row, Typography, Table as Atable } from 'antd'
 import Table, { FiltertagsNew, tableSorter, tableTitleFilter } from '../Table/TableFilter'
-import { BencheResData,  WorkforceData } from './WIHData'
 import { Api, formatCurrency, formatDate, localStore } from '../../../service/constant'
 
 

@@ -24,27 +24,31 @@ const EditableRow = ({ index, ...props }) => {
     editable,
     children,
     dataIndex,
-    key,
     record,
-    indexing,
     handleSave,
     ...restProps
   }) => {
+    const [editing, setEditing] = useState(false);
     const inputRef = useRef(null);
     const form = useContext(EditableContext);
+    useEffect(() => {
+      if (editing) {
+        inputRef.current.focus();
+      }
+    }, [editing]);
   
     const toggleEdit = () => {
+      setEditing(!editing);
       form.setFieldsValue({
-        [key]: record[key],
+        [dataIndex]: record[dataIndex],
       });
     };
-    
+  
     const save = async () => {
       try {
-        const value = isNaN(parseFloat(inputRef.current.value))? 0 : parseFloat(inputRef.current.value)
-        // console.log(inputRef.current.value)
-        toggleEdit();
-        handleSave(indexing, dataIndex, value, record);
+        const values = await form.validateFields();
+        // toggleEdit();
+        handleSave({ ...record, ...values });
       } catch (errInfo) {
         console.log('Save failed:', errInfo);
       }
@@ -55,18 +59,23 @@ const EditableRow = ({ index, ...props }) => {
     if (editable) {
       childNode =  (
         <Row >
+          {/* <Col span={10}> */}
           <Col >
             <Form.Item
               style={{
                 margin: 0,
               }}
-              name={key}
+              name={dataIndex}
+              rules={[
+                {
+                  required: true,
+                  message: `${title} is required.`,
+                },
+              ]}
             >
               <InputNumber
                 ref={inputRef}
                 size="small"
-                onFocus={()=>{toggleEdit(key)}}
-                onChange={()=> save()}
                 // onBlur={()=> setTimeout(() => { setEditing(!editing) }, 300)}
               />
             </Form.Item>
@@ -80,17 +89,15 @@ const EditableRow = ({ index, ...props }) => {
 
 
 function WorkInHand() {
-    let {start, end} = getFiscalYear('dates')
-    const fiscal = moment(end).format('[FY]YY')
+    const fiscal = getFiscalYear('dates').end.format('[FY]YY')
     const forecastMonth = moment().subtract(1, 'month').endOf("month")
 
     const [dataSource, setDataSource] = useState([])
-    const [backupData, setBackupData] = useState([])
     const [columns, setColumns] = useState([
         {
             title: '1LM - Whole A$',
             dataIndex: 'name',
-            key: 'name',
+            key: 'key',
             width: 250,
             onHeaderCell: ()=> {
                 return {
@@ -128,13 +135,14 @@ function WorkInHand() {
     }, [])
 
     const creatingCol = () =>{
+        let {start, end} = getFiscalYear('dates')
         let newColumns = [...columns]
         let monthColumns = []
         // let endDate = '06/30/2021'
         for (var iDate = parseDate(start); iDate.isSameOrBefore(end); iDate.add(1, 'months')) {
             let el = {
               year: parseDate(iDate, 'MMM YY'),
-              era: iDate.isBefore(moment(), 'month') ? 'Actual': 'Forecast',
+              era: iDate.isSameOrBefore(moment(), 'month') ? 'Actual': 'Forecast',
             };
             monthColumns.push(monthCol(el, updateField))
         }
@@ -142,7 +150,6 @@ function WorkInHand() {
         newColumns[1]['children'][0]['children'] = monthColumns
         setColumns(newColumns)
     }
-
     const structureData = ({
         MILESTONE_BASE,
         TIME_BASE,
@@ -159,7 +166,7 @@ function WorkInHand() {
         income_revenue[1] = { ...income_revenue[1], ...TIME_BASE };
         income_revenue[2] = { ...income_revenue[2], ...MILESTONE_BASE };
         income_revenue[8] = { ...income_revenue[8], ...TOTAL_REVENUE };
-        
+
         cost_of_sale[2] = { ...cost_of_sale[2], ...PERMANENT_SALARIES };
         cost_of_sale[3] = { ...cost_of_sale[3], ...CASUAL_SALARIES };
         cost_of_sale[4] = { ...cost_of_sale[4], ...PERMANENT_SUPER };
@@ -173,55 +180,32 @@ function WorkInHand() {
         direct_overhead_expense[3] = { ...direct_overhead_expense[3], ...DOH_SALARIES };
         direct_overhead_expense[4] = { ...direct_overhead_expense[4], ...DOH_SUPER };
         direct_overhead_expense[18] = { ...direct_overhead_expense[18], ...TOTAL_DOH };
-        
-        console.log("Lengths...", {revenue: income_revenue.length, cost: cost_of_sale.length, doh: direct_overhead_expense.length})
 
-        setDataSource(new Array(
+
+        setDataSource([
             ...income_revenue,
             ...cost_of_sale,
             ...contribution_margin,
-            ...direct_overhead_expense
-        ));
-
-        setBackupData(JSON.parse(JSON.stringify(Array(
-            ...income_revenue,
-            ...cost_of_sale,
-            ...contribution_margin,
-            ...direct_overhead_expense
-        ))))
+            ...direct_overhead_expense,
+            // ...occupancy_expenses,
+            // ...supplies_expenses,
+            // ...comunication_expenses,
+            // ...outside_expenses,
+            // ...travel_entertainment_expenses,
+            // ...other_general_expenses,
+        ]);
 
     };
-    const testing = (index, dataIndex,)=>{
-        console.log(backupData?.[index]?.[dataIndex], "Backup", dataSource?.[index]?.[dataIndex], "dataSource")
-        // console.log(index, dataIndex, value)
-    }
-    // testing(8, "Jul 22")
 
-    const updateField = (index, dataIndex, value, record)=>{
-        let newData = [...dataSource]
-        //for Revenue 
-        if(record.identifier === 'revenue'){
-            newData[index][dataIndex] = value
-            // newData[8][dataIndex] = getValueWithCondition(backupData, 8, dataIndex) + value
-            // newData[31][dataIndex] = getValueWithCondition(backupData, 31, dataIndex) + value
-            // newData[33][dataIndex] = getValueWithCondition(backupData, 33, dataIndex) + value
-            // console.log(getValueWithCondition(newData, index, dataIndex), dataIndex)
-            newData[index]['total'] = 0
-            newData[8]['total'] = 0
-            for (var iDate = parseDate(start); iDate.isSameOrBefore(end); iDate.add(1, 'months')) {
-                let key = parseDate(iDate, 'MMM YY')
-                    // console.log(getValueWithCondition(newDa  ta, index, 'total') , getValueWithCondition(newData, index, key), key)
-                    newData[index]['total'] = getValueWithCondition(newData, index, 'total') +getValueWithCondition(newData, index, key)
-                    newData[8]['total'] =  getValueWithCondition(newData, 8, 'total') +getValueWithCondition(newData, 8, key)
-                    // newData[31][fiscal] =  getValueWithCondition(newData, 31, fiscal) +getValueWithCondition(newData, 31, key)
-            }
-            // console.log(getValueWithCondition(newData, index, fiscal))
-            setDataSource([...newData])
-        }
-        // console.log(index, dataIndex, value)
-    }
-
-    // console.log(dataSource)
+    const updateField = useCallback(
+            (value=0, key) => {
+                console.log(value, key)
+            //   let newData = [...dataSource]
+            // newData[8][key] = parseFloat(newData[8][key]) + value
+            // setDataSource(newData)
+          },
+          [dataSource],
+    )
     
     const components = {
         body: {
@@ -231,15 +215,17 @@ function WorkInHand() {
       };
 
     const mapColumns = col => {
+      // if (!col.editable) {
+      //   return col;
+      // }
       const newCol = {
         ...col,
-        onCell: (record, index) => ({
+        onCell: record => ({
           record,
-          editable: col.dataIndex !== 'name' && !col.dataIndex.startsWith('FY') && record.editable,
+          editable: col.editable,
           dataIndex: col.dataIndex,
           title: col.title,
-          indexing: index,
-          handleSave: updateField
+          handleSave: ()=>{console.log("does this working?")}
         })
       };
       if (col.children) {
@@ -249,6 +235,7 @@ function WorkInHand() {
     };
   
     const re_column = columns.map(mapColumns);
+    console.log(re_column)
     
   return (
     <>
@@ -296,10 +283,10 @@ const monthCol = ({year, era}, updateField)=>({
       key: year,
       width: 100,
       align: 'center',
-      onCell: (record)=> {
+      onCell: ()=> {
           return {className: year.startsWith('FY') ? 'fin-total': ''} 
       },
-      render: (text,record, index) =>{
+      render: (text,record) =>{
           if(record.render){
               return record.render(year, record)
           }
@@ -308,9 +295,6 @@ const monthCol = ({year, era}, updateField)=>({
               // for (var iDate = parseDate('07/01/2020'); iDate.isSameOrBefore('06/30/2021'); iDate.add(1, 'months')) {
               //     totalYear += record[parseDate(iDate, 'MMM YY')] ?? 0
               // }
-              if(index=== 8){
-                console.log(record.total)
-              }
               return record.total ? formatCurrency(record.total) : '-'
           }
           if (record.openField){
@@ -328,11 +312,3 @@ const monthCol = ({year, era}, updateField)=>({
     }
   ],
 })
-
-const getValueWithCondition = (obj, index, key) =>{
-    return obj?.[index]?.[key]
-      ? isNaN(parseFloat(obj[index][key]))
-        ? 0
-        : parseFloat(obj[index][key])
-      : 0;
-}
