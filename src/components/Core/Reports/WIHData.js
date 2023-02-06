@@ -55,6 +55,7 @@ export const cost_of_sale = [
   { 
       name: 'COST OF SALES - COS', 
       key: 'COST OF SALES - COS cos', 
+      identifier: 'cos',
       className: 'title-row' 
   },
   {
@@ -174,11 +175,10 @@ export const contribution_margin = [
     className: 'total-row',
     name: 'CONTRIBUTION MARGIN',
     key: 'CONTRIBUTION MARGIN',
-    joinRow: "CM",
     render:(key, record)=>{
       key = key.startsWith('FY')? 'total' : key
-      let value = record['TOTAL_REVENUE'][key] - (record['TOTAL_COST'][key])
-      return value <= 0 ? `(${formatFloat(Math.abs(value))})` : formatFloat(value)
+      let value = getValueWithCondition(record, 'TOTAL_REVENUE', key)  - getValueWithCondition(record, 'TOTAL_COST', key)
+      return value < 0 ? `(${formatCurrency(Math.abs(value))})` : formatCurrency(value)
     }
   },
   {},
@@ -186,11 +186,11 @@ export const contribution_margin = [
     className: 'total-row',
     name: 'C.M. %',
     key: 'C.M. %',
-    joinRow: "CM%",
     render:(key, record)=>{
       key = key.startsWith('FY')? 'total' : key
-      let value = ((record['TOTAL_REVENUE'][key] - (record['TOTAL_COST'][key])) /record['TOTAL_REVENUE'][key]) *100
-      return `${value <= 0 ? `(${formatFloat(Math.abs(value))})` : formatFloat(value)} %`
+      let revenue = getValueWithCondition(record, 'TOTAL_REVENUE', key)
+      let value = revenue ? ((revenue - getValueWithCondition(record, 'TOTAL_COST', key)) /revenue) *100: 0.00
+      return `${value < 0 ? `(${formatFloat(Math.abs(value))})` : formatFloat(value)} %`
     }
   },
   {}
@@ -288,6 +288,79 @@ export const direct_overhead_expense = [
     key: 'TOTAL DIRECT OVERHEAD - DOH doh',
   },
 ];
+
+export const income_tax = [
+  {},
+  {
+    className: 'total-row',
+    name: 'EARNINGS BEFORE INCOME TAX - EBIT',
+    key: 'EARNINGS BEFORE INCOME TAX - EBIT',
+    render:(key, record)=>{
+      key = key.startsWith('FY')? 'total' : key
+      let value =
+        getValueWithCondition(record, 'TOTAL_REVENUE', key) -
+        getValueWithCondition(record, 'TOTAL_COST', key) -
+        getValueWithCondition(record, 'TOTAL_DOH', key);
+      return `${value < 0 ? `(${formatCurrency(Math.abs(value))})` : formatCurrency(value)}`
+    }
+  },
+  {},
+  {
+    name: 'Interest Income',
+    key: 'Interst Income tax',
+    className: 'data-title-row',
+    editable: true,
+  },
+  {
+    name: 'Interest Expense',
+    key: 'Interest Expense tax',
+    operation: '-',
+    className: 'data-title-row',
+    editable: true,
+  },
+  {
+    name: 'Indirect Overhead',
+    key: 'Indirect Overhead tax',
+    operation: '-',
+    className: 'data-title-row',
+    editable: true,
+  },
+  {
+    name: 'Other Income',
+    key: 'Other Income tax',
+    className: 'data-title-row',
+    editable: true,
+  },
+]
+
+export const net_profit = [
+  {
+    className: 'total-row',
+    name: 'PROFIT BEFORE TAX',
+    key: 'PROFIT BEFORE TAX profit',
+    render:(key, record)=>{
+      key = key.startsWith('FY')? 'total' : key
+      return record[key] ? formatCurrency(record[key]) : '-'
+    }
+  },
+  {},
+  {
+    name: 'Income Tax Expense',
+    key: 'Income Tax Expense profit',
+    className: 'data-title-row',
+    editable: true,
+  },
+  {},
+  {
+    className: 'total-row',
+    name: 'NET PROFIT',
+    key: 'NET PROFIT profit',
+    render:(key, record)=>{
+      key = key.startsWith('FY')? 'total' : key
+      return record[key] ? formatCurrency(record[key]) : '-'
+    }
+  },
+]
 
 // export const occupancy_expenses = [
 //     {},
@@ -786,3 +859,22 @@ export const direct_overhead_expense = [
 //     },
 //     {},
 // ]
+
+
+
+/**------------------Helper ------ function */
+
+const getValueWithCondition = (obj, index, key) =>{
+  if (key){
+    return obj?.[index]?.[key]
+      ? isNaN(parseFloat(obj[index][key]))
+        ? 0
+        : parseFloat(obj[index][key])
+      : 0;
+  }
+  return obj?.[index]
+    ? isNaN(parseFloat(obj[index]))
+      ? 0
+      : parseFloat(obj[index])
+    : 0;
+}
