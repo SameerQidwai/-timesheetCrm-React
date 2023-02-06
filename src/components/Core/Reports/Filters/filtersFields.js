@@ -1419,7 +1419,7 @@ export const timesheet_summary =({fields,setFields, getCompData})=> ({
         customValue: (value, option) => ({ selectedIds: value, option }),
         getValueProps: (value)=>  ({value: value?.selectedIds}),
         data: [
-          {value: 0, label: 'Not Applicable'},
+          // {value: 0, label: 'Not Applicable'},
           {value: 1, label: 'Not Submitted'},
           {value: 2, label: 'Submitted'},
           {value: 3, label: 'Approved'},
