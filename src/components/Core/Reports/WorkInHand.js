@@ -5,6 +5,7 @@ import { getWorkInHandForecast } from '../../../service/reports-Apis';
 import "../../Styles/table.css"
 import { contribution_margin, cost_of_sale, direct_overhead_expense, income_revenue, income_tax, net_profit } from './WIHData';
 import moment from 'moment'
+import { formatter, parser } from '../Forms/FormItems';
 const {Title} = Typography
 const EditableContext = React.createContext(null);
 
@@ -33,13 +34,35 @@ const EditableCell = ({
 }) => {
   const inputRef = useRef(null);
   const form = useContext(EditableContext);
-    
-  const save = async () => {
-    try {
-      const value = isNaN(parseFloat(inputRef.current.value))? 0 : parseFloat(inputRef.current.value)
-      handleSave(indexing, dataIndex, value, record);
-    } catch (errInfo) {
-      console.log('Save failed:', errInfo);
+
+  const [blurHook, setBlurHook] = useState(false)
+  
+  const blurSave = ({target: {value}})=>{
+    value = value.replace(/[^0-9.]/g, '')
+    value = isNaN(parseFloat(value))? 0 : parseFloat(value)
+    if (value !== record[dataIndex]){
+      console.log(value , record[dataIndex]??0)
+      form.setFieldsValue({
+        [record['name']]: {
+          ...form.getFieldsValue(),
+          [dataIndex]: record[dataIndex],
+        },
+      });
+    }
+    setBlurHook(false)
+  }
+
+  const save = async ({target: {value}}) => {
+    value = value.replace(/[^0-9.]/g, '')
+    value = isNaN(parseFloat(value))? 0 : parseFloat(value)
+    if (blurHook && value){
+      setBlurHook(false)
+      try {
+        
+        handleSave(indexing, dataIndex, value, record);
+      } catch (errInfo) {
+        console.log('Save failed:', errInfo);
+      }
     }
   };
 
@@ -53,12 +76,16 @@ const EditableCell = ({
             style={{
               margin: 0,
             }}
-            name={dataIndex}
+            name={[record['name'],dataIndex]}
           >
             <InputNumber
               ref={inputRef}
               size="small"
-              onChange={()=> save()}
+              formatter={(value) => formatter(value, "$") }
+              parser={(value) => parser(value, "$") }
+              onFocus={()=>{ setBlurHook(true) }}
+              onBlur={(event)=> blurSave(event)}
+              onPressEnter={(event)=> save(event)}
             />
           </Form.Item>
         </Col>
@@ -272,19 +299,19 @@ function WorkInHand() {
     <Row>
         <Col span={24}>
             <Table
-                components={components}
-                bordered
-                size="small"
-                pagination = {false}
-                rowKey={(row)=> row.key??row.name}
-                columns={re_column}
-                rowClassName={(row)=> row.className}
-                dataSource={dataSource}
-                className="scroll-table fs-v-small full-width wih-report"
-                scroll={{
-                    x: "max-content",
-                    y: '65vh',
-                }}
+              components={components}
+              bordered
+              size="small"
+              pagination = {false}
+              rowKey={(row)=> row.key??row.name}
+              columns={re_column}
+              rowClassName={(row)=> row.className}
+              dataSource={dataSource}
+              className="scroll-table fs-v-small full-width wih-report"
+              scroll={{
+                  x: "max-content",
+                  y: '65vh',
+              }}
             />
         </Col>
     </Row>
