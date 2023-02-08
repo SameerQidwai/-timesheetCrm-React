@@ -103,7 +103,7 @@ function ClientRevenueAnalysis() {
     let query = _createQuery(tags??{})
     getClientRevenueAnalysis(query, '/export').then(res=>{
       if (res.success){
-        window.open(`${Api}${res.data}`, '_blank', 'noreferrer');
+        window.open(`${Api}/${res.data}`, '_blank', 'noreferrer');
       }
       setLoading(false)
     })

@@ -171,7 +171,7 @@ function Positions() {
         let query = _createQuery(tags??{})
         getPositions(query, '/export').then(res=>{
           if (res.success){
-            window.open(`${Api}${res.data}`, '_blank', 'noreferrer');
+            window.open(`${Api}/${res.data}`, '_blank', 'noreferrer');
           }
           setLoading(false)
         })

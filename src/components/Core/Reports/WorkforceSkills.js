@@ -78,7 +78,7 @@ function WorkforceSkills() {
     let query = _createQuery(tags??{})
     getWorkforceSkills(query, '/export').then(res=>{
       if (res.success){
-        window.open(`${Api}${res.data}`, '_blank', 'noreferrer');
+        window.open(`${Api}/${res.data}`, '_blank', 'noreferrer');
       }
       setLoading(false)
     })

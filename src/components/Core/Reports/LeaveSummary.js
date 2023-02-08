@@ -111,7 +111,7 @@ function LeaveSummary() {
       let query = _createQuery(tags??{})
       getLeaveSummary(query, '/export').then(res=>{
         if (res.success){
-          window.open(`${Api}${res.data}`, '_blank', 'noreferrer');
+          window.open(`${Api}/${res.data}`, '_blank', 'noreferrer');
         }
         setLoading(false)
       })
