@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Col, Row, Typography, Table as ATable } from 'antd'
 import Table, { FiltertagsNew, tableSorter } from '../Table/TableFilter'
-import { formatCurrency, formatFloat, localStore } from '../../../service/constant'
+import { Api, formatCurrency, formatFloat, localStore } from '../../../service/constant'
 import { ReportsFilters, _createQuery } from './Filters'
 
 import { getClientRevenueAnalysis } from '../../../service/reports-Apis'
@@ -98,14 +98,34 @@ function ClientRevenueAnalysis() {
     })
   }
 
+  const exportData = () =>{
+    setLoading(true)
+    let query = _createQuery(tags??{})
+    getClientRevenueAnalysis(query, '/export').then(res=>{
+      if (res.success){
+        window.open(`${Api}/${res.data}`, '_blank', 'noreferrer');
+      }
+      setLoading(false)
+    })
+  }
+
   const tableTitle = () =>{
     return(
       <Row justify="space-between">
         <Col >
           <Typography.Title level={5}>FY Client Revenue Analysis</Typography.Title>
         </Col>
-        <Col >
-          <Button size="small" onClick={()=>setVisible(true)}>Filters</Button>
+        <Col>
+            <Row justify="end" gutter={5}>
+                <Col >
+                    <Button size="small" onClick={()=>exportData}>Download CSV</Button>
+                </Col>
+                <Col>
+                    <Button size="small" onClick={() => setVisible(true)}>
+                    Filters
+                    </Button>
+                </Col>
+            </Row>
         </Col>
         <Col span={24}>
           <FiltertagsNew

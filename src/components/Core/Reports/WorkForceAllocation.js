@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Col, Row, Typography, Table as Atable } from 'antd'
 import Table, { FiltertagsNew, tableSorter, tableTitleFilter } from '../Table/TableFilter'
-import { BencheResData,  WorkforceData } from './WIHData'
-import { formatCurrency, formatDate, localStore } from '../../../service/constant'
+import { Api, formatCurrency, formatDate, localStore } from '../../../service/constant'
 
 
 import { getAllocations } from '../../../service/reports-Apis'
@@ -165,6 +164,17 @@ function WorkForceAllocation() {
         })
     }
 
+    const exportData = () =>{
+        setLoading(true)
+        let query = _createQuery(tags??{})
+        getAllocations(query, '/export').then(res=>{
+          if (res.success){
+            window.open(`${Api}/${res.data}`, '_blank', 'noreferrer');
+          }
+          setLoading(false)
+        })
+      }
+
     const tableTitle = () => {
         return (
           <Row justify="space-between">
@@ -172,7 +182,16 @@ function WorkForceAllocation() {
               <Title level={5}>Workforce Allocations</Title>
             </Col>
             <Col>
-              <Button size="small" onClick={() => setVisible(true)}> Filters </Button>
+                <Row justify="end" gutter={5}>
+                    <Col >
+                        <Button size="small" onClick={exportData}>Download CSV</Button>
+                    </Col>
+                    <Col>
+                        <Button size="small" onClick={() => setVisible(true)}>
+                        Filters
+                        </Button>
+                    </Col>
+                </Row>
             </Col>
             <Col span={24}>
               <FiltertagsNew

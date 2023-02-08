@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Col, Row, Typography, Table as Atable } from 'antd'
 import Table, { FiltertagsNew, tableSorter } from '../Table/TableFilter'
-import { formatCurrency, formatDate, formatFloat, localStore } from '../../../service/constant'
+import { Api, formatCurrency, formatDate, formatFloat, localStore } from '../../../service/constant'
 
 
 import { getPositions } from '../../../service/reports-Apis'
@@ -166,15 +166,35 @@ function Positions() {
         })
     }
 
+    const exportData = () =>{
+        setLoading(true)
+        let query = _createQuery(tags??{})
+        getPositions(query, '/export').then(res=>{
+          if (res.success){
+            window.open(`${Api}/${res.data}`, '_blank', 'noreferrer');
+          }
+          setLoading(false)
+        })
+      }
+
     const tableTitle = () => {
       return (
         <Row justify="space-between">
           <Col>
             <Title level={5}>Opportunity & Project Position Allocations </Title>
           </Col>
-          <Col>
-            <Button size="small" onClick={() => setVisible(true)}> Filters </Button>
-          </Col>
+            <Col>
+                <Row justify="end" gutter={5}>
+                    <Col >
+                    <Button size="small" onClick={exportData}>Download CSV</Button>
+                    </Col>
+                    <Col>
+                    <Button size="small" onClick={() => setVisible(true)}>
+                    Filters
+                    </Button>
+                    </Col>
+                </Row>
+            </Col>
           <Col span={24}>
             <FiltertagsNew
               filters={tags}

@@ -300,7 +300,14 @@ const subListData = [ //FundOutlined
         key: 'LEAVESUMMARY',
         permissions: { module: 'ADMIN_OPTIONS', key: 'READ' },
         },
-    ],
+        {
+          text: 'Forecast Work In Hands',
+          icon: <CarryOutOutlined />,
+          link: '/report/work-in-hand',
+          key: 'LEAVESUMMARY',
+          permissions: { module: 'ADMIN_OPTIONS', key: 'READ' },
+        },
+      ],
     },
     {
     text: 'Training',
