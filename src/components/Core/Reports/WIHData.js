@@ -45,7 +45,7 @@ export const income_revenue = [
     key: 'TOTAL REVENUE',
     render:(key, record)=>{
       key = key.startsWith('FY')? 'total' : key
-      return record[key] ? formatCurrency(record[key]) : '-'
+      return record[key] ? formatNegativeValue(record[key]) : '-'
     }
   },
 ];
@@ -177,7 +177,7 @@ export const cost_of_sale = [
     key: 'TOTAL COST OF SALES - COS cos',
     render:(key, record)=>{
       key = key.startsWith('FY')? 'total' : key
-      return record[key] ? formatCurrency(record[key]) : '-'
+      return record[key] ? formatNegativeValue(record[key])  : '-'
     }
   },
 ];
@@ -188,10 +188,13 @@ export const contribution_margin = [
     className: 'total-row',
     name: 'CONTRIBUTION MARGIN',
     key: 'CONTRIBUTION MARGIN',
+    renderCalculation: (record, key) =>{
+      key = key.startsWith('FY')? 'total' : key
+      return getValueWithCondition(record, 8, key)  - getValueWithCondition(record, 30, key)
+    },
     render:(key, record)=>{
       key = key.startsWith('FY')? 'total' : key
-      let value = getValueWithCondition(record, 'TOTAL_REVENUE', key)  - getValueWithCondition(record, 'TOTAL_COST', key)
-      return value < 0 ? `(${formatCurrency(Math.abs(value))})` : formatCurrency(value)
+      return formatNegativeValue(record[key]) 
     }
   },
   {},
@@ -199,11 +202,14 @@ export const contribution_margin = [
     className: 'total-row',
     name: 'C.M. %',
     key: 'C.M. %',
+    renderCalculation: (record, key) =>{
+      key = key.startsWith('FY')? 'total' : key
+      let revenue = getValueWithCondition(record, 8, key)
+      return revenue ? ((revenue - getValueWithCondition(record, 30, key)) /revenue) *100: 0.00
+    },
     render:(key, record)=>{
       key = key.startsWith('FY')? 'total' : key
-      let revenue = getValueWithCondition(record, 'TOTAL_REVENUE', key)
-      let value = revenue ? ((revenue - getValueWithCondition(record, 'TOTAL_COST', key)) /revenue) *100: 0.00
-      return `${value < 0 ? `(${formatFloat(Math.abs(value))})` : formatFloat(value)} %`
+      return formatNegativeValue(record[key]) 
     }
   },
   {}
@@ -308,13 +314,15 @@ export const income_tax = [
     className: 'total-row',
     name: 'EARNINGS BEFORE INCOME TAX - EBIT',
     key: 'EARNINGS BEFORE INCOME TAX - EBIT',
+    renderCalculation: (record, key) =>{
+      key = key.startsWith('FY')? 'total' : key
+      return getValueWithCondition(record, 8, key) -
+      getValueWithCondition(record, 30, key) -
+      getValueWithCondition(record, 54, key);
+    },
     render:(key, record)=>{
       key = key.startsWith('FY')? 'total' : key
-      let value =
-        getValueWithCondition(record, 'TOTAL_REVENUE', key) -
-        getValueWithCondition(record, 'TOTAL_COST', key) -
-        getValueWithCondition(record, 'TOTAL_DOH', key);
-      return `${value < 0 ? `(${formatCurrency(Math.abs(value))})` : formatCurrency(value)}`
+      return record[key] ? formatNegativeValue(record[key])  : '-'
     }
   },
   {},
@@ -351,9 +359,17 @@ export const net_profit = [
     className: 'total-row',
     name: 'PROFIT BEFORE TAX',
     key: 'PROFIT BEFORE TAX profit',
+    renderCalculation: (record, key) =>{
+      key = key.startsWith('FY')? 'total' : key
+      return getValueWithCondition(record, 56, key) +
+      getValueWithCondition(record, 58, key) -
+      getValueWithCondition(record, 59, key) -
+      getValueWithCondition(record, 60, key) +
+      getValueWithCondition(record, 61, key) 
+    },
     render:(key, record)=>{
       key = key.startsWith('FY')? 'total' : key
-      return record[key] ? formatCurrency(record[key]) : '-'
+      return  formatNegativeValue(record[key]) 
     }
   },
   {},
@@ -368,9 +384,14 @@ export const net_profit = [
     className: 'total-row',
     name: 'NET PROFIT',
     key: 'NET PROFIT profit',
+    renderCalculation: (record, key) =>{
+      key = key.startsWith('FY')? 'total' : key
+      return getValueWithCondition(record, 62, key) -
+      getValueWithCondition(record, 64, key) 
+    },
     render:(key, record)=>{
       key = key.startsWith('FY')? 'total' : key
-      return record[key] ? formatCurrency(record[key]) : '-'
+      return formatNegativeValue(record[key])
     }
   },
 ]
@@ -877,17 +898,15 @@ export const net_profit = [
 
 /**------------------Helper ------ function */
 
-const getValueWithCondition = (obj, index, key) =>{
-  if (key){
-    return obj?.[index]?.[key]
-      ? isNaN(parseFloat(obj[index][key]))
-        ? 0
-        : parseFloat(obj[index][key])
-      : 0;
-  }
-  return obj?.[index]
-    ? isNaN(parseFloat(obj[index]))
-      ? 0
-      : parseFloat(obj[index])
-    : 0;
+export const getValueWithCondition = (obj, index, key) => {
+  if (!obj || !obj[index]) return 0;
+
+  let value = key ? obj[index][key] : obj[index];
+  return isNaN(parseFloat(value)) ? 0 : parseFloat(value);
+}
+
+export const formatNegativeValue = (value) =>{
+  return `${
+    value < 0 ? `(${formatCurrency(Math.abs(value))})` : formatCurrency(value)
+  }`;
 }

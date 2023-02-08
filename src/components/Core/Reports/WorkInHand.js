@@ -3,7 +3,7 @@ import { Col, InputNumber, Row, Table, Typography, Form } from 'antd'
 import { formatCurrency, getFiscalYear, parseDate } from '../../../service/constant';
 import { getWorkInHandForecast } from '../../../service/reports-Apis';
 import "../../Styles/table.css"
-import { contribution_margin, cost_of_sale, direct_overhead_expense, income_revenue, income_tax, net_profit } from './WIHData';
+import { contribution_margin, cost_of_sale, direct_overhead_expense, formatNegativeValue, getValueWithCondition, income_revenue, income_tax, net_profit } from './WIHData';
 import moment from 'moment'
 import { formatter, parser } from '../Forms/FormItems';
 const {Title} = Typography
@@ -37,29 +37,34 @@ const EditableCell = ({
 
   const [blurHook, setBlurHook] = useState(false)
   
-  const blurSave = ({target: {value}})=>{
-    value = value.replace(/[^0-9.]/g, '')
-    value = isNaN(parseFloat(value))? 0 : parseFloat(value)
+  const blurSave = ()=>{
+    // console.log(form.getFieldValue([record['name'], dataIndex]))
+    // value = value.replace(/[^0-9.-]/g, '')
+    let value = form.getFieldValue([record['name'], dataIndex])
+    value = (!value || isNaN(parseFloat(value)))? 0 : parseFloat(value)
     if (value !== record[dataIndex]){
-      console.log(value , record[dataIndex]??0)
       form.setFieldsValue({
         [record['name']]: {
           ...form.getFieldsValue(),
           [dataIndex]: record[dataIndex],
         },
       });
+      
     }
     setBlurHook(false)
   }
 
-  const save = async ({target: {value}}) => {
-    value = value.replace(/[^0-9.]/g, '')
-    value = isNaN(parseFloat(value))? 0 : parseFloat(value)
+  const save = async () => {
+    let value = form.getFieldValue([record['name'], dataIndex])
+    value = (!value || isNaN(parseFloat(value)))? 0 : parseFloat(value)
     if (blurHook && value){
+      console.log('ran again')
       setBlurHook(false)
       try {
-        
-        handleSave(indexing, dataIndex, value, record);
+        handleSave(indexing, dataIndex, value, setBlurHook);
+        setInterval(() => {
+          setBlurHook(true)
+        }, 1000);
       } catch (errInfo) {
         console.log('Save failed:', errInfo);
       }
@@ -101,8 +106,8 @@ function WorkInHand() {
   let {start, end} = getFiscalYear('dates')
   const fiscal = moment(end).format('[FY]YY')
   const forecastMonth = moment().subtract(1, 'month').endOf("month")
-
   const [dataSource, setDataSource] = useState([])
+  const [loading, setLoading] = useState(false)
   const [columns, setColumns] = useState([
       {
           title: '1LM - Whole A$',
@@ -202,62 +207,72 @@ function WorkInHand() {
 
   const calculate_col_total = (updatedData)=>{
     let newData = [...updatedData]
-    let columName = columns?.[1]?.['children']?.[0]?.['children']||[]
-    let revenue_total = {};
-    let cos_total = {};
-    let doh_total = {};
-    let profit_before_tax = {};
-    let net_profit = {};
+    let columName = columns?.[1]?.['children']?.[0]?.['children']||[];
 
     (columName).forEach(({children: [{dataIndex}]})=>{
-    for(let i = 0; i < newData.length; i++){
+      newData[8][dataIndex]=0; /**Revenue */ 
+      newData[30][dataIndex]=0; /**COST */ 
+      newData[54][dataIndex]=0; /**DOH */
+      newData[62][dataIndex]=0; /**TAX */
+      // newData[66][dataIndex]=0; /**Profit */
+  
+      for(let i = 0; i < newData.length; i++){
+        // console.log(i, newData[i]["name"])
       // dataIndex = dataIndex.startsWith('FY')? 'total' : dataIndex
-        if (moment(dataIndex, 'MMM YY', true).isValid()){
+      if (moment(dataIndex, 'MMM YY', true).isValid()){
           if (i<8){
-            revenue_total[dataIndex] = getValueWithCondition(revenue_total, dataIndex) + getValueWithCondition(newData, i, dataIndex)
+              newData[8][dataIndex] += getValueWithCondition(newData, i, dataIndex)
           }else if (i>8 && i <30){
-            cos_total[dataIndex] = getValueWithCondition(cos_total, dataIndex) + getValueWithCondition(newData, i, dataIndex)
+              newData[30][dataIndex] += getValueWithCondition(newData, i, dataIndex)
           }else if (i>34 && i <54){
-            doh_total[dataIndex] = getValueWithCondition(doh_total, dataIndex) + getValueWithCondition(newData, i, dataIndex)
-          }else if (i>56 && i <62){
-            profit_before_tax[dataIndex] = newData[i]['operation'] ?
-              getValueWithCondition(profit_before_tax, dataIndex) - getValueWithCondition(newData, i, dataIndex)
-            :
-              getValueWithCondition(profit_before_tax, dataIndex) + getValueWithCondition(newData, i, dataIndex)
-          }else if (i>62 && i< 67){
-            net_profit[dataIndex] =getValueWithCondition(profit_before_tax, dataIndex) + getValueWithCondition(newData, i, dataIndex)
+              newData[54][dataIndex] += getValueWithCondition(newData, i, dataIndex)
           }
-        }
+          // }else if (i>56 && i <62){
+          //     newData[62][dataIndex] = newData[i]['operation'] ?
+          //     getValueWithCondition(newData, 62, dataIndex) - getValueWithCondition(newData, i, dataIndex)
+          // :
+          //     getValueWithCondition(newData, 62, dataIndex) + getValueWithCondition(newData, i, dataIndex)
+          // }else if (i>62 && i< 67){
+          //     newData[66][dataIndex] = getValueWithCondition(newData, 62, dataIndex) - getValueWithCondition(newData, 64, dataIndex)
+          // }
+      }
       }
     }) 
 
-      newData[8]={...newData[8],...revenue_total};
-      newData[30]={...newData[30],...cos_total};
-      newData[54]={...newData[54],...doh_total};
-      newData[62]={...newData[62],...profit_before_tax};
-      newData[66]={...newData[66],...net_profit};
-      
+     // , 64, 66   /**   CM          CM %              EBIT  */
+     let calculate_indexes = [32, 34, 56, 62, 66];
 
-      for(let i = 0; i < newData.length; i++){
-        newData[i] ={...newData[i], total: 0};
-        (columName).forEach(({children: [{dataIndex}]})=>{       
-          if (moment(dataIndex, 'MMM YY', true).isValid()){
-            newData[i]['total'] = getValueWithCondition(newData, i, 'total') + getValueWithCondition(newData, i, dataIndex)
+     (columName).forEach(({children: [{dataIndex}]})=>{
+      (calculate_indexes).forEach((index)=>{
+        newData[index] = {
+          ...newData[index],
+          [dataIndex]: newData?.[index]?.renderCalculation(newData, dataIndex)
+        }
+      })
+     })
+
+    newData = newData.map(item => {
+      return {
+        ...item,
+        total: columName.reduce((acc, {children: [{dataIndex}]}) => {
+          if (moment(dataIndex, 'MMM YY', true).isValid()) {
+            acc += item[dataIndex] || 0;
           }
-        })
-      }
-
-      newData[32] = {...newData[32], TOTAL_COST: newData[30], TOTAL_REVENUE: newData[8]};
-      newData[34] = {...newData[34], TOTAL_COST: newData[30], TOTAL_REVENUE: newData[8]};
-      newData[56] = {...newData[56], TOTAL_COST: newData[30], TOTAL_REVENUE: newData[8], TOTAL_DOH: newData[54]};
-      
-      setDataSource(newData)
+          return acc;
+        }, 0)
+      };
+    });
+    setDataSource(newData)
+    return true
+    // setLoading(false)
   }
+  
 
-  const updateField = (index, dataIndex, value, record)=>{
+  const updateField = (index, dataIndex, value, openField)=>{
     let newData = [...dataSource]
     newData[index][dataIndex] = value
-    calculate_col_total(newData)
+    return calculate_col_total(newData)
+    // openField(false)
   }
     
   const components = {
@@ -301,6 +316,7 @@ function WorkInHand() {
             <Table
               components={components}
               bordered
+              // loading={true}
               size="small"
               pagination = {false}
               rowKey={(row)=> row.key??row.name}
@@ -339,7 +355,8 @@ const monthCol = ({year, era})=>({
               return record.render(year, record)
           }
           if(year.startsWith('FY')){
-              return record.total ? formatCurrency(record.total) : '-'
+            
+              return record.total ? formatNegativeValue(record.total) : '-'
           }
               //checking if number is integer                     //if total column put - of undefned or 0
           return (text>= 0 ||text<= 0) ? formatCurrency(text) : record.className === 'total-row'? '-' : record.default !== undefined? formatCurrency(record.default) : '' 
@@ -348,17 +365,3 @@ const monthCol = ({year, era})=>({
   ],
 })
 
-const getValueWithCondition = (obj, index, key) =>{
-  if (key){
-    return obj?.[index]?.[key]
-      ? isNaN(parseFloat(obj[index][key]))
-        ? 0
-        : parseFloat(obj[index][key])
-      : 0;
-  }
-  return obj?.[index]
-    ? isNaN(parseFloat(obj[index]))
-      ? 0
-      : parseFloat(obj[index])
-    : 0;
-}
