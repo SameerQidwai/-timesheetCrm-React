@@ -4,7 +4,7 @@ import Table, { FiltertagsNew, tableSorter } from '../Table/TableFilter'
 import { getTimesheetSummary } from '../../../service/reports-Apis'
 
 
-import { formatCurrency, formatFloat, getFiscalYear, localStore } from '../../../service/constant'
+import { Api, formatCurrency, formatFloat, getFiscalYear, localStore } from '../../../service/constant'
 import moment from 'moment'
 import { ReportsFilters, _createQuery } from './Filters'
 import { _generateMonthlyColumns } from '.'
@@ -119,6 +119,17 @@ function TimesheetSummary() {
     })
   }
 
+  const exportData = () =>{
+    setLoading(true)
+    let query = _createQuery(tags??{})
+    getTimesheetSummary(query, '/export').then(res=>{
+      if (res.success){
+        window.open(`${Api}/${res.data}`, '_blank', 'noreferrer');
+      }
+      setLoading(false)
+    })
+  }
+
   const summaryFooter = (data) =>{
     let excludeColumns = ['employeeName', 'employeeCode', 'projectName', 'projectCode', 'purchaseOrder', 'organizationName', 'empty',]
     if(data.length>0)
@@ -188,7 +199,16 @@ function TimesheetSummary() {
           <Typography.Title level={4}>Timesheets Summary</Typography.Title>
         </Col>
         <Col>
-          <Button size="small" onClick={()=>setVisible(true)}>Filters</Button>
+          <Row justify="end" gutter={5}>
+            <Col >
+              <Button size="small" onClick={exportData}>Download CSV</Button>
+            </Col>
+            <Col>
+              <Button size="small" onClick={() => setVisible(true)}>
+              Filters
+              </Button>
+            </Col>
+          </Row>
         </Col>
       </Row>
       <Row gutter={[0, 100]}>

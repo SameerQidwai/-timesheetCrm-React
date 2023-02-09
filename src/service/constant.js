@@ -112,7 +112,6 @@ export const formatFloat = (number, fixed, round)=>{
       roundingMode: round ?? 'trunc'
     });  
     return formatter.format(number)
-    return formatter.format(number)
   }
   return '0.00' 
 }

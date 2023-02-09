@@ -2,9 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Button, Col, Row, Typography, Table as Atable } from 'antd'
 import Table, { FiltertagsNew, tableSorter } from '../Table/TableFilter'
 import { getBenchResources } from '../../../service/reports-Apis'
-
-
-import { formatCurrency } from '../../../service/constant'
+import { Api, formatCurrency } from '../../../service/constant'
 import { ReportsFilters, _createQuery } from './Filters'
 
 const {Title, Text} = Typography
@@ -82,14 +80,33 @@ function BenchResources() {
     })
   }
 
+  const exportData = () =>{
+    setLoading(true)
+    let query = _createQuery(tags??{})
+    getBenchResources(query, '/export').then(res=>{
+      if (res.success){
+        window.open(`${Api}/${res.data}`, '_blank', 'noreferrer');
+      }
+      setLoading(false)
+    })
+  }
+
   const tableTitle = () =>{
     return(
       <Row justify="space-between">
         <Col >
           <Title level={5}>Unallocated Resources</Title>
         </Col>
-        <Col >
+        <Col span={6}>
+          <Row justify="end" gutter={5}>
+            <Col >
+            <Button size="small" onClick={()=>{
+              exportData()}}>Download CSV</Button>
+            </Col>
+            <Col>
           <Button size="small" onClick={()=>setVisible(true)}>Filters</Button>
+            </Col>
+          </Row>
         </Col>
         <Col span={24}>
           <FiltertagsNew
