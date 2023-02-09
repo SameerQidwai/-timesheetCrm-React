@@ -352,7 +352,7 @@ class Menus extends Component {
           // return el
         } else {
           delete el.subMenu;
-          allowedMenu.push(el);
+          // allowedMenu.push(el);
           // return el
         }
       } else if (permissions?.[el?.permissions?.module]) {
