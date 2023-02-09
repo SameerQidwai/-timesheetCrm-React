@@ -58,7 +58,7 @@ const contantColmuns = [
   {
     key: 'currentMonth',
     dataIndex: 'currentMonth',
-    title: 'Sheet Hours Submit This Month',
+    title: 'Sheet Hours This Month',
     width: '4%',
     render: (value)=> (formatFloat(value??0)),
     ...tableSorter('currentMonth', 'number'),
@@ -92,12 +92,13 @@ function TimesheetSummary() {
     
     
     _generateMonthlyColumns({
+      compName: 'timesheetSummary',
       contantColmuns,
       setColumn,
       spliceBtw: 9,
       width: '3%',
-      format: 'float',
-      colRender: 'filteredHours',
+      format: 'status',
+      // colRender: 'filteredHours',
       dataIndex: ['months']
     });
     mergeFilter({})
