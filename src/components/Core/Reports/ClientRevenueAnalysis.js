@@ -4,7 +4,7 @@ import Table, { FiltertagsNew, tableSorter } from '../Table/TableFilter'
 import { Api, formatCurrency, formatFloat, localStore } from '../../../service/constant'
 import { ReportsFilters, _createQuery } from './Filters'
 
-import { getClientRevenueAnalysis } from '../../../service/reports-Apis'
+import { downloadReportFile, getClientRevenueAnalysis } from '../../../service/reports-Apis'
 import { _generateMonthlyColumns } from '.'
 
 const contantColmuns = [
@@ -103,7 +103,7 @@ function ClientRevenueAnalysis() {
     let query = _createQuery(tags??{})
     getClientRevenueAnalysis(query, '/export').then(res=>{
       if (res.success){
-        window.open(`${Api}/${res.data}`, '_blank', 'noreferrer');
+        downloadReportFile(res.data, 'FY Client Revenue Analysis')
       }
       setLoading(false)
     })

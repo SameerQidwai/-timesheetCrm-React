@@ -4,7 +4,7 @@ import Table, { FiltertagsNew, tableSorter } from '../Table/TableFilter'
 import { Api, formatCurrency, formatDate, formatFloat, localStore } from '../../../service/constant'
 
 
-import { getPositions } from '../../../service/reports-Apis'
+import { downloadReportFile, getPositions } from '../../../service/reports-Apis'
 import { ReportsFilters, _createQuery } from './Filters'
 
 const {Title, Text} = Typography
@@ -171,7 +171,7 @@ function Positions() {
         let query = _createQuery(tags??{})
         getPositions(query, '/export').then(res=>{
           if (res.success){
-            window.open(`${Api}/${res.data}`, '_blank', 'noreferrer');
+            downloadReportFile(res.data, 'Position Allocations')
           }
           setLoading(false)
         })
