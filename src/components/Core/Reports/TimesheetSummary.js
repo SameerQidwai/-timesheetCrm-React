@@ -89,8 +89,6 @@ function TimesheetSummary() {
   let { start: fiscalYearStart, end: fiscalYearEnd } = getFiscalYear('dates');
 
   useEffect(() => {
-    
-    
     _generateMonthlyColumns({
       compName: 'timesheetSummary',
       contantColmuns,
@@ -191,7 +189,7 @@ function TimesheetSummary() {
           <Button size="small" onClick={()=>setVisible(true)}>Filters</Button>
         </Col>
       </Row>
-      <Row gutter={[0, 100]}>
+      <Row gutter={[0, 50]}>
         <Col span={24}>
           <Descriptions
             title="YTD Completed Hours"
@@ -234,6 +232,20 @@ function TimesheetSummary() {
             </Descriptions.Item>
           </Descriptions>
         </Col>
+        <Col span={24}>
+          <FiltertagsNew
+            filters={tags}
+            filterFunction={(updatedValue, el)=>{
+              let TAGS = {...tags}
+              TAGS[el]['value'] = updatedValue; 
+              let query = _createQuery(TAGS)
+              getData(query, tags)
+            }}
+          />
+        </Col>
+      </Row>
+      <Row gutter={[0, 50]}>
+        <Col></Col>
         <Col span={24}>
           <Table
             sticky
