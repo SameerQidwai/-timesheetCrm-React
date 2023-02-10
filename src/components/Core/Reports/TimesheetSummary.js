@@ -197,16 +197,16 @@ function TimesheetSummary() {
           <Typography.Title level={4}>Timesheets Summary</Typography.Title>
         </Col>
         <Col>
-        <Row justify="end" gutter={5}>
-          <Col >
-            <Button size="small" onClick={exportData}>Download CSV</Button>
-          </Col>
-          <Col>
-            <Button size="small" onClick={() => setVisible(true)}>
-            Filters
-            </Button>
-          </Col>
-        </Row>
+          <Row justify="end" gutter={5}>
+            <Col >
+              <Button size="small" onClick={exportData}>Download CSV</Button>
+            </Col>
+            <Col>
+              <Button size="small" onClick={() => setVisible(true)}>
+              Filters
+              </Button>
+            </Col>
+          </Row>
         </Col>
       </Row>
       <Row gutter={[0, 50]}>
