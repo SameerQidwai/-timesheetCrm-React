@@ -60,6 +60,7 @@ export const bench =({fields,setFields, getCompData})=> ({
         object: 'obj',
         fieldCol: 24,
         key: 'excludeWorkId',
+        icon: 'cross',
         size: 'small',
         mode: 'multiple',
         rangeMax:'responsive',
@@ -88,6 +89,7 @@ export const bench =({fields,setFields, getCompData})=> ({
       excludeWorkId: {
         type: 'Select',
         multi: true,
+        color: 'orange',
         value: [],
         label: 'Exclude Projects',
         showInColumn: false,
@@ -998,6 +1000,7 @@ export const projectRevenue =({fields,setFields, getCompData})=> ({
         object: 'obj',
         fieldCol: 24,
         key: 'excludeProjectId',
+        icon: 'cross',
         size: 'small',
         mode: 'multiple',
         rangeMax:'responsive',
@@ -1064,6 +1067,7 @@ export const projectRevenue =({fields,setFields, getCompData})=> ({
       excludeProjectId: {
         type: 'Select',
         multi: true,
+        color: 'orange',
         value: [],
         label: 'Exclude Projects',
         showInColumn: false,
@@ -1135,6 +1139,7 @@ export const clientRevenue =({fields,setFields, getCompData})=> ({
         object: 'obj',
         fieldCol: 24,
         key: 'excludeOrganizationId',
+        icon: 'cross',
         size: 'small',
         mode: 'multiple',
         rangeMax:'responsive',
@@ -1165,6 +1170,7 @@ export const clientRevenue =({fields,setFields, getCompData})=> ({
         type: 'Select',
         multi: true,
         value: [],
+        color: 'orange',
         label: 'Exclude Organisation',
         showInColumn: false,
         disabled: false,
@@ -1339,12 +1345,18 @@ export const timesheet_summary =({fields,setFields, getCompData})=> ({
       Promise.all([getUsers(), entityProjects('helpers/work?type=P', true), getOrganizations()]).then((res) => {
 
         let tempFields = [...fields];
-        //setting organization
+        //setting User
         tempFields[1].data = res[0].success ? res[0].data : [];
         //setting projects
         tempFields[3].data = res[1].success ? res[1].options : [];
-        //setting exclude projects
+        //setting organizaion
         tempFields[5].data = res[2].success ? res[2].data : [];
+        //setting Exclude User
+        tempFields[7].data = res[0].success ? res[0].data : [];
+        //setting Exclude projects
+        tempFields[9].data = res[1].success ? res[1].options : [];
+        //setting Exclude organizaion
+        tempFields[11].data = res[2].success ? res[2].data : [];
         setFields([...tempFields]);
       })
     },
@@ -1404,6 +1416,63 @@ export const timesheet_summary =({fields,setFields, getCompData})=> ({
         type: 'Select',
       },
       {
+        Placeholder: 'Exclude Employee',
+        fieldCol: 24,
+        size: 'small',
+        type: 'Text',
+      },
+      {
+        object: 'obj',
+        fieldCol: 24,
+        key: 'excludeEmployeeId',
+        icon: 'cross',
+        size: 'small',
+        mode: 'multiple',
+        rangeMax:'responsive',
+        customValue: (value, option) => ({ selectedIds: value, option }),
+        getValueProps: (value)=>  ({value: value?.selectedIds}),
+        data: [],
+        type: 'Select',
+      },
+      {
+        Placeholder: 'Exclude Project',
+        fieldCol: 24,
+        size: 'small',
+        type: 'Text',
+      },
+      {
+        object: 'obj',
+        fieldCol: 24,
+        key: 'excludeProjectId',
+        icon: 'cross',
+        size: 'small',
+        mode: 'multiple',
+        rangeMax:'responsive',
+        customValue: (value, option) => ({ selectedIds: value, option }),
+        getValueProps: (value)=>  ({value: value?.selectedIds}),
+        data: [],
+        type: 'Select',
+      },
+      {
+        Placeholder: 'Exclude Organisation',
+        fieldCol: 22,
+        size: 'small',
+        type: 'Text',
+      },
+      {
+        object: 'obj',
+        fieldCol: 24,
+        key: 'excludeOrganizationId',
+        icon: 'cross',
+        size: 'small',
+        mode: 'multiple',
+        rangeMax:'responsive',
+        customValue: (value, option) => ({ selectedIds: value, option }),
+        getValueProps: (value)=>  ({value: value?.selectedIds}),
+        data: [],
+        type: 'Select',
+      },
+      {
         Placeholder: 'Timesheet Status',
         fieldCol: 22,
         size: 'small',
@@ -1423,6 +1492,7 @@ export const timesheet_summary =({fields,setFields, getCompData})=> ({
           {value: 1, label: 'Not Submitted'},
           {value: 2, label: 'Submitted'},
           {value: 3, label: 'Approved'},
+          {value: 4, label: 'Rejected'},
         ],
         type: 'Select',
       },
@@ -1436,19 +1506,12 @@ export const timesheet_summary =({fields,setFields, getCompData})=> ({
         showInColumn: false,
         disabled: false,
       },
-      organizationId: {
+      excludeEmployeeId: {
+        color: 'orange',
         type: 'Select',
         multi: true,
         value: [],
-        label: 'Organisations',
-        showInColumn: false,
-        disabled: false,
-      },
-      status: {
-        type: 'Select',
-        multi: true,
-        value: [],
-        label: 'Status',
+        label: 'Exclude Employees',
         showInColumn: false,
         disabled: false,
       },
@@ -1457,6 +1520,40 @@ export const timesheet_summary =({fields,setFields, getCompData})=> ({
         multi: true,
         value: [],
         label: 'Projects',
+        showInColumn: false,
+        disabled: false,
+      },
+      excludeProjectId: {
+        color: 'orange',
+        type: 'Select',
+        multi: true,
+        value: [],
+        label: 'Exclude Projects',
+        showInColumn: false,
+        disabled: false,
+      },
+      organizationId: {
+        type: 'Select',
+        multi: true,
+        value: [],
+        label: 'Organisations',
+        showInColumn: false,
+        disabled: false,
+      },
+      excludeOrganizationId: {
+        color: 'orange',
+        type: 'Select',
+        multi: true,
+        value: [],
+        label: 'Exclude Organisations',
+        showInColumn: false,
+        disabled: false,
+      },
+      status: {
+        type: 'Select',
+        multi: true,
+        value: [],
+        label: 'Status',
         showInColumn: false,
         disabled: false,
       },
