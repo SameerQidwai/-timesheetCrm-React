@@ -301,13 +301,13 @@ class Permission extends Component {
             //   </Col>
             //       </Row>}
             title={`Edit Permission Of ${label}`}
-                    maskClosable={false}
-                    centered
-                    visible={isVisible}
-                    okText={loading ?<LoadingOutlined /> :"Save"}
-                    okButtonProps={{ disabled: loading || isSystem, htmlType: 'submit', form: 'my-form' }}
-                    onCancel={()=>{closeModal()}}
-                    width={"min-content"}
+                maskClosable={false}
+                centered
+                visible={isVisible}
+                okText={loading ?<LoadingOutlined /> :"Save"}
+                okButtonProps={{ disabled: loading || isSystem, htmlType: 'submit', form: 'my-form' }}
+                onCancel={()=>{closeModal()}}
+                width={900}
                 >
                     <Form
                         id={'my-form'}
@@ -319,11 +319,16 @@ class Permission extends Component {
                         <Table
                             bordered
                             size='small' 
-                            className='fs-small'
+                            // className='fs-small'
                             rowKey="key" 
                             columns={this.Columns} 
                             dataSource={MODULES} 
                             pagination={false} 
+                            className="scroll-table fs-v-small"
+                            scroll={{
+                                // y: 'min-content',
+                                y: '65vh',
+                            }}
                         />
                     </Form>
                 </Modal>
