@@ -314,7 +314,7 @@ export const Filtertags = ({filters, filterFunction}) =>{
                     : filters[el].multi ?
                     filters[el].value&&filters[el].value.map(value=> <Tag 
                         key={`${el}${value.value}`}
-                        color="lime" 
+                        color={filters[el].color?? "lime"} 
                         closable 
                         onClose={()=>{
                             let remove = filters[el].value.filter(elem=> elem.value !== value.value)
@@ -348,13 +348,9 @@ export const FiltertagsNew = ({filters, filterFunction}) =>{ //should make it wo
     }, []);
     return <Col span={24}> 
         {filterKeys.map(el=>{
-            let { value, label, type, multi, mode } = filters[el] ?? {}
+            let { value, label, type, multi, mode, color = "lime" } = filters[el] ?? {}
             //for multi 
             let selectedIds = value?.selectedIds ?? []
-            // if (mode === 'Year'){
-            //     let {start, end} = getFiscalYear('dates', value)
-            //     value = [start, end]
-            // }
             value =
               value && // check if filter has value set
               (value?.selectedIds // check if filter is a multi select Object
@@ -370,7 +366,7 @@ export const FiltertagsNew = ({filters, filterFunction}) =>{ //should make it wo
                     type === 'Date' ? //Date field search Tag
                             <Tag 
                                 key={value[0]}
-                                color="lime" 
+                                color={color} 
                                 closable 
                                 onClose={()=>{
                                     let remove = null
@@ -381,7 +377,7 @@ export const FiltertagsNew = ({filters, filterFunction}) =>{ //should make it wo
                     :   type === 'Select' ? //Select fields tags
                             multi ? value.map(elValue=> <Tag  // multi Select field rags
                                 key={`${el}${elValue.value}`}
-                                color="lime" 
+                                color={color} 
                                 closable 
                                 onClose={()=>{
                                     let remove = selectedIds.length ? {
@@ -396,7 +392,7 @@ export const FiltertagsNew = ({filters, filterFunction}) =>{ //should make it wo
                                 >{elValue.label}</Tag>)
                             : <Tag // Signle Select field Tags
                                 key={`${el}${value.value}`}
-                                color="lime" 
+                                color={color} 
                                 closable 
                                 onClose={()=>{
                                     filterFunction(null, el)
@@ -404,7 +400,7 @@ export const FiltertagsNew = ({filters, filterFunction}) =>{ //should make it wo
                             >{value.label}</Tag>
                     :  <Tag  // STRING, NUMBER TAGS
                             key={`${el}value`}
-                            color="lime" 
+                            color={color} 
                             closable 
                             onClose={()=>filterFunction('', el)}
                         >{value}</Tag>

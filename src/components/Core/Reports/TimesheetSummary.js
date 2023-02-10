@@ -58,7 +58,7 @@ const contantColmuns = [
   {
     key: 'currentMonth',
     dataIndex: 'currentMonth',
-    title: 'Sheet Hours Submit This Month',
+    title: 'Sheet Hours This Month',
     width: '4%',
     render: (value)=> (formatFloat(value??0)),
     ...tableSorter('currentMonth', 'number'),
@@ -89,15 +89,14 @@ function TimesheetSummary() {
   let { start: fiscalYearStart, end: fiscalYearEnd } = getFiscalYear('dates');
 
   useEffect(() => {
-    
-    
     _generateMonthlyColumns({
+      compName: 'timesheetSummary',
       contantColmuns,
       setColumn,
       spliceBtw: 9,
       width: '3%',
-      format: 'float',
-      colRender: 'filteredHours',
+      format: 'status',
+      // colRender: 'filteredHours',
       dataIndex: ['months']
     });
     mergeFilter({})
@@ -210,7 +209,7 @@ function TimesheetSummary() {
         </Row>
         </Col>
       </Row>
-      <Row gutter={[0, 100]}>
+      <Row gutter={[0, 50]}>
         <Col span={24}>
           <Descriptions
             title="YTD Completed Hours"
@@ -253,6 +252,20 @@ function TimesheetSummary() {
             </Descriptions.Item>
           </Descriptions>
         </Col>
+        <Col span={24}>
+          <FiltertagsNew
+            filters={tags}
+            filterFunction={(updatedValue, el)=>{
+              let TAGS = {...tags}
+              TAGS[el]['value'] = updatedValue; 
+              let query = _createQuery(TAGS)
+              getData(query, tags)
+            }}
+          />
+        </Col>
+      </Row>
+      <Row gutter={[0, 50]}>
+        <Col></Col>
         <Col span={24}>
           <Table
             sticky
