@@ -79,7 +79,7 @@ class Roles extends Component {
                   Permissions
                 </Menu.Item>
                 <Menu.Item
-                  key="Permission"
+                  key="reportPermissions"
                   onClick={() => this.callReportPermission(record, index)}
                 >
                   Report Permissions
