@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Col, Row, Typography, Table as Atable } from 'antd'
 import Table, { FiltertagsNew, tableSorter } from '../Table/TableFilter'
-import { getBenchResources } from '../../../service/reports-Apis'
+import { downloadReportFile, getBenchResources } from '../../../service/reports-Apis'
 import { Api, formatCurrency } from '../../../service/constant'
 import { ReportsFilters, _createQuery } from './Filters'
 
@@ -85,7 +85,7 @@ function BenchResources() {
     let query = _createQuery(tags??{})
     getBenchResources(query, '/export').then(res=>{
       if (res.success){
-        window.open(`${Api}/${res.data}`, '_blank', 'noreferrer');
+        downloadReportFile(res.data, 'Unallocated Resources')
       }
       setLoading(false)
     })

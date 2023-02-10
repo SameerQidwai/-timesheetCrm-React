@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Col, DatePicker, Descriptions, Row, Select, Typography, Table as ATable } from 'antd'
 import Table, { FiltertagsNew, tableSorter } from '../Table/TableFilter'
-import { getTimesheetSummary } from '../../../service/reports-Apis'
+import { downloadReportFile, getTimesheetSummary } from '../../../service/reports-Apis'
 
 
 import { Api, formatCurrency, formatFloat, getFiscalYear, localStore } from '../../../service/constant'
@@ -122,7 +122,7 @@ function TimesheetSummary() {
     let query = _createQuery(tags??{})
     getTimesheetSummary(query, '/export').then(res=>{
       if (res.success){
-        window.open(`${Api}/${res.data}`, '_blank', 'noreferrer');
+        downloadReportFile(res.data, 'Timesheets Summary')
       }
       setLoading(false)
     })

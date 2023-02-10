@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Col, Row, Typography, Table as ATable } from 'antd'
 import Table, { FiltertagsNew, tableSorter } from '../Table/TableFilter'
-import { getProjectRevenueAnalysis } from '../../../service/reports-Apis'
+import { downloadReportFile, getProjectRevenueAnalysis } from '../../../service/reports-Apis'
 
 
 import { Api, formatCurrency, formatFloat, getFiscalYear, localStore, parseDate } from '../../../service/constant'
@@ -125,7 +125,7 @@ function ProjectRevenueAnalysis() {
     let query = _createQuery(tags??{})
     getProjectRevenueAnalysis(query, '/export').then(res=>{
       if (res.success){
-        window.open(`${Api}/${res.data}`, '_blank', 'noreferrer');
+        downloadReportFile(res.data, 'FY Project Revenue Analysis')
       }
       setLoading(false)
     })

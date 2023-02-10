@@ -4,7 +4,7 @@ import Table, { FiltertagsNew, tableSorter, tableTitleFilter } from '../Table/Ta
 import { Api, formatCurrency, formatDate, localStore } from '../../../service/constant'
 
 
-import { getAllocations } from '../../../service/reports-Apis'
+import { downloadReportFile, getAllocations } from '../../../service/reports-Apis'
 import { ReportsFilters, _createQuery } from './Filters'
 
 const {Title, Text} = Typography
@@ -169,7 +169,7 @@ function WorkForceAllocation() {
         let query = _createQuery(tags??{})
         getAllocations(query, '/export').then(res=>{
           if (res.success){
-            window.open(`${Api}/${res.data}`, '_blank', 'noreferrer');
+            downloadReportFile(res.data, 'Workforce Allocations')
           }
           setLoading(false)
         })
