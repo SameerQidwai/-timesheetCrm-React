@@ -2,7 +2,7 @@ import axios from "axios";
 import { message as messageAlert } from "antd";
 
 import { Api, getFiscalYear, headers, jwtExpired, setToken } from "./constant";
-
+import moment from "moment"
 const url = `${Api}/reports`;
 
 export const getBenchResources = (queryParam, exporting) => {
@@ -10,7 +10,12 @@ export const getBenchResources = (queryParam, exporting) => {
     return axios
         .get(`${url}${exporting??''}/bench-resources${queryParam? '?'+ queryParam: ''}`, {headers:headers()})
         .then((res) => {
-            const { success, data } = res.data;
+            const { success, data, message } = res.data;
+            jwtExpired(message);
+            if (exporting){
+              messageAlert.success({ content: 'Creating Report', key: 'report' });
+            }
+
             setToken(res?.headers?.authorization)
              return { success: success, data: data };
         })
@@ -27,7 +32,12 @@ export const getWorkforceSkills = (queryParam, exporting) => {
     return axios
         .get(`${url}${exporting??''}/workforce-skills${queryParam? '?'+ queryParam: ''}`, {headers:headers()})
         .then((res) => {
-            const { success, data } = res.data;
+            const { success, data, message } = res.data;
+            jwtExpired(message);
+            if (exporting){
+              messageAlert.success({ content: 'Creating Report', key: 'report' });
+            }
+
             setToken(res?.headers?.authorization)
              return { success: success, data: data };
         })
@@ -44,7 +54,11 @@ export const getPositions = (queryParam, exporting) => {
     return axios
         .get(`${url}${exporting??''}/allocations${queryParam? '?'+ queryParam: ''}`, {headers:headers()})
         .then((res) => {
-            const { success, data } = res.data;
+            const { success, data, message } = res.data;
+            jwtExpired(message);
+            if (exporting){
+              messageAlert.success({ content: 'Creating Report', key: 'report' });
+            }
             setToken(res?.headers?.authorization)
              return { success: success, data: data };
         })
@@ -62,7 +76,11 @@ export const getAllocations = (queryParam, exporting) => {
         .get(`${url}${exporting??''}/allocations-all${queryParam? '?'+ queryParam: ''}`, {headers:headers()})
         // .get(`${url}/allocations-all?bookingType=4`, {headers:headers()})
         .then((res) => {
-            const { success, data } = res.data;
+            const { success, data, message } = res.data;
+            jwtExpired(message);
+            if (exporting){
+              messageAlert.success({ content: 'Creating Report', key: 'report' });
+            }
             setToken(res?.headers?.authorization)
              return { success: success, data: data };
         })
@@ -79,7 +97,11 @@ export const getTimesheetSummary = (queryParam, exporting) => {
     return axios
         .get(`${url}${exporting??''}/timesheet-summary${queryParam? '?'+ queryParam: ''}`, {headers:headers()})
         .then((res) => {
-            const { success, data } = res.data;
+            const { success, data, message } = res.data;
+            jwtExpired(message);
+            if (exporting){
+              messageAlert.success({ content: 'Creating Report', key: 'report' });
+            } 
             setToken(res?.headers?.authorization)
              return { success: success, data: data };
         })
@@ -96,7 +118,11 @@ export const getLeaveSummary = (queryParam, exporting) => {
     return axios
         .get(`${url}${exporting??''}/leave-request-summary-view${queryParam? '?'+ queryParam: ''}`, {headers:headers()})
         .then((res) => {
-            const { success, data } = res.data;
+            const { success, data, message } = res.data;
+            jwtExpired(message);
+            if (exporting){
+              messageAlert.success({ content: 'Creating Report', key: 'report' });
+            }
             setToken(res?.headers?.authorization)
              return { success: success, data: data };
         })
@@ -121,7 +147,11 @@ export const getProjectRevenueAnalysis = (queryParam, exporting) => {
         { headers: headers() }
       )
       .then((res) => {
-        const { success, data } = res.data;
+        const { success, data, message } = res.data;
+        jwtExpired(message);
+        if (exporting){
+          messageAlert.success({ content: 'Creating Report', key: 'report' });
+        }
         setToken(res?.headers?.authorization);
         return { success: success, data: data };
       })
@@ -146,7 +176,11 @@ export const getClientRevenueAnalysis = (queryParam, exporting) => {
         { headers: headers() }
       )
       .then((res) => {
-        const { success, data } = res.data;
+        const { success, data, message } = res.data;
+        jwtExpired(message);
+        if (exporting){
+          messageAlert.success({ content: 'Creating Report', key: 'report' });
+        }
         setToken(res?.headers?.authorization);
         return { success: success, data: data };
       })
@@ -171,7 +205,8 @@ export const getWorkInHandForecast = (queryParam) => {
         { headers: headers() }
       )
       .then((res) => {
-        const { success, data } = res.data;
+        const { success, data, message } = res.data;
+        jwtExpired(message);
         setToken(res?.headers?.authorization);
         return { success: success, data: data };
       })
@@ -183,3 +218,21 @@ export const getWorkInHandForecast = (queryParam) => {
         };
       });
 };
+
+export const downloadReportFile = (url, fileName)=>{
+  axios({
+    method: 'get',
+    url: `${Api}/${url}`,
+    responseType: 'blob',
+    headers:headers()
+    }).then(response => {
+        let url = window.URL.createObjectURL(response.data);
+        let a = document.createElement('a');
+        a.href = url;
+        a.download = `${fileName}_${moment().format('YYYY-MM-DDTHH:mm:ss')}`;
+        a.click();
+        messageAlert.success({ content: 'Downloading!', key: 'report' });
+    }).catch(error => {
+        console.log(error);
+    });
+}
