@@ -35,7 +35,7 @@ const CertificatePdf = (props) =>{
                 {/* <Descriptions column={1} bordered size={"small"} style={{margin:'15px 0px'}} className="describe"> */}
                 
                 <Row justify="space-around">                                {/* <!--Name__Logo-->*/}
-                    <Col span={24} className="txt-center mb-40 mt-10"><img src={'/z-cp-logo.png'} width="32%" /></Col>
+                    <Col span={24} className="txt-center mb-40 mt-10"><img src={'/onelm.png'} width="32%" /></Col>
                     <Col span={24} className="txt-center">
                         <Typography.Title level={4}>MILESTONE ACCEPTANCE CERTIFICATE</Typography.Title> 
                     </Col>
@@ -73,7 +73,7 @@ const CertificatePdf = (props) =>{
                         </Descriptions>
                     </Col>
                     <Col span={11}>                 {/* <!--Name__Logo-->*/}
-                        <Typography.Title level={5}>Timewize Representative:</Typography.Title> 
+                        <Typography.Title level={5}>1LM Representative:</Typography.Title> 
                         <Descriptions column={1} bordered className='certficate-describe representative small'>
                             <Item label="Title and Name:" > </Item>
                             <Item label="Task Position:" ></Item>
