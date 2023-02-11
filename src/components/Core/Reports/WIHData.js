@@ -898,6 +898,31 @@ export const net_profit = [
 
 /**------------------Helper ------ function */
 
+export const nextFocus = () => {
+  console.log('setted focus')
+  let focusObject = {};
+  const array = new Array (
+    ...income_revenue,
+    ...cost_of_sale,
+    ...contribution_margin,
+    ...direct_overhead_expense,
+    ...income_tax,
+    ...net_profit
+  )
+  let prev = 0
+  for (let i = 1; i < array.length; i++) {
+    let curr = array[i];
+    if (curr.editable) {
+      if (prev){
+        focusObject[prev.key] = curr.key;
+      }
+      prev = curr;
+    }
+  }
+  focusObject['Income Tax Expense profit'] = 'Revenue - Security Clearance Fee'
+  return focusObject;
+}
+
 export const getValueWithCondition = (obj, index, key) => {
   if (!obj || !obj[index]) return 0;
 
