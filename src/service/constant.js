@@ -14,7 +14,7 @@ import { message as messageAlert } from 'antd';
 // export const Api = "http://192.168.0.110:3301/api/v1"; // TrunRajPal Home
 // export const Api = "http://192.168.0.244:3301/api/v1"; // TrunRajPal Office
 
-export const Api = "http://3.239.21.153:8000/api/v1"; //live api
+export const Api = 'http://3.25.212.94:8000/api/v1'; //live api
 
 export const O_STAGE = {
   L: 'Lead',
@@ -46,7 +46,13 @@ export const R_STATUS = {
   RJ: 'Rejected',
 }; //Request Status
 
-export const STATUS_COLOR = { CM: 'geekblue', AP: 'green', SB: 'cyan', RJ: 'red', R: 'red' }; //Request Status
+export const STATUS_COLOR = {
+  CM: 'geekblue',
+  AP: 'green',
+  SB: 'cyan',
+  RJ: 'red',
+  R: 'red',
+}; //Request Status
 
 export const O_TYPE = { 1: 'Milestone', 2: 'Time' };
 
@@ -73,27 +79,33 @@ export const STATES = {
   Tasmania: 'TSA',
 };
 
-export const toTruncate = (num, fixed) => { //not using as for now using INTL method
-  if (num && !isNaN(num)){
-      return num.toString().match(new RegExp('^-?\\d+(?:\.\\d{0,' + (fixed || -1) + '})?'))?.[0] || '0.00'
+export const toTruncate = (num, fixed) => {
+  //not using as for now using INTL method
+  if (num && !isNaN(num)) {
+    return (
+      num
+        .toString()
+        .match(new RegExp('^-?\\d+(?:.\\d{0,' + (fixed || -1) + '})?'))?.[0] ||
+      '0.00'
+    );
   }
-  return '0.00'
-}
+  return '0.00';
+};
 
-export const formatCurrency = (amount, fixed) => { 
+export const formatCurrency = (amount, fixed) => {
   //console.log('=== === === formatCurrency === === ===');
   if (!isNaN(amount)) {
     var formatter = new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
-      maximumFractionDigits: fixed??2, 
-      roundingMode: 'trunc'
+      maximumFractionDigits: fixed ?? 2,
+      roundingMode: 'trunc',
     });
-    return formatter.format(amount).replace(/^(\D+)/, '$1 ')
+    return formatter.format(amount).replace(/^(\D+)/, '$1 ');
     // .replace(/\D00(?=\D*$)/, ''))
   }
   // amount = toTruncate(amount, 2)
-  return  '$ 0.00' ;
+  return '$ 0.00';
 }; //end
 
 // export const formatFloat = (number, fixed, round) => { //not using as for now using INTL method
@@ -103,33 +115,34 @@ export const formatCurrency = (amount, fixed) => {
 //   return toTruncate(number, fixed || 2 )
 // };
 
-export const formatFloat = (number, fixed, round)=>{
-  if (number && !isNaN(number)){
+export const formatFloat = (number, fixed, round) => {
+  if (number && !isNaN(number)) {
     var formatter = new Intl.NumberFormat('en-US', {
       // notation: "compact",
       // compactDisplay: "long",
-      maximumFractionDigits: fixed ?? 2, 
-      roundingMode: round ?? 'trunc'
-    });  
-    return formatter.format(number)
+      maximumFractionDigits: fixed ?? 2,
+      roundingMode: round ?? 'trunc',
+    });
+    return formatter.format(number);
   }
-  return '0.00' 
-}
-
+  return '0.00';
+};
 
 // export const formatDate = (date, format) =>{
 //   // return date && moment(date).format(format ??'ddd DD MMM yyyy')
 //   return date && moment.utc(date).format(format ??'ddd DD MMM yyyy')
 // }
 
-export const parseDate = (date, format)=>{
-    if (date){
-        if (format){
-            return moment.parseZone(date).format(format === true ? 'ddd DD MMM yyyy' : format)
-        }
-        return moment.parseZone(date)
+export const parseDate = (date, format) => {
+  if (date) {
+    if (format) {
+      return moment
+        .parseZone(date)
+        .format(format === true ? 'ddd DD MMM yyyy' : format);
     }
-}
+    return moment.parseZone(date);
+  }
+};
 
 export const formatDate = (date, string, format) => {
   return (
@@ -166,20 +179,20 @@ export const localStore = () => {
 };
 
 // helper gunction will be using this for permissions and will change everywhere
-export const getModulePermissions = (module) =>{
-  let { id, permissions } = localStore() 
-  const { [module]: modulePermission } = JSON.parse(permissions)
-  let anyPermissions = {}
-  Object.entries(modulePermission).map( ([actionKey, action]) => {
+export const getModulePermissions = (module) => {
+  let { id, permissions } = localStore();
+  const { [module]: modulePermission } = JSON.parse(permissions);
+  let anyPermissions = {};
+  Object.entries(modulePermission).map(([actionKey, action]) => {
     for (const [roleKey, role] of Object.entries(action)) {
-      anyPermissions[actionKey] = role
-        if (role){
-            break;
-        }
+      anyPermissions[actionKey] = role;
+      if (role) {
+        break;
       }
+    }
   });
-  return {anyPermissions, modulePermission, userLoginId: parseInt(id)}
-}
+  return { anyPermissions, modulePermission, userLoginId: parseInt(id) };
+};
 
 export const jwtExpired = (message) => {
   // Authentication Expired or Invalid
@@ -277,7 +290,7 @@ export const dateRange = (current, selectedDate, isDate, pDates) => {
 
 export const getFiscalYear = (request, date, dateFormat) => {
   let fiscalStartYear = undefined;
-  date = date ? moment(date, dateFormat) :moment()
+  date = date ? moment(date, dateFormat) : moment();
   if (parseInt(moment(date).format('M')) < 7) {
     fiscalStartYear = moment(date).subtract(1, 'y').format('YYYY');
   } else {
@@ -294,7 +307,7 @@ export const getFiscalYear = (request, date, dateFormat) => {
     },
     years: { start: fiscalStartYear, end: parseInt(fiscalStartYear) + 1 },
   };
-  return request? fiscalYear[request] : fiscalYear;
+  return request ? fiscalYear[request] : fiscalYear;
 };
 
 export const dateRangeAfter = (current, eDate, pDates) => {
@@ -331,6 +344,8 @@ export const sorting = (data, key) => {
 // for regex
 export const isPhone = (phoneNumber) => {
   const cleanedPhoneNumber = phoneNumber.replace(/-|\s/g, ''); // Remove spaces and hyphens before performing test
-  const pattern = new RegExp('^(?:\\+?(61))? ?(?:\\((?=.*\\)))?(0?[2-57-8])\\)? ?(\\d\\d(?:[- ](?=\\d{3})|(?!\\d\\d[- ]?\\d[- ]))\\d\\d[- ]?\\d[- ]?\\d{3})$');
+  const pattern = new RegExp(
+    '^(?:\\+?(61))? ?(?:\\((?=.*\\)))?(0?[2-57-8])\\)? ?(\\d\\d(?:[- ](?=\\d{3})|(?!\\d\\d[- ]?\\d[- ]))\\d\\d[- ]?\\d[- ]?\\d{3})$'
+  );
   return pattern.test(cleanedPhoneNumber);
 };
