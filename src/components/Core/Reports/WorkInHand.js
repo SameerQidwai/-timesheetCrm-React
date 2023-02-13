@@ -3,23 +3,24 @@ import { Col, InputNumber, Row, Table, Typography, Form } from 'antd'
 import { formatCurrency, getFiscalYear, parseDate } from '../../../service/constant';
 import { getWorkInHandForecast } from '../../../service/reports-Apis';
 import "../../Styles/table.css"
-import { contribution_margin, cost_of_sale, direct_overhead_expense, formatNegativeValue, getValueWithCondition, income_revenue, income_tax, net_profit } from './WIHData';
+import { contribution_margin, cost_of_sale, direct_overhead_expense, formatNegativeValue, getValueWithCondition, income_revenue, income_tax, net_profit, nextFocus } from './WIHData';
 import moment from 'moment'
 import { formatter, parser } from '../Forms/FormItems';
 const {Title} = Typography
 const EditableContext = React.createContext(null);
+const nextFocusFor = nextFocus()
 
 
-const EditableRow = ({ index, ...props }) => {
-    const [form] = Form.useForm();
-    return (
-      <Form form={form} component={false}>
-        <EditableContext.Provider value={form}>
-          <tr {...props} />
-        </EditableContext.Provider>
-      </Form>
-    );
-};
+// const EditableRow = ({ index, ...props }) => {
+//     const [form] = Form.useForm();
+//     return (
+//       <Form form={form} component={false}>
+//         <EditableContext.Provider value={form}>
+//           <tr {...props} />
+//         </EditableContext.Provider>
+//       </Form>
+//     );
+// };
   
 const EditableCell = ({
   title,
@@ -35,38 +36,42 @@ const EditableCell = ({
   const inputRef = useRef(null);
   const form = useContext(EditableContext);
 
-  const [blurHook, setBlurHook] = useState(false)
   
-  const blurSave = ()=>{
-    // console.log(form.getFieldValue([record['name'], dataIndex]))
-    // value = value.replace(/[^0-9.-]/g, '')
-    let value = form.getFieldValue([record['name'], dataIndex])
-    value = (!value || isNaN(parseFloat(value)))? 0 : parseFloat(value)
-    if (value !== record[dataIndex]){
-      form.setFieldsValue({
-        [record['name']]: {
-          ...form.getFieldsValue(),
-          [dataIndex]: record[dataIndex],
-        },
-      });
+  // const blurSave = ()=>{
+  //   // console.log(form.getFieldValue([record['name'], dataIndex]))
+  //   // value = value.replace(/[^0-9.-]/g, '')
+  //   let value = form.getFieldValue([record['name'], dataIndex])
+  //   value = (!value || isNaN(parseFloat(value)))? 0 : parseFloat(value)
+  //   if (value !== record[dataIndex]){
+  //     form.setFieldsValue({
+  //       [record['name']]: {
+  //         ...form.getFieldsValue(),
+  //         [dataIndex]: record[dataIndex],
+  //       },
+  //     });
       
-    }
-    setBlurHook(false)
-  }
+  //   }
+  //   setBlurHook(false)
+  // }
 
-  const save = async () => {
-    let value = form.getFieldValue([record['name'], dataIndex])
-    value = (!value || isNaN(parseFloat(value)))? 0 : parseFloat(value)
-    if (blurHook && value){
-      console.log('ran again')
-      setBlurHook(false)
+  const save = async (entered) => {
+    let value = form.getFieldValue([record['key'], dataIndex])
+    let updated = form.isFieldTouched([record['key'], dataIndex])
+    if ( value && updated ){
       try {
-        handleSave(indexing, dataIndex, value, setBlurHook);
-        setInterval(() => {
-          setBlurHook(true)
+        handleSave(indexing, dataIndex, value);
+        setTimeout(() => {
+          form.setFields([{ name: [record['key'], dataIndex], touched: false}])
+          if (entered){
+            form.getFieldInstance([nextFocusFor[record['key']], dataIndex]).focus()
+          }
         }, 1000);
       } catch (errInfo) {
         console.log('Save failed:', errInfo);
+      }
+    }else{
+      if (entered){
+        form.getFieldInstance([nextFocusFor[record['key']], dataIndex]).focus()
       }
     }
   };
@@ -81,16 +86,17 @@ const EditableCell = ({
             style={{
               margin: 0,
             }}
-            name={[record['name'],dataIndex]}
+            name={[record['key'],dataIndex]}
           >
             <InputNumber
               ref={inputRef}
+              controls={false}
               size="small"
               formatter={(value) => formatter(value, "$") }
               parser={(value) => parser(value, "$") }
-              onFocus={()=>{ setBlurHook(true) }}
-              onBlur={(event)=> blurSave(event)}
-              onPressEnter={(event)=> save(event)}
+              // onFocus={()=>{ setBlurHook(true) }}
+              onBlur={()=>save()}
+              onPressEnter={(event)=> save(true)}
             />
           </Form.Item>
         </Col>
@@ -103,6 +109,7 @@ const EditableCell = ({
 
 
 function WorkInHand() {
+  const [form] = Form.useForm();
   let {start, end} = getFiscalYear('dates')
   const fiscal = moment(end).format('[FY]YY')
   const forecastMonth = moment().subtract(1, 'month').endOf("month")
@@ -277,7 +284,7 @@ function WorkInHand() {
     
   const components = {
     body: {
-      row: EditableRow,
+      // row: EditableRow,
       cell: EditableCell,
     },
   };
@@ -313,6 +320,8 @@ function WorkInHand() {
     </Row>
     <Row>
         <Col span={24}>
+        <Form form={form} component={false}>
+          <EditableContext.Provider value={form}>
             <Table
               components={components}
               bordered
@@ -329,6 +338,8 @@ function WorkInHand() {
                   y: '65vh',
               }}
             />
+          </EditableContext.Provider>
+        </Form>
         </Col>
     </Row>
   </>)
