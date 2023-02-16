@@ -1,5 +1,6 @@
 import { _createQuery } from '.';
-import { entityProjects, getContactPersons, getEmpPersons, getleaveRequestTypes, getOrganizations, getStandardLevels, getStandardSkills, getUserLeaveType } from '../../../../service/constant-Apis'
+import { entityProjects, getContactPersons, getEmpPersons, getleaveRequestTypes, getOrganizations, getStandardLevels, getStandardSkills, getUserLeaveType } from '../../../service/constant-Apis'
+import { getUsers } from '../../../service/timesheet';
 
 export const bench =({fields,setFields, getCompData})=> ({
     effectRender: true,

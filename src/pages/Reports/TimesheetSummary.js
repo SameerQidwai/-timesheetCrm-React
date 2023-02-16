@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Col, DatePicker, Descriptions, Row, Select, Typography, Table as ATable } from 'antd'
-import Table, { FiltertagsNew, tableSorter } from '../Table/TableFilter'
-import { downloadReportFile, getTimesheetSummary } from '../../../service/reports-Apis'
+import { Button, Col, DatePicker, Descriptions, Row, Select, Typography, Table as ATable, Tabs } from 'antd'
+import Table, { FiltertagsNew, tableSorter } from '../../components/Core/Table/TableFilter'
+import { downloadReportFile, getTimesheetSummary } from '../../service/reports-Apis'
 
 
-import { Api, formatCurrency, formatFloat, getFiscalYear, localStore } from '../../../service/constant'
+import { Api, formatCurrency, formatFloat, getFiscalYear, localStore } from '../../service/constant'
 import moment from 'moment'
-import { ReportsFilters, _createQuery } from './Filters'
+// import { ReportsFilters, _createQuery } from './ReportFilters'
+import { ReportsFilters, _createQuery } from '../../components/Core/ReportFilters';
+
 import { _generateMonthlyColumns } from '.'
 
 const contantColmuns = [

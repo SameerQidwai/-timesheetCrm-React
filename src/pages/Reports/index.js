@@ -1,5 +1,5 @@
-import { formatCurrency, formatFloat, getFiscalYear, parseDate } from '../../../service/constant'
-import { tableSorter } from '../Table/TableFilter'
+import { formatCurrency, formatFloat, getFiscalYear, parseDate } from '../../service/constant'
+import { tableSorter } from '../../components/Core/Table/TableFilter'
 
 export {default as WorkInHand} from './WorkInHand'
 export {default as BenchResources} from './BenchResources'
