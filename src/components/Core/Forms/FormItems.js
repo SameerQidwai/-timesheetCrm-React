@@ -216,7 +216,7 @@ class FormItems extends Component {
         );
         break;
       case 'Select':
-        let MenuItemSelectedIcon = mode === 'multiple' && iconsComponent[icon??'check']
+        let MenuItemSelectedIcon = iconsComponent[icon??'check']
         item = (
           <Select
             placeholder={placeholder}
