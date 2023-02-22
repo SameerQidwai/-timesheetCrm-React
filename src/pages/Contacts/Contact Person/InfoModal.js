@@ -30,6 +30,7 @@ class InfoModal extends Component {
     this.associateRef = React.createRef();
     this.skillRef = React.createRef();
     this.securityRef = React.createRef();
+    this.recruitmentRef = React.createRef();
 
     this.state = {
       editCP: false,
@@ -453,6 +454,126 @@ class InfoModal extends Component {
           },
         ],
       },
+
+      RecruitmentFields: {
+        //creating Component
+        formId: 'recruitment_form',
+        FormCol: 24,
+        // FieldSpace:24,
+        justifyField: 'center',
+        FormLayout: 'inline',
+        layout: { labelCol: { span: 10 }, wrapperCol: { span: 0 } },
+        size: 'small',
+        fields: [
+          {
+            Placeholder: 'Recruitment Prospects',
+            fieldCol: 12,
+            size: 'small',
+            type: 'Text',
+            labelAlign: 'right',
+            // itemStyle:{marginBottom:'10px'},
+          },
+          {
+            Placeholder: 'Availability',
+            fieldCol: 12,
+            size: 'small',
+            type: 'Text',
+            labelAlign: 'right',
+            // itemStyle:{marginBottom:'10px'},
+          },
+          {
+            object: 'rec',
+            fieldCol: 12,
+            key: 'recruitmentForm',
+            size: 'small',
+            data: [
+              { label: 'Not considered', value: 'NC' },
+              { label: 'Do not hire', value: 'DNH' },
+              { label: 'Prospect', value: 'P' },
+              { label: 'Assigned to opportunity', value: 'ATO' },
+            ],
+            // rules: [ { required: true, message: "Gender is Obviously required", }, ],
+            type: 'Select',
+            itemStyle: { marginBottom: 10 },
+          },
+          {
+            object: 'rec',
+            fieldCol: 12,
+            key: 'availability',
+            size: 'small',
+            data: [
+              { label: 'Immediate', value: 'I' },
+              { label: 'Within a month', value: 'WAM' },
+              { label: 'Over a month', value: 'OAM' },
+              { label: 'Long-term propect', value: 'LTP' },
+            ],
+            type: 'Select',
+            itemStyle: { marginBottom: 10 },
+            
+          },
+          {
+            Placeholder: 'Salary estimate',
+            fieldCol: 12,
+            size: 'small',
+            type: 'Text',
+            labelAlign: 'right',
+            // itemStyle:{marginBottom:'10px'},
+          },
+          {
+            // need exact terms
+            Placeholder: 'Status',
+            fieldCol: 12,
+            size: 'small',
+            type: 'Text',
+            labelAlign: 'right',
+            // itemStyle:{marginBottom:'10px'},
+          },
+          {
+            object: 'rec',
+            fieldCol: 12,
+            key: 'salary',
+            size: 'small',
+            // rules:[{ required: true }],
+            shape: "$",
+            type: 'InputNumber',
+            labelAlign: 'right',
+            fieldStyle: { width: '100%' },
+            itemStyle: { marginBottom: 10 },
+          },
+          {
+            object: 'rec',
+            fieldCol: 12,
+            key: 'statusType',
+            size: 'small',
+            type: 'Select',
+            labelAlign: 'right',
+            data: [
+              { label: 'Active', value: 'A' },
+              { label: 'Close', value: 'C' },
+              { label: 'Panding', value: 'P' },
+            ],
+            itemStyle: { marginBottom: 10 },
+          },
+          {
+            Placeholder: 'Note',
+            fieldCol: 12,
+            size: 'small',
+            type: 'Text',
+            labelAlign: 'right',
+            // itemStyle:{marginBottom:'10px'},
+          },
+          {
+            object: 'rec',
+            fieldCol: 24,
+            key: 'note',
+            // size: 'small',
+            type: 'Textarea',
+            rows: 6,
+            // labelAlign: 'right',
+            itemStyle: { marginBottom: 10 },
+          },
+        ],
+      },
     };
   }
 
@@ -832,6 +953,7 @@ class InfoModal extends Component {
       () => this.validateForm()
     );
   };
+  
   validateForm = () => {
     const {
       basicSubmitted,
@@ -1010,6 +1132,7 @@ class InfoModal extends Component {
       associateFields,
       SkillFields,
       SecurityFields,
+      RecruitmentFields,
       loading,
     } = this.state;
     return (
@@ -1089,6 +1212,14 @@ class InfoModal extends Component {
               ref={this.securityRef}
               Callback={this.SecurityCall}
               FormFields={SecurityFields}
+            />
+          </TabPane>
+          {/* //temp work// */}
+          <TabPane tab="Recruitment" key="recruitment" forceRender>
+            <Form
+              ref={this.recruitmentRef}
+              // Callback={this.SecurityCall}
+              FormFields={RecruitmentFields}
             />
           </TabPane>
         </Tabs>
