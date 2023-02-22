@@ -326,22 +326,21 @@ const subListData = [ //FundOutlined
             icon: <ContactsOutlined />,
             link: '/calculator-permenent',
             key: 'PERMANENT_CAL',
-            // ???
-            permissions: { module: 'TIMESHEETS', key: 'READ' },
+            permissions: { module: 'TIMESHEETS', key: 'READ' }
           },
           {
             text: 'Employee Casual',
             icon: <IdcardOutlined />,
-            link: '/calculator/casual',
+            link: '/calculator-casual',
             key: 'CASUAL_CAL',
-            permissions: { module: 'TIMESHEETS', key: 'READ' },
+            permissions: { module: 'TIMESHEETS', key: 'READ' }
           },
           {
             text: 'Employee Contractor',
             icon: <TeamOutlined />,
-            link: '/calculator/contractor',
+            link: '/calculator-contractor',
             key: 'CONTRACTOR_CAL',
-            permissions: { module: 'TIMESHEETS', key: 'READ' },
+            permissions: { module: 'TIMESHEETS', key: 'READ' }
           },
         ],
     },

@@ -433,13 +433,13 @@ const pageLinks = [
     permission: 'ALLOWED',
   },
   {
-    component: WorkInHand,
+    component: PermanentCalculator,
     link: '/calculator-casual',
     key: 'CASUAL_CAL',
     permission: 'ALLOWED',
   },
   {
-    component: WorkInHand,
+    component: PermanentCalculator,
     link: '/calculator-contractor',
     key: 'CONTRACTOR_CAL',
     permission: 'ALLOWED',
