@@ -428,7 +428,7 @@ const pageLinks = [
   },
   {
     component: PermanentCalculator,
-    link: '/calculator-permenent',
+    link: '/calculator-permanent',
     key: 'PERMANENT_CAL',
     permission: 'ALLOWED',
   },

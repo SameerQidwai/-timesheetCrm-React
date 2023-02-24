@@ -11,9 +11,9 @@ import { formatter, parser } from "../Forms/FormItems";
 
 export const PermanentCalculator = (props) => {
     let { path } = props.match;
-    path = path.replaceAll('/','')
-    // console.log(path);
-
+    path = path.replaceAll('/calculator-', '')
+    
+    const [empType, setEmpType] = useState(path.charAt(0).toUpperCase() + path.slice(1));
     const [variables, setVariables] = useState([])
     // const [totalCostRatio, setTotalCr] = useState(0)
     const [contract, setContract] = useState({
@@ -128,8 +128,16 @@ export const PermanentCalculator = (props) => {
         return (findDbrOffer(value)/contract.dailyHours)/((1*(sumValue()/100))+1)
     }
 
-    const calABSalary = (value) => {
+    const calABSalaryforPerma = (value) => {
         return ((calTotalCostRatio(value) * contract.weaklyHours) * contract.weekInYear)
+    }
+
+    const calABSalary = (value) => {
+        return (calTotalCostRatio(value) * contract.weekInYear)
+    }
+
+    const decideCalType = () => {
+        return (empType === "Permanent") ? calABSalaryforPerma(contract.cm1) : calABSalary(contract.cm1)
     }
     return (
         <Row>
@@ -138,9 +146,8 @@ export const PermanentCalculator = (props) => {
                     <Col span={24} className="buy-cost calculator">
                         <Row> 
                             <Col span={24} className="mb-10">
-                                <Typography.Title level={5}>Buy Rate Calculator - Employee( Permanent)</Typography.Title>
+                                <Typography.Title level={5}>Buy Rate Calculator - Employee({empType})</Typography.Title>
                             </Col>                 {/**for casual type emp we already set hourly base salary */}
-                            {/* <Col span={16} className="label">{contract.type=== 1 ? 'Hourly Base Salary' :'Annual Base Salary'}</Col> */}
                             <Col span={6} className="label bold">{'Daily Sell Rate inc. GST-per RFQTS'}</Col>
                             <Col span={6}></Col>
                             <Col span={3} className="item" >
@@ -156,14 +163,12 @@ export const PermanentCalculator = (props) => {
                                 />
                             </Col>
                             <Col span={9}></Col>
-                            {/* <Col span={8} className="item">{formatCurrency(contract?.remunerationAmount)}</Col> */}
                             <Col span={6}  className="label">Daily Sell Rate ex GST (110/10)</Col>
                             <Col span={3}  className="item">{formatFloat(contract.gst)}</Col>
                             <Col span={3}  className="item"></Col>
                             <Col span={3} className="item"> {formatCurrency(findDlrGst())}
                             </Col>
                             <Col span={9}  className="item"></Col>
-                            {/* <Col span={8}  className="item">{formatFloat(contract?.dailyHours)}</Col> */}
                             <Col span={6}  className="label">Daily Sell Rate ex Panel Provider Margin</Col>
                             <Col span={3} className="item">
                             <Inputnumber
@@ -286,8 +291,7 @@ export const PermanentCalculator = (props) => {
                                                 <span className="mouse-pointer">{el.apply}</span>
                                             </Dropdown>
                                         </Col>
-                                        {/* <Col span={4} className="item">{ formatCurrency(el.amount) }</Col> */}
-                                    </Row>
+                                     </Row>
                                 </Col>)}
                             </Col>
                             <Col span={12} className="item" ></Col>
@@ -299,17 +303,15 @@ export const PermanentCalculator = (props) => {
                                     </Row>
                                 </Col>
                             </Col>
-                            {/* <Col span={8} className="item bold my-20"> {formatCurrency(buyRate + adjustment)}</Col> */}
                             <Col span={12} className="label bold"> Hourly Base Rate</Col>
                             <Col span={3} className="item bold"> {formatCurrency(calTotalCostRatio(contract.cm1))}</Col>
                             <Col span={3} className="item bold"> {formatCurrency(calTotalCostRatio(contract.cm2))}</Col>
                             <Col span={3} className="item bold"> {formatCurrency(calTotalCostRatio(contract.cm3))}</Col>
                             <Col span={3} className="item bold"> {formatCurrency(calTotalCostRatio(contract.cm4))}</Col>
-                            {/* <Col span={8} className="item bold my-20"> {formatCurrency(buyRate + adjustment)}</Col> */}
-                            <Col span={24}>
-                                <Row>  
+                            {(empType === "Permanent") && <Col span={24}>
+                                <Row>
                                     <Col span={7} offset={1} className="label">Weekly Hours - Standard Employment Contract</Col>
-                                    <Col span={4}  className="item bold "> 
+                                    <Col span={4} className="item bold ">
                                         <Inputnumber
                                             value={contract.weaklyHours}
                                             onChange={(value) => {
@@ -320,7 +322,7 @@ export const PermanentCalculator = (props) => {
                                         />
                                     </Col>
                                 </Row>
-                            </Col>
+                            </Col>}
                             <Col span={24}>
                                 <Row>
                                     <Col span={7} offset={1} className="label"> Week in a Year</Col>
@@ -328,12 +330,11 @@ export const PermanentCalculator = (props) => {
                                 </Row>
                             </Col>
                             <Col span={12} className="label bold">Annual Base Salary</Col>
-                            <Col span={3} className="item bold"> {formatCurrency(calABSalary(contract.cm1))}</Col>
-                            <Col span={3} className="item bold"> {formatCurrency(calABSalary(contract.cm2))}</Col>
-                            <Col span={3} className="item bold"> {formatCurrency(calABSalary(contract.cm3))}</Col>
-                            <Col span={3} className="item bold"> {formatCurrency(calABSalary(contract.cm4))}</Col>
-                            {/* <Col span={8} className="item bold total-cost pr-5"> {formatCurrency(expectedDailyHours * (buyRate + adjustment))}</Col> */}
-                        </Row>
+                            <Col span={3} className="item bold"> {formatCurrency(decideCalType(contract.cm1))}</Col>
+                            <Col span={3} className="item bold"> {formatCurrency(decideCalType(contract.cm12))}</Col>
+                            <Col span={3} className="item bold"> {formatCurrency(decideCalType(contract.cm13))}</Col>
+                            <Col span={3} className="item bold"> {formatCurrency(decideCalType(contract.cm14))}</Col>
+                            </Row>
                     </Col>
                     {/* <Col span={12} className="sell-cost">
                         <Row  >

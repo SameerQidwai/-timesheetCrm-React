@@ -324,7 +324,7 @@ const subListData = [ //FundOutlined
           {
             text: 'Employee Permanent',
             icon: <ContactsOutlined />,
-            link: '/calculator-permenent',
+            link: '/calculator-permanent',
             key: 'PERMANENT_CAL',
             permissions: { module: 'TIMESHEETS', key: 'READ' }
           },
