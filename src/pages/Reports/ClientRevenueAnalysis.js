@@ -1,74 +1,39 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Col, Row, Typography, Table as ATable } from 'antd'
-import Table, { FiltertagsNew, tableSorter } from '../Table/TableFilter'
-import { downloadReportFile, getProjectRevenueAnalysis } from '../../../service/reports-Apis'
+import Table, { FiltertagsNew, tableSorter } from '../../components/Core/Table/TableFilter'
+import { Api, formatCurrency, formatFloat, localStore } from '../../service/constant'
+// import { ReportsFilters, _createQuery } from './ReportFilters'
+import { ReportsFilters, _createQuery } from '../../components/Core/ReportFilters';
 
-
-import { Api, formatCurrency, formatFloat, getFiscalYear, localStore, parseDate } from '../../../service/constant'
-import moment from 'moment'
-import { ReportsFilters, _createQuery } from './Filters'
+import { downloadReportFile, getClientRevenueAnalysis } from '../../service/reports-Apis'
 import { _generateMonthlyColumns } from '.'
 
 const contantColmuns = [
   {
-    key: 'projectTitle',
-    dataIndex: 'projectTitle',
-    title: 'Project Name',
-    fixed: true,
-    width: '10%',
-    ...tableSorter('projectTitle', 'string'),
-  },
-  {
     key: 'organizationName',
     dataIndex: 'organizationName',
+    fixed: true,
     title: 'Organisation',
     width: '10%',
     ...tableSorter('organizationName', 'string'),
   },
   {
-    key: 'projectManagerName',
-    dataIndex: 'projectManagerName',
-    title: 'Project Manager Name',
-    width: '6%',
-    ...tableSorter('projectManagerName', 'string'),
-  },
-  {
-    key: 'projectId',
-    dataIndex: 'projectId',
-    title: 'Project Code',
+    key: 'organizationId',
+    dataIndex: 'organizationId',
+    title: 'Organisation Code',
     align: 'center',
     width: '4%',
     render: (text)=> (`00${text}`), 
-    ...tableSorter('projectId', 'number'),
+    ...tableSorter('organizationId', 'number'),
   },
-  {
-    key: 'projectValue',
-    dataIndex: 'projectValue',
-    title: 'Total Contract Value',
-    width: '5%',
-    render: (value)=> (formatCurrency(value??0)),
-    ...tableSorter('projectValue', 'number'),
-  },
-  {
-    key: 'totalSell',
-    dataIndex: 'totalSell',
-    title: 'Total Actual Revenue',
-    width: '5%',
-    render: (value)=> (formatCurrency(value??0)),
-    ...tableSorter('totalSell', 'number'),
-  },
-  {
-    key: 'residualedRevenue',
-    dataIndex: 'residualedRevenue',
-    title: 'Residual Contract Value',
-    width: '5%',
-    render: (_, record)=> formatCurrency(parseFloat(record.projectValue??0) - parseFloat(record.totalSell??0)),
-    sorter: (current, previous) => { 
-      let valueA = (parseFloat(current.projectValue??0) - parseFloat(current.totalSell??0))??0;
-      let valueB = (parseFloat(previous.projectValue??0) - parseFloat(previous.totalSell??0)) ??0;
-      return valueA -  valueB 
-    },
-  },
+  // { // will need when doing financial year iplementation
+  //   key: 'totalSell',
+  //   dataIndex: 'totalSell',
+  //   title: 'Total Completed Revenue',
+  //   width: '5%',
+  //   render: (value)=> (formatCurrency(value??0)),
+  //   ...tableSorter('totalSell', 'number'),
+  // },
   {
     key: 'YTDTotalSell',
     dataIndex: 'YTDTotalSell',
@@ -82,9 +47,25 @@ const contantColmuns = [
     dataIndex: 'empty',
     width: '1%'
   },
+  // // will need when doing financial year iplementation{
+  //   key: 'projectsValue',
+  //   dataIndex: 'projectsValue',
+  //   title: 'Total Contract Value',
+  //   width: '5%',
+  //   render: (value)=> (formatCurrency(value??0)),
+  //   ...tableSorter('projectsValue', 'number'),
+  // },
+  // { // will need when doing financial year iplementation
+  //   key: 'residualedRevenue',
+  //   dataIndex: 'residualedRevenue',
+  //   title: 'Residual Contract Value',
+  //   width: '5%',
+  //   render: (_, record)=> formatCurrency(parseFloat(record.projectsValue??0) - parseFloat(record.totalSell??0)),
+  //   // ...tableSorter('residualedRevenue', 'number'),
+  // },
 ]
 
-function ProjectRevenueAnalysis() {
+function ClientRevenueAnalysis() {
   const [data, setData] = useState([])
   const [columns, setColumn] = useState([])
   const [visible, setVisible] = useState(false)
@@ -96,18 +77,16 @@ function ProjectRevenueAnalysis() {
     _generateMonthlyColumns({
       contantColmuns,
       setColumn,
-      spliceBtw: 9,
+      spliceBtw: 4,
       // colRender: 'monthTotalSell',
       format: 'currency'
     });
     getData()
   }, [])
 
-  
-
   const getData = (queryParam, tagsValues) =>{
     setLoading(true)
-    getProjectRevenueAnalysis(queryParam).then(res=>{
+    getClientRevenueAnalysis(queryParam).then(res=>{
       if (res.success){
         // console.log(res.data)
         setData(res.data)
@@ -123,9 +102,9 @@ function ProjectRevenueAnalysis() {
   const exportData = () =>{
     setLoading(true)
     let query = _createQuery(tags??{})
-    getProjectRevenueAnalysis(query, '/export').then(res=>{
+    getClientRevenueAnalysis(query, '/export').then(res=>{
       if (res.success){
-        downloadReportFile(res.data, 'FY Project Revenue Analysis')
+        downloadReportFile(res.data, 'FY Client Revenue Analysis')
       }
       setLoading(false)
     })
@@ -135,12 +114,12 @@ function ProjectRevenueAnalysis() {
     return(
       <Row justify="space-between">
         <Col >
-          <Typography.Title level={5}>FY Project Revenue Analysis</Typography.Title>
+          <Typography.Title level={5}>FY Client Revenue Analysis</Typography.Title>
         </Col>
         <Col>
             <Row justify="end" gutter={5}>
                 <Col >
-                    <Button size="small" onClick={exportData}>Download CSV</Button>
+                    <Button size="small" onClick={()=>exportData}>Download CSV</Button>
                 </Col>
                 <Col>
                     <Button size="small" onClick={() => setVisible(true)}>
@@ -148,7 +127,7 @@ function ProjectRevenueAnalysis() {
                     </Button>
                 </Col>
             </Row>
-          </Col>
+        </Col>
         <Col span={24}>
           <FiltertagsNew
             filters={tags}
@@ -163,9 +142,9 @@ function ProjectRevenueAnalysis() {
       </Row>
     )
   }
-
+  
   const summaryFooter = (data) =>{
-    let excludeColumns = ['projectTitle', 'organizationName', 'projectManagerName', 'projectId', 'empty']
+    let excludeColumns = ['organizationName', 'organizationId', 'empty']
     if(data.length>0)
     return (
       <ATable.Summary fixed="bottom">
@@ -178,14 +157,14 @@ function ProjectRevenueAnalysis() {
               data.forEach((rowData, index) => {
                 //calculation for total hours and actual hours for footer to show
                 if(key === 'residualedRevenue'){
-                  value += ((rowData['projectValue'] - rowData['totalSell'])??0);
+                  value += ((rowData['projectsValue'] - rowData['totalSell'])??0);
                 }else{
                   value += (rowData[key]??0);
                 }
               });
             }
             //Title of the projct show column for title
-            return key === 'projectId' ? (
+            return key === 'organizationId' ? (
               <ATable.Summary.Cell
                 index={key + 1}
                 key={key + 1}
@@ -219,16 +198,16 @@ function ProjectRevenueAnalysis() {
           title={() => tableTitle()}
           columns={columns}
           loading={loading}
-          rowKey={'projectId'}
+          rowKey={'organizationId'}
           dataSource={data}
           pagination={false}
-          scroll={{ x:  '180vw' }}
+          scroll={{ x:  '170vw' }}
           summary={ columnData => summaryFooter(columnData)}
         />
       </Col>
       <ReportsFilters
           compName={'Filters'}
-          compKey={'projectRevenue'}
+          compKey={'clientRevenue'}
           tags={tags}
           visible={visible}
           getCompData={getData}
@@ -238,4 +217,4 @@ function ProjectRevenueAnalysis() {
   );
 }
 
-export default ProjectRevenueAnalysis
+export default ClientRevenueAnalysis

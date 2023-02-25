@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Col, Row, Typography, Table as Atable } from 'antd'
-import Table, { FiltertagsNew, tableSorter } from '../Table/TableFilter'
-import { Api, formatCurrency, formatDate, formatFloat, localStore } from '../../../service/constant'
-import { downloadReportFile, getLeaveSummary } from '../../../service/reports-Apis'
-import { ReportsFilters, _createQuery } from './Filters'
+import Table, { FiltertagsNew, tableSorter } from '../../components/Core/Table/TableFilter'
+import { Api, formatCurrency, formatDate, formatFloat, localStore } from '../../service/constant'
+import { downloadReportFile, getLeaveSummary } from '../../service/reports-Apis'
+// import { ReportsFilters, _createQuery } from './ReportFilters'
+import { ReportsFilters, _createQuery } from '../../components/Core/ReportFilters';
 
 const {Title, Text} = Typography
 

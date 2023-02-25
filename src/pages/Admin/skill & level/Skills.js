@@ -16,7 +16,7 @@ class Skills extends Component {
         this.levelForm = React.createRef();
         this.columns = [
             {
-                title: "Skill Name",
+                title: "Standard Skill",
                 dataIndex: "label",
                 key: "label",
                 ...tableSorter('label', 'string')
@@ -167,17 +167,17 @@ class Skills extends Component {
                         }.bind(this),
                     },
                     {
-                        fieldCol: 15,
+                        fieldCol: 12,
                         Placeholder: "Level Name",
                         type: "Text",
                         size: "small",
                     },
                     {
-                        fieldCol: 7,
+                        fieldCol: 10,
                         layout: {
                             wrapperCol: { offset: 1 },
                         },
-                        Placeholder: "priority",
+                        Placeholder: "Experience",
                         type: "Text",
                         size: "small",
                     },
@@ -241,7 +241,7 @@ class Skills extends Component {
         return [
             {
                 object: "obj",
-                fieldCol: 15,
+                fieldCol: 12,
                 layout: { wrapperCol: { span: 23 } },
                 key: `level${item_no}`,
                 size: "small",
@@ -253,13 +253,13 @@ class Skills extends Component {
             },
             {
                 object: "obj",
-                fieldCol: 7,
+                fieldCol: 10,
                 layout: { wrapperCol: { span: 20 } },
                 key: `priority${item_no}`,
                 size: "small",
                 // rules:[{ required: true }],
-                data: this.priority_data,
-                type: "Select",
+                // data: this.priority_data,
+                type: "Rate",
                 labelAlign: "left",
                 itemStyle: { marginBottom: "5px" },
             },
@@ -500,7 +500,7 @@ class Skills extends Component {
                         visible={isVisible}
                         okButtonProps={{ disabled: loading }}
                         okText={loading ?<LoadingOutlined /> :"Save"}
-                        width={400}
+                        width={600}
                         onCancel={() => { this.toggelModal(false); }}
                         onOk={() => { this.submit(); }}
                     >

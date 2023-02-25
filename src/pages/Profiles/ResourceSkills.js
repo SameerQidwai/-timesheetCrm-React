@@ -75,7 +75,7 @@ const ResourceSkills = (props) =>{
                             <Col span={11}>
                                 <Form.Item
                                     {...field}
-                                    label="Skill"
+                                    label="Standard Skill"
                                     name={[field.name, 'standardSkillId']}
                                     
                                 >
@@ -91,7 +91,7 @@ const ResourceSkills = (props) =>{
                             <Col span={11}>
                             <Form.Item
                                 {...field}
-                                label="Level"
+                                label="Standard Level"
                                 name={[field.name, 'id']}
                             >
                                 <Select 

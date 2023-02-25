@@ -1,54 +1,30 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Col, Row, Typography, Table as Atable } from 'antd'
-import Table, { FiltertagsNew, tableSorter, tableTitleFilter } from '../Table/TableFilter'
-import { Api, formatCurrency, formatDate, localStore } from '../../../service/constant'
+import Table, { FiltertagsNew, tableSorter } from '../../components/Core/Table/TableFilter'
+import { Api, formatCurrency, formatDate, formatFloat, localStore } from '../../service/constant'
 
 
-import { downloadReportFile, getAllocations } from '../../../service/reports-Apis'
-import { ReportsFilters, _createQuery } from './Filters'
+import { downloadReportFile, getPositions } from '../../service/reports-Apis'
+// import { ReportsFilters, _createQuery } from './ReportFilters'
+import { ReportsFilters, _createQuery } from '../../components/Core/ReportFilters';
 
 const {Title, Text} = Typography
 
 
-function WorkForceAllocation() {
-    const [data, setData] = useState()
+function Positions() {
+    const [data, setData] = useState([])
     const [visible, setVisible] = useState(false)
-    const [page, setPage] = useState({pNo:1, pSize: localStore().pageSize})
-    const [tags, setTags] = useState(null)	
-    const [loading, setLoading] = useState(false)			
+    const [tags, setTags] = useState(null)
+    const [loading, setLoading] = useState(false)
 
     const columns = [
         {
-            key: 'name',
-            dataIndex: 'name',
-            fixed: true,
-            title: 'Resource Name',
-            width: 260,
-            ...tableSorter('name', 'string', true),
-        },
-        {
-            key: 'resourceType',
-            dataIndex: 'resourceType',
-            title: 'Resource Type',
-            width: 80,
-            ...tableSorter('resourceType', 'string'),
-        },
-        {
-            key: 'employmentType',
-            dataIndex: 'employmentType',
-            // fixed: true,
-            title: 'Employee Status',
-            width: 80,
-            ...tableSorter('employmentType', 'string'),
-        },
-        
-        {
             key: 'title',
             dataIndex: 'title',
-            // fixed: true,
+            fixed: true,
             title: 'Title',
-            width: 250,
-            ...tableSorter('title', 'string'),
+            width: 260,
+            ...tableSorter('title', 'string', true),
         },
         {
             key: 'workType',
@@ -56,7 +32,7 @@ function WorkForceAllocation() {
             // fixed: true,
             title: 'Type',
             width: 100,
-            ...tableSorter('workType', 'string'),
+            ...tableSorter('workType', 'string')
         },
         {
             key: 'workStatus',
@@ -70,9 +46,9 @@ function WorkForceAllocation() {
             key: 'organization',
             dataIndex: 'organization',
             // fixed: true,
+            title: 'Organisation Name',
             width: 200,
-            title: 'Organization Name',
-            ...tableSorter('organization', 'string'),
+            ...tableSorter('organization', 'string')
         },
         {
             key: 'milestone',
@@ -80,35 +56,56 @@ function WorkForceAllocation() {
             // fixed: true,
             title: 'Milestone',
             width: 100,
-            ...tableSorter('milestone', 'string'),
+            ...tableSorter('milestone', 'string')
         },
         {
             key: 'position',
             dataIndex: 'position',
             title: 'Position Title',
             width: 100,
-            ...tableSorter('position', 'string'),
+            ...tableSorter('position', 'string')
+        },
+        {
+            key: 'skill',
+            dataIndex: 'skill',
+            title: 'Standard Skill',
+            width: 250,
+            ...tableSorter('skill', 'string')
+        },
+        {
+            key: 'skillLevel',
+            dataIndex: 'skillLevel',
+            title: 'Standard Level',
+            width: 80,
+            ...tableSorter('skillLevel', 'string')
+        },
+        {
+            key: 'name',
+            dataIndex: 'name',
+            title: 'Resource Name',
+            width: 180,
+            ...tableSorter('name', 'string')
+        },
+        {
+            key: 'resourceType',
+            dataIndex: 'resourceType',
+            title: 'Resource Type',
+            width: 80,
+            ...tableSorter('resourceType', 'string'),
+        },
+        {
+            key: 'employmentType',
+            dataIndex: 'employmentType',
+            title: 'Employee Status',
+            width: 80,
+            ...tableSorter('employmentType', 'string')
         },
         {
             key: 'bookingType',
             dataIndex: 'bookingType',
             title: 'Booking Type',
             width: 80,
-            ...tableSorter('bookingType', 'string'),
-        },
-        {
-            key: 'skill',
-            dataIndex: 'skill',
-            title: 'Skill',
-            width: 250,
-            ...tableSorter('skill', 'string'),
-        },
-        {
-            key: 'skillLevel',
-            dataIndex: 'skillLevel',
-            title: 'Skill Level',
-            width: 80,
-            ...tableSorter('skillLevel', 'string'),
+            ...tableSorter('bookingType', 'string')
         },
         {
             key: 'buyRate',
@@ -116,8 +113,7 @@ function WorkForceAllocation() {
             title: 'Buy Rate (Hourly)',
             width: 80,
             render: (text)=> formatCurrency(text),
-            ...tableSorter('buyRate', 'number'),
-
+            ...tableSorter('buyRate', 'number')
         },
         {
             key: 'sellRate',
@@ -125,7 +121,15 @@ function WorkForceAllocation() {
             title: 'Sell Rate (Hourly)',
             width: 80,
             render: (text)=> formatCurrency(text),
-            ...tableSorter('sellRate', 'number'),
+            ...tableSorter('sellRate', 'number')
+        },
+        {
+            key: 'CMPercent',
+            dataIndex: 'CMPercent',
+            title: 'CM%',
+            width: 80,
+            render: (text)=> formatFloat(text) + ' %',
+            ...tableSorter('CMPercent', 'number')
         },
         {
             key: 'startDate',
@@ -133,7 +137,7 @@ function WorkForceAllocation() {
             title: 'Position Start Date',
             width: 130,
             render: (text) => formatDate(text, true, true),
-            ...tableSorter('startDate', 'date'),
+            ...tableSorter('startDate', 'date')
         },
         {
             key: 'endDate',
@@ -141,10 +145,9 @@ function WorkForceAllocation() {
             title: 'Position End Date',
             width: 130,
             render: (text) => formatDate(text, true, true),
-            ...tableSorter('endDate', 'date'),
+            ...tableSorter('endDate', 'date')
         },
     ]
-    
 
     useEffect(() => {
         getData()
@@ -152,7 +155,7 @@ function WorkForceAllocation() {
 
     const getData = (queryParam, tagsValues) =>{
         setLoading(true)
-        getAllocations(queryParam).then(res=>{
+        getPositions(queryParam).then(res=>{
             if (res.success){
                 setData(res.data)
                 if(queryParam){
@@ -167,53 +170,46 @@ function WorkForceAllocation() {
     const exportData = () =>{
         setLoading(true)
         let query = _createQuery(tags??{})
-        getAllocations(query, '/export').then(res=>{
+        getPositions(query, '/export').then(res=>{
           if (res.success){
-            downloadReportFile(res.data, 'Workforce Allocations')
+            downloadReportFile(res.data, 'Position Allocations')
           }
           setLoading(false)
         })
       }
 
     const tableTitle = () => {
-        return (
-          <Row justify="space-between">
-            <Col>
-              <Title level={5}>Workforce Allocations</Title>
-            </Col>
+      return (
+        <Row justify="space-between">
+          <Col>
+            <Title level={5}>Opportunity & Project Position Allocations </Title>
+          </Col>
             <Col>
                 <Row justify="end" gutter={5}>
                     <Col >
-                        <Button size="small" onClick={exportData}>Download CSV</Button>
+                    <Button size="small" onClick={exportData}>Download CSV</Button>
                     </Col>
                     <Col>
-                        <Button size="small" onClick={() => setVisible(true)}>
-                        Filters
-                        </Button>
+                    <Button size="small" onClick={() => setVisible(true)}>
+                    Filters
+                    </Button>
                     </Col>
                 </Row>
             </Col>
-            <Col span={24}>
-              <FiltertagsNew
-                filters={tags}
-                filterFunction={(updatedValue, el) => {
-                    let TAGS = {...tags}
-                    TAGS[el]['value'] = updatedValue; 
-                    let query = _createQuery(TAGS)
-                    getData(query, tags)
-                  }}
-              />
-            </Col>
-          </Row>
-        );
-      };
-
-     //-------------> HELPER <----------
-     const _nextCellRender = (text, index, key)=>{
-        let { pNo, pSize } = page
-        let dataSourceIndex = ((pNo - 1) * pSize + index)
-        return (text === data?.[dataSourceIndex-1 ]?.[key] && index) ? '' : text
-    }
+          <Col span={24}>
+            <FiltertagsNew
+              filters={tags}
+              filterFunction={(updatedValue, el) => {
+                let TAGS = {...tags}
+                TAGS[el]['value'] = updatedValue; 
+                let query = _createQuery(TAGS)
+                getData(query, tags)
+              }}
+            />
+          </Col>
+        </Row>
+      );
+    };
     
     return (
         <Row>
@@ -233,7 +229,7 @@ function WorkForceAllocation() {
             </Col>
             <ReportsFilters
                 compName={'Filters'}
-                compKey={'allocations'}
+                compKey={'positions'}
                 tags={tags}
                 visible={visible}
                 getCompData={getData}
@@ -243,4 +239,5 @@ function WorkForceAllocation() {
     )
 }
 
-export default WorkForceAllocation
+export default Positions
+

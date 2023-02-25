@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Col, Row, Typography, Table as Atable } from 'antd'
-import Table, { FiltertagsNew, tableSorter } from '../Table/TableFilter'
-import { downloadReportFile, getWorkforceSkills } from '../../../service/reports-Apis'
-import { Api, formatCurrency, localStore } from '../../../service/constant'
-import { ReportsFilters, _createQuery } from './Filters'
+import Table, { FiltertagsNew, tableSorter } from '../../components/Core/Table/TableFilter'
+import { downloadReportFile, getWorkforceSkills } from '../../service/reports-Apis'
+import { Api, formatCurrency, localStore } from '../../service/constant'
+// import { ReportsFilters, _createQuery } from './ReportFilters'
+import { ReportsFilters, _createQuery } from '../../components/Core/ReportFilters';
 
 const {Title, Text} = Typography
 
@@ -18,14 +19,14 @@ function WorkforceSkills() {
     {
       key: 'skill',
       dataIndex: 'skill',
-      title: 'Skill',
+      title: 'Standard Skill',
       width: '25%',
       ...tableSorter('skill', 'string', true),
     },
     {
         key: 'skillLevel',
         dataIndex: 'skillLevel',
-        title: 'Skill Level',
+        title: 'Standard Level',
         ...tableSorter('skillLevel', 'string'),
     },
     {
