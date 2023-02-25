@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Col, Dropdown, InputNumber, Menu, Row, Typography } from "antd";
+import { Col, Dropdown, InputNumber, Menu, Row, Select, Typography } from "antd";
 import 'moment-weekday-calc';
 
 import '../../Styles/buycost.css'
 // import { formatFloat } from "../../../service/constant";
 import { formatCurrency, formatFloat, getFiscalYear, formatDate, STATES } from "../../../service/constant";
-import { buyCost } from "../../../service/constant-Apis";
+import { buyCost, getReverseCostCal } from "../../../service/constant-Apis";
 import { formatter, parser } from "../Forms/FormItems";
 
 
@@ -13,12 +13,24 @@ export const PermanentCalculator = (props) => {
     let { path } = props.match;
     path = path.replaceAll('/calculator-', '')
     
+    function checkPath(){
+        if (path === "permanent") {
+            return 1;
+        } else if (path === "casual") {
+            return 2;
+        } else {
+            return 3;
+        }
+    }
+
+    const [whichPath, setWhichPath] = useState(checkPath());
     const [empType, setEmpType] = useState(path.charAt(0).toUpperCase() + path.slice(1));
     const [variables, setVariables] = useState([])
     // const [totalCostRatio, setTotalCr] = useState(0)
     const [contract, setContract] = useState({
         rfqt: 0,
         margin: 0,
+        gst: 0,
         cm1: 20,
         cm2: 25,
         cm3: 30,
@@ -26,74 +38,33 @@ export const PermanentCalculator = (props) => {
         dailyHours: 0,
         weaklyHours: 0,
         pWeekDays : 5,
-        gst: 11,
         hourlyBaseRate: 0.9,
-        weekInYear: 52
+        weekInYear: empType === "Permanent" ? 52 : 8,
+        stateTax: []
     });
 
-    const [core, setCore] = useState({
-        dlrGst: 0,
-        dlrMargin: 0,
-        dbrOff1: 0,
-        dbrOff2: 0,
-        dbrOff3: 0,
-        dbrOff4: 0,
-        hROnCost1: 0,
-        hROnCost2: 0,
-        hROnCost3: 0,
-        hROnCost4: 0,
-    });
-    
     useEffect(() => {
         let fiscalYear = getFiscalYear('years')
-        
-        buyCost('employees', 1).then(res=>{
+     
+        getReverseCostCal(whichPath).then(res=>{
             if(res.success){
-                let {golobalVariables, employeeBuyRate} = res.data
-                /** calculating noOfDays from contract not in use  */
-                // let weekdays = []
-                // for (var i=0 ; i < contract.noOfDays ?? 5 ; i++){
-                //     weekdays.push(i+1);
-                // }
-                /** noOfDays are now fixed 5 days a week throughout year */
-                /** Not In use put it here just in case */
-                // let workdays = formatDate(new Date()).isoWeekdayCalc({  
-                //     rangeStart: `1 July ${fiscalYear['start']}`,  
-                //     rangeEnd: `30 June ${fiscalYear['end']}`,
-                //     weekdays: weekdays,  
-                //     // exclusions: holidays,
-                // }) 
-                /**will remove isoWeekdayCalc later  and put constant workDaysPerAnum*/
-
-                // contract.workDaysPerAnum = workdays
-                // contract.dailyHours = contract?.noOfHours / contract?.noOfDays
-                // contract.hourlyBaseRate = (contract.type=== 1 ? 
-                //     contract?.remunerationAmount : 
-                //     (contract?.remunerationAmount / 52 / contract?.noOfHours)
-                // ) /** hourlyBaseRate expression Annual hours / 52 * weekly hours  */
-                    /** 52 is a number of weeks in a year, noOfHours are weekly our  */
-                // let count = 0
-                // golobalVariables = golobalVariables.map((el, index)=> {
-                //     if (index === 0){
-                //         el.amount = contract?.hourlyBaseRate * el?.value/100
-                //     }else{
-                //         el.amount = ((contract?.hourlyBaseRate + golobalVariables?.[0].amount) * el.value )/100
-                //     }
-                //     el.apply = 'Yes'
-                //     count += el.amount
-                //     return el
-                // })
-                // setBuyRate(employeeBuyRate)
-                // setContract(contract)
+                let { gst, golobalVariables, stateTax } = res.data
+                contract.gst = (gst + 100) / gst;
+                contract.stateTax = stateTax;
+                contract.selectedState = stateTax?.[0]?.valueId;
+                setContract(contract);
+                let value = {
+                    name: "Payroll Tax",
+                    value: stateTax?.[0]?.value,
+                    apply: 'Yes'
+                };
+                golobalVariables.splice(1, 0, value);
                 setVariables(golobalVariables)
             }
       })
-    
     }, [])
 
     const onAplicable = (key, index) => {
-        console.log("key", key);
-        // console.log("index", index);
         let changeVariables = variables;
         changeVariables[index]['apply'] = key;
         setVariables([...changeVariables]);
@@ -107,6 +78,20 @@ export const PermanentCalculator = (props) => {
             }
         })
         return val;
+    }
+    console.log(variables.length);
+    const handleChange = (value) => {
+        setContract(contract => ({
+            ...contract, selectedState: contract?.stateTax[value-1]?.valueId
+        }));
+        let valueId = contract?.stateTax[value - 1];
+        value = {
+            name: "Payroll Tax",
+            value: valueId?.value,
+            apply: 'Yes'
+        };
+        (variables.length === 1) ? variables[0] = value : variables[1] = value;
+        setVariables(variables)
     }
 
     // SOME FUNCTIONS 
@@ -135,9 +120,8 @@ export const PermanentCalculator = (props) => {
     const calABSalary = (value) => {
         return (calTotalCostRatio(value) * contract.weekInYear)
     }
-
-    const decideCalType = () => {
-        return (empType === "Permanent") ? calABSalaryforPerma(contract.cm1) : calABSalary(contract.cm1)
+    const decideCalType = (value) => {
+        return (empType === "Permanent") ? calABSalaryforPerma(value) : calABSalary(value)
     }
     return (
         <Row>
@@ -146,7 +130,7 @@ export const PermanentCalculator = (props) => {
                     <Col span={24} className="buy-cost calculator">
                         <Row> 
                             <Col span={24} className="mb-10">
-                                <Typography.Title level={5}>Buy Rate Calculator - Employee({empType})</Typography.Title>
+                                <Typography.Title level={5}>Buy Rate Calculator - {(empType == 'Contractor') ? `Sub(${empType})` : `Employee(${empType})`}</Typography.Title>
                             </Col>                 {/**for casual type emp we already set hourly base salary */}
                             <Col span={6} className="label bold">{'Daily Sell Rate inc. GST-per RFQTS'}</Col>
                             <Col span={6}></Col>
@@ -252,6 +236,35 @@ export const PermanentCalculator = (props) => {
                             <Col span={3} className="label item">{contract.dailyHours*contract.pWeekDays}</Col>
                             
                             <Col span={24} className="label my-20"></Col>
+                            <Col span={24} className="label">
+                                <Col span={12}>
+                                    <Row>
+                                        <Col span={12}>
+                                            Select State
+                                        </Col>
+                                        <Col span={12} className="item">
+                                        <Select
+                                            value={contract?.selectedState}
+                                            fieldNames={{ label: 'label', value: 'valueId'}}
+                                            style={{
+                                            width: 200,
+                                            }}
+                                            onChange={handleChange}
+                                            // options={contract.stateTax}
+                                            options={
+                                                (contract.stateTax || []).map((d,ind) => ({
+                                                    value: d.value,
+                                                    valueId: d.valueId,
+                                                    label: d.label,
+                                                    key: ind
+                                                }))
+                                            }
+                                        />
+                                        </Col>
+                                    </Row>
+                                </Col>
+                            </Col>
+                            <Col span={24} className="label my-20"></Col>
                             
                             <Col span={12} className="label bold">Hourly Rate including On-cost</Col>
                             <Col span={3} className="item bold"> {formatCurrency(findDbrOffer(contract.cm1)/contract.dailyHours)}</Col>
@@ -259,7 +272,7 @@ export const PermanentCalculator = (props) => {
                             <Col span={3} className="item bold"> {formatCurrency(findDbrOffer(contract.cm3)/contract.dailyHours)}</Col>
                             <Col span={3} className="item bold"> {formatCurrency(findDbrOffer(contract.cm4)/contract.dailyHours)}</Col>
                             
-                            <Col span={4} offset={8} className=""><Typography.Text underline strong >Applicable</Typography.Text></Col>
+                            <Col span={3} offset={9} className="item"><Typography.Text underline strong >Applicable</Typography.Text></Col>
                             <Col span={12} className="item" ></Col>
                             <Col span={12}>
                                 {variables?.map((el, index)=>  <Col span={24} key={index}>
@@ -325,15 +338,15 @@ export const PermanentCalculator = (props) => {
                             </Col>}
                             <Col span={24}>
                                 <Row>
-                                    <Col span={7} offset={1} className="label"> Week in a Year</Col>
+                                    <Col span={7} offset={1} className="label"> {(empType === "Permanent") ? `Week in a Year` : `Daily Hours in a Day`}</Col>
                                     <Col span={4} className="item"> {contract?.weekInYear}</Col>
                                 </Row>
                             </Col>
                             <Col span={12} className="label bold">Annual Base Salary</Col>
                             <Col span={3} className="item bold"> {formatCurrency(decideCalType(contract.cm1))}</Col>
-                            <Col span={3} className="item bold"> {formatCurrency(decideCalType(contract.cm12))}</Col>
-                            <Col span={3} className="item bold"> {formatCurrency(decideCalType(contract.cm13))}</Col>
-                            <Col span={3} className="item bold"> {formatCurrency(decideCalType(contract.cm14))}</Col>
+                            <Col span={3} className="item bold"> {formatCurrency(decideCalType(contract.cm2))}</Col>
+                            <Col span={3} className="item bold"> {formatCurrency(decideCalType(contract.cm3))}</Col>
+                            <Col span={3} className="item bold"> {formatCurrency(decideCalType(contract.cm4))}</Col>
                             </Row>
                     </Col>
                     {/* <Col span={12} className="sell-cost">
