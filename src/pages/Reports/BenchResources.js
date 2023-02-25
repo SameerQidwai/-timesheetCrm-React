@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Col, Row, Typography, Table as Atable } from 'antd'
-import Table, { FiltertagsNew, tableSorter } from '../Table/TableFilter'
-import { downloadReportFile, getBenchResources } from '../../../service/reports-Apis'
-import { Api, formatCurrency } from '../../../service/constant'
-import { ReportsFilters, _createQuery } from './Filters'
+import Table, { FiltertagsNew, tableSorter } from '../../components/Core/Table/TableFilter'
+import { downloadReportFile, getBenchResources } from '../../service/reports-Apis'
+import { Api, formatCurrency } from '../../service/constant'
+// import { ReportsFilters, _createQuery } from './ReportFilters'
+import { ReportsFilters, _createQuery } from '../../components/Core/ReportFilters';
 
 const {Title, Text} = Typography
 const resourceColumn = [
@@ -40,7 +41,7 @@ const resourceColumn = [
 
 const skillColumn = [
     {
-      key: 'skill',
+      key: 'Standard skill',
       dataIndex: 'skill',
       title: 'Skill',
       width: '30.22%',
@@ -49,7 +50,7 @@ const skillColumn = [
     {
       key: 'level',
       dataIndex: 'level',
-      title: 'skill Level',
+      title: 'Stnadard Level',
       width: '23.79%',
       ...tableSorter('level', 'string'),
     },

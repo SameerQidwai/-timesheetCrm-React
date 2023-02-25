@@ -115,7 +115,7 @@ class ResModal extends Component {
           // itemStyle:{marginBottom:'10px'},
         },
         {
-          Placeholder: "Skill",
+          Placeholder: "Panel Skill",
           rangeMin: true,
           fieldCol: 12,
           size: "small",
@@ -150,7 +150,7 @@ class ResModal extends Component {
         },
         
         {
-          Placeholder: "Skill Level",
+          Placeholder: "Panel Skill Level",
           rangeMin: true,
           fieldCol: 12,
           size: "small",

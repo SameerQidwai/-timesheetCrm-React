@@ -16,7 +16,7 @@ class Skills extends Component {
         this.levelForm = React.createRef();
         this.columns = [
             {
-                title: "Skill Name",
+                title: "Standard Skill",
                 dataIndex: "label",
                 key: "label",
                 ...tableSorter('label', 'string')

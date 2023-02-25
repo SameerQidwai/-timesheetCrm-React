@@ -1,29 +1,55 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Col, Row, Typography, Table as Atable } from 'antd'
-import Table, { FiltertagsNew, tableSorter } from '../Table/TableFilter'
-import { Api, formatCurrency, formatDate, formatFloat, localStore } from '../../../service/constant'
+import Table, { FiltertagsNew, tableSorter, tableTitleFilter } from '../../components/Core/Table/TableFilter'
+import { Api, formatCurrency, formatDate, localStore } from '../../service/constant'
 
 
-import { downloadReportFile, getPositions } from '../../../service/reports-Apis'
-import { ReportsFilters, _createQuery } from './Filters'
+import { downloadReportFile, getAllocations } from '../../service/reports-Apis'
+// import { ReportsFilters, _createQuery } from './ReportFilters'
+import { ReportsFilters, _createQuery } from '../../components/Core/ReportFilters';
 
 const {Title, Text} = Typography
 
 
-function Positions() {
-    const [data, setData] = useState([])
+function WorkForceAllocation() {
+    const [data, setData] = useState()
     const [visible, setVisible] = useState(false)
-    const [tags, setTags] = useState(null)
-    const [loading, setLoading] = useState(false)
+    const [page, setPage] = useState({pNo:1, pSize: localStore().pageSize})
+    const [tags, setTags] = useState(null)	
+    const [loading, setLoading] = useState(false)			
 
     const columns = [
         {
+            key: 'name',
+            dataIndex: 'name',
+            fixed: true,
+            title: 'Resource Name',
+            width: 260,
+            ...tableSorter('name', 'string', true),
+        },
+        {
+            key: 'resourceType',
+            dataIndex: 'resourceType',
+            title: 'Resource Type',
+            width: 80,
+            ...tableSorter('resourceType', 'string'),
+        },
+        {
+            key: 'employmentType',
+            dataIndex: 'employmentType',
+            // fixed: true,
+            title: 'Employee Status',
+            width: 80,
+            ...tableSorter('employmentType', 'string'),
+        },
+        
+        {
             key: 'title',
             dataIndex: 'title',
-            fixed: true,
+            // fixed: true,
             title: 'Title',
-            width: 260,
-            ...tableSorter('title', 'string', true),
+            width: 250,
+            ...tableSorter('title', 'string'),
         },
         {
             key: 'workType',
@@ -31,7 +57,7 @@ function Positions() {
             // fixed: true,
             title: 'Type',
             width: 100,
-            ...tableSorter('workType', 'string')
+            ...tableSorter('workType', 'string'),
         },
         {
             key: 'workStatus',
@@ -45,9 +71,9 @@ function Positions() {
             key: 'organization',
             dataIndex: 'organization',
             // fixed: true,
-            title: 'Organisation Name',
             width: 200,
-            ...tableSorter('organization', 'string')
+            title: 'Organization Name',
+            ...tableSorter('organization', 'string'),
         },
         {
             key: 'milestone',
@@ -55,56 +81,35 @@ function Positions() {
             // fixed: true,
             title: 'Milestone',
             width: 100,
-            ...tableSorter('milestone', 'string')
+            ...tableSorter('milestone', 'string'),
         },
         {
             key: 'position',
             dataIndex: 'position',
             title: 'Position Title',
             width: 100,
-            ...tableSorter('position', 'string')
-        },
-        {
-            key: 'skill',
-            dataIndex: 'skill',
-            title: 'Skill',
-            width: 250,
-            ...tableSorter('skill', 'string')
-        },
-        {
-            key: 'skillLevel',
-            dataIndex: 'skillLevel',
-            title: 'Skill Level',
-            width: 80,
-            ...tableSorter('skillLevel', 'string')
-        },
-        {
-            key: 'name',
-            dataIndex: 'name',
-            title: 'Resource Name',
-            width: 180,
-            ...tableSorter('name', 'string')
-        },
-        {
-            key: 'resourceType',
-            dataIndex: 'resourceType',
-            title: 'Resource Type',
-            width: 80,
-            ...tableSorter('resourceType', 'string'),
-        },
-        {
-            key: 'employmentType',
-            dataIndex: 'employmentType',
-            title: 'Employee Status',
-            width: 80,
-            ...tableSorter('employmentType', 'string')
+            ...tableSorter('position', 'string'),
         },
         {
             key: 'bookingType',
             dataIndex: 'bookingType',
             title: 'Booking Type',
             width: 80,
-            ...tableSorter('bookingType', 'string')
+            ...tableSorter('bookingType', 'string'),
+        },
+        {
+            key: 'skill',
+            dataIndex: 'skill',
+            title: 'Standard Skill',
+            width: 250,
+            ...tableSorter('skill', 'string'),
+        },
+        {
+            key: 'skillLevel',
+            dataIndex: 'skillLevel',
+            title: 'Standard Level',
+            width: 80,
+            ...tableSorter('skillLevel', 'string'),
         },
         {
             key: 'buyRate',
@@ -112,7 +117,8 @@ function Positions() {
             title: 'Buy Rate (Hourly)',
             width: 80,
             render: (text)=> formatCurrency(text),
-            ...tableSorter('buyRate', 'number')
+            ...tableSorter('buyRate', 'number'),
+
         },
         {
             key: 'sellRate',
@@ -120,15 +126,7 @@ function Positions() {
             title: 'Sell Rate (Hourly)',
             width: 80,
             render: (text)=> formatCurrency(text),
-            ...tableSorter('sellRate', 'number')
-        },
-        {
-            key: 'CMPercent',
-            dataIndex: 'CMPercent',
-            title: 'CM%',
-            width: 80,
-            render: (text)=> formatFloat(text) + ' %',
-            ...tableSorter('CMPercent', 'number')
+            ...tableSorter('sellRate', 'number'),
         },
         {
             key: 'startDate',
@@ -136,7 +134,7 @@ function Positions() {
             title: 'Position Start Date',
             width: 130,
             render: (text) => formatDate(text, true, true),
-            ...tableSorter('startDate', 'date')
+            ...tableSorter('startDate', 'date'),
         },
         {
             key: 'endDate',
@@ -144,9 +142,10 @@ function Positions() {
             title: 'Position End Date',
             width: 130,
             render: (text) => formatDate(text, true, true),
-            ...tableSorter('endDate', 'date')
+            ...tableSorter('endDate', 'date'),
         },
     ]
+    
 
     useEffect(() => {
         getData()
@@ -154,7 +153,7 @@ function Positions() {
 
     const getData = (queryParam, tagsValues) =>{
         setLoading(true)
-        getPositions(queryParam).then(res=>{
+        getAllocations(queryParam).then(res=>{
             if (res.success){
                 setData(res.data)
                 if(queryParam){
@@ -169,46 +168,53 @@ function Positions() {
     const exportData = () =>{
         setLoading(true)
         let query = _createQuery(tags??{})
-        getPositions(query, '/export').then(res=>{
+        getAllocations(query, '/export').then(res=>{
           if (res.success){
-            downloadReportFile(res.data, 'Position Allocations')
+            downloadReportFile(res.data, 'Workforce Allocations')
           }
           setLoading(false)
         })
       }
 
     const tableTitle = () => {
-      return (
-        <Row justify="space-between">
-          <Col>
-            <Title level={5}>Opportunity & Project Position Allocations </Title>
-          </Col>
+        return (
+          <Row justify="space-between">
+            <Col>
+              <Title level={5}>Workforce Allocations</Title>
+            </Col>
             <Col>
                 <Row justify="end" gutter={5}>
                     <Col >
-                    <Button size="small" onClick={exportData}>Download CSV</Button>
+                        <Button size="small" onClick={exportData}>Download CSV</Button>
                     </Col>
                     <Col>
-                    <Button size="small" onClick={() => setVisible(true)}>
-                    Filters
-                    </Button>
+                        <Button size="small" onClick={() => setVisible(true)}>
+                        Filters
+                        </Button>
                     </Col>
                 </Row>
             </Col>
-          <Col span={24}>
-            <FiltertagsNew
-              filters={tags}
-              filterFunction={(updatedValue, el) => {
-                let TAGS = {...tags}
-                TAGS[el]['value'] = updatedValue; 
-                let query = _createQuery(TAGS)
-                getData(query, tags)
-              }}
-            />
-          </Col>
-        </Row>
-      );
-    };
+            <Col span={24}>
+              <FiltertagsNew
+                filters={tags}
+                filterFunction={(updatedValue, el) => {
+                    let TAGS = {...tags}
+                    TAGS[el]['value'] = updatedValue; 
+                    let query = _createQuery(TAGS)
+                    getData(query, tags)
+                  }}
+              />
+            </Col>
+          </Row>
+        );
+      };
+
+     //-------------> HELPER <----------
+     const _nextCellRender = (text, index, key)=>{
+        let { pNo, pSize } = page
+        let dataSourceIndex = ((pNo - 1) * pSize + index)
+        return (text === data?.[dataSourceIndex-1 ]?.[key] && index) ? '' : text
+    }
     
     return (
         <Row>
@@ -228,7 +234,7 @@ function Positions() {
             </Col>
             <ReportsFilters
                 compName={'Filters'}
-                compKey={'positions'}
+                compKey={'allocations'}
                 tags={tags}
                 visible={visible}
                 getCompData={getData}
@@ -238,5 +244,4 @@ function Positions() {
     )
 }
 
-export default Positions
-
+export default WorkForceAllocation

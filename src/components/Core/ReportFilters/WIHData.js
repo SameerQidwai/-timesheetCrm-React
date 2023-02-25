@@ -21,8 +21,13 @@ export const income_revenue = [
     className: 'data-title-row',
     default: 0,
   },
-  {},
-  {},
+  {
+    name: 'Revnue - Other',
+    identifier: 'revenue_total',
+    key: 'Revnue - Other',
+    className: 'data-title-row',
+    editable: true,
+  },
   {
     name: 'Revenue - Security Clearance Fee',
     identifier: 'revenue_total',
@@ -34,6 +39,13 @@ export const income_revenue = [
     name: 'Misc Income',
     identifier: 'revenue_total',
     key: 'Misc Income',
+    className: 'data-title-row',
+    editable: true,
+  },
+  {
+    name: 'Adjustment',
+    identifier: 'revenue_total',
+    key: 'Revenue - Adjustment',
     className: 'data-title-row',
     editable: true,
   },
@@ -209,7 +221,7 @@ export const contribution_margin = [
     },
     render:(key, record)=>{
       key = key.startsWith('FY')? 'total' : key
-      return formatNegativeValue(record[key]) 
+      return formatNegativeValue(record[key], 'float') 
     }
   },
   {}
@@ -217,12 +229,11 @@ export const contribution_margin = [
 
 export const direct_overhead_expense = [
   {},
-  { name: 'DIRECT OVERHEAD - DOH',
-  key: 'DIRECT OVERHEAD - DOH doh',
-  className: 'title-row' },
-  { name: 'PERSONNEL EXPENSES',
-  key: 'PERSONNEL EXPENSES doh',
-   className: 'title-row' },
+  {
+    name: 'DIRECT OVERHEAD - DOH',
+    key: 'DIRECT OVERHEAD - DOH doh',
+    className: 'title-row',
+  },
   {
     name: 'Salaries & Wages - Permanent',
     key: 'Salaries & Wages - Permanent doh',
@@ -252,30 +263,6 @@ export const direct_overhead_expense = [
     editable: true,
   },
   {
-    name: 'Training & Education',
-    key: 'Training & Education doh',
-    className: 'data-title-row',
-    editable: true,
-  },
-  {
-    name: 'Recruitment Expenses',
-    key: 'Recruitment Expenses doh',
-    className: 'data-title-row',
-    editable: true,
-  },
-  {
-    name: 'Staff amenities',
-    key: 'Staff amenities doh',
-    className: 'data-title-row',
-    editable: true,
-  },
-  {
-    name: 'Fringe Benefits Tax',
-    key: 'Fringe Benefits Tax doh',
-    className: 'data-title-row',
-    editable: true,
-  },
-  {
     name: 'Subcontractor Services',
     key: 'Subcontractor Services doh',
     className: 'data-title-row',
@@ -288,18 +275,59 @@ export const direct_overhead_expense = [
     editable: true,
   },
   {
-    name: 'Security Clearance Sponsorship',
-    key: 'Security Clearance Sponsorship doh',
+    name: 'Other Personnel Expenses',
+    key: 'Other Personnel Expenses doh',
     className: 'data-title-row',
     editable: true,
   },
   {
-    name: 'Membership Fee',
-    key: 'Membership Fee doh',
+    name: 'Occupancy Expenses ',
+    key: 'Occupancy Expenses doh',
     className: 'data-title-row',
     editable: true,
   },
-  {},
+  {
+    name: 'Equipment Expenses ',
+    key: 'Equipment Expenses doh',
+    className: 'data-title-row',
+    editable: true,
+  },
+  {
+    name: 'Communication Expenses ',
+    key: 'Communication Expenses doh',
+    className: 'data-title-row',
+    editable: true,
+  },
+  {
+    name: 'Outside Services Expenses ',
+    key: 'Outside Services Expenses doh',
+    className: 'data-title-row',
+    editable: true,
+  },
+  {
+    name: 'Travel Expenses',
+    key: 'Travel Expenses doh',
+    className: 'data-title-row',
+    editable: true,
+  },
+  {
+    name: 'Entertainment - Client ',
+    key: 'Entertainment - Client doh',
+    className: 'data-title-row',
+    editable: true,
+  },
+  {
+    name: 'Entertainment - Staff ',
+    key: 'Entertainment - Staff doh',
+    className: 'data-title-row',
+    editable: true,
+  },
+  {
+    name: 'Other General Expenses ',
+    key: 'Other General Expenses doh',
+    className: 'data-title-row',
+    editable: true,
+  },
   {},
   {
     className: 'total-row',
@@ -930,8 +958,9 @@ export const getValueWithCondition = (obj, index, key) => {
   return isNaN(parseFloat(value)) ? 0 : parseFloat(value);
 }
 
-export const formatNegativeValue = (value) =>{
-  return `${
-    value < 0 ? `(${formatCurrency(Math.abs(value))})` : formatCurrency(value)
-  }`;
+export const formatNegativeValue = (value, format) =>{
+  return format === 'float' ?
+  `${ value < 0 ? `(${formatFloat(Math.abs(value))})` : formatFloat(value) } %`
+  :
+  `${ value < 0 ? `(${formatCurrency(Math.abs(value))})` : formatCurrency(value) }`;
 }
