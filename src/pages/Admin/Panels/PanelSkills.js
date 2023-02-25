@@ -20,7 +20,7 @@ class PanelInfo extends Component {
 
         this.columns = [
             {
-                title: "Skill",
+                title: "Panel Skill",
                 dataIndex: "label",
                 key: "label",
                 ...tableSorter('label', 'string')
@@ -98,7 +98,7 @@ class PanelInfo extends Component {
                     },
                     {
                         fieldCol: 12,
-                        Placeholder: "Generic Skill",
+                        Placeholder: "Standard Skill",
                         type: "Text",
                         size: "small",
                     },
@@ -125,7 +125,7 @@ class PanelInfo extends Component {
                         rules: [
                             {
                                 required: true,
-                                message: "Generic Skill is Required",
+                                message: "Standard Skill is Required",
                             },
                         ],
                         type: "Select",

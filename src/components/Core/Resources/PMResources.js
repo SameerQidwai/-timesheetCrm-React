@@ -90,13 +90,13 @@ const positionColumns = [
     ...tableSorter('title', 'string'),
   },
   {
-    title: 'Skill',
+    title: 'Panel Skill',
     dataIndex: ['panelSkill', 'label'],
     key: 'panelSkill',
     ...tableSorter('panelSkill.label', 'string'),
   },
   {
-    title: 'Level',
+    title: 'Panel Level',
     dataIndex: ['panelSkillStandardLevel', 'levelLabel'],
     key: 'panelSkillStandardLevel',
     ...tableSorter('panelSkillStandardLevel.levelLabel', 'string'),

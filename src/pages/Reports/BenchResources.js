@@ -41,7 +41,7 @@ const resourceColumn = [
 
 const skillColumn = [
     {
-      key: 'skill',
+      key: 'Standard skill',
       dataIndex: 'skill',
       title: 'Skill',
       width: '30.22%',
@@ -50,7 +50,7 @@ const skillColumn = [
     {
       key: 'level',
       dataIndex: 'level',
-      title: 'skill Level',
+      title: 'Stnadard Level',
       width: '23.79%',
       ...tableSorter('level', 'string'),
     },

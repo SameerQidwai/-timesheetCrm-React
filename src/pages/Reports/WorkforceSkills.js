@@ -19,14 +19,14 @@ function WorkforceSkills() {
     {
       key: 'skill',
       dataIndex: 'skill',
-      title: 'Skill',
+      title: 'Standard Skill',
       width: '25%',
       ...tableSorter('skill', 'string', true),
     },
     {
         key: 'skillLevel',
         dataIndex: 'skillLevel',
-        title: 'Skill Level',
+        title: 'Standard Level',
         ...tableSorter('skillLevel', 'string'),
     },
     {
