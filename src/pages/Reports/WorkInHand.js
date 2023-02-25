@@ -219,20 +219,20 @@ function WorkInHand() {
     (columName).forEach(({children: [{dataIndex}]})=>{
       newData[8][dataIndex]=0; /**Revenue */ 
       newData[30][dataIndex]=0; /**COST */ 
-      newData[54][dataIndex]=0; /**DOH */
-      newData[62][dataIndex]=0; /**TAX */
+      newData[55][dataIndex]=0; /**DOH */
+      // newData[62][dataIndex]=0; /**TAX */
       // newData[66][dataIndex]=0; /**Profit */
   
       for(let i = 0; i < newData.length; i++){
-        // console.log(i, newData[i]["name"])
+        console.log(i, newData[i]["renderCalculation"])
       // dataIndex = dataIndex.startsWith('FY')? 'total' : dataIndex
       if (moment(dataIndex, 'MMM YY', true).isValid()){
           if (i<8){
               newData[8][dataIndex] += getValueWithCondition(newData, i, dataIndex)
           }else if (i>8 && i <30){
               newData[30][dataIndex] += getValueWithCondition(newData, i, dataIndex)
-          }else if (i>34 && i <54){
-              newData[54][dataIndex] += getValueWithCondition(newData, i, dataIndex)
+          }else if (i>34 && i <55){
+              newData[55][dataIndex] += getValueWithCondition(newData, i, dataIndex)
           }
           // }else if (i>56 && i <62){
           //     newData[62][dataIndex] = newData[i]['operation'] ?
@@ -247,13 +247,13 @@ function WorkInHand() {
     }) 
 
      // , 64, 66   /**   CM          CM %              EBIT  */
-     let calculate_indexes = [32, 34, 56, 62, 66];
+     let calculate_indexes = [32, 34, 57, 63, 67];
 
      (columName).forEach(({children: [{dataIndex}]})=>{
       (calculate_indexes).forEach((index)=>{
         newData[index] = {
           ...newData[index],
-          [dataIndex]: newData?.[index]?.renderCalculation(newData, dataIndex)
+          [dataIndex]: newData?.[index]?.renderCalculation?.(newData, dataIndex)
         }
       })
      })
