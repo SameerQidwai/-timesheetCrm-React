@@ -470,9 +470,9 @@ class InfoModal extends Component {
           {
             object: 'sec',
             fieldCol: 12,
-            key: 'csid',
+            key: 'csidNumber',
             size: 'small',
-            type: 'Select',
+            type: 'Input',
             labelAlign: 'right',
             itemStyle: { marginBottom: 10 },
           },
@@ -511,10 +511,10 @@ class InfoModal extends Component {
             key: 'recruitmentProspect',
             size: 'small',
             data: [
-              { label: 'Not considered', value: 'NC' },
-              { label: 'Do not hire', value: 'DNH' },
-              { label: 'Prospect', value: 'P' },
-              { label: 'Assigned to opportunity', value: 'ATO' },
+              { label: 'Not Considered', value: 'NCO' },
+              { label: 'Do Not Hire', value: 'DNH' },
+              { label: 'Prospect', value: 'PRO' },
+              { label: 'Assigned To Opportunity', value: 'ATO' },
             ],
             // rules: [ { required: true, message: "Gender is Obviously required", }, ],
             type: 'Select',
@@ -526,10 +526,11 @@ class InfoModal extends Component {
             key: 'recruitmentAvailability',
             size: 'small',
             data: [
-              { label: 'Immediate', value: 'I' },
-              { label: 'Within a month', value: 'WAM' },
-              { label: 'Over a month', value: 'OAM' },
-              { label: 'Long-term propect', value: 'LTP' },
+              { label: 'Immediate', value: 'IMM' },
+              { label: 'Within A Month', value: 'WMO' },
+              { label: 'Over A Month', value: 'OMO' },
+              { label: 'Long-term Propect', value: 'LTP' },
+              { label: 'No Clearance', value: 'NCL' },
             ],
             type: 'Select',
             itemStyle: { marginBottom: 10 },
@@ -1117,7 +1118,7 @@ class InfoModal extends Component {
           clearanceExpiryDate:
             data.clearanceExpiryDate && formatDate(data.clearanceExpiryDate),
           clearanceSponsorId: data.clearanceSponsorId,
-          csid: data.csid,
+          csidNumber: data.csidNumber,
         };
         let rec = {
           recruitmentProspect: data.recruitmentProspect ,
