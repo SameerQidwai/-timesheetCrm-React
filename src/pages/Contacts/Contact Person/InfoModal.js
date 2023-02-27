@@ -39,6 +39,7 @@ class InfoModal extends Component {
       detailSubmitted: false,
       skillSubmitted: false,
       securitySubmitted: false,
+      recruitmentSubmitted: false,
       skill_data: [],
       orgs_data: [],
       loading: false,
@@ -369,6 +370,7 @@ class InfoModal extends Component {
                 fields[1].rangeMin = true;
                 fields[4].rangeMin = true;
                 fields[5].rangeMin = true;
+                fields[8].rangeMin = true;
 
                 fields[3].rules = [
                   { required: true, message: 'Date Granted is required' },
@@ -379,14 +381,19 @@ class InfoModal extends Component {
                 fields[7].rules = [
                   { required: true, message: 'Current Sponsor is required' },
                 ];
+                fields[9].rules = [
+                  { required: true, message: 'CS # is required' },
+                ];
               } else {
                 fields[1].rangeMin = false;
                 fields[4].rangeMin = false;
                 fields[5].rangeMin = false;
+                fields[8].rangeMin = false;
 
                 fields[3].rules = [{ required: false, message: '' }];
                 fields[6].rules = [{ required: false, message: '' }];
                 fields[7].rules = [{ required: false, message: '' }];
+                fields[9].rules = [{ required: false, message: '' }];
               }
               this.setState({
                 SecurityFields: {
@@ -447,6 +454,23 @@ class InfoModal extends Component {
             object: 'sec',
             fieldCol: 12,
             key: 'clearanceSponsorId',
+            size: 'small',
+            type: 'Select',
+            labelAlign: 'right',
+            itemStyle: { marginBottom: 10 },
+          },
+          {
+            Placeholder: 'CS #',
+            fieldCol: 12,
+            size: 'small',
+            type: 'Text',
+            labelAlign: 'right',
+            // itemStyle:{marginBottom:'10px'},
+          },
+          {
+            object: 'sec',
+            fieldCol: 12,
+            key: 'csid',
             size: 'small',
             type: 'Select',
             labelAlign: 'right',
@@ -842,6 +866,7 @@ class InfoModal extends Component {
     this.skillRef.current && this.skillRef.current.refs.skill_form.submit();
     this.securityRef.current &&
       this.securityRef.current.refs.security_form.submit();
+      this.recruitmentRef.current.refs.recruitment_form.submit();
   };
 
   BasicCall = (vake) => {
@@ -953,6 +978,25 @@ class InfoModal extends Component {
       () => this.validateForm()
     );
   };
+
+  RecruitmentCall = (vake) => {
+    // this will work after  got  Object from the skill from
+    // vake.basic.stateId = null
+    let rec = {
+      ...vake.rec,
+    };
+
+    this.setState(
+      {
+        mergeObj: {
+          ...this.state.mergeObj,
+          ...rec,
+        },
+        recruitmentSubmitted: true, // skill form submitted
+      },
+      () => this.validateForm()
+    );
+  };
   
   validateForm = () => {
     const {
@@ -960,13 +1004,15 @@ class InfoModal extends Component {
       associateSubmitted,
       skillSubmitted,
       securitySubmitted,
+      recruitmentSubmitted,
       mergeObj,
     } = this.state;
     if (
       basicSubmitted &&
       associateSubmitted &&
       skillSubmitted &&
-      securitySubmitted
+      securitySubmitted && 
+      recruitmentSubmitted
     ) {
       //check if both form is submittef
       if (!this.props.editCP) {
@@ -986,6 +1032,7 @@ class InfoModal extends Component {
       detailSubmitted: false,
       skillSubmitted: false,
       securitySubmitted: false,
+      recruitmentSubmitted:false,
       loading: true,
     });
     addList(value).then((res) => {
@@ -1069,6 +1116,14 @@ class InfoModal extends Component {
           clearanceExpiryDate:
             data.clearanceExpiryDate && formatDate(data.clearanceExpiryDate),
           clearanceSponsorId: data.clearanceSponsorId,
+          csid: data.csid,
+        };
+        let rec = {
+          recruitmentForm: data.recruitmentForm,
+          availability: data.availability,
+          salary: data.salary,
+          statusType: data.statusType,
+          note: data.note,
         };
 
         this.basicRef.current.refs.basic_form.setFieldsValue({ basic: basic });
@@ -1076,9 +1131,8 @@ class InfoModal extends Component {
           asso: asso,
         });
         this.skillRef.current.refs.skill_form.setFieldsValue({ skill: skill });
-        this.securityRef.current.refs.security_form.setFieldsValue({
-          sec: sec,
-        });
+        this.securityRef.current.refs.security_form.setFieldsValue({ sec });
+        this.recruitmentRef.current.refs.recruitment_form.setFieldsValue({ rec });
         this.setState({ associateFields, SkillFields });
       }
     });
@@ -1093,6 +1147,7 @@ class InfoModal extends Component {
       detailSubmitted: false,
       skillSubmitted: false,
       securitySubmitted: false,
+      recruitmentSubmitted:false,
       loading: true,
     });
     editList(value).then((res) => {
@@ -1114,6 +1169,7 @@ class InfoModal extends Component {
         basicSubmitted: false,
         associateSubmitted: false,
         skillSubmitted: false,
+        recruitmentSubmitted: false,
         BasicFields: { ...BasicFields }, //delete Formfields on Close
         associateFields: { ...associateFields },
         SkillFields: { ...SkillFields },
@@ -1218,7 +1274,7 @@ class InfoModal extends Component {
           <TabPane tab="Recruitment" key="recruitment" forceRender>
             <Form
               ref={this.recruitmentRef}
-              // Callback={this.SecurityCall}
+              Callback={this.RecruitmentCall}
               FormFields={RecruitmentFields}
             />
           </TabPane>
