@@ -61,7 +61,7 @@ import ExpenseSheet from '../../../pages/Expenses/ExpenseSheet';
 // import TimeSheetHTML from "../../Core/TimeSheetHTML"
 import { localStore } from '../../../service/constant';
 import { BenchResources, Positions, WorkForceAllocation, WorkforceSkills, ProjectRevenueAnalysis, ClientRevenueAnalysis, TimesheetSummary, LeaveSummary, WorkInHand } from '../../../pages/Reports';
-
+import { PermanentCalculator } from '../../Core/Cost Calculator/PermanentCalculator';
 const { Content } = Layout;
 
 const pageLinks = [
@@ -425,6 +425,24 @@ const pageLinks = [
     link: '/report/work-in-hand',
     key: 'FORECASTING',
     permission: 'READ',
+  },
+  {
+    component: PermanentCalculator,
+    link: '/calculator-permanent',
+    key: 'PERMANENT_CAL',
+    permission: 'ALLOWED',
+  },
+  {
+    component: PermanentCalculator,
+    link: '/calculator-casual',
+    key: 'CASUAL_CAL',
+    permission: 'ALLOWED',
+  },
+  {
+    component: PermanentCalculator,
+    link: '/calculator-contractor',
+    key: 'CONTRACTOR_CAL',
+    permission: 'ALLOWED',
   },
 ];
 

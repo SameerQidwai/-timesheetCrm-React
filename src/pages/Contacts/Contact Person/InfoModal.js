@@ -30,6 +30,7 @@ class InfoModal extends Component {
     this.associateRef = React.createRef();
     this.skillRef = React.createRef();
     this.securityRef = React.createRef();
+    this.recruitmentRef = React.createRef();
 
     this.state = {
       editCP: false,
@@ -38,6 +39,7 @@ class InfoModal extends Component {
       detailSubmitted: false,
       skillSubmitted: false,
       securitySubmitted: false,
+      recruitmentSubmitted: false,
       skill_data: [],
       orgs_data: [],
       loading: false,
@@ -368,6 +370,7 @@ class InfoModal extends Component {
                 fields[1].rangeMin = true;
                 fields[4].rangeMin = true;
                 fields[5].rangeMin = true;
+                fields[8].rangeMin = true;
 
                 fields[3].rules = [
                   { required: true, message: 'Date Granted is required' },
@@ -378,14 +381,19 @@ class InfoModal extends Component {
                 fields[7].rules = [
                   { required: true, message: 'Current Sponsor is required' },
                 ];
+                fields[9].rules = [
+                  { required: true, message: 'CS # is required' },
+                ];
               } else {
                 fields[1].rangeMin = false;
                 fields[4].rangeMin = false;
                 fields[5].rangeMin = false;
+                fields[8].rangeMin = false;
 
                 fields[3].rules = [{ required: false, message: '' }];
                 fields[6].rules = [{ required: false, message: '' }];
                 fields[7].rules = [{ required: false, message: '' }];
+                fields[9].rules = [{ required: false, message: '' }];
               }
               this.setState({
                 SecurityFields: {
@@ -451,6 +459,144 @@ class InfoModal extends Component {
             labelAlign: 'right',
             itemStyle: { marginBottom: 10 },
           },
+          {
+            Placeholder: 'CS #',
+            fieldCol: 24,
+            size: 'small',
+            type: 'Text',
+            labelAlign: 'right',
+            // itemStyle:{marginBottom:'10px'},
+          },
+          {
+            object: 'sec',
+            fieldCol: 12,
+            key: 'csidNumber',
+            size: 'small',
+            type: 'Input',
+            labelAlign: 'right',
+            itemStyle: { marginBottom: 10 },
+          },
+        ],
+      },
+
+      RecruitmentFields: {
+        //creating Component
+        formId: 'recruitment_form',
+        FormCol: 24,
+        // FieldSpace:24,
+        justifyField: 'center',
+        FormLayout: 'inline',
+        layout: { labelCol: { span: 10 }, wrapperCol: { span: 0 } },
+        size: 'small',
+        fields: [
+          {
+            Placeholder: 'Recruitment Prospects',
+            fieldCol: 12,
+            size: 'small',
+            type: 'Text',
+            labelAlign: 'right',
+            // itemStyle:{marginBottom:'10px'},
+          },
+          {
+            Placeholder: 'Availability',
+            fieldCol: 12,
+            size: 'small',
+            type: 'Text',
+            labelAlign: 'right',
+            // itemStyle:{marginBottom:'10px'},
+          },
+          {
+            object: 'rec',
+            fieldCol: 12,
+            key: 'recruitmentProspect',
+            size: 'small',
+            data: [
+              { label: 'Not Considered', value: 'NCO' },
+              { label: 'Do Not Hire', value: 'DNH' },
+              { label: 'Prospect', value: 'PRO' },
+              { label: 'Assigned To Opportunity', value: 'ATO' },
+            ],
+            // rules: [ { required: true, message: "Gender is Obviously required", }, ],
+            type: 'Select',
+            itemStyle: { marginBottom: 10 },
+          },
+          {
+            object: 'rec',
+            fieldCol: 12,
+            key: 'recruitmentAvailability',
+            size: 'small',
+            data: [
+              { label: 'Immediate', value: 'IMM' },
+              { label: 'Within A Month', value: 'WMO' },
+              { label: 'Over A Month', value: 'OMO' },
+              { label: 'Long-term Propect', value: 'LTP' },
+              { label: 'No Clearance', value: 'NCL' },
+            ],
+            type: 'Select',
+            itemStyle: { marginBottom: 10 },
+            
+          },
+          {
+            Placeholder: 'Salary estimate',
+            fieldCol: 12,
+            size: 'small',
+            type: 'Text',
+            labelAlign: 'right',
+            // itemStyle:{marginBottom:'10px'},
+          },
+          {
+            // need exact terms
+            Placeholder: 'Status',
+            fieldCol: 12,
+            size: 'small',
+            type: 'Text',
+            labelAlign: 'right',
+            // itemStyle:{marginBottom:'10px'},
+          },
+          {
+            object: 'rec',
+            fieldCol: 12,
+            key: 'recruitmentSalaryEstimate',
+            size: 'small',
+            // rules:[{ required: true }],
+            shape: "$",
+            type: 'InputNumber',
+            labelAlign: 'right',
+            fieldStyle: { width: '100%' },
+            itemStyle: { marginBottom: 10 },
+          },
+          {
+            object: 'rec',
+            fieldCol: 12,
+            key: 'statusType',
+            size: 'small',
+            type: 'Select',
+            labelAlign: 'right',
+            data: [
+              { label: 'Active', value: 'A' },
+              { label: 'Close', value: 'C' },
+              { label: 'Pending', value: 'P' },
+            ],
+            itemStyle: { marginBottom: 10 },
+          },
+          {
+            Placeholder: 'Note',
+            fieldCol: 12,
+            size: 'small',
+            type: 'Text',
+            labelAlign: 'right',
+            // itemStyle:{marginBottom:'10px'},
+          },
+          {
+            object: 'rec',
+            fieldCol: 24,
+            key: 'recruitmentNotes',
+            // size: 'small',
+            type: 'Textarea',
+            rows: 6,
+            // labelAlign: 'right',
+            itemStyle: { marginBottom: 10 },
+          },
         ],
       },
     };
@@ -460,6 +606,7 @@ class InfoModal extends Component {
     // const {editCP}= this.props
     this.fetchAll();
   };
+
   fetchAll = () => {
     const { editCP } = this.props;
     Promise.all([getStates(), getStandardSkills(), getOrganizations()])
@@ -721,6 +868,7 @@ class InfoModal extends Component {
     this.skillRef.current && this.skillRef.current.refs.skill_form.submit();
     this.securityRef.current &&
       this.securityRef.current.refs.security_form.submit();
+      this.recruitmentRef.current && this.recruitmentRef.current.refs.recruitment_form.submit();
   };
 
   BasicCall = (vake) => {
@@ -832,19 +980,41 @@ class InfoModal extends Component {
       () => this.validateForm()
     );
   };
+
+  RecruitmentCall = (vake) => {
+    // this will work after  got  Object from the skill from
+    // vake.basic.stateId = null
+    let rec = {
+      ...vake.rec,
+    };
+
+    this.setState(
+      {
+        mergeObj: {
+          ...this.state.mergeObj,
+          ...rec,
+        },
+        recruitmentSubmitted: true, // skill form submitted
+      },
+      () => this.validateForm()
+    );
+  };
+  
   validateForm = () => {
     const {
       basicSubmitted,
       associateSubmitted,
       skillSubmitted,
       securitySubmitted,
+      recruitmentSubmitted,
       mergeObj,
     } = this.state;
     if (
       basicSubmitted &&
       associateSubmitted &&
       skillSubmitted &&
-      securitySubmitted
+      securitySubmitted && 
+      recruitmentSubmitted
     ) {
       //check if both form is submittef
       if (!this.props.editCP) {
@@ -864,6 +1034,7 @@ class InfoModal extends Component {
       detailSubmitted: false,
       skillSubmitted: false,
       securitySubmitted: false,
+      recruitmentSubmitted:false,
       loading: true,
     });
     addList(value).then((res) => {
@@ -947,6 +1118,14 @@ class InfoModal extends Component {
           clearanceExpiryDate:
             data.clearanceExpiryDate && formatDate(data.clearanceExpiryDate),
           clearanceSponsorId: data.clearanceSponsorId,
+          csidNumber: data.csidNumber,
+        };
+        let rec = {
+          recruitmentProspect: data.recruitmentProspect ,
+          recruitmentAvailability: data.recruitmentAvailability ,
+          recruitmentSalaryEstimate: data.recruitmentSalaryEstimate ,
+          recruitmentNotes: data.recruitmentNotes ,
+          statusType: data.statusType,
         };
 
         this.basicRef.current.refs.basic_form.setFieldsValue({ basic: basic });
@@ -954,9 +1133,8 @@ class InfoModal extends Component {
           asso: asso,
         });
         this.skillRef.current.refs.skill_form.setFieldsValue({ skill: skill });
-        this.securityRef.current.refs.security_form.setFieldsValue({
-          sec: sec,
-        });
+        this.securityRef.current.refs.security_form.setFieldsValue({ sec });
+        this.recruitmentRef.current.refs.recruitment_form.setFieldsValue({ rec });
         this.setState({ associateFields, SkillFields });
       }
     });
@@ -971,6 +1149,7 @@ class InfoModal extends Component {
       detailSubmitted: false,
       skillSubmitted: false,
       securitySubmitted: false,
+      recruitmentSubmitted:false,
       loading: true,
     });
     editList(value).then((res) => {
@@ -992,6 +1171,7 @@ class InfoModal extends Component {
         basicSubmitted: false,
         associateSubmitted: false,
         skillSubmitted: false,
+        recruitmentSubmitted: false,
         BasicFields: { ...BasicFields }, //delete Formfields on Close
         associateFields: { ...associateFields },
         SkillFields: { ...SkillFields },
@@ -1010,6 +1190,7 @@ class InfoModal extends Component {
       associateFields,
       SkillFields,
       SecurityFields,
+      RecruitmentFields,
       loading,
     } = this.state;
     return (
@@ -1089,6 +1270,14 @@ class InfoModal extends Component {
               ref={this.securityRef}
               Callback={this.SecurityCall}
               FormFields={SecurityFields}
+            />
+          </TabPane>
+          {/* //temp work// */}
+          <TabPane tab="Recruitment" key="recruitment" forceRender>
+            <Form
+              ref={this.recruitmentRef}
+              Callback={this.RecruitmentCall}
+              FormFields={RecruitmentFields}
             />
           </TabPane>
         </Tabs>
