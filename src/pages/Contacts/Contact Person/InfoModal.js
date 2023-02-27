@@ -605,6 +605,7 @@ class InfoModal extends Component {
     // const {editCP}= this.props
     this.fetchAll();
   };
+
   fetchAll = () => {
     const { editCP } = this.props;
     Promise.all([getStates(), getStandardSkills(), getOrganizations()])
@@ -866,7 +867,7 @@ class InfoModal extends Component {
     this.skillRef.current && this.skillRef.current.refs.skill_form.submit();
     this.securityRef.current &&
       this.securityRef.current.refs.security_form.submit();
-      this.recruitmentRef.current.refs.recruitment_form.submit();
+      this.recruitmentRef.current && this.recruitmentRef.current.refs.recruitment_form.submit();
   };
 
   BasicCall = (vake) => {

@@ -29,14 +29,14 @@ export const PermanentCalculator = (props) => {
     // const [totalCostRatio, setTotalCr] = useState(0)
     const [contract, setContract] = useState({
         rfqt: 0,
-        margin: 0,
+        margin: 8,
         gst: 0,
         cm1: 20,
         cm2: 25,
         cm3: 30,
         cm4: 40,
-        dailyHours: 0,
-        weaklyHours: 0,
+        dailyHours: 8,
+        weaklyHours: 38,
         pWeekDays : 5,
         hourlyBaseRate: 0.9,
         weekInYear: empType === "Permanent" ? 52 : 8,
@@ -49,7 +49,6 @@ export const PermanentCalculator = (props) => {
         getReverseCostCal(whichPath).then(res=>{
             if(res.success){
                 let { gst, golobalVariables, stateTax } = res.data
-                console.log((10 + 100) / 10);
                 contract.gst = (gst + 100) / gst;
                 contract.stateTax = stateTax
                 contract.selectedState = stateTax?.[0]?.value;
@@ -78,7 +77,7 @@ export const PermanentCalculator = (props) => {
                 val += ele.value
             }
         })
-        return val;
+        return `${formatFloat(val, 2)}%`;
     }
     const handleChange = (value, {tax}) => {
         // console.log(value, option)
@@ -97,12 +96,12 @@ export const PermanentCalculator = (props) => {
     // SOME FUNCTIONS 
     const findDlrGst = () => {
         const {gst, rfqt} = contract
-        return (rfqt/gst) - rfqt;
+        return Math.abs((rfqt/gst) - rfqt);
     }
 
     const findDslMArgin = () => {
         const { margin } = contract
-        return (findDlrGst() * (margin/100)) - findDlrGst()
+        return Math.abs((findDlrGst() * (margin/100)) - findDlrGst())
     }
 
     const findDbrOffer = (value) => {
@@ -110,7 +109,10 @@ export const PermanentCalculator = (props) => {
     }
 
     const calTotalCostRatio = (value) => {
-        return (findDbrOffer(value)/contract.dailyHours)/((1*(sumValue()/100))+1)
+        if(contract.dailyHours){
+            return (findDbrOffer(value)/contract.dailyHours)/((1*(sumValue()/100))+1)
+        }
+        return 0
     }
 
     const calABSalaryforPerma = (value) => {
