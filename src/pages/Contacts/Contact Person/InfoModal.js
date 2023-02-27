@@ -461,7 +461,7 @@ class InfoModal extends Component {
           },
           {
             Placeholder: 'CS #',
-            fieldCol: 12,
+            fieldCol: 24,
             size: 'small',
             type: 'Text',
             labelAlign: 'right',
@@ -508,7 +508,7 @@ class InfoModal extends Component {
           {
             object: 'rec',
             fieldCol: 12,
-            key: 'recruitmentForm',
+            key: 'recruitmentProspect',
             size: 'small',
             data: [
               { label: 'Not considered', value: 'NC' },
@@ -523,7 +523,7 @@ class InfoModal extends Component {
           {
             object: 'rec',
             fieldCol: 12,
-            key: 'availability',
+            key: 'recruitmentAvailability',
             size: 'small',
             data: [
               { label: 'Immediate', value: 'I' },
@@ -555,7 +555,7 @@ class InfoModal extends Component {
           {
             object: 'rec',
             fieldCol: 12,
-            key: 'salary',
+            key: 'recruitmentSalaryEstimate',
             size: 'small',
             // rules:[{ required: true }],
             shape: "$",
@@ -574,7 +574,7 @@ class InfoModal extends Component {
             data: [
               { label: 'Active', value: 'A' },
               { label: 'Close', value: 'C' },
-              { label: 'Panding', value: 'P' },
+              { label: 'Pending', value: 'P' },
             ],
             itemStyle: { marginBottom: 10 },
           },
@@ -589,7 +589,7 @@ class InfoModal extends Component {
           {
             object: 'rec',
             fieldCol: 24,
-            key: 'note',
+            key: 'recruitmentNotes',
             // size: 'small',
             type: 'Textarea',
             rows: 6,
@@ -1120,11 +1120,11 @@ class InfoModal extends Component {
           csid: data.csid,
         };
         let rec = {
-          recruitmentForm: data.recruitmentForm,
-          availability: data.availability,
-          salary: data.salary,
+          recruitmentProspect: data.recruitmentProspect ,
+          recruitmentAvailability: data.recruitmentAvailability ,
+          recruitmentSalaryEstimate: data.recruitmentSalaryEstimate ,
+          recruitmentNotes: data.recruitmentNotes ,
           statusType: data.statusType,
-          note: data.note,
         };
 
         this.basicRef.current.refs.basic_form.setFieldsValue({ basic: basic });
