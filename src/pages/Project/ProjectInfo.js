@@ -38,6 +38,7 @@ import { generalDelete } from "../../service/delete-Api's";
 import ProjectTracking from '../../components/Core/ProjectTracking/ProjectTracking';
 
 import './styles.css';
+import ShutdownPeriods from '../../components/Core/ShutdownPeriods';
 
 const { Item } = Descriptions;
 const { TabPane } = Tabs;
@@ -337,6 +338,11 @@ class ProjectInfo extends Component {
             <TabPane tab="Project Tracking" key="projectTracking">
               <ProjectTracking id={leadId} data={data} />
             </TabPane>)}
+            <TabPane tab="Shutdown Periods" key="shutdown">
+              <ShutdownPeriods
+                id={leadId}
+                />
+            </TabPane>
           </Tabs>
         )}
         {infoModal && (
