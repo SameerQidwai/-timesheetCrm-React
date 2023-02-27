@@ -11,6 +11,9 @@ import { ReportsFilters, _createQuery } from '../../components/Core/ReportFilter
 
 import { _generateMonthlyColumns } from '.'
 
+
+const {TabPane} = Tabs
+
 const contantColmuns = [
   {
     key: 'employeeName',
@@ -266,7 +269,52 @@ function TimesheetSummary() {
           />
         </Col>
       </Row>
-      <Row gutter={[0, 50]}>
+
+      {/* additional sample */}
+        {/* <Col span={24}> */}
+          <Tabs
+            type="card"
+            style={{ marginTop: "50px" }}
+          >
+            <TabPane tab="Time & Material" key="timebase">
+              <Table
+                sticky
+                title={() => (
+                  <Typography.Title level={5}>
+                    Timesheet Data - T&M
+                  </Typography.Title>
+                )}
+                columns={columns}
+                loading={loading}
+                rowKey={'index'}
+                dataSource={data?.timeProjectSummary ?? []}
+                pagination={false}
+                scroll={{ x: '170vw' }}
+                summary={(columnData) => summaryFooter(columnData)}
+              />
+            </TabPane>
+            <TabPane tab="Milestone" key="milestone">
+              <Table
+                sticky
+                title={() => (
+                  <Typography.Title level={5}>
+                    Timesheet Data - Milestone
+                  </Typography.Title>
+                )}
+                columns={columns}
+                loading={loading}
+                rowKey={'index'}
+                dataSource={data?.milestoneProjectSummary ?? []}
+                pagination={false}
+                scroll={{ x: '170vw' }}
+                summary={(columnData) => summaryFooter(columnData)}
+              />
+            </TabPane>
+          </Tabs>
+         
+        {/* </Col> */}
+       
+      {/* <Row gutter={[0, 50]}>
         <Col></Col>
         <Col span={24}>
           <Table
@@ -302,7 +350,7 @@ function TimesheetSummary() {
             summary={(columnData) => summaryFooter(columnData)}
           />
         </Col>
-      </Row>
+      </Row> */}
         <ReportsFilters
           compName={'Filters'}
           compKey={'timesheet_summary'}
