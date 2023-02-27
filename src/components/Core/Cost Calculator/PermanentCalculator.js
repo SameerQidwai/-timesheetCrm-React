@@ -49,13 +49,14 @@ export const PermanentCalculator = (props) => {
         getReverseCostCal(whichPath).then(res=>{
             if(res.success){
                 let { gst, golobalVariables, stateTax } = res.data
+                console.log((10 + 100) / 10);
                 contract.gst = (gst + 100) / gst;
-                contract.stateTax = stateTax;
-                contract.selectedState = stateTax?.[0]?.valueId;
+                contract.stateTax = stateTax
+                contract.selectedState = stateTax?.[0]?.value;
                 setContract(contract);
                 let value = {
                     name: "Payroll Tax",
-                    value: stateTax?.[0]?.value,
+                    value:  stateTax?.[0]?.tax,
                     apply: 'Yes'
                 };
                 golobalVariables.splice(1, 0, value);
@@ -79,15 +80,14 @@ export const PermanentCalculator = (props) => {
         })
         return val;
     }
-    console.log(variables.length);
-    const handleChange = (value) => {
+    const handleChange = (value, {tax}) => {
+        // console.log(value, option)
         setContract(contract => ({
-            ...contract, selectedState: contract?.stateTax[value-1]?.valueId
+            ...contract, selectedState: value
         }));
-        let valueId = contract?.stateTax[value - 1];
         value = {
             name: "Payroll Tax",
-            value: valueId?.value,
+            value: tax,
             apply: 'Yes'
         };
         (variables.length === 1) ? variables[0] = value : variables[1] = value;
@@ -238,27 +238,27 @@ export const PermanentCalculator = (props) => {
                             <Col span={24} className="label my-20"></Col>
                             <Col span={24} className="label">
                                 <Col span={12}>
-                                    <Row>
-                                        <Col span={12}>
+                                    <Row justify="space-between">
+                                        <Col span={6}>
                                             Select State
                                         </Col>
-                                        <Col span={12} className="item">
+                                        <Col span={12} >
+                                            
                                         <Select
-                                            value={contract?.selectedState}
-                                            fieldNames={{ label: 'label', value: 'valueId'}}
-                                            style={{
-                                            width: 200,
-                                            }}
-                                            onChange={handleChange}
-                                            // options={contract.stateTax}
-                                            options={
-                                                (contract.stateTax || []).map((d,ind) => ({
-                                                    value: d.value,
-                                                    valueId: d.valueId,
-                                                    label: d.label,
-                                                    key: ind
-                                                }))
-                                            }
+                                            placeholder="Select State"
+                                            options={contract.stateTax}
+                                            value={contract.selectedState}    
+                                            style={{ width: '100%' }}
+                                            // showSearch
+                                            // optionFilterProp={["label", "value"]}
+                                            // filterOption={
+                                            //     (input, option) =>{
+                                            //         const label = option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                            //         const value = option.value.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                            //             return label || value
+                                            //     }
+                                            // }
+                                            onSelect={handleChange}
                                         />
                                         </Col>
                                     </Row>
