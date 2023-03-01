@@ -754,3 +754,40 @@ export const delSchedule = (proId, id) => {
       return apiErrorRes(err, id, 5);
     });
 };
+
+// shutdown periods 
+export const addShutPeriod = (proId, data) => {
+  console.log(proId, {...data[0], notes:"abc", amount: 100});
+  messageAlert.loading({ content: 'Loading...', key: proId });
+  return axios.post(url+`/${proId}/shutdownPeriods`,{...data[0], notes:"abc", amount: 100},{headers: headers()}).then((res) => {
+    const { success, message, data } = res.data;
+    jwtExpired(message);
+    messageAlert.success({ content: message, key: proId });
+    if (success) setToken(res?.headers?.authorization);
+    return { success, data };    
+  }).catch((err) => {
+    return apiErrorRes(err, proId, 5);
+  })
+}
+
+export const getOneShutPeriod = (proId, id) => {
+  return axios
+    .get(url + `/${proId}/shutdownPeriods/${id}`, { headers: headers() })
+    .then((res) => {
+      let { success, data, message } = res.data;
+      jwtExpired(message);
+      if (success) {
+        setToken(res?.headers?.authorization);
+        return { success, data: data };
+      }
+      return { success };
+    })
+    .catch((err) => {
+      return {
+        error: 'Please login again!',
+        status: false,
+        message: err.message,
+      };
+    });
+};
+

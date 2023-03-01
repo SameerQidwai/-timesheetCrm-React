@@ -2,12 +2,12 @@ import { Button, Col, DatePicker, Form } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { MinusCircleFilled, PlusSquareFilled } from "@ant-design/icons"; //Icons
 import { formatDate } from '../../service/constant';
+import { addShutPeriod } from '../../service/projects';
 
-const ShutdownPeriods = () => {
+const ShutdownPeriods = ({id}) => {
   const [form] = Form.useForm();
   const [disable, setDisable] =useState(0)
   const [saveDisabled, setSaveDisabled] =useState(true)
-
 
   useEffect(() => {
     console.log("useEffect run");
@@ -15,15 +15,22 @@ const ShutdownPeriods = () => {
   
   const onFinish = (value) => {
     let projectShutdown = value?.projectShutdown ?? {}
+    console.log("shutdown", projectShutdown);
     let addNewDates = []
     Object.entries(projectShutdown).forEach(([key, value]) => {
-      let shutdownPeriod = {
-        startDate: formatDate(value["startDate"], true),
-        endDate: formatDate(value["endDate"], true)
-      }
-      console.log("start", formatDate(value["startDate"], true));
-      console.log("end", formatDate(value["endDate"], true));
+        let shutdownPeriod = {
+            startDate: formatDate(value["startDate"], true),
+            endDate: formatDate(value["endDate"], true)
+        }
+        addNewDates.push(shutdownPeriod); 
     });
+      addShutPeriod(id, addNewDates).then(res=>{
+        if(res.success){
+            console.log("res", res.data);
+        }
+    })    
+    console.log("start", formatDate(value["startDate"], true));
+    console.log("end", formatDate(value["endDate"], true));
   }
   
   return (
