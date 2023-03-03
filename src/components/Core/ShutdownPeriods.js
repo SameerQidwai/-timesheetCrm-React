@@ -2,15 +2,29 @@ import { Button, Col, DatePicker, Form } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { MinusCircleFilled, PlusSquareFilled } from "@ant-design/icons"; //Icons
 import { formatDate } from '../../service/constant';
-import { addShutPeriod } from '../../service/projects';
+import { addShutPeriod, getShutPeriods } from '../../service/projects';
+import moment from 'moment';
 
 const ShutdownPeriods = ({id}) => {
   const [form] = Form.useForm();
   const [disable, setDisable] =useState(0)
   const [saveDisabled, setSaveDisabled] =useState(true)
+  const [reload, setReload] = useState({})
 
   useEffect(() => {
-    console.log("useEffect run");
+    getShutPeriods(id).then(res=>{
+        if(res.success){
+            let initialData = [];
+            res.data.map((ele)=>{
+                initialData.push({
+                    startDate : moment(ele.startDate),
+                    endDate : moment(ele.endDate)
+                })
+            });
+            setDisable(initialData.length);
+            form.setFieldsValue({projectShutdown: initialData})
+        }
+    }) 
   },[])
   
   const onFinish = (value) => {
@@ -26,12 +40,11 @@ const ShutdownPeriods = ({id}) => {
     });
       addShutPeriod(id, addNewDates).then(res=>{
         if(res.success){
-            console.log("res", res.data);
+            setDisable(res.data.length)
+            setSaveDisabled(true)
         }
     })    
-    console.log("start", formatDate(value["startDate"], true));
-    console.log("end", formatDate(value["endDate"], true));
-  }
+   }
   
   return (
     <Form
@@ -40,7 +53,7 @@ const ShutdownPeriods = ({id}) => {
         scrollToFirstError={true}
         size="small"
         layout="inline"
-        // onFieldsChange={()=> setSaveDisabled(false)}
+        onFieldsChange={()=> setSaveDisabled(false)}
         style={{padding: 50, paddingTop:20, textAlign: 'center'}}
         onFinish={onFinish}
     >
@@ -61,8 +74,8 @@ const ShutdownPeriods = ({id}) => {
                                 <DatePicker 
                                     style={{ width: '100%' }} 
                                     size="small"
-                                    // onChange={()=>setReload(!reload)}
-                                    // disabled={field.name < disable}
+                                    onChange={()=>setReload(!reload)}
+                                    disabled={field.name < disable}
                                 />
                             </Form.Item>
                         </Col>
@@ -75,16 +88,28 @@ const ShutdownPeriods = ({id}) => {
                                 <DatePicker 
                                     style={{ width: '100%' }} 
                                     size="small" 
-                                    // onChange={()=>setReload(!reload)}
-                                    // disabled={field.name < disable}
+                                    onChange={()=>setReload(!reload)}
+                                    disabled={field.name < disable}
                                 />
                             </Form.Item>
                         </Col>
-                        <Col span={'auto'} >
+                        <Col span={1} >
                             <MinusCircleFilled 
-                                style={{color:"red",margin: 'auto'}} 
+                                style={{color:`${field.name < disable? "grey" :"red"}`,margin: 'auto'}} 
                                 onClick={() => {
+                                    if(field.name > disable -1){
                                         remove(field.name)
+                                    }
+                                }} 
+                            />
+                        </Col>
+                        <Col span={1} >
+                            <MinusCircleFilled 
+                                style={{color:`${field.name < disable? "grey" :"red"}`,margin: 'auto'}} 
+                                onClick={() => {
+                                    if(field.name > disable -1){
+                                        remove(field.name)
+                                    }
                                 }} 
                             />
                         </Col>
@@ -95,7 +120,7 @@ const ShutdownPeriods = ({id}) => {
                         size="small" 
                         type="primary" 
                         htmlType="submit"
-                        // disabled={saveDisabled}
+                        disabled={saveDisabled}
                     > Save  </Button>
                 </Form.Item>
             </>)}

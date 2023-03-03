@@ -770,6 +770,27 @@ export const addShutPeriod = (proId, data) => {
   })
 }
 
+export const getShutPeriods = (proId) => {
+  return axios
+    .get(url + `/${proId}/shutdownPeriods`, { headers: headers() })
+    .then((res) => {
+      let { success, data, message } = res.data;
+      jwtExpired(message);
+      if (success) {
+        setToken(res?.headers?.authorization);
+        return { success, data: data };
+      }
+      return { success };
+    })
+    .catch((err) => {
+      return {
+        error: 'Please login again!',
+        status: false,
+        message: err.message,
+      };
+    });
+};
+
 export const getOneShutPeriod = (proId, id) => {
   return axios
     .get(url + `/${proId}/shutdownPeriods/${id}`, { headers: headers() })
