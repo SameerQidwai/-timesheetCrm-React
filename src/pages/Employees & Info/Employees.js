@@ -31,8 +31,7 @@ class Employees extends Component {
         },
         ...tableSorter(
           'contactPersonOrganization.contactPersonId',
-          'number',
-          true
+          'number'
         ),
       },
       {
@@ -84,7 +83,8 @@ class Employees extends Component {
           text={`${text}`}
           objName="ACTIVE_STATUS"
           colorName="ACTIVE_STATUS_COLORS"
-        />
+        />,
+        ...tableSorter('active', 'string', true, true),
       },
       {
         title: '...',
