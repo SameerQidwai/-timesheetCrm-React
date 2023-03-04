@@ -57,7 +57,7 @@ class Opportunities extends Component {
         key: 'id',
         width: '1%',
         render: (record) => `00${record}`,
-        ...tableSorter('id', 'number', true),
+        ...tableSorter('id', 'number'),
       },
       {
         title: 'Title',
@@ -138,6 +138,19 @@ class Opportunities extends Component {
         width: '1%',
         render: (record) => O_TYPE[record],
         ...tableSorter('type', 'number'),
+      },
+      {
+        title: 'Status',
+        dataIndex: 'status',
+        key: 'status',
+        width: '1%',
+        render: (record) => O_STATUS[record],
+        // render: (record) => <Tag_s
+        // text={record}
+        // objName="O_STATUS"
+        // colorName="O_STATUS_COLORS"
+      // />,
+        ...tableSorter('status', 'string', true, 'O'),
       },
       {
         title: '...',

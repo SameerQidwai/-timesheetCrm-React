@@ -1,9 +1,9 @@
 import { Tag } from 'antd'
 import React from 'react'
-import { R_STATUS, STATUS_COLOR, O_PHASE, O_PHASE_COLORS } from '../../../service/constant'
+import { R_STATUS, STATUS_COLOR, O_PHASE, O_PHASE_COLORS,O_STATUS, O_STATUS_COLORS } from '../../../service/constant'
 
 let constantNames = {
-  R_STATUS, STATUS_COLOR, O_PHASE, O_PHASE_COLORS
+  R_STATUS, STATUS_COLOR, O_PHASE, O_PHASE_COLORS, O_STATUS, O_STATUS_COLORS
 }
 
 const Tags = ({ text, objName, colorName }) => {

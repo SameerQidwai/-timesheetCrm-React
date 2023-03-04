@@ -9,18 +9,6 @@ import { formatter, parser } from '../../components/Core/Forms/FormItems';
 const {Title} = Typography
 const EditableContext = React.createContext(null);
 const nextFocusFor = nextFocus()
-
-
-// const EditableRow = ({ index, ...props }) => {
-//     const [form] = Form.useForm();
-//     return (
-//       <Form form={form} component={false}>
-//         <EditableContext.Provider value={form}>
-//           <tr {...props} />
-//         </EditableContext.Provider>
-//       </Form>
-//     );
-// };
   
 const EditableCell = ({
   title,
@@ -35,24 +23,6 @@ const EditableCell = ({
 }) => {
   const inputRef = useRef(null);
   const form = useContext(EditableContext);
-
-  
-  // const blurSave = ()=>{
-  //   // console.log(form.getFieldValue([record['name'], dataIndex]))
-  //   // value = value.replace(/[^0-9.-]/g, '')
-  //   let value = form.getFieldValue([record['name'], dataIndex])
-  //   value = (!value || isNaN(parseFloat(value)))? 0 : parseFloat(value)
-  //   if (value !== record[dataIndex]){
-  //     form.setFieldsValue({
-  //       [record['name']]: {
-  //         ...form.getFieldsValue(),
-  //         [dataIndex]: record[dataIndex],
-  //       },
-  //     });
-      
-  //   }
-  //   setBlurHook(false)
-  // }
 
   const save = async (entered) => {
     let value = form.getFieldValue([record['key'], dataIndex])
@@ -117,7 +87,7 @@ function WorkInHand() {
   const [loading, setLoading] = useState(false)
   const [columns, setColumns] = useState([
       {
-          title: '1LM - Whole A$',
+          title: 'Whole A$',
           dataIndex: 'name',
           key: 'name',
           width: 250,
@@ -157,7 +127,13 @@ function WorkInHand() {
 
   const creatingCol = () =>{
       let newColumns = [...columns]
-      let monthColumns = []
+      let monthColumns = [
+        monthCol({
+          year: fiscal,
+          era: 'Actual',
+          totalKey: 'actual-total'
+        })
+      ]
       // let endDate = '06/30/2021'
       for (var iDate = parseDate(start); iDate.isSameOrBefore(end); iDate.add(1, 'months')) {
           let el = {
@@ -165,24 +141,21 @@ function WorkInHand() {
             era: iDate.isBefore(moment(), 'month') ? 'Actual': 'Forecast',
           };
           monthColumns.push(monthCol(el, updateField))
-      }
-      monthColumns.push(monthCol({year: fiscal, era: 'Forcaste'}))
+      }                                                         // forecast-total
+      monthColumns.push(monthCol({year: fiscal, era: 'Forcaste', totalKey: 'total'}))
       newColumns[1]['children'][0]['children'] = monthColumns
       setColumns(newColumns)
   }
 
   const structureData = ({
-      MILESTONE_BASE,
-      TIME_BASE,
-      PERMANENT_SALARIES,
-      PERMANENT_SUPER,
-      CASUAL_SALARIES,
-      CASUAL_SUPER,
-      DOH_SALARIES,
-      DOH_SUPER,
-      TOTAL_REVENUE,
-      TOTAL_COST,
-      TOTAL_DOH
+    MILESTONE_BASE,
+    TIME_BASE,
+    PERMANENT_SALARIES,
+    PERMANENT_SUPER,
+    CASUAL_SALARIES,
+    CASUAL_SUPER,
+    DOH_SALARIES,
+    DOH_SUPER,
   }) => {
     income_revenue[1] = { ...income_revenue[1], ...TIME_BASE };
     income_revenue[2] = { ...income_revenue[2], ...MILESTONE_BASE };
@@ -224,7 +197,7 @@ function WorkInHand() {
       // newData[66][dataIndex]=0; /**Profit */
   
       for(let i = 0; i < newData.length; i++){
-        console.log(i, newData[i]["renderCalculation"])
+        // console.log(i, newData[i]["renderCalculation"])
       // dataIndex = dataIndex.startsWith('FY')? 'total' : dataIndex
       if (moment(dataIndex, 'MMM YY', true).isValid()){
           if (i<8){
@@ -258,17 +231,44 @@ function WorkInHand() {
       })
      })
 
-    newData = newData.map(item => {
+    // newData = newData.map(item => {
+    //   return {
+    //     ...item,
+    //     'actual-total':columName.reduce((acc, {children: [{dataIndex, title}]}) => {
+    //       if (moment(dataIndex, 'MMM YY', true).isValid() && title === 'Actual') {
+    //         acc += item[dataIndex] || 0;
+    //       }
+    //       return acc;
+    //     }, 0),
+    //     total: columName.reduce((acc, {children: [{dataIndex}]}) => {
+    //       if (moment(dataIndex, 'MMM YY', true).isValid()) {
+    //         acc += item[dataIndex] || 0;
+    //       }
+    //       return acc;
+    //     }, 0)
+    //   };
+    // });
+
+    newData = newData.map((item) => {
+      let actualTotal = 0;
+      let total = 0;
+      for (let i = 0; i < columName.length; i++) {
+        const { children: [{ dataIndex, title }] } = columName[i];
+        if (moment(dataIndex, 'MMM YY', true).isValid()) {
+          const value = +item[dataIndex] || 0;
+          total += value;
+          if ( title === 'Actual') {
+            actualTotal += value;
+          }
+        }
+      }
       return {
         ...item,
-        total: columName.reduce((acc, {children: [{dataIndex}]}) => {
-          if (moment(dataIndex, 'MMM YY', true).isValid()) {
-            acc += item[dataIndex] || 0;
-          }
-          return acc;
-        }, 0)
+        'actual-total': actualTotal,
+        total,
       };
     });
+    
     setDataSource(newData)
     return true
     // setLoading(false)
@@ -312,7 +312,7 @@ function WorkInHand() {
   return (<>
     <Row style={{backgroundColor: '#0463AC'}}>
         <Col span={24}>
-            <Title level={5} style={{color: '#fff', marginBottom: 0, paddingLeft: 5 }}> 1LM Forecast {fiscal} - {forecastMonth.format('MMMM')} Month End</Title>
+            <Title level={5} style={{color: '#fff', marginBottom: 0, paddingLeft: 5 }}>Forecast {fiscal} - {forecastMonth.format('MMMM')} Month End</Title>
         </Col>
         <Col span={24}>
             <Title level={5} style={{color: '#fff', marginBottom: 0, paddingLeft: 5 }}>Profit & Loss Statement - {forecastMonth.format('DD MMMM YYYY')}</Title>
@@ -348,7 +348,7 @@ function WorkInHand() {
 export default WorkInHand
 
 // -------------Helper-------
-const monthCol = ({year, era})=>({
+const monthCol = ({year, era, totalKey})=>({
   title: year,
   align: 'center',
   children: [
@@ -367,7 +367,7 @@ const monthCol = ({year, era})=>({
           }
           if(year.startsWith('FY')){
             
-              return record.total ? formatNegativeValue(record.total) : '-'
+              return record[totalKey] ? formatNegativeValue(record[totalKey]) : '-'
           }
               //checking if number is integer                     //if total column put - of undefned or 0
           return (text>= 0 ||text<= 0) ? formatCurrency(text) : record.className === 'total-row'? '-' : record.default !== undefined? formatCurrency(record.default) : '' 

@@ -186,7 +186,7 @@ class PanelInfo extends Component {
                         layout: {
                             wrapperCol: { offset: 1 },
                         },
-                        Placeholder: "Generic Level",
+                        Placeholder: "Standard Level",
                         type: "Text",
                         size: "small",
                     },
