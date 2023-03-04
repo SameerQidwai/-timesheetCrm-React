@@ -132,7 +132,7 @@ class Contact extends Component {
                 <Menu.Item
                   key="update"
                   onClick={() => {
-                    this.setState({ openModal: true, editCP: record.id });
+                    this.setState({ openModal: true, editCP: record.id, status: record.employementStatus });
                   }}
                   disabled={this.state && !this.state.permissions['UPDATE']}
                 >
@@ -160,6 +160,7 @@ class Contact extends Component {
     this.state = {
       openSearch: false,
       filterData: [],
+      status: false,
       data: [],
       openModal: false,
       editCP: false,
@@ -421,6 +422,7 @@ class Contact extends Component {
           filterData: res.data,
           openModal: false,
           editCP: false,
+          status: false,
           permissions: CONTACT_PERSONS,
         });
       }
@@ -443,7 +445,7 @@ class Contact extends Component {
   };
 
   toggelModal = (status) => {
-    this.setState({ openModal: status, editCP: false });
+    this.setState({ openModal: status, editCP: false, status: false });
   };
 
   Callback = () => {
@@ -619,6 +621,7 @@ class Contact extends Component {
       searchedColumn,
       openSearch,
       filterFields,
+      status
     } = this.state;
     const columns = this.columns;
     return (
@@ -644,7 +647,7 @@ class Contact extends Component {
                   type="primary"
                   size="small"
                   onClick={() => {
-                    this.setState({ openModal: true });
+                    this.setState({ openModal: true, status:undefined });
                   }}
                   disabled={!permissions['ADD']}
                 >
@@ -689,6 +692,7 @@ class Contact extends Component {
           <InfoModal
             visible={openModal}
             editCP={editCP}
+            contactStatus={status}
             close={this.toggelModal}
             callBack={this.Callback}
           />

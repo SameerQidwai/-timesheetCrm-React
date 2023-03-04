@@ -299,13 +299,28 @@ const subListData = [ //FundOutlined
           key: 'LEAVESUMMARY',
           permissions: { module: 'LEAVE_SUMMARY', key: 'READ' },
         },
+      ],
+    },
+    {
+      text: 'Budget & Forecast',
+      icon: <ContainerOutlined />,
+      key: 'ACCOUNTS',
+      // permissions: { module: 'ADMIN_OPTIONS', key: 'READ' },
+      subMenu: [
         {
-          text: 'Forecast Work In Hands',
+          text: 'Forecast Work in Hand',
           icon: <CarryOutOutlined />,
           link: '/report/work-in-hand',
           key: 'FORECASTING',
           permissions: { module: 'FORECASTING', key: 'READ' },
         },
+        // {
+        //   text: 'Budget',
+        //   icon: <CarryOutOutlined />,
+        //   link: '/report/work-in-hand',
+        //   key: 'FORECASTING',
+        //   permissions: { module: 'FORECASTING', key: 'READ' },
+        // },
       ],
     },
     {
@@ -322,27 +337,27 @@ const subListData = [ //FundOutlined
       // permissions: { module: 'ADMIN_OPTIONS', key: 'READ' },
       subMenu: [
           {
-            text: 'Employee Permanent',
+            text: 'Employee Salary Calculator',
             icon: <ContactsOutlined />,
             link: '/calculator-permanent',
             key: 'PERMANENT_CAL',
             permissions: { module: 'TIMESHEETS', key: 'READ' }
           },
           {
-            text: 'Employee Casual',
+            text: 'Casual Rate Calculator',
             icon: <IdcardOutlined />,
             link: '/calculator-casual',
             key: 'CASUAL_CAL',
             permissions: { module: 'TIMESHEETS', key: 'READ' }
           },
           {
-            text: 'Employee Contractor',
+            text: 'Contractor Rate Calculator',
             icon: <TeamOutlined />,
             link: '/calculator-contractor',
             key: 'CONTRACTOR_CAL',
             permissions: { module: 'TIMESHEETS', key: 'READ' }
           },
-        ],
+      ],
     },
 ];
   
