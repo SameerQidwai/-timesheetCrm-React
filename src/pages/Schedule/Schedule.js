@@ -64,6 +64,13 @@ class Schedule extends Component {
           ...tableSorter('endDate', 'date'),
         },
         {
+          title: 'Payment Date',
+          dataIndex: 'paymentDate',
+          key: 'paymentDate',
+          render: (record) => formatDate(record, true, true),
+          ...tableSorter('paymentDate', 'date'),
+        },
+        {
           title: 'Amount',
           dataIndex: 'amount',
           key: 'amount',

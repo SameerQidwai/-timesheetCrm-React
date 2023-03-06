@@ -460,7 +460,7 @@ class InfoModal extends Component {
             itemStyle: { marginBottom: 10 },
           },
           {
-            Placeholder: 'CS #',
+            Placeholder: 'Clearance Subject ID',
             fieldCol: 24,
             size: 'small',
             type: 'Text',
@@ -546,7 +546,7 @@ class InfoModal extends Component {
           },
           {
             // need exact terms
-            Placeholder: 'Status',
+            Placeholder: 'Contract Type',
             fieldCol: 12,
             size: 'small',
             type: 'Text',
@@ -568,14 +568,15 @@ class InfoModal extends Component {
           {
             object: 'rec',
             fieldCol: 12,
-            key: 'statusType',
+            key: 'recruitmentContractType',
             size: 'small',
             type: 'Select',
             labelAlign: 'right',
             data: [
-              { label: 'Active', value: 'A' },
-              { label: 'Close', value: 'C' },
-              { label: 'Pending', value: 'P' },
+              { label: 'Part Time', value: 'PTI' },
+              { label: 'Full Time', value: 'FTI' },
+              { label: 'Casual', value: 'CAS' },
+              { label: 'Contractor', value: 'CON' },
             ],
             itemStyle: { marginBottom: 10 },
           },
@@ -1125,7 +1126,7 @@ class InfoModal extends Component {
           recruitmentAvailability: data.recruitmentAvailability ,
           recruitmentSalaryEstimate: data.recruitmentSalaryEstimate ,
           recruitmentNotes: data.recruitmentNotes ,
-          statusType: data.statusType,
+          recruitmentContractType: data.recruitmentContractType,
         };
 
         this.basicRef.current.refs.basic_form.setFieldsValue({ basic: basic });
@@ -1184,7 +1185,7 @@ class InfoModal extends Component {
   };
 
   render() {
-    const { editCP, visible } = this.props;
+    const { editCP, visible, contactStatus= 'Contact Person' } = this.props;
     const {
       BasicFields,
       associateFields,
@@ -1273,7 +1274,7 @@ class InfoModal extends Component {
             />
           </TabPane>
           {/* //temp work// */}
-          <TabPane tab="Recruitment" key="recruitment" forceRender>
+          <TabPane tab="Recruitment" key="recruitment" forceRender disabled={contactStatus !=='Contact Person'}>
             <Form
               ref={this.recruitmentRef}
               Callback={this.RecruitmentCall}
