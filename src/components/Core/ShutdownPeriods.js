@@ -157,12 +157,22 @@ const editShutDown = (eleId, data) =>{
   })
 }
 
-const handleDelete = (id) => {
-  delShutPeriod(props.id, id).then((res) => {
-    if (res.success) {
-      setData([...res.data]);
-    }
-  });
+const handleDelete = (id, index) => {
+  // let {data, filtered} =  expenseSheet
+    // const url = '/expense-sheets';
+    const { history } = props;
+    const url = `/projects/${props.id}/shutdownPeriods`;
+    generalDelete(history, url, id, index, [], data).then((res) => {
+      if (res.success) {
+        setData(res.data);
+      }
+    });
+  
+  // delShutPeriod(props.id, id).then((res) => {
+  //   if (res.success) {
+  //     setData([...res.data]);
+  //   }
+  // });
 }
 
 const callBack = (rowData, index) => {
