@@ -39,6 +39,7 @@ import ProjectTracking from '../../components/Core/ProjectTracking/ProjectTracki
 
 import './styles.css';
 import ShutdownPeriods from '../../components/Core/ShutdownPeriods';
+import Shutdown from '../../components/Core/Shutdown';
 
 const { Item } = Descriptions;
 const { TabPane } = Tabs;
@@ -339,6 +340,9 @@ class ProjectInfo extends Component {
               <ProjectTracking id={leadId} data={data} />
             </TabPane>)}
             <TabPane tab="Shutdown Periods" key="shutdown">
+              {/* <Shutdown
+                id={leadId}
+                /> */}
               <ShutdownPeriods
                 id={leadId}
                 />

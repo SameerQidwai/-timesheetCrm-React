@@ -1,132 +1,195 @@
-import { Button, Col, DatePicker, Form } from 'antd'
-import React, { useEffect, useState } from 'react'
-import { MinusCircleFilled, PlusSquareFilled } from "@ant-design/icons"; //Icons
-import { formatDate } from '../../service/constant';
-import { addShutPeriod, getShutPeriods } from '../../service/projects';
-import moment from 'moment';
+import React, { useState, useEffect } from 'react'
+import { Button, Col, Dropdown, Menu, Modal, Popconfirm, Row, Table, Tag, Tooltip, Typography, Form, } from 'antd'
+import { SettingOutlined, PlusSquareOutlined} from '@ant-design/icons'; //Icons
+import { generalDelete } from '../../service/delete-Api\'s';
 
-const ShutdownPeriods = ({id}) => {
+const ShutdownPeriods=({projectId})=>{
+  const [data, setData] = useState([])
+  const [visible, setVisible] = useState(false)
   const [form] = Form.useForm();
-  const [disable, setDisable] =useState(0)
-  const [saveDisabled, setSaveDisabled] =useState(true)
-  const [reload, setReload] = useState({})
+  const columns = [
+    {
+      title: 'Submited At',
+      dataIndex: 'submittedAt',
+      align: 'center',
+      render: (text)=> formatDate(text, true, true),
+      ...tableSorter('date', 'date'),
+    },
+    {
+      title: 'Submited At',
+      dataIndex: 'submittedAt',
+      align: 'center',
+      render: (text)=> formatDate(text, true, true),
+      ...tableSorter('date', 'date'),
+    },
+    {
+      title: '...',
+      key: 'action',
+      align: 'center',
+      width: '1%',
+      // width: '155',
+      render: (value, record, index) => (
+        <Dropdown
+          overlay={
+            <Menu>
+              <Menu.Item
+                key="delete"
+                danger
+                className="pop-confirm-menu"
+              >
+                <Popconfirm
+                  title="Are you sure you want to delete ?"
+                  onConfirm={() => handleDelete(record.id, index)}
+                  okText="Yes"
+                  cancelText="No"
+                >
+                  <div> Delete </div>
+                </Popconfirm>
+              </Menu.Item>
+              <Menu.Item
+                key="edit"
+                onClick={() =>
+                  setVisible({...record,index})
+                }
+              >
+                Edit
+              </Menu.Item>
+            </Menu>
+          }
+        >
+          <Button size="small">
+            <SettingOutlined />
+          </Button>
+        </Dropdown>
+      ),
+    },
+  ];
+
+  const FormFields = [
+    {
+      Placeholder: "Start Date",
+      rangeMin: true,
+      fieldCol: 12,
+      size: "small",
+      type: "Text",
+    },
+    {
+      Placeholder: "End Date",
+      rangeMin: true,
+      fieldCol: 12,
+      size: "small",
+      type: "Text",
+    },
+    {
+        object: "projectShutdown",
+        fieldCol: 12,
+        key: "startDate", // when-api change it to projectId
+        size: "small",
+        rules:[{ required: true, message: 'Start Date is Required' }],
+        data: [],
+        type: "DatePicker",
+    },
+    {
+        object: "projectShutdown",
+        fieldCol: 12,
+        key: "endDate", // when-api change it to projectId
+        size: "small",
+        rules:[{ required: true, message: 'End Date is Required' }],
+        data: [],
+        type: "DatePicker",
+    },
+  ]
 
   useEffect(() => {
-    getShutPeriods(id).then(res=>{
-        if(res.success){
-            let initialData = [];
-            res.data.map((ele)=>{
-                initialData.push({
-                    startDate : moment(ele.startDate),
-                    endDate : moment(ele.endDate)
-                })
-            });
-            setDisable(initialData.length);
-            form.setFieldsValue({projectShutdown: initialData})
-        }
+    getData();
+  }, []);
+
+  const getData = () => {
+    getShutPeriods(projectId).then(res=>{
+      if(res.success){
+          setData(res.data)
+      }
     }) 
-  },[])
-  
-  const onFinish = (value) => {
-    let projectShutdown = value?.projectShutdown ?? {}
-    console.log("shutdown", projectShutdown);
-    let addNewDates = []
-    Object.entries(projectShutdown).forEach(([key, value]) => {
-        let shutdownPeriod = {
-            startDate: formatDate(value["startDate"], true),
-            endDate: formatDate(value["endDate"], true)
-        }
-        addNewDates.push(shutdownPeriod); 
-    });
-      addShutPeriod(id, addNewDates).then(res=>{
-        if(res.success){
-            setDisable(res.data.length)
-            setSaveDisabled(true)
-        }
-    })    
-   }
-  
+  }
+
+  const close = () =>{
+    setVisible(false)
+  }
+
+  const onFinish =(values)=>{
+    let {projectShutdown} = values
+    let shutdownPeriod = {
+      startDate: formatDate(projectShutdown["startDate"], true),
+      endDate: formatDate(projectShutdown["endDate"], true)
+  }
+  addShutPeriod(projectId, shutdownPeriod).then(res=>{
+    if(res.success){
+      setData([...data, res.data])
+    }
+  })
+}
+
+const handleDelete = (id, index) => {
+  const url = '/expense-sheets';
+  const { history } = props;
+  generalDelete(history, url, id, index, data).then((res) => {
+    if (res.success) {
+      setData([...res.data]);
+    }
+  });
+}
+
   return (
-    <Form
-        id={'my-form'}
-        form={form}
-        scrollToFirstError={true}
-        size="small"
-        layout="inline"
-        onFieldsChange={()=> setSaveDisabled(false)}
-        style={{padding: 50, paddingTop:20, textAlign: 'center'}}
-        onFinish={onFinish}
-    >
-        <Form.List name={'projectShutdown'}>
-            {(fields, { add, remove }) => (<>
-                <Form.Item style={{margin: "0px 20px 10px auto", }}>
-                    <Button size="small" onClick={() => add()} type='primary' > <PlusSquareFilled /> Insert Period</Button>
-                </Form.Item>
-                {fields.map((field, index) => (
-                    <span className="ant-row" key={field.key} style={{width: '100%', marginBottom: 10}}>
-                        <Col span={11}>
-                            <Form.Item
-                                {...field}
-                                label="Start Date"
-                                name={[field.name, 'startDate']}
-                                
-                            >
-                                <DatePicker 
-                                    style={{ width: '100%' }} 
-                                    size="small"
-                                    onChange={()=>setReload(!reload)}
-                                    disabled={field.name < disable}
-                                />
-                            </Form.Item>
-                        </Col>
-                        <Col span={11}>
-                            <Form.Item
-                                {...field}
-                                label="End Date"
-                                name={[field.name, 'endDate']}
-                            >
-                                <DatePicker 
-                                    style={{ width: '100%' }} 
-                                    size="small" 
-                                    onChange={()=>setReload(!reload)}
-                                    disabled={field.name < disable}
-                                />
-                            </Form.Item>
-                        </Col>
-                        <Col span={1} >
-                            <MinusCircleFilled 
-                                style={{color:`${field.name < disable? "grey" :"red"}`,margin: 'auto'}} 
-                                onClick={() => {
-                                    if(field.name > disable -1){
-                                        remove(field.name)
-                                    }
-                                }} 
-                            />
-                        </Col>
-                        <Col span={1} >
-                            <MinusCircleFilled 
-                                style={{color:`${field.name < disable? "grey" :"red"}`,margin: 'auto'}} 
-                                onClick={() => {
-                                    if(field.name > disable -1){
-                                        remove(field.name)
-                                    }
-                                }} 
-                            />
-                        </Col>
-                    </span>
-                ))}
-                 <Form.Item style={{marginTop: 8}}>
-                    <Button 
-                        size="small" 
-                        type="primary" 
-                        htmlType="submit"
-                        disabled={saveDisabled}
-                    > Save  </Button>
-                </Form.Item>
-            </>)}
-        </Form.List>
-    </Form>
-)
+    <Row justify='space-between'>
+      <Col>
+          <Title level={4}>Project Shutdown Periods</Title>
+        </Col>
+        <Col>
+        <Button
+          type="primary"
+          size="small"
+          onClick={() => {
+            setVisible(true)
+          }}            
+        >
+          <PlusSquareOutlined /> Add Period
+        </Button>
+        </Col>  
+      <Col span={24}>
+        <Table
+          // title={() => tableTitleFilter(5, generalFilter)}
+          size={'small'}
+          bordered
+          className='fs-small'
+          rowKey={data=> data.id}
+          columns={columns}
+          dataSource={data}
+        />
+      </Col>
+      <Modal
+        title={`Expense Sheet`}
+        visible={visible}
+        width={900}
+        onCancel={close}
+        okText={"Save"}
+        // adminView Prop add
+        // okButtonProps={{ htmlType: 'submit', form: 'my-form', disabled: (( (visible?.projectId === null && adminView) || (selectedRowKeys.length < 1 && !adminView)) || !permission['UPDATE'] || !permission['ADD'])}}
+        okButtonProps={{ htmlType: 'submit', form: 'my-form'}}
+      >
+      <Form
+          id={'my-form'}
+          form={form}
+          // ref={formRef}
+          onFinish={onFinish}
+          scrollToFirstError={true}
+          size="small"
+          layout="inline"
+      >
+          <FormItems FormFields={FormFields} />  
+      </Form>
+      </Modal>
+    </Row>
+  )
 }
 
 export default ShutdownPeriods
