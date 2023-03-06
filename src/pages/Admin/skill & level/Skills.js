@@ -511,7 +511,7 @@ class Skills extends Component {
                                 FormFields={skillFields}
                             />
                         </Row>
-                        <Row style={{ maxHeight: "85px", overflowY: "auto" }}>
+                        <Row style={{ maxHeight: "145px", overflowY: "auto"}}>
                             <Forms
                                 ref={this.levelForm}
                                 Callback={this.levelCall}

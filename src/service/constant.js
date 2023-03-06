@@ -23,6 +23,14 @@ export const O_STAGE = {
   BD: 'Bid Development',
 };
 
+export const O_STATUS_COLORS = {
+  O: 'green',
+  L: 'red',
+  P: 'red',
+  NB: 'red',
+  DNP: 'red',
+  C: 'green',
+};
 export const O_STATUS = {
   O: 'Open',
   L: 'Lost',
