@@ -757,9 +757,9 @@ export const delSchedule = (proId, id) => {
 
 // shutdown periods 
 export const addShutPeriod = (proId, data) => {
-  console.log(proId, {...data[0], notes:"abc", amount: 100});
+  console.log(proId, {...data, notes:"abc", amount: 100});
   messageAlert.loading({ content: 'Loading...', key: proId });
-  return axios.post(url+`/${proId}/shutdownPeriods`,{...data[0], notes:"abc", amount: 100},{headers: headers()}).then((res) => {
+  return axios.post(url+`/${proId}/shutdownPeriods`,{...data, notes:"abc", amount: 100},{headers: headers()}).then((res) => {
     const { success, message, data } = res.data;
     jwtExpired(message);
     messageAlert.success({ content: message, key: proId });
@@ -769,6 +769,34 @@ export const addShutPeriod = (proId, data) => {
     return apiErrorRes(err, proId, 5);
   })
 }
+
+export const editShutPeriod = (proId, elementId, data) => {
+  console.log(proId, {...data, notes:"abc", amount: 100});
+  messageAlert.loading({ content: 'Loading...', key: proId });
+  return axios.post(url+`/${proId}/shutdownPeriods/${elementId}`,{...data, notes:"abc", amount: 100},{headers: headers()}).then((res) => {
+    const { success, message, data } = res.data;
+    jwtExpired(message);
+    messageAlert.success({ content: message, key: proId });
+    if (success) setToken(res?.headers?.authorization);
+    return { success, data };    
+  }).catch((err) => {
+    return apiErrorRes(err, proId, 5);
+  })
+}
+
+export const delShutPeriod = (proId, id) => {
+  return axios.delete(url+`/${proId}/shutdownPeriods/${id}`, { headers: headers() })
+    .then((res) => {
+      const { success, message } = res.data;
+      jwtExpired(message);
+      if (success) setToken(res?.headers?.authorization);
+
+      return { success };
+    })
+    .catch((err) => {
+      return apiErrorRes(err, id, 5);
+    });
+};
 
 export const getShutPeriods = (proId) => {
   return axios

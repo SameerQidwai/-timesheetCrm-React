@@ -2,22 +2,27 @@ import React, { useState, useEffect } from 'react'
 import { Button, Col, Dropdown, Menu, Modal, Popconfirm, Row, Table, Tag, Tooltip, Typography, Form, } from 'antd'
 import { SettingOutlined, PlusSquareOutlined} from '@ant-design/icons'; //Icons
 import { generalDelete } from '../../service/delete-Api\'s';
+import { formatDate } from '../../service/constant';
+import { tableSorter } from './Table/TableFilter';
+import { addShutPeriod, delShutPeriod, editShutPeriod, getShutPeriods } from '../../service/projects';
+import Title from 'antd/lib/skeleton/Title';
+import FormItems from './Forms/FormItems';
 
-const ShutdownPeriods=({projectId})=>{
+const ShutdownPeriods=(props)=>{
   const [data, setData] = useState([])
   const [visible, setVisible] = useState(false)
   const [form] = Form.useForm();
   const columns = [
     {
-      title: 'Submited At',
-      dataIndex: 'submittedAt',
+      title: 'Start Date',
+      dataIndex: 'startDate',
       align: 'center',
       render: (text)=> formatDate(text, true, true),
       ...tableSorter('date', 'date'),
     },
     {
-      title: 'Submited At',
-      dataIndex: 'submittedAt',
+      title: 'End Date',
+      dataIndex: 'endDate',
       align: 'center',
       render: (text)=> formatDate(text, true, true),
       ...tableSorter('date', 'date'),
@@ -101,11 +106,14 @@ const ShutdownPeriods=({projectId})=>{
   ]
 
   useEffect(() => {
+    if (visible !== true) {
+      form.setFieldsValue({ basic: visible })
+    }
     getData();
   }, []);
 
   const getData = () => {
-    getShutPeriods(projectId).then(res=>{
+    getShutPeriods(props.id).then(res=>{
       if(res.success){
           setData(res.data)
       }
@@ -122,21 +130,55 @@ const ShutdownPeriods=({projectId})=>{
       startDate: formatDate(projectShutdown["startDate"], true),
       endDate: formatDate(projectShutdown["endDate"], true)
   }
-  addShutPeriod(projectId, shutdownPeriod).then(res=>{
+  console.log("shutDown->",shutdownPeriod);
+
+  if (props?.visible?.id) {
+    editShutDown(props.visible?.id, shutdownPeriod);
+  }
+  addShutDown(shutdownPeriod);
+}
+
+const addShutDown = (data) =>{
+  addShutPeriod(props.id, data).then(res=>{
     if(res.success){
       setData([...data, res.data])
+      setVisible(false);
     }
   })
 }
 
-const handleDelete = (id, index) => {
-  const url = '/expense-sheets';
-  const { history } = props;
-  generalDelete(history, url, id, index, data).then((res) => {
+const editShutDown = (eleId, data) =>{
+  editShutPeriod(props.id, eleId, data).then(res=>{
+    if (res.success){
+      callBack(res.data, eleId);
+    } else {
+      console.log("err",res)
+    }
+  })
+}
+
+const handleDelete = (id) => {
+  delShutPeriod(props.id, id).then((res) => {
     if (res.success) {
       setData([...res.data]);
     }
   });
+}
+
+const callBack = (rowData, index) => {
+  // let {data, filtered} =  expenseSheet;
+  if (index >= 0) {
+    let findIndex = data.findIndex(el=> el.id === rowData.id)
+    // let findFilteredIndex = filtered.findIndex(el=> el.id === rowData.id)
+    data[findIndex] = rowData;
+    // filtered[findFilteredIndex] = rowData;
+  } else {
+    data = [...data, rowData]
+    // filtered = [...filtered, rowData]
+  }
+  
+  setData({data: [...data]});  
+  setVisible(false);
 }
 
   return (
