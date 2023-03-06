@@ -770,10 +770,10 @@ export const addShutPeriod = (proId, data) => {
   })
 }
 
-export const editShutPeriod = (proId, elementId, data) => {
+export const editShutPeriod = (proId, id, data) => {
   console.log(proId, {...data, notes:"abc", amount: 100});
   messageAlert.loading({ content: 'Loading...', key: proId });
-  return axios.post(url+`/${proId}/shutdownPeriods/${elementId}`,{...data, notes:"abc", amount: 100},{headers: headers()}).then((res) => {
+  return axios.put(url+`/${proId}/shutdownPeriods/${id}`,{...data, notes:"abc", amount: 100},{headers: headers()}).then((res) => {
     const { success, message, data } = res.data;
     jwtExpired(message);
     messageAlert.success({ content: message, key: proId });
