@@ -5,7 +5,7 @@ import 'moment-weekday-calc';
 import '../../Styles/buycost.css'
 // import { formatFloat } from "../../../service/constant";
 import { formatCurrency, formatFloat, getFiscalYear, formatDate, STATES } from "../../../service/constant";
-import { buyCost, getReverseCostCal } from "../../../service/constant-Apis";
+import { getReverseCostCal } from "../../../service/constant-Apis";
 import { formatter, parser } from "../Forms/FormItems";
 
 
@@ -44,7 +44,6 @@ export const PermanentCalculator = (props) => {
     });
 
     useEffect(() => {
-        let fiscalYear = getFiscalYear('years')
      
         getReverseCostCal(whichPath).then(res=>{
             if(res.success){
@@ -77,7 +76,8 @@ export const PermanentCalculator = (props) => {
                 val += ele.value
             }
         })
-        return `${formatFloat(val, 2)}%`;
+        // return `${formatFloat(val, 2)}%`;
+        return val;
     }
     const handleChange = (value, {tax}) => {
         // console.log(value, option)
@@ -109,6 +109,7 @@ export const PermanentCalculator = (props) => {
     }
 
     const calTotalCostRatio = (value) => {
+        
         if(contract.dailyHours){
             return (findDbrOffer(value)/contract.dailyHours)/((1*(sumValue()/100))+1)
         }
@@ -126,232 +127,337 @@ export const PermanentCalculator = (props) => {
         return (empType === "Permanent") ? calABSalaryforPerma(value) : calABSalary(value)
     }
     return (
-        <Row>
-            <Col span={16}>
-                <Row className="buy-sell-calculator">
-                    <Col span={24} className="buy-cost calculator">
-                        <Row> 
-                            <Col span={24} className="mb-10">
-                                <Typography.Title level={5}>Buy Rate Calculator - {(empType == 'Contractor') ? `Sub(${empType})` : `Employee(${empType})`}</Typography.Title>
-                            </Col>                 {/**for casual type emp we already set hourly base salary */}
-                            <Col span={6} className="label bold">{'Daily Sell Rate inc. GST-per RFQTS'}</Col>
-                            <Col span={6}></Col>
-                            <Col span={3} className="item" >
-                                <Inputnumber
-                                    value={contract.rfqt}
-                                    shape="$"
-                                    onChange={(value) => {
-                                        setContract(contract => ({
-                                            ...contract, rfqt: value ?? 0
-                                        }))
-                                        // findDlrGst(contract?.gst, value ?? 0)
-                                    }}
-                                />
-                            </Col>
-                            <Col span={9}></Col>
-                            <Col span={6}  className="label">Daily Sell Rate ex GST (110/10)</Col>
-                            <Col span={3}  className="item">{formatFloat(contract.gst)}</Col>
-                            <Col span={3}  className="item"></Col>
-                            <Col span={3} className="item"> {formatCurrency(findDlrGst())}
-                            </Col>
-                            <Col span={9}  className="item"></Col>
-                            <Col span={6}  className="label">Daily Sell Rate ex Panel Provider Margin</Col>
-                            <Col span={3} className="item">
-                            <Inputnumber
-                                    value={contract.margin}
-                                    onChange={(value)=>{setContract(contract => ({
-                                            ...contract, margin: value ?? 0
-                                        }))
-                                        // findDslMArgin(core.dlrGst, value?? 0)
-                                    }}
-                                    shape="%"
-                                />
-                            </Col>
-                            <Col span={3} className="item"></Col>
-                            <Col span={3} className="item"> {formatCurrency(findDslMArgin())}</Col>
-                            <Col span={9} className="item"></Col>
-                            {/* we are saving noOfHOurs in week in our databse so no need to show here */}
-                            <Col span={11} offset={1} className="label bold">Expected CM %</Col>
-                            <Col span={3} className="item">
-                                <Inputnumber
-                                    value={contract.cm1}
-                                    onChange={(value)=>{setContract(contract => ({
-                                            ...contract, cm1: value ?? 0
-                                        }))
-                                    }}
-                                    shape="%"
-                                />
-                            </Col>
-                            <Col span={3} className="item">
-                                <Inputnumber
-                                    value={contract.cm2}
-                                    onChange={(value)=>{setContract(contract => ({
-                                            ...contract, cm2: value ?? 0
-                                        }))
-                                    }}
-                                    shape="%"
-                                />
-                            </Col>
-                            <Col span={3} className="item">
-                                <Inputnumber
-                                    value={contract.cm3}
-                                    onChange={(value)=>{setContract(contract => ({
-                                            ...contract, cm3: value ?? 0
-                                        }))
-                                    }}
-                                    shape="%"
-                                />
-                            </Col>
-                            <Col span={3} className="item">
-                                <Inputnumber
-                                    value={contract.cm4}
-                                    onChange={(value)=>{setContract(contract => ({
-                                            ...contract, cm4: value ?? 0
-                                        }))
-                                    }}
-                                    shape="%"
-                                />
-                            </Col>
-                            <Col span={24} className="label"></Col>
-                            {/* offer */}
-                            <Col span={12} className="label bold my-20">Daily Buy Rate available to offer</Col>
-                            <Col span={3} className="item bold my-20"> {formatCurrency(findDbrOffer(contract.cm1))}</Col>
-                            <Col span={3} className="item bold my-20"> {formatCurrency(findDbrOffer(contract.cm2))}</Col>
-                            <Col span={3} className="item bold my-20"> {formatCurrency(findDbrOffer(contract.cm3))}</Col>
-                            <Col span={3} className="item bold my-20"> {formatCurrency(findDbrOffer(contract.cm4))}</Col>
-                            
-                            <Col span={6} className="label">Project Daily Hours</Col>
-                            <Col span={3} className="item"></Col>
-                            <Col span={3} className="item bold  mb-10"> 
-                            <Inputnumber
-                                value={contract.dailyHours}
-                                    onChange={(value) => {
-                                        setContract(contract => ({
-                                            ...contract, dailyHours: value ?? 0
-                                        }))
-                                    }}
-                                />
-                            </Col>
-                            <Col span={12} className="item"></Col>
-                            <Col span={6} className="label">Project Weekly Hours</Col>
-                            <Col span={3} className="label">{`${contract.dailyHours} * ${contract.pWeekDays}`}</Col>
-                            <Col span={3} className="label item">{contract.dailyHours*contract.pWeekDays}</Col>
-                            
-                            <Col span={24} className="label my-20"></Col>
-                            <Col span={24} className="label">
-                                <Col span={12}>
-                                    <Row justify="space-between">
-                                        <Col span={6}>
-                                            Select State
-                                        </Col>
-                                        <Col span={12} >
-                                            
-                                        <Select
-                                            placeholder="Select State"
-                                            options={contract.stateTax}
-                                            value={contract.selectedState}    
-                                            style={{ width: '100%' }}
-                                            // showSearch
-                                            // optionFilterProp={["label", "value"]}
-                                            // filterOption={
-                                            //     (input, option) =>{
-                                            //         const label = option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                                            //         const value = option.value.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0
-                                            //             return label || value
-                                            //     }
-                                            // }
-                                            onSelect={handleChange}
-                                        />
-                                        </Col>
-                                    </Row>
-                                </Col>
-                            </Col>
-                            <Col span={24} className="label my-20"></Col>
-                            
-                            <Col span={12} className="label bold">Hourly Rate including On-cost</Col>
-                            <Col span={3} className="item bold"> {formatCurrency(findDbrOffer(contract.cm1)/contract.dailyHours)}</Col>
-                            <Col span={3} className="item bold"> {formatCurrency(findDbrOffer(contract.cm2)/contract.dailyHours)}</Col>
-                            <Col span={3} className="item bold"> {formatCurrency(findDbrOffer(contract.cm3)/contract.dailyHours)}</Col>
-                            <Col span={3} className="item bold"> {formatCurrency(findDbrOffer(contract.cm4)/contract.dailyHours)}</Col>
-                            
-                            <Col span={3} offset={9} className="item"><Typography.Text underline strong >Applicable</Typography.Text></Col>
-                            <Col span={12} className="item" ></Col>
-                            <Col span={12}>
-                                {variables?.map((el, index)=>  <Col span={24} key={index}>
-                                    <Row>
-                                        <Col span={16} className="label">
-                                            { STATES[el.name]?
-                                                `Payroll Tax - ${STATES[el.name]}`
-                                            :
-                                                el.name}
-                                        </Col>
-                                        <Col span={4} className="item">{`${el.value}%`}</Col>
-                                        <Col span={4} className="item">
-                                            <Dropdown
-                                                trigger={['click']}
-                                                overlay={
-                                                    <Menu
-                                                        style={{backgroundColor: '#f6f4f1'}}
-                                                        onClick={(event)=>{onAplicable(event?.key,index)}}
-                                                    >
-                                                        <Menu.Item key={'Yes'}>
-                                                            Yes
-                                                        </Menu.Item>
-                                                        <Menu.Item key={'No'}>
-                                                            No
-                                                        </Menu.Item>
-                                                    </Menu>
-                                                }
-                                            >
-                                                <span className="mouse-pointer">{el.apply}</span>
-                                            </Dropdown>
-                                        </Col>
-                                     </Row>
-                                </Col>)}
-                            </Col>
-                            <Col span={12} className="item" ></Col>
-                            <Col span={24}>      
-                                <Col span={10} offset={2}>      
-                                    <Row>
-                                        <Col span={12} className="label bold my-20"> Total On-cost Ratio</Col>
-                                        <Col span={12} className="bold my-20">{sumValue()}</Col>
-                                    </Row>
-                                </Col>
-                            </Col>
-                            <Col span={12} className="label bold"> Hourly Base Rate</Col>
-                            <Col span={3} className="item bold"> {formatCurrency(calTotalCostRatio(contract.cm1))}</Col>
-                            <Col span={3} className="item bold"> {formatCurrency(calTotalCostRatio(contract.cm2))}</Col>
-                            <Col span={3} className="item bold"> {formatCurrency(calTotalCostRatio(contract.cm3))}</Col>
-                            <Col span={3} className="item bold"> {formatCurrency(calTotalCostRatio(contract.cm4))}</Col>
-                            {(empType === "Permanent") && <Col span={24}>
-                                <Row>
-                                    <Col span={7} offset={1} className="label">Weekly Hours - Standard Employment Contract</Col>
-                                    <Col span={4} className="item bold ">
-                                        <Inputnumber
-                                            value={contract.weaklyHours}
-                                            onChange={(value) => {
-                                                setContract(contract => ({
-                                                    ...contract, weaklyHours: value ?? 0
-                                                }))
-                                            }}
-                                        />
-                                    </Col>
-                                </Row>
-                            </Col>}
-                            <Col span={24}>
-                                <Row>
-                                    <Col span={7} offset={1} className="label"> {(empType === "Permanent") ? `Week in a Year` : `Daily Hours in a Day`}</Col>
-                                    <Col span={4} className="item"> {contract?.weekInYear}</Col>
-                                </Row>
-                            </Col>
-                            <Col span={12} className="label bold">Annual Base Salary</Col>
-                            <Col span={3} className="item bold"> {formatCurrency(decideCalType(contract.cm1))}</Col>
-                            <Col span={3} className="item bold"> {formatCurrency(decideCalType(contract.cm2))}</Col>
-                            <Col span={3} className="item bold"> {formatCurrency(decideCalType(contract.cm3))}</Col>
-                            <Col span={3} className="item bold"> {formatCurrency(decideCalType(contract.cm4))}</Col>
-                            </Row>
+      <Row>
+        <Col span={16}>
+          <Row className="buy-sell-calculator">
+            <Col span={24} className="buy-cost calculator">
+              <Row>
+                <Col span={24} className="mb-10">
+                  <Typography.Title level={5}>
+                    {empType == 'Permanent'
+                      ? 'Employee Salary Calculator'
+                      : empType == 'Contractor'
+                      ? `Contractor Rate Calculator`
+                      : `Casual Rate Calculator`}
+                  </Typography.Title>
+                </Col>
+                {/**for casual type emp we already set hourly base salary */}
+                <Col span={6} className="label bold">
+                  {'Daily Sell Rate inc. GST-per RFQTS'}
+                </Col>
+                <Col span={6}></Col>
+                <Col span={3} className="item">
+                  <Inputnumber
+                    value={contract.rfqt}
+                    shape="$"
+                    onChange={(value) => {
+                      setContract((contract) => ({
+                        ...contract,
+                        rfqt: value ?? 0,
+                      }));
+                      // findDlrGst(contract?.gst, value ?? 0)
+                    }}
+                  />
+                </Col>
+                <Col span={9}></Col>
+                <Col span={6} className="label">
+                  Daily Sell Rate ex GST (110/10)
+                </Col>
+                <Col span={3} className="item">
+                  {formatFloat(contract.gst)}
+                </Col>
+                <Col span={3} className="item"></Col>
+                <Col span={3} className="item">
+                  {' '}
+                  {formatCurrency(findDlrGst())}
+                </Col>
+                <Col span={9} className="item"></Col>
+                <Col span={6} className="label">
+                  Daily Sell Rate ex Panel Provider Margin
+                </Col>
+                <Col span={3} className="item">
+                  <Inputnumber
+                    value={contract.margin}
+                    onChange={(value) => {
+                      setContract((contract) => ({
+                        ...contract,
+                        margin: value ?? 0,
+                      }));
+                      // findDslMArgin(core.dlrGst, value?? 0)
+                    }}
+                    shape="%"
+                  />
+                </Col>
+                <Col span={3} className="item"></Col>
+                <Col span={3} className="item">
+                  {' '}
+                  {formatCurrency(findDslMArgin())}
+                </Col>
+                <Col span={9} className="item"></Col>
+                {/* we are saving noOfHOurs in week in our databse so no need to show here */}
+                <Col span={11} offset={1} className="label bold">
+                  Expected CM %
+                </Col>
+                <Col span={3} className="item">
+                  <Inputnumber
+                    value={contract.cm1}
+                    onChange={(value) => {
+                      setContract((contract) => ({
+                        ...contract,
+                        cm1: value ?? 0,
+                      }));
+                    }}
+                    shape="%"
+                  />
+                </Col>
+                <Col span={3} className="item">
+                  <Inputnumber
+                    value={contract.cm2}
+                    onChange={(value) => {
+                      setContract((contract) => ({
+                        ...contract,
+                        cm2: value ?? 0,
+                      }));
+                    }}
+                    shape="%"
+                  />
+                </Col>
+                <Col span={3} className="item">
+                  <Inputnumber
+                    value={contract.cm3}
+                    onChange={(value) => {
+                      setContract((contract) => ({
+                        ...contract,
+                        cm3: value ?? 0,
+                      }));
+                    }}
+                    shape="%"
+                  />
+                </Col>
+                <Col span={3} className="item">
+                  <Inputnumber
+                    value={contract.cm4}
+                    onChange={(value) => {
+                      setContract((contract) => ({
+                        ...contract,
+                        cm4: value ?? 0,
+                      }));
+                    }}
+                    shape="%"
+                  />
+                </Col>
+                <Col span={24} className="label"></Col>
+                {/* offer */}
+                <Col span={12} className="label bold my-20">
+                  Daily Buy Rate available to offer
+                </Col>
+                <Col span={3} className="item bold my-20">
+                  {formatCurrency(findDbrOffer(contract.cm1))}
+                </Col>
+                <Col span={3} className="item bold my-20">
+                  {formatCurrency(findDbrOffer(contract.cm2))}
+                </Col>
+                <Col span={3} className="item bold my-20">
+                  {formatCurrency(findDbrOffer(contract.cm3))}
+                </Col>
+                <Col span={3} className="item bold my-20">
+                  {formatCurrency(findDbrOffer(contract.cm4))}
+                </Col>
+                <Col span={6} className="label">
+                  Project Daily Hours
+                </Col>
+                <Col span={3} className="item"></Col>
+                <Col span={3} className="item bold  mb-10">
+                  <Inputnumber
+                    value={contract.dailyHours}
+                    onChange={(value) => {
+                      setContract((contract) => ({
+                        ...contract,
+                        dailyHours: value ?? 0,
+                      }));
+                    }}
+                  />
+                </Col>
+                <Col span={12} className="item"></Col>
+                <Col span={6} className="label">
+                  Project Weekly Hours
+                </Col>
+                <Col
+                  span={3}
+                  className="label"
+                >{`${contract.dailyHours} * ${contract.pWeekDays}`}</Col>
+                <Col span={3} className="label item">
+                  {contract.dailyHours * contract.pWeekDays}
+                </Col>
+                <Col span={24} className="label my-20"></Col>
+                <Col span={24} className="label">
+                  <Col span={12}>
+                    <Row justify="space-between">
+                      <Col span={6}>Select State</Col>
+                      <Col span={12}>
+                        <Select
+                          placeholder="Select State"
+                          options={contract.stateTax}
+                          value={contract.selectedState}
+                          style={{ width: '100%' }}
+                          // showSearch
+                          // optionFilterProp={["label", "value"]}
+                          // filterOption={
+                          //     (input, option) =>{
+                          //         const label = option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                          //         const value = option.value.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0
+                          //             return label || value
+                          //     }
+                          // }
+                          onSelect={handleChange}
+                        />
+                      </Col>
+                    </Row>
+                  </Col>
+                </Col>
+                <Col span={24} className="label my-20"></Col>
+                <Col span={12} className="label bold">
+                  Hourly Rate including On-cost
+                </Col>
+                <Col span={3} className="item bold">
+                  {formatCurrency(
+                    findDbrOffer(contract.cm1) / contract.dailyHours
+                  )}
+                </Col>
+                <Col span={3} className="item bold">
+                  {formatCurrency(
+                    findDbrOffer(contract.cm2) / contract.dailyHours
+                  )}
+                </Col>
+                <Col span={3} className="item bold">
+                  {formatCurrency(
+                    findDbrOffer(contract.cm3) / contract.dailyHours
+                  )}
+                </Col>
+                <Col span={3} className="item bold">
+                  {formatCurrency(
+                    findDbrOffer(contract.cm4) / contract.dailyHours
+                  )}
+                </Col>
+                <Col span={3} offset={9} className="item">
+                  <Typography.Text underline strong>
+                    Applicable
+                  </Typography.Text>
+                </Col>
+                <Col span={12} className="item"></Col>
+                <Col span={12}>
+                  {variables?.map((el, index) => (
+                    <Col span={24} key={index}>
+                      <Row>
+                        <Col span={16} className="label">
+                          {STATES[el.name]
+                            ? `Payroll Tax - ${STATES[el.name]}`
+                            : el.name}
+                        </Col>
+                        <Col span={4} className="item">{`${el.value}%`}</Col>
+                        <Col span={4} className="item">
+                          <Dropdown
+                            trigger={['click']}
+                            overlay={
+                              <Menu
+                                style={{ backgroundColor: '#f6f4f1' }}
+                                onClick={(event) => {
+                                  onAplicable(event?.key, index);
+                                }}
+                              >
+                                <Menu.Item key={'Yes'}>Yes</Menu.Item>
+                                <Menu.Item key={'No'}>No</Menu.Item>
+                              </Menu>
+                            }
+                          >
+                            <span className="mouse-pointer">{el.apply}</span>
+                          </Dropdown>
+                        </Col>
+                      </Row>
                     </Col>
-                    {/* <Col span={12} className="sell-cost">
+                  ))}
+                </Col>
+                <Col span={12} className="item"></Col>
+                <Col span={24}>
+                  <Col span={10} offset={2}>
+                    <Row>
+                      <Col span={12} className="label bold my-20">
+                        Total On-cost Ratio
+                      </Col>
+                      <Col span={12} className="bold my-20">
+                        {`${formatFloat(sumValue(), 2)}%`}
+                      </Col>
+                    </Row>
+                  </Col>
+                </Col>
+                <Col span={12} className="label bold">
+                  Hourly Base Rate
+                </Col>
+                <Col span={3} className="item bold">
+                  {formatCurrency(calTotalCostRatio(contract.cm1))}
+                </Col>
+                <Col span={3} className="item bold">
+                  {formatCurrency(calTotalCostRatio(contract.cm2))}
+                </Col>
+                <Col span={3} className="item bold">
+                  {formatCurrency(calTotalCostRatio(contract.cm3))}
+                </Col>
+                <Col span={3} className="item bold">
+                  {formatCurrency(calTotalCostRatio(contract.cm4))}
+                </Col>
+                {empType === 'Permanent' && (
+                  <Col span={24}>
+                    <Row>
+                      <Col span={7} offset={1} className="label">
+                        Weekly Hours - Standard Employment Contract
+                      </Col>
+                      <Col span={4} className="item bold ">
+                        <Inputnumber
+                          value={contract.weaklyHours}
+                          onChange={(value) => {
+                            setContract((contract) => ({
+                              ...contract,
+                              weaklyHours: value ?? 0,
+                            }));
+                          }}
+                        />
+                      </Col>
+                    </Row>
+                  </Col>
+                )}
+                <Col span={24}>
+                  <Row>
+                    <Col span={7} offset={1} className="label">
+                      {empType === 'Permanent'
+                        ? `Week in a Year`
+                        : `Daily Hours in a Day`}
+                    </Col>
+                    <Col span={4} className="item">
+                      {contract?.weekInYear}
+                    </Col>
+                  </Row>
+                </Col>
+                <Col span={12} className="label bold">
+                    {empType == 'Permanent'
+                      ? 'Annual Base Salary'
+                      : 'Daily Base Rate'
+                    }
+                </Col>
+                <Col span={3} className="item bold">
+                  {formatCurrency(decideCalType(contract.cm1))}
+                </Col>
+                <Col span={3} className="item bold">
+                  {formatCurrency(decideCalType(contract.cm2))}
+                </Col>
+                <Col span={3} className="item bold">
+                  {formatCurrency(decideCalType(contract.cm3))}
+                </Col>
+                <Col span={3} className="item bold">
+                  {formatCurrency(decideCalType(contract.cm4))}
+                </Col>
+              </Row>
+            </Col>
+            {/* <Col span={12} className="sell-cost">
                         <Row  >
                             <Col span={24} className="mb-10">
                                 <Typography.Title level={5}>Sell Rate Calculator - Employee</Typography.Title>
@@ -374,11 +480,11 @@ export const PermanentCalculator = (props) => {
                             </Col>)}
                         </Row>
                     </Col> */}
-                </Row>
-            </Col>
-            
-            {/* //: */}
-            {/* <Row className="buy-sell-calculator " align="middle" justify="center" >
+          </Row>
+        </Col>
+
+        {/* //: */}
+        {/* <Row className="buy-sell-calculator " align="middle" justify="center" >
                 <Col span={12} className="no-active">
                     <Typography.Text type="danger" mark>No Active Contract</Typography.Text>
                 </Col>
@@ -386,8 +492,8 @@ export const PermanentCalculator = (props) => {
                     <Typography.Text type="danger" mark>No Active Contract</Typography.Text>
                 </Col>
             </Row> */}
-        </Row>
-    )
+      </Row>
+    );
 }
 
 function Inputnumber({value, shape, onChange, min, max}) {
