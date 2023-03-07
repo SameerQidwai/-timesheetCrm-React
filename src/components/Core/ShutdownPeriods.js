@@ -7,7 +7,6 @@ import { tableSorter } from './Table/TableFilter';
 import { addShutPeriod, delShutPeriod, editShutPeriod, getShutPeriods } from '../../service/projects';
 import Title from 'antd/lib/skeleton/Title';
 import FormItems from './Forms/FormItems';
-import moment from 'moment';
 
 const ShutdownPeriods=(props)=>{
   const [data, setData] = useState([])
@@ -114,8 +113,8 @@ const ShutdownPeriods=(props)=>{
   useEffect(() => {
     if ((visible !== true) && (visible !== false)) {
       let data = {
-        startDate : moment(visible.startDate),
-        endDate : moment(visible.endDate)
+        startDate : formatDate(visible.startDate),
+        endDate : formatDate(visible.endDate)
       }
       form.setFieldsValue({ projectShutdown: data })
     }
@@ -130,7 +129,7 @@ const ShutdownPeriods=(props)=>{
   }
 
   const close = () =>{
-    form.setFieldsValue({ projectShutdown: "" })
+    form.resetFields();
     setVisible(false)
   }
 
@@ -187,7 +186,7 @@ const callBack = (rowData, index) => {
   }
   
   setData([...periodData]);  
-  form.setFieldsValue({ projectShutdown: "" })
+  form.resetFields();
   setVisible(false);
 }
 
