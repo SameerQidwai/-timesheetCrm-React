@@ -35,7 +35,7 @@ export const O_STATUS = {
 export const O_PHASE = { false: 'Closed', true: 'Open' };
 export const O_PHASE_COLORS = { false: 'red', true: 'green' };
 
-export const ACTIVE_STATUS = { true: 'Active', false: 'Deactivate' };
+export const ACTIVE_STATUS = { true: 'Active', false: 'Deactive' };
 export const ACTIVE_STATUS_COLORS = { false: 'red', true: 'green' };
 
 export const R_STATUS = {

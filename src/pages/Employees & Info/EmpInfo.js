@@ -162,7 +162,7 @@ class OrgInfo extends Component {
                 >
                   <Popconfirm
                     title={`Are you sure you want to ${
-                      data.active ? 'Deactive' : 'Activate'
+                      data.active ? 'Deactivate' : 'Activate'
                     }`}
                     onConfirm={() => this.toggleActiveStatus(emp)}
                     okText="Yes"
