@@ -16,21 +16,21 @@ const ShutdownPeriods=(props)=>{
     {
       title: 'Start Date',
       dataIndex: 'startDate',
-      align: 'center',
+      // align: 'center',
       render: (text)=> formatDate(text, true, true),
       ...tableSorter('date', 'date'),
     },
     {
       title: 'End Date',
       dataIndex: 'endDate',
-      align: 'center',
+      // align: 'center',
       render: (text)=> formatDate(text, true, true),
       ...tableSorter('date', 'date'),
     },
     {
       title: '...',
       key: 'action',
-      align: 'center',
+      align: 'right',
       width: '1%',
       // width: '155',
       render: (value, record, index) => (
