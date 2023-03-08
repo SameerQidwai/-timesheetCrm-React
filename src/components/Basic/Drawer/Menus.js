@@ -308,19 +308,26 @@ const subListData = [ //FundOutlined
       // permissions: { module: 'ADMIN_OPTIONS', key: 'READ' },
       subMenu: [
         {
-          text: 'Forecast Work in Hand',
+          text: 'Forecast',
           icon: <CarryOutOutlined />,
-          link: '/report/work-in-hand',
+          link: '/financial-outlook/work-in-hand',
           key: 'FORECASTING',
           permissions: { module: 'FORECASTING', key: 'READ' },
         },
-        // {
-        //   text: 'Budget',
-        //   icon: <CarryOutOutlined />,
-        //   link: '/report/work-in-hand',
-        //   key: 'FORECASTING',
-        //   permissions: { module: 'FORECASTING', key: 'READ' },
-        // },
+        {
+          text: 'Budget',
+          icon: <CarryOutOutlined />,
+          link: '/financial-outlook/budget',
+          key: 'FORECASTING',
+          permissions: { module: 'FORECASTING', key: 'READ' },
+        },
+        {
+          text: 'Cash Flow',
+          icon: <CarryOutOutlined />,
+          link: '/financial-outlook/cash-flow',
+          key: 'FORECASTING',
+          permissions: { module: 'FORECASTING', key: 'READ' },
+        },
       ],
     },
     {
