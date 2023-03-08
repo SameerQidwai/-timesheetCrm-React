@@ -105,7 +105,7 @@ function Budget() {
           fixed: 'left',
       },
       {
-          title: `${fiscal} Forecast`,
+          title: `${fiscal} Budget`,
           children: [
               {
                   title: 'Revenue AU$',
@@ -147,16 +147,7 @@ function Budget() {
       setColumns(newColumns)
   }
 
-  const structureData = ({
-    MILESTONE_BASE,
-    TIME_BASE,
-    PERMANENT_SALARIES,
-    PERMANENT_SUPER,
-    CASUAL_SALARIES,
-    CASUAL_SUPER,
-    DOH_SALARIES,
-    DOH_SUPER,
-  }) => {
+  const structureData = () => {
     // income_revenue[1] = { ...income_revenue[1], ...TIME_BASE };
     // income_revenue[2] = { ...income_revenue[2], ...MILESTONE_BASE };
     // // income_revenue[8] = { ...income_revenue[8], ...TOTAL_REVENUE };
@@ -312,7 +303,7 @@ function Budget() {
   return (<>
     <Row style={{backgroundColor: '#0463AC'}}>
         <Col span={24}>
-            <Title level={5} style={{color: '#fff', marginBottom: 0, paddingLeft: 5 }}>Forecast {fiscal} - {forecastMonth.format('MMMM')} Month End</Title>
+            <Title level={5} style={{color: '#fff', marginBottom: 0, paddingLeft: 5 }}>Budget {fiscal} - {forecastMonth.format('MMMM')} Month End</Title>
         </Col>
         <Col span={24}>
             <Title level={5} style={{color: '#fff', marginBottom: 0, paddingLeft: 5 }}>Profit & Loss Statement - {forecastMonth.format('DD MMMM YYYY')}</Title>
