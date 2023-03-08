@@ -310,7 +310,7 @@ const subListData = [ //FundOutlined
         {
           text: 'Forecast',
           icon: <CarryOutOutlined />,
-          link: '/financial-outlook/work-in-hand',
+          link: '/financial-outlook/forecast',
           key: 'FORECASTING',
           permissions: { module: 'FORECASTING', key: 'READ' },
         },
