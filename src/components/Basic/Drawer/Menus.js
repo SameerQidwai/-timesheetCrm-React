@@ -168,7 +168,7 @@ const listData = [
     
 const subListData = [ //FundOutlined
     {
-        text: 'SUBMISSIONS',
+        text: 'Submissions',
         icon: <PlusCircleOutlined />,
         key: 'SUBMISSIONS',
         subMenu: [
@@ -203,7 +203,7 @@ const subListData = [ //FundOutlined
         ],
     },
     {
-    text: 'APPROVALS',
+    text: 'Approvals',
     icon: <CheckCircleOutlined />,
     key: 'APPROVALS',
     subMenu: [
@@ -238,7 +238,7 @@ const subListData = [ //FundOutlined
     ],
     },
     {
-    text: 'REPORTS',
+    text: 'Reports',
     icon: <ContainerOutlined />,
     key: 'REPORTS',
     // permissions: { module: 'ADMIN_OPTIONS', key: 'READ' },
@@ -302,7 +302,7 @@ const subListData = [ //FundOutlined
       ],
     },
     {
-      text: 'Budget & Forecast',
+      text: 'Financial Outlook',
       icon: <ContainerOutlined />,
       key: 'ACCOUNTS',
       // permissions: { module: 'ADMIN_OPTIONS', key: 'READ' },
