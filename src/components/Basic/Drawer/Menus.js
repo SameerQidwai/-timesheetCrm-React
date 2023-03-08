@@ -299,20 +299,6 @@ const subListData = [ //FundOutlined
           key: 'LEAVESUMMARY',
           permissions: { module: 'LEAVE_SUMMARY', key: 'READ' },
         },
-        {
-          text: 'Budget',
-          icon: <CarryOutOutlined />,
-          link: '/financial-outlook/budget',
-          key: 'FORECASTING',
-          permissions: { module: 'ADMIN_OPTIONS', key: 'READ' },
-        },
-        {
-          text: 'Cash FLow',
-          icon: <CarryOutOutlined />,
-          link: '/financial-outlook/cash-flow',
-          key: 'FORECASTING',
-          permissions: { module: 'ADMIN_OPTIONS', key: 'READ' },
-        },
       ],
     },
     {
