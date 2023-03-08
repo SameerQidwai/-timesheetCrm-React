@@ -601,35 +601,7 @@ class Contact extends Component {
       this.setState({
         filterData: data.filter((el) => {
           // method one which have mutliple if condition for every multiple search  
-          console.log( (search['recruitmentProspect']['value'].length > 0
-          ? search['recruitmentProspect']['value']
-          : [{ value: ',' }]
-          ).some((s) =>
-            (search['recruitmentProspect']['value'].length > 0
-              ? [el.recruitmentProspect]
-              : [',']
-            ).includes(s.value) && el.employementStatus === 'Contact Person'
-          ) &&
-          
-          (search['recruitmentAvailability']['value'].length > 0
-            ? search['recruitmentAvailability']['value']
-            : [{ value: ',' }]
-          ).some((s) =>
-            (search['recruitmentAvailability']['value'].length > 0
-              ? [el.recruitmentAvailability]
-              : [',']
-            ).includes(s.value) && el.employementStatus === 'Contact Person'
-          ) &&
-          
-          (search['recruitmentContractType']['value'].length > 0
-            ? search['recruitmentContractType']['value']
-            : [{ value: ',' }]
-          ).some((s) =>
-            (search['recruitmentContractType']['value'].length > 0
-              ? [el.recruitmentContractType]
-              : [',']
-            ).includes(s.value) && el.employementStatus === 'Contact Person'
-          ))     
+          let contactPerson = el.employementStatus === 'Contact Person'
           return (
             `00${el.id.toString()}`.includes(search['id']['value']) &&
             `${el.firstName ?? ''}`
@@ -704,34 +676,34 @@ class Contact extends Component {
                 ).includes(s.value)
             ) &&
 
-            (search['recruitmentProspect']['value'].length > 0
+            (search['recruitmentProspect']['value'].length > 0 && contactPerson
             ? search['recruitmentProspect']['value']
             : [{ value: ',' }]
             ).some((s) =>
               (search['recruitmentProspect']['value'].length > 0
                 ? [el.recruitmentProspect]
                 : [',']
-              ).includes(s.value) && el.employementStatus === 'Contact Person'
+              ).includes(s.value) 
             ) &&
             
-            (search['recruitmentAvailability']['value'].length > 0
+            (search['recruitmentAvailability']['value'].length > 0 && contactPerson
               ? search['recruitmentAvailability']['value']
               : [{ value: ',' }]
             ).some((s) =>
               (search['recruitmentAvailability']['value'].length > 0
                 ? [el.recruitmentAvailability]
                 : [',']
-              ).includes(s.value) && el.employementStatus === 'Contact Person'
+              ).includes(s.value) 
             ) &&
             
-            (search['recruitmentContractType']['value'].length > 0
+            (search['recruitmentContractType']['value'].length > 0 && contactPerson
               ? search['recruitmentContractType']['value']
               : [{ value: ',' }]
             ).some((s) =>
               (search['recruitmentContractType']['value'].length > 0
                 ? [el.recruitmentContractType]
                 : [',']
-              ).includes(s.value) && el.employementStatus === 'Contact Person'
+              ).includes(s.value) 
             )
           );
         }),
