@@ -1,3 +1,4 @@
+$env:NODE_OPTIONS = "--openssl-legacy-provider"
 ONELM CRM live
     project_tracking
         project tracking month //

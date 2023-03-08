@@ -3,7 +3,7 @@ import { Col, InputNumber, Row, Table, Typography, Form } from 'antd'
 import { formatCurrency, getFiscalYear, parseDate } from '../../service/constant';
 import { getWorkInHandForecast } from '../../service/reports-Apis';
 import "../../../src/components/Styles/table.css"
-import { contribution_margin, cost_of_sale, direct_overhead_expense, formatNegativeValue, getValueWithCondition, income_revenue, income_tax, net_profit, nextFocus } from '../../components/Core/ReportFilters/WIHData';
+import { contribution_margin, cost_of_sale, direct_overhead_expense, formatNegativeValue, getValueWithCondition, income_revenue, income_tax, net_profit, nextFocus } from '../../components/Core/ReportFilters/BudgetData';
 import moment from 'moment'
 import { formatter, parser } from '../../components/Core/Forms/FormItems';
 const {Title} = Typography
@@ -78,7 +78,7 @@ const EditableCell = ({
 };
 
 
-function WorkInHand() {
+function Budget() {
   const [form] = Form.useForm();
   let {start, end} = getFiscalYear('dates')
   const fiscal = moment(end).format('[FY]YY')
@@ -117,11 +117,11 @@ function WorkInHand() {
 
   useEffect(() => {
       creatingCol()
-      getWorkInHandForecast().then(res=>{
-          if(res.success){
-              structureData(res.data)
-          }
-      })
+      // getWorkInHandForecast().then(res=>{
+      //     if(res.success){
+              structureData()
+          // }
+      // })
       // dummyStructureData()
   }, [])
 
@@ -157,31 +157,31 @@ function WorkInHand() {
     DOH_SALARIES,
     DOH_SUPER,
   }) => {
-    income_revenue[1] = { ...income_revenue[1], ...TIME_BASE };
-    income_revenue[2] = { ...income_revenue[2], ...MILESTONE_BASE };
-    // income_revenue[8] = { ...income_revenue[8], ...TOTAL_REVENUE };
+    // income_revenue[1] = { ...income_revenue[1], ...TIME_BASE };
+    // income_revenue[2] = { ...income_revenue[2], ...MILESTONE_BASE };
+    // // income_revenue[8] = { ...income_revenue[8], ...TOTAL_REVENUE };
     
-    cost_of_sale[2] = { ...cost_of_sale[2], ...PERMANENT_SALARIES };
-    cost_of_sale[3] = { ...cost_of_sale[3], ...CASUAL_SALARIES };
-    cost_of_sale[4] = { ...cost_of_sale[4], ...PERMANENT_SUPER };
-    cost_of_sale[5] = { ...cost_of_sale[5], ...CASUAL_SUPER };
-    cost_of_sale[5] = { ...cost_of_sale[5], ...CASUAL_SUPER };
-    // cost_of_sale[21] = { ...cost_of_sale[21], ...TOTAL_COST };
+    // cost_of_sale[2] = { ...cost_of_sale[2], ...PERMANENT_SALARIES };
+    // cost_of_sale[3] = { ...cost_of_sale[3], ...CASUAL_SALARIES };
+    // cost_of_sale[4] = { ...cost_of_sale[4], ...PERMANENT_SUPER };
+    // cost_of_sale[5] = { ...cost_of_sale[5], ...CASUAL_SUPER };
+    // cost_of_sale[5] = { ...cost_of_sale[5], ...CASUAL_SUPER };
+    // // cost_of_sale[21] = { ...cost_of_sale[21], ...TOTAL_COST };
     
 
 
-    direct_overhead_expense[2] = { ...direct_overhead_expense[2], ...DOH_SALARIES };
-    direct_overhead_expense[3] = { ...direct_overhead_expense[3], ...DOH_SUPER };
+    // direct_overhead_expense[2] = { ...direct_overhead_expense[2], ...DOH_SALARIES };
+    // direct_overhead_expense[3] = { ...direct_overhead_expense[3], ...DOH_SUPER };
     // direct_overhead_expense[18] = { ...direct_overhead_expense[18], ...TOTAL_DOH };
     
 
     calculate_col_total(new Array(
-        ...income_revenue,
-        ...cost_of_sale,
-        ...contribution_margin,
-        ...direct_overhead_expense,
-        ...income_tax,
-        ...net_profit
+      ...income_revenue,
+      ...cost_of_sale,
+      ...contribution_margin,
+      ...direct_overhead_expense,
+      ...income_tax,
+      ...net_profit
     ));
   };
 
@@ -345,7 +345,7 @@ function WorkInHand() {
   </>)
 }
 
-export default WorkInHand
+export default Budget
 
 // -------------Helper-------
 const monthCol = ({year, era, totalKey})=>({
