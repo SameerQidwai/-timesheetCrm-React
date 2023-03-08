@@ -60,8 +60,9 @@ import ExpenseSheet from '../../../pages/Expenses/ExpenseSheet';
 
 // import TimeSheetHTML from "../../Core/TimeSheetHTML"
 import { localStore } from '../../../service/constant';
-import { BenchResources, Positions, WorkForceAllocation, WorkforceSkills, ProjectRevenueAnalysis, ClientRevenueAnalysis, TimesheetSummary, LeaveSummary, WorkInHand } from '../../../pages/Reports';
 import { PermanentCalculator } from '../../Core/Cost Calculator/PermanentCalculator';
+import { BenchResources, Positions, WorkForceAllocation, WorkforceSkills, ProjectRevenueAnalysis, ClientRevenueAnalysis, TimesheetSummary, LeaveSummary, WorkInHand, Budget, CashFlow } from '../../../pages/Reports';
+
 const { Content } = Layout;
 
 const pageLinks = [
@@ -421,12 +422,6 @@ const pageLinks = [
     permission: 'READ',
   },
   {
-    component: WorkInHand,
-    link: '/report/work-in-hand',
-    key: 'FORECASTING',
-    permission: 'READ',
-  },
-  {
     component: PermanentCalculator,
     link: '/calculator-permanent',
     key: 'PERMANENT_CAL',
@@ -443,6 +438,24 @@ const pageLinks = [
     link: '/calculator-contractor',
     key: 'CONTRACTOR_CAL',
     permission: 'ALLOWED',
+  },
+  {
+    component: WorkInHand,
+    link: '/financial-outlook/forecast',
+    key: 'FORECASTING',
+    permission: 'READ',
+  },
+  {
+    component: Budget,
+    link: '/financial-outlook/budget',
+    key: 'FORECASTING',
+    permission: 'READ',
+  },
+  {
+    component: CashFlow,
+    link: '/financial-outlook/cash-flow',
+    key: 'FORECASTING',
+    permission: 'READ',
   },
 ];
 
