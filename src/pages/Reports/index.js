@@ -10,6 +10,8 @@ export {default as ProjectRevenueAnalysis} from './ProjectRevenueAnalysis'
 export {default as ClientRevenueAnalysis} from './ClientRevenueAnalysis'
 export {default as TimesheetSummary} from './TimesheetSummary'
 export {default as LeaveSummary} from './LeaveSummary'
+export {default as Budget} from './Budget'
+export {default as CashFlow} from './CashFlow'
 
 //-----------------> HelperFunction <---------------
 export const _generateMonthlyColumns = ({date, contantColmuns, setColumn, spliceBtw, colRender, format, dataIndex, width="5%"})=>{

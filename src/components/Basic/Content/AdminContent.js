@@ -60,7 +60,7 @@ import ExpenseSheet from '../../../pages/Expenses/ExpenseSheet';
 
 // import TimeSheetHTML from "../../Core/TimeSheetHTML"
 import { localStore } from '../../../service/constant';
-import { BenchResources, Positions, WorkForceAllocation, WorkforceSkills, ProjectRevenueAnalysis, ClientRevenueAnalysis, TimesheetSummary, LeaveSummary, WorkInHand } from '../../../pages/Reports';
+import { BenchResources, Positions, WorkForceAllocation, WorkforceSkills, ProjectRevenueAnalysis, ClientRevenueAnalysis, TimesheetSummary, LeaveSummary, WorkInHand, Budget, CashFlow } from '../../../pages/Reports';
 
 const { Content } = Layout;
 
@@ -422,7 +422,19 @@ const pageLinks = [
   },
   {
     component: WorkInHand,
-    link: '/report/work-in-hand',
+    link: '/financial-outlook/forecast',
+    key: 'REPORTS',
+    permission: 'ALLOWED',
+  },
+  {
+    component: Budget,
+    link: '/financial-outlook/budget',
+    key: 'REPORTS',
+    permission: 'ALLOWED',
+  },
+  {
+    component: CashFlow,
+    link: '/financial-outlook/cash-flow',
     key: 'REPORTS',
     permission: 'ALLOWED',
   },

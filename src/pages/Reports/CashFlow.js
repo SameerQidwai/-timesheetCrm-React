@@ -78,7 +78,7 @@ const EditableCell = ({
 };
 
 
-function WorkInHand() {
+function CashFlow() {
   const [form] = Form.useForm();
   let {start, end} = getFiscalYear('dates')
   const fiscal = moment(end).format('[FY]YY')
@@ -345,7 +345,7 @@ function WorkInHand() {
   </>)
 }
 
-export default WorkInHand
+export default CashFlow
 
 // -------------Helper-------
 const monthCol = ({year, era, totalKey})=>({
