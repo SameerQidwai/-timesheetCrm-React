@@ -132,7 +132,7 @@ class Contact extends Component {
                 <Menu.Item
                   key="update"
                   onClick={() => {
-                    this.setState({ openModal: true, editCP: record.id });
+                    this.setState({ openModal: true, editCP: record.id, status: record.employementStatus });
                   }}
                   disabled={this.state && !this.state.permissions['UPDATE']}
                 >
@@ -160,6 +160,7 @@ class Contact extends Component {
     this.state = {
       openSearch: false,
       filterData: [],
+      status: false,
       data: [],
       openModal: false,
       editCP: false,
@@ -242,6 +243,30 @@ class Contact extends Component {
           multi: true,
           value: [],
           label: 'Association',
+          showInColumn: false,
+          disabled: false,
+        },
+        recruitmentProspect: {
+          type: 'none',
+          multi: true,
+          value: [],
+          label: 'Recruitment Prospects',
+          showInColumn: false,
+          disabled: false,
+        },
+        recruitmentAvailability: {
+          type: 'none',
+          multi: true,
+          value: [],
+          label: 'Availability',
+          showInColumn: false,
+          disabled: false,
+        },
+        recruitmentContractType: {
+          type: 'none',
+          multi: true,
+          value: [],
+          label: 'Contract Type',
           showInColumn: false,
           disabled: false,
         },
@@ -392,6 +417,70 @@ class Contact extends Component {
           type: 'Select',
         },
         {
+          Placeholder: 'Recruitment Prospects',
+          fieldCol: 12,
+          size: 'small',
+          type: 'Text',
+        },
+        {
+          object: 'obj',
+          fieldCol: 24,
+          key: 'recruitmentProspect',
+          size: 'small',
+          mode: 'multiple',
+          customValue: (value, option) => option,
+           data: [
+            { label: 'Not Considered', value: 'NCO' },
+            { label: 'Do Not Hire', value: 'DNH' },
+            { label: 'Prospect', value: 'PRO' },
+            { label: 'Assigned To Opportunity', value: 'ATO' },
+          ],
+          type: 'Select',
+        },
+        {
+          Placeholder: 'Availability',
+          fieldCol: 12,
+          size: 'small',
+          type: 'Text',
+        },
+        {
+          object: 'obj',
+          fieldCol: 24,
+          key: 'recruitmentAvailability',
+          size: 'small',
+          mode: 'multiple',
+          customValue: (value, option) => option,
+          data: [
+            { label: 'Immediate', value: 'IMM' },
+            { label: 'Within A Month', value: 'WMO' },
+            { label: 'Over A Month', value: 'OMO' },
+            { label: 'Long-term Propect', value: 'LTP' },
+            { label: 'No Clearance', value: 'NCL' },
+          ],
+          type: 'Select',
+        },
+        {
+          Placeholder: 'Contract Type',
+          fieldCol: 12,
+          size: 'small',
+          type: 'Text',
+        },
+        {
+          object: 'obj',
+          fieldCol: 24,
+          key: 'recruitmentContractType',
+          size: 'small',
+          mode: 'multiple',
+          customValue: (value, option) => option,
+          data: [
+            { label: 'Part Time', value: 'PTI' },
+            { label: 'Full Time', value: 'FTI' },
+            { label: 'Casual', value: 'CAS' },
+            { label: 'Contractor', value: 'CON' },
+          ],
+          type: 'Select',
+        },
+        {
           Placeholder: 'Address',
           fieldCol: 12,
           size: 'small',
@@ -421,6 +510,7 @@ class Contact extends Component {
           filterData: res.data,
           openModal: false,
           editCP: false,
+          status: false,
           permissions: CONTACT_PERSONS,
         });
       }
@@ -443,7 +533,7 @@ class Contact extends Component {
   };
 
   toggelModal = (status) => {
-    this.setState({ openModal: status, editCP: false });
+    this.setState({ openModal: status, editCP: false, status: false });
   };
 
   Callback = () => {
@@ -502,12 +592,16 @@ class Contact extends Component {
       search['address']['value'] ||
       search['skill']['value'].length > 0 ||
       search['clearanceLevel']['value'].length > 0 ||
-      search['association']['value'].length > 0
+      search['association']['value'].length > 0 ||
+      search['recruitmentProspect']['value'].length > 0 ||
+      search['recruitmentAvailability']['value'].length > 0 ||
+      search['recruitmentContractType']['value'].length > 0
     ) {
 
       this.setState({
         filterData: data.filter((el) => {
-          // method one which have mutliple if condition for every multiple search       
+          // method one which have mutliple if condition for every multiple search  
+          let contactPerson = el.employementStatus === 'Contact Person'
           return (
             `00${el.id.toString()}`.includes(search['id']['value']) &&
             `${el.firstName ?? ''}`
@@ -556,6 +650,7 @@ class Contact extends Component {
                 : [',']
               ).includes(s.value)
             ) &&
+                        
             // //searching for skill in skills array
             // giving some function a default array... and search it if not passed
             (search['skill']['value'].length > 0
@@ -579,6 +674,36 @@ class Contact extends Component {
                   ? el.contactPersonOrganizations.map((p) => p.organizationId)
                   : [',']
                 ).includes(s.value)
+            ) &&
+
+            (search['recruitmentProspect']['value'].length > 0 && contactPerson
+            ? search['recruitmentProspect']['value']
+            : [{ value: ',' }]
+            ).some((s) =>
+              (search['recruitmentProspect']['value'].length > 0
+                ? [el.recruitmentProspect]
+                : [',']
+              ).includes(s.value) 
+            ) &&
+            
+            (search['recruitmentAvailability']['value'].length > 0 && contactPerson
+              ? search['recruitmentAvailability']['value']
+              : [{ value: ',' }]
+            ).some((s) =>
+              (search['recruitmentAvailability']['value'].length > 0
+                ? [el.recruitmentAvailability]
+                : [',']
+              ).includes(s.value) 
+            ) &&
+            
+            (search['recruitmentContractType']['value'].length > 0 && contactPerson
+              ? search['recruitmentContractType']['value']
+              : [{ value: ',' }]
+            ).some((s) =>
+              (search['recruitmentContractType']['value'].length > 0
+                ? [el.recruitmentContractType]
+                : [',']
+              ).includes(s.value) 
             )
           );
         }),
@@ -619,6 +744,7 @@ class Contact extends Component {
       searchedColumn,
       openSearch,
       filterFields,
+      status
     } = this.state;
     const columns = this.columns;
     return (
@@ -644,7 +770,7 @@ class Contact extends Component {
                   type="primary"
                   size="small"
                   onClick={() => {
-                    this.setState({ openModal: true });
+                    this.setState({ openModal: true, status:undefined });
                   }}
                   disabled={!permissions['ADD']}
                 >
@@ -689,6 +815,7 @@ class Contact extends Component {
           <InfoModal
             visible={openModal}
             editCP={editCP}
+            contactStatus={status}
             close={this.toggelModal}
             callBack={this.Callback}
           />

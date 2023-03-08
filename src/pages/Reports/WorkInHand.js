@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext, useRef } from 'react'
 import { Col, InputNumber, Row, Table, Typography, Form } from 'antd'
-import { formatCurrency, getFiscalYear, parseDate } from '../../../service/constant';
-import { getWorkInHandForecast } from '../../../service/reports-Apis';
-import "../../Styles/table.css"
-import { contribution_margin, cost_of_sale, direct_overhead_expense, formatNegativeValue, getValueWithCondition, income_revenue, income_tax, net_profit, nextFocus } from './WIHData';
+import { formatCurrency, getFiscalYear, parseDate } from '../../service/constant';
+import { getWorkInHandForecast } from '../../service/reports-Apis';
+import "../../../src/components/Styles/table.css"
+import { contribution_margin, cost_of_sale, direct_overhead_expense, formatNegativeValue, getValueWithCondition, income_revenue, income_tax, net_profit, nextFocus } from '../../components/Core/ReportFilters/WIHData';
 import moment from 'moment'
-import { formatter, parser } from '../Forms/FormItems';
+import { formatter, parser } from '../../components/Core/Forms/FormItems';
 const {Title} = Typography
 const EditableContext = React.createContext(null);
 const nextFocusFor = nextFocus()

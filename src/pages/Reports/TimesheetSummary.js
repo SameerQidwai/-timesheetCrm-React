@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Col, DatePicker, Descriptions, Row, Select, Typography, Table as ATable } from 'antd'
-import Table, { FiltertagsNew, tableSorter } from '../Table/TableFilter'
-import { downloadReportFile, getTimesheetSummary } from '../../../service/reports-Apis'
+import { Button, Col, DatePicker, Descriptions, Row, Select, Typography, Table as ATable, Tabs } from 'antd'
+import Table, { FiltertagsNew, tableSorter } from '../../components/Core/Table/TableFilter'
+import { downloadReportFile, getTimesheetSummary } from '../../service/reports-Apis'
 
 
-import { Api, formatCurrency, formatFloat, getFiscalYear, localStore } from '../../../service/constant'
+import { Api, formatCurrency, formatFloat, getFiscalYear, localStore } from '../../service/constant'
 import moment from 'moment'
-import { ReportsFilters, _createQuery } from './Filters'
+// import { ReportsFilters, _createQuery } from './ReportFilters'
+import { ReportsFilters, _createQuery } from '../../components/Core/ReportFilters';
+
 import { _generateMonthlyColumns } from '.'
+
+
+const {TabPane} = Tabs
 
 const contantColmuns = [
   {
@@ -264,7 +269,52 @@ function TimesheetSummary() {
           />
         </Col>
       </Row>
-      <Row gutter={[0, 50]}>
+
+      {/* additional sample */}
+        {/* <Col span={24}> */}
+          <Tabs
+            type="card"
+            style={{ marginTop: "50px" }}
+          >
+            <TabPane tab="Time & Material" key="timebase">
+              <Table
+                sticky
+                title={() => (
+                  <Typography.Title level={5}>
+                    Timesheet Data - T&M
+                  </Typography.Title>
+                )}
+                columns={columns}
+                loading={loading}
+                rowKey={'index'}
+                dataSource={data?.timeProjectSummary ?? []}
+                pagination={false}
+                scroll={{ x: '170vw' }}
+                summary={(columnData) => summaryFooter(columnData)}
+              />
+            </TabPane>
+            <TabPane tab="Milestone" key="milestone">
+              <Table
+                sticky
+                title={() => (
+                  <Typography.Title level={5}>
+                    Timesheet Data - Milestone
+                  </Typography.Title>
+                )}
+                columns={columns}
+                loading={loading}
+                rowKey={'index'}
+                dataSource={data?.milestoneProjectSummary ?? []}
+                pagination={false}
+                scroll={{ x: '170vw' }}
+                summary={(columnData) => summaryFooter(columnData)}
+              />
+            </TabPane>
+          </Tabs>
+         
+        {/* </Col> */}
+       
+      {/* <Row gutter={[0, 50]}>
         <Col></Col>
         <Col span={24}>
           <Table
@@ -300,7 +350,7 @@ function TimesheetSummary() {
             summary={(columnData) => summaryFooter(columnData)}
           />
         </Col>
-      </Row>
+      </Row> */}
         <ReportsFilters
           compName={'Filters'}
           compKey={'timesheet_summary'}
