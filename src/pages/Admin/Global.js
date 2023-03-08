@@ -26,7 +26,7 @@ function GlobalVars(props) {
             style: { textDecoration: "underline" },
         },
         {
-            fieldCol: 10,
+            fieldCol: 5,
             Placeholder: "Finish Date",
             type: "Title",
             mode: 4,
@@ -79,7 +79,7 @@ function GlobalVars(props) {
         },
         {
             object: "GST",
-            fieldCol: 10,
+            fieldCol: 5,
             key: "endDate",
             size: "small",
             shape: '%',
@@ -99,6 +99,74 @@ function GlobalVars(props) {
                     },
                 }),
             ]
+        },
+        {
+            fieldCol: 4,
+            type: "Text",
+        },
+        {
+            fieldCol: 4,
+            Placeholder: "Income Tax:",
+            type: "Text",
+            itemStyle:{textAlign: 'right', paddingRight: '15%'}, 
+        },
+        {
+            object: "income_tax",
+            fieldCol: 3,
+            key: "value",
+            size: "small",
+            shape: '%',
+            type: "InputNumber",
+        },
+        {
+            object: "income_tax",
+            fieldCol: 5,
+            key: "startDate",
+            size: "small",
+            shape: '%',
+            type: "DatePicker",
+            rules:[
+                ({ getFieldValue }) => ({
+                    validator(_, date) {
+                        const {value} = getFieldValue('GST') ?? {}
+                        if (value){
+                            if(!date){
+                                return Promise.reject(new Error('Start Date is Required!!'))
+                            }else{
+                                return Promise.resolve();
+                            }
+                        }
+                        return Promise.resolve();
+                    },
+                }),
+            ]
+        },
+        {
+            object: "income_tax",
+            fieldCol: 5,
+            key: "endDate",
+            size: "small",
+            shape: '%',
+            type: "DatePicker",
+            rules:[
+                ({ getFieldValue }) => ({
+                    validator(_, date) {
+                        const {value} = getFieldValue('GST') ?? {}
+                        if (value){
+                            if(!date){
+                                return Promise.reject(new Error('End Date is Required!!'))
+                            }else{
+                                return Promise.resolve();
+                            }
+                        }
+                        return Promise.resolve();
+                    },
+                }),
+            ]
+        },
+        {
+            fieldCol: 4,
+            type: "Text",
         },
         {
             fieldCol: 24,
@@ -146,7 +214,7 @@ function GlobalVars(props) {
         },
         {
             object: "Superannuation",
-            fieldCol: 10,
+            fieldCol: 5,
             key: "endDate",
             size: "small",
             shape: '%',
@@ -166,6 +234,10 @@ function GlobalVars(props) {
                     },
                 }),
             ]
+        },
+        {
+            fieldCol: 4,
+            type: "Text",
         },
     ])
 
@@ -309,7 +381,7 @@ function GlobalVars(props) {
         },
         {
             object: key,
-            fieldCol: 10,
+            fieldCol: 5,
             key: "endDate",
             size: "small",
             shape: '%',
@@ -329,7 +401,14 @@ function GlobalVars(props) {
                     },
                 }),
             ]
-        },]
+        },
+        {
+            object: key,
+            fieldCol: 5,
+            size: "small",
+            type: "Text"
+        }
+    ]
     }
 
     const addGlobalFields = (lables, states) =>{

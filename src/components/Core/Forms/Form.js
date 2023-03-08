@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { InputNumber, Typography, DatePicker, TimePicker, Checkbox, Divider, Upload, Button, Select, Switch, Radio, Input, Space, Form, Row, Col, Tooltip} from "antd";
+import { InputNumber, Typography, DatePicker, TimePicker, Checkbox, Divider, Upload, Button, Select, Switch, Radio, Input, Space, Form, Row, Col, Tooltip, Rate} from "antd";
 
 const { Item } = Form;
 const { Dragger } = Upload;
@@ -379,6 +379,11 @@ class Forms extends Component {
                     >
                         {placeholder}
                     </Dragger>
+                );
+                break;
+            case "Rate":
+                item = (
+                    <Rate count={7}	/>
                 );
                 break;
             default:

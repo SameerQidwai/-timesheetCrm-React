@@ -13,6 +13,7 @@ export const income_revenue = [
     key: 'Revenue - T&M Basis',
     className: 'data-title-row',
     default: 0,
+    editable: true,
   },
   {
     name: 'Revenue - Milestone Basis',
@@ -20,6 +21,7 @@ export const income_revenue = [
     key: 'Revenue - Milestone Basis',
     className: 'data-title-row',
     default: 0,
+    editable: true,
   },
   {
     name: 'Revnue - Other',
@@ -75,24 +77,28 @@ export const cost_of_sale = [
     key: 'Salaries & Wages - Permanent cos',
     identifier: 'cost_total',
     className: 'data-title-row',
+    editable: true,
   },
   {
     name: 'Salaries & Wages - Casual',
     key: 'Salaries & Wages - Casual cos',
     identifier: 'cost_total',
     className: 'data-title-row',
+    editable: true,
   },
   {
     name: 'Superannuation - Permanent',
     key: 'Superannuation - Permanent cos',
     identifier: 'cost_total',
     className: 'data-title-row',
+    editable: true,
   },
   {
     name: 'Superannuation - Casual',
     key: 'Superannuation - Casual cos',
     identifier: 'cost_total',
     className: 'data-title-row',
+    editable: true,
   },
   {
     name: 'Bonus/STI',
@@ -238,11 +244,13 @@ export const direct_overhead_expense = [
     name: 'Salaries & Wages - Permanent',
     key: 'Salaries & Wages - Permanent doh',
     className: 'data-title-row',
+    editable: true,
   },
   {
     name: 'Superannuation - Permanent',
     key: 'Superannuation - Permanent doh',
     className: 'data-title-row',
+    editable: true,
   },
   {
     name: 'Travel Allowances',

@@ -68,14 +68,14 @@ function Positions() {
         {
             key: 'skill',
             dataIndex: 'skill',
-            title: 'Skill',
+            title: 'Standard Skill',
             width: 250,
             ...tableSorter('skill', 'string')
         },
         {
             key: 'skillLevel',
             dataIndex: 'skillLevel',
-            title: 'Skill Level',
+            title: 'Standard Level',
             width: 80,
             ...tableSorter('skillLevel', 'string')
         },

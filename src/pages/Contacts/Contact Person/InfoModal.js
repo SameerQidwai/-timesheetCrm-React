@@ -1253,8 +1253,8 @@ class InfoModal extends Component {
               </Col>
               <Col span="24">
                 <Row>
-                  <Col span="11">Skill</Col>
-                  <Col span="11">Level</Col>
+                  <Col span="11">Standard Skill</Col>
+                  <Col span="11">Standard Level</Col>
                 </Row>
               </Col>
             </Row>

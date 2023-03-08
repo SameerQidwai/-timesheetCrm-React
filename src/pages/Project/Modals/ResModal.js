@@ -33,7 +33,7 @@ class ResModal extends Component {
           // itemStyle:{marginBottom:'10px'},
         },
         {
-          Placeholder: "Skill",
+          Placeholder: "Panel Skill",
           fieldCol: 12,
           size: "small",
           rangeMin: true,
@@ -69,7 +69,7 @@ class ResModal extends Component {
           },
         },
         {
-          Placeholder: "Level",
+          Placeholder: "Panel Level",
           fieldCol: 12,
           size: "small",
           rangeMin: true,
