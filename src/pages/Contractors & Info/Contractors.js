@@ -54,7 +54,6 @@ class Contractors extends Component {
         ...tableSorter(
           'contactPersonOrganization.contactPersonId',
           'number',
-          true
         ),
       },
       {
@@ -124,7 +123,8 @@ class Contractors extends Component {
           text={`${text}`}
           objName="ACTIVE_STATUS"
           colorName="ACTIVE_STATUS_COLORS"
-        />
+        />,
+        ...tableSorter('active', 'string', true, true),
       },
       {
         title: '...',
