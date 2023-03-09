@@ -40,7 +40,9 @@ export const PermanentCalculator = (props) => {
         pWeekDays : 5,
         hourlyBaseRate: 0.9,
         weekInYear: empType === "Permanent" ? 52 : 8,
-        stateTax: []
+        stateTax: [],
+        // dslGst: ["Daily Sell Rate inc. GST-per RFQTS","Daily Sell Rate exc. GST-per RFQTS"]
+        dslGst: [{value:"Include"},{value:"Exclude"}]
     });
 
     useEffect(() => {
@@ -50,6 +52,7 @@ export const PermanentCalculator = (props) => {
                 let { gst, golobalVariables, stateTax } = res.data
                 contract.gst = (gst + 100) / gst;
                 contract.stateTax = stateTax
+                contract.selectedDslGst = contract.dslGst?.[0].value;
                 contract.selectedState = stateTax?.[0]?.value;
                 setContract(contract);
                 let value = {
@@ -79,8 +82,8 @@ export const PermanentCalculator = (props) => {
         // return `${formatFloat(val, 2)}%`;
         return val;
     }
+
     const handleChange = (value, {tax}) => {
-        // console.log(value, option)
         setContract(contract => ({
             ...contract, selectedState: value
         }));
@@ -92,11 +95,17 @@ export const PermanentCalculator = (props) => {
         (variables.length === 1) ? variables[0] = value : variables[1] = value;
         setVariables(variables)
     }
+    
+    const dslHandleChange = (value) => {
+        setContract(contract => ({
+            ...contract, selectedDslGst: value
+        }));
+    }
 
     // SOME FUNCTIONS 
     const findDlrGst = () => {
         const {gst, rfqt} = contract
-        return Math.abs((rfqt/gst) - rfqt);
+        return contract?.selectedDslGst == "Include" ? contract.rfqt : Math.abs((rfqt/gst) - rfqt);
     }
 
     const findDslMArgin = () => {
@@ -143,9 +152,17 @@ export const PermanentCalculator = (props) => {
                 </Col>
                 {/**for casual type emp we already set hourly base salary */}
                 <Col span={6} className="label bold">
-                  {'Daily Sell Rate inc. GST-per RFQTS'}
+                  {`Daily Sell Rate ${contract.selectedDslGst}. GST-per RFQTS`}
                 </Col>
-                <Col span={6}></Col>
+                <Col span={6}>
+                <Select
+                    placeholder="Select GST"
+                    options={contract.dslGst}
+                    value={contract.selectedDslGst}
+                    style={{ width: '100%' }}
+                    onSelect={dslHandleChange}
+                  />
+                </Col>
                 <Col span={3} className="item">
                   <Inputnumber
                     value={contract.rfqt}
