@@ -145,7 +145,7 @@ class ContInfo extends Component {
                 >
                   <Popconfirm
                     title={`Are you sure you want to ${
-                      data.active ? 'Deactive' : 'Activate'
+                      data.active ? 'Deactivate' : 'Activate'
                     }`}
                     onConfirm={() => this.toggleActiveStatus(editCont)}
                     okText="Yes"

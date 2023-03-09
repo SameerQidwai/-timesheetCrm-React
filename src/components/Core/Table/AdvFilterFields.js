@@ -152,7 +152,7 @@ export const EmployeeFilterFields= [
       type: 'Select',
       data: [
         {value:true, label: 'Active'},
-        {value:false, label: 'Deactivaited'},
+        {value:false, label: 'Deactive'},
       ],
     },
     // {
