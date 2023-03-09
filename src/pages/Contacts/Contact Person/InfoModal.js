@@ -311,6 +311,7 @@ class InfoModal extends Component {
         // fields: this.newAssociateField(0),
         fields: [],
       },
+      
       SkillFields: {
         formId: 'skill_form',
         FormCol: 24,
@@ -530,7 +531,6 @@ class InfoModal extends Component {
               { label: 'Within A Month', value: 'WMO' },
               { label: 'Over A Month', value: 'OMO' },
               { label: 'Long-term Propect', value: 'LTP' },
-              { label: 'No Clearance', value: 'NCL' },
             ],
             type: 'Select',
             itemStyle: { marginBottom: 10 },
@@ -546,7 +546,7 @@ class InfoModal extends Component {
           },
           {
             // need exact terms
-            Placeholder: 'Contract Type',
+            Placeholder: 'Preferred Contract Type',
             fieldCol: 12,
             size: 'small',
             type: 'Text',

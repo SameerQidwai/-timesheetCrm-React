@@ -417,6 +417,19 @@ class Contact extends Component {
           type: 'Select',
         },
         {
+          Placeholder: 'Address',
+          fieldCol: 24,
+          size: 'small',
+          type: 'Text',
+        },
+        {
+          object: 'obj',
+          fieldCol: 24,
+          key: 'address',
+          size: 'small',
+          type: 'Input',
+        },
+        {
           Placeholder: 'Recruitment Prospects',
           fieldCol: 12,
           size: 'small',
@@ -479,19 +492,6 @@ class Contact extends Component {
             { label: 'Contractor', value: 'CON' },
           ],
           type: 'Select',
-        },
-        {
-          Placeholder: 'Address',
-          fieldCol: 12,
-          size: 'small',
-          type: 'Text',
-        },
-        {
-          object: 'obj',
-          fieldCol: 24,
-          key: 'address',
-          size: 'small',
-          type: 'Input',
         },
       ],
     };
