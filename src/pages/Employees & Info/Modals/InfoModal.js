@@ -758,7 +758,7 @@ class InfoModal extends Component {
           itemStyle: { marginBottom: 10 },
         },
         {
-          Placeholder: "BOH Rate",
+          Placeholder: "Back Office Rate of Effort",
           rangeMin: true,
           fieldCol: 24,
           size: "small",
