@@ -235,7 +235,7 @@ class BillModal extends Component {
                     itemStyle: { marginBottom: 1 },
                 },
                 {
-                    Placeholder: "BOH Rate",
+                    Placeholder: "Back Office Rate of Effort",
                     rangeMin: true,
                     fieldCol: 24,
                     size: "small",
