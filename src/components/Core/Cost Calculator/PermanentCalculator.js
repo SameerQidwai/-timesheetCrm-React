@@ -154,15 +154,17 @@ export const PermanentCalculator = (props) => {
                 <Col span={6} className="label bold">
                   {`Daily Sell Rate ${contract.selectedDslGst}. GST-per RFQTS`}
                 </Col>
-                <Col span={6}>
+                <Col span={3}>
                 <Select
-                    placeholder="Select GST"
-                    options={contract.dslGst}
-                    value={contract.selectedDslGst}
-                    style={{ width: '100%' }}
-                    onSelect={dslHandleChange}
+                  size="small"
+                  placeholder="Select GST"
+                  options={contract.dslGst}
+                  value={contract.selectedDslGst}
+                  style={{ width: '100%' }}
+                  onSelect={dslHandleChange}
                   />
                 </Col>
+                <Col span={3}></Col>
                 <Col span={3} className="item">
                   <Inputnumber
                     value={contract.rfqt}
@@ -313,6 +315,7 @@ export const PermanentCalculator = (props) => {
                       <Col span={6}>Select State</Col>
                       <Col span={12}>
                         <Select
+                          size="small"
                           placeholder="Select State"
                           options={contract.stateTax}
                           value={contract.selectedState}
