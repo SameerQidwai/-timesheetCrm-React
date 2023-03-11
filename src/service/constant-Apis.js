@@ -469,7 +469,7 @@ export const getManageProjects = (resourcePermission) =>{
     });
 }
 
-export const getHolidays = (id) => {
+export const getCalendarHolidays = (id) => {
     return axios
         .get(`${Api}/calendar-holidays` + `?calendarId=${id}`, {headers:headers()})
         .then((res) => {

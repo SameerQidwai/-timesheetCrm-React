@@ -37,6 +37,7 @@ import { generalDelete } from "../../service/delete-Api's";
 import AuthError from '../../components/Core/AuthError';
 import OMResource from '../../components/Core/Resources/OMResources';
 import OTResources from '../../components/Core/Resources/OTResources';
+import ShutdownPeriods from '../../components/Core/ShutdownPeriods';
 
 const { SubMenu } = Menu;
 const { Item } = Descriptions;
@@ -377,6 +378,11 @@ class OpportunityInfo extends Component {
                 // Need to create these both component as one
                 <OTResources id={leadId} data={data} />
               )}
+            </TabPane>
+            <TabPane tab="Shutdown Periods" key="shutdown">
+              <ShutdownPeriods
+                id={leadId}
+                />
             </TabPane>
           </Tabs>
         )}
