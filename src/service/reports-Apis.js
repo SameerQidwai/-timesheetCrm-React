@@ -219,6 +219,55 @@ export const getWorkInHandForecast = (queryParam) => {
       });
 };
 
+export const getSaveForecast = (queryParam) => {
+    let {start, end} = getFiscalYear('dates')
+    return axios
+      .get(
+        `${Api}/forecastReportLabel/`,
+        { headers: headers() }
+      )
+      .then((res) => {
+        const { success, data=[], message } = res.data;
+        jwtExpired(message);
+        let structData = {}
+        if (success){
+          for (const {values, title} of data) {
+            structData[title] = values
+          }
+        }
+        setToken(res?.headers?.authorization);
+        return { success: success, data: structData };
+      })
+      .catch((err) => {
+        return {
+          error: 'Please login again!',
+          success: false,
+          message: err.message,
+        };
+      });
+};
+
+export const updateSaveForecast = (data, queryParam) => {
+    // let {start, end} = getFiscalYear('dates')
+    return axios
+      .put(`${Api}/forecastReportLabel/updateReport/`, data, {
+        headers: headers(),
+      })
+      .then((res) => {
+        const { success, data = [], message } = res.data;
+        jwtExpired(message);
+        setToken(res?.headers?.authorization);
+        return { success: success};
+      })
+      .catch((err) => {
+        return {
+          error: 'Please login again!',
+          success: false,
+          message: err.message,
+        };
+      });
+};
+
 export const downloadReportFile = (url, fileName)=>{
   axios({
     method: 'get',
