@@ -27,7 +27,7 @@ const EditableCell = ({
   const save = async (entered) => {
     let value = form.getFieldValue([record['key'], dataIndex])
     let updated = form.isFieldTouched([record['key'], dataIndex])
-    if ( value && updated ){
+    if ( updated ){
       try {
         handleSave(indexing, dataIndex, value);
         setTimeout(() => {

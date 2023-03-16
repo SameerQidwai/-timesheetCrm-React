@@ -257,6 +257,60 @@ export const updateSaveForecast = (data, queryParam) => {
         const { success, data = [], message } = res.data;
         jwtExpired(message);
         setToken(res?.headers?.authorization);
+        if (success){
+          messageAlert.success({ content: 'Report Updated Successfully', key: 'report' });
+        }
+        return { success: success};
+      })
+      .catch((err) => {
+        return {
+          error: 'Please login again!',
+          success: false,
+          message: err.message,
+        };
+      });
+};
+
+export const getSaveBudget = (queryParam) => {
+  let {start, end} = getFiscalYear('dates')
+  return axios
+    .get(
+      `${Api}/budgetReportLabel/`,
+      { headers: headers() }
+    )
+    .then((res) => {
+      const { success, data=[], message } = res.data;
+      jwtExpired(message);
+      let structData = {}
+      if (success){
+        for (const {values, title} of data) {
+          structData[title] = values
+        }
+      }
+      setToken(res?.headers?.authorization);
+      return { success: success, data: structData };
+    })
+    .catch((err) => {
+      return {
+        error: 'Please login again!',
+        success: false,
+        message: err.message,
+      };
+    });
+};
+export const updateSaveBudget = (data, queryParam) => {
+    // let {start, end} = getFiscalYear('dates')
+    return axios
+      .put(`${Api}/budgetReportLabel/updateReport/`, data, {
+        headers: headers(),
+      })
+      .then((res) => {
+        const { success, data = [], message } = res.data;
+        jwtExpired(message);
+        setToken(res?.headers?.authorization);
+        if (success){
+          messageAlert.success({ content: 'Report Updated Successfully', key: 'report' });
+        }
         return { success: success};
       })
       .catch((err) => {

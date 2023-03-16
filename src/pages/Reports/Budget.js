@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext, useRef } from 'react'
-import { Col, InputNumber, Row, Table, Typography, Form } from 'antd'
+import { Col, InputNumber, Row, Table, Typography, Form, Popconfirm, Button } from 'antd'
 import { formatCurrency, getFiscalYear, parseDate } from '../../service/constant';
-import { getWorkInHandForecast } from '../../service/reports-Apis';
+import { getSaveBudget, getWorkInHandForecast, updateSaveBudget } from '../../service/reports-Apis';
 import "../../../src/components/Styles/table.css"
 import { contribution_margin, cost_of_sale, direct_overhead_expense, formatNegativeValue, getValueWithCondition, income_revenue, income_tax, net_profit, nextFocus } from '../../components/Core/ReportFilters/BudgetData';
 import moment from 'moment'
@@ -27,7 +27,7 @@ const EditableCell = ({
   const save = async (entered) => {
     let value = form.getFieldValue([record['key'], dataIndex])
     let updated = form.isFieldTouched([record['key'], dataIndex])
-    if ( value && updated ){
+    if ( updated ){
       try {
         handleSave(indexing, dataIndex, value);
         setTimeout(() => {
@@ -117,11 +117,12 @@ function Budget() {
 
   useEffect(() => {
       creatingCol()
-      // getWorkInHandForecast().then(res=>{
-      //     if(res.success){
-              structureData()
-          // }
-      // })
+      getSaveBudget().then(res=>{
+          if(res.success){
+              structureData(res.data)
+              form.setFieldsValue(res.data)
+          }
+      })
       // dummyStructureData()
   }, [])
 
@@ -147,7 +148,7 @@ function Budget() {
       setColumns(newColumns)
   }
 
-  const structureData = () => {
+  const structureData = (saveBudget) => {
     // income_revenue[1] = { ...income_revenue[1], ...TIME_BASE };
     // income_revenue[2] = { ...income_revenue[2], ...MILESTONE_BASE };
     // // income_revenue[8] = { ...income_revenue[8], ...TOTAL_REVENUE };
@@ -164,16 +165,25 @@ function Budget() {
     // direct_overhead_expense[2] = { ...direct_overhead_expense[2], ...DOH_SALARIES };
     // direct_overhead_expense[3] = { ...direct_overhead_expense[3], ...DOH_SUPER };
     // direct_overhead_expense[18] = { ...direct_overhead_expense[18], ...TOTAL_DOH };
-    
 
-    calculate_col_total(new Array(
+    let data = new Array(
       ...income_revenue,
       ...cost_of_sale,
       ...contribution_margin,
       ...direct_overhead_expense,
       ...income_tax,
       ...net_profit
-    ));
+    )
+
+    data = data.map(el=>{
+      if (saveBudget[el.key]){
+        el = {...el, ...saveBudget[el.key]}
+      }
+      return el
+    })
+    
+
+    calculate_col_total(data);
   };
 
   const calculate_col_total = (updatedData)=>{
@@ -272,6 +282,12 @@ function Budget() {
     return calculate_col_total(newData)
     // openField(false)
   }
+
+  const onFormSubmit = (values) =>{
+    updateSaveBudget(values).then(res=>{
+      // if(res)
+    })
+  }
     
   const components = {
     body: {
@@ -301,17 +317,34 @@ function Budget() {
   const re_column = columns.map(mapColumns);
     
   return (<>
-    <Row style={{backgroundColor: '#0463AC'}}>
-        <Col span={24}>
-            <Title level={5} style={{color: '#fff', marginBottom: 0, paddingLeft: 5 }}>Budget {fiscal} - {forecastMonth.format('MMMM')} Month End</Title>
-        </Col>
-        <Col span={24}>
-            <Title level={5} style={{color: '#fff', marginBottom: 0, paddingLeft: 5 }}>Profit & Loss Statement - {forecastMonth.format('DD MMMM YYYY')}</Title>
+    <Row style={{backgroundColor: '#0463AC'}} justify="space-between" align="middle">
+      <Col span={18}>
+        <Row>
+          <Col span={24}>
+              <Title level={5} style={{color: '#fff', marginBottom: 0, paddingLeft: 5 }}>Budget {fiscal} - {forecastMonth.format('MMMM')} Month End</Title>
+          </Col>
+          <Col span={24}>
+              <Title level={5} style={{color: '#fff', marginBottom: 0, paddingLeft: 5 }}>Profit & Loss Statement - {forecastMonth.format('DD MMMM YYYY')}</Title>
+          </Col>
+        </Row>
+      </Col>
+      <Col span={1}>
+          <Popconfirm
+            placement="bottom"
+            title="Are you sure want to save new Settings?"
+            onConfirm={() => form.submit()}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button type="primary" size="small">
+              Save
+            </Button>
+          </Popconfirm>
         </Col>
     </Row>
     <Row>
         <Col span={24}>
-        <Form form={form} component={false}>
+        <Form form={form} component={false} onFinish={onFormSubmit}>
           <EditableContext.Provider value={form}>
             <Table
               components={components}
