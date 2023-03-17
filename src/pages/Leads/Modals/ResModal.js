@@ -3,9 +3,9 @@ import { Modal, Tabs, Form  } from "antd";
 import { LoadingOutlined } from "@ant-design/icons"; //Icons
 import FormItems from "../../../components/Core/Forms/FormItems";
 
-import { addLeadSkill, editLeadSkill, addLeadSkillResource, editLeadSkillResource, } from "../../../service/opportunities";
+import { addLeadSkill, editLeadSkill, addLeadSkillResource, editLeadSkillResource, getHolidays, } from "../../../service/opportunities";
 import { getPanelSkills, getOrgPersons, buyCost, } from "../../../service/constant-Apis";
-import { dateRange, dateRangeAfter, dateRangeBefore, formatCurrency, formatDate } from "../../../service/constant";
+import { dateRange, dateRangeAfter, dateRangeBefore, formatCurrency, formatDate, formatFloat, getNumberOfWeekdays } from "../../../service/constant";
 
 const { TabPane } = Tabs;
 
@@ -18,6 +18,7 @@ class ResModal extends Component {
       resourceSubmitted: false,
       check: false,
       loading: false,
+      holidays: [],
 
       SKILLS: [],
       STATES: [],
@@ -159,7 +160,7 @@ class ResModal extends Component {
           // itemStyle:{marginBottom:'10px'},
         },
         {
-          Placeholder: "Total Billable Hours",
+          Placeholder: "Start Date",
           rangeMin: true,
           fieldCol: 12,
           size: "small",
@@ -182,20 +183,20 @@ class ResModal extends Component {
         {
           object: "obj",
           fieldCol: 12,
-          key: "billableHours",
+          key: "startDate",
+          rules: [{ required: true, message: "Start Date is Required" }],
           size: "small",
-          rules: [{ required: true, message: "Billable Hours is Required" }],
-          type: "InputNumber",
+          type: "DatePicker",
           fieldStyle: { width: "100%" },
-        },
-        {
-          Placeholder: "Start Date",
-          rangeMin: true,
-          fieldCol: 12,
-          size: "small",
-          type: "Text",
-          labelAlign: "right",
-          // itemStyle:{marginBottom:'10px'},
+          rangeMin: (current)=>{
+            const { obj } = this.formRef.current.getFieldValue();
+            // return dateRangeAfter(current, obj?.endDate, props.pDates)
+            return dateRange(current, obj?.endDate, 'start', props.pDates)
+          },
+          onChange: ()=>{
+            const { obj } = this.formRef.current.getFieldValue();
+            this.setBilHouRate(obj?.startDate, obj?.endDate);
+          }
         },
         {
           Placeholder: "End Date",
@@ -207,18 +208,13 @@ class ResModal extends Component {
           // itemStyle:{marginBottom:'10px'},
         },
         {
-          object: "obj",
+          Placeholder: "Total Billable Hours",
+          rangeMin: true,
           fieldCol: 12,
-          key: "startDate",
-          rules: [{ required: true, message: "Start Date is Required" }],
           size: "small",
-          type: "DatePicker",
-          fieldStyle: { width: "100%" },
-          rangeMin: (current)=>{
-            const { obj } = this.formRef.current.getFieldValue();
-            // return dateRangeAfter(current, obj?.endDate, props.pDates)
-            return dateRange(current, obj?.endDate, 'start', props.pDates)
-          }
+          type: "Text",
+          labelAlign: "right",
+          // itemStyle:{marginBottom:'10px'},
         },
         {
           object: "obj",
@@ -232,14 +228,26 @@ class ResModal extends Component {
             const { obj } = this.formRef.current.getFieldValue();
             // return dateRangeBefore(current, obj?.startDate, props.pDates)
             return dateRange(current, obj?.startDate, 'end', props.pDates)
+          },
+          onChange: ()=>{
+            const { obj } = this.formRef.current.getFieldValue();
+            this.setBilHouRate(obj?.startDate, obj?.endDate);
           }
+        },
+        {
+          object: "obj",
+          fieldCol: 12,
+          key: "billableHours",
+          size: "small",
+          rules: [{ required: true, message: "Billable Hours is Required" }],
+          type: "InputNumber",
+          fieldStyle: { width: "100%" },
         },
       ],
     };
   }
   componentDidMount = () => {
     const { skillId } = this.props;
-    console.log(skillId);
     if (skillId) {
       this.fetchRes();
     } else {
@@ -323,9 +331,15 @@ class ResModal extends Component {
 
   skillModal = () => {
     const { editRex, panelId, leadId } = this.props;
+    getHolidays(leadId).then(res=>{
+      if(res.success){
+          const { holidays } = res.data
+          this.setState({holidays})
+      }
+    })
     getPanelSkills(panelId)
       .then((res) => {
-        const { SkillFields } = this.state;
+        const { SkillFields, holidays } = this.state;
         SkillFields[3].data = res.success ? res.data : [];
 
         if (editRex) {
@@ -336,6 +350,23 @@ class ResModal extends Component {
           SkillFields[6].data = SkillFields[3].data
             ? SkillFields[3].data[skillIndex].levels
             : [];
+
+            SkillFields[9].suggestion = `${formatFloat(
+              getNumberOfWeekdays(
+                editRex.startDate,
+                editRex.endDate ?? editRex.startDate,
+                holidays
+              ) * this.props.hours
+            )}'`;
+
+            console.log(`${formatFloat(
+              getNumberOfWeekdays(
+                editRex.startDate,
+                editRex.endDate ?? editRex.startDate,
+                holidays
+              ) * this.props.hours
+            )}'`)
+
           const obj = {
             panelSkillId: editRex.panelSkillId,
             panelSkillStandardLevelId: editRex.panelSkillStandardLevelId,
@@ -354,6 +385,19 @@ class ResModal extends Component {
         console.log(e);
       });
   };
+
+  // shahbaz 
+  setBilHouRate = (start,end) =>{
+    const {SkillFields, holidays} = this.state
+    if (start) {
+      // ResourceFields[13].suggestion = getNumberOfWeekdays(start, end, holidays) * this.props.hours;
+      SkillFields[9].suggestion = `${formatFloat(getNumberOfWeekdays(start, end??start, holidays) * this.props.hours)}'`;
+    } else {
+      SkillFields[9].suggestion = "";
+    }
+    this.setState({SkillFields: [...SkillFields] })
+  }
+  // end
 
   onFinish = (vake) => {
     // this will work after I get the Object from the form

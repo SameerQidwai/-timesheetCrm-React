@@ -638,6 +638,7 @@ class Resources extends Component {
             skillId={skillId}
             levelId={levelId}
             leadId={leadId}
+            hours={desc?.hoursPerDay}
             cmRate={desc.cmPercentage ?? 0}
             mileId={mileId}
             pDates={pDates}
