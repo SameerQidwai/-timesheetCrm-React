@@ -202,6 +202,7 @@ function reStructure(data) {
     noOfHours: employmentContracts.noOfHours,
     noOfDays: employmentContracts.noOfDays,
     noOfHoursPer: employmentContracts.noOfHoursPer,
+    bohPercent: employmentContracts.bohPercent,
     remunerationAmount: employmentContracts.remunerationAmount,
     remunerationAmountPer: employmentContracts.remunerationAmountPer,
     comments: employmentContracts.comments,

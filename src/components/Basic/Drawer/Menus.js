@@ -168,7 +168,7 @@ const listData = [
     
 const subListData = [ //FundOutlined
     {
-        text: 'SUBMISSIONS',
+        text: 'Submissions',
         icon: <PlusCircleOutlined />,
         key: 'SUBMISSIONS',
         subMenu: [
@@ -203,7 +203,7 @@ const subListData = [ //FundOutlined
         ],
     },
     {
-    text: 'APPROVALS',
+    text: 'Approvals',
     icon: <CheckCircleOutlined />,
     key: 'APPROVALS',
     subMenu: [
@@ -238,7 +238,7 @@ const subListData = [ //FundOutlined
     ],
     },
     {
-    text: 'REPORTS',
+    text: 'Reports',
     icon: <ContainerOutlined />,
     key: 'REPORTS',
     // permissions: { module: 'ADMIN_OPTIONS', key: 'READ' },
@@ -299,10 +299,32 @@ const subListData = [ //FundOutlined
           key: 'LEAVESUMMARY',
           permissions: { module: 'LEAVE_SUMMARY', key: 'READ' },
         },
+      ],
+    },
+    {
+      text: 'Financial Outlook',
+      icon: <ContainerOutlined />,
+      key: 'ACCOUNTS',
+      // permissions: { module: 'ADMIN_OPTIONS', key: 'READ' },
+      subMenu: [
         {
-          text: 'Forecast Work In Hands',
+          text: 'Forecast',
           icon: <CarryOutOutlined />,
-          link: '/report/work-in-hand',
+          link: '/financial-outlook/forecast',
+          key: 'FORECASTING',
+          permissions: { module: 'FORECASTING', key: 'READ' },
+        },
+        {
+          text: 'Budget',
+          icon: <CarryOutOutlined />,
+          link: '/financial-outlook/budget',
+          key: 'FORECASTING',
+          permissions: { module: 'FORECASTING', key: 'READ' },
+        },
+        {
+          text: 'Cash Flow',
+          icon: <CarryOutOutlined />,
+          link: '/financial-outlook/cash-flow',
           key: 'FORECASTING',
           permissions: { module: 'FORECASTING', key: 'READ' },
         },
@@ -322,27 +344,27 @@ const subListData = [ //FundOutlined
       // permissions: { module: 'ADMIN_OPTIONS', key: 'READ' },
       subMenu: [
           {
-            text: 'Employee Permanent',
+            text: 'Employee Salary Calculator',
             icon: <ContactsOutlined />,
             link: '/calculator-permanent',
             key: 'PERMANENT_CAL',
             permissions: { module: 'TIMESHEETS', key: 'READ' }
           },
           {
-            text: 'Employee Casual',
+            text: 'Casual Rate Calculator',
             icon: <IdcardOutlined />,
             link: '/calculator-casual',
             key: 'CASUAL_CAL',
             permissions: { module: 'TIMESHEETS', key: 'READ' }
           },
           {
-            text: 'Employee Contractor',
+            text: 'Contractor Rate Calculator',
             icon: <TeamOutlined />,
             link: '/calculator-contractor',
             key: 'CONTRACTOR_CAL',
             permissions: { module: 'TIMESHEETS', key: 'READ' }
           },
-        ],
+      ],
     },
 ];
   

@@ -675,6 +675,7 @@ class Resources extends Component {
           <ResModal
             visible={infoModal}
             editRex={editRex}
+            hours={proDesc?.hoursPerDay}
             proId={proId}
             pDates={pDates}
             crud={crud}

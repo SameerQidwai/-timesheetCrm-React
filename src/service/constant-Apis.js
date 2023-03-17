@@ -511,3 +511,23 @@ export const buyCost = (url, id, searchIn) => {
             };
         });
 };
+
+export const getReverseCostCal = (type) => {
+    return axios
+        .get(`${Api}/global-variables/calculator-variable?type=${type}`, {headers:headers()})
+        .then((res) => {
+            const { success, data, message } = res.data;
+            jwtExpired(message)
+            if (success) setToken(res?.headers?.authorization)
+
+            return { success: success, data: data };
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                success: false,
+                message: err.message,
+            };
+        });
+};
+

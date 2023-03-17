@@ -758,6 +758,27 @@ class InfoModal extends Component {
           itemStyle: { marginBottom: 10 },
         },
         {
+          Placeholder: "Back Office Rate of Effort",
+          rangeMin: true,
+          fieldCol: 24,
+          size: "small",
+          type: "Text",
+          labelAlign: "right",
+          // itemStyle:{marginBottom:'10px'},
+        },
+        {
+          object: "billing",
+          fieldCol: 6,
+          key: "bohPercent",
+          size: "small",
+          type: "InputNumber",
+          rules:[{ required: true, message: 'BOH Rate is Required' }],
+          shape: "%",
+          rangeMin: 0,
+          rangeMax: 100,
+          itemStyle: { marginBottom: 10 },
+        },
+        {
           Placeholder: 'Comments',
           fieldCol: 24,
           size: 'small',
@@ -1251,7 +1272,7 @@ class InfoModal extends Component {
           scrollToFirstError={true}
           size="small"
           layout="inline"
-          initialValues={{ billing: { startDate: null } }}
+          initialValues={{ billing: { startDate: null, bohPercent:0 } }}
         >
           {!editEmp && (
             <Col span={8} style={{ marginBottom: 10 }}>

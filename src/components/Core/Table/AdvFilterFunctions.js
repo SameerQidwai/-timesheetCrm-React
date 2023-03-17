@@ -149,6 +149,17 @@ export const EmployeeAdvaceFilter = (value, column, state, setState, advSearch) 
             // `${salary.toString() ?? ''}`
             //   .toLowerCase()
             //   .includes(search['salary']['value'].toString().toLowerCase()) &&
+            // search['minSalary']['value'] && status
+            // ? +search['minSalary']['value']
+            // : 0 <= search['minSalary']['value'] && status
+            // ? +el.recruitmentSalaryEstimate
+            // : 0 &&
+
+            // search['maxSalary']['value'] && status
+            // ? +search['maxSalary']['value']
+            // : 99999999999 >= search['maxSalary']['value'] && status
+            // ? +el.recruitmentSalaryEstimate
+            // : 99999999999 
               (parseFloat(salary?salary:0) >= parseFloat(search['minSalary']['value']?search['minSalary']['value']: 0) &&
               parseFloat(salary?salary:999999999999) <= parseFloat(search['maxSalary']['value']?search['maxSalary']['value']:999999999999)) &&
 

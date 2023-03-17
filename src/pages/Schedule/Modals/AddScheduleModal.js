@@ -89,6 +89,22 @@ class AddScheduleModal extends Component {
           },
         },
         {
+          Placeholder: 'Payment Date',
+          fieldCol: 8,
+          size: 'small',
+          type: 'Text',
+          labelAlign: 'right',
+          itemStyle: { marginBottom: '10px' },
+        },
+        {
+          object: 'dates',
+          fieldCol: 16,
+          key: 'paymentDate',
+          size: 'small',
+          mode: 'month',
+          type: 'DatePicker',
+        },
+        {
           Placeholder: 'Amount',
           rangeMin: true,
           fieldCol: 8,
@@ -260,7 +276,7 @@ class AddScheduleModal extends Component {
       .then((res) => {
         //Destructure res[1] to avoid writing res[1] repeateadly
         if (res?.success) {
-          const {id, notes, amount, startDate, endDate, segments = []} = res.data
+          const {id, notes, amount, startDate, endDate, segments = [], paymentDate} = res.data
           // run if modal is opened for editing
           const formValues = {
             id: id,
@@ -268,6 +284,7 @@ class AddScheduleModal extends Component {
             amount: amount,
             startDate: formatDate(startDate),
             endDate: formatDate(endDate),
+            paymentDate: paymentDate? formatDate(paymentDate): null
           };
           this.formRef.current.setFieldsValue({ dates: formValues });
           this.getDateArray(
@@ -293,6 +310,7 @@ class AddScheduleModal extends Component {
       startDate: formatDate(dates.startDate, true),
          //if end date is not selected make it as last date of startday month or project endDate
       endDate: formatDate(dates.endDate, true),
+      paymentDate: formatDate(dates.paymentDate, true),
       //if sameMonth got included as project save project date otherwise endDate
       amount: dates.amount,
       notes: dates.notes ?? '',
