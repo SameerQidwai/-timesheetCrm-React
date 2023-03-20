@@ -181,6 +181,12 @@ export const cost_of_sale = [
     className: 'data-title-row',
     editable: true,
   },
+  {
+    name: 'Adjustment',
+    key: 'Adjustment cos',
+    className: 'data-title-row',
+    editable: true,
+  },
   {},
   {},
   {

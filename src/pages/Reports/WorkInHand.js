@@ -141,8 +141,8 @@ function WorkInHand() {
       let newColumns = [...columns]
       let monthColumns = [
         monthCol({
-          year: fiscal,
-          era: 'Actual',
+          year: 'YTD',
+          era: '',
           totalKey: 'actual-total'
         })
       ]
@@ -154,7 +154,7 @@ function WorkInHand() {
           };
           monthColumns.push(monthCol(el, updateField))
       }                                                         // forecast-total
-      monthColumns.push(monthCol({year: fiscal, era: 'Forcaste', totalKey: 'total'}))
+      monthColumns.push(monthCol({year: fiscal, era: 'Forcast', totalKey: 'total'}))
       newColumns[1]['children'][0]['children'] = monthColumns
       setColumns(newColumns)
   }
@@ -212,8 +212,8 @@ function WorkInHand() {
 
     (columName).forEach(({children: [{dataIndex}]})=>{
       newData[8][dataIndex]=0; /**Revenue */ 
-      newData[30][dataIndex]=0; /**COST */ 
-      newData[55][dataIndex]=0; /**DOH */
+      newData[31][dataIndex]=0; /**COST */ 
+      newData[56][dataIndex]=0; /**DOH */
       // newData[62][dataIndex]=0; /**TAX */
       // newData[66][dataIndex]=0; /**Profit */
   
@@ -223,10 +223,10 @@ function WorkInHand() {
       if (moment(dataIndex, 'MMM YY', true).isValid()){
           if (i<8){
               newData[8][dataIndex] += getValueWithCondition(newData, i, dataIndex)
-          }else if (i>8 && i <30){
-              newData[30][dataIndex] += getValueWithCondition(newData, i, dataIndex)
-          }else if (i>34 && i <55){
-              newData[55][dataIndex] += getValueWithCondition(newData, i, dataIndex)
+          }else if (i>8 && i <31){
+              newData[31][dataIndex] += getValueWithCondition(newData, i, dataIndex)
+          }else if (i>35 && i <56){
+              newData[56][dataIndex] += getValueWithCondition(newData, i, dataIndex)
           }
           // }else if (i>56 && i <62){
           //     newData[62][dataIndex] = newData[i]['operation'] ?
@@ -241,7 +241,7 @@ function WorkInHand() {
     }) 
 
      // , 64, 66   /**   CM          CM %              EBIT  */
-     let calculate_indexes = [32, 34, 57, 63, 67];
+     let calculate_indexes = [33, 35, 58, 64, 68];
 
      (columName).forEach(({children: [{dataIndex}]})=>{
       (calculate_indexes).forEach((index)=>{
@@ -321,7 +321,7 @@ function WorkInHand() {
       ...col,
       onCell: (record, index) => ({
         record,
-        editable: col.dataIndex !== 'name' && !col.dataIndex.startsWith('FY') && record.editable,
+        editable: col.dataIndex !== 'name' && !col.totalCol && record.editable,
         dataIndex: col.dataIndex,
         title: col.title,
         indexing: index,
@@ -338,8 +338,8 @@ function WorkInHand() {
     
   return (
     <>
-      <Row style={{ backgroundColor: '#0463AC' }} justify="space-between" align="middle" >
-        <Col span={18}>
+      <Row style={{ backgroundColor: '#0463AC', paddingRight: 15 }} justify="space-between" align="middle" >
+        <Col span={20}>
           <Row>
             <Col span={24}>
               <Title
@@ -359,7 +359,7 @@ function WorkInHand() {
             </Col>
           </Row>
         </Col>
-        <Col span={1}>
+        <Col>
           <Popconfirm
             placement="bottom"
             title="Are you sure want to save new Settings?"
@@ -412,17 +412,17 @@ const monthCol = ({year, era, totalKey})=>({
       title: era,
       dataIndex: year,
       key: year,
+      totalCol: !!totalKey,
       width: 100,
       align: 'center',
       onCell: (record)=> {
-          return {className: year.startsWith('FY') ? 'fin-total': ''} 
+          return {className: totalKey? 'fin-total': ''} 
       },
       render: (text,record, index) =>{
           if(record.render){
               return record.render(year, record)
           }
-          if(year.startsWith('FY')){
-            
+          if(totalKey){
               return record[totalKey] ? formatNegativeValue(record[totalKey]) : '-'
           }
               //checking if number is integer                     //if total column put - of undefned or 0

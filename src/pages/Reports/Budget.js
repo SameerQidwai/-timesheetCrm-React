@@ -317,30 +317,30 @@ function Budget() {
   const re_column = columns.map(mapColumns);
     
   return (<>
-    <Row style={{backgroundColor: '#0463AC'}} justify="space-between" align="middle">
-      <Col span={18}>
+    <Row style={{backgroundColor: '#0463AC', paddingRight: 15}} justify="space-between" align="middle">
+      <Col span={28}>
         <Row>
           <Col span={24}>
-              <Title level={5} style={{color: '#fff', marginBottom: 0, paddingLeft: 5 }}>Budget {fiscal} - {forecastMonth.format('MMMM')} Month End</Title>
+              <Title level={5} style={{color: '#fff', marginBottom: 0, paddingLeft: 5 }}>Budget {fiscal}</Title>
           </Col>
           <Col span={24}>
-              <Title level={5} style={{color: '#fff', marginBottom: 0, paddingLeft: 5 }}>Profit & Loss Statement - {forecastMonth.format('DD MMMM YYYY')}</Title>
+              <Title level={5} style={{color: '#fff', marginBottom: 0, paddingLeft: 5 }}>Profit & Loss Statement </Title>
           </Col>
         </Row>
       </Col>
-      <Col span={1}>
-          <Popconfirm
-            placement="bottom"
-            title="Are you sure want to save new Settings?"
-            onConfirm={() => form.submit()}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button type="primary" size="small">
-              Save
-            </Button>
-          </Popconfirm>
-        </Col>
+      <Col>
+        <Popconfirm
+          placement="bottom"
+          title="Are you sure want to save new Settings?"
+          onConfirm={() => form.submit()}
+          okText="Yes"
+          cancelText="No"
+        >
+          <Button type="primary" size="small">
+            Save
+          </Button>
+        </Popconfirm>
+      </Col>
     </Row>
     <Row>
         <Col span={24}>

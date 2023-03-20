@@ -75,7 +75,10 @@ class ProfitLoss extends Component {
         let forecastStatement = {}
         let forecastTotal = {sellTotal: 0, buyTotal: 0}
         let tempEndDate = parseDate(new Date()).add(100, 'years')
-        let forecastStartDate = startDate.isBefore(fiscalYear['start'], 'day') ? fiscalYear['start'] : startDate
+        // let forecastStartDate = startDate.isBefore(fiscalYear['start'], 'day') ? fiscalYear['start'] : startDate
+        let currentDate = moment().set({ date: 1})
+        let forecastStartDate = currentDate.isBetween(fiscalYear['start'], fiscalYear['end'], 'day', '[]') ? currentDate : fiscalYear['start']
+        forecastStartDate = startDate.isBefore(forecastStartDate, 'day') ? forecastStartDate : startDate
         let forecastEndDate = endDate.isAfter(fiscalYear['end'], 'day') ? fiscalYear['end'] : endDate
         //Testing
 
