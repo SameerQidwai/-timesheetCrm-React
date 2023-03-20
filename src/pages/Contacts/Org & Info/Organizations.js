@@ -20,7 +20,7 @@ import { Link } from 'react-router-dom';
 import InfoModal from './InfoModal';
 import { getList, delOrg } from '../../../service/Organizations';
 
-import { localStore } from '../../../service/constant';
+import { BUSINESS_TYPE, localStore } from '../../../service/constant';
 import {
   Filtertags,
   TableModalFilter,
@@ -85,6 +85,14 @@ class Organizations extends Component {
           );
         },
         ...tableSorter('parentOrganization.name', 'string'),
+      },
+      {
+        title: 'Business Type',
+        dataIndex: 'businessType',
+        key: 'businessType',
+        render:(text)=>BUSINESS_TYPE[text],
+        width: 100,
+        ...tableSorter('businessType', 'string'),
       },
       {
         title: '...',
