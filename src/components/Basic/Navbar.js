@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Menu, Dropdown, Row, Col, Space, message, Tooltip } from "antd";
-import { CaretDownOutlined, DownOutlined, SettingOutlined, LogoutOutlined, ProfileOutlined, QuestionOutlined } from "@ant-design/icons"; //Icons
+import { CaretDownOutlined, DownOutlined, SettingOutlined, LogoutOutlined, ProfileOutlined, QuestionOutlined, QuestionCircleOutlined } from "@ant-design/icons"; //Icons
 import { Link, Redirect, withRouter } from "react-router-dom";
 
 import "../Styles/Navbar.css";
@@ -148,7 +148,7 @@ class Navbar extends Component {
                                     // className="nav-drop"
                                 >
                                     <Tooltip title="Help Centre – Timewize">
-                                        <QuestionOutlined />
+                                        <QuestionCircleOutlined />
                                     </Tooltip>
                                 </Link>
                                 <Link
@@ -169,7 +169,7 @@ class Navbar extends Component {
                                     target='_blank'
                                     // className="nav-drop"
                                 >
-                                    <QuestionOutlined />
+                                    <QuestionCircleOutlined />
                                 </Link>
                                 <Dropdown overlay={options} placement="bottomCenter" >
                                     <DownOutlined style={{color: '#1890ff', cursor:'pointer'}} />
