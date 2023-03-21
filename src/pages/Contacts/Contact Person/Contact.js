@@ -431,7 +431,7 @@ class Contact extends Component {
         },
         {
           Placeholder: 'Recruitment Prospects',
-          fieldCol: 12,
+          fieldCol: 24,
           size: 'small',
           type: 'Text',
         },
@@ -452,7 +452,7 @@ class Contact extends Component {
         },
         {
           Placeholder: 'Availability',
-          fieldCol: 12,
+          fieldCol: 24,
           size: 'small',
           type: 'Text',
         },
@@ -473,7 +473,7 @@ class Contact extends Component {
         },
         {
           Placeholder: 'Contract Type',
-          fieldCol: 12,
+          fieldCol: 24,
           size: 'small',
           type: 'Text',
         },
@@ -806,6 +806,7 @@ class Contact extends Component {
             filterFields={filterFields}
             filterFunction={this.advancefilter}
             effectFunction={this.filterModalUseEffect}
+            groupFrom={{'General':[0,20], 'Recruitment': [20,26]}}
             effectRender={true}
             onClose={() => this.setState({ openSearch: false })}
           />

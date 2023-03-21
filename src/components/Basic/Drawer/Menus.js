@@ -2,7 +2,12 @@ import React, { Component } from 'react';
 import { Menu } from 'antd';
 import { Link, withRouter } from 'react-router-dom';
 
-import { PlusCircleOutlined, ClockCircleOutlined, DollarOutlined,CheckCircleOutlined , HomeOutlined, CalendarOutlined , CarryOutOutlined , SolutionOutlined, RestOutlined, CheckSquareOutlined, SnippetsOutlined, DiffOutlined, ApartmentOutlined, ExceptionOutlined, ContainerOutlined, FileDoneOutlined, FileAddOutlined, ContactsOutlined, IdcardOutlined, TeamOutlined, FieldTimeOutlined, FileSearchOutlined  } from "@ant-design/icons"; //Icons
+import { PlusCircleOutlined, ClockCircleOutlined, DollarOutlined,CheckCircleOutlined ,
+HomeOutlined, CalendarOutlined , CarryOutOutlined , SolutionOutlined,CheckSquareOutlined, 
+SnippetsOutlined, DiffOutlined, ApartmentOutlined, ExceptionOutlined, ContainerOutlined,
+FileDoneOutlined, FileAddOutlined, ContactsOutlined, IdcardOutlined, TeamOutlined, 
+FieldTimeOutlined, FileSearchOutlined, PieChartOutlined, RetweetOutlined, BarChartOutlined,
+FundProjectionScreenOutlined, CalculatorOutlined  } from "@ant-design/icons"; //Icons
 
 import '../../Styles/Menus.css';
 import { localStore } from '../../../service/constant';
@@ -303,27 +308,27 @@ const subListData = [ //FundOutlined
     },
     {
       text: 'Financial Outlook',
-      icon: <ContainerOutlined />,
+      icon: <FundProjectionScreenOutlined />,
       key: 'ACCOUNTS',
       // permissions: { module: 'ADMIN_OPTIONS', key: 'READ' },
       subMenu: [
         {
           text: 'Forecast',
-          icon: <CarryOutOutlined />,
+          icon: <BarChartOutlined />,
           link: '/financial-outlook/forecast',
           key: 'FORECASTING',
           permissions: { module: 'FORECASTING', key: 'READ' },
         },
         {
           text: 'Budget',
-          icon: <CarryOutOutlined />,
+          icon: <PieChartOutlined />,
           link: '/financial-outlook/budget',
           key: 'FORECASTING',
           permissions: { module: 'FORECASTING', key: 'READ' },
         },
         {
           text: 'Cash Flow',
-          icon: <CarryOutOutlined />,
+          icon: <RetweetOutlined />,
           link: '/financial-outlook/cash-flow',
           key: 'FORECASTING',
           permissions: { module: 'FORECASTING', key: 'READ' },
@@ -338,8 +343,8 @@ const subListData = [ //FundOutlined
       permissions: { module: 'TIMESHEETS', key: 'READ' },
     },
     {
-      text: 'Cost Calculators',
-      icon: <ContainerOutlined />,
+      text: 'Calculators',
+      icon: <CalculatorOutlined />,
       key: 'COSTCAL',
       // permissions: { module: 'ADMIN_OPTIONS', key: 'READ' },
       subMenu: [
@@ -438,7 +443,7 @@ class Menus extends Component {
         <SubMenu key={item.key} icon={item.icon} title={item.text}>
           {item.subMenu.map((sub, j) => (
             <Menu.Item key={sub.link} icon={sub.icon}>
-              <Link to={sub.link} className="nav-link">
+              <Link to={sub.link} className="nav-link sub-menu-font">
                 {sub.text}
               </Link>
             </Menu.Item>

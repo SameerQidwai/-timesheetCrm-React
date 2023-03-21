@@ -55,7 +55,7 @@ class ReportPermissions extends Component {
                         <Form.Item noStyle name={[record.key, 'READ']}>
                           {permissionOptions[record.key]['READ'] && (
                             <Checkbox.Group
-                                disabled={record.key === 'FORECASTING'} // to be removed when we want to show forecasting
+                                // disabled={record.key === 'FORECASTING'} // to be removed when we want to show forecasting
                                 options={permissionOptions[record.key]['READ']}
                             />
                           )}
