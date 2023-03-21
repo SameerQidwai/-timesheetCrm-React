@@ -84,6 +84,7 @@ function WorkInHand() {
   const fiscal = moment(end).format('[FY]YY')
   const forecastMonth = moment().subtract(1, 'month').endOf("month")
   const [dataSource, setDataSource] = useState([])
+  const [incomeTaxRates, setIncomeTaxRates] = useState({})
   const [loading, setLoading] = useState(false)
   const [columns, setColumns] = useState([
       {
@@ -122,6 +123,7 @@ function WorkInHand() {
           let saveForecast = res[0].success ? res[0].data : {}
           let forecast = res[1].success ? res[1].data : {}
           structureData(forecast, saveForecast)
+          setIncomeTaxRates(forecast.INCOME_TAX_RATES?? {})
           form.setFieldsValue(saveForecast)
         }
       );
@@ -168,6 +170,7 @@ function WorkInHand() {
     CASUAL_SUPER,
     DOH_SALARIES,
     DOH_SUPER,
+    INCOME_TAX_RATES,
   }, saveForecast) => {
 
     income_revenue[1] = { ...income_revenue[1], ...TIME_BASE };
@@ -187,6 +190,8 @@ function WorkInHand() {
     direct_overhead_expense[3] = { ...direct_overhead_expense[3], ...DOH_SUPER };
     // direct_overhead_expense[18] = { ...direct_overhead_expense[18], ...TOTAL_DOH };
     
+    // net_profit[2] = {...net_profit[2], ...INCOME_TAX_RATES}
+    
     let dataWithTotal = new Array(
       ...income_revenue,
       ...cost_of_sale,
@@ -202,11 +207,10 @@ function WorkInHand() {
       }
       return el
     })
-
-    calculate_col_total(dataWithTotal);
+    calculate_col_total(dataWithTotal, INCOME_TAX_RATES);
   };
 
-  const calculate_col_total = (updatedData)=>{
+  const calculate_col_total = (updatedData, INCOME_TAX_RATES)=>{
     let newData = [...updatedData]
     let columName = columns?.[1]?.['children']?.[0]?.['children']||[];
 
@@ -239,15 +243,20 @@ function WorkInHand() {
       }
       }
     }) 
-
-     // , 64, 66   /**   CM          CM %              EBIT  */
-     let calculate_indexes = [33, 35, 58, 64, 68];
-
+    /**
+     * 33 = CM
+     * 35 = CM%
+     * 58 =EBIT
+     * 64 = "PROFIT BEFORE TAX"
+     * 66 = "Income Tax Expense"
+     * 68 = "NET PROFIT"
+     */
+     let calculate_indexes = [33, 35, 58, 64, 66, 68];
      (columName).forEach(({children: [{dataIndex}]})=>{
       (calculate_indexes).forEach((index)=>{
         newData[index] = {
           ...newData[index],
-          [dataIndex]: newData?.[index]?.renderCalculation?.(newData, dataIndex)
+          [dataIndex]: newData?.[index]?.renderCalculation?.(newData, dataIndex, INCOME_TAX_RATES[dataIndex])
         }
       })
      })
@@ -289,7 +298,7 @@ function WorkInHand() {
         total,
       };
     });
-    
+    console.log(newData)
     setDataSource(newData)
     return true
     // setLoading(false)
@@ -299,7 +308,7 @@ function WorkInHand() {
   const updateField = (index, dataIndex, value, openField)=>{
     let newData = [...dataSource]
     newData[index][dataIndex] = value
-    return calculate_col_total(newData)
+    return calculate_col_total(newData, incomeTaxRates)
     // openField(false)
   }
 
