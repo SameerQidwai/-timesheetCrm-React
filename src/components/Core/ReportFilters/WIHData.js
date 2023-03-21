@@ -413,7 +413,6 @@ export const net_profit = [
     className: 'data-title-row',
     renderCalculation: (record, key, incomeTax) =>{
       key = key.startsWith('FY')? 'total' : key
-      console.log(getValueWithCondition(record, 64, key), incomeTax)
       return getValueWithCondition(record, 64, key) * incomeTax
       
     },

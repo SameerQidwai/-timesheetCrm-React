@@ -84,7 +84,7 @@ function WorkInHand() {
   const fiscal = moment(end).format('[FY]YY')
   const forecastMonth = moment().subtract(1, 'month').endOf("month")
   const [dataSource, setDataSource] = useState([])
-  const [incomeTaxRates, setIncomeTaxRates] = useState({})
+  const [incomeTaxRates, setIncomeTaxRates] = useState(undefined)
   const [loading, setLoading] = useState(false)
   const [columns, setColumns] = useState([
       {
@@ -210,7 +210,7 @@ function WorkInHand() {
     calculate_col_total(dataWithTotal, INCOME_TAX_RATES);
   };
 
-  const calculate_col_total = (updatedData, INCOME_TAX_RATES)=>{
+  const calculate_col_total = (updatedData, INCOME_TAX_RATES={})=>{
     let newData = [...updatedData]
     let columName = columns?.[1]?.['children']?.[0]?.['children']||[];
 
@@ -298,7 +298,6 @@ function WorkInHand() {
         total,
       };
     });
-    console.log(newData)
     setDataSource(newData)
     return true
     // setLoading(false)
@@ -389,6 +388,7 @@ function WorkInHand() {
               <Table
                 components={components}
                 bordered
+                loading={!incomeTaxRates}
                 // loading={true}
                 size="small"
                 pagination={false}
