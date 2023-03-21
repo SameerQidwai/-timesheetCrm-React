@@ -1,11 +1,13 @@
 import React, { Component } from "react";
 import { Modal, Tabs, Form } from "antd";
 import { LoadingOutlined } from "@ant-design/icons"; //Icons
+// import { formatDate } from "../../../service/constant";
 
 import { addLeadSkill, getLeadSkill, editLeadSkill, } from "../../../service/projects";
 import { getPanelSkills, getOrgPersons, buyCost, } from "../../../service/constant-Apis";
 import FormItems from "../../../components/Core/Forms/FormItems";
 import { dateRangeAfter, dateRangeBefore, formatCurrency, formatDate } from "../../../service/constant";
+import moment from "moment";
 
 const { TabPane } = Tabs;
 
@@ -78,11 +80,11 @@ class ResModal extends Component {
           // itemStyle:{marginBottom:'10px'},
         },
         {
-          Placeholder: "Total Billable Hours",
+          Placeholder: "Resource",
           fieldCol: 12,
+          rangeMin: true,
           size: "small",
           type: "Text",
-          rangeMin: true,
           labelAlign: "right",
           // itemStyle:{marginBottom:'10px'},
         },
@@ -102,7 +104,7 @@ class ResModal extends Component {
             // getOrgPersons(customUrl).then((res) => {
             //   ResourceFields[10].data = res.success ? res.data : [];
             let { success, data } = await getOrgPersons(customUrl);
-            ResourceFields[10].data = success ? data : [];
+            ResourceFields[7].data = success ? data : [];
 
             ResourceFields[19].hint = this.ceilHint( option.stceil, option.ltceil );
           } else {
@@ -118,20 +120,13 @@ class ResModal extends Component {
         {
           object: "obj",
           fieldCol: 12,
-          key: "billableHours",
+          key: "contactPersonId",
+          disabled: props.editRex,
           size: "small",
-          rules:[{ required: true, message: 'Work Hour is Required' }],
-          type: "InputNumber",
-          fieldStyle: { width: "100%" },
-        },
-        {
-          Placeholder: "Resource",
-          fieldCol: 12,
-          rangeMin: true,
-          size: "small",
-          type: "Text",
-          labelAlign: "right",
-          // itemStyle:{marginBottom:'10px'},
+          rules:[{ required: true, message: 'Resource is Required' }],
+          data: [],
+          type: "Select",
+          onChange: (value, option)=> { this.checkRates(value, option) }
         },
         {
           Placeholder: "Start Date",
@@ -143,15 +138,13 @@ class ResModal extends Component {
           // itemStyle:{marginBottom:'10px'},
         },
         {
-          object: "obj",
+          Placeholder: "End Date",
           fieldCol: 12,
-          key: "contactPersonId",
-          disabled: props.editRex,
           size: "small",
-          rules:[{ required: true, message: 'Resource is Required' }],
-          data: [],
-          type: "Select",
-          onChange: (value, option)=> { this.checkRates(value, option) }
+          rangeMin: true,
+          type: "Text",
+          labelAlign: "right",
+          // itemStyle:{marginBottom:'10px'},
         },
         {
           object: "obj",
@@ -164,25 +157,11 @@ class ResModal extends Component {
           rangeMin: (current)=>{
             const { obj } = this.formRef.current.getFieldValue();
             return dateRangeAfter(current, obj?.endDate, props.pDates)
+          },
+          onChange: ()=>{
+            const { obj } = this.formRef.current.getFieldValue();
+            this.setBilHouRate(obj?.startDate, obj?.endDate);
           }
-        },
-        {
-          Placeholder: "End Date",
-          fieldCol: 12,
-          size: "small",
-          rangeMin: true,
-          type: "Text",
-          labelAlign: "right",
-          // itemStyle:{marginBottom:'10px'},
-        },
-        {
-          Placeholder: "Effort Rate",
-          fieldCol: 12,
-          size: "small",
-          rangeMin: true,
-          type: "Text",
-          labelAlign: "right",
-          // itemStyle:{marginBottom:'10px'},
         },
         {
           object: "obj",
@@ -195,7 +174,28 @@ class ResModal extends Component {
           rangeMax: (current)=>{
             const { obj } = this.formRef.current.getFieldValue();
             return dateRangeBefore(current, obj?.startDate, props.pDates)
+          },
+          onChange: ()=>{
+            const { obj } = this.formRef.current.getFieldValue();
+            this.setBilHouRate(obj?.startDate, obj?.endDate);
           }
+        },
+        {
+          Placeholder: "Effort Rate",
+          fieldCol: 12,
+          size: "small",
+          rangeMin: true,
+          type: "Text",
+          labelAlign: "right",
+          // itemStyle:{marginBottom:'10px'},
+        },
+        {
+          Placeholder: "Total Billable Hours",
+          fieldCol: 12,
+          size: "small",
+          type: "Text",
+          rangeMin: true,
+          // itemStyle:{marginBottom:'10px'},
         },
         {
           object: "obj",
@@ -208,6 +208,15 @@ class ResModal extends Component {
           fieldStyle: { width: "100%" },
           rangeMin: 0,
           rangeMax: 100,
+        },
+        {
+          object: "obj",
+          fieldCol: 12,
+          key: "billableHours",
+          size: "small",
+          rules:[{ required: true, message: 'Work Hour is Required' }],
+          type: "InputNumber",
+          fieldStyle: { width: "100%" },
         },
         {
           Placeholder: "Buy Rate (Hourly)",
@@ -255,6 +264,19 @@ class ResModal extends Component {
   componentDidMount = () => {
     this.openModal();
   };
+
+  // shahbaz 
+  setBilHouRate = (start,end) =>{
+    const {ResourceFields} = this.state
+    if (start) {
+      let totalDays = moment(end?? start).diff(moment(start), 'days')+1;
+      ResourceFields[13].suggestion = totalDays * this.props.hours;
+    } else {
+      ResourceFields[13].suggestion = "";
+    }
+    this.setState({ResourceFields: [...ResourceFields] })
+  }
+  // end 
 
   checkRates = (value, option)=>{
     if (value){
@@ -348,7 +370,8 @@ class ResModal extends Component {
           ResourceFields[6].data = skills[skillIndex]
             ? skills[skillIndex].levels
             : [];
-          ResourceFields[10].data = resP.success ? resP.data : [];
+          ResourceFields[7].data = resP.success ? resP.data : [];
+          ResourceFields[13].suggestion = (moment(resR.data?.endDate?? resR.data?.startDate).diff(moment(resR.data?.startDate), 'days')+1) * this.props.hours;
           ResourceFields[19].hint = this.ceilHint(resR.data?.stceil, resR.data?.ltceil)
           this.formRef.current.setFieldsValue({ obj: resR.data, });
           this.setState({ ResourceFields, allocationId: resR.data.allocationId, },()=>{
