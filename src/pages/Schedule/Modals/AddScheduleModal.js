@@ -5,7 +5,7 @@ import moment from 'moment';
 import { dateRange, formatCurrency, formatDate, formatFloat, toTruncate } from '../../../service/constant';
 
 import { addSchedule, editSchedule, getSchedule } from '../../../service/projects';
-import { getHolidays } from '../../../service/constant-Apis';
+import { getCalendarHolidays } from '../../../service/constant-Apis';
 
 import 'moment-weekday-calc';
 import '../styles.css';
@@ -155,7 +155,7 @@ class AddScheduleModal extends Component {
     if (editMile) {
       this.getSubmittedData();
     }
-    getHolidays(1).then(res=>{
+    getCalendarHolidays(1).then(res=>{
       if(res.success){
         this.setState({holidays: res.data})
       }

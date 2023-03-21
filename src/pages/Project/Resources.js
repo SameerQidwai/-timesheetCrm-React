@@ -566,7 +566,7 @@ class Resources extends Component {
           bordered
           layout="horizontal"
         >
-          <Item label="Project Name">
+          <Item label="Project Name" contentStyle={{ width: '25%' }}>
             <Link
               to={{
                 pathname: `/projects/${proDesc.id}/info`,
@@ -579,7 +579,7 @@ class Resources extends Component {
           <Item label="Estimated Value">
             {formatCurrency(proDesc.value ?? 0)}
           </Item>
-          <Item label="Organisation">
+          <Item label="Organisation" contentStyle={{ width: '25%' }}>
             {proDesc.organization ? (
               <Link
                 to={{

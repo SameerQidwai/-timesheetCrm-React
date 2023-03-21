@@ -45,7 +45,7 @@ class ProfitLoss extends Component {
                 }
             })
         }else{
-            getHolidays().then(res=>{
+            getHolidays(id).then(res=>{
                 if(res.success){
                     const { holidays } = res.data
                     this.calculateLeadData(holidays)
