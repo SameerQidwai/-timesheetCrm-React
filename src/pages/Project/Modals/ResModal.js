@@ -6,8 +6,9 @@ import { LoadingOutlined } from "@ant-design/icons"; //Icons
 import { addLeadSkill, getLeadSkill, editLeadSkill, } from "../../../service/projects";
 import { getPanelSkills, getOrgPersons, buyCost, } from "../../../service/constant-Apis";
 import FormItems from "../../../components/Core/Forms/FormItems";
-import { dateRangeAfter, dateRangeBefore, formatCurrency, formatDate } from "../../../service/constant";
+import { dateRangeAfter, dateRangeBefore, formatCurrency, formatDate, formatFloat, getNumberOfWeekdays } from "../../../service/constant";
 import moment from "moment";
+import { getHolidays } from "../../../service/opportunities";
 
 const { TabPane } = Tabs;
 
@@ -24,6 +25,7 @@ class ResModal extends Component {
       STATES: [],
       ORGS: [],
       data: {},
+      holidays: [],
 
       ResourceFields: [
         {
@@ -159,8 +161,10 @@ class ResModal extends Component {
             return dateRangeAfter(current, obj?.endDate, props.pDates)
           },
           onChange: ()=>{
-            const { obj } = this.formRef.current.getFieldValue();
-            this.setBilHouRate(obj?.startDate, obj?.endDate);
+            const {
+              obj: { startDate, endDate, effortRate },
+            } = this.formRef.current.getFieldValue();
+            this.setBilHouRate(startDate, endDate, effortRate);;
           }
         },
         {
@@ -176,8 +180,10 @@ class ResModal extends Component {
             return dateRangeBefore(current, obj?.startDate, props.pDates)
           },
           onChange: ()=>{
-            const { obj } = this.formRef.current.getFieldValue();
-            this.setBilHouRate(obj?.startDate, obj?.endDate);
+            const {
+              obj: { startDate, endDate, effortRate },
+            } = this.formRef.current.getFieldValue();
+            this.setBilHouRate(startDate, endDate, effortRate);
           }
         },
         {
@@ -208,6 +214,12 @@ class ResModal extends Component {
           fieldStyle: { width: "100%" },
           rangeMin: 0,
           rangeMax: 100,
+          onChange: ()=>{
+            const {
+              obj: { startDate, endDate, effortRate },
+            } = this.formRef.current.getFieldValue();
+            this.setBilHouRate(startDate, endDate, effortRate);
+          }
         },
         {
           object: "obj",
@@ -266,11 +278,13 @@ class ResModal extends Component {
   };
 
   // shahbaz 
-  setBilHouRate = (start,end) =>{
-    const {ResourceFields} = this.state
+  setBilHouRate = (start,end, effort) =>{
+    const {ResourceFields, holidays} = this.state
+    const {hours} = this.props
     if (start) {
-      let totalDays = moment(end?? start).diff(moment(start), 'days')+1;
-      ResourceFields[13].suggestion = totalDays * this.props.hours;
+      // ResourceFields[13].suggestion = getNumberOfWeekdays(start, end, holidays) * this.props.hours;
+      effort = (effort??100)/100
+      ResourceFields[13].suggestion = `${formatFloat(getNumberOfWeekdays(start, end??start, holidays) * hours * effort)}'`;
     } else {
       ResourceFields[13].suggestion = "";
     }
@@ -311,7 +325,13 @@ class ResModal extends Component {
   }
 
   openModal = () => {
-    const { editRex, panelId } = this.props;
+    const { editRex, panelId, proId } = this.props;
+    getHolidays(proId).then(res=>{
+      if(res.success){
+          const { holidays } = res.data
+          this.setState({holidays})
+      }
+    })
     getPanelSkills(panelId).then((res) => {
       const { ResourceFields } = this.state;
       ResourceFields[3].data = res.success ? res.data : [];
@@ -357,26 +377,40 @@ class ResModal extends Component {
   };
 
   getRecord = (skills) => {
-    const { crud, editRex } = this.props;
+    const { crud, editRex, hours } = this.props;
     getLeadSkill(crud, editRex).then((resR) => {
       if (resR.success) {
+        let {
+          panelSkillId, panelSkillStandardLevelId, endDate,
+          startDate, stceil, ltceil, allocationId,
+          contactPersonId, role, effortRate,
+        } = resR.data;
+
         const skillIndex = skills.findIndex(
-          (skill) => skill.value === resR.data.panelSkillId
+          (skill) => skill.value === panelSkillId
         );
-          const customUrl = `employees/get/by-skills?psslId=${resR?.data?.panelSkillStandardLevelId}&workType=P`
+          const customUrl = `employees/get/by-skills?psslId=${panelSkillStandardLevelId}&workType=P`
           getOrgPersons(customUrl).then((resP) => {
             
-          const { ResourceFields } = this.state;
+          const { ResourceFields, holidays } = this.state;
           ResourceFields[6].data = skills[skillIndex]
             ? skills[skillIndex].levels
             : [];
           ResourceFields[7].data = resP.success ? resP.data : [];
-          ResourceFields[13].suggestion = (moment(resR.data?.endDate?? resR.data?.startDate).diff(moment(resR.data?.startDate), 'days')+1) * this.props.hours;
-          ResourceFields[19].hint = this.ceilHint(resR.data?.stceil, resR.data?.ltceil)
+
+          ResourceFields[13].suggestion = `${formatFloat(
+            getNumberOfWeekdays(startDate, endDate ?? startDate, holidays) *
+              hours *
+              (effortRate / 100)
+          )}'`;
+
+          ResourceFields[19].hint = this.ceilHint(stceil, ltceil)
+
           this.formRef.current.setFieldsValue({ obj: resR.data, });
-          this.setState({ ResourceFields, allocationId: resR.data.allocationId, },()=>{
-            if (resR?.data?.role) {
-              this.checkRates(resR.data.contactPersonId, {label: resR?.data?.role})
+
+          this.setState({ ResourceFields, allocationId: allocationId, },()=>{
+            if (role) {
+              this.checkRates(contactPersonId, {label: role})
             }else{
               this.setRates('No Active Contract', 'No Active Contract')
             }

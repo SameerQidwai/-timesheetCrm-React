@@ -362,9 +362,9 @@ export const getHierarchy = (opportunityId) => {
     });
 };
 
-export const getHolidays = () => {
+export const getHolidays = (projectId) => {
   return axios
-    .get(`${url}/get-holidays`, { headers: headers() })
+    .get(`${url}/get-holidays/${projectId}`, { headers: headers() })
     .then((res) => {
       const { success, data, message } = res.data;
       jwtExpired(message);
