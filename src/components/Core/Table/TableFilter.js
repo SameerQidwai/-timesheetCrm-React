@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import { Button, Col, Input, Modal, Row, Space, Table, Form, Select, Tag, DatePicker } from 'antd';
+import { Button, Col, Input, Modal, Row, Space, Table, Form, Select, Tag, DatePicker, Collapse } from 'antd';
 import FormItems from '../Forms/FormItems';
 import { SearchOutlined } from "@ant-design/icons";
 import moment from "moment";
@@ -205,7 +205,7 @@ export const tableTitleFilter = (colSpan, filterFunction) =>{ // table filter on
         </Row>
 }
 
-export const TableModalFilter = ({title, visible, onClose, filters, filterFunction, filterFields, effectRender, effectFunction, destroyOnClose=true}) =>{
+export const TableModalFilter = ({title, visible, onClose, filters, filterFunction, filterFields, effectRender, effectFunction, destroyOnClose=true, groupFrom}) =>{
     const [form] = Form.useForm();
     
     useEffect(() => {
@@ -276,7 +276,23 @@ export const TableModalFilter = ({title, visible, onClose, filters, filterFuncti
             layout="inline"
             onFinish={onFinish}
         >
-            <FormItems FormFields={filterFields} />
+            {   groupFrom ? <Collapse 
+                    defaultActiveKey={['0']} 
+                    accordion 
+                    // ghost
+                    style={{width:'100%'}} 
+                >
+                    {Object.entries(groupFrom).map(([key, value], index)=>(
+                        <Collapse.Panel header={key} key={index}>
+                            <Row>
+                                <FormItems FormFields={filterFields.slice(value[0], value[1])} /> 
+                            </Row>
+                    </Collapse.Panel>
+                    ))}
+            </Collapse>
+            :
+                <FormItems FormFields={filterFields} /> 
+            }
         </Form>
     </Modal>
 }
