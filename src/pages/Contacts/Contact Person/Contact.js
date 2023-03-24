@@ -468,7 +468,6 @@ class Contact extends Component {
             { label: 'Within A Month', value: 'WMO' },
             { label: 'Over A Month', value: 'OMO' },
             { label: 'Long-term Propect', value: 'LTP' },
-            { label: 'No Clearance', value: 'NCL' },
           ],
           type: 'Select',
         },
