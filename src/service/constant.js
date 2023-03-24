@@ -1,4 +1,5 @@
 import moment from 'moment';
+import 'moment-weekday-calc';
 import { message as messageAlert } from 'antd';
 // export const Api = 'http://localhost:3301/api/v1';
 
@@ -341,4 +342,19 @@ export const isPhone = (phoneNumber) => {
   const cleanedPhoneNumber = phoneNumber.replace(/-|\s/g, ''); // Remove spaces and hyphens before performing test
   const pattern = new RegExp('^(?:\\+?(61))? ?(?:\\((?=.*\\)))?(0?[2-57-8])\\)? ?(\\d\\d(?:[- ](?=\\d{3})|(?!\\d\\d[- ]?\\d[- ]))\\d\\d[- ]?\\d[- ]?\\d{3})$');
   return pattern.test(cleanedPhoneNumber);
+};
+
+export const getNumberOfWeekdays = (
+  startDate,
+  endDate,
+  exclusions = [],
+  weekdays = [1, 2, 3, 4, 5]
+) => {
+  return formatDate(new Date()).isoWeekdayCalc({
+    rangeStart: startDate,
+    rangeEnd: endDate,
+    weekdays: weekdays,
+    exclusions: exclusions,
+    //when I get holidays
+  });
 };

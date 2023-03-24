@@ -220,7 +220,7 @@ return (
       <Modal
         title={`ShutDown Period`}
         visible={visible}
-        width={900}
+        width={700}
         onCancel={close}
         okText={"Save"}
         // adminView Prop add
