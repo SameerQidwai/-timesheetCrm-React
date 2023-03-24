@@ -10,3 +10,7 @@ aside.ant-layout-sider-light ul.ant-menu
 li.ant-menu-submenu-selected {
     background-color: #FEFEFE !important
 }
+
+.sub-menu-font{
+    font-size: 12px;
+}
