@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext, useRef } from 'react'
-import { Col, InputNumber, Row, Table, Typography, Form } from 'antd'
+import { Col, InputNumber, Row, Table, Typography, Form, Popconfirm, Button } from 'antd'
 import { formatCurrency, getFiscalYear, parseDate } from '../../service/constant';
-import { getWorkInHandForecast } from '../../service/reports-Apis';
+import { getSaveForecast, getWorkInHandForecast, updateSaveForecast } from '../../service/reports-Apis';
 import "../../../src/components/Styles/table.css"
 import { contribution_margin, cost_of_sale, direct_overhead_expense, formatNegativeValue, getValueWithCondition, income_revenue, income_tax, net_profit, nextFocus } from '../../components/Core/ReportFilters/WIHData';
 import moment from 'moment'
@@ -27,7 +27,7 @@ const EditableCell = ({
   const save = async (entered) => {
     let value = form.getFieldValue([record['key'], dataIndex])
     let updated = form.isFieldTouched([record['key'], dataIndex])
-    if ( value && updated ){
+    if ( updated ){
       try {
         handleSave(indexing, dataIndex, value);
         setTimeout(() => {
@@ -84,6 +84,7 @@ function WorkInHand() {
   const fiscal = moment(end).format('[FY]YY')
   const forecastMonth = moment().subtract(1, 'month').endOf("month")
   const [dataSource, setDataSource] = useState([])
+  const [incomeTaxRates, setIncomeTaxRates] = useState(undefined)
   const [loading, setLoading] = useState(false)
   const [columns, setColumns] = useState([
       {
@@ -117,11 +118,24 @@ function WorkInHand() {
 
   useEffect(() => {
       creatingCol()
-      getWorkInHandForecast().then(res=>{
-          if(res.success){
-              structureData(res.data)
-          }
-      })
+      Promise.all([getSaveForecast(), getWorkInHandForecast()]).then(
+        (res) => {
+          let saveForecast = res[0].success ? res[0].data : {}
+          let forecast = res[1].success ? res[1].data : {}
+          structureData(forecast, saveForecast)
+          setIncomeTaxRates(forecast.INCOME_TAX_RATES?? {})
+          form.setFieldsValue(saveForecast)
+        }
+      );
+      // getSaveForecast().then(res=>{
+      //   if(res.success){
+      //   }
+      // })
+      // getWorkInHandForecast().then(res=>{
+      //     if(res.success){
+      //         structureData(res.data)
+      //     }
+      // })
       // dummyStructureData()
   }, [])
 
@@ -129,8 +143,8 @@ function WorkInHand() {
       let newColumns = [...columns]
       let monthColumns = [
         monthCol({
-          year: fiscal,
-          era: 'Actual',
+          year: 'YTD',
+          era: '',
           totalKey: 'actual-total'
         })
       ]
@@ -142,7 +156,7 @@ function WorkInHand() {
           };
           monthColumns.push(monthCol(el, updateField))
       }                                                         // forecast-total
-      monthColumns.push(monthCol({year: fiscal, era: 'Forcaste', totalKey: 'total'}))
+      monthColumns.push(monthCol({year: fiscal, era: 'Forcast', totalKey: 'total'}))
       newColumns[1]['children'][0]['children'] = monthColumns
       setColumns(newColumns)
   }
@@ -156,7 +170,9 @@ function WorkInHand() {
     CASUAL_SUPER,
     DOH_SALARIES,
     DOH_SUPER,
-  }) => {
+    INCOME_TAX_RATES,
+  }, saveForecast) => {
+
     income_revenue[1] = { ...income_revenue[1], ...TIME_BASE };
     income_revenue[2] = { ...income_revenue[2], ...MILESTONE_BASE };
     // income_revenue[8] = { ...income_revenue[8], ...TOTAL_REVENUE };
@@ -174,25 +190,34 @@ function WorkInHand() {
     direct_overhead_expense[3] = { ...direct_overhead_expense[3], ...DOH_SUPER };
     // direct_overhead_expense[18] = { ...direct_overhead_expense[18], ...TOTAL_DOH };
     
+    // net_profit[2] = {...net_profit[2], ...INCOME_TAX_RATES}
+    
+    let dataWithTotal = new Array(
+      ...income_revenue,
+      ...cost_of_sale,
+      ...contribution_margin,
+      ...direct_overhead_expense,
+      ...income_tax,
+      ...net_profit
+    )
 
-    calculate_col_total(new Array(
-        ...income_revenue,
-        ...cost_of_sale,
-        ...contribution_margin,
-        ...direct_overhead_expense,
-        ...income_tax,
-        ...net_profit
-    ));
+    dataWithTotal = dataWithTotal.map(el=>{
+      if (saveForecast[el.key]){
+        el = {...el, ...saveForecast[el.key]}
+      }
+      return el
+    })
+    calculate_col_total(dataWithTotal, INCOME_TAX_RATES);
   };
 
-  const calculate_col_total = (updatedData)=>{
+  const calculate_col_total = (updatedData, INCOME_TAX_RATES={})=>{
     let newData = [...updatedData]
     let columName = columns?.[1]?.['children']?.[0]?.['children']||[];
 
     (columName).forEach(({children: [{dataIndex}]})=>{
       newData[8][dataIndex]=0; /**Revenue */ 
-      newData[30][dataIndex]=0; /**COST */ 
-      newData[55][dataIndex]=0; /**DOH */
+      newData[31][dataIndex]=0; /**COST */ 
+      newData[56][dataIndex]=0; /**DOH */
       // newData[62][dataIndex]=0; /**TAX */
       // newData[66][dataIndex]=0; /**Profit */
   
@@ -202,10 +227,10 @@ function WorkInHand() {
       if (moment(dataIndex, 'MMM YY', true).isValid()){
           if (i<8){
               newData[8][dataIndex] += getValueWithCondition(newData, i, dataIndex)
-          }else if (i>8 && i <30){
-              newData[30][dataIndex] += getValueWithCondition(newData, i, dataIndex)
-          }else if (i>34 && i <55){
-              newData[55][dataIndex] += getValueWithCondition(newData, i, dataIndex)
+          }else if (i>8 && i <31){
+              newData[31][dataIndex] += getValueWithCondition(newData, i, dataIndex)
+          }else if (i>35 && i <56){
+              newData[56][dataIndex] += getValueWithCondition(newData, i, dataIndex)
           }
           // }else if (i>56 && i <62){
           //     newData[62][dataIndex] = newData[i]['operation'] ?
@@ -218,15 +243,20 @@ function WorkInHand() {
       }
       }
     }) 
-
-     // , 64, 66   /**   CM          CM %              EBIT  */
-     let calculate_indexes = [32, 34, 57, 63, 67];
-
+    /**
+     * 33 = CM
+     * 35 = CM%
+     * 58 =EBIT
+     * 64 = "PROFIT BEFORE TAX"
+     * 66 = "Income Tax Expense"
+     * 68 = "NET PROFIT"
+     */
+     let calculate_indexes = [33, 35, 58, 64, 66, 68];
      (columName).forEach(({children: [{dataIndex}]})=>{
       (calculate_indexes).forEach((index)=>{
         newData[index] = {
           ...newData[index],
-          [dataIndex]: newData?.[index]?.renderCalculation?.(newData, dataIndex)
+          [dataIndex]: newData?.[index]?.renderCalculation?.(newData, dataIndex, INCOME_TAX_RATES[dataIndex])
         }
       })
      })
@@ -268,7 +298,6 @@ function WorkInHand() {
         total,
       };
     });
-    
     setDataSource(newData)
     return true
     // setLoading(false)
@@ -278,8 +307,14 @@ function WorkInHand() {
   const updateField = (index, dataIndex, value, openField)=>{
     let newData = [...dataSource]
     newData[index][dataIndex] = value
-    return calculate_col_total(newData)
+    return calculate_col_total(newData, incomeTaxRates)
     // openField(false)
+  }
+
+  const onFormSubmit = (values) =>{
+    updateSaveForecast(values).then(res=>{
+      // if(res)
+    })
   }
     
   const components = {
@@ -294,7 +329,7 @@ function WorkInHand() {
       ...col,
       onCell: (record, index) => ({
         record,
-        editable: col.dataIndex !== 'name' && !col.dataIndex.startsWith('FY') && record.editable,
+        editable: col.dataIndex !== 'name' && !col.totalCol && record.editable,
         dataIndex: col.dataIndex,
         title: col.title,
         indexing: index,
@@ -309,40 +344,70 @@ function WorkInHand() {
 
   const re_column = columns.map(mapColumns);
     
-  return (<>
-    <Row style={{backgroundColor: '#0463AC'}}>
-        <Col span={24}>
-            <Title level={5} style={{color: '#fff', marginBottom: 0, paddingLeft: 5 }}>Forecast {fiscal} - {forecastMonth.format('MMMM')} Month End</Title>
+  return (
+    <>
+      <Row style={{ backgroundColor: '#0463AC', paddingRight: 15 }} justify="space-between" align="middle" >
+        <Col span={20}>
+          <Row>
+            <Col span={24}>
+              <Title
+                level={5}
+                style={{ color: '#fff', marginBottom: 0, paddingLeft: 5 }}
+              >
+                Forecast {fiscal} - {forecastMonth.format('MMMM')} Month End
+              </Title>
+            </Col>
+            <Col span={24}>
+              <Title
+                level={5}
+                style={{ color: '#fff', marginBottom: 0, paddingLeft: 5 }}
+              >
+                Profit & Loss Statement - {forecastMonth.format('DD MMMM YYYY')}
+              </Title>
+            </Col>
+          </Row>
         </Col>
-        <Col span={24}>
-            <Title level={5} style={{color: '#fff', marginBottom: 0, paddingLeft: 5 }}>Profit & Loss Statement - {forecastMonth.format('DD MMMM YYYY')}</Title>
+        <Col>
+          <Popconfirm
+            placement="bottom"
+            title="Are you sure want to save new Settings?"
+            onConfirm={() => form.submit()}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button type="primary" size="small">
+              Save
+            </Button>
+          </Popconfirm>
         </Col>
-    </Row>
-    <Row>
+      </Row>
+      <Row>
         <Col span={24}>
-        <Form form={form} component={false}>
-          <EditableContext.Provider value={form}>
-            <Table
-              components={components}
-              bordered
-              // loading={true}
-              size="small"
-              pagination = {false}
-              rowKey={(row)=> row.key??row.name}
-              columns={re_column}
-              rowClassName={(row)=> row.className}
-              dataSource={dataSource}
-              className="scroll-table fs-v-small full-width wih-report"
-              scroll={{
-                  x: "max-content",
+          <Form form={form} component={false} onFinish={onFormSubmit}>
+            <EditableContext.Provider value={form}>
+              <Table
+                components={components}
+                bordered
+                loading={!incomeTaxRates}
+                // loading={true}
+                size="small"
+                pagination={false}
+                rowKey={(row) => row.key ?? row.name}
+                columns={re_column}
+                rowClassName={(row) => row.className}
+                dataSource={dataSource}
+                className="scroll-table fs-v-small full-width wih-report"
+                scroll={{
+                  x: 'max-content',
                   y: '65vh',
-              }}
-            />
-          </EditableContext.Provider>
-        </Form>
+                }}
+              />
+            </EditableContext.Provider>
+          </Form>
         </Col>
-    </Row>
-  </>)
+      </Row>
+    </>
+  );
 }
 
 export default WorkInHand
@@ -356,17 +421,17 @@ const monthCol = ({year, era, totalKey})=>({
       title: era,
       dataIndex: year,
       key: year,
+      totalCol: !!totalKey,
       width: 100,
       align: 'center',
       onCell: (record)=> {
-          return {className: year.startsWith('FY') ? 'fin-total': ''} 
+          return {className: totalKey? 'fin-total': ''} 
       },
       render: (text,record, index) =>{
           if(record.render){
               return record.render(year, record)
           }
-          if(year.startsWith('FY')){
-            
+          if(totalKey){
               return record[totalKey] ? formatNegativeValue(record[totalKey]) : '-'
           }
               //checking if number is integer                     //if total column put - of undefned or 0
