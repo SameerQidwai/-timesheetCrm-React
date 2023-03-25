@@ -60,7 +60,9 @@ const EditableCell = ({
           >
             <InputNumber
               ref={inputRef}
+              className="table-inputNumber-border"
               controls={false}
+              // bordered={false}
               size="small"
               formatter={(value) => formatter(value, "$") }
               parser={(value) => parser(value, "$") }
@@ -85,7 +87,7 @@ function WorkInHand() {
   const forecastMonth = moment().subtract(1, 'month').endOf("month")
   const [dataSource, setDataSource] = useState([])
   const [incomeTaxRates, setIncomeTaxRates] = useState(undefined)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [columns, setColumns] = useState([
       {
           title: 'Whole A$',
@@ -298,6 +300,7 @@ function WorkInHand() {
         total,
       };
     });
+    setLoading(false)
     setDataSource(newData)
     return true
     // setLoading(false)
@@ -312,7 +315,9 @@ function WorkInHand() {
   }
 
   const onFormSubmit = (values) =>{
+    setLoading(true)
     updateSaveForecast(values).then(res=>{
+      setLoading(false)
       // if(res)
     })
   }
@@ -388,7 +393,7 @@ function WorkInHand() {
               <Table
                 components={components}
                 bordered
-                loading={!incomeTaxRates}
+                loading={loading}
                 // loading={true}
                 size="small"
                 pagination={false}
