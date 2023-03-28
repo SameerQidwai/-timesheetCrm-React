@@ -41,12 +41,21 @@ export const parser = (value, shape) =>{
     }
 }
 
+export const phoneNormalize = (value)=>{
+  if (!value) return value;
+  const currentValue = value.replace(/[^\d]/g, '');
+  const cvLength = currentValue.length;              
+  if (cvLength < 5) return currentValue;
+  if (cvLength < 8) return `${currentValue.slice(0, 4)} ${currentValue.slice(4)}`;
+  return `${currentValue.slice(0, 4)} ${currentValue.slice(4, 7)} ${currentValue.slice(7, 10)}`;
+}
+
 class FormItems extends Component {
   constructor(props) {
     super(props);
     // [this.form] = Form.useForm();
     // this.formRef = React.createRef();
-  }
+  } 
 
   multipleUpload = (file, filelist, key, multiple) => {
     console.log(file, filelist, key, multiple);
@@ -94,6 +103,7 @@ class FormItems extends Component {
           hidden={item.hidden === true}
           style={item.itemStyle}
           noStyle={item.noStyle}
+          normalize={item.normalize}
         >
           {this.filedformat(
             item.type,
