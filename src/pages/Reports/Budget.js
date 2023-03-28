@@ -143,7 +143,7 @@ function Budget() {
           };
           monthColumns.push(monthCol(el, updateField))
       }                                                         // forecast-total
-      monthColumns.push(monthCol({year: fiscal, era: 'Forcaste', totalKey: 'total'}))
+      monthColumns.push(monthCol({year: fiscal, era: 'Forcast', totalKey: 'total'}))
       newColumns[1]['children'][0]['children'] = monthColumns
       setColumns(newColumns)
   }
@@ -269,7 +269,7 @@ function Budget() {
         total,
       };
     });
-    
+    setLoading(false)
     setDataSource(newData)
     return true
     // setLoading(false)
@@ -284,7 +284,9 @@ function Budget() {
   }
 
   const onFormSubmit = (values) =>{
+    setLoading(true)
     updateSaveBudget(values).then(res=>{
+      setLoading(false)
       // if(res)
     })
   }
@@ -349,6 +351,7 @@ function Budget() {
             <Table
               components={components}
               bordered
+              loading={loading}
               // loading={true}
               size="small"
               pagination = {false}

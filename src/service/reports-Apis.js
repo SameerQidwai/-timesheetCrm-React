@@ -1,7 +1,7 @@
 import axios from "axios";
 import { message as messageAlert } from "antd";
 
-import { Api, getFiscalYear, headers, jwtExpired, setToken } from "./constant";
+import { Api, apiErrorRes, getFiscalYear, headers, jwtExpired, setToken } from "./constant";
 import moment from "moment"
 const url = `${Api}/reports`;
 
@@ -248,6 +248,7 @@ export const getSaveForecast = (queryParam) => {
 };
 
 export const updateSaveForecast = (data, queryParam) => {
+  messageAlert.loading({ content: 'Updating Forecast', key: 1 });
     // let {start, end} = getFiscalYear('dates')
     return axios
       .put(`${Api}/forecastReportLabel/updateReport/`, data, {
@@ -258,16 +259,12 @@ export const updateSaveForecast = (data, queryParam) => {
         jwtExpired(message);
         setToken(res?.headers?.authorization);
         if (success){
-          messageAlert.success({ content: 'Report Updated Successfully', key: 'report' });
+          messageAlert.success({ content: 'Forecast Updated Successfully', key: 1 });
         }
         return { success: success};
       })
       .catch((err) => {
-        return {
-          error: 'Please login again!',
-          success: false,
-          message: err.message,
-        };
+        return apiErrorRes(err, 1, 5)
       });
 };
 
@@ -298,7 +295,9 @@ export const getSaveBudget = (queryParam) => {
       };
     });
 };
+
 export const updateSaveBudget = (data, queryParam) => {
+  messageAlert.loading({ content: 'Updating Budget', key: 2 });
     // let {start, end} = getFiscalYear('dates')
     return axios
       .put(`${Api}/budgetReportLabel/updateReport/`, data, {
@@ -309,16 +308,12 @@ export const updateSaveBudget = (data, queryParam) => {
         jwtExpired(message);
         setToken(res?.headers?.authorization);
         if (success){
-          messageAlert.success({ content: 'Report Updated Successfully', key: 'report' });
+          messageAlert.success({ content: 'Budget Updated Successfully', key: 2 });
         }
         return { success: success};
       })
       .catch((err) => {
-        return {
-          error: 'Please login again!',
-          success: false,
-          message: err.message,
-        };
+        return apiErrorRes(err, 2, 5)
       });
 };
 
