@@ -174,6 +174,7 @@ class InfoModal extends Component {
                             {label: 'Partnership', value: 2 },
                             {label: 'Company', value: 3 },
                             {label: 'Trust', value: 4 },
+                            {label: 'Government', value: 5 },
                         ]
                     },
                     {
