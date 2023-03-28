@@ -116,17 +116,10 @@ class InfoModal extends Component {
             size: 'small',
             normalize:phoneNormalize,
             rules:[
-              ({ getFieldValue }) => ({
-                  validator(rules, value) {
-                      if (value){
-                        if (!isPhone(value)) {
-                            return Promise.reject(new Error('Must contain 10 digits'));
-                        }
-                        return Promise.resolve();
-                      }
-                      return Promise.resolve();
-                    },
-              }),
+              {
+                pattern: new RegExp('^(?:\\+?(61))? ?(?:\\((?=.*\\)))?(0?[2-57-8])\\)? ?(\\d\\d(?:[- ](?=\\d{3})|(?!\\d\\d[- ]?\\d[- ]))\\d\\d[- ]?\\d[- ]?\\d{3})$'),
+                message: 'Must contain 10 digits' 
+              }
             ],
             type: 'input',
             labelAlign: 'right',
