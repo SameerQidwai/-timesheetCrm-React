@@ -24,6 +24,16 @@ const normFile = (e) => {
     return e && e.fileList;
 };
 
+export const phoneNormalize = (value)=>{
+    if (!value) return value;
+    const currentValue = value.replace(/[^\d]/g, '');
+    const cvLength = currentValue.length;              
+    if (cvLength < 5) return currentValue;
+    if (cvLength < 8) return `${currentValue.slice(0, 4)} ${currentValue.slice(4)}`;
+    return `${currentValue.slice(0, 4)} ${currentValue.slice(4, 7)} ${currentValue.slice(7, 10)}`;
+}
+
+
 class Forms extends Component {
     constructor(props) {
         super(props);
@@ -123,6 +133,7 @@ class Forms extends Component {
                                         hidden={item.hidden === true}
                                         style={item.itemStyle}
                                         noStyle={item.noStyle}
+                                        normalize={item.normalize}
                                     >
                                          { 
                                         //  item.tooltip ? 

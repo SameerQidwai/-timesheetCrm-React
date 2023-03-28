@@ -42,7 +42,7 @@ export const PermanentCalculator = (props) => {
         weekInYear: empType === "Permanent" ? 52 : 8,
         stateTax: [],
         // dslGst: ["Daily Sell Rate inc. GST-per RFQTS","Daily Sell Rate exc. GST-per RFQTS"]
-        dslGst: [{value:"Include"},{value:"Exclude"}]
+        dslGst: [{value:"Inc GST"},{value:"Exc GST"}]
     });
 
     useEffect(() => {
@@ -50,7 +50,8 @@ export const PermanentCalculator = (props) => {
         getReverseCostCal(whichPath).then(res=>{
             if(res.success){
                 let { gst, golobalVariables, stateTax } = res.data
-                contract.gst = (gst + 100) / gst;
+                contract.gst = gst;
+                // contract.gst = (gst + 100) / gst;
                 contract.stateTax = stateTax
                 contract.selectedDslGst = contract.dslGst?.[0].value;
                 contract.selectedState = stateTax?.[0]?.value;
@@ -103,9 +104,15 @@ export const PermanentCalculator = (props) => {
     }
 
     // SOME FUNCTIONS 
+    
+    const gstPercentage = (value) =>{
+      return (value + 100) / value;
+    }
+
+
     const findDlrGst = () => {
-        const {gst, rfqt} = contract
-        return contract?.selectedDslGst == "Include" ? contract.rfqt : Math.abs((rfqt/gst) - rfqt);
+        const {gst, rfqt} = contract //additional now
+        return contract?.selectedDslGst == "Exc GST" ? contract.rfqt : Math.abs((rfqt/gstPercentage(gst)) - rfqt);
     }
 
     const findDslMArgin = () => {
@@ -151,20 +158,21 @@ export const PermanentCalculator = (props) => {
                   </Typography.Title>
                 </Col>
                 {/**for casual type emp we already set hourly base salary */}
-                <Col span={6} className="label bold">
-                  {`Daily Sell Rate ${contract.selectedDslGst}. GST-per RFQTS`}
-                </Col>
-                <Col span={3}>
+                <Col span={6} className="label bold" >
+                  {`Daily Sell Rate`}
+                  {/* {`Daily Sell Rate ${contract.selectedDslGst}`} */}
+                {/* </Col>
+                <Col span={3}> */}
                 <Select
                   size="small"
                   placeholder="Select GST"
                   options={contract.dslGst}
                   value={contract.selectedDslGst}
-                  style={{ width: '100%' }}
+                  style={{ width: '90px', marginLeft:'3px' }}
                   onSelect={dslHandleChange}
                   />
                 </Col>
-                <Col span={3}></Col>
+                <Col span={6}></Col>
                 <Col span={3} className="item">
                   <Inputnumber
                     value={contract.rfqt}
@@ -179,18 +187,24 @@ export const PermanentCalculator = (props) => {
                   />
                 </Col>
                 <Col span={9}></Col>
-                <Col span={6} className="label">
-                  Daily Sell Rate ex GST (110/10)
-                </Col>
-                <Col span={3} className="item">
-                  {formatFloat(contract.gst)}
-                </Col>
-                <Col span={3} className="item"></Col>
-                <Col span={3} className="item">
-                  {' '}
-                  {formatCurrency(findDlrGst())}
-                </Col>
-                <Col span={9} className="item"></Col>
+                {
+                  contract?.selectedDslGst == "Exc GST" ?
+                  <Col span={24} className="label my-10"></Col> : 
+                  <>
+                    <Col span={6} className="label">
+                      Daily Sell Rate ex GST
+                    </Col>
+                    <Col span={3} className="item">
+                      {`${formatFloat(contract.gst)}%`}
+                    </Col>
+                    <Col span={3} className="item"></Col>
+                    <Col span={3} className="item">
+                      {' '}
+                      {formatCurrency(findDlrGst())}
+                    </Col>
+                    <Col span={9} className="item"></Col>
+                  </>
+                }
                 <Col span={6} className="label">
                   Daily Sell Rate ex Panel Provider Margin
                 </Col>

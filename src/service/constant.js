@@ -67,7 +67,7 @@ export const O_TYPE = { 1: 'Milestone', 2: 'Time' };
 
 export const JOB_TYPE = { 1: 'Casual', 2: 'Part Time', 3: 'Full Time' };
 
-export const BUSINESS_TYPE = {1: 'Sole Trader' , 2: 'Partnership' , 3: 'Company' , 4: 'Trust'}
+export const BUSINESS_TYPE = {1: 'Sole Trader' , 2: 'Partnership' , 3: 'Company' , 4: 'Trust', 5:'Government'}
 
 export const DURATION = {
   1: 'Hourly',

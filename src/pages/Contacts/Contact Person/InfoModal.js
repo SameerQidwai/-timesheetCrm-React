@@ -7,7 +7,7 @@ import {
   LoadingOutlined,
 } from '@ant-design/icons'; //Icons
 
-import Form from '../../../components/Core/Forms/Form';
+import Form,{phoneNormalize} from '../../../components/Core/Forms/Form';
 import {
   addList,
   getContactRecord,
@@ -114,22 +114,17 @@ class InfoModal extends Component {
             fieldCol: 12,
             key: 'phoneNumber',
             size: 'small',
+            normalize:phoneNormalize,
             rules:[
-              ({ getFieldValue }) => ({
-                  validator(rules, value) {
-                      if (value){
-                        if (!isPhone(value)) {
-                            return Promise.reject(new Error('Must contain 11 digits'));
-                        }
-                        return Promise.resolve();
-                      }
-                      return Promise.resolve();
-                    },
-              }),
+              {
+                pattern: new RegExp('^(?:\\+?(61))? ?(?:\\((?=.*\\)))?(0?[2-57-8])\\)? ?(\\d\\d(?:[- ](?=\\d{3})|(?!\\d\\d[- ]?\\d[- ]))\\d\\d[- ]?\\d[- ]?\\d{3})$'),
+                message: 'Must contain 10 digits' 
+              }
             ],
             type: 'input',
             labelAlign: 'right',
             itemStyle: { marginBottom: 10 },
+
           },
           {
             object: 'basic',
