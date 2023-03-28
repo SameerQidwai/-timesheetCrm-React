@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Modal, Tabs, Row, Col, Select, Input, Form, Upload } from "antd";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons"; //Icons
-import FormItems from "../../../components/Core/Forms/FormItems";
+import FormItems, { phoneNormalize } from "../../../components/Core/Forms/FormItems";
 import { addList, getRecord, editList } from "../../../service/contractors";
 import { getContactRecord } from "../../../service/conatct-person";
 import { getOrganizations, getOrgPersons, getRoles, getStates } from "../../../service/constant-Apis";
@@ -132,12 +132,13 @@ class InfoModal extends Component {
                     fieldCol: 12,
                     key: "phoneNumber",
                     size: "small",
+                    normalize:phoneNormalize,
                     rules:[
                         ({ getFieldValue }) => ({
                             validator(rules, value) {
                                 if (value){
                                     if (!isPhone(value)) {
-                                        return Promise.reject(new Error('Must contain 11 digits'));
+                                        return Promise.reject(new Error('Must contain 10 digits'));
                                     }
                                     return Promise.resolve();
                                 }
@@ -285,12 +286,13 @@ class InfoModal extends Component {
                     fieldCol: 12,
                     key: "nextOfKinPhoneNumber",
                     size: "small",
+                    normalize:phoneNormalize,
                     rules:[
                         ({ getFieldValue }) => ({
                             validator(rules, value) {
                                 if (value){
                                     if (!isPhone(value)) {
-                                        return Promise.reject(new Error('Must contain 11 digits'));
+                                        return Promise.reject(new Error('Must contain 10 digits'));
                                     }
                                     return Promise.resolve();
                                 }

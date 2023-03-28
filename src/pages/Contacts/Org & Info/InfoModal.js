@@ -3,7 +3,7 @@ import { Modal, Tabs } from "antd";
 import Draggable from 'react-draggable';
 
 import { LoadingOutlined } from "@ant-design/icons"; //Icons
-import Form from "../../../components/Core/Forms/Form";
+import Form, { phoneNormalize } from "../../../components/Core/Forms/Form";
 import { addList, getOrgRecord, editList } from "../../../service/Organizations";
 import { getOrganizations, getOrgPersons } from "../../../service/constant-Apis";
 import { formatDate, isPhone } from "../../../service/constant";
@@ -113,13 +113,14 @@ class InfoModal extends Component {
                         fieldCol: 12,
                         key: "phone",
                         size: "small",
+                        normalize:phoneNormalize,
                         // rules:[{ required: true }],
                         rules:[
                             ({ getFieldValue }) => ({
                                 validator(rules, value) {
                                     if (value){
                                         if (!isPhone(value)) {
-                                            return Promise.reject(new Error('Must contain 11 digits'));
+                                            return Promise.reject(new Error('Must contain 10 digits'));
                                         }
                                         return Promise.resolve();
                                     }

@@ -17,7 +17,7 @@ import {
   PlusOutlined,
 } from '@ant-design/icons'; //Icons
 
-import FormItems from '../../../components/Core/Forms/FormItems';
+import FormItems, { phoneNormalize } from '../../../components/Core/Forms/FormItems';
 
 import {
   getEmpPersons,
@@ -156,12 +156,13 @@ class InfoModal extends Component {
           fieldCol: 12,
           key: 'phoneNumber',
           size: 'small',
+          normalize:phoneNormalize,
           rules:[
             ({ getFieldValue }) => ({
                 validator(rules, value) {
                     if (value){
                         if (!isPhone(value)) {
-                            return Promise.reject(new Error('Must contain 11 digits'));
+                            return Promise.reject(new Error('Must contain 10 digits'));
                         }
                         return Promise.resolve();
                       }
@@ -365,13 +366,14 @@ class InfoModal extends Component {
           key: 'nextOfKinPhoneNumber',
           size: 'small',
           // rules:[{ required: true }],
+          normalize:phoneNormalize,
           type: 'input',
           rules:[
             ({ getFieldValue }) => ({
                 validator(rules, value) {
                     if (value){
                         if (!isPhone(value)) {
-                            return Promise.reject(new Error('Must contain 11 digits'));
+                            return Promise.reject(new Error('Must contain 10 digits'));
                         }
                         return Promise.resolve();
                     }
