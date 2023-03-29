@@ -1,6 +1,6 @@
 import moment from 'moment';
 import { message as messageAlert } from 'antd';
-export const Api = 'http://localhost:3301/api/v1';
+// export const Api = 'http://localhost:3301/api/v1';
 
 // export const Api = "http://onelmcrm.gaamatech.com:8000/api/v1";
 // export const Api = "http://192.168.0.243:3000/api/v1"; // Shahzaib/
@@ -9,7 +9,7 @@ export const Api = 'http://localhost:3301/api/v1';
 // export const Api = 'http://192.168.0.147:3301/api/v1'; // Me
 
 // export const Api = 'http://3.89.162.49:8000/api/v1'; //Test
-// export const Api = 'http://54.174.229.28:8000/api/v1'; //Demo...
+export const Api = 'http://54.174.229.28:8000/api/v1'; //Demo...
 
 // export const Api = "http://192.168.0.110:3301/api/v1"; // TrunRajPal Home
 // export const Api = "http://192.168.0.244:3301/api/v1"; // TrunRajPal Office
