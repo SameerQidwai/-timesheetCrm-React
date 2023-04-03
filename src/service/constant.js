@@ -1,6 +1,6 @@
 import moment from 'moment';
 import { message as messageAlert } from 'antd';
-export const Api = 'http://localhost:3301/api/v1';
+// export const Api = 'http://localhost:3301/api/v1';
 
 // export const Api = "http://onelmcrm.gaamatech.com:8000/api/v1";
 // export const Api = "http://192.168.0.243:3000/api/v1"; // Shahzaib/
@@ -9,7 +9,7 @@ export const Api = 'http://localhost:3301/api/v1';
 // export const Api = 'http://192.168.0.147:3301/api/v1'; // Me
 
 // export const Api = 'http://3.89.162.49:8000/api/v1'; //Test
-// export const Api = 'http://54.174.229.28:8000/api/v1'; //Demo...
+export const Api = 'http://54.174.229.28:8000/api/v1'; //Demo...
 
 // export const Api = "http://192.168.0.110:3301/api/v1"; // TrunRajPal Home
 // export const Api = "http://192.168.0.244:3301/api/v1"; // TrunRajPal Office
@@ -52,7 +52,7 @@ export const O_TYPE = { 1: 'Milestone', 2: 'Time' };
 
 export const JOB_TYPE = { 1: 'Casual', 2: 'Part Time', 3: 'Full Time' };
 
-export const BUSINESS_TYPE = {1: 'Sole Trader' , 2: 'Partnership' , 3: 'Company' , 4: 'Trust'}
+export const BUSINESS_TYPE = {1: 'Sole Trader' , 2: 'Partnership' , 3: 'Company' , 4: 'Trust', 5:'Government'}
 
 export const DURATION = {
   1: 'Hourly',

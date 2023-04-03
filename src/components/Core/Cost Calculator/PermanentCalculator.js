@@ -158,17 +158,17 @@ export const PermanentCalculator = (props) => {
                   </Typography.Title>
                 </Col>
                 {/**for casual type emp we already set hourly base salary */}
-                <Col span={3} className="label bold">
+                <Col span={6} className="label bold" >
                   {`Daily Sell Rate`}
                   {/* {`Daily Sell Rate ${contract.selectedDslGst}`} */}
-                </Col>
-                <Col span={3}>
+                {/* </Col>
+                <Col span={3}> */}
                 <Select
                   size="small"
                   placeholder="Select GST"
                   options={contract.dslGst}
                   value={contract.selectedDslGst}
-                  style={{ width: '100%' }}
+                  style={{ width: '90px', marginLeft:'3px' }}
                   onSelect={dslHandleChange}
                   />
                 </Col>
