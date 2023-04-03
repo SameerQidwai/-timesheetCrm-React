@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { Button, Col, Form } from 'antd'
 import FormItems from '../../components/Core/Forms/FormItems'
 import { upadteSettings } from '../../service/Login-Apis';
+import { LoadingOutlined, UploadOutlined } from "@ant-design/icons"; //Icons
+
 import { localStore } from '../../service/constant';
 
 function OtherDetails(props) {
@@ -505,9 +507,30 @@ function OtherDetails(props) {
             onFinish={changeSetings}
         >
             <FormItems FormFields={detailFields} />
+            <Upload
+                // customRequest={this.handleUpload}
+                listType="text"
+                maxCount={1}
+                fileList={fileList}
+                // onRemove= {this.onRemove}
+            >
+                {fileList.length < 1 &&
+                    <Button icon={<UploadOutlined />} style={{marginTop: 10}} >Upload Contract</Button> 
+                }
+            </Upload>
             <FormItems FormFields={kinFields} />
             <FormItems FormFields={bankFields} />
-            {/* <FormItems FormFields={trainField} /> */}
+            <Upload
+                // customRequest={this.handleUpload}
+                listType="text"
+                maxCount={1}
+                fileList={fileList}
+                // onRemove= {this.onRemove}
+            >
+                {fileList.length < 1 &&
+                    <Button icon={<UploadOutlined />} style={{marginTop: 10}} >Upload Bank details</Button> 
+                }
+            </Upload>
             <Col span={24} style={{padding: 20}}>
                 <Button htmlType={"submit"} type="primary" size="middle" style={{float: "right"}}
                     

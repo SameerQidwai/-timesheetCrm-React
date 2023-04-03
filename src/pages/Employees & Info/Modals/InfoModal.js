@@ -526,10 +526,19 @@ class InfoModal extends Component {
         {
           Placeholder: 'Employment Status',
           rangeMin: true,
-          fieldCol: 12,
+          fieldCol: 6,
           size: 'small',
           type: 'Text',
           labelAlign: 'right',
+          // itemStyle:{marginBottom:'10px'},
+        },
+        {
+          Placeholder: "Back Office Rate of Effort",
+          rangeMin: true,
+          fieldCol: 6,
+          size: "small",
+          type: "Text",
+          labelAlign: "right",
           // itemStyle:{marginBottom:'10px'},
         },
         {
@@ -542,7 +551,7 @@ class InfoModal extends Component {
         },
         {
           object: 'billing',
-          fieldCol: 12,
+          fieldCol: 6,
           key: 'type',
           size: 'small',
           data: [
@@ -554,14 +563,26 @@ class InfoModal extends Component {
           onChange: (value) => {
             const { BillingFields } = this.state;
             if (value === 1) {
-              BillingFields[11].Placeholder = 'Hourly Base Salary';
+              BillingFields[13].Placeholder = 'Hourly Base Salary';
               this.setState({ BillingFields });
             } else {
-              BillingFields[11].Placeholder = 'Annual Base Salary';
+              BillingFields[13].Placeholder = 'Annual Base Salary';
               this.setState({ BillingFields });
             }
           },
           rules: [{ required: true, message: 'Status is Required' }],
+          itemStyle: { marginBottom: 10 },
+        },
+        {
+          object: "billing",
+          fieldCol: 6,
+          key: "bohPercent",
+          size: "small",
+          type: "InputNumber",
+          rules:[{ required: true, message: 'BOH Rate is Required' }],
+          shape: "%",
+          rangeMin: 0,
+          rangeMax: 100,
           itemStyle: { marginBottom: 10 },
         },
         {
@@ -734,27 +755,6 @@ class InfoModal extends Component {
           itemStyle: { marginBottom: 10 },
         },
         {
-          Placeholder: "Back Office Rate of Effort",
-          rangeMin: true,
-          fieldCol: 24,
-          size: "small",
-          type: "Text",
-          labelAlign: "right",
-          // itemStyle:{marginBottom:'10px'},
-        },
-        {
-          object: "billing",
-          fieldCol: 6,
-          key: "bohPercent",
-          size: "small",
-          type: "InputNumber",
-          rules:[{ required: true, message: 'BOH Rate is Required' }],
-          shape: "%",
-          rangeMin: 0,
-          rangeMax: 100,
-          itemStyle: { marginBottom: 10 },
-        },
-        {
           Placeholder: 'Comments',
           fieldCol: 24,
           size: 'small',
@@ -833,7 +833,7 @@ class InfoModal extends Component {
         const { BasicFields, BillingFields, ManagerFields } = this.state;
         BasicFields[15].data = res[0].data;
         BasicFields[3].data = res[1].data;
-        BillingFields[17].data = res[3].data;
+        BillingFields[19].data = res[3].data;
         ManagerFields[1].data = res[4].data;
         this.setState({
           BasicFields,
@@ -912,7 +912,7 @@ class InfoModal extends Component {
           billing: res.billing,
           train: res.train,
         });
-        BillingFields[11].Placeholder =
+        BillingFields[13].Placeholder =
           res?.billing?.type === 1
             ? 'Hourly Base Salary'
             : 'Annual Base Salary';

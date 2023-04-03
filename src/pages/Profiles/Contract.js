@@ -1,15 +1,26 @@
 import React, { useEffect, useState } from 'react'
-import { Form } from 'antd';
+import { Form, Upload } from 'antd';
+import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import FormItems from '../../components/Core/Forms/FormItems'
 import { getLeavePolicy } from "../../service/constant-Apis";
 
 const PersonalContract = (props)=> {
     const [form] = Form.useForm();
+    const [fileList, setFileList] = useState([])
     const [fields, setFields] = useState([
         {
             Placeholder: "Employment Status",
             rangeMin: true,
-            fieldCol: 12,
+            fieldCol: 6,
+            size: "small",
+            type: "Text",
+            labelAlign: "right",
+            // itemStyle:{marginBottom:'10px'},
+        },
+        {
+            Placeholder: "Back Office Rate of Effort",
+            rangeMin: true,
+            fieldCol: 6,
             size: "small",
             type: "Text",
             labelAlign: "right",
@@ -25,7 +36,7 @@ const PersonalContract = (props)=> {
         },
         {
             object: "billing",
-            fieldCol: 12,
+            fieldCol: 6,
             disabled: true,
             key: "type",
             size: "small",
@@ -35,8 +46,17 @@ const PersonalContract = (props)=> {
                 { label: "Full Time", value: 3 },
             ],
             type: "Select",
-            rules: [ { required: true, message: "Status is Required", }, ],
             itemStyle: { marginBottom: 1 },
+        },
+        {
+            object: "billing",
+            fieldCol: 6,
+            key: "bohPercent",
+            disabled: true,
+            size: "small",
+            type: "InputNumber",
+            fieldStyle: { width: "100%" },
+            itemStyle: { marginBottom: 10 },
         },
         {
             object: "billing",
@@ -45,12 +65,6 @@ const PersonalContract = (props)=> {
             disabled: true,
             size: "small",
             type: "input",
-            // rules: [
-            //     {
-            //         required: true,
-            //         message: "Payment Email is required",
-            //     },
-            // ],
             itemStyle: { marginBottom: 1 },
         },
         {
@@ -90,7 +104,6 @@ const PersonalContract = (props)=> {
             type: "InputNumber",
             // shape: " Hours",
             fieldStyle: { width: "100%" },
-            rules: [ { required: true, message: "Work Hours is Required", }, ],
             itemStyle: { marginBottom: 1 },
         },
         {
@@ -100,15 +113,7 @@ const PersonalContract = (props)=> {
             disabled: true,
             size: "small",
             type: "InputNumber",
-            // shape: " Hours",
-            // data: [
-            //     // { label: "Daily", value: 2 },
-            //     { label: "Weekly", value: 3 },
-            //     // { label: "Fortnightly", value: 4 },
-            //     // { label: "Monthly", value: 5 },
-            // ],
             fieldStyle: { width: "100%" },
-            rules: [ { required: true, message: "Work Days are Required", }, ],
             itemStyle: { marginBottom: 10 },
         },
         {
@@ -119,7 +124,6 @@ const PersonalContract = (props)=> {
             size: "small",
             type: "DatePicker",
             fieldStyle: { width: "100%" },
-            rules: [ { required: true, message: "Start Date is Required", }, ],
             itemStyle: { marginBottom: 1 },
         },
         {
@@ -158,7 +162,6 @@ const PersonalContract = (props)=> {
             type: "InputNumber",
             shape: "$",
             fieldStyle: { width: "100%" },
-            rules: [ { required: true, message: "Salary is Required", }, ],
             itemStyle: { marginBottom: 1 },
         },  
         {
@@ -193,7 +196,6 @@ const PersonalContract = (props)=> {
                 { label: "Monthly", value: 5 },
             ],
             type: "Select",
-            rules: [ { required: true, message: "Payment Frequncy is required", }, ],
             itemStyle: { marginBottom: 1 },
         },
         {
@@ -204,7 +206,6 @@ const PersonalContract = (props)=> {
             size: "small",
             data: [],
             type: "Select",
-            rules: [ { required: true, message: "Policy is required", }, ],
             itemStyle: { marginBottom: 10 },
         },
         {
@@ -228,6 +229,7 @@ const PersonalContract = (props)=> {
 
     useEffect(() => {
         setLeavePolicy()
+        setFileList(props.data.file??[])
         form.setFieldsValue({billing: props.data})
     }, [])
 
@@ -237,13 +239,14 @@ const PersonalContract = (props)=> {
             if(res.success){
                 const dummy = fields
                 const { type } = props.data
-                dummy[17].data = res.data
-                dummy[11].Placeholder = type ===1 ? "Hourly Base Salary" : "Annual Base Salary"
+                dummy[19].data = res.data
+                dummy[13].Placeholder = type ===1 ? "Hourly Base Salary" : "Annual Base Salary"
                 setFields([...dummy])
             }
         })
     }
     return (
+        <>
         <Form
             id={'my-form'}
             form={form}
@@ -253,7 +256,23 @@ const PersonalContract = (props)=> {
             style={{padding: 50, paddingTop:20}}
         >
             <FormItems FormFields={fields} />
+        <p style={{marginTop: 10, marginBottom: 2}}>Signed Contract</p>
+        <Upload
+            // listType="picture"
+            listType="picture-card"
+            maxCount={1}
+            fileList={fileList}
+        >
+            {fileList.length < 1 &&
+                <div style={{marginTop: 10}} >
+                    <PlusOutlined />
+                    <div style={{ marginTop: 8 }}>Upload</div>
+                </div>
+            }
+            {/* <Button icon={<UploadOutlined />} style={{marginTop: 10}} loading={imgLoading}>Upload Contract</Button> */}
+        </Upload>
         </Form>
+        </>
     )
     
 }

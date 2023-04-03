@@ -8,6 +8,7 @@ import {
   setToken,
   jwtExpired,
   formatDate,
+  thumbUrl,
 } from './constant';
 const url = `${Api}/auth`;
 export const login = (data) => {
@@ -41,7 +42,7 @@ export const login = (data) => {
           localStorage.setItem(key, data[key]);
         }
         return { success, data };
-      }else{
+      } else {
         messageAlert.error({ content: message, key: 'logout' }, 5);
       }
     })
@@ -187,6 +188,7 @@ export const getSettings = () => {
           startDate: formatDate(employmentContracts?.startDate),
           endDate: formatDate(employmentContracts?.endDate),
           type: employmentContracts?.type,
+          bohPercent: employmentContracts.bohPercent,
           noOfHours: employmentContracts?.noOfHours,
           noOfDays: employmentContracts?.noOfDays,
           noOfHoursPer: employmentContracts?.noOfHoursPer,
@@ -194,6 +196,21 @@ export const getSettings = () => {
           remunerationAmountPer: employmentContracts?.remunerationAmountPer,
           comments: employmentContracts?.comments,
           leaveRequestPolicyId: employmentContracts?.leaveRequestPolicyId ?? 0,
+          fileId: employmentContracts.fileId,
+          file: employmentContracts?.file?.id
+            ? [
+                {
+                  id: employmentContracts.file.id,
+                  createdAt: employmentContracts.file.createdAt,
+                  fileId: employmentContracts.file.id,
+                  uid: employmentContracts.file.uniqueName,
+                  name: employmentContracts.file.originalName,
+                  type: employmentContracts.file.type,
+                  url: `${Api}/files/${employmentContracts.file.uniqueName}`,
+                  thumbUrl: thumbUrl(employmentContracts.file.type),
+                },
+              ]
+            : [],
         };
         const sClearance = {
           clearanceLevel: contactPerson.clearanceLevel,
