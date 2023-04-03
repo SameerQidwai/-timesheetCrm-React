@@ -33,6 +33,10 @@ export const phoneNormalize = (value)=>{
     return `${currentValue.slice(0, 4)} ${currentValue.slice(4, 7)} ${currentValue.slice(7, 10)}`;
 }
 
+export const phoneRegex = {
+    pattern: new RegExp('^(?:\\+?(61))? ?(?:\\((?=.*\\)))?(0?[2-57-8])\\)? ?(\\d\\d(?:[- ](?=\\d{3})|(?!\\d\\d[- ]?\\d[- ]))\\d\\d[- ]?\\d[- ]?\\d{3})$'),
+    message: 'Must contain 10 digits' 
+}
 
 class Forms extends Component {
     constructor(props) {

@@ -7,7 +7,7 @@ import {
   LoadingOutlined,
 } from '@ant-design/icons'; //Icons
 
-import Form,{phoneNormalize} from '../../../components/Core/Forms/Form';
+import Form from '../../../components/Core/Forms/Form';
 import {
   addList,
   getContactRecord,
@@ -114,7 +114,6 @@ class InfoModal extends Component {
             fieldCol: 12,
             key: 'phoneNumber',
             size: 'small',
-            normalize:phoneNormalize,
             // rules:[
             //   {
             //     // pattern: isPhone,

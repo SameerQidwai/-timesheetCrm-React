@@ -132,7 +132,6 @@ class InfoModal extends Component {
                     fieldCol: 12,
                     key: "phoneNumber",
                     size: "small",
-                    normalize:phoneNormalize,
                     // !isPhone
                     type: "input",
                     itemStyle: { marginBottom: 10 },
@@ -274,7 +273,6 @@ class InfoModal extends Component {
                     fieldCol: 12,
                     key: "nextOfKinPhoneNumber",
                     size: "small",
-                    normalize:phoneNormalize,
                     // !isPhone
                     type: "input",
                     itemStyle: { marginBottom: 1 },

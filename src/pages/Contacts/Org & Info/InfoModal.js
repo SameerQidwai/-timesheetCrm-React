@@ -3,7 +3,7 @@ import { Modal, Tabs } from "antd";
 import Draggable from 'react-draggable';
 
 import { LoadingOutlined } from "@ant-design/icons"; //Icons
-import Form, { phoneNormalize } from "../../../components/Core/Forms/Form";
+import Form  from "../../../components/Core/Forms/Form";
 import { addList, getOrgRecord, editList } from "../../../service/Organizations";
 import { getOrganizations, getOrgPersons } from "../../../service/constant-Apis";
 import { formatDate } from "../../../service/constant";
@@ -113,7 +113,6 @@ class InfoModal extends Component {
                         fieldCol: 12,
                         key: "phone",
                         size: "small",
-                        normalize:phoneNormalize,
                         // !isPhone
                         type: "Input",
                     },
