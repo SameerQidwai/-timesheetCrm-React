@@ -7,6 +7,7 @@ import { getContactRecord } from "../../../service/conatct-person";
 import { getOrganizations, getOrgPersons, getRoles, getStates } from "../../../service/constant-Apis";
 import { addFiles } from "../../../service/Attachment-Apis";
 import { DURATION, formatDate, isPhone } from "../../../service/constant";
+import { phoneRegex } from "../../../components/Core/Forms/Form";
 
 const { TabPane } = Tabs;
 
@@ -133,19 +134,7 @@ class InfoModal extends Component {
                     key: "phoneNumber",
                     size: "small",
                     normalize:phoneNormalize,
-                    rules:[
-                        ({ getFieldValue }) => ({
-                            validator(rules, value) {
-                                if (value){
-                                    if (!isPhone(value)) {
-                                        return Promise.reject(new Error('Must contain 10 digits'));
-                                    }
-                                    return Promise.resolve();
-                                }
-                                return Promise.resolve();
-                            },
-                        }),
-                    ],
+                    rules:[phoneRegex],
                     type: "input",
                     itemStyle: { marginBottom: 10 },
                 },
@@ -287,19 +276,7 @@ class InfoModal extends Component {
                     key: "nextOfKinPhoneNumber",
                     size: "small",
                     normalize:phoneNormalize,
-                    rules:[
-                        ({ getFieldValue }) => ({
-                            validator(rules, value) {
-                                if (value){
-                                    if (!isPhone(value)) {
-                                        return Promise.reject(new Error('Must contain 10 digits'));
-                                    }
-                                    return Promise.resolve();
-                                }
-                                return Promise.resolve();
-                            },
-                        }),
-                    ],
+                    rules:[phoneRegex],
                     type: "input",
                     itemStyle: { marginBottom: 1 },
                 },

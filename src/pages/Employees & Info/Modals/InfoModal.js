@@ -30,6 +30,7 @@ import { getContactRecord } from '../../../service/conatct-person';
 import { addList, getRecord, editList } from '../../../service/Employees';
 import { addAttachments, addFiles } from '../../../service/Attachment-Apis';
 import { formatDate, isPhone } from '../../../service/constant';
+import { phoneRegex } from '../../../components/Core/Forms/Form';
 
 const { TabPane } = Tabs;
 
@@ -157,19 +158,7 @@ class InfoModal extends Component {
           key: 'phoneNumber',
           size: 'small',
           normalize:phoneNormalize,
-          rules:[
-            ({ getFieldValue }) => ({
-                validator(rules, value) {
-                    if (value){
-                        if (!isPhone(value)) {
-                            return Promise.reject(new Error('Must contain 10 digits'));
-                        }
-                        return Promise.resolve();
-                      }
-                      return Promise.resolve();
-                },
-            }),
-          ],
+          rules:[phoneRegex],
           type: 'input',
           itemStyle: { marginBottom: 10 },
         },
@@ -368,19 +357,7 @@ class InfoModal extends Component {
           // rules:[{ required: true }],
           normalize:phoneNormalize,
           type: 'input',
-          rules:[
-            ({ getFieldValue }) => ({
-                validator(rules, value) {
-                    if (value){
-                        if (!isPhone(value)) {
-                            return Promise.reject(new Error('Must contain 10 digits'));
-                        }
-                        return Promise.resolve();
-                    }
-                      return Promise.resolve();
-                },
-            }),
-        ],
+          rules:[phoneRegex],
           itemStyle: { marginBottom: 10 },
         },
         {
