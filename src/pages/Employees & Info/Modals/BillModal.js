@@ -27,7 +27,16 @@ class BillModal extends Component {
                 {
                     Placeholder: "Employment Status",
                     rangeMin: true,
-                    fieldCol: 12,
+                    fieldCol: 6,
+                    size: "small",
+                    type: "Text",
+                    labelAlign: "right",
+                    // itemStyle:{marginBottom:'10px'},
+                },
+                {
+                    Placeholder: "Back Office Rate of Effort",
+                    rangeMin: true,
+                    fieldCol: 6,
                     size: "small",
                     type: "Text",
                     labelAlign: "right",
@@ -43,7 +52,7 @@ class BillModal extends Component {
                 },
                 {
                     object: "billing",
-                    fieldCol: 12,
+                    fieldCol: 6,
                     key: "type",
                     size: "small",
                     data: [
@@ -56,14 +65,26 @@ class BillModal extends Component {
                     onChange: (value) => {
                         const { BillingFields } = this.state
                         if (value === 1){
-                            BillingFields[11].Placeholder = "Hourly Base Salary"
+                            BillingFields[13].Placeholder = "Hourly Base Salary"
                             this.setState({BillingFields})
                         }else{
-                            BillingFields[11].Placeholder = "Annual Base Salary"
+                            BillingFields[13].Placeholder = "Annual Base Salary"
                             this.setState({BillingFields})
                         }
                     },
                     itemStyle: { marginBottom: 1 },
+                },
+                {
+                    object: "billing",
+                    fieldCol: 6,
+                    key: "bohPercent",
+                    size: "small",
+                    type: "InputNumber",
+                    rules:[{ required: true, message: 'BOH Rate is Required' }],
+                    shape: "%",
+                    rangeMin: 0,
+                    rangeMax: 100,
+                    itemStyle: { marginBottom: 10 },
                 },
                 {
                     object: "billing",
@@ -235,27 +256,6 @@ class BillModal extends Component {
                     itemStyle: { marginBottom: 1 },
                 },
                 {
-                    Placeholder: "Back Office Rate of Effort",
-                    rangeMin: true,
-                    fieldCol: 24,
-                    size: "small",
-                    type: "Text",
-                    labelAlign: "right",
-                    // itemStyle:{marginBottom:'10px'},
-                },
-                {
-                    object: "billing",
-                    fieldCol: 6,
-                    key: "bohPercent",
-                    size: "small",
-                    type: "InputNumber",
-                    rules:[{ required: true, message: 'BOH Rate is Required' }],
-                    shape: "%",
-                    rangeMin: 0,
-                    rangeMax: 100,
-                    itemStyle: { marginBottom: 10 },
-                },
-                {
                     Placeholder: "Comments",
                     fieldCol: 24,
                     size: "small",
@@ -318,10 +318,10 @@ class BillModal extends Component {
         Promise.all([getLeavePolicy(), editCntrct && getRecord(editCntrct)])
         .then(res => {
             const{BillingFields} = this.state
-            BillingFields[17].data = res[0].success ? res[0].data:[];
+            BillingFields[19].data = res[0].success ? res[0].data:[];
             const {success, data} = res[1]
             if (success){
-                BillingFields[11].Placeholder = data.type ===1 ? "Hourly Base Salary" : "Annual Base Salary"
+                BillingFields[13].Placeholder = data.type ===1 ? "Hourly Base Salary" : "Annual Base Salary"
                 data.startDate =  formatDate(data.startDate)
                 data.endDate =  formatDate(data.endDate)
                 this.formRef.current.setFieldsValue({ billing: data, });

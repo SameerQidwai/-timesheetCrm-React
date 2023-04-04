@@ -81,6 +81,24 @@ const SecurityClearance = (props) =>{
             labelAlign: "right",
             itemStyle: { marginBottom: 10 },
         },
+        {
+            Placeholder: 'Clearance Subject ID',
+            fieldCol: 24,
+            size: 'small',
+            type: 'Text',
+            labelAlign: 'right',
+            // itemStyle:{marginBottom:'10px'},
+          },
+          {
+            object: 'security',
+            fieldCol: 12,
+            key: 'csidNumber',
+            disabled: true,
+            size: 'small',
+            type: 'Input',
+            labelAlign: 'right',
+            itemStyle: { marginBottom: 10 },
+          },
     ])
 
     useEffect(() => {
