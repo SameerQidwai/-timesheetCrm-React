@@ -1,15 +1,7 @@
 import { message as messageAlert } from 'antd';
 import axios from 'axios';
-
-import {
-  Api,
-  localStore,
-  headers,
-  setToken,
-  jwtExpired,
-  formatDate,
-  thumbUrl,
-} from './constant';
+import moment from 'moment'
+import { Api, localStore, headers, setToken, jwtExpired, formatDate, thumbUrl, } from './constant';
 const url = `${Api}/auth`;
 export const login = (data) => {
   return axios
@@ -157,6 +149,21 @@ export const getSettings = () => {
           superannuationBankBsb: data.superannuationBankBsb,
           superannuationAddress: data.superannuationAddress,
           superannuationType: data.superannuationType,
+          superannuationFileId: data.superannuationFileId,
+          file: data.superannuationFileId
+            ? [
+                {
+                  id: data.file.id,
+                  createdAt: data.file.createdAt,
+                  fileId: data.file.id,
+                  uid: data.file.uniqueName,
+                  name: data.file.originalName,
+                  type: data.file.type,
+                  url: `${Api}/files/${data.file.uniqueName}`,
+                  thumbUrl: thumbUrl(data.file.type),
+                },
+              ]
+            : [],
         };
         const kin = {
           nextOfKinDateOfBirth: formatDate(data.nextOfKinDateOfBirth),
@@ -175,48 +182,69 @@ export const getSettings = () => {
           tfn: data.tfn,
           taxFreeThreshold: data.taxFreeThreshold,
           helpHECS: data.helpHECS,
-        };
-        const employmentContracts =
-          data.employmentContracts && data.employmentContracts.length > 0
-            ? data.employmentContracts[0]
-            : {};
-        const billing = {
-          employeeId: employmentContracts?.employeeId,
-          payslipEmail: employmentContracts?.payslipEmail,
-          membershipAccountNo: employmentContracts?.membershipAccountNo,
-          payFrequency: employmentContracts?.payFrequency,
-          startDate: formatDate(employmentContracts?.startDate),
-          endDate: formatDate(employmentContracts?.endDate),
-          type: employmentContracts?.type,
-          bohPercent: employmentContracts.bohPercent,
-          noOfHours: employmentContracts?.noOfHours,
-          noOfDays: employmentContracts?.noOfDays,
-          noOfHoursPer: employmentContracts?.noOfHoursPer,
-          remunerationAmount: employmentContracts?.remunerationAmount,
-          remunerationAmountPer: employmentContracts?.remunerationAmountPer,
-          comments: employmentContracts?.comments,
-          leaveRequestPolicyId: employmentContracts?.leaveRequestPolicyId ?? 0,
-          fileId: employmentContracts.fileId,
-          file: employmentContracts?.file?.id
+          bankAccountFileId: bankAccount.bankAccountFileId,
+          file: bankAccount.bankAccountFileId
             ? [
                 {
-                  id: employmentContracts.file.id,
-                  createdAt: employmentContracts.file.createdAt,
-                  fileId: employmentContracts.file.id,
-                  uid: employmentContracts.file.uniqueName,
-                  name: employmentContracts.file.originalName,
-                  type: employmentContracts.file.type,
-                  url: `${Api}/files/${employmentContracts.file.uniqueName}`,
-                  thumbUrl: thumbUrl(employmentContracts.file.type),
+                  id: bankAccount.file.id,
+                  createdAt: bankAccount.file.createdAt,
+                  fileId: bankAccount.file.id,
+                  uid: bankAccount.file.uniqueName,
+                  name: bankAccount.file.originalName,
+                  type: bankAccount.file.type,
+                  url: `${Api}/files/${bankAccount.file.uniqueName}`,
+                  thumbUrl: thumbUrl(bankAccount.file.type),
                 },
               ]
             : [],
         };
+        // const employmentContracts =
+        //   data.employmentContracts && data.employmentContracts.length > 0
+        //     ? data.employmentContracts[0]
+        //     : {};
+        let activeContractId = 'NAC';
+        const contracts = (data.employmentContracts ?? []).map(
+          (contract, index) => {
+            if (activeContractId === 'NAC') {
+              if (contract.endDate == null) {
+                activeContractId = contract.id;
+              } else if (
+                formatDate(contract.startDate) <= formatDate(moment()) &&
+                formatDate(contract.endDate) >= formatDate(moment())
+              ) {
+                activeContractId = contract.id;
+              } else {
+                activeContractId = 'NAC';
+              }
+            }
+            return {
+              ...contract,
+              startDate: formatDate(contract?.startDate),
+              endDate: formatDate(contract?.endDate),
+              file: contract.file?.id
+                ? [
+                    {
+                      id: contract.file.id,
+                      createdAt: contract.file.createdAt,
+                      fileId: contract.file.id,
+                      uid: contract.file.uniqueName,
+                      name: contract.file.originalName,
+                      type: contract.file.type,
+                      url: `${Api}/files/${contract.file.uniqueName}`,
+                      thumbUrl: thumbUrl(contract.file.type),
+                    },
+                  ]
+                : [],
+            };
+          }
+        );
+
         const sClearance = {
           clearanceLevel: contactPerson.clearanceLevel,
           clearanceGrantedDate: formatDate(contactPerson.clearanceGrantedDate),
           clearanceExpiryDate: formatDate(contactPerson.clearanceExpiryDate),
           clearanceSponsorId: contactPerson.clearanceSponsorId,
+          csidNumber: contactPerson.csidNumber,
         };
         const resourceSkill = contactPerson.standardSkillStandardLevels;
 
@@ -228,7 +256,7 @@ export const getSettings = () => {
           detail,
           kin,
           bank,
-          billing,
+          billing: {contracts, activeContractId},
           sClearance,
           resourceSkill,
         };

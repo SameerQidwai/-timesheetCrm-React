@@ -1,12 +1,92 @@
 import React, { useEffect, useState } from 'react'
-import { Form, Upload } from 'antd';
+import { Form, Table, Upload } from 'antd';
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import FormItems from '../../components/Core/Forms/FormItems'
 import { getLeavePolicy } from "../../service/constant-Apis";
+import { JOB_TYPE, formatCurrency, formatDate, localStore } from '../../service/constant';
+import { tableSorter } from '../../components/Core/Table/TableFilter';
 
-const PersonalContract = (props)=> {
+const PersonalContract = ({data: {contracts, activeContractId: activeId}})=> {
+    
+
+    const column = [
+        {
+            title: "Code",
+            dataIndex: "id",
+            key: "id",
+            wdith: 115,
+            render: (record) => `00${record}`,
+            ...tableSorter('id', 'number', true),
+        },
+        {
+            title: "Start Date",
+            dataIndex: "startDate",
+            key: "startDate",
+            render:(record)=> record && formatDate(record, true, true),
+            ...tableSorter('startDate', 'date'),
+        },
+        {
+            title: "End Date",
+            dataIndex: "endDate",
+            key: "endDate",
+            render:(record)=> record && formatDate(record, true, true),
+            ...tableSorter('endDate', 'date'),
+        },
+        {
+            title: "Employment Type",
+            dataIndex: "type",
+            key: "type",
+            render: (record) => JOB_TYPE[record]
+        },
+        {
+            title: "Base Remuneration",
+            dataIndex: "remunerationAmount",
+            key: "remunerationAmount",
+            render: (record)=> `${formatCurrency(record)}`,
+            ...tableSorter('remunerationAmount', 'number'),
+        },
+        // {
+        //     title: "Rate Duration",
+        //     dataIndex: "remunerationAmountPer",
+        //     key: "remunerationAmountPer",
+        //     render: (record)=> DURATION[record]
+        // },
+    ];
+
+    
+
+    return (
+        <Table
+            bordered
+            pagination={{pageSize: localStore().pageSize}}
+            rowKey={(record) => record.id}
+            columns={column}
+            onRow={(record)=>({className: record.id === activeId && 'active-contract'})}
+            dataSource={contracts}
+            size="small"
+            className='fs-small contract-table'
+            expandable={{
+                defaultExpandedRowKeys:[activeId],
+                expandedRowRender: record => {
+                    return (
+                    <ViewDetails 
+                        data={record} 
+                        key={record.id}
+                    />)
+                },
+                }}
+        />
+    )
+
+    
+}
+
+export default PersonalContract
+
+
+function ViewDetails({data}) {
     const [form] = Form.useForm();
-    const [fileList, setFileList] = useState([])
+    const [fileList, setFileList] = useState(data.file??[])
     const [fields, setFields] = useState([
         {
             Placeholder: "Employment Status",
@@ -226,19 +306,15 @@ const PersonalContract = (props)=> {
             itemStyle: { marginBottom: 1 },
         },
     ]);
-
     useEffect(() => {
+        form.setFieldsValue({billing: data})
         setLeavePolicy()
-        setFileList(props.data.file??[])
-        form.setFieldsValue({billing: props.data})
     }, [])
-
-    
     const setLeavePolicy = () =>{
         getLeavePolicy().then(res=>{
             if(res.success){
                 const dummy = fields
-                const { type } = props.data
+                const { type } = data
                 dummy[19].data = res.data
                 dummy[13].Placeholder = type ===1 ? "Hourly Base Salary" : "Annual Base Salary"
                 setFields([...dummy])
@@ -274,7 +350,5 @@ const PersonalContract = (props)=> {
         </Form>
         </>
     )
-    
-}
 
-export default PersonalContract
+};

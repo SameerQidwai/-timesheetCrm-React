@@ -164,11 +164,26 @@ function reStructure(data) {
     superannuationName: data.superannuationName,
     superannuationBankName: data.superannuationBankName,
     superannuationBankAccountOrMembershipNumber:
-      data.superannuationBankAccountOrMembershipNumber,
+    data.superannuationBankAccountOrMembershipNumber,
     superannuationAbnOrUsi: data.superannuationAbnOrUsi,
     superannuationBankBsb: data.superannuationBankBsb,
     superannuationAddress: data.superannuationAddress,
     superannuationType: data.superannuationType,
+    superannuationFileId: data.superannuationFileId,
+    file: data.superannuationFileId
+      ? [
+          {
+            id: data.file.id,
+            createdAt: data.file.createdAt,
+            fileId: data.file.id,
+            uid: data.file.uniqueName,
+            name: data.file.originalName,
+            type: data.file.type,
+            url: `${Api}/files/${data.file.uniqueName}`,
+            thumbUrl: thumbUrl(data.file.type),
+          },
+        ]
+      : [],
   };
   const kin = {
     nextOfKinDateOfBirth: formatDate(data.nextOfKinDateOfBirth),
@@ -186,6 +201,21 @@ function reStructure(data) {
     tfn: data.tfn,
     taxFreeThreshold: data.taxFreeThreshold,
     helpHECS: data.helpHECS,
+    bankAccountFileId: bankAccount.bankAccountFileId,
+    file: bankAccount.bankAccountFileId
+      ? [
+          {
+            id: bankAccount.file.id,
+            createdAt: bankAccount.file.createdAt,
+            fileId: bankAccount.file.id,
+            uid: bankAccount.file.uniqueName,
+            name: bankAccount.file.originalName,
+            type: bankAccount.file.type,
+            url: `${Api}/files/${bankAccount.file.uniqueName}`,
+            thumbUrl: thumbUrl(bankAccount.file.type),
+          },
+        ]
+      : [],
   };
   const employmentContracts =
     data.employmentContracts.length > 0 ? data.employmentContracts[0] : {};
