@@ -101,7 +101,6 @@ export const delList = (id) => {
 
 export const editList = (id, data) => {
   messageAlert.loading({ content: 'Loading...', key: id });
-  console.log(data);
   return axios
     .put(url + `/${id}`, data, { headers: headers() })
     .then((res) => {
@@ -170,7 +169,7 @@ function reStructure(data) {
     superannuationAddress: data.superannuationAddress,
     superannuationType: data.superannuationType,
     superannuationFileId: data.superannuationFileId,
-    file: data.superannuationFileId
+    file: data.superannuationFile?.id
       ? [
           {
             id: data.file.id,

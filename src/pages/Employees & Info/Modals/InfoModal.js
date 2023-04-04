@@ -44,7 +44,7 @@ class InfoModal extends Component {
       CONTACT: [],
       data: {},
       imgLoading: false,
-      files: {contract: [], superannuation: [], bankAccoun: []},
+      files: {contract: [], superannuation: [], bankAccount: []},
       fileIds: {contract: null, superannuation: null, bankAccount: null},
       activeKey: 'basic',
 
@@ -1359,7 +1359,7 @@ class InfoModal extends Component {
                 fileList={files.superannuation}
                 onRemove={()=>this.onRemove('superannuation')}
               >
-                {files?.contract.length < 1 && (
+                {files?.superannuation.length < 1 && (
                   <div style={{ marginTop: 10 }}>
                     <PlusOutlined />
                     <div style={{ marginTop: 8 }}>Upload</div>
@@ -1392,7 +1392,7 @@ class InfoModal extends Component {
                 fileList={files.bankAccount}
                 onRemove={()=>this.onRemove('bankAccount')}
               >
-                {files?.contract.length < 1 && (
+                {files?.bankAccount.length < 1 && (
                   <div style={{ marginTop: 10 }}>
                     <PlusOutlined />
                     <div style={{ marginTop: 8 }}>Upload</div>

@@ -519,9 +519,10 @@ function OtherDetails(props) {
       ...values.detail,
       ...values.kin,
       ...values.bank,
-      superannuationFileId: files.detailFile?.[0]?.file?.id,
-      bankAccountFileId: files.bankFile?.[0]?.file?.id,
+      superannuationFileId: files.detailFile?.[0]?.fileId,
+      bankAccountFileId: files.bankFile?.[0]?.fileId,
     };
+    console.log({files, obj})
     upadteSettings(obj).then((res) => {
       if (res.success) {
         // console.log(res.data);
