@@ -169,17 +169,17 @@ function reStructure(data) {
     superannuationAddress: data.superannuationAddress,
     superannuationType: data.superannuationType,
     superannuationFileId: data.superannuationFileId,
-    file: data.superannuationFile?.id
+    file: data.superannuationFileId && data.superannuationFile
       ? [
           {
-            id: data.file.id,
-            createdAt: data.file.createdAt,
-            fileId: data.file.id,
-            uid: data.file.uniqueName,
-            name: data.file.originalName,
-            type: data.file.type,
-            url: `${Api}/files/${data.file.uniqueName}`,
-            thumbUrl: thumbUrl(data.file.type),
+            id: data.superannuationFile?.id,
+            createdAt: data.superannuationFile?.createdAt,
+            fileId: data.superannuationFile?.id,
+            uid: data.superannuationFile?.uniqueName,
+            name: data.superannuationFile?.originalName,
+            type: data.superannuationFile?.type,
+            url: `${Api}/files/${data.superannuationFile?.uniqueName}`,
+            thumbUrl: thumbUrl(data.superannuationFile?.type),
           },
         ]
       : [],
@@ -200,18 +200,18 @@ function reStructure(data) {
     tfn: data.tfn,
     taxFreeThreshold: data.taxFreeThreshold,
     helpHECS: data.helpHECS,
-    bankAccountFileId: bankAccount.bankAccountFileId,
-    file: bankAccount.bankAccountFileId
+    bankAccountFileId: bankAccount.fileId,
+    file: bankAccount.fileId && bankAccount?.file
       ? [
           {
-            id: bankAccount.file.id,
-            createdAt: bankAccount.file.createdAt,
-            fileId: bankAccount.file.id,
-            uid: bankAccount.file.uniqueName,
-            name: bankAccount.file.originalName,
-            type: bankAccount.file.type,
-            url: `${Api}/files/${bankAccount.file.uniqueName}`,
-            thumbUrl: thumbUrl(bankAccount.file.type),
+            id: bankAccount?.file?.id,
+            createdAt: bankAccount?.file?.createdAt,
+            fileId: bankAccount?.file?.id,
+            uid: bankAccount?.file?.uniqueName,
+            name: bankAccount?.file?.originalName,
+            type: bankAccount?.file?.type,
+            url: `${Api}/files/${bankAccount?.file?.uniqueName}`,
+            thumbUrl: thumbUrl(bankAccount?.file?.type),
           },
         ]
       : [],

@@ -153,14 +153,14 @@ export const getSettings = () => {
           file: data.superannuationFileId
             ? [
                 {
-                  id: data.file.id,
-                  createdAt: data.file.createdAt,
-                  fileId: data.file.id,
-                  uid: data.file.uniqueName,
-                  name: data.file.originalName,
-                  type: data.file.type,
-                  url: `${Api}/files/${data.file.uniqueName}`,
-                  thumbUrl: thumbUrl(data.file.type),
+                  id: data.superannuationFile.id,
+                  createdAt: data.superannuationFile.createdAt,
+                  fileId: data.superannuationFile.id,
+                  uid: data.superannuationFile.uniqueName,
+                  name: data.superannuationFile.originalName,
+                  type: data.superannuationFile.type,
+                  url: `${Api}/files/${data.superannuationFile.uniqueName}`,
+                  thumbUrl: thumbUrl(data.superannuationFile.type),
                 },
               ]
             : [],
@@ -182,8 +182,8 @@ export const getSettings = () => {
           tfn: data.tfn,
           taxFreeThreshold: data.taxFreeThreshold,
           helpHECS: data.helpHECS,
-          bankAccountFileId: bankAccount.bankAccountFileId,
-          file: bankAccount.bankAccountFileId
+          bankAccountFileId: bankAccount.fileId,
+          file: bankAccount.fileId
             ? [
                 {
                   id: bankAccount.file.id,
