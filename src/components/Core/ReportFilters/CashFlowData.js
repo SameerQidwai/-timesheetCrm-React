@@ -1,5 +1,4 @@
 import { formatCurrency, formatFloat } from "../../../service/constant";
-import moment from 'moment'
 export const cash_inflows = [
   {},
   { 
@@ -14,13 +13,6 @@ export const cash_inflows = [
     default: 0,
     partialEdit: 'Jul',
     editable: true,
-    // renderCalculation: (record, key) =>{
-    //   if (key !== 'Jul'){
-    //     let prevKey = moment(key, 'MMM YY').subtract(1, 'month').format('MMM YY')
-    //     prevKey = prevKey.startsWith('FY')? 'total' : prevKey
-    //     return  (getValueWithCondition(record, 6, prevKey) - getValueWithCondition(record, 31, prevKey))
-    //   }
-    // },
     render:(key, record)=>{
       key = key.startsWith('FY')? 'total' : key
       return record[key] ? formatNegativeValue(record[key]) : '-'
@@ -54,9 +46,15 @@ export const cash_inflows = [
 export const cash_outflows = [
   {},
   { 
-      name: 'Salary - Permanent',
-      key:'Salary - Permanent outflows',
+      name: 'Cash Outflows',
+      key:'Cash Outflows outflows',
       className: 'title-row' 
+  },
+  { 
+    name: 'Salary - Permanent',
+    key:'Salary - Permanent outflows',
+    className: 'data-title-row',
+    editable: true,
   },
   {
     name: 'Salary - Casual',
@@ -178,6 +176,12 @@ export const cash_outflows = [
     className: 'data-title-row',
     editable: true,
   },
+  {
+    name: 'Other Outflows',
+    key: 'Other Outflows outflows',
+    className: 'data-title-row',
+    editable: true,
+  },
   {},
   {},
   {
@@ -199,7 +203,7 @@ export const closing_cashflows = [
     key: 'Surplus (Shortffall)',
     renderCalculation: (record, key) =>{
       key = key.startsWith('FY')? 'total' : key
-      return  (getValueWithCondition(record, 6, key) - getValueWithCondition(record, 31, key))
+      return  (getValueWithCondition(record, 6, key) - getValueWithCondition(record, 33, key))
     },
     render:(key, record)=>{
       key = key.startsWith('FY')? 'total' : key
@@ -212,7 +216,7 @@ export const closing_cashflows = [
     key: 'Cash at Bank - Closing',
     renderCalculation: (record, key) =>{
       key = key.startsWith('FY')? 'total' : key
-      return  (getValueWithCondition(record, 6, key) - getValueWithCondition(record, 31, key))
+      return  (getValueWithCondition(record, 6, key) - getValueWithCondition(record, 33, key))
     },
     render:(key, record)=>{
       key = key.startsWith('FY')? 'total' : key
@@ -240,7 +244,7 @@ export const nextFocus = () => {
       prev = curr;
     }
   }
-  focusObject['ATO Income Tax Payment outflows'] = 'Debtor Receipts inflows'
+  focusObject['Other Outflows outflows'] = 'Debtor Receipts inflows'
   return focusObject;
 }
 

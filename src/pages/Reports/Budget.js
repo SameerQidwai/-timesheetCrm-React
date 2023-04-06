@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext, useRef } from 'react'
 import { Col, InputNumber, Row, Table, Typography, Form, Popconfirm, Button } from 'antd'
 import { formatCurrency, getFiscalYear, parseDate } from '../../service/constant';
-import { getSaveBudget, getWorkInHandForecast, updateSaveBudget } from '../../service/reports-Apis';
-import "../../../src/components/Styles/table.css"
+import { getSaveBudget, updateSaveBudget } from '../../service/financial-Apis';
 import { contribution_margin, cost_of_sale, direct_overhead_expense, formatNegativeValue, getValueWithCondition, income_revenue, income_tax, net_profit, nextFocus } from '../../components/Core/ReportFilters/BudgetData';
 import moment from 'moment'
 import { formatter, parser } from '../../components/Core/Forms/FormItems';
+import "../../../src/components/Styles/table.css"
 const {Title} = Typography
 const EditableContext = React.createContext(null);
 const nextFocusFor = nextFocus()
@@ -60,6 +60,7 @@ const EditableCell = ({
           >
             <InputNumber
               ref={inputRef}
+              className="table-inputNumber-border"
               controls={false}
               size="small"
               formatter={(value) => formatter(value, "$") }
