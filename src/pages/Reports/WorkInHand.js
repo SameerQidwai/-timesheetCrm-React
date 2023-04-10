@@ -147,7 +147,7 @@ function WorkInHand() {
         monthCol({
           year: 'YTD',
           era: '',
-          totalKey: 'actual-total'
+          totalKey: 'YTD'
         })
       ]
       // let endDate = '06/30/2021'
@@ -266,7 +266,7 @@ function WorkInHand() {
     // newData = newData.map(item => {
     //   return {
     //     ...item,
-    //     'actual-total':columName.reduce((acc, {children: [{dataIndex, title}]}) => {
+    //     'YTD':columName.reduce((acc, {children: [{dataIndex, title}]}) => {
     //       if (moment(dataIndex, 'MMM YY', true).isValid() && title === 'Actual') {
     //         acc += item[dataIndex] || 0;
     //       }
@@ -296,7 +296,7 @@ function WorkInHand() {
       }
       return {
         ...item,
-        'actual-total': actualTotal,
+        'YTD': actualTotal,
         total,
       };
     });

@@ -131,6 +131,7 @@ export const updateSaveBudget = (data, queryParam) => {
 };
 
 export const getSaveCashFlow = (queryParam) => {
+  messageAlert.loading({ content: 'Calculating Cash Flow', key: 1 });
   let {start, end} = getFiscalYear('dates')
   return axios
     .get(
@@ -159,7 +160,7 @@ export const getSaveCashFlow = (queryParam) => {
 };
 
 export const updateSaveCashFlow = (data, queryParam) => {
-  messageAlert.loading({ content: 'Updating Budget', key: 2 });
+  messageAlert.loading({ content: 'Updating Cash Flow', key: 2 });
     // let {start, end} = getFiscalYear('dates')
     return axios
       .put(`${Api}/cashflowReportLabel/updateReport/`, data, {
@@ -170,7 +171,7 @@ export const updateSaveCashFlow = (data, queryParam) => {
         jwtExpired(message);
         setToken(res?.headers?.authorization);
         if (success){
-          messageAlert.success({ content: 'Budget Updated Successfully', key: 2 });
+          messageAlert.success({ content: 'Cash Flow Updated Successfully', key: 2 });
         }
         return { success: success};
       })

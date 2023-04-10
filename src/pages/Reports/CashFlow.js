@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from 'react'
-import { Col, InputNumber, Row, Table, Typography, Form, Popconfirm, Button } from 'antd'
+import { Col, InputNumber, Row, Table, Typography, Form, Popconfirm, Button, Input, Tooltip } from 'antd'
 import { formatCurrency, getFiscalYear, parseDate } from '../../service/constant';
 import { getSaveCashFlow, updateSaveCashFlow } from '../../service/financial-Apis';
 import "../../../src/components/Styles/table.css"
@@ -23,25 +23,30 @@ const EditableCell = ({
 }) => {
   const inputRef = useRef(null);
   const form = useContext(EditableContext);
+  let comment_key = form.getFieldValue([record?.['key'], dataIndex]);
 
   const save = async (entered) => {
-    let value = form.getFieldValue([record['key'], dataIndex])
-    let updated = form.isFieldTouched([record['key'], dataIndex])
-    if ( updated ){
+    let value = form.getFieldValue([record['key'], dataIndex]);
+    let updated = form.isFieldTouched([record['key'], dataIndex]);
+    if (updated) {
       try {
         handleSave(indexing, dataIndex, value);
         setTimeout(() => {
-          form.setFields([{ name: [record['key'], dataIndex], touched: false}])
-          if (entered){
-            form.getFieldInstance([nextFocusFor[record['key']], dataIndex]).focus()
+          form.setFields([
+            { name: [record['key'], dataIndex], touched: false },
+          ]);
+          if (entered) {
+            form
+              .getFieldInstance([nextFocusFor[record['key']], dataIndex])
+              .focus();
           }
         }, 1000);
       } catch (errInfo) {
         console.log('Save failed:', errInfo);
       }
-    }else{
-      if (entered){
-        form.getFieldInstance([nextFocusFor[record['key']], dataIndex]).focus()
+    } else {
+      if (entered) {
+        form.getFieldInstance([nextFocusFor[record['key']], dataIndex]).focus();
       }
     }
   };
@@ -49,15 +54,39 @@ const EditableCell = ({
   let childNode = children;
 
   if (editable) {
-    if (!record?.['partialEdit']){
-      childNode =  (
-        <Row >
-          <Col >
+    if (dataIndex === 'Comments') {
+      childNode = (
+        <Row>
+          <Col>
+            <Tooltip title={comment_key} placement="top" destroyTooltipOnHide>
+              <Form.Item
+                style={{
+                  margin: 0,
+                }}
+                name={[record['key'], 'description']}
+              >
+                <Input
+                  ref={inputRef}
+                  className="table-inputNumber-border"
+                  controls={false}
+                  size="small"
+                  onBlur={() => save()}
+                  onPressEnter={(event) => save(true)}
+                />
+              </Form.Item>
+            </Tooltip>
+          </Col>
+        </Row>
+      );
+    } else if (!record?.['partialEdit'] || moment(dataIndex, 'MMM YY').format('MMM') === record?.['partialEdit']) {
+      childNode = (
+        <Row>
+          <Col>
             <Form.Item
               style={{
                 margin: 0,
               }}
-              name={[record['key'],dataIndex]}
+              name={[record['key'], dataIndex]}
             >
               <InputNumber
                 ref={inputRef}
@@ -65,47 +94,47 @@ const EditableCell = ({
                 controls={false}
                 // bordered={false}
                 size="small"
-                formatter={(value) => formatter(value, "$") }
-                parser={(value) => parser(value, "$") }
+                formatter={(value) => formatter(value, '$')}
+                parser={(value) => parser(value, '$')}
                 // onFocus={()=>{ setBlurHook(true) }}
-                onBlur={()=>save()}
-                onPressEnter={(event)=> save(true)}
+                onBlur={() => save()}
+                onPressEnter={(event) => save(true)}
               />
             </Form.Item>
           </Col>
         </Row>
-      ) 
-    }else{
-      if (moment(dataIndex, 'MMM YY').format('MMM') === record?.['partialEdit']){
-        childNode =  (
-          <Row >
-            <Col >
-              <Form.Item
-                style={{
-                  margin: 0,
-                }}
-                name={[record['key'],dataIndex]}
-              >
-                <InputNumber
-                  ref={inputRef}
-                  className="table-inputNumber-border"
-                  controls={false}
-                  // bordered={false}
-                  size="small"
-                  formatter={(value) => formatter(value, "$") }
-                  parser={(value) => parser(value, "$") }
-                  // onFocus={()=>{ setBlurHook(true) }}
-                  onBlur={()=>save()}
-                  onPressEnter={(event)=> save(true)}
-                />
-              </Form.Item>
-            </Col>
-          </Row>
-        ) 
-      }
-    }
+      );
+    } 
+    // else if (
+    //   moment(dataIndex, 'MMM YY').format('MMM') === record?.['partialEdit']
+    // ) {
+    //   childNode = (
+    //     <Row>
+    //       <Col>
+    //         <Form.Item
+    //           style={{
+    //             margin: 0,
+    //           }}
+    //           name={[record['key'], dataIndex]}
+    //         >
+    //           <InputNumber
+    //             ref={inputRef}
+    //             className="table-inputNumber-border"
+    //             controls={false}
+    //             // bordered={false}
+    //             size="small"
+    //             formatter={(value) => formatter(value, '$')}
+    //             parser={(value) => parser(value, '$')}
+    //             // onFocus={()=>{ setBlurHook(true) }}
+    //             onBlur={() => save()}
+    //             onPressEnter={(event) => save(true)}
+    //           />
+    //         </Form.Item>
+    //       </Col>
+    //     </Row>
+    //   );
+    // }
   }
-  
 
   return <td {...restProps}>{childNode}</td>;
 };
@@ -117,7 +146,7 @@ function CashFlow() {
   const fiscal = moment(end).format('[FY]YY')
   // const forecastMonth = moment().subtract(1, 'month').endOf("month")
   const [dataSource, setDataSource] = useState([])
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [columns, setColumns] = useState([
       {
           title: <> <div>Month</div>Actual/Forecast</>,
@@ -180,17 +209,24 @@ function CashFlow() {
       setColumns(newColumns)
   }
 
-  const structureData = () => {
-    
-
-    calculate_col_total(new Array(
+  const structureData = (savedCash) => {
+    let cashFlowAcc = new Array(
       ...cash_inflows,
       ...cash_outflows,
       ...closing_cashflows,
-    ));
+    )
+
+    cashFlowAcc = cashFlowAcc.map(el=>{
+      if (savedCash[el.key]){
+        el = {...el, ...savedCash[el.key]}
+      }
+      return el
+    })
+    calculate_col_total(cashFlowAcc);
   };
 
   const calculate_col_total = (updatedData)=>{
+    
     let newData = [...updatedData]
     let columName = columns?.[1]?.['children']?.[0]?.['children']||[];
 
@@ -224,11 +260,13 @@ function CashFlow() {
       }
     }); 
     setDataSource(newData)
+    setLoading(false)
     return true
   }
   
 
   const updateField = (index, dataIndex, value, openField)=>{
+    setLoading(true)
     let newData = [...dataSource]
     newData[index][dataIndex] = value
     return calculate_col_total(newData)
@@ -274,7 +312,7 @@ function CashFlow() {
     <>
       <Row style={{ backgroundColor: '#0463AC', paddingRight: 15 }} justify="space-between" align="middle" >
         <Col span={20}>
-          <Row>
+          <Row style={{ height: '48px' }} align="middle">
             <Col span={24}>
               <Title
                 level={5}
@@ -339,7 +377,7 @@ const monthCol = ({year, era, totalKey})=>({
       title: era,
       dataIndex: year,
       key: year,
-      width: 100,
+      width: year ==='Comments'?200:100,
       align: 'center',
       onCell: (record)=> {
           return {className: year.startsWith('FY') ? 'fin-total': ''} 

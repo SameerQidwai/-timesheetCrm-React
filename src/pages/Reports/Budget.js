@@ -131,9 +131,9 @@ function Budget() {
       let newColumns = [...columns]
       let monthColumns = [
         monthCol({
-          year: fiscal,
-          era: 'Actual',
-          totalKey: 'actual-total'
+          year: 'YTD',
+          era: '',
+          totalKey: 'YTD'
         })
       ]
       // let endDate = '06/30/2021'
@@ -236,7 +236,7 @@ function Budget() {
     // newData = newData.map(item => {
     //   return {
     //     ...item,
-    //     'actual-total':columName.reduce((acc, {children: [{dataIndex, title}]}) => {
+    //     'YTD':columName.reduce((acc, {children: [{dataIndex, title}]}) => {
     //       if (moment(dataIndex, 'MMM YY', true).isValid() && title === 'Actual') {
     //         acc += item[dataIndex] || 0;
     //       }
@@ -266,7 +266,7 @@ function Budget() {
       }
       return {
         ...item,
-        'actual-total': actualTotal,
+        'YTD': actualTotal,
         total,
       };
     });
@@ -304,7 +304,7 @@ function Budget() {
       ...col,
       onCell: (record, index) => ({
         record,
-        editable: col.dataIndex !== 'name' && !col.dataIndex.startsWith('FY') && record.editable,
+        editable: col.dataIndex !== 'name' && !col.totalCol && record.editable,
         dataIndex: col.dataIndex,
         title: col.title,
         indexing: index,
@@ -384,6 +384,7 @@ const monthCol = ({year, era, totalKey})=>({
       title: era,
       dataIndex: year,
       key: year,
+      totalCol: !!totalKey,
       width: 100,
       align: 'center',
       onCell: (record)=> {
@@ -393,10 +394,9 @@ const monthCol = ({year, era, totalKey})=>({
           if(record.render){
               return record.render(year, record)
           }
-          if(year.startsWith('FY')){
-            
-              return record[totalKey] ? formatNegativeValue(record[totalKey]) : '-'
-          }
+          if(totalKey){
+            return record[totalKey] ? formatNegativeValue(record[totalKey]) : '-'
+        }
               //checking if number is integer                     //if total column put - of undefned or 0
           return (text>= 0 ||text<= 0) ? formatCurrency(text) : record.className === 'total-row'? '-' : record.default !== undefined? formatCurrency(record.default) : '' 
       }       //udefiend and null can't work on isNaN                                                      //checking if any default value is given 
