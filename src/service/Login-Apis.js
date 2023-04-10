@@ -165,6 +165,23 @@ export const getSettings = () => {
               ]
             : [],
         };
+        const tfn = {
+          tfnFileId: data.tfnFileId,
+          file: data.tfnFileId
+            ? [
+                {
+                  id: data.tfnFile.id,
+                  createdAt: data.tfnFile.createdAt,
+                  fileId: data.tfnFile.id,
+                  uid: data.tfnFile.uniqueName,
+                  name: data.tfnFile.originalName,
+                  type: data.tfnFile.type,
+                  url: `${Api}/files/${data.tfnFile.uniqueName}`,
+                  thumbUrl: thumbUrl(data.tfnFile.type),
+                },
+              ]
+            : [],
+        }
         const kin = {
           nextOfKinDateOfBirth: formatDate(data.nextOfKinDateOfBirth),
           nextOfKinEmail: data.nextOfKinEmail,
@@ -254,6 +271,7 @@ export const getSettings = () => {
           data,
           basic,
           detail,
+          tfn,
           kin,
           bank,
           billing: {contracts, activeContractId},

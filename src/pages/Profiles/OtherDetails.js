@@ -14,6 +14,8 @@ function OtherDetails(props) {
     detailFile_loading: false,
     bankFile: [],
     bankFile_loading: false,
+    tfnFile: [],
+    tfnFile_loading: false,
   });
 
   const [detailFields, setDetailsFields] = useState([
@@ -169,7 +171,7 @@ function OtherDetails(props) {
 
   const [bankFields, setBankFields] = useState([
     {
-      Placeholder: 'Bank Details',
+      Placeholder: 'Banking/Tax Details',
       fieldCol: 24,
       size: 'small',
       type: 'Title',
@@ -315,7 +317,8 @@ function OtherDetails(props) {
   // ]);
 
   useEffect(() => {
-    const { train, bank, kin, detail } = props.data;
+    const { train, bank, kin, detail, tfn } = props.data;
+    console.log(tfn)
     form.setFieldsValue({ train, bank, kin, detail });
     onFundType();
     setBankReq();
@@ -324,6 +327,8 @@ function OtherDetails(props) {
         detailFile_loading: false,
         bankFile: bank.file,
         bankFile_loading: false,
+        tfnFile: tfn.file,
+        tfnFile_loading: false,
     });
     
   }, []);
@@ -456,6 +461,7 @@ function OtherDetails(props) {
         itemStyle: { marginBottom: '20px' },
       },
     ];
+
     const { detail } = form.getFieldsValue(); // get the values from from data
     const { superAnnuationName, superannuationType } = detail;
     let newFields = detailFields;
@@ -515,14 +521,15 @@ function OtherDetails(props) {
   };
 
   const changeSetings = (values) => {
+    console.log(files.tfnFile?.[0]?.fileId)
     const obj = {
       ...values.detail,
       ...values.kin,
       ...values.bank,
       superannuationFileId: files.detailFile?.[0]?.fileId,
       bankAccountFileId: files.bankFile?.[0]?.fileId,
+      tfnFileId: files.tfnFile?.[0]?.fileId,
     };
-    console.log({files, obj})
     upadteSettings(obj).then((res) => {
       if (res.success) {
         // console.log(res.data);
@@ -583,6 +590,7 @@ function OtherDetails(props) {
     >
       <FormItems FormFields={detailFields} />
       <Col span={12} style={{ marginBottom: 20 }}>
+      <p style={{ marginBottom: 2}}>Superannuation Form</p>
         <Upload
           customRequest={(option) =>
             handleUpload(option, 'detailFile')
@@ -606,6 +614,7 @@ function OtherDetails(props) {
       <FormItems FormFields={kinFields} />
       <FormItems FormFields={bankFields} />
       <Col span={12} style={{ marginBottom: 10 }}>
+      <p style={{ marginBottom: 2}}>Bank Details</p>
         <Upload
           customRequest={(option) => handleUpload(option, 'bankFile')}
           listType="text"
@@ -617,6 +626,23 @@ function OtherDetails(props) {
           {files.bankFile.length < 1 && (
             <Button icon={<UploadOutlined />} loading={files.bankFile_loading}>
               Upload Bank Details
+            </Button>
+          )}
+        </Upload>
+      </Col>
+      <Col span={12} style={{ marginBottom: 10 }}>
+      <p style={{ marginBottom: 2}}>TFN Declaration</p>
+        <Upload
+          customRequest={(option) => handleUpload(option, 'tfnFile')}
+          listType="text"
+          maxCount={1}
+          fileList={files.tfn}
+          name={`TFN Declaration`}
+          onRemove={() => onRemove('tfnFile')}
+        >
+          {files.tfnFile.length < 1 && (
+            <Button icon={<UploadOutlined />} loading={files.tfnFile_loading}>
+              Upload TFN Declaration
             </Button>
           )}
         </Upload>
