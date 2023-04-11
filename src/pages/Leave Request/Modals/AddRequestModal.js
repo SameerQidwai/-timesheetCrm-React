@@ -385,22 +385,7 @@ class AddRequestModal extends Component {
     // Get Projects
     getSingleRequest(edit).then((srRes) => {
       if (srRes.success) {
-        const {
-          data,
-          data: {
-            workId,
-            typeId,
-            work,
-            type,
-            holidays,
-            contractDetails,
-            startDate,
-            endDate,
-          },
-          entries,
-          fileIds,
-          fileList,
-        } = srRes;
+        const { data, data: { workId, typeId, work, type, holidays, contractDetails, startDate, endDate, }, entries, fileIds, fileList, } = srRes;
         console.log(type.id);
         BasicFields[3].data = workId
           ? [{ value: workId, label: work?.title }]

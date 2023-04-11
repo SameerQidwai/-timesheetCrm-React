@@ -331,6 +331,9 @@ class FormItems extends Component {
             size={size}
             style={{ width: '100%', ...style }}
             disabled={disabled}
+            minuteStep={min}
+            showNow={max}
+            onChange={onChange}
           />
         );
         break;
@@ -340,7 +343,11 @@ class FormItems extends Component {
             format={showTime}
             use12Hours={mode === 'use12Hours'}
             size={size}
-            style={style}
+            style={{ width: '100%', ...style }}
+            minuteStep={min}
+            showNow={max}
+            disabled={disabled}
+            onChange={onChange}
           />
         );
         break;
