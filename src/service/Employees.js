@@ -39,8 +39,8 @@ export const getRecord = (id) => {
       const { success, data, message } = res.data;
       jwtExpired(message);
       if (success) {
-        const { basic, detail, kin, bank, billing, train } = reStructure(data);
-        return { success, data, basic, detail, kin, bank, billing, train };
+        // const { basic, detail, kin, bank, billing, train, tfn } = reStructure(data);
+        return { success, data, ...reStructure(data) };
       }
       return { success };
     })
@@ -184,6 +184,23 @@ function reStructure(data) {
         ]
       : [],
   };
+  const tfn = {
+    tfnFileId: data.tfnFileId,
+    file: data?.tfnFile?.id
+      ? [
+          {
+            id: data.tfnFile.id,
+            createdAt: data.tfnFile.createdAt,
+            fileId: data.tfnFile.id,
+            uid: data.tfnFile.uniqueName,
+            name: data.tfnFile.originalName,
+            type: data.tfnFile.type,
+            url: `${Api}/files/${data.tfnFile.uniqueName}`,
+            thumbUrl: thumbUrl(data.tfnFile.type),
+          },
+        ]
+      : [],
+  }
   const kin = {
     nextOfKinDateOfBirth: formatDate(data.nextOfKinDateOfBirth),
     nextOfKinEmail: data.nextOfKinEmail,
@@ -255,5 +272,5 @@ function reStructure(data) {
   const train = {
     training: data.training,
   };
-  return { basic, detail, kin, bank, billing, train };
+  return { basic, detail, kin, bank, billing, train, tfn };
 }

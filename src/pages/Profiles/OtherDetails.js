@@ -636,7 +636,7 @@ function OtherDetails(props) {
           customRequest={(option) => handleUpload(option, 'tfnFile')}
           listType="text"
           maxCount={1}
-          fileList={files.tfn}
+          fileList={files.tfnFile}
           name={`TFN Declaration`}
           onRemove={() => onRemove('tfnFile')}
         >
