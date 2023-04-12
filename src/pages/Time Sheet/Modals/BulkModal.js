@@ -7,6 +7,7 @@ import moment from 'moment'
 import FormItems from '../../../components/Core/Forms/FormItems';
 import '../../styles/table.css'
 import { getUserMilestones } from '../../../service/constant-Apis';
+import { addBulkTime } from '../../../service/timesheet';
 
 class BulkModal  extends Component{
     constructor(props){
@@ -45,7 +46,7 @@ class BulkModal  extends Component{
                     showNow={false}
                     size="small"
                     onChange={(value) => {
-                    //   this.setHours(records, value, index);
+                      this.setHours(formatDate(records.key, true, 'DD-MM-YYYY'), index);
                     }}
                   />
                 </Form.Item>
@@ -69,7 +70,7 @@ class BulkModal  extends Component{
                     showNow={false}
                     size="small"
                     onChange={(value) => {
-                    //   this.setHours(records, value, index);
+                      this.setHours(formatDate(records.key, true, 'DD-MM-YYYY'), index);
                     }}
                   />
                 </Form.Item>
@@ -82,7 +83,7 @@ class BulkModal  extends Component{
               render: (text, records, index) => (
                 <Form.Item
                   noStyle
-                  name={['entry',formatDate(records.date, true, 'DD-MM-YYYY'), 'breakHours']}
+                  name={['entry',formatDate(records.key, true, 'DD-MM-YYYY'), 'breakHours']}
                 >
                   <TimePicker
                     placeholder="Break Hours"
@@ -92,7 +93,7 @@ class BulkModal  extends Component{
                     bordered={false}
                     size="small"
                     onChange={(value) => {
-                    //   this.setHours(records, value, index);
+                      this.setHours(formatDate(records.key, true, 'DD-MM-YYYY'), index);
                     }}
                   />
                 </Form.Item>
@@ -285,12 +286,9 @@ class BulkModal  extends Component{
         // had to format and re-format is becuase of changing in some nano second was making a lil diffenert in millisecond
         let duration = ((d_start && d_end) && Math.abs(moment.duration(moment(d_end.format('hh:mm a'), 'hh:mm a').diff(moment(d_start.format('hh:mm a'), 'hh:mm a'))).asHours()))?? 0 ;
         let breakAsHours = d_break && moment.duration(d_break.format('HH:mm')).asHours()
-        console.log({d_start,
-            d_end,
-            d_break,})
         if (start && end) {
-            var arr = new Array();
-            while (start.isSameOrBefore(end)) {
+          var arr = new Array();
+          while (start.isSameOrBefore(end)) {
                 const newDate = start.format('DD-MM-YYYY');
                 hoursEntry[newDate]  = {
                     startTime: d_start,
@@ -302,8 +300,9 @@ class BulkModal  extends Component{
                     hoursEntry[newDate] = {}
                 }
                 if(isHoliday && holidays[start.format('M D YYYY')]){
-                    hoursEntry[newDate] = {}
+                  hoursEntry[newDate] = {}
                 }
+               
                 
                 arr.push({
                     key: start.format('YYYY-MM-DD'),
@@ -317,8 +316,9 @@ class BulkModal  extends Component{
             hoursEntry = {};
             data =[]
         }
+        console.log(hoursEntry)
         this.setState({ data, hoursEntry, });
-        this.formRef.current.setFieldsValue({ entry: hoursEntry });
+        this.formRef.current.setFieldsValue({ entry: {...hoursEntry} });
     }
 
     getProjects = () => {
@@ -352,9 +352,40 @@ class BulkModal  extends Component{
         })
     }
 
+    setHours = (dateKey, index) =>{
+      let {hoursEntry, data} = this.state
+      let entry = this.formRef.current.getFieldValue(['entry', dateKey]);
+      console.log(entry)
+      let {startTime, endTime, breakHours} = entry 
+      let duration = ((startTime && endTime) && Math.abs(moment.duration(moment(startTime.format('hh:mm a'), 'hh:mm a').diff(moment(endTime.format('hh:mm a'), 'hh:mm a'))).asHours()))?? 0 ;
+      let breakAsHours = breakHours && moment.duration(breakHours.format('HH:mm')).asHours()
+      entry['actualHours'] = formatFloat(duration - breakAsHours)
+      hoursEntry[dateKey] = entry
+      data[index] = {...data[index], ...entry}
+      console.log(hoursEntry, data)
+      this.setState({hoursEntry: {...hoursEntry}, data: [...data]})
+    }
+
     onSubmit = (values)=>{
-        console.log({...this.props.bulkData})
-        console.log(values)
+      console.log(values)
+        const {dates: {dateRange: [startDate = null, endDate= null], workId}, includes: {isHoliday=false, isWeekend=false}} = values
+        let { monthStart, monthEnd, userId }  = this.props.bulkData
+        let keys = { monthStart: monthStart.format('DD-MM-YYYY'), monthEnd: monthEnd.format('DD-MM-YYYY'), userId: userId } 
+
+        let submitObject = {
+          startDate,
+          endDate,
+          holidays: isHoliday,
+          weekends: isWeekend,
+          milestoneId: workId,
+          entries: [...this.state.data]
+        }
+        console.log(this.props.bulkData, submitObject)
+        addBulkTime(keys, submitObject).then(res=>{
+          if(res.success){
+            console.log('lets see')
+          }
+        })
     }
 
     render (){
