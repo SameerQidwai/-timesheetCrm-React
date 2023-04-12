@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { InputNumber, Typography, DatePicker, TimePicker, Checkbox, Divider, Upload, Button, Select, Switch, Radio, Input, Space, Form, Row, Col, Tooltip} from "antd";
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons"; //Icons
-
 const { Item } = Form;
 const { Dragger } = Upload;
 const { RangePicker } = DatePicker;
@@ -128,7 +127,9 @@ class FormItems extends Component {
             item.fieldNames,
             item.suggestion,
             item.format,
-            item.icon
+            item.icon,
+            item.orderCheck,
+            item.ranges,
           )}
         </Item>
       </Col>
@@ -139,7 +140,7 @@ class FormItems extends Component {
     type, placeholder, data, mode, min, max, showTime, shape,
     size, style, disabled, readOnly, onChange, onClick, onBlur,
     onClear, tooltip, tTitle, tTrigger, fieldNames, suggestion,
-    format, icon
+    format, icon, orderCheck=true, ranges={}
   ) => {
     let item = null;
     switch (type) {
@@ -345,6 +346,7 @@ class FormItems extends Component {
             size={size}
             style={{ width: '100%', ...style }}
             minuteStep={min}
+            order={orderCheck}
             showNow={max}
             disabled={disabled}
             onChange={onChange}
@@ -358,6 +360,7 @@ class FormItems extends Component {
             showTime={showTime}
             disabledDate={min ?? max}
             size={size}
+            ranges={ranges}
             style={style}
             onBlur={onBlur}
             onChange={onChange}

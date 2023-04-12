@@ -1,14 +1,12 @@
 import React, { Component } from 'react'
 import { Modal, Row, Col, TimePicker, Form, Table } from "antd";
 import { LoadingOutlined,InboxOutlined } from "@ant-design/icons";
-import TextArea from 'antd/lib/input/TextArea';
-import Dragger from 'antd/lib/upload/Dragger';
-import { addFiles, getAttachments } from "../../../service/Attachment-Apis";
-import { addMilestoneTimesheetNote } from "../../../service/timesheet";
-import { dateRange, formatDate, formatFloat } from '../../../service/constant';
+import { formatDate, formatFloat } from '../../../service/constant';
+import { getHolidays } from "../../../service/opportunities"; // this need to be change using it here cuz it was already in oppotutinty for profit and loss
 import moment from 'moment'
 import FormItems from '../../../components/Core/Forms/FormItems';
 import '../../styles/table.css'
+import { getUserMilestones } from '../../../service/constant-Apis';
 
 class BulkModal  extends Component{
     constructor(props){
@@ -22,7 +20,7 @@ class BulkModal  extends Component{
               key: 'date',
               render: (text, records) => (
                 <Row justify="space-between">
-                  <Col> {formatDate(text, true, true)} </Col>
+                  <Col> {formatDate(records.key, true, true)} </Col>
                   {/* <Col style={{ marginLeft: 'auto', color: 'red' }}>
                     {records.disabled}
                   </Col> */}
@@ -36,7 +34,7 @@ class BulkModal  extends Component{
               render: (text, records, index) => (
                 <Form.Item
                   noStyle
-                  name={['entry', formatDate(records.date, true, 'DD-MM-YYYY'), 'startTime']}
+                  name={['entry', formatDate(records.key, true, 'DD-MM-YYYY'), 'startTime']}
                 >
                   <TimePicker
                     placeholder="Start Time"
@@ -60,7 +58,7 @@ class BulkModal  extends Component{
               render: (text, records, index) => (
                 <Form.Item
                   noStyle
-                  name={['entry', formatDate(records.date, true, 'DD-MM-YYYY'), 'endTime']}
+                  name={['entry', formatDate(records.key, true, 'DD-MM-YYYY'), 'endTime']}
                 >
                   <TimePicker
                     placeholder="End Time"
@@ -104,6 +102,7 @@ class BulkModal  extends Component{
               title: 'Hours',
               dataIndex: 'actualHours',
               key: 'actualHours',
+              align: 'center'
             //   render: (text, records, index) => text
             },
         ];
@@ -111,9 +110,28 @@ class BulkModal  extends Component{
         this.state ={
             loading: false,
             disabled: false,
+            holidays: [],
             BasicFields: [
                 {
-                  Placeholder: 'Date',
+                    Placeholder: 'Project',
+                    fieldCol: 6,
+                    rangeMin: true, 
+                    size: 'small',
+                    type: 'Text',
+                    labelAlign: 'right',
+                    itemStyle: { marginBottom: '10px' },
+                },
+                {
+                    object: 'dates',
+                    fieldCol: 18,
+                    key: 'workId',
+                    size: 'small',
+                    rules: [{ required: true, message: 'Project Is Required' }],
+                    data: [],
+                    type: 'Select',
+                },
+                {
+                  Placeholder: 'Dates',
                   rangeMin: true,
                   fieldCol: 6,
                   size: 'small',
@@ -130,10 +148,14 @@ class BulkModal  extends Component{
                   },
                   size: 'small',
                   type: 'RangePicker',
-                  rules: [{ required: true, message: 'Dates are Required' }],
+                  rules: [{ required: true, message: 'Dates Are Required' }],
                   fieldStyle: { width: '100%' },
-                  onChange:(values)=>{
-                    const { times } = this.formRef.current.getFieldsValue();
+                  ranges: {
+                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                  },
+                  onChange:(values=[])=>{
+                    const { times, dates: {dateRange = []}, include } = this.formRef.current.getFieldsValue();
+                    values= values|| [];
                     this.getDateArray(values[0],values[1], times)
                   }
                 },
@@ -151,12 +173,14 @@ class BulkModal  extends Component{
                     key: "timeRange",
                     type: "TimeRange",
                     mode: "use12Hours",
+                    orderCheck: false,
                     rangeMax: false,
                     rangeMin: 15,
                     size: "small",
                     showTime: "hh:mm a",
                     onChange:(values)=>{
-                        const { times, dates: {dateRange = []} } = this.formRef.current.getFieldsValue();
+                        let { times, dates: {dateRange = []}, include } = this.formRef.current.getFieldsValue();
+                        dateRange = dateRange || [];
                         this.getDateArray(dateRange[0],dateRange[1], times)
                     }
                 },
@@ -179,71 +203,67 @@ class BulkModal  extends Component{
                     size: "small",
                     showTime: "HH:mm",
                     onChange:(values)=>{
-                        const { times, dates: {dateRange = []} } = this.formRef.current.getFieldsValue();
+                        let { times, dates: {dateRange = []}, include } = this.formRef.current.getFieldsValue();
+                        dateRange = dateRange || [];
                         this.getDateArray(dateRange[0],dateRange[1], times)
                     }
                 },
                 {
-                    object: "obj",
+                    object: "includes",
                     fieldCol: 12,
-                    key: "isweekend",
+                    key: "isWeekend",
                     size: "small",
                     label: 'Weekends',
-                    initialValue: false,
+                    initialValue: true,
                     type: "Checkbox",
                     valuePropName: "checked",
                     itemStyle:{margin:'10px 0px'},
-                    // name:"reimbursed",
-                    // value:"reimbursed"
-                    // checked: []
+                    onChange:(values)=>{
+                        let { times, dates: {dateRange = []}, include } = this.formRef.current.getFieldsValue();
+                        dateRange = dateRange || [];
+                        this.getDateArray(dateRange[0],dateRange[1], times)
+                    }
                 },
                 {
-                    object: "obj",
+                    object: "includes",
                     fieldCol: 12,
-                    key: "iHoliday",
+                    key: "isHoliday",
                     label: 'Holidays',
                     size: "small",
-                    initialValue: false,
+                    initialValue: true,
                     type: "Checkbox",
                     valuePropName: "checked",
                     itemStyle:{margin:'10px 0px'},
-                    // name:"reimbursed",
-                    // value:"reimbursed"
-                    // checked: []
+                    onChange:(values)=>{
+                        let { times, dates: {dateRange = []}, include } = this.formRef.current.getFieldsValue();
+                        dateRange = dateRange || [];
+                        this.getDateArray(dateRange[0],dateRange[1], times)
+                    }
                 },
             ],
         }
     }
     
     componentDidMount=()=>{
-        // const { milestoneEntryId } = this.props.timeObj
-        // this.getRecord('PEN', milestoneEntryId[0])
+        this.getProjects()
+        this.fetchHolidays()
     }
 
     getRecord = (targetType, targetId) =>{
-        const { notes } = this.props.timeObj
-        getAttachments(targetType, targetId).then(res=>{
-            if(res.success){
-                this.setState({
-                    fileList: res.fileList,
-                    fileIds: res.fileIds,
-                    notes: notes
-                })
-            }
-        })
     }
 
     getTableSummary = (data) => {
         let total = 0;
-        data.forEach(({ hours }) => {
-          total += parseFloat(hours ?? 0);
+        data.forEach(({ actualHours }) => {
+          total += parseFloat(actualHours ?? 0);
         });
     
         return (
           <Table.Summary fixed="top">
             <Table.Summary.Row>
-              <Table.Summary.Cell index={0}>Total</Table.Summary.Cell>
-              <Table.Summary.Cell index={1} colSpan={4}>
+              <Table.Summary.Cell index={0}  colSpan={3}></Table.Summary.Cell>
+              <Table.Summary.Cell index={1} align='right'>Total</Table.Summary.Cell>
+              <Table.Summary.Cell index={2} align='center'>
                 {formatFloat(total)}
               </Table.Summary.Cell>
             </Table.Summary.Row>
@@ -251,29 +271,44 @@ class BulkModal  extends Component{
         );
     };
     
-    getDateArray = (start, end, defaultTime ={}, entries) => {
+    getDateArray = () => {
         //try to put your condition to put closer to eachother if they link to eachother
-        //so it will be easy to track conditions
         let { holidays, data =[], hoursEntry={} } = this.state;
-        let { timeRange: [d_start ,d_end ] = [null, null], breakHours: d_break = 0} = defaultTime
+        //so it will be easy to track conditions
+        const { times: defaultTime, dates: {dateRange = []}, includes: {isWeekend, isHoliday} } = this.formRef.current.getFieldsValue();
+        //get data from form 
+        let [start = null, end = null] = dateRange || [];
+        let {timeRange, breakHours: d_break = 0} = defaultTime
+        let [d_start = null, d_end = null] = timeRange || []
+        //initilizing form data into varialbles
+
+        // had to format and re-format is becuase of changing in some nano second was making a lil diffenert in millisecond
+        let duration = ((d_start && d_end) && Math.abs(moment.duration(moment(d_end.format('hh:mm a'), 'hh:mm a').diff(moment(d_start.format('hh:mm a'), 'hh:mm a'))).asHours()))?? 0 ;
+        let breakAsHours = d_break && moment.duration(d_break.format('HH:mm')).asHours()
+        console.log({d_start,
+            d_end,
+            d_break,})
         if (start && end) {
             var arr = new Array();
             while (start.isSameOrBefore(end)) {
-                let newDate = start.format('DD-MM-YYYY');
-                let duration = ((d_start && d_end) && moment.duration(d_end.diff(d_start)).asHours() )?? 0
-                hoursEntry[newDate] = {
+                const newDate = start.format('DD-MM-YYYY');
+                hoursEntry[newDate]  = {
                     startTime: d_start,
                     endTime: d_end,
                     breakHours: d_break,
-                    actualHours: duration
+                    actualHours: formatFloat(duration - breakAsHours)
                 }
+                if (isWeekend&& start.isoWeekday() > 5) {
+                    hoursEntry[newDate] = {}
+                }
+                if(isHoliday && holidays[start.format('M D YYYY')]){
+                    hoursEntry[newDate] = {}
+                }
+                
                 arr.push({
-                    key: newDate,
-                    date: start.format('YYYY-MM-DD'),
-                    startTime: d_start,
-                    endTime: d_end,
-                    breakHours: d_break,
-                    actualHours: duration
+                    key: start.format('YYYY-MM-DD'),
+                    date: newDate,
+                    ...(hoursEntry[newDate])
                 });
                 start = moment(start).add(1, 'd');
             }
@@ -282,9 +317,39 @@ class BulkModal  extends Component{
             hoursEntry = {};
             data =[]
         }
-        console.log(data, hoursEntry)
         this.setState({ data, hoursEntry, });
         this.formRef.current.setFieldsValue({ entry: hoursEntry });
+    }
+
+    getProjects = () => {
+        let {BasicFields} =this.state
+        const {userId, monthStart, monthEnd} = this.props?.bulkData
+        getUserMilestones({
+        userId: userId,
+        phase: 0,
+        startDate: monthStart.format('DD-MM-YYYY'),
+        endDate: monthEnd.format('DD-MM-YYYY'),
+        }).then((res) => {
+        if (res.success) {
+            BasicFields[1].data =res.data
+            this.setState({
+            BasicFields
+            });
+        }
+        });
+    };
+
+    fetchHolidays = (id=0) =>{
+        getHolidays(id).then(res=>{
+            if(res.success){
+                const { holidays } = res.data
+                let holidaysObj = {}
+                for (const date of holidays) {
+                    holidaysObj[date] = true
+                }
+                this.setState({holidays: holidaysObj})
+            }
+        })
     }
 
     onSubmit = (values)=>{
@@ -309,7 +374,7 @@ class BulkModal  extends Component{
               htmlType: 'submit',
               form: 'my-form',
             }}
-            okText={loading ? <LoadingOutlined /> : 'Submit'}
+            okText={loading ? <LoadingOutlined /> : 'Save'}
             onCancel={close}
             width={'85vw'}
             // footer={}
@@ -332,7 +397,7 @@ class BulkModal  extends Component{
                 <Table
                     sticky
                     style={{
-                      maxHeight: '40vh',
+                      height: '60vh',
                       overflowY: 'scroll',
                       position: 'relative',
                     }}

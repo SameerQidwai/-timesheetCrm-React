@@ -107,25 +107,25 @@ export const formatCurrency = (amount, fixed) => {
   return  '$ 0.00' ;
 }; //end
 
-// export const formatFloat = (number, fixed, round) => { //not using as for now using INTL method
-//   if (round){
-//     return !isNaN(parseFloat(number)) ? parseFloat(number).toFixed(2) : '0.00';
-//   }
-//   return toTruncate(number, fixed || 2 )
-// };
-
-export const formatFloat = (number, fixed, round)=>{
-  if (number && !isNaN(number)){
-    var formatter = new Intl.NumberFormat('en-US', {
-      // notation: "compact",
-      // compactDisplay: "long",
-      maximumFractionDigits: fixed ?? 2, 
-      roundingMode: round ?? 'trunc'
-    });  
-    return formatter.format(number)
+export const formatFloat = (number, fixed, round) => { 
+  if (round){
+    return !isNaN(parseFloat(number)) ? parseFloat(number).toFixed(2) : '0.00';
   }
-  return '0.00' 
-}
+  return toTruncate(number, fixed || 2 )
+};
+
+// export const formatFloat = (number, fixed, round)=>{ //not using as using INTL method's trunc is still rounding off
+//   if (number && !isNaN(number)){
+//     var formatter = new Intl.NumberFormat('en-US', {
+//       // notation: "compact",
+//       // compactDisplay: "long",
+//       maximumFractionDigits: fixed ?? 2, 
+//       roundingMode: round ?? 'trunc'
+//     });  
+//     return formatter.format(number)
+//   }
+//   return '0.00' 
+// }
 
 
 // export const formatDate = (date, format) =>{

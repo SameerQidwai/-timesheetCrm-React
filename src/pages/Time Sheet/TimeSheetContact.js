@@ -97,7 +97,7 @@ class TimeSheetContact extends Component {
                     </Col>
                     {/* File_name and paperclip to show under project is in comment section line 156*/}
                     <Col style={{ marginLeft: 'auto' }}>
-                      <span
+                      {/* <span /> // this is for  bulk entry Icon on single project 
                         className={
                           ['AP'].includes(record.status)
                             ? 'disabledanticon'
@@ -117,7 +117,7 @@ class TimeSheetContact extends Component {
                             style={{ color: '#1890ff', marginRight: 10 }}
                           />
                         </Tooltip>
-                      </span>
+                      </span> */}
                       <Tooltip
                         placement="top"
                         title="Export"
@@ -249,7 +249,7 @@ class TimeSheetContact extends Component {
       });
   };
 
-  getProjects = (userId, startDate, endDate) => {
+  getProjects = (userId, startDate, endDate) => { // remove this if project button gets removed
     getUserMilestones({
       userId: userId,
       phase: 0,
@@ -647,13 +647,16 @@ class TimeSheetContact extends Component {
     }
   };
 
-  openBulkModal = (record, index) => {
+  openBulkModal = () => {
     const { startDate, endDate } = this.state.sheetDates;
+    const { sUser } = this.state;
     this.setState({
       isBulk: {
+        userId: sUser,
         monthStart: startDate,
         monthEnd: endDate,
-        milestoneId: record.milestoneId,
+        visible: true
+        // milestoneId: record.milestoneId,
       },
     });
   };
@@ -841,27 +844,7 @@ class TimeSheetContact extends Component {
   };
 
   render() {
-    const {
-      loading,
-      data,
-      isVisible,
-      proVisible,
-      columns,
-      editTime,
-      timeObj,
-      sheetDates,
-      milestones,
-      sMilestone,
-      isAttach,
-      isBulk,
-      isDownload,
-      eData,
-      USERS,
-      sUser,
-      loginId,
-      sTMilestones,
-      permissions,
-    } = this.state;
+    const { loading, data, isVisible, proVisible, columns, editTime, timeObj, sheetDates, milestones, sMilestone, isAttach, isBulk, isDownload, eData, USERS, sUser, loginId, sTMilestones, permissions, } = this.state;
     // delete button disable condition
     const canDelete =
       sTMilestones.keys.length < 1 &&
@@ -869,11 +852,11 @@ class TimeSheetContact extends Component {
     const { sWeek, startDate, endDate } = this.state.sheetDates;
     return (
       <>
-        <Row justify="space-between">
+        <Row justify="space-between" gutter={20}>
           <Col>
             <Title level={4}>Timesheet Submission</Title>
           </Col>
-          <Col>
+          <Col style={{marginLeft: 'auto'}}>
             <Select
               placeholder="Select User"
               options={USERS}
@@ -927,7 +910,17 @@ class TimeSheetContact extends Component {
               defaultValue={moment()}
             />
           </Col>
-          <Col>
+          <Col >
+            <Button
+              type="primary"
+              disabled={sUser !== loginId}
+            //   style={{backgroundColor: '#f37748' , border: '#f37748'}}
+              onClick={() => { this.openBulkModal(); }}
+            >
+              Add Time Entries
+            </Button>
+          </Col>
+          {/* <Col >
             <Button
               type="primary"
               disabled={sUser !== loginId}
@@ -938,13 +931,14 @@ class TimeSheetContact extends Component {
             >
               Add Project
             </Button>
-          </Col>
+          </Col> */}
         </Row>
-        <Row justify="end">
+        <Row justify="end" gutter={[0,20]}>
           <Col>
             <Button
               disabled={sWeek.isSameOrBefore(startDate)}
               value="pWeek"
+              size="small"
               onClick={() => this.handleSelWeek('pWeek')}
             >
               <LeftOutlined />
@@ -952,6 +946,7 @@ class TimeSheetContact extends Component {
             <Button
               disabled={sWeek.isSameOrAfter(endDate)}
               value="nWeek"
+              size="small"
               onClick={() => this.handleSelWeek('nWeek')}
             >
               <RightOutlined />
@@ -1048,7 +1043,7 @@ class TimeSheetContact extends Component {
         )}
         {isBulk && (
           <BulkModal
-            visible={!!isBulk?.milestoneId}
+            visible={!!isBulk?.visible}
             bulkData={isBulk}
             close={() => this.setState({ isBulk: false })}
           />
@@ -1059,7 +1054,7 @@ class TimeSheetContact extends Component {
             close={() => this.setState({ isDownload: false })}
           />
         )}
-        {proVisible && (
+        {proVisible && ( // if Project gets remove remove this
           <Modal
             title="Add Project"
             maskClosable={false}
