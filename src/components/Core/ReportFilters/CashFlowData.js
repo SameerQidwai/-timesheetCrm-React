@@ -207,7 +207,7 @@ export const closing_cashflows = [
     },
     render:(key, record)=>{
       key = key.startsWith('FY')? 'total' : key
-      return formatNegativeValue(record[key]) 
+      return record[key] ? formatNegativeValue(record[key])  : '-'
     }
   },
   {
@@ -220,7 +220,7 @@ export const closing_cashflows = [
     },
     render:(key, record)=>{
       key = key.startsWith('FY')? 'total' : key
-      return formatNegativeValue(record[key]) 
+      return record[key] ? formatNegativeValue(record[key])  : '-'
     }
   },
   {}

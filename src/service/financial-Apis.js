@@ -135,20 +135,20 @@ export const getSaveCashFlow = (queryParam) => {
   let {start, end} = getFiscalYear('dates')
   return axios
     .get(
-      `${Api}/cashflowReportLabel/`,
+      `${Api}/cashflowReportLabel/getReport`,
       { headers: headers() }
     )
     .then((res) => {
       const { success, data=[], message } = res.data;
       jwtExpired(message);
       let structData = {}
-      if (success){
-        for (const {values, title} of data) {
-          structData[title] = values
-        }
-      }
+      // if (success){
+      //   for (const {values, title} of data) {
+      //     structData[title] = values
+      //   }
+      // }
       setToken(res?.headers?.authorization);
-      return { success: success, data: structData };
+      return { success: success, data: data };
     })
     .catch((err) => {
       return {
