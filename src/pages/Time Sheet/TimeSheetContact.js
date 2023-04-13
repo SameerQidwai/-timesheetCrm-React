@@ -843,6 +843,32 @@ class TimeSheetContact extends Component {
     }
   };
 
+  bulkCallBack = () =>{
+    // get timesheet for the employee withe date
+    const { sUser, sheetDates } = this.state;
+    const { startDate, endDate } = sheetDates;
+    if (sUser) {
+      getList({
+        userId: sUser,
+        startDate: startDate.format('DD-MM-YYYY'),
+        endDate: endDate.format('DD-MM-YYYY'),
+      }).then((res) => {
+        // if (res.success){
+        this.setState({
+          timesheet: res.data ?? {},
+          data: res?.data?.milestones ?? [],
+          sTMilestones: {
+            milestones: [],
+            keys: [],
+          },
+          isBulk: false 
+        });
+        // }
+      });
+    }
+  }
+
+
   render() {
     const { loading, data, isVisible, proVisible, columns, editTime, timeObj, sheetDates, milestones, sMilestone, isAttach, isBulk, isDownload, eData, USERS, sUser, loginId, sTMilestones, permissions, } = this.state;
     // delete button disable condition
@@ -1045,6 +1071,7 @@ class TimeSheetContact extends Component {
           <BulkModal
             visible={!!isBulk?.visible}
             bulkData={isBulk}
+            callBack={this.bulkCallBack}
             close={() => this.setState({ isBulk: false })}
           />
         )}
