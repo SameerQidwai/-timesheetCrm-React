@@ -44,6 +44,25 @@ export const addTime = (keys ,data) => {
             return apiErrorRes(err, 1, 5)
         });
 };
+export const addBulkTime = (keys ,data) => {
+    messageAlert.loading({ content: 'Loading...', key: 1 })
+    return axios
+        .post(url +`bulkEntry/${keys.monthStart}&${keys.monthEnd}&${keys.userId}`, data, {headers:headers()})
+        .then((res) => {
+            const { success, data, message } = res.data;
+            jwtExpired(message)
+            if (success) {
+                messageAlert.success({ content: message, key: 1})
+                data.actualHours = data.hours
+                setToken(res?.headers?.authorization)
+                return {success, data}
+            };
+            return { success }
+        })
+        .catch((err) => {
+            return apiErrorRes(err, 1, 5)
+        });
+};
 
 export const editTime = (entryId ,data) => {
     messageAlert.loading({ content: 'Loading...', key: 1 })
