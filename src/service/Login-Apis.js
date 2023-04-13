@@ -150,7 +150,7 @@ export const getSettings = () => {
           superannuationAddress: data.superannuationAddress,
           superannuationType: data.superannuationType,
           superannuationFileId: data.superannuationFileId,
-          file: data.superannuationFileId
+          file: data?.superannuationFile?.id
             ? [
                 {
                   id: data.superannuationFile.id,
@@ -165,6 +165,23 @@ export const getSettings = () => {
               ]
             : [],
         };
+        const tfn = {
+          tfnFileId: data.tfnFileId,
+          file: data?.tfnFile?.id
+            ? [
+                {
+                  id: data.tfnFile.id,
+                  createdAt: data.tfnFile.createdAt,
+                  fileId: data.tfnFile.id,
+                  uid: data.tfnFile.uniqueName,
+                  name: data.tfnFile.originalName,
+                  type: data.tfnFile.type,
+                  url: `${Api}/files/${data.tfnFile.uniqueName}`,
+                  thumbUrl: thumbUrl(data.tfnFile.type),
+                },
+              ]
+            : [],
+        }
         const kin = {
           nextOfKinDateOfBirth: formatDate(data.nextOfKinDateOfBirth),
           nextOfKinEmail: data.nextOfKinEmail,
@@ -183,7 +200,7 @@ export const getSettings = () => {
           taxFreeThreshold: data.taxFreeThreshold,
           helpHECS: data.helpHECS,
           bankAccountFileId: bankAccount.fileId,
-          file: bankAccount.fileId
+          file: bankAccount?.file?.id
             ? [
                 {
                   id: bankAccount.file.id,
@@ -254,6 +271,7 @@ export const getSettings = () => {
           data,
           basic,
           detail,
+          tfn,
           kin,
           bank,
           billing: {contracts, activeContractId},

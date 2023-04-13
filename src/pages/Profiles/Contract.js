@@ -134,6 +134,7 @@ function ViewDetails({data}) {
             key: "bohPercent",
             disabled: true,
             size: "small",
+            shape: "%",
             type: "InputNumber",
             fieldStyle: { width: "100%" },
             itemStyle: { marginBottom: 10 },

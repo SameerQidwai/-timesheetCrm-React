@@ -44,8 +44,8 @@ class InfoModal extends Component {
       CONTACT: [],
       data: {},
       imgLoading: false,
-      files: {contract: [], superannuation: [], bankAccount: []},
-      fileIds: {contract: null, superannuation: null, bankAccount: null},
+      files: {contract: [], superannuation: [], bankAccount: [], tfn: []},
+      fileIds: {contract: null, superannuation: null, bankAccount: null, tfn: null},
       activeKey: 'basic',
 
       BasicFields: [
@@ -909,11 +909,13 @@ class InfoModal extends Component {
             contact: res.billing.fileId,
             superannuation: res.detail.superannuationFileId,
             bankAccount: res.bank.bankAccountFileId,
+            tfn: res.tfn.tfnFileId,
           },
           files: {
             contract: res.billing.file,
             superannuation: res.detail.file,
             bankAccount: res.bank.file,
+            tfn: res.tfn.file,
           },
           BillingFields,
         });
@@ -1135,6 +1137,7 @@ class InfoModal extends Component {
       superannuationType: detail?.superannuationType ?? null,
       superannuationFileId: fileIds.superannuation,
       bankAccountFileId: fileIds.bankAccount,
+      tfnFileId: fileIds.tfn,
       bankName: bank.bankName ?? '',
       bankAccountNo: bank.bankAccountNo ?? '',
       bankBsb: bank.bankBsb ?? '',
@@ -1262,7 +1265,7 @@ class InfoModal extends Component {
           scrollToFirstError={true}
           size="small"
           layout="inline"
-          initialValues={{ billing: { startDate: null, bohPercent:0 } }}
+          initialValues={{ billing: { startDate: null, bohPercent: 0 } }}
         >
           {!editEmp && (
             <Col span={8} style={{ marginBottom: 10 }}>
@@ -1289,10 +1292,11 @@ class InfoModal extends Component {
             <Form.Item
               name={['basic', 'username']}
               rules={[
-                { required: true, message: 'Email/Username is requrired' }, {
+                { required: true, message: 'Email/Username is requrired' },
+                {
                   type: 'email',
                   message: 'The input is not valid e-mail!',
-                }
+                },
               ]}
             >
               <Input
@@ -1300,7 +1304,7 @@ class InfoModal extends Component {
                 size="small"
                 type="email"
                 style={{ width: '100%' }}
-                />
+              />
             </Form.Item>
           </Col>
           <Tabs
@@ -1327,12 +1331,14 @@ class InfoModal extends Component {
               <FormItems FormFields={BillingFields} />
               <p style={{ marginTop: 10, marginBottom: 2 }}>Signed Contract</p>
               <Upload
-                customRequest={(options)=>this.handleUpload(options, 'contract')}
+                customRequest={(options) =>
+                  this.handleUpload(options, 'contract')
+                }
                 // listType="picture"
                 listType="picture-card"
                 maxCount={1}
                 fileList={files.contract}
-                onRemove={()=>this.onRemove('contract')}
+                onRemove={() => this.onRemove('contract')}
               >
                 {files?.contract.length < 1 && (
                   <div style={{ marginTop: 10 }}>
@@ -1350,14 +1356,18 @@ class InfoModal extends Component {
               className="ant-form ant-form-inline ant-form-small"
             >
               <FormItems FormFields={DetailFields} />
-              <p style={{ marginTop: 10, marginBottom: 2 }}>Superannuation Form</p>
+              <p style={{ marginTop: 10, marginBottom: 2 }}>
+                Superannuation Form
+              </p>
               <Upload
-                customRequest={(options)=>this.handleUpload(options, 'superannuation')}
+                customRequest={(options) =>
+                  this.handleUpload(options, 'superannuation')
+                }
                 // listType="picture"
                 listType="picture-card"
                 maxCount={1}
                 fileList={files.superannuation}
-                onRemove={()=>this.onRemove('superannuation')}
+                onRemove={() => this.onRemove('superannuation')}
               >
                 {files?.superannuation.length < 1 && (
                   <div style={{ marginTop: 10 }}>
@@ -1383,23 +1393,47 @@ class InfoModal extends Component {
               className="ant-form ant-form-inline ant-form-small"
             >
               <FormItems FormFields={BankFields} />
-              <p style={{ marginTop: 10, marginBottom: 2 }}>TFN Declaration</p>
-              <Upload
-                customRequest={(options)=>this.handleUpload(options, 'bankAccount')}
-                // listType="picture"
-                listType="picture-card"
-                maxCount={1}
-                fileList={files.bankAccount}
-                onRemove={()=>this.onRemove('bankAccount')}
-              >
-                {files?.bankAccount.length < 1 && (
-                  <div style={{ marginTop: 10 }}>
-                    <PlusOutlined />
-                    <div style={{ marginTop: 8 }}>Upload</div>
-                  </div>
-                )}
-                {/* <Button icon={<UploadOutlined />} style={{marginTop: 10}} loading={imgLoading}>Upload Contract</Button> */}
-              </Upload>
+              {/* <Row> */}
+                <Col span={12}>
+                  <p style={{ marginTop: 10, marginBottom: 2 }}>Bank Details</p>
+                  <Upload
+                    customRequest={(options) =>
+                      this.handleUpload(options, 'bankAccount')
+                    }
+                    // listType="picture"
+                    listType="picture-card"
+                    maxCount={1}
+                    fileList={files.bankAccount}
+                    onRemove={() => this.onRemove('bankAccount')}
+                  >
+                    {files?.bankAccount.length < 1 && (
+                      <div style={{ marginTop: 10 }}>
+                        <PlusOutlined />
+                        <div style={{ marginTop: 8 }}>Upload</div>
+                      </div>
+                    )}
+                    {/* <Button icon={<UploadOutlined />} style={{marginTop: 10}} loading={imgLoading}>Upload Contract</Button> */}
+                  </Upload>
+                </Col>
+                <Col span={12} style={{ marginBottom: 10 }}>
+                  <p style={{ marginBottom: 2 }}>TFN Declaration</p>
+                  <Upload
+                    customRequest={(option) => this.handleUpload(option, 'tfn')}
+                    listType="picture-card"
+                    maxCount={1}
+                    fileList={files.tfn}
+                    name={`TFN Declaration`}
+                    onRemove={() => this.onRemove('tfn')}
+                  >
+                    {files?.tfn.length < 1 && (
+                      <div style={{ marginTop: 10 }}>
+                        <PlusOutlined />
+                        <div style={{ marginTop: 8 }}>Upload</div>
+                      </div>
+                    )}
+                  </Upload>
+                </Col>
+              {/* </Row> */}
             </TabPane>
             <TabPane
               tab="Employee Manager"
