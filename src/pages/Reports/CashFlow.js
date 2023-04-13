@@ -23,6 +23,7 @@ const EditableCell = ({
 }) => {
   const inputRef = useRef(null);
   const form = useContext(EditableContext);
+  dataIndex = dataIndex === 'Comments' ? 'description' :dataIndex
   let comment_key = form.getFieldValue([record?.['key'], dataIndex]);
 
   const save = async (entered) => {
@@ -54,7 +55,7 @@ const EditableCell = ({
   let childNode = children;
 
   if (editable) {
-    if (dataIndex === 'Comments') {
+    if (dataIndex === 'description') {
       childNode = (
         <Row>
           <Col>
