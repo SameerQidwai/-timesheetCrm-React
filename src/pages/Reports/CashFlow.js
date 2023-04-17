@@ -64,6 +64,7 @@ const EditableCell = ({
                 style={{
                   margin: 0,
                 }}
+                initialValue={""}
                 name={[record['key'], 'description']}
               >
                 <Input
@@ -276,6 +277,9 @@ function CashFlow() {
 
   const onFormSubmit = (values) =>{
     setLoading(true)
+    for (const key in values) {
+      values[key]['description']  = values[key]['description'] ?  values[key]['description'] : ''
+    }
     updateSaveCashFlow(values).then(res=>{
       setLoading(false)
       // if(res)
