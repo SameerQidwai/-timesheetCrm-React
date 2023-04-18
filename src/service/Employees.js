@@ -39,8 +39,8 @@ export const getRecord = (id) => {
       const { success, data, message } = res.data;
       jwtExpired(message);
       if (success) {
-        const { basic, detail, kin, bank, billing, train } = reStructure(data);
-        return { success, data, basic, detail, kin, bank, billing, train };
+        // const { basic, detail, kin, bank, billing, train, tfn } = reStructure(data);
+        return { success, data, ...reStructure(data) };
       }
       return { success };
     })
@@ -101,7 +101,6 @@ export const delList = (id) => {
 
 export const editList = (id, data) => {
   messageAlert.loading({ content: 'Loading...', key: id });
-  console.log(data);
   return axios
     .put(url + `/${id}`, data, { headers: headers() })
     .then((res) => {
@@ -164,12 +163,44 @@ function reStructure(data) {
     superannuationName: data.superannuationName,
     superannuationBankName: data.superannuationBankName,
     superannuationBankAccountOrMembershipNumber:
-      data.superannuationBankAccountOrMembershipNumber,
+    data.superannuationBankAccountOrMembershipNumber,
     superannuationAbnOrUsi: data.superannuationAbnOrUsi,
     superannuationBankBsb: data.superannuationBankBsb,
     superannuationAddress: data.superannuationAddress,
     superannuationType: data.superannuationType,
+    superannuationFileId: data.superannuationFileId,
+    file: data.superannuationFileId && data.superannuationFile
+      ? [
+          {
+            id: data.superannuationFile?.id,
+            createdAt: data.superannuationFile?.createdAt,
+            fileId: data.superannuationFile?.id,
+            uid: data.superannuationFile?.uniqueName,
+            name: data.superannuationFile?.originalName,
+            type: data.superannuationFile?.type,
+            url: `${Api}/files/${data.superannuationFile?.uniqueName}`,
+            thumbUrl: thumbUrl(data.superannuationFile?.type),
+          },
+        ]
+      : [],
   };
+  const tfn = {
+    tfnFileId: data.tfnFileId,
+    file: data?.tfnFile?.id
+      ? [
+          {
+            id: data.tfnFile.id,
+            createdAt: data.tfnFile.createdAt,
+            fileId: data.tfnFile.id,
+            uid: data.tfnFile.uniqueName,
+            name: data.tfnFile.originalName,
+            type: data.tfnFile.type,
+            url: `${Api}/files/${data.tfnFile.uniqueName}`,
+            thumbUrl: thumbUrl(data.tfnFile.type),
+          },
+        ]
+      : [],
+  }
   const kin = {
     nextOfKinDateOfBirth: formatDate(data.nextOfKinDateOfBirth),
     nextOfKinEmail: data.nextOfKinEmail,
@@ -186,6 +217,21 @@ function reStructure(data) {
     tfn: data.tfn,
     taxFreeThreshold: data.taxFreeThreshold,
     helpHECS: data.helpHECS,
+    bankAccountFileId: bankAccount.fileId,
+    file: bankAccount.fileId && bankAccount?.file
+      ? [
+          {
+            id: bankAccount?.file?.id,
+            createdAt: bankAccount?.file?.createdAt,
+            fileId: bankAccount?.file?.id,
+            uid: bankAccount?.file?.uniqueName,
+            name: bankAccount?.file?.originalName,
+            type: bankAccount?.file?.type,
+            url: `${Api}/files/${bankAccount?.file?.uniqueName}`,
+            thumbUrl: thumbUrl(bankAccount?.file?.type),
+          },
+        ]
+      : [],
   };
   const employmentContracts =
     data.employmentContracts.length > 0 ? data.employmentContracts[0] : {};
@@ -226,5 +272,5 @@ function reStructure(data) {
   const train = {
     training: data.training,
   };
-  return { basic, detail, kin, bank, billing, train };
+  return { basic, detail, kin, bank, billing, train, tfn };
 }
