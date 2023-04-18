@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext, useRef } from 'react'
-import { Col, InputNumber, Row, Table, Typography, Form } from 'antd'
+import { Col, InputNumber, Row, Table, Typography, Form, Popconfirm, Button } from 'antd'
 import { formatCurrency, getFiscalYear, parseDate } from '../../service/constant';
 import { getWorkInHandForecast } from '../../service/reports-Apis';
 import "../../../src/components/Styles/table.css"
-import { contribution_margin, cost_of_sale, direct_overhead_expense, formatNegativeValue, getValueWithCondition, income_revenue, income_tax, net_profit, nextFocus } from '../../components/Core/ReportFilters/BudgetData';
+import { cash_inflows, cash_outflows, closing_cashflows, formatNegativeValue, getValueWithCondition, nextFocus } from '../../components/Core/ReportFilters/CashFlowData';
 import moment from 'moment'
 import { formatter, parser } from '../../components/Core/Forms/FormItems';
 const {Title} = Typography
@@ -27,7 +27,7 @@ const EditableCell = ({
   const save = async (entered) => {
     let value = form.getFieldValue([record['key'], dataIndex])
     let updated = form.isFieldTouched([record['key'], dataIndex])
-    if ( value && updated ){
+    if ( updated ){
       try {
         handleSave(indexing, dataIndex, value);
         setTimeout(() => {
@@ -49,30 +49,63 @@ const EditableCell = ({
   let childNode = children;
 
   if (editable) {
-    childNode =  (
-      <Row >
-        <Col >
-          <Form.Item
-            style={{
-              margin: 0,
-            }}
-            name={[record['key'],dataIndex]}
-          >
-            <InputNumber
-              ref={inputRef}
-              controls={false}
-              size="small"
-              formatter={(value) => formatter(value, "$") }
-              parser={(value) => parser(value, "$") }
-              // onFocus={()=>{ setBlurHook(true) }}
-              onBlur={()=>save()}
-              onPressEnter={(event)=> save(true)}
-            />
-          </Form.Item>
-        </Col>
-      </Row>
-    ) 
+    if (!record?.['partialEdit']){
+      childNode =  (
+        <Row >
+          <Col >
+            <Form.Item
+              style={{
+                margin: 0,
+              }}
+              name={[record['key'],dataIndex]}
+            >
+              <InputNumber
+                ref={inputRef}
+                className="table-inputNumber-border"
+                controls={false}
+                // bordered={false}
+                size="small"
+                formatter={(value) => formatter(value, "$") }
+                parser={(value) => parser(value, "$") }
+                // onFocus={()=>{ setBlurHook(true) }}
+                onBlur={()=>save()}
+                onPressEnter={(event)=> save(true)}
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+      ) 
+    }else{
+      if (moment(dataIndex, 'MMM YY').format('MMM') === record?.['partialEdit']){
+        childNode =  (
+          <Row >
+            <Col >
+              <Form.Item
+                style={{
+                  margin: 0,
+                }}
+                name={[record['key'],dataIndex]}
+              >
+                <InputNumber
+                  ref={inputRef}
+                  className="table-inputNumber-border"
+                  controls={false}
+                  // bordered={false}
+                  size="small"
+                  formatter={(value) => formatter(value, "$") }
+                  parser={(value) => parser(value, "$") }
+                  // onFocus={()=>{ setBlurHook(true) }}
+                  onBlur={()=>save()}
+                  onPressEnter={(event)=> save(true)}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+        ) 
+      }
+    }
   }
+  
 
   return <td {...restProps}>{childNode}</td>;
 };
@@ -82,12 +115,12 @@ function CashFlow() {
   const [form] = Form.useForm();
   let {start, end} = getFiscalYear('dates')
   const fiscal = moment(end).format('[FY]YY')
-  const forecastMonth = moment().subtract(1, 'month').endOf("month")
+  // const forecastMonth = moment().subtract(1, 'month').endOf("month")
   const [dataSource, setDataSource] = useState([])
   const [loading, setLoading] = useState(false)
   const [columns, setColumns] = useState([
       {
-          title: 'Whole A$',
+          title: <> <div>Month</div>Actual/Forecast</>,
           dataIndex: 'name',
           key: 'name',
           width: 250,
@@ -129,9 +162,9 @@ function CashFlow() {
       let newColumns = [...columns]
       let monthColumns = [
         monthCol({
-          year: fiscal,
-          era: 'Actual',
-          totalKey: 'actual-total'
+          year: 'Payment Date',
+          // era: 'Actual',
+          // totalKey: 'actual-total'
         })
       ]
       // let endDate = '06/30/2021'
@@ -142,7 +175,7 @@ function CashFlow() {
           };
           monthColumns.push(monthCol(el, updateField))
       }                                                         // forecast-total
-      monthColumns.push(monthCol({year: fiscal, era: 'Forcaste', totalKey: 'total'}))
+      // monthColumns.push(monthCol({year: fiscal, era: 'Forcaste', totalKey: 'total'}))
       newColumns[1]['children'][0]['children'] = monthColumns
       setColumns(newColumns)
   }
@@ -167,12 +200,9 @@ function CashFlow() {
     
 
     calculate_col_total(new Array(
-      ...income_revenue,
-      ...cost_of_sale,
-      ...contribution_margin,
-      ...direct_overhead_expense,
-      ...income_tax,
-      ...net_profit
+      ...cash_inflows,
+      ...cash_outflows,
+      ...closing_cashflows,
     ));
   };
 
@@ -181,9 +211,8 @@ function CashFlow() {
     let columName = columns?.[1]?.['children']?.[0]?.['children']||[];
 
     (columName).forEach(({children: [{dataIndex}]})=>{
-      newData[8][dataIndex]=0; /**Revenue */ 
-      newData[30][dataIndex]=0; /**COST */ 
-      newData[55][dataIndex]=0; /**DOH */
+      newData[6][dataIndex]=0; /**Inflow Total */ 
+      newData[31][dataIndex]=0; /**outflows */ 
       // newData[62][dataIndex]=0; /**TAX */
       // newData[66][dataIndex]=0; /**Profit */
   
@@ -191,12 +220,10 @@ function CashFlow() {
         // console.log(i, newData[i]["renderCalculation"])
       // dataIndex = dataIndex.startsWith('FY')? 'total' : dataIndex
       if (moment(dataIndex, 'MMM YY', true).isValid()){
-          if (i<8){
-              newData[8][dataIndex] += getValueWithCondition(newData, i, dataIndex)
-          }else if (i>8 && i <30){
-              newData[30][dataIndex] += getValueWithCondition(newData, i, dataIndex)
-          }else if (i>34 && i <55){
-              newData[55][dataIndex] += getValueWithCondition(newData, i, dataIndex)
+          if (i<6){
+              newData[6][dataIndex] += getValueWithCondition(newData, i, dataIndex)
+          }else if (i>6 && i <31){
+              newData[31][dataIndex] += getValueWithCondition(newData, i, dataIndex)
           }
           // }else if (i>56 && i <62){
           //     newData[62][dataIndex] = newData[i]['operation'] ?
@@ -209,18 +236,26 @@ function CashFlow() {
       }
       }
     }) 
-
-     // , 64, 66   /**   CM          CM %              EBIT  */
-     let calculate_indexes = [32, 34, 57, 63, 67];
-
-     (columName).forEach(({children: [{dataIndex}]})=>{
+                            /** 2*/
+    let calculate_indexes = [33, 34];
+    (columName).forEach(({children: [{dataIndex}]})=>{
       (calculate_indexes).forEach((index)=>{
         newData[index] = {
           ...newData[index],
           [dataIndex]: newData?.[index]?.renderCalculation?.(newData, dataIndex)
         }
       })
-     })
+    });
+    //For calculate Opening
+    // (columName).forEach(({children: [{dataIndex}]})=>{
+    //   if (moment(dataIndex, 'MMM YY').format('MMM') !== 'Jul'){
+    //     let prevKey = moment(dataIndex, 'MMM YY').subtract(1, 'month').format('MMM YY')
+    //     newData[2] = {
+    //       ...newData[2],
+    //       [dataIndex]: (getValueWithCondition(newData, 6, prevKey) - getValueWithCondition(newData, 31, prevKey))
+    //     }
+    //   }
+    // })
 
     // newData = newData.map(item => {
     //   return {
@@ -240,26 +275,24 @@ function CashFlow() {
     //   };
     // });
 
-    newData = newData.map((item) => {
-      let actualTotal = 0;
-      let total = 0;
-      for (let i = 0; i < columName.length; i++) {
-        const { children: [{ dataIndex, title }] } = columName[i];
-        if (moment(dataIndex, 'MMM YY', true).isValid()) {
-          const value = +item[dataIndex] || 0;
-          total += value;
-          if ( title === 'Actual') {
-            actualTotal += value;
-          }
-        }
-      }
-      return {
-        ...item,
-        'actual-total': actualTotal,
-        total,
-      };
-    });
-    
+    // newData = newData.map((item) => {
+    //   for (let i = 0; i < columName.length; i++) {
+    //     const { children: [{ dataIndex, title }] } = columName[i];
+    //     if (moment(dataIndex, 'MMM YY', true).isValid()) {
+    //       const value = +item[dataIndex] || 0;
+    //       if ( moment(dataIndex, 'MMM YY').format('MMM') !== item.partialEdit) {
+    //         let prevKey = moment(dataIndex, 'MMM').subtract(1, 'month').format('MMM')
+            
+    //         return {
+    //           ...item,
+    //           'actual-total': actualTotal,
+    //           total,
+    //         };
+    //       }
+    //     }
+    //   }
+    // });
+    console.log(newData)
     setDataSource(newData)
     return true
     // setLoading(false)
@@ -271,6 +304,14 @@ function CashFlow() {
     newData[index][dataIndex] = value
     return calculate_col_total(newData)
     // openField(false)
+  }
+
+  const onFormSubmit = (values) =>{
+    // setLoading(true)
+    // updateSaveForecast(values).then(res=>{
+    //   setLoading(false)
+    //   // if(res)
+    // })
   }
     
   const components = {
@@ -285,7 +326,7 @@ function CashFlow() {
       ...col,
       onCell: (record, index) => ({
         record,
-        editable: col.dataIndex !== 'name' && !col.dataIndex.startsWith('FY') && record.editable,
+        editable: col.dataIndex !== 'name' && !col.totalCol && record.editable,
         dataIndex: col.dataIndex,
         title: col.title,
         indexing: index,
@@ -300,40 +341,62 @@ function CashFlow() {
 
   const re_column = columns.map(mapColumns);
     
-  return (<>
-    <Row style={{backgroundColor: '#0463AC'}}>
-        <Col span={24}>
-            <Title level={5} style={{color: '#fff', marginBottom: 0, paddingLeft: 5 }}>Cash FLow {fiscal} - {forecastMonth.format('MMMM')} Month End</Title>
+  return (
+    <>
+      <Row style={{ backgroundColor: '#0463AC', paddingRight: 15 }} justify="space-between" align="middle" >
+        <Col span={20}>
+          <Row>
+            <Col span={24}>
+              <Title
+                level={5}
+                style={{ color: '#fff', marginBottom: 0, paddingLeft: 5 }}
+              >
+                Cashflow Forecast {fiscal}
+              </Title>
+            </Col>
+          </Row>
         </Col>
-        <Col span={24}>
-            <Title level={5} style={{color: '#fff', marginBottom: 0, paddingLeft: 5 }}>Profit & Loss Statement - {forecastMonth.format('DD MMMM YYYY')}</Title>
+        <Col>
+          <Popconfirm
+            placement="bottom"
+            title="Are you sure want to save new Settings?"
+            onConfirm={() => form.submit()}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button type="primary" size="small">
+              Save
+            </Button>
+          </Popconfirm>
         </Col>
-    </Row>
-    <Row>
+      </Row>
+      <Row>
         <Col span={24}>
-        <Form form={form} component={false}>
-          <EditableContext.Provider value={form}>
-            <Table
-              components={components}
-              bordered
-              // loading={true}
-              size="small"
-              pagination = {false}
-              rowKey={(row)=> row.key??row.name}
-              columns={re_column}
-              rowClassName={(row)=> row.className}
-              dataSource={dataSource}
-              className="scroll-table fs-v-small full-width wih-report"
-              scroll={{
-                  x: "max-content",
+          <Form form={form} component={false} onFinish={onFormSubmit}>
+            <EditableContext.Provider value={form}>
+              <Table
+                components={components}
+                bordered
+                loading={loading}
+                // loading={true}
+                size="small"
+                pagination={false}
+                rowKey={(row) => row.key ?? row.name}
+                columns={re_column}
+                rowClassName={(row) => row.className}
+                dataSource={dataSource}
+                className="scroll-table fs-v-small full-width wih-report"
+                scroll={{
+                  x: 'max-content',
                   y: '65vh',
-              }}
-            />
-          </EditableContext.Provider>
-        </Form>
+                }}
+              />
+            </EditableContext.Provider>
+          </Form>
         </Col>
-    </Row>
-  </>)
+      </Row>
+    </>
+  );
 }
 
 export default CashFlow

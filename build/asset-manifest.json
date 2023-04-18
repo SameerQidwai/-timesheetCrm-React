@@ -1,6 +1,7 @@
 {
   "files": {
 <<<<<<< HEAD
+<<<<<<< HEAD
     "main.css": "/static/css/main.d17ee529.chunk.css",
     "main.js": "/static/js/main.f07fa285.chunk.js",
     "main.js.map": "/static/js/main.f07fa285.chunk.js.map",
@@ -19,23 +20,34 @@
     "main.css": "/static/css/main.366b51a1.chunk.css",
     "main.js": "/static/js/main.e5783b70.chunk.js",
     "main.js.map": "/static/js/main.e5783b70.chunk.js.map",
+=======
+    "main.css": "/static/css/main.221b0651.chunk.css",
+    "main.js": "/static/js/main.a31c4b7b.chunk.js",
+    "main.js.map": "/static/js/main.a31c4b7b.chunk.js.map",
+>>>>>>> 348d6b468d46f40d1ddf8588b218b5398cb497c0
     "runtime-main.js": "/static/js/runtime-main.d1b0aef5.js",
     "runtime-main.js.map": "/static/js/runtime-main.d1b0aef5.js.map",
     "static/css/2.c0dcd60b.chunk.css": "/static/css/2.c0dcd60b.chunk.css",
-    "static/js/2.53507f8b.chunk.js": "/static/js/2.53507f8b.chunk.js",
-    "static/js/2.53507f8b.chunk.js.map": "/static/js/2.53507f8b.chunk.js.map",
+    "static/js/2.f31ba5b8.chunk.js": "/static/js/2.f31ba5b8.chunk.js",
+    "static/js/2.f31ba5b8.chunk.js.map": "/static/js/2.f31ba5b8.chunk.js.map",
     "index.html": "/index.html",
-    "precache-manifest.b262a30f9b89558fbbb9b9a0164d61c8.js": "/precache-manifest.b262a30f9b89558fbbb9b9a0164d61c8.js",
+    "precache-manifest.92cf2c35e93183ddca6d6968aa0e5bfb.js": "/precache-manifest.92cf2c35e93183ddca6d6968aa0e5bfb.js",
     "service-worker.js": "/service-worker.js",
     "static/css/2.c0dcd60b.chunk.css.map": "/static/css/2.c0dcd60b.chunk.css.map",
+<<<<<<< HEAD
     "static/css/main.366b51a1.chunk.css.map": "/static/css/main.366b51a1.chunk.css.map",
     "static/js/2.53507f8b.chunk.js.LICENSE.txt": "/static/js/2.53507f8b.chunk.js.LICENSE.txt",
 >>>>>>> d6b23b84543de8b2dcb51894bf45ab2615dbbc69
+=======
+    "static/css/main.221b0651.chunk.css.map": "/static/css/main.221b0651.chunk.css.map",
+    "static/js/2.f31ba5b8.chunk.js.LICENSE.txt": "/static/js/2.f31ba5b8.chunk.js.LICENSE.txt",
+>>>>>>> 348d6b468d46f40d1ddf8588b218b5398cb497c0
     "static/media/index.css": "/static/media/PowerGrotesk-Regular.99dac056.otf"
   },
   "entrypoints": [
     "static/js/runtime-main.d1b0aef5.js",
     "static/css/2.c0dcd60b.chunk.css",
+<<<<<<< HEAD
 <<<<<<< HEAD
     "static/js/2.cc05a2a9.chunk.js",
     "static/css/main.d17ee529.chunk.css",
@@ -45,5 +57,10 @@
     "static/css/main.366b51a1.chunk.css",
     "static/js/main.e5783b70.chunk.js"
 >>>>>>> d6b23b84543de8b2dcb51894bf45ab2615dbbc69
+=======
+    "static/js/2.f31ba5b8.chunk.js",
+    "static/css/main.221b0651.chunk.css",
+    "static/js/main.a31c4b7b.chunk.js"
+>>>>>>> 348d6b468d46f40d1ddf8588b218b5398cb497c0
   ]
 }
