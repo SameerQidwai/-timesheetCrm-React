@@ -142,11 +142,9 @@ export const getSaveCashFlow = (queryParam) => {
       const { success, data=[], message } = res.data;
       jwtExpired(message);
       let structData = {}
-      // if (success){
-      //   for (const {values, title} of data) {
-      //     structData[title] = values
-      //   }
-      // }
+      if (success){
+        messageAlert.loading({ content: 'Cash Flow', key: 1 });
+      }
       setToken(res?.headers?.authorization);
       return { success: success, data: data };
     })
