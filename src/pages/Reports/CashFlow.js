@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext, useRef } from 'react'
-import { Col, InputNumber, Row, Table, Typography, Form, Popconfirm, Button } from 'antd'
+import { Col, InputNumber, Row, Table, Typography, Form, Popconfirm, Button, Input, Tooltip } from 'antd'
 import { formatCurrency, getFiscalYear, parseDate } from '../../service/constant';
-import { getWorkInHandForecast } from '../../service/reports-Apis';
+import { getSaveCashFlow, updateSaveCashFlow } from '../../service/financial-Apis';
 import "../../../src/components/Styles/table.css"
 import { cash_inflows, cash_outflows, closing_cashflows, formatNegativeValue, getValueWithCondition, nextFocus } from '../../components/Core/ReportFilters/CashFlowData';
 import moment from 'moment'
@@ -23,25 +23,31 @@ const EditableCell = ({
 }) => {
   const inputRef = useRef(null);
   const form = useContext(EditableContext);
+  dataIndex = dataIndex === 'Comments' ? 'description' :dataIndex
+  let comment_key = form.getFieldValue([record?.['key'], dataIndex]);
 
   const save = async (entered) => {
-    let value = form.getFieldValue([record['key'], dataIndex])
-    let updated = form.isFieldTouched([record['key'], dataIndex])
-    if ( updated ){
+    let value = form.getFieldValue([record['key'], dataIndex]);
+    let updated = form.isFieldTouched([record['key'], dataIndex]);
+    if (updated) {
       try {
         handleSave(indexing, dataIndex, value);
         setTimeout(() => {
-          form.setFields([{ name: [record['key'], dataIndex], touched: false}])
-          if (entered){
-            form.getFieldInstance([nextFocusFor[record['key']], dataIndex]).focus()
+          form.setFields([
+            { name: [record['key'], dataIndex], touched: false },
+          ]);
+          if (entered) {
+            form
+              .getFieldInstance([nextFocusFor[record['key']], dataIndex])
+              .focus();
           }
         }, 1000);
       } catch (errInfo) {
         console.log('Save failed:', errInfo);
       }
-    }else{
-      if (entered){
-        form.getFieldInstance([nextFocusFor[record['key']], dataIndex]).focus()
+    } else {
+      if (entered) {
+        form.getFieldInstance([nextFocusFor[record['key']], dataIndex]).focus();
       }
     }
   };
@@ -49,15 +55,40 @@ const EditableCell = ({
   let childNode = children;
 
   if (editable) {
-    if (!record?.['partialEdit']){
-      childNode =  (
-        <Row >
-          <Col >
+    if (dataIndex === 'description') {
+      childNode = (
+        <Row>
+          <Col>
+            <Tooltip title={comment_key} placement="top" destroyTooltipOnHide>
+              <Form.Item
+                style={{
+                  margin: 0,
+                }}
+                initialValue={""}
+                name={[record['key'], 'description']}
+              >
+                <Input
+                  ref={inputRef}
+                  className="table-inputNumber-border"
+                  controls={false}
+                  size="small"
+                  onBlur={() => save()}
+                  onPressEnter={(event) => save(true)}
+                />
+              </Form.Item>
+            </Tooltip>
+          </Col>
+        </Row>
+      );
+    } else if (!record?.['partialEdit'] || moment(dataIndex, 'MMM YY').format('MMM') === record?.['partialEdit']) {
+      childNode = (
+        <Row>
+          <Col>
             <Form.Item
               style={{
                 margin: 0,
               }}
-              name={[record['key'],dataIndex]}
+              name={[record['key'], dataIndex]}
             >
               <InputNumber
                 ref={inputRef}
@@ -65,47 +96,47 @@ const EditableCell = ({
                 controls={false}
                 // bordered={false}
                 size="small"
-                formatter={(value) => formatter(value, "$") }
-                parser={(value) => parser(value, "$") }
+                formatter={(value) => formatter(value, '$')}
+                parser={(value) => parser(value, '$')}
                 // onFocus={()=>{ setBlurHook(true) }}
-                onBlur={()=>save()}
-                onPressEnter={(event)=> save(true)}
+                onBlur={() => save()}
+                onPressEnter={(event) => save(true)}
               />
             </Form.Item>
           </Col>
         </Row>
-      ) 
-    }else{
-      if (moment(dataIndex, 'MMM YY').format('MMM') === record?.['partialEdit']){
-        childNode =  (
-          <Row >
-            <Col >
-              <Form.Item
-                style={{
-                  margin: 0,
-                }}
-                name={[record['key'],dataIndex]}
-              >
-                <InputNumber
-                  ref={inputRef}
-                  className="table-inputNumber-border"
-                  controls={false}
-                  // bordered={false}
-                  size="small"
-                  formatter={(value) => formatter(value, "$") }
-                  parser={(value) => parser(value, "$") }
-                  // onFocus={()=>{ setBlurHook(true) }}
-                  onBlur={()=>save()}
-                  onPressEnter={(event)=> save(true)}
-                />
-              </Form.Item>
-            </Col>
-          </Row>
-        ) 
-      }
-    }
+      );
+    } 
+    // else if (
+    //   moment(dataIndex, 'MMM YY').format('MMM') === record?.['partialEdit']
+    // ) {
+    //   childNode = (
+    //     <Row>
+    //       <Col>
+    //         <Form.Item
+    //           style={{
+    //             margin: 0,
+    //           }}
+    //           name={[record['key'], dataIndex]}
+    //         >
+    //           <InputNumber
+    //             ref={inputRef}
+    //             className="table-inputNumber-border"
+    //             controls={false}
+    //             // bordered={false}
+    //             size="small"
+    //             formatter={(value) => formatter(value, '$')}
+    //             parser={(value) => parser(value, '$')}
+    //             // onFocus={()=>{ setBlurHook(true) }}
+    //             onBlur={() => save()}
+    //             onPressEnter={(event) => save(true)}
+    //           />
+    //         </Form.Item>
+    //       </Col>
+    //     </Row>
+    //   );
+    // }
   }
-  
 
   return <td {...restProps}>{childNode}</td>;
 };
@@ -117,7 +148,7 @@ function CashFlow() {
   const fiscal = moment(end).format('[FY]YY')
   // const forecastMonth = moment().subtract(1, 'month').endOf("month")
   const [dataSource, setDataSource] = useState([])
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [columns, setColumns] = useState([
       {
           title: <> <div>Month</div>Actual/Forecast</>,
@@ -138,10 +169,10 @@ function CashFlow() {
           fixed: 'left',
       },
       {
-          title: `${fiscal} Cash Flow`,
+          title: ``,
           children: [
               {
-                  title: 'Revenue AU$',
+                  title: '',
                   children: []
               }
           ]
@@ -150,11 +181,12 @@ function CashFlow() {
 
   useEffect(() => {
       creatingCol()
-      // getWorkInHandForecast().then(res=>{
-      //     if(res.success){
-              structureData()
-          // }
-      // })
+      getSaveCashFlow().then(res=>{
+          if(res.success){
+            structureData(res.data)
+            form.setFieldsValue(res.data)
+          }
+      })
       // dummyStructureData()
   }, [])
 
@@ -162,9 +194,8 @@ function CashFlow() {
       let newColumns = [...columns]
       let monthColumns = [
         monthCol({
-          year: 'Payment Date',
+          year: 'Comments',
           // era: 'Actual',
-          // totalKey: 'actual-total'
         })
       ]
       // let endDate = '06/30/2021'
@@ -180,126 +211,64 @@ function CashFlow() {
       setColumns(newColumns)
   }
 
-  const structureData = () => {
-    // income_revenue[1] = { ...income_revenue[1], ...TIME_BASE };
-    // income_revenue[2] = { ...income_revenue[2], ...MILESTONE_BASE };
-    // // income_revenue[8] = { ...income_revenue[8], ...TOTAL_REVENUE };
-    
-    // cost_of_sale[2] = { ...cost_of_sale[2], ...PERMANENT_SALARIES };
-    // cost_of_sale[3] = { ...cost_of_sale[3], ...CASUAL_SALARIES };
-    // cost_of_sale[4] = { ...cost_of_sale[4], ...PERMANENT_SUPER };
-    // cost_of_sale[5] = { ...cost_of_sale[5], ...CASUAL_SUPER };
-    // cost_of_sale[5] = { ...cost_of_sale[5], ...CASUAL_SUPER };
-    // // cost_of_sale[21] = { ...cost_of_sale[21], ...TOTAL_COST };
-    
-
-
-    // direct_overhead_expense[2] = { ...direct_overhead_expense[2], ...DOH_SALARIES };
-    // direct_overhead_expense[3] = { ...direct_overhead_expense[3], ...DOH_SUPER };
-    // direct_overhead_expense[18] = { ...direct_overhead_expense[18], ...TOTAL_DOH };
-    
-
-    calculate_col_total(new Array(
+  const structureData = (savedCash) => {
+    let cashFlowAcc = new Array(
       ...cash_inflows,
       ...cash_outflows,
       ...closing_cashflows,
-    ));
+    )
+
+    cashFlowAcc = cashFlowAcc.map(el=>{
+      if (savedCash[el.key]){
+        el = {...el, ...savedCash[el.key]}
+      }
+      return el
+    })
+    calculate_col_total(cashFlowAcc);
   };
 
   const calculate_col_total = (updatedData)=>{
+    
     let newData = [...updatedData]
     let columName = columns?.[1]?.['children']?.[0]?.['children']||[];
 
-    (columName).forEach(({children: [{dataIndex}]})=>{
-      newData[6][dataIndex]=0; /**Inflow Total */ 
-      newData[31][dataIndex]=0; /**outflows */ 
-      // newData[62][dataIndex]=0; /**TAX */
-      // newData[66][dataIndex]=0; /**Profit */
-  
-      for(let i = 0; i < newData.length; i++){
-        // console.log(i, newData[i]["renderCalculation"])
-      // dataIndex = dataIndex.startsWith('FY')? 'total' : dataIndex
-      if (moment(dataIndex, 'MMM YY', true).isValid()){
-          if (i<6){
-              newData[6][dataIndex] += getValueWithCondition(newData, i, dataIndex)
-          }else if (i>6 && i <31){
-              newData[31][dataIndex] += getValueWithCondition(newData, i, dataIndex)
+    columName.forEach(({ children: [{ dataIndex }] }) => {
+      const inflowIndex = 6 /**Inflow Total Index*/
+      const outflowIndex = 33 /**outflow Total Index*/
+      const surplusIndex = 35 /**sum of this month*/
+      const closingIndex = 36 /**closing of this month*/
+      const openingIndex =2 /**opening of next month*/
+
+      newData[inflowIndex][dataIndex] = 0; /**Inflow Total */
+      newData[outflowIndex][dataIndex] = 0; /**outflows */
+
+      for (let i = 0; i < newData.length; i++) {
+        if (moment(dataIndex, 'MMM YY', true).isValid()) {
+          const value = getValueWithCondition( newData, i, dataIndex )
+          if (i < inflowIndex) {
+            newData[inflowIndex][dataIndex] += value;
+          } else if (i > inflowIndex && i < outflowIndex) {
+            newData[outflowIndex][dataIndex] += value
+          }else if (i === surplusIndex){
+            newData[surplusIndex][dataIndex] = newData?.[surplusIndex]?.renderCalculation?.(newData, dataIndex)
+          }else if ( i === closingIndex){
+            let closing_of_month = newData?.[closingIndex]?.renderCalculation?.(newData, dataIndex)
+            newData[closingIndex][dataIndex] = closing_of_month
+
+            let nextDataIndex = moment(dataIndex, 'MMM YY', true).add(1,'month').format('MMM YY')
+            newData[openingIndex][nextDataIndex] = closing_of_month
           }
-          // }else if (i>56 && i <62){
-          //     newData[62][dataIndex] = newData[i]['operation'] ?
-          //     getValueWithCondition(newData, 62, dataIndex) - getValueWithCondition(newData, i, dataIndex)
-          // :
-          //     getValueWithCondition(newData, 62, dataIndex) + getValueWithCondition(newData, i, dataIndex)
-          // }else if (i>62 && i< 67){
-          //     newData[66][dataIndex] = getValueWithCondition(newData, 62, dataIndex) - getValueWithCondition(newData, 64, dataIndex)
-          // }
-      }
-      }
-    }) 
-                            /** 2*/
-    let calculate_indexes = [33, 34];
-    (columName).forEach(({children: [{dataIndex}]})=>{
-      (calculate_indexes).forEach((index)=>{
-        newData[index] = {
-          ...newData[index],
-          [dataIndex]: newData?.[index]?.renderCalculation?.(newData, dataIndex)
         }
-      })
-    });
-    //For calculate Opening
-    // (columName).forEach(({children: [{dataIndex}]})=>{
-    //   if (moment(dataIndex, 'MMM YY').format('MMM') !== 'Jul'){
-    //     let prevKey = moment(dataIndex, 'MMM YY').subtract(1, 'month').format('MMM YY')
-    //     newData[2] = {
-    //       ...newData[2],
-    //       [dataIndex]: (getValueWithCondition(newData, 6, prevKey) - getValueWithCondition(newData, 31, prevKey))
-    //     }
-    //   }
-    // })
-
-    // newData = newData.map(item => {
-    //   return {
-    //     ...item,
-    //     'actual-total':columName.reduce((acc, {children: [{dataIndex, title}]}) => {
-    //       if (moment(dataIndex, 'MMM YY', true).isValid() && title === 'Actual') {
-    //         acc += item[dataIndex] || 0;
-    //       }
-    //       return acc;
-    //     }, 0),
-    //     total: columName.reduce((acc, {children: [{dataIndex}]}) => {
-    //       if (moment(dataIndex, 'MMM YY', true).isValid()) {
-    //         acc += item[dataIndex] || 0;
-    //       }
-    //       return acc;
-    //     }, 0)
-    //   };
-    // });
-
-    // newData = newData.map((item) => {
-    //   for (let i = 0; i < columName.length; i++) {
-    //     const { children: [{ dataIndex, title }] } = columName[i];
-    //     if (moment(dataIndex, 'MMM YY', true).isValid()) {
-    //       const value = +item[dataIndex] || 0;
-    //       if ( moment(dataIndex, 'MMM YY').format('MMM') !== item.partialEdit) {
-    //         let prevKey = moment(dataIndex, 'MMM').subtract(1, 'month').format('MMM')
-            
-    //         return {
-    //           ...item,
-    //           'actual-total': actualTotal,
-    //           total,
-    //         };
-    //       }
-    //     }
-    //   }
-    // });
-    console.log(newData)
+      }
+    }); 
     setDataSource(newData)
+    setLoading(false)
     return true
-    // setLoading(false)
   }
   
 
   const updateField = (index, dataIndex, value, openField)=>{
+    setLoading(true)
     let newData = [...dataSource]
     newData[index][dataIndex] = value
     return calculate_col_total(newData)
@@ -307,11 +276,14 @@ function CashFlow() {
   }
 
   const onFormSubmit = (values) =>{
-    // setLoading(true)
-    // updateSaveForecast(values).then(res=>{
-    //   setLoading(false)
-    //   // if(res)
-    // })
+    setLoading(true)
+    for (const key in values) {
+      values[key]['description']  = values[key]['description'] ?  values[key]['description'] : ''
+    }
+    updateSaveCashFlow(values).then(res=>{
+      setLoading(false)
+      // if(res)
+    })
   }
     
   const components = {
@@ -345,7 +317,7 @@ function CashFlow() {
     <>
       <Row style={{ backgroundColor: '#0463AC', paddingRight: 15 }} justify="space-between" align="middle" >
         <Col span={20}>
-          <Row>
+          <Row style={{ height: '48px' }} align="middle">
             <Col span={24}>
               <Title
                 level={5}
@@ -410,7 +382,7 @@ const monthCol = ({year, era, totalKey})=>({
       title: era,
       dataIndex: year,
       key: year,
-      width: 100,
+      width: year ==='Comments'?200:100,
       align: 'center',
       onCell: (record)=> {
           return {className: year.startsWith('FY') ? 'fin-total': ''} 
@@ -424,7 +396,7 @@ const monthCol = ({year, era, totalKey})=>({
               return record[totalKey] ? formatNegativeValue(record[totalKey]) : '-'
           }
               //checking if number is integer                     //if total column put - of undefned or 0
-          return (text>= 0 ||text<= 0) ? formatCurrency(text) : record.className === 'total-row'? '-' : record.default !== undefined? formatCurrency(record.default) : '' 
+          return (text>= 0 ||text<= 0) ? formatCurrency(text) : record.className === 'total-row'? '-' : record.default !== undefined? formatCurrency(record.default) : <span style={{color: 'white'}}>-</span> 
       }       //udefiend and null can't work on isNaN                                                      //checking if any default value is given 
     }
   ],
