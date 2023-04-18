@@ -492,6 +492,26 @@ export const getCalendarHolidays = (id) => {
         });
 };
 
+export const getCalendarHolidaysFormat = () => {
+    return axios
+        .get(`${Api}/calendar-holidays/keyValueFormat`, {headers:headers()})
+        .then((res) => {
+            let { success, data, message } = res.data;
+            jwtExpired(message)
+            if (success) {
+                setToken(res?.headers?.authorization)
+            }
+            return { success: success, data: data, };
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                success: false,
+                message: err.message,
+            };
+        });
+};
+
 
 export const buyCost = (url, id, searchIn) => {
     return axios

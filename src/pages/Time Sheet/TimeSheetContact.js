@@ -649,13 +649,14 @@ class TimeSheetContact extends Component {
 
   openBulkModal = () => {
     const { startDate, endDate } = this.state.sheetDates;
-    const { sUser } = this.state;
+    const { sUser, data } = this.state;
     this.setState({
       isBulk: {
         userId: sUser,
         monthStart: startDate,
         monthEnd: endDate,
-        visible: true
+        visible: true,
+        leaves: data.filter(record=> record.leaveRequest === true)
         // milestoneId: record.milestoneId,
       },
     });

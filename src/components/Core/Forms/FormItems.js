@@ -149,7 +149,6 @@ class FormItems extends Component {
           <Title level={mode} size={size} style={style}>
             {tooltip ? (
               <Tooltip title={tTitle} trigger={tTrigger}>
-                {' '}
                 {placeholder}
               </Tooltip>
             ) : (
