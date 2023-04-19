@@ -1,32 +1,98 @@
 import React, { useEffect, useState } from 'react'
-import { Row, Button, Space, Popconfirm, Divider, Form, Table } from "antd";
-import { getSettings, getVariables, upadteSettings, upadteVariables } from "../../service/global-apis"
-import FormItems from "../../components/Core/Forms/FormItems";
-import { getleaveRequestTypes, getStates } from '../../service/constant-Apis';
-import { formatDate, STATES } from '../../service/constant';
+import { Button, Dropdown, Menu, Row, Table } from "antd";
+import { DownOutlined, SettingOutlined, PlusSquareOutlined, LoadingOutlined } from "@ant-design/icons"; //Icons
+import { formatDate } from '../../service/constant';
 import { localStore } from '../../../service/constant';
 
 const columns = [
     {
-        title: "Standard Skill",
+        title: "Created AT",
+        dataIndex: "createdby",
+        key: "label",
+        ...tableSorter('label', 'string')
+    }, 
+    {
+        title: "Created By",
+        dataIndex: "createdby",
+        key: "label",
+        ...tableSorter('label', 'string')
+    }, 
+    {
+        title: "Name",
         dataIndex: "label",
         key: "label",
         ...tableSorter('label', 'string')
     }, 
     {
-        
-    }
+        title: "Start Date",
+        dataIndex: "label",
+        key: "label",
+          render: (record) => formatDate(record, true, true),
+        ...tableSorter('label', 'string')
+    },
+    {
+        title: "End Date",
+        dataIndex: "label",
+        key: "label",
+          render: (record) => formatDate(record, true, true),
+        ...tableSorter('label', 'string')
+    },
+    {
+        title: "Lock By",
+        dataIndex: "label",
+        key: "label",
+        ...tableSorter('label', 'string')
+    },
+    {
+        title: "Lock At",
+        dataIndex: "label",
+        key: "label",
+          render: (record) => formatDate(record, true, true),
+        ...tableSorter('label', 'string')
+    },
+    {
+        title: '...',
+        key: 'action',
+        align: 'center',
+        width: '1%',
+        render: (value, record, index) => (
+          <Dropdown
+            overlay={
+              <Menu>
+                <Menu.Item
+                  key="edit"
+                //   onClick={() => {
+                //     this.openModal({ ...record, rowIndex: index });
+                //   }}
+                //   disabled={this.state && !this.state.permissions['UPDATE']}
+                >
+                  Edit
+                </Menu.Item>
+                <Menu.Item key="Closing">
+                    Close
+                </Menu.Item>
+              </Menu>
+            }
+          >
+            <Button size="small">
+              <SettingOutlined />
+            </Button>
+          </Dropdown>
+        ),
+      },
 ]
 
 function GlobalVars(props) {
-    const [form] = Form.useForm();
-    const [formValues, setFormValues] = useState({settings: {}, variables: {}})
+    // const [form] = Form.useForm();
+    const [data, setData] = useState([])
 
     useEffect(() => {
+        setData([])
     }, [])
 
     return (
-        <Row>
+        <Row justify="end">
+            <Col><Button>Create FY</Button></Col>
             <Col span={24}>
                 <Table
                     // title={()=>tableTitleFilter(5, this.generalFilter)}
