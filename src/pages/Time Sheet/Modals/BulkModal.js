@@ -608,7 +608,7 @@ class BulkModal extends Component {
         modal.destroy();
       },
       onCancel: () => {
-        this.setState({ loading: true }, () => {
+        this.setState({ loading: false }, () => {
           modal.destroy();
         });
       },
