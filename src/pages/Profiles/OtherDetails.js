@@ -521,14 +521,13 @@ function OtherDetails(props) {
   };
 
   const changeSetings = (values) => {
-    console.log(files.tfnFile?.[0]?.fileId)
     const obj = {
       ...values.detail,
       ...values.kin,
       ...values.bank,
-      superannuationFileId: files.detailFile?.[0]?.fileId,
-      bankAccountFileId: files.bankFile?.[0]?.fileId,
-      tfnFileId: files.tfnFile?.[0]?.fileId,
+      superannuationFileId: files.detailFile?.[0]?.fileId?? null,
+      bankAccountFileId: files.bankFile?.[0]?.fileId?? null,
+      tfnFileId: files.tfnFile?.[0]?.fileId?? null,
     };
     upadteSettings(obj).then((res) => {
       if (res.success) {
