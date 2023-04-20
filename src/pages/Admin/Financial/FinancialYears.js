@@ -85,6 +85,8 @@ const columns = [
 function GlobalVars(props) {
     // const [form] = Form.useForm();
     const [data, setData] = useState([])
+    const [visibleModal, setVisibleModal] = useState(false)
+    const [visibleConfirm, setVisibleConfirm] = useState(false)
 
     useEffect(() => {
         setData([])
@@ -105,7 +107,6 @@ function GlobalVars(props) {
                 />
             </Col>
         </Row>
-        
     )
 }
 
