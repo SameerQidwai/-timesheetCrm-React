@@ -12,6 +12,7 @@ import {
   ApartmentOutlined,
   GoldOutlined,
   FileSyncOutlined,
+  ProfileOutlined
 } from '@ant-design/icons'; //Icons
 
 // import './Menus.css'
@@ -84,6 +85,12 @@ const listData = [
     icon: <FileSyncOutlined />,
     link: '/admin/import-export',
     key: '/admin/import-export',
+  },
+  {
+    text: 'Financial Year',
+    icon: <ProfileOutlined />,
+    link: '/admin/financial-year',
+    key: '/admin/financial-year',
   },
   // { global Variable commented
   //     text: "Tax Rates",
