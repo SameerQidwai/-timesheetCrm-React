@@ -164,6 +164,7 @@ class BulkModal extends Component {
           key: 'workId',
           size: 'small',
           rules: [{ required: true, message: 'Project Is Required' }],
+          itemStyle: {marginBottom:5},
           data: [],
           type: 'Select',
           onChange: (value) => {
@@ -190,6 +191,7 @@ class BulkModal extends Component {
           size: 'small',
           type: 'RangePicker',
           rules: [{ required: true, message: 'Dates Are Required' }],
+          itemStyle: {marginBottom:10},
           fieldStyle: { width: '100%' },
           ranges: {
             'This Month': [monthStart, monthEnd],
@@ -592,27 +594,34 @@ class BulkModal extends Component {
     });
   };
 
-  onConfirm = () => {
-    let modal = Modal.confirm({
-      title: `Do you wish to proceed?`,
-      icon: <ExclamationCircleOutlined />,
-      content: `You are about to apply a bulk timesheet data entry. Any existing timesheet entries for the project and dates already entered will be overwritten.`,
-      // okButtonProps: { danger: stage === 'Delete' ?? true },
-      okButtonProps: {
-        htmlType: 'submit',
-        form: 'my-form',
-      },
-      okText: 'Yes',
-      cancelText: 'No',
-      onOk: () => {
-        modal.destroy();
-      },
-      onCancel: () => {
-        this.setState({ loading: true }, () => {
+  onConfirm = async() => {
+    try{
+      const values = await this.formRef.current.validateFields();
+      
+      let modal = Modal.confirm({
+        title: `Do you wish to proceed?`,
+        icon: <ExclamationCircleOutlined />,
+        content: `You are about to apply a bulk timesheet data entry. Any existing timesheet entries for the project and dates already entered will be overwritten.`,
+        // okButtonProps: { danger: stage === 'Delete' ?? true },
+        okButtonProps: {
+          htmlType: 'submit',
+          form: 'my-form',
+        },
+        okText: 'Yes',
+        cancelText: 'No',
+        onOk: () => {
           modal.destroy();
-        });
-      },
-    });
+        },
+        onCancel: () => {
+          this.setState({ loading: false }, () => {
+            modal.destroy();
+          });
+        },
+      });
+
+    }catch{
+      this.setState({ loading: false });
+    }
   };
 
   render() {
