@@ -67,7 +67,7 @@ export const updateFY = (fyId) => {
 export const closingFY = (fyId) => {
   messageAlert.loading({ content: 'Closing FY...', key: 1 }, 5);
   return axios
-    .patch(`${url}/${fyId}/closeYear`, { headers: headers() })
+    .patch(`${url}/${fyId}/closeYear`, {}, { headers: headers() })
     .then((res) => {
       const { success, data, message } = res.data;
       jwtExpired(message);
