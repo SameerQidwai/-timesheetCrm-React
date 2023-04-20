@@ -12,6 +12,7 @@ export const getAllFY = () => {
         .then((res) => {
         const { success, message, data } = res.data;
         jwtExpired(message);
+        messageAlert.destroy()
         setToken(res.headers && res.headers.authorization);
 
         return { success, data }
@@ -28,7 +29,7 @@ export const getAllFY = () => {
 };
 
 export const createFY = (data) => {
-    messageAlert.loading({ content: 'Loading...', key: 1 }, 5);
+    messageAlert.loading({ content: 'Creating FY...', key: 1 }, 5);
     return axios
       .post(url, data, { headers: headers() })
         .then((res) => {
@@ -41,12 +42,7 @@ export const createFY = (data) => {
 
       })
       .catch((err) => {
-        messageAlert.error({ content: 'Error!', key: 1 }, 5);
-        return {
-          error: 'Please login again!',
-          status: false,
-          message: err.message,
-        };
+        return apiErrorRes(err, 1, 5);
       });
 };
 
@@ -69,20 +65,18 @@ export const updateFY = (fyId) => {
     });
 };
 export const closingFY = (fyId) => {
+  messageAlert.loading({ content: 'Closing FY...', key: 1 }, 5);
   return axios
     .patch(`${url}/${fyId}/closeYear`, { headers: headers() })
     .then((res) => {
       const { success, data, message } = res.data;
       jwtExpired(message);
+      messageAlert.destroy()
       setToken(res.headers && res.headers.authorization);
 
       return { success, data };
     })
     .catch((err) => {
-      return {
-        error: 'Please login again!',
-        success: false,
-        message: err.message,
-      };
+      return apiErrorRes(err, fyId, 5);
     });
 };

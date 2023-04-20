@@ -19,18 +19,18 @@ function FinancialYears(props) {
     const [visibleConfirm, setVisibleConfirm] = useState(false)
 
     const columns = [
-      {
-          title: "Created AT",
-          dataIndex: "createdby",
-          key: "label",
-          ...tableSorter('label', 'string')
-      }, 
-      {
-          title: "Created By",
-          dataIndex: "createdby",
-          key: "label",
-          ...tableSorter('label', 'string')
-      }, 
+      // {
+      //     title: "Created AT",
+      //     dataIndex: "createdby",
+      //     key: "label",
+      //     ...tableSorter('label', 'string')
+      // }, 
+      // {
+      //     title: "Created By",
+      //     dataIndex: "createdby",
+      //     key: "label",
+      //     ...tableSorter('label', 'string')
+      // }, 
       {
           title: "Name",
           dataIndex: "label",
@@ -51,12 +51,12 @@ function FinancialYears(props) {
             render: (record) => formatDate(record, true, true),
           ...tableSorter('endDate', 'date')
       },
-      {
-          title: "Lock By",
-          dataIndex: "lockBy",
-          key: "LockBy",
-          ...tableSorter('lockDate', 'string')
-      },
+      // {
+      //     title: "Lock By",
+      //     dataIndex: "lockBy",
+      //     key: "LockBy",
+      //     ...tableSorter('lockDate', 'string')
+      // },
       {
           title: "Locked",
           dataIndex: "closed",
@@ -86,7 +86,10 @@ function FinancialYears(props) {
                   >
                     Edit
                   </Menu.Item>
-                  <Menu.Item key="Closing" onClick={()=>{onConfirm(record, index)}}>
+                  <Menu.Item 
+                    // disabled={record.closed}
+                    key="Closing" onClick={()=>{onConfirm(record, index)}}
+                  >
                       Close
                   </Menu.Item>
                 </Menu>
@@ -116,21 +119,22 @@ function FinancialYears(props) {
       setVisibleModal(false)
     }
 
-    const onConfirm = (record) => {
+    const onConfirm = (record, index) => {
       let modal = Modal.confirm({
-        title: <span>Do you wish to close <b>{moment(record.startDate).format()} - ${moment(record.endDate).format()}</b></span>,
+        width: 800,
+        title: <span>Do you wish to close "{record.label}" <b>{moment(record.startDate).format('DD-MM-YYYY')} - ${moment(record.endDate).format('DD-MM-YYYY')}</b></span>,
         icon: <ExclamationCircleOutlined />,
         content: <span>
           <Paragraph>
-              <ul><li>Leave Request Spanning Found</li></ul>
+              <b>- Leave Request Spanning Found</b><br/>
               Leave Requests spanning to next financial year would be broken down into two request,
               <Paragraph>
-                <ul>Mustafa Syed</ul>
-                <ul>Sameer Ahmed</ul>
+                <ul><li>Mustafa Syed</li></ul>
+                <ul><li>Sameer Ahmed</li></ul>
               </Paragraph>
           </Paragraph>
           <Paragraph>
-              <ul><li>Closing Projects</li></ul>
+              <b>- Closing Projects</b>
               <Paragraph>
                 <ul> <li>Non-Project Hours</li></ul>
                 <ul> <li>SA - Strategic Design / Business Process EL2</li></ul>
@@ -139,9 +143,9 @@ function FinancialYears(props) {
               </Paragraph>
           </Paragraph>
           <Paragraph>
-              <ul><li>Leave Balances</li></ul>
+              <b>- Leave Balances</b>
               <Paragraph>
-                Leave Balanace will be closed for all employees
+                <ul><li>Leave Balanace will be closed for all employees</li></ul>
               </Paragraph>
           </Paragraph>
         </span>,
@@ -154,8 +158,12 @@ function FinancialYears(props) {
         cancelText: 'No',
         onOk: async() => {
           try{
-            let {success, data} = await closingFY(record.id)
-            console.log(data)
+            let {success} = await closingFY(record.id)
+            if (success){
+              let newData = [...data]
+              newData[index]['closed'] = true
+              setData([...newData])
+            }
           }catch{
             modal.destroy();
           }
