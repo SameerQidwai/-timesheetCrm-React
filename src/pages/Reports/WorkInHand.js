@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext, useRef } from 'react'
 import { Col, InputNumber, Row, Table, Typography, Form, Popconfirm, Button } from 'antd'
 import { formatCurrency, getFiscalYear, parseDate } from '../../service/constant';
-import { getSaveForecast, getWorkInHandForecast, updateSaveForecast } from '../../service/reports-Apis';
-import "../../../src/components/Styles/table.css"
+import { getSaveForecast, getWorkInHandForecast, updateSaveForecast } from '../../service/financial-Apis';
 import { contribution_margin, cost_of_sale, direct_overhead_expense, formatNegativeValue, getValueWithCondition, income_revenue, income_tax, net_profit, nextFocus } from '../../components/Core/ReportFilters/WIHData';
 import moment from 'moment'
 import { formatter, parser } from '../../components/Core/Forms/FormItems';
+import "../../../src/components/Styles/table.css"
 const {Title} = Typography
 const EditableContext = React.createContext(null);
 const nextFocusFor = nextFocus()
@@ -147,7 +147,7 @@ function WorkInHand() {
         monthCol({
           year: 'YTD',
           era: '',
-          totalKey: 'actual-total'
+          totalKey: 'YTD'
         })
       ]
       // let endDate = '06/30/2021'
@@ -266,7 +266,7 @@ function WorkInHand() {
     // newData = newData.map(item => {
     //   return {
     //     ...item,
-    //     'actual-total':columName.reduce((acc, {children: [{dataIndex, title}]}) => {
+    //     'YTD':columName.reduce((acc, {children: [{dataIndex, title}]}) => {
     //       if (moment(dataIndex, 'MMM YY', true).isValid() && title === 'Actual') {
     //         acc += item[dataIndex] || 0;
     //       }
@@ -296,7 +296,7 @@ function WorkInHand() {
       }
       return {
         ...item,
-        'actual-total': actualTotal,
+        'YTD': actualTotal,
         total,
       };
     });

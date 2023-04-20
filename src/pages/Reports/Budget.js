@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext, useRef } from 'react'
 import { Col, InputNumber, Row, Table, Typography, Form, Popconfirm, Button } from 'antd'
 import { formatCurrency, getFiscalYear, parseDate } from '../../service/constant';
-import { getSaveBudget, getWorkInHandForecast, updateSaveBudget } from '../../service/reports-Apis';
-import "../../../src/components/Styles/table.css"
+import { getSaveBudget, updateSaveBudget } from '../../service/financial-Apis';
 import { contribution_margin, cost_of_sale, direct_overhead_expense, formatNegativeValue, getValueWithCondition, income_revenue, income_tax, net_profit, nextFocus } from '../../components/Core/ReportFilters/BudgetData';
 import moment from 'moment'
 import { formatter, parser } from '../../components/Core/Forms/FormItems';
+import "../../../src/components/Styles/table.css"
 const {Title} = Typography
 const EditableContext = React.createContext(null);
 const nextFocusFor = nextFocus()
@@ -60,6 +60,7 @@ const EditableCell = ({
           >
             <InputNumber
               ref={inputRef}
+              className="table-inputNumber-border"
               controls={false}
               size="small"
               formatter={(value) => formatter(value, "$") }
@@ -130,9 +131,9 @@ function Budget() {
       let newColumns = [...columns]
       let monthColumns = [
         monthCol({
-          year: fiscal,
-          era: 'Actual',
-          totalKey: 'actual-total'
+          year: 'YTD',
+          era: '',
+          totalKey: 'YTD'
         })
       ]
       // let endDate = '06/30/2021'
@@ -235,7 +236,7 @@ function Budget() {
     // newData = newData.map(item => {
     //   return {
     //     ...item,
-    //     'actual-total':columName.reduce((acc, {children: [{dataIndex, title}]}) => {
+    //     'YTD':columName.reduce((acc, {children: [{dataIndex, title}]}) => {
     //       if (moment(dataIndex, 'MMM YY', true).isValid() && title === 'Actual') {
     //         acc += item[dataIndex] || 0;
     //       }
@@ -265,7 +266,7 @@ function Budget() {
       }
       return {
         ...item,
-        'actual-total': actualTotal,
+        'YTD': actualTotal,
         total,
       };
     });
@@ -303,7 +304,7 @@ function Budget() {
       ...col,
       onCell: (record, index) => ({
         record,
-        editable: col.dataIndex !== 'name' && !col.dataIndex.startsWith('FY') && record.editable,
+        editable: col.dataIndex !== 'name' && !col.totalCol && record.editable,
         dataIndex: col.dataIndex,
         title: col.title,
         indexing: index,
@@ -383,6 +384,7 @@ const monthCol = ({year, era, totalKey})=>({
       title: era,
       dataIndex: year,
       key: year,
+      totalCol: !!totalKey,
       width: 100,
       align: 'center',
       onCell: (record)=> {
@@ -392,10 +394,9 @@ const monthCol = ({year, era, totalKey})=>({
           if(record.render){
               return record.render(year, record)
           }
-          if(year.startsWith('FY')){
-            
-              return record[totalKey] ? formatNegativeValue(record[totalKey]) : '-'
-          }
+          if(totalKey){
+            return record[totalKey] ? formatNegativeValue(record[totalKey]) : '-'
+        }
               //checking if number is integer                     //if total column put - of undefned or 0
           return (text>= 0 ||text<= 0) ? formatCurrency(text) : record.className === 'total-row'? '-' : record.default !== undefined? formatCurrency(record.default) : '' 
       }       //udefiend and null can't work on isNaN                                                      //checking if any default value is given 

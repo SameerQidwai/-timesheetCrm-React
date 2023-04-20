@@ -1,62 +1,41 @@
 import { formatCurrency, formatFloat } from "../../../service/constant";
-
-export const income_revenue = [
+export const cash_inflows = [
+  {},
   { 
-    name: 'INCOME/REVENUE',
-    key: 'INCOME/REVENUE',
-    identifier: 'revenue_total',
+    name: 'Cash Inflows',
+    key: 'Cash Inflows',
     className: 'title-row' 
   },
   {
-    name: 'Revenue - T&M Basis',
-    identifier: 'revenue_total',
-    key: 'Revenue - T&M Basis',
+    name: 'Cash at Bank - Opening',
+    key: 'Cash at Bank - Opening inflows',
+    className: 'data-title-row',
+    default: 0,
+    partialEdit: 'Jul',
+    editable: true,
+    render:(key, record)=>{
+      key = key.startsWith('FY')? 'total' : key
+      return record[key] ? formatNegativeValue(record[key]) : '-'
+    }
+  },
+  {
+    name: 'Debtor Receipts',
+    key: 'Debtor Receipts inflows',
     className: 'data-title-row',
     default: 0,
     editable: true,
   },
   {
-    name: 'Revenue - Milestone Basis',
-    identifier: 'revenue_total',
-    key: 'Revenue - Milestone Basis',
-    className: 'data-title-row',
-    default: 0,
-    editable: true,
-  },
-  {
-    name: 'Revnue - Other',
-    identifier: 'revenue_total',
-    key: 'Revnue - Other',
-    className: 'data-title-row',
-    editable: true,
-  },
-  {
-    name: 'Revenue - Security Clearance Fee',
-    identifier: 'revenue_total',
-    key: 'Revenue - Security Clearance Fee',
-    className: 'data-title-row',
-    editable: true,
-  },
-  {
-    name: 'Misc Income',
-    identifier: 'revenue_total',
-    key: 'Misc Income',
-    className: 'data-title-row',
-    editable: true,
-  },
-  {
-    name: 'Adjustment',
-    identifier: 'revenue_total',
-    key: 'Revenue - Adjustment',
+    name: 'Other Inflows',
+    key: 'Other Inflows inflows',
     className: 'data-title-row',
     editable: true,
   },
   {},
   {
     className: 'total-row',
-    name: 'TOTAL REVENUE',
-    identifier: 'revenue_total',
-    key: 'TOTAL REVENUE',
+    name: 'Total Inflows',
+    key: 'Total Inflows',
     render:(key, record)=>{
       key = key.startsWith('FY')? 'total' : key
       return record[key] ? formatNegativeValue(record[key]) : '-'
@@ -64,126 +43,142 @@ export const income_revenue = [
   },
 ];
 
-export const cost_of_sale = [
+export const cash_outflows = [
   {},
   { 
-      name: 'COST OF SALES - COS', 
-      key: 'COST OF SALES - COS cos', 
-      identifier: 'cost_total',
+      name: 'Cash Outflows',
+      key:'Cash Outflows outflows',
       className: 'title-row' 
   },
-  {
-    name: 'Salaries & Wages - Permanent',
-    key: 'Salaries & Wages - Permanent cos',
-    identifier: 'cost_total',
+  { 
+    name: 'Salary - Permanent',
+    key:'Salary - Permanent outflows',
     className: 'data-title-row',
     editable: true,
   },
   {
-    name: 'Salaries & Wages - Casual',
-    key: 'Salaries & Wages - Casual cos',
-    identifier: 'cost_total',
+    name: 'Salary - Casual',
+    key:'Salary - Casual outflows',
     className: 'data-title-row',
     editable: true,
   },
   {
     name: 'Superannuation - Permanent',
-    key: 'Superannuation - Permanent cos',
-    identifier: 'cost_total',
+    key:'Superannuation - Permanent outflows',
     className: 'data-title-row',
     editable: true,
   },
   {
     name: 'Superannuation - Casual',
-    key: 'Superannuation - Casual cos',
-    identifier: 'cost_total',
+    key:'Superannuation - Casual outflows',
     className: 'data-title-row',
     editable: true,
   },
   {
-    name: 'Bonus/STI',
-    key: 'Bonus/STI cos',
-    className: 'data-title-row',
-    identifier: 'cost_total',
-    editable: true,
-  },
-  {
-    name: 'Superannuation on Bonus/STI',
-    key: 'Superannuation on Bonus/STI cos',
-    identifier: 'cost_total',
-    className: 'data-title-row',
-    editable: true,
-  },
-  {
-    name: 'Employee Leave Entitlements AL/LSL',
-    key: 'Employee Leave Entitlements AL/LSL cos',
-    identifier: 'cost_total',
-    className: 'data-title-row',
-    editable: true,
-  },
-  {
-    name: 'Training & Education',
-    key: 'Training & Education cos',
-    identifier: 'cost_total',
-    className: 'data-title-row',
-    editable: true,
-  },
-  {
-    name: 'Recruitment Expenses',
-    key: 'Recruitment Expenses cos',
-    identifier: 'cost_total',
-    className: 'data-title-row',
-    editable: true,
-  },
-  {
-    name: 'Staff amenities',
-    key: 'Staff amenities cos',
-    identifier: 'cost_total',
-    className: 'data-title-row',
-    editable: true,
-  },
-  {
-    name: 'Fringe Benefits Tax',
-    key: 'Fringe Benefits Tax cos',
-    identifier: 'cost_total',
-    className: 'data-title-row',
-    editable: true,
-  },
-  {
-    name: 'Subcontractor Services',
-    key: 'Subcontractor Services cos',
-    identifier: 'cost_total',
+    name: 'Subcontractors',
+    key:'Subcontractors outflows',
     className: 'data-title-row',
     editable: true,
   },
   {
     name: 'Payroll Tax',
-    key: 'Payroll Tax cos',
-    className: 'data-title-row',
-    identifier: 'cost_total',
-    editable: true,
-  },
-  {
-    name: 'Security Clearance Sponsorship',
-    key: 'Security Clearance Sponsorship cos',
+    key:'Payroll Tax outflows',
     className: 'data-title-row',
     editable: true,
   },
   {
-    name: 'Travel - Client Funded',
-    key: 'Travel - Client Funded cos',
+    name: 'Travel Claims',
+    key:'Travel Claims outflows',
     className: 'data-title-row',
     editable: true,
   },
   {
-    name: 'Travel - Milestone Inclusive',
-    key: 'Travel - Milestone Inclusive cos',
+    name: 'Rent',
+    key:'Rent outflows',
     className: 'data-title-row',
     editable: true,
   },
   {
-    name: 'Membership Fee',
-    key: 'Membership Fee cos',
+    name: 'Utilities',
+    key:'Utilities outflows',
+    className: 'data-title-row',
+    editable: true,
+  },
+  {
+    name: 'Office Supplies',
+    key:'Office Supplies outflows',
+    className: 'data-title-row',
+    editable: true,
+  },
+  {
+    name: 'Telephone & Mobiles',
+    key:'Telephone & Mobiles outflows',
+    className: 'data-title-row',
+    editable: true,
+  },
+  {
+    name: 'IT Expenses',
+    key:'IT Expenses outflows',
+    className: 'data-title-row',
+    editable: true,
+  },
+  {
+    name: 'Accounting Fee',
+    key:'Accounting Fee outflows',
+    className: 'data-title-row',
+    editable: true,
+  },
+  {
+    name: 'Insurance',
+    key:'Insurance outflows',
+    className: 'data-title-row',
+    editable: true,
+  },
+  {
+    name: 'Software Fee',
+    key:'Software Fee outflows',
+    className: 'data-title-row',
+    editable: true,
+  },
+  {
+    name: 'Business Travel',
+    key:'Business Travel outflows',
+    className: 'data-title-row',
+    editable: true,
+  },
+  {
+    name: 'Entertainments',
+    key:'Entertainments outflows',
+    className: 'data-title-row',
+    editable: true,
+  },
+  {
+    name: 'Other General Expense',
+    key:'Other General Expense outflows',
+    className: 'data-title-row',
+    editable: true,
+  },
+  {
+    name:'ATO GST Payment',
+    key:'ATO GST Payment outflows',
+    className: 'data-title-row',
+    editable: true,
+  },
+  {
+    name:'ATO PAYG W/Tax Payment',
+    key:'ATO PAYG W/Tax Payment outflows',
+    className: 'data-title-row',
+    editable: true,
+  },
+  {
+    name:'ATO Income Tax Payment',
+    key:'ATO Income Tax Payment outflows',
+    className: 'data-title-row',
+    editable: true,
+  },
+  {
+    name: 'Other Outflows',
+    key: 'Other Outflows outflows',
     className: 'data-title-row',
     editable: true,
   },
@@ -191,8 +186,8 @@ export const cost_of_sale = [
   {},
   {
     className: 'total-row',
-    name: 'TOTAL COST OF SALES - COS',
-    key: 'TOTAL COST OF SALES - COS cos',
+    name: 'Total Outflows',
+    key: 'Total Outflows',
     render:(key, record)=>{
       key = key.startsWith('FY')? 'total' : key
       return record[key] ? formatNegativeValue(record[key])  : '-'
@@ -200,750 +195,44 @@ export const cost_of_sale = [
   },
 ];
 
-export const contribution_margin = [
+export const closing_cashflows = [
   {},
   {
     className: 'total-row',
-    name: 'CONTRIBUTION MARGIN',
-    key: 'CONTRIBUTION MARGIN',
+    name: 'Surplus (Shortffall)',
+    key: 'Surplus (Shortffall)',
     renderCalculation: (record, key) =>{
       key = key.startsWith('FY')? 'total' : key
-      return getValueWithCondition(record, 8, key)  - getValueWithCondition(record, 30, key)
+      return  (getValueWithCondition(record, 6, key) - getValueWithCondition(record, 33, key))
     },
     render:(key, record)=>{
       key = key.startsWith('FY')? 'total' : key
-      return formatNegativeValue(record[key]) 
+      return record[key] ? formatNegativeValue(record[key])  : '-'
     }
   },
-  {},
   {
     className: 'total-row',
-    name: 'C.M. %',
-    key: 'C.M. %',
+    name: 'Cash at Bank - Closing',
+    key: 'Cash at Bank - Closing',
     renderCalculation: (record, key) =>{
       key = key.startsWith('FY')? 'total' : key
-      let revenue = getValueWithCondition(record, 8, key)
-      return revenue ? ((revenue - getValueWithCondition(record, 30, key)) /revenue) *100: 0.00
+      return  (getValueWithCondition(record, 6, key) - getValueWithCondition(record, 33, key))
     },
     render:(key, record)=>{
       key = key.startsWith('FY')? 'total' : key
-      return formatNegativeValue(record[key], 'float') 
+      return record[key] ? formatNegativeValue(record[key])  : '-'
     }
   },
   {}
 ]
 
-export const direct_overhead_expense = [
-  {},
-  {
-    name: 'DIRECT OVERHEAD - DOH',
-    key: 'DIRECT OVERHEAD - DOH doh',
-    className: 'title-row',
-  },
-  {
-    name: 'Salaries & Wages - Permanent',
-    key: 'Salaries & Wages - Permanent doh',
-    className: 'data-title-row',
-    editable: true,
-  },
-  {
-    name: 'Superannuation - Permanent',
-    key: 'Superannuation - Permanent doh',
-    className: 'data-title-row',
-    editable: true,
-  },
-  {
-    name: 'Travel Allowances',
-    key: 'Travel Allowances doh',
-    className: 'data-title-row',
-    editable: true,
-  },
-  {
-    name: 'Bonus/STI',
-    key: 'Bonus/STI doh',
-    className: 'data-title-row',
-    editable: true,
-  },
-  {
-    name: 'Employee Leave Entitlements AL/LSL',
-    key: 'Employee Leave Entitlements AL/LSL doh',
-    className: 'data-title-row',
-    editable: true,
-  },
-  {
-    name: 'Subcontractor Services',
-    key: 'Subcontractor Services doh',
-    className: 'data-title-row',
-    editable: true,
-  },
-  {
-    name: 'Payroll Tax',
-    key: 'Payroll Tax doh',
-    className: 'data-title-row',
-    editable: true,
-  },
-  {
-    name: 'Other Personnel Expenses',
-    key: 'Other Personnel Expenses doh',
-    className: 'data-title-row',
-    editable: true,
-  },
-  {
-    name: 'Occupancy Expenses ',
-    key: 'Occupancy Expenses doh',
-    className: 'data-title-row',
-    editable: true,
-  },
-  {
-    name: 'Equipment Expenses ',
-    key: 'Equipment Expenses doh',
-    className: 'data-title-row',
-    editable: true,
-  },
-  {
-    name: 'Communication Expenses ',
-    key: 'Communication Expenses doh',
-    className: 'data-title-row',
-    editable: true,
-  },
-  {
-    name: 'Outside Services Expenses ',
-    key: 'Outside Services Expenses doh',
-    className: 'data-title-row',
-    editable: true,
-  },
-  {
-    name: 'Travel Expenses',
-    key: 'Travel Expenses doh',
-    className: 'data-title-row',
-    editable: true,
-  },
-  {
-    name: 'Entertainment - Client ',
-    key: 'Entertainment - Client doh',
-    className: 'data-title-row',
-    editable: true,
-  },
-  {
-    name: 'Entertainment - Staff ',
-    key: 'Entertainment - Staff doh',
-    className: 'data-title-row',
-    editable: true,
-  },
-  {
-    name: 'Other General Expenses ',
-    key: 'Other General Expenses doh',
-    className: 'data-title-row',
-    editable: true,
-  },
-  {},
-  {
-    className: 'total-row',
-    name: 'TOTAL DIRECT OVERHEAD - DOH',
-    key: 'TOTAL DIRECT OVERHEAD - DOH doh',
-  },
-];
-
-export const income_tax = [
-  {},
-  {
-    className: 'total-row',
-    name: 'EARNINGS BEFORE INCOME TAX - EBIT',
-    key: 'EARNINGS BEFORE INCOME TAX - EBIT',
-    renderCalculation: (record, key) =>{
-      key = key.startsWith('FY')? 'total' : key
-      return getValueWithCondition(record, 8, key) -
-      getValueWithCondition(record, 30, key) -
-      getValueWithCondition(record, 54, key);
-    },
-    render:(key, record)=>{
-      key = key.startsWith('FY')? 'total' : key
-      return record[key] ? formatNegativeValue(record[key])  : '-'
-    }
-  },
-  {},
-  {
-    name: 'Interest Income',
-    key: 'Interst Income tax',
-    className: 'data-title-row',
-    editable: true,
-  },
-  {
-    name: 'Interest Expense',
-    key: 'Interest Expense tax',
-    operation: '-',
-    className: 'data-title-row',
-    editable: true,
-  },
-  {
-    name: 'Indirect Overhead',
-    key: 'Indirect Overhead tax',
-    operation: '-',
-    className: 'data-title-row',
-    editable: true,
-  },
-  {
-    name: 'Other Income',
-    key: 'Other Income tax',
-    className: 'data-title-row',
-    editable: true,
-  },
-]
-
-export const net_profit = [
-  {
-    className: 'total-row',
-    name: 'PROFIT BEFORE TAX',
-    key: 'PROFIT BEFORE TAX profit',
-    renderCalculation: (record, key) =>{
-      key = key.startsWith('FY')? 'total' : key
-      return getValueWithCondition(record, 56, key) +
-      getValueWithCondition(record, 58, key) -
-      getValueWithCondition(record, 59, key) -
-      getValueWithCondition(record, 60, key) +
-      getValueWithCondition(record, 61, key) 
-    },
-    render:(key, record)=>{
-      key = key.startsWith('FY')? 'total' : key
-      return  formatNegativeValue(record[key]) 
-    }
-  },
-  {},
-  {
-    name: 'Income Tax Expense',
-    key: 'Income Tax Expense profit',
-    className: 'data-title-row',
-    editable: true,
-  },
-  {},
-  {
-    className: 'total-row',
-    name: 'NET PROFIT',
-    key: 'NET PROFIT profit',
-    renderCalculation: (record, key) =>{
-      key = key.startsWith('FY')? 'total' : key
-      return getValueWithCondition(record, 62, key) -
-      getValueWithCondition(record, 64, key) 
-    },
-    render:(key, record)=>{
-      key = key.startsWith('FY')? 'total' : key
-      return formatNegativeValue(record[key])
-    }
-  },
-]
-
-// export const occupancy_expenses = [
-//     {},
-//     { name: 'OCCUPANCY EXPENSES', className: 'title-row' },
-//     {
-//         name: 'Rent - Office',
-//         className: 'data-title-row',
-//         // 'Jul 20':0,
-//         // 'Aug 20':0,
-//         // 'Sep 20':0,
-//         // 'Oct 20':0,
-//         // 'Nov 20':0,
-//         // 'Dec 20':0,
-//         // 'Jan 21':0,
-//         // 'Feb 21':0,
-//         // 'Mar 21':0,
-//         // 'Apr 21':0,
-//         // 'May 21':0,
-//         // 'Jun 21':0,
-//     },
-//     {
-//         name: 'Rent - Other Cost',
-//         className: 'data-title-row',
-//         // 'Jul 20':0,
-//         // 'Aug 20':0,
-//         // 'Sep 20':0,
-//         // 'Oct 20':0,
-//         // 'Nov 20':0,
-//         // 'Dec 20':0,
-//         // 'Jan 21':0,
-//         // 'Feb 21':0,
-//         // 'Mar 21':0,
-//         // 'Apr 21':0,
-//         // 'May 21':0,
-//         // 'Jun 21':0,
-//     },
-//     {
-//         name: 'Office Maintenance',
-//         className: 'data-title-row',
-//         // 'Jul 20':0,
-//         // 'Aug 20':0,
-//         // 'Sep 20':0,
-//         // 'Oct 20':0,
-//         // 'Nov 20':0,
-//         // 'Dec 20':0,
-//         // 'Jan 21':0,
-//         // 'Feb 21':0,
-//         // 'Mar 21':0,
-//         // 'Apr 21':0,
-//         // 'May 21':0,
-//         // 'Jun 21':0,
-//     },
-//     {
-//         name: 'Electricity',
-//         className: 'data-title-row',
-//         // 'Jul 20':0,
-//         // 'Aug 20':0,
-//         // 'Sep 20':0,
-//         // 'Oct 20':0,
-//         // 'Nov 20':0,
-//         // 'Dec 20':0,
-//         // 'Jan 21':0,
-//         // 'Feb 21':0,
-//         // 'Mar 21':0,
-//         // 'Apr 21':0,
-//         // 'May 21':0,
-//         // 'Jun 21':0,
-//     },
-//     {
-//         name: 'Water',
-//         className: 'data-title-row',
-//         // 'Jul 20':0,
-//         // 'Aug 20':0,
-//         // 'Sep 20':0,
-//         // 'Oct 20':0,
-//         // 'Nov 20':0,
-//         // 'Dec 20':0,
-//         // 'Jan 21':0,
-//         // 'Feb 21':0,
-//         // 'Mar 21':0,
-//         // 'Apr 21':0,
-//         // 'May 21':0,
-//         // 'Jun 21':0,
-//     },
-//     {
-//         name: 'Rates',
-//         className: 'data-title-row',
-//         // 'Jul 20':0,
-//         // 'Aug 20':0,
-//         // 'Sep 20':0,
-//         // 'Oct 20':0,
-//         // 'Nov 20':0,
-//         // 'Dec 20':0,
-//         // 'Jan 21':0,
-//         // 'Feb 21':0,
-//         // 'Mar 21':0,
-//         // 'Apr 21':0,
-//         // 'May 21':0,
-//         // 'Jun 21':0,
-//     },
-//     {},
-// ]
-
-// export const supplies_expenses = [
-//     {},
-//     { name: 'SUPPLIES & EQUIPMENT EXPENSES' , className: 'title-row' },
-//     {
-//         name: 'Office Supplies & Staionery',
-//         className: 'data-title-row',
-//         // 'Jul 20':0,
-//         // 'Aug 20':0,
-//         // 'Sep 20':0,
-//         // 'Oct 20':0,
-//         // 'Nov 20':0,
-//         // 'Dec 20':0,
-//         // 'Jan 21':0,
-//         // 'Feb 21':0,
-//         // 'Mar 21':0,
-//         // 'Apr 21':0,
-//         // 'May 21':0,
-//         // 'Jun 21':0,
-//     },
-//     {
-//         name: 'Office Equipments',
-//         className: 'data-title-row',
-//         // 'Jul 20':0,
-//         // 'Aug 20':0,
-//         // 'Sep 20':0,
-//         // 'Oct 20':0,
-//         // 'Nov 20':0,
-//         // 'Dec 20':0,
-//         // 'Jan 21':0,
-//         // 'Feb 21':0,
-//         // 'Mar 21':0,
-//         // 'Apr 21':0,
-//         // 'May 21':0,
-//         // 'Jun 21':0,
-//     },
-//     {
-//         name: 'Repair & Maint - Office Equip',
-//         className: 'data-title-row',
-//         // 'Jul 20':0,
-//         // 'Aug 20':0,
-//         // 'Sep 20':0,
-//         // 'Oct 20':0,
-//         // 'Nov 20':0,
-//         // 'Dec 20':0,
-//         // 'Jan 21':0,
-//         // 'Feb 21':0,
-//         // 'Mar 21':0,
-//         // 'Apr 21':0,
-//         // 'May 21':0,
-//         // 'Jun 21':0,
-//     },
-//     {
-//         name: 'Depreciation Charge',
-//         className: 'data-title-row',
-//         // 'Jul 20':0,
-//         // 'Aug 20':0,
-//         // 'Sep 20':0,
-//         // 'Oct 20':0,
-//         // 'Nov 20':0,
-//         // 'Dec 20':0,
-//         // 'Jan 21':0,
-//         // 'Feb 21':0,
-//         // 'Mar 21':0,
-//         // 'Apr 21':0,
-//         // 'May 21':0,
-//         // 'Jun 21':0,
-//     },
-// ]
-
-// export const comunication_expenses = [
-//     {},
-//     { name: 'COMMUNICATION EXPENSES' , className: 'title-row' },
-//     {
-//         name: 'Telephone & Mobile Phones',
-//         className: 'data-title-row',
-//         // 'Jul 20':0,
-//         // 'Aug 20':0,
-//         // 'Sep 20':0,
-//         // 'Oct 20':0,
-//         // 'Nov 20':0,
-//         // 'Dec 20':0,
-//         // 'Jan 21':0,
-//         // 'Feb 21':0,
-//         // 'Mar 21':0,
-//         // 'Apr 21':0,
-//         // 'May 21':0,
-//         // 'Jun 21':0,
-//     },
-//     {
-//         name: 'Internet Expenses',
-//         className: 'data-title-row',
-//         // 'Jul 20':0,
-//         // 'Aug 20':0,
-//         // 'Sep 20':0,
-//         // 'Oct 20':0,
-//         // 'Nov 20':0,
-//         // 'Dec 20':0,
-//         // 'Jan 21':0,
-//         // 'Feb 21':0,
-//         // 'Mar 21':0,
-//         // 'Apr 21':0,
-//         // 'May 21':0,
-//         // 'Jun 21':0,
-//     },
-//     {
-//         name: 'RPostage',
-//         className: 'data-title-row',
-//         // 'Jul 20':0,
-//         // 'Aug 20':0,
-//         // 'Sep 20':0,
-//         // 'Oct 20':0,
-//         // 'Nov 20':0,
-//         // 'Dec 20':0,
-//         // 'Jan 21':0,
-//         // 'Feb 21':0,
-//         // 'Mar 21':0,
-//         // 'Apr 21':0,
-//         // 'May 21':0,
-//         // 'Jun 21':0,
-//     },
-//     {
-//         name: 'IT Services - Microsoft Exchange Fee',
-//         className: 'data-title-row',
-//         // 'Jul 20':0,
-//         // 'Aug 20':0,
-//         // 'Sep 20':0,
-//         // 'Oct 20':0,
-//         // 'Nov 20':0,
-//         // 'Dec 20':0,
-//         // 'Jan 21':0,
-//         // 'Feb 21':0,
-//         // 'Mar 21':0,
-//         // 'Apr 21':0,
-//         // 'May 21':0,
-//         // 'Jun 21':0,
-//     },
-// ]
-
-// export const outside_expenses = [
-//     {},
-//     { name: 'OUTSIDE SERVICES EXPENSES' , className: 'title-row' },
-//     {
-//         name: 'Accounting & Legal Fees',
-//         className: 'data-title-row',
-//         // 'Jul 20':0,
-//         // 'Aug 20':0,
-//         // 'Sep 20':0,
-//         // 'Oct 20':0,
-//         // 'Nov 20':0,
-//         // 'Dec 20':0,
-//         // 'Jan 21':0,
-//         // 'Feb 21':0,
-//         // 'Mar 21':0,
-//         // 'Apr 21':0,
-//         // 'May 21':0,
-//         // 'Jun 21':0,
-//     },
-//     {
-//         name: 'Consulting Fees',
-//         className: 'data-title-row',
-//         // 'Jul 20':0,
-//         // 'Aug 20':0,
-//         // 'Sep 20':0,
-//         // 'Oct 20':0,
-//         // 'Nov 20':0,
-//         // 'Dec 20':0,
-//         // 'Jan 21':0,
-//         // 'Feb 21':0,
-//         // 'Mar 21':0,
-//         // 'Apr 21':0,
-//         // 'May 21':0,
-//         // 'Jun 21':0,
-//     },
-//     {
-//         name: 'Advertising and Promotion',
-//         className: 'data-title-row',
-//         // 'Jul 20':0,
-//         // 'Aug 20':0,
-//         // 'Sep 20':0,
-//         // 'Oct 20':0,
-//         // 'Nov 20':0,
-//         // 'Dec 20':0,
-//         // 'Jan 21':0,
-//         // 'Feb 21':0,
-//         // 'Mar 21':0,
-//         // 'Apr 21':0,
-//         // 'May 21':0,
-//         // 'Jun 21':0,
-//     },
-//     {
-//         name: 'Insurance - Business & WorkSafe',
-//         className: 'data-title-row',
-//         // 'Jul 20':0,
-//         // 'Aug 20':0,
-//         // 'Sep 20':0,
-//         // 'Oct 20':0,
-//         // 'Nov 20':0,
-//         // 'Dec 20':0,
-//         // 'Jan 21':0,
-//         // 'Feb 21':0,
-//         // 'Mar 21':0,
-//         // 'Apr 21':0,
-//         // 'May 21':0,
-//         // 'Jun 21':0,
-//     },
-//     {
-//         name: 'Software Exp - MYOB Subscription',
-//         className: 'data-title-row',
-//         // 'Jul 20':0,
-//         // 'Aug 20':0,
-//         // 'Sep 20':0,
-//         // 'Oct 20':0,
-//         // 'Nov 20':0,
-//         // 'Dec 20':0,
-//         // 'Jan 21':0,
-//         // 'Feb 21':0,
-//         // 'Mar 21':0,
-//         // 'Apr 21':0,
-//         // 'May 21':0,
-//         // 'Jun 21':0,
-//     },
-//     {},
-// ]
-
-// export const travel_entertainment_expenses = [
-//     {},
-//     { name: 'TRVEL & ENTERTAINMENT EXPENSES' , className: 'title-row' },
-//     {
-//         name: 'Travel - AGIS Funded',
-//         className: 'data-title-row',
-//         // 'Jul 20':0,
-//         // 'Aug 20':0,
-//         // 'Sep 20':0,
-//         // 'Oct 20':0,
-//         // 'Nov 20':0,
-//         // 'Dec 20':0,
-//         // 'Jan 21':0,
-//         // 'Feb 21':0,
-//         // 'Mar 21':0,
-//         // 'Apr 21':0,
-//         // 'May 21':0,
-//         // 'Jun 21':0,
-//     },
-//     {
-//         name: 'Office Catering/Entertainment',
-//         className: 'data-title-row',
-//         // 'Jul 20':0,
-//         // 'Aug 20':0,
-//         // 'Sep 20':0,
-//         // 'Oct 20':0,
-//         // 'Nov 20':0,
-//         // 'Dec 20':0,
-//         // 'Jan 21':0,
-//         // 'Feb 21':0,
-//         // 'Mar 21':0,
-//         // 'Apr 21':0,
-//         // 'May 21':0,
-//         // 'Jun 21':0,
-//     },
-//     {
-//         name: 'Employee Conference & Function',
-//         className: 'data-title-row',
-//         // 'Jul 20':0,
-//         // 'Aug 20':0,
-//         // 'Sep 20':0,
-//         // 'Oct 20':0,
-//         // 'Nov 20':0,
-//         // 'Dec 20':0,
-//         // 'Jan 21':0,
-//         // 'Feb 21':0,
-//         // 'Mar 21':0,
-//         // 'Apr 21':0,
-//         // 'May 21':0,
-//         // 'Jun 21':0,
-//     },
-//     {
-//         name: 'Business Entertainment',
-//         className: 'data-title-row',
-//         // 'Jul 20':0,
-//         // 'Aug 20':0,
-//         // 'Sep 20':0,
-//         // 'Oct 20':0,
-//         // 'Nov 20':0,
-//         // 'Dec 20':0,
-//         // 'Jan 21':0,
-//         // 'Feb 21':0,
-//         // 'Mar 21':0,
-//         // 'Apr 21':0,
-//         // 'May 21':0,
-//         // 'Jun 21':0,
-//     },
-//     {
-//         name: 'Business Conference & Function',
-//         className: 'data-title-row',
-//         // 'Jul 20':0,
-//         // 'Aug 20':0,
-//         // 'Sep 20':0,
-//         // 'Oct 20':0,
-//         // 'Nov 20':0,
-//         // 'Dec 20':0,
-//         // 'Jan 21':0,
-//         // 'Feb 21':0,
-//         // 'Mar 21':0,
-//         // 'Apr 21':0,
-//         // 'May 21':0,
-//         // 'Jun 21':0,
-//     },
-//     {},
-// ]
-
-// export const other_general_expenses = [
-//     {},
-//     { name: 'OTHER GENERAL EXPENSES' , className: 'title-row' },
-//     {
-//         name: 'Membership Fee',
-//         className: 'data-title-row',
-//         // 'Jul 20':0,
-//         // 'Aug 20':0,
-//         // 'Sep 20':0,
-//         // 'Oct 20':0,
-//         // 'Nov 20':0,
-//         // 'Dec 20':0,
-//         // 'Jan 21':0,
-//         // 'Feb 21':0,
-//         // 'Mar 21':0,
-//         // 'Apr 21':0,
-//         // 'May 21':0,
-//         // 'Jun 21':0,
-//     },
-//     {
-//         name: 'Donation & Subscription',
-//         className: 'data-title-row',
-//         // 'Jul 20':0,
-//         // 'Aug 20':0,
-//         // 'Sep 20':0,
-//         // 'Oct 20':0,
-//         // 'Nov 20':0,
-//         // 'Dec 20':0,
-//         // 'Jan 21':0,
-//         // 'Feb 21':0,
-//         // 'Mar 21':0,
-//         // 'Apr 21':0,
-//         // 'May 21':0,
-//         // 'Jun 21':0,
-//     },
-//     {
-//         name: 'Licence & Registration Fee',
-//         className: 'data-title-row',
-//         // 'Jul 20':0,
-//         // 'Aug 20':0,
-//         // 'Sep 20':0,
-//         // 'Oct 20':0,
-//         // 'Nov 20':0,
-//         // 'Dec 20':0,
-//         // 'Jan 21':0,
-//         // 'Feb 21':0,
-//         // 'Mar 21':0,
-//         // 'Apr 21':0,
-//         // 'May 21':0,
-//         // 'Jun 21':0,
-//     },
-//     {
-//         name: 'Bank Charges',
-//         className: 'data-title-row',
-//         // 'Jul 20':0,
-//         // 'Aug 20':0,
-//         // 'Sep 20':0,
-//         // 'Oct 20':0,
-//         // 'Nov 20':0,
-//         // 'Dec 20':0,
-//         // 'Jan 21':0,
-//         // 'Feb 21':0,
-//         // 'Mar 21':0,
-//         // 'Apr 21':0,
-//         // 'May 21':0,
-//         // 'Jun 21':0,
-//     },
-//     {
-//         name: 'Other General Expenses',
-//         className: 'data-title-row',
-//         // 'Jul 20':0,
-//         // 'Aug 20':0,
-//         // 'Sep 20':0,
-//         // 'Oct 20':0,
-//         // 'Nov 20':0,
-//         // 'Dec 20':0,
-//         // 'Jan 21':0,
-//         // 'Feb 21':0,
-//         // 'Mar 21':0,
-//         // 'Apr 21':0,
-//         // 'May 21':0,
-//         // 'Jun 21':0,
-//     },
-//     {},
-// ]
-
-
-
 /**------------------Helper ------ function */
 
 export const nextFocus = () => {
-  console.log('setted focus')
   let focusObject = {};
   const array = new Array (
-    ...income_revenue,
-    ...cost_of_sale,
-    ...contribution_margin,
-    ...direct_overhead_expense,
-    ...income_tax,
-    ...net_profit
+    ...cash_inflows,
+    ...cash_outflows,
   )
   let prev = 0
   for (let i = 1; i < array.length; i++) {
@@ -955,7 +244,7 @@ export const nextFocus = () => {
       prev = curr;
     }
   }
-  focusObject['Income Tax Expense profit'] = 'Revenue - Security Clearance Fee'
+  focusObject['Other Outflows outflows'] = 'Debtor Receipts inflows'
   return focusObject;
 }
 
