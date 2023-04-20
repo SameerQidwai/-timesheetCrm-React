@@ -87,7 +87,7 @@ function FinancialYears(props) {
                     Edit
                   </Menu.Item>
                   <Menu.Item 
-                    // disabled={record.closed}
+                    disabled={record.closed}
                     key="Closing" onClick={()=>{onConfirm(record, index)}}
                   >
                       Close
