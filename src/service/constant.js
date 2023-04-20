@@ -1,7 +1,7 @@
 import moment from 'moment';
 import 'moment-weekday-calc';
 import { message as messageAlert } from 'antd';
-// export const Api = 'http://localhost:3301/api/v1';
+export const Api = 'http://localhost:3301/api/v1';
 
 // export const Api = "http://onelmcrm.gaamatech.com:8000/api/v1";
 // export const Api = "http://192.168.0.243:3000/api/v1"; // Shahzaib/
@@ -119,6 +119,7 @@ export const formatCurrency = (amount, fixed) => {
   return '$ 0.00';
 }; //end
 
+<<<<<<< HEAD
 // export const formatFloat = (number, fixed, round) => { //not using as for now using INTL method
 //   if (round){
 //     return !isNaN(parseFloat(number)) ? parseFloat(number).toFixed(2) : '0.00';
@@ -138,6 +139,28 @@ export const formatFloat = (number, fixed, round) => {
   }
   return '0.00';
 };
+=======
+export const formatFloat = (number, fixed, round) => { 
+  if (round){
+    return !isNaN(parseFloat(number)) ? parseFloat(number).toFixed(2) : '0.00';
+  }
+  return toTruncate(number, fixed || 2 )
+};
+
+// export const formatFloat = (number, fixed, round)=>{ //not using as using INTL method's trunc is still rounding off
+//   if (number && !isNaN(number)){
+//     var formatter = new Intl.NumberFormat('en-US', {
+//       // notation: "compact",
+//       // compactDisplay: "long",
+//       maximumFractionDigits: fixed ?? 2, 
+//       roundingMode: round ?? 'trunc'
+//     });  
+//     return formatter.format(number)
+//   }
+//   return '0.00' 
+// }
+
+>>>>>>> 77c30d40655be47f8852d1953cd47ef6ef43af1e
 
 // export const formatDate = (date, format) =>{
 //   // return date && moment(date).format(format ??'ddd DD MMM yyyy')
