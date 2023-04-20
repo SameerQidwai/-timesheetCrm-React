@@ -29,7 +29,7 @@ import {
 import { getContactRecord } from '../../../service/conatct-person';
 import { addList, getRecord, editList } from '../../../service/Employees';
 import { addAttachments, addFiles } from '../../../service/Attachment-Apis';
-import { formatDate, isPhone } from '../../../service/constant';
+import { formatDate } from '../../../service/constant';
 
 const { TabPane } = Tabs;
 
@@ -44,8 +44,8 @@ class InfoModal extends Component {
       CONTACT: [],
       data: {},
       imgLoading: false,
-      fileList: [],
-      fileIds: null,
+      files: {contract: [], superannuation: [], bankAccount: [], tfn: []},
+      fileIds: {contract: null, superannuation: null, bankAccount: null, tfn: null},
       activeKey: 'basic',
 
       BasicFields: [
@@ -156,20 +156,7 @@ class InfoModal extends Component {
           fieldCol: 12,
           key: 'phoneNumber',
           size: 'small',
-          normalize:phoneNormalize,
-          rules:[
-            ({ getFieldValue }) => ({
-                validator(rules, value) {
-                    if (value){
-                        if (!isPhone(value)) {
-                            return Promise.reject(new Error('Must contain 10 digits'));
-                        }
-                        return Promise.resolve();
-                      }
-                      return Promise.resolve();
-                },
-            }),
-          ],
+          // !isPhone
           type: 'input',
           itemStyle: { marginBottom: 10 },
         },
@@ -366,21 +353,8 @@ class InfoModal extends Component {
           key: 'nextOfKinPhoneNumber',
           size: 'small',
           // rules:[{ required: true }],
-          normalize:phoneNormalize,
           type: 'input',
-          rules:[
-            ({ getFieldValue }) => ({
-                validator(rules, value) {
-                    if (value){
-                        if (!isPhone(value)) {
-                            return Promise.reject(new Error('Must contain 10 digits'));
-                        }
-                        return Promise.resolve();
-                    }
-                      return Promise.resolve();
-                },
-            }),
-        ],
+          // !isPhone
           itemStyle: { marginBottom: 10 },
         },
         {
@@ -552,10 +526,19 @@ class InfoModal extends Component {
         {
           Placeholder: 'Employment Status',
           rangeMin: true,
-          fieldCol: 12,
+          fieldCol: 6,
           size: 'small',
           type: 'Text',
           labelAlign: 'right',
+          // itemStyle:{marginBottom:'10px'},
+        },
+        {
+          Placeholder: "Back Office Rate of Effort",
+          rangeMin: true,
+          fieldCol: 6,
+          size: "small",
+          type: "Text",
+          labelAlign: "right",
           // itemStyle:{marginBottom:'10px'},
         },
         {
@@ -568,7 +551,7 @@ class InfoModal extends Component {
         },
         {
           object: 'billing',
-          fieldCol: 12,
+          fieldCol: 6,
           key: 'type',
           size: 'small',
           data: [
@@ -580,14 +563,26 @@ class InfoModal extends Component {
           onChange: (value) => {
             const { BillingFields } = this.state;
             if (value === 1) {
-              BillingFields[11].Placeholder = 'Hourly Base Salary';
+              BillingFields[13].Placeholder = 'Hourly Base Salary';
               this.setState({ BillingFields });
             } else {
-              BillingFields[11].Placeholder = 'Annual Base Salary';
+              BillingFields[13].Placeholder = 'Annual Base Salary';
               this.setState({ BillingFields });
             }
           },
           rules: [{ required: true, message: 'Status is Required' }],
+          itemStyle: { marginBottom: 10 },
+        },
+        {
+          object: "billing",
+          fieldCol: 6,
+          key: "bohPercent",
+          size: "small",
+          type: "InputNumber",
+          rules:[{ required: true, message: 'BOH Rate is Required' }],
+          shape: "%",
+          rangeMin: 0,
+          rangeMax: 100,
           itemStyle: { marginBottom: 10 },
         },
         {
@@ -760,27 +755,6 @@ class InfoModal extends Component {
           itemStyle: { marginBottom: 10 },
         },
         {
-          Placeholder: "Back Office Rate of Effort",
-          rangeMin: true,
-          fieldCol: 24,
-          size: "small",
-          type: "Text",
-          labelAlign: "right",
-          // itemStyle:{marginBottom:'10px'},
-        },
-        {
-          object: "billing",
-          fieldCol: 6,
-          key: "bohPercent",
-          size: "small",
-          type: "InputNumber",
-          rules:[{ required: true, message: 'BOH Rate is Required' }],
-          shape: "%",
-          rangeMin: 0,
-          rangeMax: 100,
-          itemStyle: { marginBottom: 10 },
-        },
-        {
           Placeholder: 'Comments',
           fieldCol: 24,
           size: 'small',
@@ -859,7 +833,7 @@ class InfoModal extends Component {
         const { BasicFields, BillingFields, ManagerFields } = this.state;
         BasicFields[15].data = res[0].data;
         BasicFields[3].data = res[1].data;
-        BillingFields[17].data = res[3].data;
+        BillingFields[19].data = res[3].data;
         ManagerFields[1].data = res[4].data;
         this.setState({
           BasicFields,
@@ -912,22 +886,10 @@ class InfoModal extends Component {
     });
   };
 
-  addEmployee = (data) => {
-    const { callBack } = this.props;
-    const { sContact } = this.state;
-    data.contactPersonId = sContact;
-    // value.key = rows; // get new key
-    addList(data).then((res) => {
-      this.setState({ loading: false });
-      if (res.success) {
-        // this.uploadAttachments(res.billing, res.data)
-        callBack(res.data, false);
-      }
-    });
-  };
+  
 
-  getRecord = (id) => {
-    return getRecord(id).then((res) => {
+  getRecord = async(id) => {
+    return await getRecord(id).then((res) => {
       if (res.success) {
         const { BillingFields } = this.state;
         this.formRef.current.setFieldsValue({
@@ -938,13 +900,23 @@ class InfoModal extends Component {
           billing: res.billing,
           train: res.train,
         });
-        BillingFields[11].Placeholder =
+        BillingFields[13].Placeholder =
           res?.billing?.type === 1
             ? 'Hourly Base Salary'
             : 'Annual Base Salary';
         this.setState({
-          fileIds: res.billing.fileId,
-          fileList: res.billing.file,
+          fileIds: {
+            contact: res.billing.fileId,
+            superannuation: res.detail.superannuationFileId,
+            bankAccount: res.bank.bankAccountFileId,
+            tfn: res.tfn.tfnFileId,
+          },
+          files: {
+            contract: res.billing.file,
+            superannuation: res.detail.file,
+            bankAccount: res.bank.file,
+            tfn: res.tfn.file,
+          },
           BillingFields,
         });
         this.onFundType(res.detail && res.detail);
@@ -952,18 +924,7 @@ class InfoModal extends Component {
       }
     });
   };
-
-  editRecord = (value) => {
-    const { editEmp, callBack } = this.props;
-
-    editList(editEmp, value).then((res) => {
-      this.setState({ loading: false });
-      if (res.success) {
-        // this.uploadAttachments(res.billing, res.data)
-        callBack();
-      }
-    });
-  };
+  
 
   onContact = (value) => {
     if (value) {
@@ -1165,7 +1126,7 @@ class InfoModal extends Component {
       ...kin,
       latestEmploymentContract: {
         ...billing,
-        fileId: fileIds,
+        fileId: fileIds.contract??null,
         startDate: formatDate(billing.startDate, true),
         endDate: formatDate(billing.endDate, true),
         leaveRequestPolicyId: billing.leaveRequestPolicyId || null,
@@ -1174,6 +1135,9 @@ class InfoModal extends Component {
       dateOfBirth: formatDate(basic.dateOfBirth, true),
       lineManagerId: basic?.lineManagerId ?? null,
       superannuationType: detail?.superannuationType ?? null,
+      superannuationFileId: fileIds.superannuation??null,
+      bankAccountFileId: fileIds.bankAccount??null,
+      tfnFileId: fileIds.tfn,
       bankName: bank.bankName ?? '',
       bankAccountNo: bank.bankAccountNo ?? '',
       bankBsb: bank.bankBsb ?? '',
@@ -1188,10 +1152,35 @@ class InfoModal extends Component {
     }
   };
 
+  addEmployee = (data) => {
+    const { callBack } = this.props;
+    const { sContact } = this.state;
+    data.contactPersonId = sContact;
+    // value.key = rows; // get new key
+    addList(data).then((res) => {
+      this.setState({ loading: false });
+      if (res.success) {
+        // this.uploadAttachments(res.billing, res.data)
+        callBack(res.data, false);
+      }
+    });
+  };
+  
+  editRecord = (value) => {
+    const { editEmp, callBack } = this.props;
+
+    editList(editEmp, value).then((res) => {
+      this.setState({ loading: false });
+      if (res.success) {
+        // this.uploadAttachments(res.billing, res.data)
+        callBack();
+      }
+    });
+  };
+
   //file upload testing
 
-  handleUpload = async (option) => {
-    const { onSuccess, onError, file, onProgress } = option;
+  handleUpload = async ({ onSuccess, onError, file, onProgress }, key_file) => {
     const formData = new FormData();
     const config = {
       headers: { 'content-type': 'multipart/form-data' },
@@ -1208,10 +1197,11 @@ class InfoModal extends Component {
     addFiles(formData, config).then((res, err) => {
       if (res.success) {
         onSuccess('Ok');
-        this.setState({
-          fileList: [res.file],
-          fileIds: res.file.fileId,
-        });
+        this.setState((prev)=>({
+          ...prev,
+          files: {...prev.files, [key_file]: [res.file]},
+          fileIds: {...prev.fileIds, [key_file]: res.file.fileId},
+        }));
       } else {
         console.log('Eroor: ', err);
         const error = new Error('Some error');
@@ -1227,11 +1217,12 @@ class InfoModal extends Component {
     });
   };
 
-  onRemove = (file) => {
-    this.setState({
-      fileIds: null,
-      fileList: [],
-    });
+  onRemove = (key_file) => {
+    this.setState((prev)=>({
+      ...prev,
+      files: {...prev.files, [key_file]: []},
+      fileIds: {...prev.fileIds, [key_file]: null},
+    }));
   };
 
   //file upload testing
@@ -1248,7 +1239,7 @@ class InfoModal extends Component {
       ManagerFields,
       CONTACT,
       loading,
-      fileList,
+      files,
       activeKey,
     } = this.state;
     return (
@@ -1274,7 +1265,7 @@ class InfoModal extends Component {
           scrollToFirstError={true}
           size="small"
           layout="inline"
-          initialValues={{ billing: { startDate: null, bohPercent:0 } }}
+          initialValues={{ billing: { startDate: null, bohPercent: 0 } }}
         >
           {!editEmp && (
             <Col span={8} style={{ marginBottom: 10 }}>
@@ -1301,10 +1292,11 @@ class InfoModal extends Component {
             <Form.Item
               name={['basic', 'username']}
               rules={[
-                { required: true, message: 'Email/Username is requrired' }, {
+                { required: true, message: 'Email/Username is requrired' },
+                {
                   type: 'email',
                   message: 'The input is not valid e-mail!',
-                }
+                },
               ]}
             >
               <Input
@@ -1312,7 +1304,7 @@ class InfoModal extends Component {
                 size="small"
                 type="email"
                 style={{ width: '100%' }}
-                />
+              />
             </Form.Item>
           </Col>
           <Tabs
@@ -1339,14 +1331,16 @@ class InfoModal extends Component {
               <FormItems FormFields={BillingFields} />
               <p style={{ marginTop: 10, marginBottom: 2 }}>Signed Contract</p>
               <Upload
-                customRequest={this.handleUpload}
+                customRequest={(options) =>
+                  this.handleUpload(options, 'contract')
+                }
                 // listType="picture"
                 listType="picture-card"
                 maxCount={1}
-                fileList={fileList}
-                onRemove={this.onRemove}
+                fileList={files.contract}
+                onRemove={() => this.onRemove('contract')}
               >
-                {fileList.length < 1 && (
+                {files?.contract.length < 1 && (
                   <div style={{ marginTop: 10 }}>
                     <PlusOutlined />
                     <div style={{ marginTop: 8 }}>Upload</div>
@@ -1362,6 +1356,27 @@ class InfoModal extends Component {
               className="ant-form ant-form-inline ant-form-small"
             >
               <FormItems FormFields={DetailFields} />
+              <p style={{ marginTop: 10, marginBottom: 2 }}>
+                Superannuation Form
+              </p>
+              <Upload
+                customRequest={(options) =>
+                  this.handleUpload(options, 'superannuation')
+                }
+                // listType="picture"
+                listType="picture-card"
+                maxCount={1}
+                fileList={files.superannuation}
+                onRemove={() => this.onRemove('superannuation')}
+              >
+                {files?.superannuation.length < 1 && (
+                  <div style={{ marginTop: 10 }}>
+                    <PlusOutlined />
+                    <div style={{ marginTop: 8 }}>Upload</div>
+                  </div>
+                )}
+                {/* <Button icon={<UploadOutlined />} style={{marginTop: 10}} loading={imgLoading}>Upload Contract</Button> */}
+              </Upload>
             </TabPane>
             <TabPane
               tab="Next of Kin"
@@ -1378,6 +1393,47 @@ class InfoModal extends Component {
               className="ant-form ant-form-inline ant-form-small"
             >
               <FormItems FormFields={BankFields} />
+              {/* <Row> */}
+                <Col span={12}>
+                  <p style={{ marginTop: 10, marginBottom: 2 }}>Bank Details</p>
+                  <Upload
+                    customRequest={(options) =>
+                      this.handleUpload(options, 'bankAccount')
+                    }
+                    // listType="picture"
+                    listType="picture-card"
+                    maxCount={1}
+                    fileList={files.bankAccount}
+                    onRemove={() => this.onRemove('bankAccount')}
+                  >
+                    {files?.bankAccount.length < 1 && (
+                      <div style={{ marginTop: 10 }}>
+                        <PlusOutlined />
+                        <div style={{ marginTop: 8 }}>Upload</div>
+                      </div>
+                    )}
+                    {/* <Button icon={<UploadOutlined />} style={{marginTop: 10}} loading={imgLoading}>Upload Contract</Button> */}
+                  </Upload>
+                </Col>
+                <Col span={12} style={{ marginBottom: 10 }}>
+                  <p style={{ marginBottom: 2 }}>TFN Declaration</p>
+                  <Upload
+                    customRequest={(option) => this.handleUpload(option, 'tfn')}
+                    listType="picture-card"
+                    maxCount={1}
+                    fileList={files.tfn}
+                    name={`TFN Declaration`}
+                    onRemove={() => this.onRemove('tfn')}
+                  >
+                    {files?.tfn.length < 1 && (
+                      <div style={{ marginTop: 10 }}>
+                        <PlusOutlined />
+                        <div style={{ marginTop: 8 }}>Upload</div>
+                      </div>
+                    )}
+                  </Upload>
+                </Col>
+              {/* </Row> */}
             </TabPane>
             <TabPane
               tab="Employee Manager"

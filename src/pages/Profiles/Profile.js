@@ -33,11 +33,13 @@ const Profile = ()=>{
                     kin: res.kin, 
                     detail: res.detail, 
                     bank: res.bank,
+                    tfn: res.tfn
                     // train:res.train, 
                 })
                 setClearance(res.sClearance)
                 setResourceSkill(res.resourceSkill)
             }
+            console.log(res.billing)
         })
     }
     return (

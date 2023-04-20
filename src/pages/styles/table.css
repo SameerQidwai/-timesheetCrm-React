@@ -104,6 +104,10 @@ div.timeSheet-table .ant-table-tbody > tr.approveClass.ant-table-row > td {
     background: #caffe4 ;
 }
 
+
+div.contract-table .ant-table-tbody > tr.active-contract.ant-table-row > td {
+    background: #caffe4 ;
+}
 /* div.timeSheet-table .ant-table-tbody > tr.submitClass.ant-table-row-selected.ant-table-row > td {
     background: #f0f0f0 ;
 }

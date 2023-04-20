@@ -7,7 +7,7 @@ import {
   LoadingOutlined,
 } from '@ant-design/icons'; //Icons
 
-import Form,{phoneNormalize} from '../../../components/Core/Forms/Form';
+import Form from '../../../components/Core/Forms/Form';
 import {
   addList,
   getContactRecord,
@@ -19,7 +19,7 @@ import {
   getOrganizations,
 } from '../../../service/constant-Apis';
 
-import { formatDate, isPhone } from '../../../service/constant';
+import { formatDate } from '../../../service/constant';
 
 const { TabPane } = Tabs;
 
@@ -114,13 +114,12 @@ class InfoModal extends Component {
             fieldCol: 12,
             key: 'phoneNumber',
             size: 'small',
-            normalize:phoneNormalize,
-            rules:[
-              {
-                pattern: new RegExp('^(?:\\+?(61))? ?(?:\\((?=.*\\)))?(0?[2-57-8])\\)? ?(\\d\\d(?:[- ](?=\\d{3})|(?!\\d\\d[- ]?\\d[- ]))\\d\\d[- ]?\\d[- ]?\\d{3})$'),
-                message: 'Must contain 10 digits' 
-              }
-            ],
+            // rules:[
+            //   {
+            //     // pattern: isPhone,
+            //     message: 'Must contain 10 digits' 
+            //   }
+            // ],
             type: 'input',
             labelAlign: 'right',
             itemStyle: { marginBottom: 10 },
