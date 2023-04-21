@@ -25,8 +25,8 @@ class BulkModal extends Component {
         width: '22%',
         render: (text, records) => (
           <Row justify="space-between">
-            <Col> {formatDate(records.key, true, true)} </Col>
-            <Col>
+            <Col span={24}> {formatDate(records.key, true, true)} </Col>
+            <Col span={24}>
               <Tooltip
                 title={
                   records.holiday !== 'Weekend'
