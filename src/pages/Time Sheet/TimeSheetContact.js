@@ -941,13 +941,13 @@ class TimeSheetContact extends Component {
             <Button
               type="primary"
               disabled={sUser !== loginId}
-            //   style={{backgroundColor: '#f37748' , border: '#f37748'}}
+              style={{backgroundColor: '#f37748' , border: '#f37748'}}
               onClick={() => { this.openBulkModal(); }}
             >
-              Add Time Entries
+              Bulk Entries
             </Button>
           </Col>
-          {/* <Col >
+          <Col >
             <Button
               type="primary"
               disabled={sUser !== loginId}
@@ -958,7 +958,7 @@ class TimeSheetContact extends Component {
             >
               Add Project
             </Button>
-          </Col> */}
+          </Col>
         </Row>
         <Row justify="end" gutter={[0,20]}>
           <Col>
