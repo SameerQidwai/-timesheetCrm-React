@@ -4,8 +4,8 @@ import { Row, Col, Typography, Input, Button, Form } from 'antd';
 import { login, loggedIn } from '../../service/Login-Apis';
 import { localStore } from '../../service/constant';
 import { getSettings } from '../../service/global-apis';
-import Text from 'antd/lib/typography/Text';
-const { Title } = Typography;
+import { getAllFY } from '../../service/financial-year-apis';
+const { Title, Text } = Typography;
 const { Password } = Input;
 
 function Login(props) {
@@ -21,13 +21,27 @@ function Login(props) {
     login(value).then((res) => {
       if (res && res.success) {
         //set local storage
-        getSettings().then((res) => {
-          if (res.success) {
-            localStorage.setItem('pageSize', res.data.recordsPerPage);
+        // getSettings()
+        Promise.all([getSettings(), getAllFY()])
+        .then((res) => {
+          if (res[0]?.success) {
+            localStorage.setItem('pageSize', res[0]?.data?.recordsPerPage);
+          }
+          // console.log(res[1])
+          if(res[1]?.success){
+            let closedYears = [null, null]; //selecting Empty financial year
+            (res[1]?.data??[]).forEach(({closed, startDate, endDate}) => {
+              if(closed){ 
+                if(!closedYears[0]){ //check if startDate is already been set
+                  closedYears[0] = startDate
+                }
+                closedYears[1] = endDate // 
+              }
+            });
+            localStorage.setItem('closedYears', JSON.stringify(closedYears));
           }
           window.location.href = '/dashboard';
         });
-        // setRedirectToReferrer(true)
       }
     });
   };

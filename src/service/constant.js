@@ -1,7 +1,7 @@
 import moment from 'moment';
 import 'moment-weekday-calc';
 import { message as messageAlert } from 'antd';
-// export const Api = 'http://localhost:3301/api/v1';
+export const Api = 'http://localhost:3301/api/v1';
 
 // export const Api = "http://onelmcrm.gaamatech.com:8000/api/v1";
 // export const Api = "http://192.168.0.243:3000/api/v1"; // Shahzaib/
@@ -9,7 +9,7 @@ import { message as messageAlert } from 'antd';
 // export const Api = "https://a067-111-88-150-124.ngrok.io/api/v1"; // Shahzaib/ tunnel
 // export const Api = 'http://192.168.0.147:3301/api/v1'; // Me
 
-export const Api = 'http://3.89.162.49:8000/api/v1'; //Test
+// export const Api = 'http://3.89.162.49:8000/api/v1'; //Test
 // export const Api = 'http://54.174.229.28:8000/api/v1'; //Demo...
 
 // export const Api = "http://192.168.0.110:3301/api/v1"; // TrunRajPal Home
@@ -243,7 +243,7 @@ export const apiErrorRes = (err, id, duration, style) => {
   return { error: err.message, status, message, success };
 };
 
-export const dateRange = (current, selectedDate, isDate, pDates) => {
+export const dateRange = (current, selectedDate, isDate, pDates,[startYear, endYear]) => {
   if (current) {
     const startDate =
       pDates?.startDate ?? formatDate(new Date()).subtract(10, 'years');
@@ -260,7 +260,13 @@ export const dateRange = (current, selectedDate, isDate, pDates) => {
         formatDate(endDate),
         'day',
         '[]'
-      )
+      ) || // checking if date doesn't falls into financial year
+      ((endYear ) &&
+        current.isBefore(
+        formatDate(endYear),
+        'day',
+        '[)]'
+      ))
     );
   }
 };
@@ -360,3 +366,12 @@ export const getNumberOfWeekdays = (
     //when I get holidays
   });
 };
+
+export const dateClosed = (date)=>{
+  let isClosed = false
+  const [start, end]  = JSON.parse(localStore().closedYears)
+  if (end){
+    isClosed = moment(end).isAfter(moment(date))
+  }
+  return isClosed
+}

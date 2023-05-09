@@ -24,7 +24,7 @@ import {
   getSingleRequest,
 } from '../../../service/leaveRequest-Apis';
 import moment from 'moment';
-import { formatDate, formatFloat, localStore } from '../../../service/constant';
+import { dateRange, formatDate, formatFloat, localStore } from '../../../service/constant';
 
 import '../styles.css';
 
@@ -33,9 +33,9 @@ const { Text } = Typography;
 class AddRequestModal extends Component {
   constructor(props) {
     super(props);
+    const yearClosed = JSON.parse(localStore().closedYears)
     this.formRef = React.createRef();
     this.attachRef = React.createRef();
-
     this.columns = [
       {
         title: 'Date',
@@ -149,7 +149,8 @@ class AddRequestModal extends Component {
           rangeMin: (current) => {
             const { dates } = this.formRef.current.getFieldsValue();
             const { endDate } = dates;
-            return endDate && current > endDate;
+            // return endDate && current > endDate;
+            return dateRange(current, endDate, 'start', undefined, yearClosed)
           },
         },
         {
@@ -177,7 +178,8 @@ class AddRequestModal extends Component {
           rangeMax: (current) => {
             const { dates } = this.formRef.current.getFieldsValue();
             const { startDate } = dates;
-            return startDate && current < startDate;
+            // return startDate && current < startDate;
+            return dateRange(current, startDate, 'end', undefined, yearClosed)
           },
         },
         {
