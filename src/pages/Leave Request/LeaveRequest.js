@@ -24,6 +24,7 @@ import {
   localStore,
   R_STATUS,
   STATUS_COLOR,
+  dateClosed,
 } from '../../service/constant';
 import AddRequestModal from './Modals/AddRequestModal';
 import { getRequests } from '../../service/leaveRequest-Apis';
@@ -154,7 +155,7 @@ class LeaveRequest extends Component {
                     this.setState({
                       openModal: true,
                       editRequest: record.id,
-                      readOnly: record.status,
+                      readOnly: dateClosed(record.endDate)||record.status,
                       // editIndex: index
                     });
                   }}
@@ -294,7 +295,7 @@ class LeaveRequest extends Component {
             close={this.closeModal}
             edit={editRequest}
             callBack={this.getData}
-            readOnly={readOnly === 'AP'}
+            readOnly={readOnly === true || readOnly === 'AP'}
             showDetails={!readOnly || readOnly === 'SB' || readOnly === 'RJ'}
           />
         )}

@@ -6,7 +6,7 @@ import { LoadingOutlined } from "@ant-design/icons"; //Icons
 import { addLeadSkill, getLeadSkill, editLeadSkill, } from "../../../service/projects";
 import { getPanelSkills, getOrgPersons, buyCost, } from "../../../service/constant-Apis";
 import FormItems from "../../../components/Core/Forms/FormItems";
-import { dateRangeAfter, dateRangeBefore, formatCurrency, formatDate, formatFloat, getNumberOfWeekdays } from "../../../service/constant";
+import { dateClosed, dateRange, dateRangeAfter, dateRangeBefore, disableAllFields, formatCurrency, formatDate, formatFloat, getNumberOfWeekdays, localStore } from "../../../service/constant";
 import moment from "moment";
 import { getHolidays } from "../../../service/opportunities";
 
@@ -15,6 +15,7 @@ const { TabPane } = Tabs;
 class ResModal extends Component {
   constructor(props) {
     super(props);
+    const yearClosed = JSON.parse(localStore().closedYears);
     this.formRef = React.createRef();
     this.state = {
       editRex: false,
@@ -157,8 +158,9 @@ class ResModal extends Component {
           type: "DatePicker",
           fieldStyle: { width: "100%" },
           rangeMin: (current)=>{
-            const { obj } = this.formRef.current.getFieldValue();
-            return dateRangeAfter(current, obj?.endDate, props.pDates)
+            const { obj:{endDate} } = this.formRef.current.getFieldValue();
+            return dateRange(current, endDate, 'start', props.pDates, yearClosed);
+            // return dateRangeAfter(current, obj?.endDate, props.pDates)
           },
           onChange: ()=>{
             const {
@@ -176,8 +178,9 @@ class ResModal extends Component {
           type: "DatePicker",
           fieldStyle: { width: "100%" },
           rangeMax: (current)=>{
-            const { obj } = this.formRef.current.getFieldValue();
-            return dateRangeBefore(current, obj?.startDate, props.pDates)
+            const { obj:{startDate} } = this.formRef.current.getFieldValue();
+            return dateRange(current, startDate, 'end', props.pDates, yearClosed);
+            // return dateRangeBefore(current, obj?.startDate, props.pDates)
           },
           onChange: ()=>{
             const {
@@ -392,7 +395,7 @@ class ResModal extends Component {
           const customUrl = `employees/get/by-skills?psslId=${panelSkillStandardLevelId}&workType=P`
           getOrgPersons(customUrl).then((resP) => {
             
-          const { ResourceFields, holidays } = this.state;
+          let { ResourceFields, holidays } = this.state;
           ResourceFields[6].data = skills[skillIndex]
             ? skills[skillIndex].levels
             : [];
@@ -407,8 +410,15 @@ class ResModal extends Component {
           ResourceFields[19].hint = this.ceilHint(stceil, ltceil)
 
           this.formRef.current.setFieldsValue({ obj: resR.data, });
+          
+          let disabledFY = dateClosed(startDate, endDate)
+          if (disabledFY){
+            ResourceFields = disableAllFields(ResourceFields)
+          }else{
+            ResourceFields[10].disabled = dateClosed(startDate)
+          }
 
-          this.setState({ ResourceFields, allocationId: allocationId, },()=>{
+          this.setState({ ResourceFields, allocationId: allocationId, disabledFY},()=>{
             if (role) {
               this.checkRates(contactPersonId, {label: role})
             }else{
@@ -441,14 +451,14 @@ class ResModal extends Component {
 
   render() {
     const { editRex, visible, close, onHold } = this.props;
-    const { ResourceFields, loading } = this.state;
+    const { ResourceFields, loading, disabledFY } = this.state;
     return (
       <Modal
         title={editRex ? "Edit Resource" : "Add Resource"}
         maskClosable={false}
         centered
         visible={visible}
-        okButtonProps={{ disabled: loading || onHold, htmlType: 'submit', form: 'my-form' }}
+        okButtonProps={{ disabled: loading || onHold || disabledFY, htmlType: 'submit', form: 'my-form' }}
         okText={loading ? <LoadingOutlined /> : "Save"}
         onCancel={close}
         width={900}

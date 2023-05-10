@@ -379,7 +379,7 @@ class TimeSheetContact extends Component {
                   record.status === 'RJ' ||
                   !record.status) &&
                 record.phase !== false &&
-                sUser === loginId;
+                sUser === loginId && !dateClosed(endDate)
               if (value) {
                 // I didn't put the conditon for column previos or next month because this column won't have any value for now
                 let breakHours = moment.duration(value['breakHours'], 'hours');

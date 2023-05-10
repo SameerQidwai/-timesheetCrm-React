@@ -15,7 +15,7 @@ import { SettingOutlined, DownOutlined } from '@ant-design/icons'; //Icons
 import { Link } from 'react-router-dom';
 
 import MileModal from './Modal/MileModal';
-import { formatDate, formatCurrency, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
+import { formatDate, formatCurrency, localStore, R_STATUS, STATUS_COLOR, dateClosed } from '../../service/constant';
 import { getMilestones, getProjectDetail } from '../../service/Milestone-Apis';
 import { getRecord } from '../../service/opportunities';
 import { generalDelete } from "../../service/delete-Api's";
@@ -102,7 +102,7 @@ class Milestone extends Component {
                   <Menu.Item
                     key="delete"
                     danger
-                    disabled={!this?.state?.permissions?.['DELETE']}
+                    disabled={!this?.state?.permissions?.['DELETE']|| this?.state?.disabledFY}
                     className="pop-confirm-menu"
                   >
                     <Popconfirm
@@ -119,7 +119,7 @@ class Milestone extends Component {
                     onClick={() => {
                       this.openModal({ ...record, rowIndex: index });
                     }}
-                    disabled={this.state && !this.state.permissions['UPDATE']}
+                    disabled={!this?.state?.permissions['UPDATE']}
                   >
                     Edit Milestone
                   </Menu.Item>
@@ -189,6 +189,7 @@ class Milestone extends Component {
           customUrl,
           work,
           permissions: work === 'opportunities' ? OPPORTUNITIES : PROJECTS,
+          disabledFY: work !== 'opportunities' && dateClosed(res[0]?.data?.startDate, res[0]?.data?.endDate)
         });
       })
       .catch((e) => {
@@ -236,7 +237,7 @@ class Milestone extends Component {
   };
 
   render() {
-    const { desc, data, infoModal, editMile, proId, permissions, columns, customUrl, pDates, work, } = this.state;
+    const { desc, data, infoModal, editMile, proId, permissions, columns, customUrl, pDates, work, disabledFY} = this.state;
     return (
       <>
         <Descriptions
@@ -271,7 +272,7 @@ class Milestone extends Component {
               size="small"
               onClick={() => this.openModal(false)}
               //checking if project is close
-              disabled={!permissions['ADD'] || desc?.phase === false}
+              disabled={!permissions['ADD'] || desc?.phase === false || disabledFY}
             >
               Add Milestone
             </Button>

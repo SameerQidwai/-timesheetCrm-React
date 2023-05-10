@@ -203,7 +203,7 @@ class AddRequestModal extends Component {
     };
   }
   componentDidMount = () => {
-    const { approval } = this.props;
+    const { approval, readOnly } = this.props;
     if (approval) {
       this.getApprovingData();
     } else {
@@ -247,7 +247,7 @@ class AddRequestModal extends Component {
   getDateArray = (start, end, LeaveRequestType, entries) => {
     //try to put your condition to put closer to eachother if they link to eachother
     //so it will be easy to track conditions
-    console.log({ LeaveRequestType });
+    // console.log({ LeaveRequestType });
     const { showDetails, readOnly } = this.props;
     let { BasicFields, contractDetails, holidays, data, hoursEntry } =
       this.state;

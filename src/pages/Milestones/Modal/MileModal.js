@@ -4,13 +4,14 @@ import { LoadingOutlined } from "@ant-design/icons"; //Icons
 import FormItems from "../../../components/Core/Forms/FormItems";
 import { addMilestone, editMilestone, getMilestone } from "../../../service/Milestone-Apis";
 
-import { dateRangeAfter, dateRangeBefore, formatDate } from "../../../service/constant";
+import { dateClosed, dateRange, dateRangeAfter, dateRangeBefore, disableAllFields, formatDate, localStore } from "../../../service/constant";
 
 
 class MileModal extends Component {
   constructor(props) {
     super(props);
     this.formRef = React.createRef();
+    const yearClosed = JSON.parse(localStore().closedYears);
 
     this.state = {
       editMile: false,
@@ -46,7 +47,7 @@ class MileModal extends Component {
             fieldCol: 12,
             key: "title",
 
-            // disabled: true,
+            disabled: this?.state?.disabledFY,
             size: "small",
             rules:[{ required: true, message: 'title is Required' }],
             type: "Input",
@@ -56,6 +57,7 @@ class MileModal extends Component {
             fieldCol: 12,
             key: "progress",
             // rules:[{ required: true, message: 'Effort Rate is Required' }],
+            disabled: this?.state?.disabledFY,
             shape: "%",
             size: "small",
             type: "InputNumber",
@@ -85,13 +87,15 @@ class MileModal extends Component {
             object: "obj",
             fieldCol: 12,
             key: "startDate",
+            disabled: this?.state?.disabledFY,
             size: "small",
             rules:[{ required: true, message: 'Start Date is Required' }],
             type: "DatePicker",
             fieldStyle: { width: "100%" },
             rangeMin: (current)=>{
-              const { obj } = this.formRef.current.getFieldValue();
-              return dateRangeAfter(current, obj.endDate, props.pDates)
+              const { obj: {endDate} } = this.formRef.current.getFieldValue();
+              return dateRange(current, endDate, 'start', props.pDates, yearClosed);
+              // return dateRangeAfter(current, obj.endDate, props.pDates)
             }
           },
           {
@@ -101,10 +105,12 @@ class MileModal extends Component {
             size: "small",
             rules:[{ required: true, message: 'End Date is Required' }],
             type: "DatePicker",
+            disabled: this?.state?.disabledFY,
             fieldStyle: { width: "100%" },
             rangeMax: (current)=>{
-              const { obj } = this.formRef.current.getFieldValue();              
-              return dateRangeBefore(current, obj.startDate, props.pDates)
+              const { obj: {startDate} } = this.formRef.current.getFieldValue();  
+              return dateRange( current, startDate, 'end', props.pDates, yearClosed );            
+              // return dateRangeBefore(current, obj.startDate, props.pDates)
             }
           },
           // {
@@ -138,6 +144,7 @@ class MileModal extends Component {
           {
             object: "obj",
             fieldCol: 24,
+            disabled: this?.state?.disabledFY,
             key: "description",
             size: "small",
             type: "Textarea",
@@ -249,7 +256,6 @@ class MileModal extends Component {
   }
 
   componentDidMount = () => {
-    console.log(this.props.crud);
     this.openModal();
   };
 
@@ -291,9 +297,21 @@ class MileModal extends Component {
   };
 
   getRecord = () => {
-    const { editMile } = this.props;
+    const { editMile, work } = this.props;
+    let {PMileFields} = this.state
     editMile.startDate = formatDate(editMile.startDate)
     editMile.endDate = formatDate(editMile.endDate)
+    let disabledFY =  work !== 'opportunities' && dateClosed(editMile.startDate, editMile.endDate);
+    
+    if (disabledFY){
+      PMileFields= disableAllFields(PMileFields)
+    }else{
+      PMileFields[6].disabled = dateClosed(editMile.startDate)
+    }
+    this.setState({
+      PMileFields: PMileFields,
+      disabledFY
+    })
     this.formRef.current.setFieldsValue({ obj: editMile});
     // getMilestone(editMile.id).then(res=>{
     //   if( res.success ){
@@ -314,14 +332,14 @@ class MileModal extends Component {
 
   render() {
     const { editMile, visible, close, work, onHold} = this.props;
-    const { PMileFields, LMileFields ,loading } = this.state;
+    const { PMileFields, LMileFields ,loading, disabledFY } = this.state;
     return (
       <Modal
         title={editMile ? "Edit Milestone" : "Add Milestone"}
         maskClosable={false}
         centered
         visible={visible}
-        okButtonProps={{ disabled: (loading || onHold ||editMile.isApproved === 'AP' || editMile.isApproved === 'SB') , htmlType: 'submit', form: 'my-form' }}
+        okButtonProps={{ disabled: (loading || onHold ||editMile.isApproved === 'AP' || editMile.isApproved === 'SB'|| disabledFY) , htmlType: 'submit', form: 'my-form' }}
         okText={loading ? <LoadingOutlined /> : "Save"}
         onCancel={close}
         width={900}

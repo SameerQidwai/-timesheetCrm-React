@@ -27,6 +27,7 @@ import {
   localStore,
   formatPercent,
   formatFloat,
+  dateClosed,
 } from '../../service/constant';
 import {
   Filtertags,
@@ -127,7 +128,7 @@ class Resources extends Component {
                 <Menu.Item
                   key="delete"
                   danger
-                  disabled={!this?.state?.permissions?.['DELETE']}
+                  disabled={!this?.state?.permissions?.['DELETE'] || this?.state?.disabledFY}
                   className="pop-confirm-menu"
                 >
                   <Popconfirm
@@ -338,6 +339,7 @@ class Resources extends Component {
           filterData: res[1]?.success ? res[1].data : [],
           permissions: PROJECTS,
           notAuth: res?.[1]?.authError,
+          disabledFY: dateClosed(res[0]?.data?.startDate, res[0]?.data?.endDate)
         });
       })
       .catch((e) => {
@@ -543,6 +545,7 @@ class Resources extends Component {
   render() {
     const {
       proDesc,
+      disabledFY,
       data,
       infoModal,
       editRex,
@@ -638,7 +641,7 @@ class Resources extends Component {
               size="small"
               onClick={() => this.openModal(false)}
               //checking if project is close
-              disabled={!permissions['ADD'] || proDesc.phase === false}
+              disabled={!permissions['ADD'] || proDesc.phase === false || disabledFY}
             >
               <PlusSquareOutlined /> Add Resource
             </Button>

@@ -243,18 +243,19 @@ export const apiErrorRes = (err, id, duration, style) => {
   return { error: err.message, status, message, success };
 };
 
-export const dateRange = (current, selectedDate, isDate, pDates,[startYear, endYear]) => {
+export const dateRange = (current, selectedDate, isDate, pDates,dateFY) => {
+  console.log(selectedDate?.format())
+  let  [startYear =null, endYear =null] = dateFY??[]
   if (current) {
     const startDate =
       pDates?.startDate ?? formatDate(new Date()).subtract(10, 'years');
     const endDate = pDates?.endDate ?? formatDate(new Date()).add(10, 'years');
 
     return (
-      (isDate === 'start' && selectedDate //checking if ut call from startDate
+      (selectedDate? isDate === 'start' //checking if ut call from startDate
         ? current >= selectedDate //disable after
-        : isDate === 'end' &&
-          selectedDate && //checking if it call from endtDate
-          current <= selectedDate) || //disable Before // disable Before, // disable After
+        : isDate === 'end' ? current <= selectedDate :false //checking if it call from endtDate
+      : false) || //disable Before // disable Before, // disable After
       !current.isBetween(
         formatDate(startDate),
         formatDate(endDate),
@@ -262,10 +263,10 @@ export const dateRange = (current, selectedDate, isDate, pDates,[startYear, endY
         '[]'
       ) || // checking if date doesn't falls into financial year
       ((endYear ) &&
-        current.isBefore(
-        formatDate(endYear),
+        current.isSameOrBefore(
+        formatDate(endYear, true, 'YYYY-MM-DD'),
         'day',
-        '[)]'
+        // '()'
       ))
     );
   }
@@ -367,11 +368,26 @@ export const getNumberOfWeekdays = (
   });
 };
 
-export const dateClosed = (date)=>{
+export const dateClosed = (endDate, startDate)=>{
   let isClosed = false
   const [start, end]  = JSON.parse(localStore().closedYears)
   if (end){
-    isClosed = moment(end).isAfter(moment(date))
+    if (startDate) {
+      isClosed =
+        moment(end).isAfter(moment(endDate)) &&
+        moment(end).isAfter(moment(startDate));
+    } else {
+      isClosed = moment(end).isAfter(moment(endDate));
+    }
   }
   return isClosed
+}
+
+export const disableAllFields = (fields) =>{
+  return (fields??[]).map((el) => {
+    if (el.key) {
+      el.disabled = true;
+    }
+    return el;
+  });
 }

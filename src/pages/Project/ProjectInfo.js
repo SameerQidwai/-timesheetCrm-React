@@ -30,6 +30,7 @@ import {
   localStore,
   O_STATUS,
   O_PHASE,
+  dateClosed,
 } from '../../service/constant';
 import AuthError from '../../components/Core/AuthError';
 import PMResources from '../../components/Core/Resources/PMResources';
@@ -79,6 +80,7 @@ class ProjectInfo extends Component {
           renderTabs: true,
           permissions: PROJECTS,
           calculatedValue: res.data.calculatedValue,
+          disabledFY: dateClosed(res?.data?.startDate, res?.data?.endDate)
         });
       } else if (res.authError) {
         this.setState({ notAuth: true });
@@ -127,6 +129,7 @@ class ProjectInfo extends Component {
       notAuth,
       valueSpin,
       updateEnabled,
+      disabledFY
     } = this.state;
 
     const DescTitle = (
@@ -139,11 +142,11 @@ class ProjectInfo extends Component {
                 <Menu.Item
                   key={'delete'}
                   danger
-                  disabled={!permissions?.['DELETE'] || basic.phase === false}
+                  disabled={!permissions?.['DELETE'] || basic.phase === false || disabledFY}
                   className="pop-confirm-menu"
                 >
                   <Popconfirm
-                    disabled={!permissions?.['DELETE'] || basic.phase === false}
+                    disabled={!permissions?.['DELETE'] || basic.phase === false || disabledFY}
                     title="Are you sure you want to delete ?"
                     onConfirm={() => this.handleDelete(leadId)}
                     okText="Yes"
@@ -152,15 +155,15 @@ class ProjectInfo extends Component {
                     <div> Delete </div>
                   </Popconfirm>
                 </Menu.Item>
-                <Menu.SubMenu title={'Outcome'} key="Outcome">
+                <Menu.SubMenu title={'Outcome'} key="Outcome" disabled={disabledFY}>
                   <Menu.Item
                     key="Open"
-                    disabled={!permissions['UPDATE'] || basic.phase === true}
+                    disabled={!permissions['UPDATE'] || basic.phase === true }
                     style={{ color: '#6fac45' }}
                     className="pop-confirm-menu"
                   >
                     <Popconfirm
-                      disabled={!permissions['UPDATE'] || basic.phase === true}
+                      disabled={!permissions['UPDATE'] || basic.phase === true }
                       title={'Do You Want To Open this Project?'}
                       onConfirm={() => this.OutcomeAction('open')}
                       okText="Yes"
@@ -254,6 +257,7 @@ class ProjectInfo extends Component {
           size="small"
           bordered
           layout="horizontal"
+          contentStyle={{width: '33%'}}
           // extra={<Button type="primary">Edit</Button>}
         >
           <Item label="Project Name">{data.title}</Item>
