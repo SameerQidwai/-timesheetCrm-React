@@ -149,11 +149,14 @@ class Projects extends Component {
                   key="delete"
                   danger
                   disabled={
-                    !this?.state?.permissions?.['DELETE'] || record.phase
+                    (!this?.state?.permissions?.['DELETE'] || !record.phase)
                   }
                   className="pop-confirm-menu"
                 >
                   <Popconfirm
+                    disabled={
+                      (!this?.state?.permissions?.['DELETE'] || !record.phase)
+                    }
                     title="Are you sure you want to delete ?"
                     onConfirm={() => this.handleDelete(record.id, index)}
                     okText="Yes"

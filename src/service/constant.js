@@ -263,7 +263,7 @@ export const dateRange = (current, selectedDate, isDate, pDates,dateFY) => {
         '[]'
       ) || // checking if date doesn't falls into financial year
       ((endYear ) &&
-        current.isSameOrBefore(
+        current.isBefore(
         formatDate(endYear, true, 'YYYY-MM-DD'),
         'day',
         // '()'
@@ -374,10 +374,11 @@ export const dateClosed = (endDate, startDate)=>{
   if (end){
     if (startDate) {
       isClosed =
-        moment(end).isAfter(moment(endDate)) &&
-        moment(end).isAfter(moment(startDate));
+        moment(end).utc().isAfter(moment(endDate)) &&
+        moment(end).utc().isAfter(moment(startDate));
     } else {
-      isClosed = moment(end).isAfter(moment(endDate));
+      console.log(moment(end).utc().format(), moment().utc(end).isAfter(moment(endDate)), moment(endDate).utc().format())
+      isClosed = moment(end).utc().isAfter(moment(endDate).utc());
     }
   }
   return isClosed

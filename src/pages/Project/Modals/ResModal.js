@@ -416,6 +416,9 @@ class ResModal extends Component {
             ResourceFields = disableAllFields(ResourceFields)
           }else{
             ResourceFields[10].disabled = dateClosed(startDate)
+            ResourceFields[14].disabled = dateClosed(startDate)
+            ResourceFields[18].disabled = dateClosed(startDate)
+            ResourceFields[19].disabled = dateClosed(startDate)
           }
 
           this.setState({ ResourceFields, allocationId: allocationId, disabledFY},()=>{
