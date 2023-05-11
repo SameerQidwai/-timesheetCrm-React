@@ -108,8 +108,8 @@ class AttachModal extends Component{
                 centered
                 visible={visible}
                 onOk={() => { this.addNotes() }}
-                okButtonProps={{ disabled: loading, disabled: disabled   }}
-                okText={loading ?<LoadingOutlined /> :"Save"}
+                okButtonProps={{ loading: loading, disabled: disabled   }}
+                okText={"Save"}
                 onCancel={close}
                 width={540}
                 // footer={}

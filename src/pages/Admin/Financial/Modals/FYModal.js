@@ -1,20 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import { DatePicker, Form, Modal, Typography, Upload } from 'antd'
-import { PlusOutlined } from "@ant-design/icons"; //Icons
+import { Form, Modal } from 'antd'
 import FormItems from '../../../../components/Core/Forms/FormItems'
-import { createFY, getAllFY } from '../../../../service/financial-year-apis';
+import { createFY, updateFY } from '../../../../service/financial-year-apis';
 import { formatDate } from '../../../../service/constant';
-
-const { Text } = Typography
-
 
 const FYModal = ({ visible, close, callBack }) => {
 
-    const [progress, setProgress] = useState();
+    const [loading, setLoading] = useState();
     const [form] = Form.useForm();
 
-    // console.log("fileList", fileList);
-    // fields 
     const [basicFields, setBasicFields] = useState([
         {
             Placeholder: "FY Name",
@@ -68,24 +62,37 @@ const FYModal = ({ visible, close, callBack }) => {
 
     // on submit 
     const onFinish = async(formValue) => {
+        setLoading(true)
         let { FY: {dates, ...FYData} } = formValue
         if (dates?.length){
             FYData.startDate = formatDate(dates[0], true)
             FYData.endDate = formatDate(dates[1], true)
         }
-        let {success, data} =  await createFY(FYData)
-        if (success){
-            callBack(data)
+        if(visible !== true){
+            let {id} = visible
+            let {success, data} =  await updateFY(id, FYData)
+            setLoading(false)
+            if (success){
+                callBack(data)
+            }
         }else{
-            close()
+            let {success, data} =  await createFY(FYData)
+            setLoading(false)
+            if (success){
+                callBack(data)
+            }
         }
     }
 
-    const getData = async() => {
-    //     let {success, data} = await getAllFY()
-    //     if (success){
-    //         d
-    //     }
+    const getData = () => {
+        if(visible !== true){
+            let {startDate, endDate, label} = visible
+            let FY = {
+                label,
+                dates: [formatDate(startDate), formatDate(endDate)]
+            }
+            form.setFieldsValue({FY})
+        }
     }
 
   return (
@@ -95,7 +102,7 @@ const FYModal = ({ visible, close, callBack }) => {
           width={650}
           onCancel={close}
           okText={"Save"}
-          okButtonProps={{ htmlType: 'submit', form: 'my-form'}}
+          okButtonProps={{ htmlType: 'submit', form: 'my-form', loading}}
       >
           <Form
             id={'my-form'}

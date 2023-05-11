@@ -12,7 +12,8 @@ const { TabPane } = Tabs;
 class InfoModal extends Component {
   constructor() {
     super();
-    const yearClosed = JSON.parse(localStore().closedYears);
+    let yearClosed = localStore().closedYears
+    yearClosed = yearClosed && JSON.parse(yearClosed)
     this.formRef = React.createRef();
 
     this.state = {

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Modal, Table, Form, Row, Col, Typography, InputNumber, message, } from 'antd';
 import FormItems, { formatter, parser } from '../../../components/Core/Forms/FormItems';
 import moment from 'moment';
-import { dateRange, formatCurrency, formatDate, formatFloat, toTruncate } from '../../../service/constant';
+import { dateClosed, dateRange, disableAllFields, formatCurrency, formatDate, formatFloat, localStore, toTruncate } from '../../../service/constant';
 
 import { addSchedule, editSchedule, getSchedule } from '../../../service/projects';
 import { getCalendarHolidays } from '../../../service/constant-Apis';
@@ -16,7 +16,10 @@ class AddScheduleModal extends Component {
   constructor(props) {
     super(props);
     this.formRef = React.createRef();
-
+    let yearClosed = localStore().closedYears
+    yearClosed = yearClosed && JSON.parse(yearClosed)
+    this.yearClosed = yearClosed
+    
     this.state = {
       data: [],
       amountEntry: {}, //need to remeber hours if date is change for now it is setting it to defualt if any date selected
@@ -51,9 +54,8 @@ class AddScheduleModal extends Component {
             this.getDateArray(startDate, endDate); //check it
           },
           rangeMin: (current) => {
-            const {dates} = this.formRef.current.getFieldsValue();
-            const { endDate } = dates;
-            return dateRange(current, endDate, 'start', props.pDates)
+            const {dates: {endDate}} = this.formRef.current.getFieldsValue();
+            return dateRange(current, endDate, 'start', props.pDates, yearClosed)
           },
         },
         {
@@ -83,9 +85,8 @@ class AddScheduleModal extends Component {
             this.getDateArray(startDate, endDate); //check it
           },
           rangeMax: (current) => {
-            const {dates} = this.formRef.current.getFieldValue();
-            const {startDate} = dates
-            return dateRange(current, moment(startDate), 'end', props.pDates)
+            const {dates: {startDate}} = this.formRef.current.getFieldValue();
+            return dateRange(current, startDate, 'end', props.pDates, yearClosed)
           },
         },
         {
@@ -125,9 +126,11 @@ class AddScheduleModal extends Component {
           rules: [{ required: true, message: 'Amount is Required' }],
           disabled: false,
           onBlur: ()=>{
-            const { dates ={} } = this.formRef.current.getFieldValue();
-            const { endDate, startDate } = dates;
-            this.getDateArray(startDate, endDate) //check it
+            setTimeout(() => {
+              const { dates ={} } = this.formRef.current.getFieldValue();
+              const { endDate, startDate } = dates;
+              this.getDateArray(startDate, endDate) //check it
+            }, 500);
           }
         },
         {
@@ -194,6 +197,9 @@ class AddScheduleModal extends Component {
     BasicFields[3].disabled = false;
     let { dates } = this.formRef.current.getFieldValue()
     let scheduleAmount = (dates?.amount??0) < accountedAmount ? dates?.amount : accountedAmount
+    let [_,endFYDate] =  this.yearClosed
+      endFYDate = moment(endFYDate).utc()
+
 
     if (entries) {
       var arr = new Array();
@@ -212,12 +218,28 @@ class AddScheduleModal extends Component {
       // and disabling endDate
     } else if (start && end) {
       //it will call on change of start and end date and found
-      var arr = new Array();
+      
+      var arr = new Array()
+
+      //for any if any date fall into previous FY dates
+      let amountInClosedFY = 0
+      while(start.isSameOrBefore(endFYDate)){
+        let newDate = start.format('MMM-YYYY');
+        amountInClosedFY += amountEntry[newDate] 
+        arr.push({
+          key: newDate,
+          month: newDate,
+          amount: amountEntry[newDate] 
+          //check if FY is closed in between schedule then amount can't not be change 
+        });
+        start = moment(start).set('date', 1).add(1, 'M');
+      }
+
       //getting total Number of weekdays to work
       let totalNumberOfWeekDays = this.getWeekdays(start, end)
-      // console.log(start, end)
-      // let numberofSegments = moment(end.endOf('month')).diff(start.startOf('month'), 'months')+1;
-      let totalAmount = scheduleAmount
+
+      let totalAmount = scheduleAmount - amountInClosedFY
+
       let perDayAmount = (totalAmount ?? 0)/totalNumberOfWeekDays
       while (start.isSameOrBefore(end)) {
         // need key to push in the table
@@ -227,9 +249,17 @@ class AddScheduleModal extends Component {
         let numberOfWeekDays = this.getWeekdays(start,
           start.isSame(end, 'month') ? end : moment(start).endOf('month')
         ); //checking if start date and end date ends early then end of month        
-        let segmentAmount = parseFloat((perDayAmount * numberOfWeekDays ).toFixed(2))
-        totalAmount = totalAmount - segmentAmount
-        amountEntry[newDate]  = parseFloat((segmentAmount + (totalAmount <=1 ? totalAmount : 0)).toFixed(2))
+        
+        let segmentAmount = totalAmount>0 ? parseFloat((perDayAmount * numberOfWeekDays ).toFixed(2)):0
+        //stop negative value
+        totalAmount -= segmentAmount
+
+        if (start.isSame(end, 'month')){
+          amountEntry[newDate] = parseFloat((segmentAmount+totalAmount).toFixed(2));
+        }else{
+          amountEntry[newDate] = parseFloat((segmentAmount).toFixed(2));
+        }
+
         arr.push({
           key: newDate,
           month: newDate,
@@ -241,8 +271,11 @@ class AddScheduleModal extends Component {
       // BasicFields[BasicFields[2].note ? 8 : 7].disabled = false; // adding an object when select leavetype
     } else if (start) {
       //if end date is not sent
+      let disabledFYDate = endFYDate.isSameOrAfter(start, 'months')
       let newDate = start.format('MMM-YYYY');
-      amountEntry[newDate]  = scheduleAmount
+      amountEntry[newDate]  = disabledFYDate //check if FY is closed in between schedule then amount can't not be change 
+      ? amountEntry[newDate]
+      : scheduleAmount;
       data = [
         {
           key: newDate,
@@ -260,12 +293,12 @@ class AddScheduleModal extends Component {
     }
 
 
+    this.formRef.current.setFieldsValue({ amount: amountEntry, dates:{...dates, amount: scheduleAmount} });
     this.setState({
       BasicFields: [...BasicFields],
       data: [...data],
       amountEntry: {...amountEntry}
-    });
-    this.formRef.current.setFieldsValue({ amount: amountEntry, dates:{...dates, amount: scheduleAmount} });
+    },()=>this.checkFYCLose());
     //single hook cal for all the condition
   };
 
@@ -299,12 +332,38 @@ class AddScheduleModal extends Component {
       });
   };
 
+  checkFYCLose= () =>{
+    const { dates: {startDate, endDate} } = this.formRef.current.getFieldsValue();
+    let disabledFY =  dateClosed(startDate, endDate);
+    let {BasicFields, data} = this.state
+    if (disabledFY){
+      BasicFields = disableAllFields(BasicFields)
+      data = disableAllFields(data)
+    }else{
+      let [_,endFYDate] =  this.yearClosed
+      if (endFYDate && dateClosed(startDate)){
+        endFYDate = moment(endFYDate).utc()
+        BasicFields[1].disabled = endFYDate.isSameOrAfter(startDate, 'months');
+        BasicFields[3].disabled = endFYDate.isSameOrAfter(endDate, 'months');
+        let minAmount = 0
+        data = data.map((el)=>{
+          if (endFYDate.isSameOrAfter(moment.utc(el.key, 'MMM-YYYY'))){
+            el.disabled = true
+            minAmount = el.amount
+          }
+           return el
+        })
+        BasicFields[7].rangeMin = minAmount
+      }
+    }
+    this.setState({BasicFields, data:[...data], disabledFY})
+  }
+
   getFormValues = (val) => {
     this.setState({ loading: true });
     const { dates } = val;
     const { editMile, callBack, proId, pDates } = this.props;
     const { data, fileIds } = this.state;
-
     const newVal = {
       //if sameMonth got included as project save project date otherwise startdate 
       startDate: formatDate(dates.startDate, true),
@@ -316,14 +375,8 @@ class AddScheduleModal extends Component {
       notes: dates.notes ?? '',
       segments: data.map((el) => {
         return {
-          startDate: formatDate(
-            moment(el.month, 'MMM/YYYY').startOf('month'),
-            true
-          ),
-          endDate: formatDate(
-            moment(el.month, 'MMM/YYYY').endOf('month'),
-            true
-          ),
+          startDate: formatDate(moment.utc(el.month, 'MMM/YYYY').startOf('month'), true),
+          endDate: formatDate( moment.utc(el.month, 'MMM/YYYY').endOf('month'), true ),
           amount: el.amount,
         };
       }),
@@ -374,7 +427,7 @@ class AddScheduleModal extends Component {
   //File
   render() {
     const { visible, close, editMile, onHold } = this.props;
-    const { BasicFields, data, loading, disabled } = this.state;
+    const { BasicFields, data, loading, disabled, disabledFY } = this.state;
     
     // for timeBeing
     let columns = [
@@ -424,7 +477,7 @@ class AddScheduleModal extends Component {
         okButtonProps={{
           htmlType: 'submit',
           form: 'my-form',
-          disabled: onHold || disabled,
+          disabled: onHold || disabled || disabledFY,
           loading: loading,
         }}
         okText={'Submit'}

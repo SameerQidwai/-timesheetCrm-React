@@ -110,6 +110,7 @@ class Milestone extends Component {
                       onConfirm={() => this.handleDelete(record.id, index)}
                       okText="Yes"
                       cancelText="No"
+                      disabled={!this?.state?.permissions?.['DELETE']|| this?.state?.disabledFY}
                     >
                       <div> Delete </div>
                     </Popconfirm>

@@ -15,7 +15,8 @@ const { TabPane } = Tabs;
 class ResModal extends Component {
   constructor(props) {
     super(props);
-    const yearClosed = JSON.parse(localStore().closedYears);
+    let yearClosed = localStore().closedYears
+    yearClosed = yearClosed && JSON.parse(yearClosed)
     this.formRef = React.createRef();
     this.state = {
       editRex: false,

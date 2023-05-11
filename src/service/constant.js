@@ -1,7 +1,7 @@
 import moment from 'moment';
 import 'moment-weekday-calc';
 import { message as messageAlert } from 'antd';
-export const Api = 'http://localhost:3301/api/v1';
+// export const Api = 'http://localhost:3301/api/v1';
 
 // export const Api = "http://onelmcrm.gaamatech.com:8000/api/v1";
 // export const Api = "http://192.168.0.243:3000/api/v1"; // Shahzaib/
@@ -9,7 +9,7 @@ export const Api = 'http://localhost:3301/api/v1';
 // export const Api = "https://a067-111-88-150-124.ngrok.io/api/v1"; // Shahzaib/ tunnel
 // export const Api = 'http://192.168.0.147:3301/api/v1'; // Me
 
-// export const Api = 'http://3.89.162.49:8000/api/v1'; //Test
+export const Api = 'http://3.89.162.49:8000/api/v1'; //Test
 // export const Api = 'http://54.174.229.28:8000/api/v1'; //Demo...
 
 // export const Api = "http://192.168.0.110:3301/api/v1"; // TrunRajPal Home
@@ -150,6 +150,7 @@ export const formatDate = (date, string, format) => {
         ? moment.utc(date).format(format === true ? 'ddd DD MMM yyyy' : format)
         : // check if format is true return default format or prop format
           moment(date).utcOffset(0, true).format()
+          // moment.utc(date).format()
       : moment.utc(date))
   );
 };
@@ -244,7 +245,6 @@ export const apiErrorRes = (err, id, duration, style) => {
 };
 
 export const dateRange = (current, selectedDate, isDate, pDates,dateFY) => {
-  console.log(selectedDate?.format())
   let  [startYear =null, endYear =null] = dateFY??[]
   if (current) {
     const startDate =
@@ -264,7 +264,7 @@ export const dateRange = (current, selectedDate, isDate, pDates,dateFY) => {
       ) || // checking if date doesn't falls into financial year
       ((endYear ) &&
         current.isBefore(
-        formatDate(endYear, true, 'YYYY-MM-DD'),
+        formatDate(endYear).format(),
         'day',
         // '()'
       ))
@@ -370,15 +370,18 @@ export const getNumberOfWeekdays = (
 
 export const dateClosed = (endDate, startDate)=>{
   let isClosed = false
-  const [start, end]  = JSON.parse(localStore().closedYears)
+  let yearClosed = localStore().closedYears
+    yearClosed = yearClosed ? JSON.parse(yearClosed):[]
+  const [start, end]  = yearClosed
   if (end){
     if (startDate) {
       isClosed =
-        moment(end).utc().isAfter(moment(endDate)) &&
-        moment(end).utc().isAfter(moment(startDate));
+        moment.utc(end).isAfter(moment.utc(endDate)) &&
+        moment.utc(end).isAfter(moment.utc(startDate));
     } else {
-      console.log(moment(end).utc().format(), moment().utc(end).isAfter(moment(endDate)), moment(endDate).utc().format())
-      isClosed = moment(end).utc().isAfter(moment(endDate).utc());
+      if (endDate) {
+        isClosed = moment.utc(end).isAfter(moment.utc(endDate));
+      }
     }
   }
   return isClosed

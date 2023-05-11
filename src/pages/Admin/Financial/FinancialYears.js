@@ -15,6 +15,7 @@ const {Paragraph} = Typography
 function FinancialYears(props) {
     // const [form] = Form.useForm();
     const [data, setData] = useState([])
+    const [loading, setLoading] = useState(false)
     const [visibleModal, setVisibleModal] = useState(false)
     const [visibleConfirm, setVisibleConfirm] = useState(false)
 
@@ -79,10 +80,10 @@ function FinancialYears(props) {
                 <Menu>
                   <Menu.Item
                     key="edit"
-                  //   onClick={() => {
-                  //     this.openModal({ ...record, rowIndex: index });
-                  //   }}
-                    disabled={true}
+                    disabled={record.closed}
+                    onClick={() => {
+                      setVisibleModal({ ...record, rowIndex: index })
+                    }}
                   >
                     Edit
                   </Menu.Item>
@@ -153,18 +154,22 @@ function FinancialYears(props) {
         okButtonProps: {
           htmlType: 'submit',
           form: 'my-form',
+          loading
         },
         okText: 'Yes',
         cancelText: 'No',
         onOk: async() => {
           try{
+            setLoading(true)
             let {success} = await closingFY(record.id)
+            setLoading(false)
             if (success){
               let newData = [...data]
               newData[index]['closed'] = true
               setData([...newData])
             }
           }catch{
+            setLoading(false)
             modal.destroy();
           }
         },
@@ -195,8 +200,8 @@ function FinancialYears(props) {
               className='fs-small'
           />
         </Col>
-        {visibleModal&& <FYModal 
-          visible={visibleModal}
+        {visibleModal&& <FYModal //visible true means to add new
+          visible={visibleModal} // visble anydata means to edit this
           close={()=>setVisibleModal(false)}
           callBack={onFYAdd}
         />}

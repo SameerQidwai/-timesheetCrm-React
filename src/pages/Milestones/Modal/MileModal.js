@@ -11,7 +11,8 @@ class MileModal extends Component {
   constructor(props) {
     super(props);
     this.formRef = React.createRef();
-    const yearClosed = JSON.parse(localStore().closedYears);
+    let yearClosed = localStore().closedYears
+    yearClosed = yearClosed && JSON.parse(yearClosed)
 
     this.state = {
       editMile: false,
