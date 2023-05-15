@@ -4,9 +4,11 @@ import { getSettings, getVariables, upadteSettings, upadteVariables } from "../.
 import FormItems from "../../components/Core/Forms/FormItems";
 import { getleaveRequestTypes, getStates } from '../../service/constant-Apis';
 import { formatDate, STATES } from '../../service/constant';
+import GlobalHistory from './GlobalVars/Modals/GlobalHistory';
 
-function GlobalVars(props) {
+function GlobalVars(item) {
     const [form] = Form.useForm();
+    const [openHistory, setOpenHistory] = useState(false)
     const [formValues, setFormValues] = useState({settings: {}, variables: {}})
     const [rateFields, setRateFields] = useState([
         {
@@ -26,11 +28,19 @@ function GlobalVars(props) {
             style: { textDecoration: "underline" },
         },
         {
-            fieldCol: 5,
+            fieldCol: 6,
             Placeholder: "Finish Date",
             type: "Title",
             mode: 4,
             fieldStyle:{textAlign: 'center'}, 
+            style: { textDecoration: "underline" },
+        },
+        {
+            fieldCol: 4,
+            Placeholder: "Action",
+            type: "Title",
+            mode: 4,
+            // fieldStyle:{textAlign: 'right'}, 
             style: { textDecoration: "underline" },
         },
         {
@@ -102,7 +112,12 @@ function GlobalVars(props) {
         },
         {
             fieldCol: 4,
+            Placeholder: <a>History</a>,
             type: "Text",
+            itemStyle:{textAlign: ''},
+            onClick:()=>{
+                setOpenHistory('GST')
+            }
         },
         {
             fieldCol: 4,
@@ -167,6 +182,11 @@ function GlobalVars(props) {
         {
             fieldCol: 4,
             type: "Text",
+            Placeholder: <a>History</a>,
+            itemStyle:{textAlign: ''},
+            onClick:()=>{
+                setOpenHistory('income_tax')
+            }
         },
         {
             fieldCol: 24,
@@ -238,6 +258,11 @@ function GlobalVars(props) {
         {
             fieldCol: 4,
             type: "Text",
+            Placeholder: <a>History</a>,
+            itemStyle:{textAlign: ''},
+            onClick:()=>{
+                setOpenHistory('Superannuation')
+            }
         },
     ])
 
@@ -404,9 +429,14 @@ function GlobalVars(props) {
         },
         {
             object: key,
-            fieldCol: 5,
+            fieldCol: 4,
+            Placeholder: <a>History</a>,
             size: "small",
-            type: "Text"
+            type: "Text",
+            itemStyle:{textAlign: ''},
+            onClick:()=>{
+                setOpenHistory(key)
+            }
         }
     ]
     }
@@ -506,6 +536,10 @@ function GlobalVars(props) {
                 </Button>
             </Space>
         </Row>
+        {openHistory&&<GlobalHistory
+            visible={openHistory}
+            onClose={()=>setOpenHistory(false)}
+        />}
         </>
     )
 }

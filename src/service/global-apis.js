@@ -52,17 +52,22 @@ export const upadteSettings = (data) => {
         });
 };
 
-export const getVariables = () => {
+export const getVariables = (query) => {
+    console.log(`${var_url}${query?'?variableName=': ''}${query??''}`);
     return axios
-        .get(var_url, {headers:headers()})
+        .get(`${var_url}${query?'?variableName=': ''}${query??''}`, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
             setToken(res?.headers?.authorization)
             let variables= {}
             if (success) {
-                for (var {variable, globalVariableId, value, startDate, endDate} of data){
-                    variables[variable?.name] = {globalVariableId, value, startDate: formatDate(startDate), endDate: formatDate(endDate)}
+                if (!query){
+                    for (var {variable, globalVariableId, value, startDate, endDate} of data){
+                        variables[variable?.name] = {globalVariableId, value, startDate: formatDate(startDate), endDate: formatDate(endDate)}
+                    }
+                }else{
+                    variables = data?.[0]?.values??[]
                 }
             }
             return { success, data: variables };
