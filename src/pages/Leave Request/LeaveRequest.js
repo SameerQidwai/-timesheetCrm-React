@@ -34,7 +34,7 @@ import {Tag_s} from '../../components/Core/Custom/Index';
 import { generalDelete } from "../../service/delete-Api's";
 const { Title } = Typography;
 
-class LeaveRequest extends Component {
+class LeaveRequest extends Component {  
   constructor(props) {
     super(props);
     this.typeColumns = [
@@ -135,11 +135,15 @@ class LeaveRequest extends Component {
                   danger
                   disabled={
                     !this?.state?.permissions?.['DELETE'] ||
-                    record.status === 'AP'
+                    record.status === 'AP' || dateClosed(record.startDate)
                   }
                   className="pop-confirm-menu"
                 >
                   <Popconfirm
+                  disabled={
+                    !this?.state?.permissions?.['DELETE'] ||
+                    record.status === 'AP' || dateClosed(record.startDate)
+                  }
                     title="Are you sure you want to delete ?"
                     onConfirm={() => this.handleDelete(record.id, index)}
                     okText="Yes"

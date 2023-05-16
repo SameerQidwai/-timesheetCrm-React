@@ -276,7 +276,7 @@ function GlobalVars(item) {
             style: { textDecoration: "underline" },
         },
         {
-            fieldCol: 4, // this is only label 1
+            fieldCol: 7, // this is only label 1
             size: "small",
             Placeholder: "Records Per Page",
             type: "Text",
@@ -284,7 +284,7 @@ function GlobalVars(item) {
         },
         {
             object: "settings",
-            fieldCol: 20,
+            fieldCol: 12,
             key: "recordsPerPage",
             size: "small",
             // rules:[{ required: true, message: 'Insert your Password Please' }],
@@ -295,7 +295,7 @@ function GlobalVars(item) {
             // hidden: false
         },
         {
-            fieldCol: 4, // this is only label 1
+            fieldCol: 7, // this is only label 1
             size: "small",
             Placeholder: "Display Email",
             rangeMin: true,
@@ -304,7 +304,7 @@ function GlobalVars(item) {
         },
         {
             object: "settings",
-            fieldCol: 20,
+            fieldCol: 12,
             key: "displayEmail",
             Placeholder: "Display Name In Email",
             size: "small",
@@ -315,8 +315,9 @@ function GlobalVars(item) {
             itemStyle: { marginBottom: 20 },
             // hidden: false
         },
+        
         {
-            fieldCol: 4, // this is only label 1
+            fieldCol: 7, // this is only label 1
             size: "small",
             Placeholder: "From Email",
             rangeMin: true,
@@ -325,7 +326,7 @@ function GlobalVars(item) {
         },
         {
             object: "settings",
-            fieldCol: 20,
+            fieldCol: 12,
             key: "fromEmail",
             Placeholder: "From Email Address",
             size: "small",
@@ -334,6 +335,28 @@ function GlobalVars(item) {
             labelCol: { span: 3 },
             labelAlign: "right",
             itemStyle: { marginBottom: 20 },
+            // hidden: false
+        },
+        {
+            fieldCol: 7, // this is only label 1
+            size: "small",
+            Placeholder: "Auto Reject Submitted Requests On FY Closing",
+            rangeMin: true,
+            type: "Text",
+            labelAlign: "left",
+        },
+        {
+            object: "settings",
+            // fieldCol: ,
+            valuePropName:"checked",
+            key: "autoRejectFY",
+            // Placeholder: "Display Name In Email",
+            size: "small",
+            // rules:[{ required: true, message: 'Insert your Password Please' }],
+            type: "Switch",
+            // labelCol: { span: 3 },
+            labelAlign: "right",
+            // itemStyle: { marginBottom: 20 },
             // hidden: false
         },
         {
@@ -466,7 +489,7 @@ function GlobalVars(item) {
                     },
                     ...stateFields,
                     {
-                        fieldCol: 20,
+                        fieldCol: 12,
                         mode: "horizontal",
                         type: "Divider",
                         itemStyle: { padding: "0px", margin: "0px" },

@@ -6,7 +6,7 @@ import { expensesData } from './DummyData';
 import { expenseSheetActions, getExpenseSheets } from '../../service/expenseSheet-Apis';
 import { getListOfExpenses } from '../../service/expense-Apis';
 import { generalDelete } from "../../service/delete-Api\'s";
-import { formatCurrency, formatDate, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
+import { dateClosed, formatCurrency, formatDate, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
 import { tableSorter, tableTitleFilter } from '../../components/Core/Table/TableFilter';
 import {Tag_s} from '../../components/Core/Custom/Index';
 
@@ -85,11 +85,11 @@ const ExpenseSheet = (props) => {
               <Menu.Item
                 key="delete"
                 danger
-                disabled={['AP', 'SB'].includes(record.status) || !permission['DELETE']}
+                disabled={['AP', 'SB'].includes(record.status) || !permission['DELETE']|| dateClosed(record.submittedAt) }
                 className="pop-confirm-menu"
               >
                 <Popconfirm
-                  disabled={['AP', 'SB'].includes(record.status)}
+                  disabled={['AP', 'SB'].includes(record.status) || !permission['DELETE']|| dateClosed(record.submittedAt) }
                   title="Are you sure you want to delete ?"
                   onConfirm={() => handleDelete(record.id, index)}
                   okText="Yes"
@@ -197,7 +197,7 @@ const ExpenseSheet = (props) => {
     selectedRowKeys: selectedRows.keys,
     onChange: onSelectChange,
     // preserveSelectedRowKeys: false,
-    getCheckboxProps: (record)=> ({disabled: ['AP', 'SB'].includes(record.status) })
+    getCheckboxProps: (record)=> ({disabled: ['AP', 'SB'].includes(record.status) || dateClosed(record.submittedAt) })
   };
 
   const onOpenModal = (open) =>{

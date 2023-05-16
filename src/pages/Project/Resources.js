@@ -130,8 +130,9 @@ class Resources extends Component {
                   danger
                   disabled={!this?.state?.permissions?.['DELETE'] || this?.state?.disabledFY}
                   className="pop-confirm-menu"
-                >
+                  >
                   <Popconfirm
+                    disabled={!this?.state?.permissions?.['DELETE'] || this?.state?.disabledFY}
                     title="Are you sure you want to delete ?"
                     onConfirm={() => this.handleDelete(record.id, index)}
                     okText="Yes"
@@ -339,7 +340,7 @@ class Resources extends Component {
           filterData: res[1]?.success ? res[1].data : [],
           permissions: PROJECTS,
           notAuth: res?.[1]?.authError,
-          disabledFY: dateClosed(res[0]?.data?.startDate, res[0]?.data?.endDate)
+          disabledFY: dateClosed(res[0]?.data?.startDate)
         });
       })
       .catch((e) => {

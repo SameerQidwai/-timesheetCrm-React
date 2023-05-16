@@ -6,23 +6,9 @@ import { getVariables } from '../../../../service/global-apis'
 import { SettingOutlined } from '@ant-design/icons'
 import GlobalVarsModal from './GlobalVarsModal'
 
-const GlobalHistory = ({ visible, onClose, callBack }) => {
+const GlobalHistory = ({ visible, onClose }) => {
   let [data, setData] = useState([])
   let [openModal, setOpenModal] = useState(false)
-
-  useEffect(() => {
-    getVariableData()
-  }, [])
-  
-
-  const getVariableData = () =>{
-    getVariables(visible).then(res=>{
-      if (res.success){
-        setData(res.data)
-      }
-    })
-  }
-  
   let columns = [
     {
       title: 'Start Date',
@@ -55,7 +41,7 @@ const GlobalHistory = ({ visible, onClose, callBack }) => {
             <Menu>
               <Menu.Item
                 key="edit"
-                onClick={() => {setOpenModal(true)}}
+                onClick={() => {setOpenModal({...record, index})}}
               >
                 Edit
               </Menu.Item>
@@ -69,6 +55,31 @@ const GlobalHistory = ({ visible, onClose, callBack }) => {
       ),
     },
   ]
+
+  useEffect(() => {
+    getVariableData()
+  }, [])
+  
+
+  const getVariableData = () =>{
+    getVariables(visible).then(res=>{
+      if (res.success){
+        setData(res.data)
+      }
+    })
+  }
+  
+  
+
+  const callBack = (value, index) =>{
+    if(index){
+      let temp = [...value]
+      temp[index] = data
+      setData([...temp])
+    }else{
+      setData([...data, value])
+    }
+  }
 
   return (
     <Modal
@@ -99,6 +110,7 @@ const GlobalHistory = ({ visible, onClose, callBack }) => {
       {openModal&&<GlobalVarsModal
         visible={openModal}
         onClose={()=>setOpenModal(false)}
+        callBack={callBack}
       />}
     </Modal>
   )

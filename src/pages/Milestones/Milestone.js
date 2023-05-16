@@ -190,7 +190,7 @@ class Milestone extends Component {
           customUrl,
           work,
           permissions: work === 'opportunities' ? OPPORTUNITIES : PROJECTS,
-          disabledFY: work !== 'opportunities' && dateClosed(res[0]?.data?.startDate, res[0]?.data?.endDate)
+          disabledFY: work !== 'opportunities' && dateClosed(res[0]?.data?.startDate)
         });
       })
       .catch((e) => {

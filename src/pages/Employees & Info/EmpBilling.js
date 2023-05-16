@@ -7,7 +7,7 @@ import BillModal from "./Modals/BillModal";
 import { getRecord as empRecord } from "../../service/Employees"
 import { getList } from "../../service/employee-contracts";
 
-import { formatCurrency, localStore, JOB_TYPE, DURATION, formatDate } from "../../service/constant";
+import { formatCurrency, localStore, JOB_TYPE, DURATION, formatDate, dateClosed } from "../../service/constant";
 import { tableSorter, tableTitleFilter } from "../../components/Core/Table/TableFilter";
 import { generalDelete } from "../../service/delete-Api's";
 
@@ -73,10 +73,11 @@ class EmpBilling extends Component {
                                 <Menu.Item
                                     key="delete" 
                                     danger
-                                    disabled={!this?.state?.permissions?.['DELETE']}
+                                    disabled={!this?.state?.permissions?.['DELETE'] || dateClosed(record.startDate)}
                                     className="pop-confirm-menu"
                                 >
                                     <Popconfirm
+                                        disabled={!this?.state?.permissions?.['DELETE'] || dateClosed(record.startDate)}
                                         title="Are you sure you want to delete ?" 
                                         onConfirm={() => this.handleDelete(record.id, index)} 
                                         okText="Yes"

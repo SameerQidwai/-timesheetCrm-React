@@ -29,6 +29,7 @@ import {
   localStore,
   O_TYPE,
   O_PHASE,
+  dateClosed,
 } from '../../service/constant';
 import {
   getOrganizations,
@@ -149,13 +150,13 @@ class Projects extends Component {
                   key="delete"
                   danger
                   disabled={
-                    (!this?.state?.permissions?.['DELETE'] || !record.phase)
+                    (!this?.state?.permissions?.['DELETE'] || !record.phase || dateClosed(record.startDate))
                   }
                   className="pop-confirm-menu"
                 >
                   <Popconfirm
                     disabled={
-                      (!this?.state?.permissions?.['DELETE'] || !record.phase)
+                      (!this?.state?.permissions?.['DELETE'] || !record.phase || dateClosed(record.startDate))
                     }
                     title="Are you sure you want to delete ?"
                     onConfirm={() => this.handleDelete(record.id, index)}

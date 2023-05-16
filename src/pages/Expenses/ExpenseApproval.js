@@ -3,7 +3,7 @@ import { SettingOutlined, CheckCircleOutlined, AuditOutlined, CheckOutlined} fro
 import React, { useEffect, useState } from 'react'
 import { entityProjects, getManageProjects, getUserProjects } from '../../service/constant-Apis';
 import { expenseSheetActions, getApprovalExpenseSheets, getExpenseSheet } from '../../service/expenseSheet-Apis';
-import { formatCurrency, formatDate, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
+import { dateClosed, formatCurrency, formatDate, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
 // import { expensesData as dummyExpensesData } from '../DummyData';
 import ExpenseSheetModal from './Modals/ExpenseSheetModal';
 import { tableSorter } from '../../components/Core/Table/TableFilter';
@@ -156,7 +156,7 @@ const ExpenseApproval = () => {
 		selectedRowKeys: selectedRows.keys,
 		onChange: onSelectChange,
 		// preserveSelectedRowKeys: false,
-   		getCheckboxProps: (record)=> ({disabled: ['RJ', 'SV'].includes(record.status) })
+   		getCheckboxProps: (record)=> ({disabled: ['RJ', 'SV'].includes(record.status) || dateClosed(record.submittedAt) })
 	};
 
 	// for get all project 
