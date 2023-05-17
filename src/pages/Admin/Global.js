@@ -526,6 +526,11 @@ function GlobalVars(item) {
         .catch(err => console.log(err))
     }
 
+    const onHistoryClose =() =>{
+        setOpenHistory(false)
+        fetchAll()
+    }
+
     return (
         <>
         <Form
@@ -561,7 +566,7 @@ function GlobalVars(item) {
         </Row>
         {openHistory&&<GlobalHistory
             visible={openHistory}
-            onClose={()=>setOpenHistory(false)}
+            onClose={()=>onHistoryClose()}
         />}
         </>
     )

@@ -78,18 +78,24 @@ const ExpenseSheet = (props) => {
       align: 'center',
       width: '1%',
       // width: '155',
-      render: (value, record, index) => (
-        <Dropdown
+      render: (value, record, index) => {
+        let disable =
+          ['AP', 'SB'].includes(record.status) ||
+          !permission['DELETE'] ||
+          dateClosed(record.submittedAt) ||
+          dateClosed(record.approvedAt) ||
+          dateClosed(record.rejectedAt);
+        return <Dropdown
           overlay={
             <Menu>
               <Menu.Item
                 key="delete"
                 danger
-                disabled={['AP', 'SB'].includes(record.status) || !permission['DELETE']|| dateClosed(record.submittedAt) }
+                disabled={disable}
                 className="pop-confirm-menu"
               >
                 <Popconfirm
-                  disabled={['AP', 'SB'].includes(record.status) || !permission['DELETE']|| dateClosed(record.submittedAt) }
+                  disabled={disable}
                   title="Are you sure you want to delete ?"
                   onConfirm={() => handleDelete(record.id, index)}
                   okText="Yes"
@@ -126,7 +132,7 @@ const ExpenseSheet = (props) => {
             <SettingOutlined />
           </Button>
         </Dropdown>
-      ),
+      },
     },
   ];
 
@@ -197,7 +203,13 @@ const ExpenseSheet = (props) => {
     selectedRowKeys: selectedRows.keys,
     onChange: onSelectChange,
     // preserveSelectedRowKeys: false,
-    getCheckboxProps: (record)=> ({disabled: ['AP', 'SB'].includes(record.status) || dateClosed(record.submittedAt) })
+    getCheckboxProps: (record) => ({
+      disabled:
+        ['AP', 'SB'].includes(record.status) ||
+        dateClosed(record.submittedAt) ||
+        dateClosed(record.approvedAt) ||
+        dateClosed(record.rejectedAt),
+    }),
   };
 
   const onOpenModal = (open) =>{

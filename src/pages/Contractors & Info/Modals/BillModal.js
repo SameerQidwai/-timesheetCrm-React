@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Modal, Upload, Form } from "antd";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons"; //Icons
 import FormItems from "../../../components/Core/Forms/FormItems";
-import { formatDate, headers } from "../../../service/constant";
+import { dateClosed, dateRange, disableAllFields, formatDate, headers, localStore } from "../../../service/constant";
 
 import { addList, editList, getRecord } from "../../../service/subContrators-contracts";
 import { addFiles } from "../../../service/Attachment-Apis";
@@ -10,6 +10,8 @@ import { addFiles } from "../../../service/Attachment-Apis";
 class BillModal extends Component {
     constructor() {
         super();
+        let yearClosed = localStore().closedYears
+        yearClosed = yearClosed && JSON.parse(yearClosed)
         this.formRef = React.createRef();
 
         this.state = {
@@ -18,6 +20,9 @@ class BillModal extends Component {
 
             fileList: [],
             fileIds:null,
+
+            disabledFY:false,
+            disabledSY: false, //disable start Year
 
             data: { },
             
@@ -48,7 +53,7 @@ class BillModal extends Component {
                     labelAlign: "right",
                     rangeMin: (current)=>{
                         const { billing } = this.formRef.current.getFieldValue();
-                        return  billing.endDate && current >  billing.endDate
+                        return dateRange(current, billing.endDate, 'start', undefined, yearClosed);
                     }
                 },
                 {
@@ -60,7 +65,7 @@ class BillModal extends Component {
                     fieldStyle: { width: "100%" },
                     rangeMax: (current)=>{
                         const { billing } = this.formRef.current.getFieldValue();
-                        return  billing.startDate && current < billing.startDate
+                        return dateRange(current, billing.startDate, 'end', undefined, yearClosed);
                     }
                 },
                 {
@@ -223,14 +228,28 @@ class BillModal extends Component {
     getRecord = (data) => {
         getRecord(data).then(res=>{
             const {success, data} = res
-            console.log(res);
+            let { BillingFields, disabledFY, disabledSY } = this.state
             if (success){
                 data.startDate = formatDate(data.startDate)
                 data.endDate =  formatDate(data.endDate)
+                disabledFY =  dateClosed(data.endDate, data.startDate);
+
+                if (disabledFY) {
+                    BillingFields = disableAllFields(BillingFields)
+                }else{
+                    disabledSY = dateClosed(data.startDate)
+                    if (disabledSY)
+                    BillingFields = disableAllFields(BillingFields)
+                    BillingFields[3].disabled = false
+                }
+
                 this.formRef.current.setFieldsValue({ billing: data, });
                 this.setState({
                     fileIds: data.fileId,
-                    fileList: data.file
+                    fileList: data.file,
+                    BillingFields,
+                    disabledFY,
+                    disabledSY
                 })
             }
         })        
@@ -289,7 +308,7 @@ class BillModal extends Component {
 
     render() {
         const { editCntrct, visible, close } = this.props;
-        const { BillingFields, loading, fileIds, fileList } = this.state;
+        const { BillingFields, loading, fileIds, fileList, disabledFY, disabledSY } = this.state;
 
         return (
             <Modal
@@ -297,8 +316,8 @@ class BillModal extends Component {
                 maskClosable={false}
                 centered
                 visible={visible}
-                okButtonProps={{ disabled: loading, htmlType: 'submit', form: 'my-form'  }}
-                okText={loading ? <LoadingOutlined /> : "Save"}
+                okButtonProps={{ disabled: loading|| disabledFY, loading, htmlType: 'submit', form: 'my-form'  }}
+                okText={"Save"}
                 onCancel={close}
                 width={900}
             >
@@ -318,6 +337,7 @@ class BillModal extends Component {
                 <Upload
                     customRequest={this.handleUpload}
                     // listType="picture"
+                    disabled={disabledFY||disabledSY}
                     listType="picture-card"
                     maxCount={1}
                     fileList={fileList}

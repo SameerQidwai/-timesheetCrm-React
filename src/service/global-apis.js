@@ -79,6 +79,26 @@ export const getVariables = (query) => {
             };
         });
 };
+export const getVariableValues = (query) => {
+    return axios
+        .get(var_url + `/${query}`, {headers:headers()})
+        .then((res) => {
+            const { success, data, message } = res.data;
+            jwtExpired(message)
+            setToken(res?.headers?.authorization)
+            if (success) {
+                
+            }
+            return { success, data: data?.values??[] };
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                success: false,
+                message: err.message,
+            };
+        });
+};
 
 export const upadteVariables = (data) => {
     messageAlert.loading({ content: 'Loading...', key: 1 },5)
@@ -99,5 +119,21 @@ export const upadteVariables = (data) => {
         })
         .catch((err) => {
             return apiErrorRes(err, 1, 5)
+        });
+};
+export const updateValue = (id, data) => {
+    messageAlert.loading({ content: 'Loading...', key: id },5)
+    return axios
+        .put(`${var_url}/updateValue/${id}`, data, {headers:headers()})
+        .then((res) => {
+            const { success, message } = res.data;
+            jwtExpired(message)
+            messageAlert.success({ content: message, key: id},5)
+            setToken(res?.headers?.authorization)
+            let variables= {}
+            return { success, data: variables };
+        })
+        .catch((err) => {
+            return apiErrorRes(err, id, 5)
         });
 };

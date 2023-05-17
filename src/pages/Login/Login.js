@@ -57,7 +57,7 @@ function Login(props) {
       justify="center"
       align="middle"
       className="app-login app-login-background"
-      style={{ backgroundImage: `url(${'/Z-avatar.svg'})` }}
+      // style={{ backgroundImage: `url(${'/Z-avatar.svg'})` }}
     >
       {/* <Form Callback={this.Callback} FormFields= {FormFields}/> */}
       <Col span={8}>

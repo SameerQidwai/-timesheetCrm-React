@@ -2,13 +2,15 @@ import React, { useState, useEffect } from 'react'
 import { Button, Col, Dropdown, Menu, Modal, Row, Table } from 'antd'
 import { formatDate, localStore } from '../../../../service/constant'
 import { tableSorter } from '../../../../components/Core/Table/TableFilter'
-import { getVariables } from '../../../../service/global-apis'
+import { getVariableValues } from '../../../../service/global-apis'
 import { SettingOutlined } from '@ant-design/icons'
 import GlobalVarsModal from './GlobalVarsModal'
+import moment from 'moment'
 
 const GlobalHistory = ({ visible, onClose }) => {
   let [data, setData] = useState([])
   let [openModal, setOpenModal] = useState(false)
+  const [minStartDate, setMinStartDate] = useState(null)
   let columns = [
     {
       title: 'Start Date',
@@ -62,8 +64,13 @@ const GlobalHistory = ({ visible, onClose }) => {
   
 
   const getVariableData = () =>{
-    getVariables(visible).then(res=>{
+    getVariableValues(visible).then(res=>{
       if (res.success){
+        setMinStartDate(
+          res.data?.length > 0 
+          ? moment.max(res.data?.map(obj => moment(obj.endDate)))
+          : null
+        )
         setData(res.data)
       }
     })
@@ -73,12 +80,13 @@ const GlobalHistory = ({ visible, onClose }) => {
 
   const callBack = (value, index) =>{
     if(index){
-      let temp = [...value]
-      temp[index] = data
+      let temp = [...data]
+      temp[index] = value
       setData([...temp])
     }else{
       setData([...data, value])
     }
+    setOpenModal(false)
   }
 
   return (
@@ -111,6 +119,8 @@ const GlobalHistory = ({ visible, onClose }) => {
         visible={openModal}
         onClose={()=>setOpenModal(false)}
         callBack={callBack}
+        minDate={openModal===true?minStartDate:null}
+        keyName={visible}
       />}
     </Modal>
   )
