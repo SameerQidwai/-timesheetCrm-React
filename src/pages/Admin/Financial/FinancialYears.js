@@ -165,17 +165,6 @@ function FinancialYears(props) {
               <Panel header={<b>- Closing Projects</b>} key="projects">
                 {projects.length ? (
                   projects.map(({ id, title, startDate, endDate }) => {
-                    // return <Descriptions
-                    //   size="small"
-                    //   // bordered
-                    //   column={4}
-                    //   layout="horizontal"
-                    // >
-                    //   <Item label="Code" contentStyle={{width: '1%'}}>{id}</Item>
-                    //   <Item label="Title">{title}</Item>
-                    //   <Item label="Start Date">{startDate}</Item>
-                    //   <Item label="End Date">{endDate}</Item>
-                    // </Descriptions>;
                     return <Paragraph key={id}>
                         Title: <b>{title}</b>
                         <Paragraph>
@@ -191,20 +180,46 @@ function FinancialYears(props) {
                   <div>No Project</div>
                 )}
               </Panel>
+              <Panel header={<b>- Closing Milestone</b>} key="milestones">
+                {milestones.length ? (
+                  milestones.map(({ id, title, startDate, endDate, projectName }) => {
+                    return <Paragraph key={id}>
+                        Title: <b>{title}</b>
+                        <Paragraph>
+                          <Row justify="space-around">
+                            <Col>Code: 00{id}</Col>
+                            <Col>Project Name: {projectName}</Col>
+                            <Col>Start Date: {startDate}</Col>
+                            <Col>End Date: {endDate}</Col>
+                          </Row>
+                        </Paragraph>
+                    </Paragraph>
+                  })
+                ) : (
+                  <div>No Milestones</div>
+                )}
+              </Panel>
+              <Panel header={<b>- Timesheet</b>} key="timesheets">
+                {timesheets.length ? (
+                  timesheets.map(({ id, employeeName, startDate, status, projectName }) => {
+                    return <Paragraph key={id}>
+                        Employee: <b>{employeeName}</b>
+                        <Paragraph>
+                          <Row justify="space-around">
+                            <Col>Project Name: {projectName}</Col>
+                            <Col>Month: {formatDate(startDate).format('MMM')}</Col>
+                            <Col>Status: {status}</Col>
+                          </Row>
+                        </Paragraph>
+                    </Paragraph>
+                  })
+                ) : (
+                  <div>No Milestones</div>
+                )}
+              </Panel>
               <Panel header={<b>- Ending Contract</b>} key="contracts">
                 {contracts.length ? (
                   contracts.map(({ id, name, startDate, endDate }) => {
-                    // return <Descriptions
-                    //   size="small"
-                    //   // bordered
-                    //   column={4}
-                    //   layout="horizontal"
-                    // >
-                    //   <Item label="Code">{id}</Item>
-                    //   <Item label="Full Name">{name}</Item>
-                    //   <Item label="Start Date">{startDate}</Item>
-                    //   <Item label="End Date">{endDate}</Item>
-                    // </Descriptions>;
                     return <Paragraph key={id}>
                         Employee: <b>{name}</b>
                         <Paragraph>
@@ -232,22 +247,15 @@ function FinancialYears(props) {
                 key="leaverequest"
               >
                 {leaveRequests.length ? (
-                  leaveRequests.map(({ id, submittedBy, submittedAt }) => {
-                    // return <Descriptions
-                    //   size="small"
-                    //   // bordered
-                    //   column={4}
-                    //   layout="horizontal"
-                    // >
-                    //   <Item label="name">{submittedBy}</Item>
-                    //   <Item label="Submitted At">{submittedAt}</Item>
-                    // </Descriptions>;
+                  leaveRequests.map(({ id, employeeName, startDate, projectName, endDate, status }) => {
                     return <Paragraph key={id}>
-                        Submitted By: <b>{submittedBy}</b>
+                        Submitted By: <b>{employeeName}</b>
                         <Paragraph>
                           <Row justify="space-around">
-                            <Col>Code: 00{id}</Col>
-                            <Col>Submitted At: {submittedAt}</Col>
+                          <Col>Project Name: {projectName}</Col>
+                            <Col>Start Date: {startDate}</Col>
+                            <Col>End Date: {endDate}</Col>
+                            <Col>Status: {status}</Col>
                             {/* <Col>End Date: {endDate}</Col> */}
                           </Row>
                         </Paragraph>
@@ -255,6 +263,24 @@ function FinancialYears(props) {
                   })
                 ) : (
                   <div>No Leave Requests</div>
+                )}
+              </Panel>
+            <Panel header={<b>- Expenses</b>} key="expense">
+                {expenseSheets.length ? (
+                  expenseSheets.map(({ id, employeeName, projectName, status }) => {
+                    return <Paragraph key={id}>
+                        Employee: <b>{employeeName}</b>
+                        <Paragraph>
+                          <Row justify="space-around">
+                            <Col>Code: 00{id}</Col>
+                            <Col>Project Name: {projectName}</Col>
+                            <Col>Status: {status}</Col>
+                          </Row>
+                        </Paragraph>
+                    </Paragraph>
+                  })
+                ) : (
+                  <div>No Contracts</div>
                 )}
               </Panel>
             </Collapse>
