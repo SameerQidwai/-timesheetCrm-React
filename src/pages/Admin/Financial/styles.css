@@ -1,0 +1,9 @@
+.fy-modal{
+    top: 10px !important;
+    padding-bottom: 0px !important;
+} 
+.fy-modal .ant-modal-confirm-content{
+    max-height: 75vh;
+    overflow-y: scroll;
+    position: relative;
+}
