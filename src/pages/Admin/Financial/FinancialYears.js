@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Col, Collapse, Descriptions, Dropdown, Menu, Modal, Row, Table, Typography, message,  } from "antd";
-import { ExclamationCircleOutlined, SettingOutlined, PlusSquareOutlined, LoadingOutlined } from "@ant-design/icons"; //Icons
 // import { formatDate } from '../../service/constant';
+import { ExclamationCircleOutlined, SettingOutlined } from "@ant-design/icons"; //Icons
 import { localStore, formatDate } from '../../../service/constant';
 import { closingFY, getAllFY } from '../../../service/financial-year-apis';
 import FYModal from './Modals/FYModal';
@@ -9,6 +9,7 @@ import { tableSorter } from '../../../components/Core/Table/TableFilter';
 import { Tag_s } from '../../../components/Core/Custom/Index';
 import moment from 'moment'
 import './styles.css'
+import FYCloseModal from './Modals/FYCloseModal';
 
 const {Paragraph} = Typography
 const {Panel} = Collapse
@@ -93,7 +94,9 @@ function FinancialYears(props) {
                   </Menu.Item>
                   <Menu.Item 
                     disabled={record.closed}
-                    key="Closing" onClick={()=>{onConfirm(record, index)}}
+                    key="Closing" 
+                    // onClick={()=>{onConfirm(record, index)}}
+                    onClick={()=>{setVisibleConfirm({...record, index})}}
                   >
                       Close
                   </Menu.Item>
@@ -201,7 +204,8 @@ function FinancialYears(props) {
               </Panel>
               <Panel header={<b>- Timesheet</b>} key="timesheets">
                 {timesheets.length ? (
-                  timesheets.map(({ id, employeeName, startDate, status, projectName }) => {
+                  <div>
+                  {timesheets.map(({ id, employeeName, startDate, status, projectName }) => {
                     return <Paragraph key={id}>
                         Employee: <b>{employeeName}</b>
                         <Paragraph>
@@ -212,14 +216,16 @@ function FinancialYears(props) {
                           </Row>
                         </Paragraph>
                     </Paragraph>
-                  })
+                  })}
+                  </div>
                 ) : (
                   <div>No Milestones</div>
                 )}
               </Panel>
               <Panel header={<b>- Ending Contract</b>} key="contracts">
                 {contracts.length ? (
-                  contracts.map(({ id, name, startDate, endDate }) => {
+                <div>
+                  {contracts.map(({ id, name, startDate, endDate }) => {
                     return <Paragraph key={id}>
                         Employee: <b>{name}</b>
                         <Paragraph>
@@ -230,7 +236,8 @@ function FinancialYears(props) {
                           </Row>
                         </Paragraph>
                     </Paragraph>
-                  })
+                  })}
+                  </div>
                 ) : (
                   <div>No Contracts</div>
                 )}
@@ -247,7 +254,8 @@ function FinancialYears(props) {
                 key="leaverequest"
               >
                 {leaveRequests.length ? (
-                  leaveRequests.map(({ id, employeeName, startDate, projectName, endDate, status }) => {
+                  <div>
+                  {leaveRequests.map(({ id, employeeName, startDate, projectName, endDate, status }) => {
                     return <Paragraph key={id}>
                         Submitted By: <b>{employeeName}</b>
                         <Paragraph>
@@ -260,7 +268,8 @@ function FinancialYears(props) {
                           </Row>
                         </Paragraph>
                     </Paragraph>
-                  })
+                  })}
+                  </div>
                 ) : (
                   <div>No Leave Requests</div>
                 )}
@@ -361,6 +370,11 @@ function FinancialYears(props) {
           visible={visibleModal} // visble anydata means to edit this
           close={()=>setVisibleModal(false)}
           callBack={onFYAdd}
+        />}
+        {visibleConfirm&& <FYCloseModal //visible true means to add new
+          visible={visibleConfirm} // visble anydata means to edit this
+          close={()=>setVisibleConfirm(false)}
+          // callBack={onFYAdd}
         />}
       </Row>
     )

@@ -63,10 +63,10 @@ export const updateFY = (fyId, data) => {
     });
 };
 
-export const closingFY = (fyId) => {
+export const closingFY = (fyId, query='') => {
   messageAlert.loading({ content: 'Closing FY...', key: 1 }, 5);
   return axios
-    .patch(`${url}/${fyId}/closeYear`, {}, { headers: headers() })
+    .patch(`${url}/${fyId}/closeYear${query}`, {}, { headers: headers() })
     .then((res) => {
       const { success, data, message } = res.data;
       jwtExpired(message);

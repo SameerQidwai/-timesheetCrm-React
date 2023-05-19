@@ -79,7 +79,7 @@ const GlobalHistory = ({ visible, onClose }) => {
   
 
   const callBack = (value, index) =>{
-    if(index){
+    if(index>=0){
       let temp = [...data]
       temp[index] = value
       setData([...temp])
