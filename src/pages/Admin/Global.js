@@ -351,7 +351,7 @@ function GlobalVars(item) {
             object: "settings",
             // fieldCol: ,
             valuePropName:"checked",
-            key: "autoRejectFY",
+            key: "forceStatusChange",
             // Placeholder: "Display Name In Email",
             size: "small",
             // rules:[{ required: true, message: 'Insert your Password Please' }],

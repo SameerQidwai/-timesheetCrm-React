@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { Form, Modal, Steps, Tabs, message, Row, Col, Typography, Table } from 'antd'
+import {  Modal, Steps, message, Table } from 'antd'
 import { formatDate } from '../../../../service/constant';
 import { closingFY } from '../../../../service/financial-year-apis';
 import { ExclamationCircleOutlined } from "@ant-design/icons"; //Icons
 import '../styles.css'
+import { Link } from 'react-router-dom';
+import { Tag_s } from '../../../../components/Core/Custom/Index';
 const {Step} = Steps
-const {Paragraph} = Typography
 
 const stepsInitial = [
   {
@@ -34,12 +35,15 @@ const FYCloseModal = ({ visible, close, callBack }) => {
         getData();
     }, []);
 
-    const getData = async() => {
-      try{
-        message.loading({ content: 'Getting Information', key: 1}, 0);
-        let {success, data} = await closingFY(visible.id)
-        message.warning({ content: 'Please Read The Action Carefully', key: 1}, 5);
-        if (success){
+    const getData = async () => {
+      try {
+        message.loading({ content: 'Getting Information', key: 1 }, 0);
+        let { success, data } = await closingFY(visible.id);
+        message.warning(
+          { content: 'Please Read The Action Carefully', key: 1 },
+          5
+        );
+        if (success) {
           let createSteps = [];
           let {
             projects = [],
@@ -55,281 +59,283 @@ const FYCloseModal = ({ visible, close, callBack }) => {
           createSteps[0] = {
             title: 'Project',
             key: 0,
-            content: 
-                <Table
-                  rowKey={(data) => data.id}
-                  columns={[
-                    {
-                      title: "Title",
-                      dataIndex: "title",
-                      key: "title",
-                    },
-                    {
-                      title: "Code",
-                      dataIndex: "id",
-                      key: "id",
-                      render: (text) => `00${text}`
-                    },
-                    {
-                      title: "Start Date",
-                      dataIndex: "startDate",
-                      key: "startDate",
-                    },
-                    {
-                      title: "End Date",
-                      dataIndex: "endDate",
-                      key: "endDate",
-                    },
-                  ]}
-                  dataSource={projects.length?projects:[]}
-                  size="small"
-                  className='fs-small'
-                  />
-                  // {/* {projects.map(({ id, title, startDate, endDate }) => {
-                  //   return (
-                  //     <Paragraph key={id}>
-                  //       Title: <b>{title}</b>
-                  //       <Paragraph>
-                  //         <Row justify="space-around">
-                  //           <Col>Code: 00{id}</Col>
-                  //           <Col>Start Date: {startDate}</Col>
-                  //           <Col>End Date: {endDate}</Col>
-                  //         </Row>
-                  //       </Paragraph>
-                  //     </Paragraph>
-                  //   );
-                  // })} */}
+            content: (
+              <Table
+                rowKey={(data) => data.id}
+                columns={[
+                  {
+                    title: 'Title',
+                    dataIndex: 'title',
+                    key: 'title',
+                    render:(text, record)=>(
+                      <Link
+                        to={{
+                          pathname: `/projects/${record.id}/info`,
+                        }}
+                        className="nav-link"
+                      >
+                        {text}
+                      </Link>
+                    )
+                  },
+                  {
+                    title: 'Code',
+                    dataIndex: 'id',
+                    key: 'id',
+                    render: (text) => `00${text}`,
+                  },
+                  {
+                    title: 'Start Date',
+                    dataIndex: 'startDate',
+                    key: 'startDate',
+                  },
+                  {
+                    title: 'End Date',
+                    dataIndex: 'endDate',
+                    key: 'endDate',
+                  },
+                ]}
+                dataSource={ projects }
+                size="small"
+                className="fs-small"
+              />
+            ),
           };
 
           createSteps[1] = {
             title: 'Milestone',
             key: 1,
-            content: 
-            <Table
-                  rowKey={(data) => data.id}
-                  columns={[
-                    {
-                      title: "Title",
-                      dataIndex: "title",
-                      key: "title",
-                    },
-                    {
-                      title: "Code",
-                      dataIndex: "id",
-                      key: "id",
-                      render: (text) => `00${text}`
-                    },
-                    {
-                      title: "Project Name",
-                      dataIndex: "projectName",
-                      key: "projectName",
-                    },
-                    {
-                      title: "Start Date",
-                      dataIndex: "startDate",
-                      key: "startDate",
-                      render: (text) => formatDate(text, true, 'DD-MM-YYYY')
-                    },
-                    {
-                      title: "End Date",
-                      dataIndex: "endDate",
-                      key: "endDate",
-                      render: (text) => formatDate(text, true, 'DD-MM-YYYY')
-                    },
-                  ]}
-                  dataSource={milestones.length?milestones:[]}
-                  size="small"
-                  className='fs-small'
-                />
-            // milestones.length ? (
-            //   <div>
-            //   {milestones.map(({ id, title, startDate, endDate, projectName }) => {
-            //     return <Paragraph key={id}>
-            //         Title: <b>{title}</b>
-            //         <Paragraph>
-            //           <Row justify="space-around">
-            //             <Col>Code: 00{id}</Col>
-            //             <Col>Project Name: {projectName}</Col>
-            //             <Col>Start Date: {startDate}</Col>
-            //             <Col>End Date: {endDate}</Col>
-            //           </Row>
-            //         </Paragraph>
-            //     </Paragraph>
-            //   })}
-            //   </div>
-            // ) : (
-            //   <div>No Milestones</div>
-            // )
-          }
+            content: (
+              <Table
+                rowKey={(data) => data.id}
+                columns={[
+                  {
+                    title: 'Title',
+                    dataIndex: 'title',
+                    key: 'title',
+                    render:(text, record)=>(
+                      <Link
+                        to={{
+                          pathname: `/projects/${record.projectId}/milestones/${record.id}`,
+                        }}
+                        className="nav-link"
+                      >
+                        {text}
+                      </Link>
+                    )
+                  },
+                  {
+                    title: 'Code',
+                    dataIndex: 'id',
+                    key: 'id',
+                    render: (text) => `00${text}`,
+                  },
+                  {
+                    title: 'Project Name',
+                    dataIndex: 'projectName',
+                    key: 'projectName',
+                    render:(text, record)=>(
+                      <Link
+                        to={{
+                          pathname: `/projects/${record.projectId}/info`,
+                        }}
+                        className="nav-link"
+                      >
+                        {text}
+                      </Link>
+                    )
+                  },
+                  {
+                    title: 'Start Date',
+                    dataIndex: 'startDate',
+                    key: 'startDate',
+                    render: (text) => formatDate(text, true, 'DD-MM-YYYY'),
+                  },
+                  {
+                    title: 'End Date',
+                    dataIndex: 'endDate',
+                    key: 'endDate',
+                    render: (text) => formatDate(text, true, 'DD-MM-YYYY'),
+                  },
+                ]}
+                dataSource={ milestones }
+                size="small"
+                className="fs-small"
+              />
+            ),
+          };
 
           createSteps[2] = {
             title: 'Timesheet',
             key: 2,
-            content: <Table
-            rowKey={(data) => data.id}
-            columns={[
-              {
-                title: "Employee",
-                dataIndex: "employeeName",
-                key: "employeeName",
-              },
-              {
-                title: "Project Name",
-                dataIndex: "projectName",
-                key: "projectName",
-              },
-              {
-                title: "Month",
-                dataIndex: "startDate",
-                key: "startDate",
-                render: (text) => formatDate(text).format('MMM')
-              },
-              {
-                title: "Status",
-                dataIndex: "status",
-                key: "status",
-              },
-            ]}
-            dataSource={timesheets.length?timesheets:[]}
-            size="small"
-            className='fs-small'
-          />
-            
-            // timesheets.length ? (
-            //   <div>
-            //   {timesheets.map(({ id, employeeName, startDate, status, projectName }) => {
-            //     return <Paragraph key={id}>
-            //         Employee: <b>{employeeName}</b>
-            //         <Paragraph>
-            //           <Row justify="space-around">
-            //             <Col>Project Name: {projectName}</Col>
-            //             <Col>Month: {formatDate(startDate).format('MMM')}</Col>
-            //             <Col>Status: {status}</Col>
-            //           </Row>
-            //         </Paragraph>
-            //     </Paragraph>
-            //   })}
-            //   </div>
-            // ) : (
-            //   <div>No Milestones</div>
-            // )
-          }
+            content: (
+              <Table
+                rowKey={(data) => data.id}
+                columns={[
+                  {
+                    title: 'Employee',
+                    dataIndex: 'employeeName',
+                    key: 'employeeName',
+                    render:(text, record)=>(
+                      <Link
+                        to={{
+                          pathname: `/employees/${record.employeeId}/info`,
+                        }}
+                        className="nav-link"
+                      >
+                        {text}
+                      </Link>
+                    )
+                  },
+                  {
+                    title: 'Project Name',
+                    dataIndex: 'projectName',
+                    key: 'projectName',
+                  },
+                  {
+                    title: 'Month',
+                    dataIndex: 'startDate',
+                    key: 'startDate',
+                    render: (text) => formatDate(text).format('MMM'),
+                  },
+                  {
+                    title: 'Status',
+                    dataIndex: 'status',
+                    key: 'status',
+                    render: (text) => <Tag_s text={text}/>
+                  },
+                ]}
+                dataSource={ timesheets }
+                size="small"
+                className="fs-small"
+              />
+            ),
+          };
 
           createSteps[3] = {
             title: 'Contracts',
             key: 3,
-            content: <Table
-            rowKey={(data) => data.id}
-            columns={[
-              {
-                title: "Employee",
-                dataIndex: "employeeName",
-                key: "employeeName",
-              },
-              {
-                title: "code",
-                dataIndex: "id",
-                key: "id",
-                render: (text) => `00${text}`
-              },
-              {
-                title: "Start Date",
-                dataIndex: "startDate",
-                key: "startDate",
-                render: (text) => formatDate(text, true, 'DD-MM-YYYY')
-              },
-              {
-                title: "End Date",
-                dataIndex: "endDate",
-                key: "endDate",
-                render: (text) => formatDate(text, true, 'DD-MM-YYYY')
-              },
-            ]}
-            dataSource={contracts.length?contracts:[]}
-            size="small"
-            className='fs-small'
-          />
-            // contracts.length ? (
-            //   <div>
-            //     {contracts.map(({ id, name, startDate, endDate }) => {
-            //       return <Paragraph key={id}>
-            //           Employee: <b>{name}</b>
-            //           <Paragraph>
-            //             <Row justify="space-around">
-            //               <Col>Code: 00{id}</Col>
-            //               <Col>Start Date: {startDate}</Col>
-            //               <Col>End Date: {endDate}</Col>
-            //             </Row>
-            //           </Paragraph>
-            //       </Paragraph>
-            //     })}
-            //     </div>
-            //   ) : (
-            //     <div>No Contracts</div>
-            //     )
-          }
+            content: (
+              <Table
+                rowKey={(data) => data.id}
+                columns={[
+                  {
+                    title: 'Employee',
+                    dataIndex: 'employeeName',
+                    key: 'employeeName',
+                  },
+                  {
+                    title: 'code',
+                    dataIndex: 'id',
+                    key: 'id',
+                    render: (text) => `00${text}`,
+                  },
+                  {
+                    title: 'Start Date',
+                    dataIndex: 'startDate',
+                    key: 'startDate',
+                    render: (text) => formatDate(text, true, 'DD-MM-YYYY'),
+                  },
+                  {
+                    title: 'End Date',
+                    dataIndex: 'endDate',
+                    key: 'endDate',
+                    render: (text) => formatDate(text, true, 'DD-MM-YYYY'),
+                  },
+                  {
+                    title: 'Impact',
+                    dataIndex: 'accross',
+                    key: 'accross',
+                    render: (text) => text? 'Only End Date Will Be Changeable': 'Need New Contract',
+                  },
+                ]}
+                dataSource={ contracts }
+                size="small"
+                className="fs-small"
+              />
+            ),
+          };
 
           createSteps[4] = {
             title: 'Leave',
             key: 4,
-            content: <Table
-            rowKey={(data) => data.id}
-            columns={[
-              {
-                title: "Submitted By",
-                dataIndex: "employeeName",
-                key: "employeeName",
-              },
-              {
-                title: "Project Name",
-                dataIndex: "projectName",
-                key: "projectName",
-              },
-              {
-                title: "Start Date",
-                dataIndex: "startDate",
-                key: "startDate",
-                render: (text) => formatDate(text, true, 'DD-MM-YYYY')
-              },
-              {
-                title: "End Date",
-                dataIndex: "endDate",
-                key: "endDate",
-                render: (text) => formatDate(text, true, 'DD-MM-YYYY')
-              },
-            ]}
-            dataSource={leaveRequests.length?leaveRequests:[]}
-            size="small"
-            className='fs-small'
-          />
-            // leaveRequests.length ? (
-            //   <div>
-            //   {leaveRequests.map(({ id, employeeName, startDate, projectName, endDate, status }) => {
-            //     return <Paragraph key={id}>
-            //         Submitted By: <b>{employeeName}</b>
-            //         <Paragraph>
-            //           <Row justify="space-around">
-            //           <Col>Project Name: {projectName}</Col>
-            //             <Col>Start Date: {startDate}</Col>
-            //             <Col>End Date: {endDate}</Col>
-            //             <Col>Status: {status}</Col>
-            //             {/* <Col>End Date: {endDate}</Col> */}
-            //           </Row>
-            //         </Paragraph>
-            //     </Paragraph>
-            //   })}
-            //   </div>
-            // ) : (
-            //   <div>No Leave Requests</div>
-            // )
-          }
-          setCloseData(createSteps)
-        }
+            content: (
+              <Table
+                rowKey={(data) => data.id}
+                columns={[
+                  {
+                    title: 'Submitted By',
+                    dataIndex: 'employeeName',
+                    key: 'employeeName',
+                  },
+                  {
+                    title: 'Project Name',
+                    dataIndex: 'projectName',
+                    key: 'projectName',
+                  },
+                  {
+                    title: 'Start Date',
+                    dataIndex: 'startDate',
+                    key: 'startDate',
+                    render: (text) => formatDate(text, true, 'DD-MM-YYYY'),
+                  },
+                  {
+                    title: 'End Date',
+                    dataIndex: 'endDate',
+                    key: 'endDate',
+                    render: (text) => formatDate(text, true, 'DD-MM-YYYY'),
+                  },
+                ]}
+                dataSource={ leaveRequests }
+                size="small"
+                className="fs-small"
+              />
+            ),
+          };
 
-      }catch{
-        console.log('this action cant be perform')
+          createSteps[5] = {
+            title: 'Expense',
+            key: 4,
+            content: (
+              <Table
+                rowKey={(data) => data.id}
+                columns={[
+                  {
+                    title: 'Submitted By',
+                    dataIndex: 'employeeName',
+                    key: 'employeeName',
+                  },
+                  {
+                    title: 'code',
+                    dataIndex: 'id',
+                    key: 'id',
+                    render: (text) => `00${text}`,
+                  },
+                  {
+                    title: 'Project Name',
+                    dataIndex: 'projectName',
+                    key: 'projectName',
+                  },
+                  {
+                    title: 'Status',
+                    dataIndex: 'status',
+                    key: 'status',
+                    render: (text) => <Tag_s text={text}/>
+                  },
+                ]}
+                dataSource={ expenseSheets }
+                size="small"
+                className="fs-small"
+              />
+            ),
+          };
+
+          setCloseData(createSteps);
+        }
+      } catch {
+        console.log('this action cant be perform');
       }
-    }
+    };
 
     
     const onOkay =()=>{
@@ -339,19 +345,19 @@ const FYCloseModal = ({ visible, close, callBack }) => {
         icon: <ExclamationCircleOutlined color='red'/>,
         content: "Are you Sure You Want To Lock This Year?",
         onOk: async () => {
-          // try {
-          //   setLoading(true);
-          //   let { success } = await closingFY(visible.id, '?confirm=true');
-          //   setLoading(false);
-          //   if (success) {
-          //     let newData = [...data];
-          //     newData[index]['closed'] = true;
-          //     setData([...newData]);
-          //   }
-          // } catch {
-          //   setLoading(false);
-          //   confirmModal.destroy();
-          // }
+          try {
+            setLoading(true);
+            let { success } = await closingFY(visible.id, '?confirm=true');
+            setLoading(false);
+            if (success) {
+              // let newData = [...data];
+              // newData[index]['closed'] = true;
+              // setData([...newData]);
+            }
+          } catch {
+            setLoading(false);
+            confirmModal.destroy();
+          }
         },
         onCancel: () => {
           confirmModal.destroy();
@@ -369,8 +375,8 @@ const FYCloseModal = ({ visible, close, callBack }) => {
             <ExclamationCircleOutlined /> {' '}
             Do you wish to close "{visible.label}"{' '}
             <b>
-              {formatDate(visible.startDate, true,'DD-MM-YYYY')} - 
-              {formatDate(visible.endDate, true,'DD-MM-YYYY')}
+              ({formatDate(visible.startDate, true,'DD-MM-YYYY')}) - 
+              ({formatDate(visible.endDate, true,'DD-MM-YYYY')})
             </b>
           </span>
         }
