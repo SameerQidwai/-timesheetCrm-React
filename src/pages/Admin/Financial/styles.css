@@ -12,3 +12,13 @@
 .fy-modal .ant-modal-content {
     height: 100vh !important
 }
+.steps-content{
+    padding-top: 10px
+}
+.instructions-fy{
+    padding-top: 2%
+}
+
+.instructions-fy .ant-typography ul li {
+    padding-top: 10px
+}
