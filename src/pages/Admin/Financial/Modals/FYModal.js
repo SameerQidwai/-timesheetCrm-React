@@ -69,11 +69,11 @@ const FYModal = ({ visible, close, callBack }) => {
             FYData.endDate = formatDate(dates[1], true)
         }
         if(visible !== true){
-            let {id} = visible
+            let {id, rowIndex} = visible
             let {success, data} =  await updateFY(id, FYData)
             setLoading(false)
             if (success){
-                callBack(data)
+                callBack(data, rowIndex)
             }
         }else{
             let {success, data} =  await createFY(FYData)

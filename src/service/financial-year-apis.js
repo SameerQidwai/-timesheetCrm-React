@@ -49,7 +49,7 @@ export const createFY = (data) => {
 export const updateFY = (fyId, data) => {
   messageAlert.loading({ content: 'Updating FY...', key: fyId }, 5);
   return axios
-    .patch(`${url}/${fyId}`, data,{ headers: headers() })
+    .put(`${url}/${fyId}`, data,{ headers: headers() })
     .then((res) => {
       const { success, data, message } = res.data;
       jwtExpired(message);

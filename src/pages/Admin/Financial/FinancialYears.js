@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Col, Collapse, Descriptions, Dropdown, Menu, Modal, Row, Table, Typography, message,  } from "antd";
+import { Button, Col, Collapse, Descriptions, Dropdown, Menu, Modal, Popconfirm, Row, Table, Typography, message,  } from "antd";
 // import { formatDate } from '../../service/constant';
 import { ExclamationCircleOutlined, SettingOutlined } from "@ant-design/icons"; //Icons
 import { localStore, formatDate } from '../../../service/constant';
@@ -10,6 +10,7 @@ import { Tag_s } from '../../../components/Core/Custom/Index';
 import moment from 'moment'
 import './styles.css'
 import FYCloseModal from './Modals/FYCloseModal';
+import { generalDelete } from '../../../service/delete-Api\'s';
 
 const {Paragraph} = Typography
 const {Panel} = Collapse
@@ -22,6 +23,7 @@ function FinancialYears(props) {
   const [loading, setLoading] = useState(false)
   const [visibleModal, setVisibleModal] = useState(false)
   const [visibleConfirm, setVisibleConfirm] = useState(false)
+  const [lastFY, setLastFY] = useState(0)
 
   
     const columns = [
@@ -92,6 +94,22 @@ function FinancialYears(props) {
                   >
                     Edit
                   </Menu.Item>
+                  <Menu.Item
+                    key="delete"
+                    danger
+                    className="pop-confirm-menu"
+                    disabled={record.closed|| lastFY !== record.id}
+                  >
+                    <Popconfirm
+                      title="Are you sure you want to delete ?"
+                      onConfirm={() => handleDelete(record.id, index)}
+                      okText="Yes"
+                      cancelText="No"
+                      disabled={record.closed|| lastFY !== record.id}
+                    >
+                      <div> Delete </div>
+                    </Popconfirm>
+                  </Menu.Item>
                   <Menu.Item 
                     disabled={record.closed}
                     key="Closing" 
@@ -118,13 +136,37 @@ function FinancialYears(props) {
     const getData = async() =>{
       let {success, data} = await getAllFY()
         if (success){
+          let highestEndDate =null
+          let highestEndDateId= 0
+          data.forEach(({id, endDate}) => {
+            if (!highestEndDate || highestEndDate.isBefore(endDate)){
+              highestEndDate= moment(endDate) 
+              highestEndDateId = id
+            }
+          });
+          setLastFY(highestEndDateId)
           setData(data)
         }
     }
     
-    const onFYAdd = (newEntry) =>{
-      setData([...data, newEntry])
+    const onFYAdd = (newEntry, rowIndex) =>{
+      if (rowIndex>=0){
+        let tempData = data
+        tempData[rowIndex] = newEntry
+        setData([...tempData])
+      }else{
+        setData([...data, newEntry])
+      }
       setVisibleModal(false)
+    }
+
+    const handleDelete = (id, index) => {
+      const url = `/financial-years/`;
+      generalDelete({}, url, id, index, [], data).then((res) => {
+        if (res.success) {
+          setData(res.data);
+        }
+      });
     }
 
     const onConfirm = async(record, index) => {
