@@ -11,7 +11,14 @@ export const createInvoice = () => {
     .then((res) => {
       const { success, message,data } = res?.data;
     //   jwtExpired(message);
-    window.open(`${data}`, '_blank', 'toolbar=0,location=0,menubar=0')
+    let popup = window.open(`${data}`, '_blank', 'toolbar=0,location=0,menubar=0')
+    window.addEventListener('message', event => {
+      // Only accept messages from http://example.com.
+        if (event.data === 'close') {
+          console.log(event.data)
+          popup.close()
+        }
+    })
     //   messageAlert.success({ content: message, key: 1 });
     //   if (success) setToken(res?.headers?.authorization);
       return { success };
