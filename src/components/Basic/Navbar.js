@@ -33,6 +33,11 @@ const NavItem = [
         link: "/projects",
         key: "PROJECTS"
     },
+    {
+        text: "Invoices",
+        link: "/invoice",
+        key: "PROJECTS"
+    },
 ];
 
 class Navbar extends Component {

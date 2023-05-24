@@ -1,0 +1,22 @@
+import axios from 'axios';
+import { Api, apiErrorRes, headers } from './constant';
+import { message as messageAlert } from 'antd';
+
+const url = `${Api}/xero`;
+
+export const createInvoice = () => {
+  messageAlert.loading({ content: 'Loading...', key: 1 });
+  return axios
+    .get(url+ '/create-invoice', { headers: headers() })
+    .then((res) => {
+      const { success, message,data } = res?.data;
+    //   jwtExpired(message);
+    window.open(`${data}`, '_blank', 'toolbar=0,location=0,menubar=0')
+    //   messageAlert.success({ content: message, key: 1 });
+    //   if (success) setToken(res?.headers?.authorization);
+      return { success };
+    })
+    .catch((err) => {
+      return apiErrorRes(err, 1);
+    });
+};
