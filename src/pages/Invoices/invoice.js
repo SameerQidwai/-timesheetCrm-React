@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Row, Col, Typography, Input, Button, Form } from 'antd';
-import { createInvoice } from '../../service/invoice-Apis';
+import { createInvoice, toolLogin } from '../../service/invoice-Apis';
 
 
 const Invoice = (props) => {
@@ -8,7 +8,7 @@ const Invoice = (props) => {
   return (
    <Row justify="center" align="middle">
     <Col>
-        <Button type="primary" onClick={()=>createInvoice()}>Create Invoice again Bayside Club</Button>
+        <Button type="primary" onClick={()=>toolLogin()}>Login to Xero</Button>
     </Col>
    </Row>
   );
