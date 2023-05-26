@@ -8,7 +8,7 @@ const Invoice = (props) => {
   return (
    <Row justify="center" align="middle">
     <Col>
-        <Button type="primary" onClick={()=>toolLogin()}>Login to Xero</Button>
+        {/* <Button type="primary" onClick={()=>toolLogin()}>Login to Xero</Button> */}
     </Col>
    </Row>
   );

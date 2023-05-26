@@ -175,6 +175,12 @@ const pageLinks = [
     permission: 'READ',
   },
   {
+    component: Admin,
+    link: '/admin/integration',
+    key: 'ADMIN_OPTIONS',
+    permission: 'READ',
+  },
+  {
     component: Organizations,
     link: '/organisations',
     key: 'ORGANIZATIONS',
