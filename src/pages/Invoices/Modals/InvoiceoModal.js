@@ -87,7 +87,7 @@ const InfoModal = ({ visible, close, callBack }) => {
             fieldStyle:{width: '100%'}
         },
         {
-            Placeholder: "Milestone",
+            Placeholder: "Project",
             // rangeMin: true,
             fieldCol: 12,
             size: "small",
@@ -105,7 +105,7 @@ const InfoModal = ({ visible, close, callBack }) => {
         {
             object: "basic",
             fieldCol: 12,
-            key: "milestoneId",
+            key: "projectId",
             size: "small",
             rules:[{ required: true, message: 'type is Required' }],
             data: [],
@@ -161,8 +161,8 @@ const InfoModal = ({ visible, close, callBack }) => {
     }
 
     const getEntries = () =>{
-        let {milestoneId, months} =form.getFieldsValue().basic
-        console.log(milestoneId, months)
+        let {projectId, months} =form.getFieldsValue().basic
+        console.log(projectId, months)
     }
 
 
