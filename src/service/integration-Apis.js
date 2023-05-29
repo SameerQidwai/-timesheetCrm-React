@@ -27,7 +27,7 @@ export const toolLogin = (toolName) => {
       .catch((err) => {
         return apiErrorRes(err, 1);
       });
-  };
+};
 export const checkToolLogin = (toolName) => {
     messageAlert.loading({ content: 'Loading...', key: 1 });
     return axios
@@ -57,4 +57,20 @@ export const toolLogout = (toolName) => {
       .catch((err) => {
         return apiErrorRes(err, 1);
       });
-  };
+};
+
+export const gettoolOrganizations = (toolName) => {
+  messageAlert.loading({ content: 'Loading...', key: 1 });
+  return axios
+    .get(`${url}/${toolName}/organizations`, { headers: headers() })
+    .then((res) => {
+      const { success, message,data } = res?.data;
+      jwtExpired(message);
+      messageAlert.success({ content: message, key: 1 });
+      setToken(res?.headers?.authorization);
+      return { success, data};
+    })
+    .catch((err) => {
+      return apiErrorRes(err, 1);
+    });
+};

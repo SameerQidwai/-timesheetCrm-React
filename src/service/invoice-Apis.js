@@ -1,9 +1,40 @@
 import axios from 'axios';
-import { Api, apiErrorRes, headers } from './constant';
+import { Api, apiErrorRes, headers, jwtExpired, setToken } from './constant';
 import { message as messageAlert } from 'antd';
 
-const url = `${Api}/xero`;
+const url = `${Api}/invoice`;
 
+export const getInvoices = () => {
+  messageAlert.loading({ content: 'Loading...', key: 1 });
+  return axios
+    .get(url+ '/', { headers: headers() })
+    .then((res) => {
+      const { success, message,data } = res?.data;
+      jwtExpired(message);
+      messageAlert.success({ content: message, key: 1 });
+      setToken(res?.headers?.authorization);
+      return { success, data };
+    })
+    .catch((err) => {
+      return apiErrorRes(err, 1);
+    });
+};
+
+export const getInvoiceData = (projectId, startDate, endDate) => {
+  messageAlert.loading({ content: 'Loading...', key: 1 });
+  return axios
+    .get(`${url}/data/${projectId}&${startDate}&${endDate}`, { headers: headers() })
+    .then((res) => {
+      const { success, message,data } = res?.data;
+      jwtExpired(message);
+      messageAlert.success({ content: message, key: 1 });
+      setToken(res?.headers?.authorization);
+      return { success, data };
+    })
+    .catch((err) => {
+      return apiErrorRes(err, 1);
+    });
+};
 export const createInvoice = () => {
   messageAlert.loading({ content: 'Loading...', key: 1 });
   return axios
