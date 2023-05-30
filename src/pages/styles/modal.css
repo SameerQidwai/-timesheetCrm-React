@@ -1,0 +1,15 @@
+.modal-top{
+    width: calc(100vw - 300px) !important;
+    padding-bottom: 0px !important;
+    top: 10px !important;
+    max-width: calc(100vw - 300px) !important;
+} 
+
+.modal-top .ant-modal-body{
+    overflow-y: scroll !important;
+    position: relative !important;
+    max-height: calc(100vh - 120px) !important;
+}
+.modal-top .ant-modal-content {
+    max-height: 98vh !important
+}

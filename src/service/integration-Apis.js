@@ -59,10 +59,26 @@ export const toolLogout = (toolName) => {
       });
 };
 
-export const gettoolOrganizations = (toolName) => {
+export const getToolOrganizations = (toolName) => {
   messageAlert.loading({ content: 'Loading...', key: 1 });
   return axios
     .get(`${url}/${toolName}/organizations`, { headers: headers() })
+    .then((res) => {
+      const { success, message,data } = res?.data;
+      jwtExpired(message);
+      messageAlert.success({ content: message, key: 1 });
+      setToken(res?.headers?.authorization);
+      return { success, data};
+    })
+    .catch((err) => {
+      return apiErrorRes(err, 1);
+    });
+};
+
+export const getToolAssets = (toolName, data) => {
+  messageAlert.loading({ content: 'Loading...', key: 1 });
+  return axios
+    .post(`${url}/${toolName}/tool-assets`,data, { headers: headers() })
     .then((res) => {
       const { success, message,data } = res?.data;
       jwtExpired(message);
