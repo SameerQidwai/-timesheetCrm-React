@@ -27,14 +27,19 @@ import {
   getToolOrganizations,
 } from '../../../service/integration-Apis';
 import { getOrgProjects } from '../../../service/Organizations';
-import { createInvoice, getInvoiceData } from '../../../service/invoice-Apis';
+import {
+  createInvoice,
+  getInvoice,
+  getInvoiceData,
+  updateInvoice,
+} from '../../../service/invoice-Apis';
 import '../../styles/modal.css';
 const { Text } = Typography;
 
 const InvoiceModal = ({ visible, close, callBack }) => {
   const [form] = Form.useForm();
   const [lineItems, setLineItems] = useState([{}]);
-  const [totalData, setTotalData] = useState({});
+  const [totalAmounts, setTotalAmounts] = useState({});
   const [fields, setFields] = useState([
     {
       Placeholder: 'Organization',
@@ -61,6 +66,8 @@ const InvoiceModal = ({ visible, close, callBack }) => {
       data: [],
       type: 'Select',
       customValue: (_, option) => option,
+      getValueProps: (value)=>  ({value: value?.id}),
+      fieldNames: { value: 'id', label: 'name' },
       onChange: (value) => getProjects(value),
     },
     {
@@ -97,6 +104,7 @@ const InvoiceModal = ({ visible, close, callBack }) => {
       rules: [{ required: true, message: 'type is Required' }],
       data: [],
       type: 'Select',
+      fieldNames: { value: 'id', label: 'name' },
       onChange: (value, record) => {
         changeTypeFields(value, record);
       },
@@ -104,7 +112,7 @@ const InvoiceModal = ({ visible, close, callBack }) => {
     {
       object: 'basic',
       fieldCol: 12,
-      key: 'invoice_number',
+      key: 'invoiceNumber',
       disabled: true,
       size: 'small',
       type: 'Input',
@@ -128,12 +136,11 @@ const InvoiceModal = ({ visible, close, callBack }) => {
     {
       object: 'basic',
       fieldCol: 12,
-      key: 'months', // when-api change it to projectId
+      key: 'months',
       mode: 'month',
       size: 'small',
       disabled: true,
       rules: [{ required: true, message: 'Month Are Required' }],
-      // customValue: (value, option) => option, // when-api remove this
       type: 'RangePicker',
       onChange: () => {
         invoiceData();
@@ -142,10 +149,9 @@ const InvoiceModal = ({ visible, close, callBack }) => {
     {
       object: 'basic',
       fieldCol: 12,
-      key: 'issue_date', // when-api change it to projectId
+      key: 'issueDate',
       size: 'small',
       rules: [{ required: true, message: 'Date is Required' }],
-      // customValue: (value, option) => option, // when-api remove this
       type: 'DatePicker',
       fieldStyle: { width: '100%' },
     },
@@ -181,28 +187,23 @@ const InvoiceModal = ({ visible, close, callBack }) => {
     {
       object: 'basic',
       fieldCol: 12,
-      key: 'due_date', // when-api change it to projectId
+      key: 'dueDate',
       size: 'small',
       rules: [{ required: true, message: 'Date is Required' }],
-      // customValue: (value, option) => option, // when-api remove this
       type: 'DatePicker',
       fieldStyle: { width: '100%' },
     },
     {
       Placeholder: 'Tax Rates',
-      // rangeMin: true,
       fieldCol: 12,
       size: 'small',
       type: 'Text',
-      // itemStyle:{marginBottom:'10px'},
     },
     {
       Placeholder: 'Amounts Are',
-      // rangeMin: true,
       fieldCol: 12,
       size: 'small',
       type: 'Text',
-      // itemStyle:{marginBottom:'10px'},
     },
     {
       object: 'basic',
@@ -220,7 +221,7 @@ const InvoiceModal = ({ visible, close, callBack }) => {
     {
       object: 'basic',
       fieldCol: 12,
-      key: 'amountAre',
+      key: 'lineAmountTypes',
       size: 'small',
       rules: [{ required: true, message: 'type is Required' }],
       data: [
@@ -248,20 +249,20 @@ const InvoiceModal = ({ visible, close, callBack }) => {
     },
     {
       title: 'Price',
-      dataIndex: 'unit_amount',
-      key: 'unit_amount',
+      dataIndex: 'unitAmount',
+      key: 'unitAmount',
       render: (value) => formatCurrency(value),
     },
     {
       title: 'Tax Amount',
-      dataIndex: 'tax_amount',
-      key: 'tax_amount',
+      dataIndex: 'taxAmount',
+      key: 'taxAmount',
       render: (value) => formatCurrency(value),
     },
     {
       title: 'Amount.',
-      dataIndex: 'amount',
-      key: 'amount',
+      dataIndex: 'lineAmount',
+      key: 'lineAmount',
       render: (value) => formatCurrency(value),
     },
   ];
@@ -269,11 +270,9 @@ const InvoiceModal = ({ visible, close, callBack }) => {
     1: {
       label: {
         Placeholder: 'Schedule',
-        // rangeMin: true,
         fieldCol: 12,
         size: 'small',
         type: 'Text',
-        // itemStyle:{marginBottom:'10px'},
       },
       field: {
         object: 'basic',
@@ -283,6 +282,7 @@ const InvoiceModal = ({ visible, close, callBack }) => {
         rules: [{ required: true, message: 'type is Required' }],
         data: [],
         type: 'Select',
+        fieldNames: { value: 'id', label: 'description' },
         onChange: (value, record) => {
           let recordArray = record ? [record] : [];
           //if record is not null put it in array to save
@@ -302,11 +302,10 @@ const InvoiceModal = ({ visible, close, callBack }) => {
       field: {
         object: 'basic',
         fieldCol: 12,
-        key: 'months', // when-api change it to projectId
+        key: 'months',
         // mode: 'month',
         size: 'small',
         rules: [{ required: true, message: 'Month Are Required' }],
-        // customValue: (value, option) => option, // when-api remove this
         type: 'RangePicker',
         onChange: () => {
           invoiceData();
@@ -317,12 +316,7 @@ const InvoiceModal = ({ visible, close, callBack }) => {
 
   useEffect(() => {
     getData();
-    if (visible !== true) {
-      visible.date = formatDate(visible.date);
-      form.setFieldsValue({ basic: visible });
-    }
   }, []);
- 
 
   const getData = () => {
     const toolsQuery = {
@@ -330,38 +324,74 @@ const InvoiceModal = ({ visible, close, callBack }) => {
       taxType: 'CanApplyToRevenue=true AND status=="ACTIVE"',
     };
     Promise.all([
-      getToolOrganizations('xero'),
-      getToolAssets('xero', toolsQuery),
+      getToolOrganizations('xero'), //call organization 
+      getToolAssets('xero', toolsQuery), //get all assets belong from ttol
+      visible !== true && getInvoice(visible.id), //for Edit api get Invoice
     ]).then((res) => {
       let tempFields = fields;
-      tempFields[2].data = res[0].success ? res[0].data : [];
-      tempFields[14].data = res[1].success ? res[1]?.data?.accounts ?? [] : [];
-      tempFields[18].data = res[1].success ? res[1]?.data?.taxRates ?? [] : [];
+      tempFields[2].data = res[0].success ? res[0].data : []; //set data in select box
+      tempFields[14].data = res[1].success ? res[1]?.data?.accounts ?? [] : [];//set data in select box
+      tempFields[18].data = res[1].success ? res[1]?.data?.taxRates ?? [] : []; //set data in select box
+
+      //if getInvoice api hit
+      if (res?.[2]?.success) {
+        // give temporary data to project to avoid delay response
+        tempFields[6].data = [res[2]?.data?.project];
+
+        //testing project type for scheule or Range picker field select
+        let projectType = res[2]?.data?.project?.type
+
+        //If project is milestone change scheduleId
+        if (projectType ===1){
+            tempFields[8] = projectTypeField[1]['label'];
+            tempFields[10] = projectTypeField[1]['field'];
+            tempFields[10].data = res[2]?.data?.lineItems // set tempoary field change to this field
+        }
+        //setting form field
+        form.setFieldsValue({ basic: res[2]?.data });
+        //setting table data to show invoice line
+        setLineItems(res[2]?.data?.lineItems);
+
+        //setting total amount to show below table
+        setTotalAmounts(res[2]?.data?.totalAmounts);
+
+        // simultaneously getting real project data after avoiding delay response
+        getProjects(res[2]?.data?.organization, true)
+        if (projectType ===1){
+            // simultaneously getting real project data after avoiding delay response if project is milestone
+            invoiceData(1)
+        }
+      }
+
+      //set useState fields
       setFields([...tempFields]);
     });
   };
 
-  const getProjects = (orgId) => {
+  const getProjects = (orgId, noReset) => {
     if (orgId) {
       getOrgProjects(orgId).then((res) => {
         if (res.success) {
           let tempFields = fields;
           tempFields[6].data = res.data;
-          tempFields[10].disabled = true;
+        //   tempFields[10].disabled = true;
           setFields([...tempFields]);
         }
       });
     }
-    let { basic } = form.getFieldsValue();
-    form.setFieldsValue({
-      basic: {
-        ...basic,
-        projectId: null,
-        months: [null, null],
-        scheduleId: null,
-      },
-    });
-    setLineItems([{}]);
+    if (!noReset){
+        let { basic } = form.getFieldsValue();
+        form.setFieldsValue({
+          basic: {
+            ...basic,
+            projectId: null,
+            months: [null, null],
+            scheduleId: null,
+          },
+        });
+        setTotalAmounts({})
+        setLineItems([{}]);
+    }
   };
 
   const changeTypeFields = (value, record) => {
@@ -401,60 +431,70 @@ const InvoiceModal = ({ visible, close, callBack }) => {
     }
   };
 
-    const setTableData = (records, effectiveGst) => {
-        // can call a function from two ways after api called after selecting dateRange for timebase
-        // OR
-        // if selecting schedule from selectbox
-        let { basic } = form.getFieldsValue();
-        let { accountCode, amountAre, taxType } = basic;
-        setTotalData((prev) => {
-        let gstRate = (effectiveGst ?? 0) / 100 || prev.gstRate || 0;
-        let subtotal = 0;
-        let totalTaxAmount = 0;
-        let totalAmount = 0;
-        setLineItems((previousRecords) => {
-            return (records ?? previousRecords).map((record) => {
-            console.log(record);
-            let recordAmount =
-                parseFloat(record.unit_amount) * parseFloat(record.quantity);
-            let recordTaxAmount =
-                amountAre !== 'NOTAX' ? recordAmount * parseFloat(gstRate) : 0;
-            subtotal += recordAmount;
-            totalTaxAmount += recordTaxAmount;
-            totalAmount += recordAmount + (amountAre === 'EXCLUSIVE' ? recordTaxAmount : 0)
-            return {
-                ...record,
-                tax_amount: recordTaxAmount,
-                account_code: accountCode,
-                amount: recordAmount,
-                tax_type: taxType
-            };
-            });
+  const setTableData = (records, effectiveGst) => {
+    // can call a function from two ways after api called after selecting dateRange for timebase
+    // OR
+    // if selecting schedule from selectbox
+    let { basic } = form.getFieldsValue();
+    let { accountCode, lineAmountTypes, taxType } = basic;
+    setTotalAmounts((prev) => {
+      let gstRate = (effectiveGst ?? 0) / 100 || prev.gstRate || 0;
+      let subTotal = 0;
+      let totalTax = 0;
+      let total = 0;
+      setLineItems((previousRecords) => {
+        return (records ?? previousRecords).map((record) => {
+          console.log(record);
+          let lineAmount =
+            parseFloat(record.unitAmount) * parseFloat(record.quantity);
+          let taxAmount =
+            lineAmountTypes !== 'NoTax' ? lineAmount * parseFloat(gstRate) : 0;
+          subTotal += lineAmount;
+          totalTax += taxAmount;
+          total +=
+            lineAmount + (lineAmountTypes === 'Exclusive' ? taxAmount : 0);
+          return {
+            ...record,
+            taxAmount: taxAmount,
+            accountCode: accountCode,
+            lineAmount: lineAmount,
+            taxType: taxType,
+          };
         });
-        return { subtotal, totalTaxAmount, totalAmount, gstRate };
-        });
-    };
+      });
+      return { subTotal, totalTax, total, gstRate };
+    });
+  };
 
-    // on submit
-    const onFinish = (formData) => {
-        if (lineItems?.[0]?.unit_amount){
-            delete formData['undefined']
-            let data = { 
-                ...formData,
-                due_date: formatDate(formData.due_date, true),
-                issue_date: formatDate(formData.issue_date, true),
-                 lineItems 
+  // on submit
+  const onFinish = ({basic: formData}) => {
+    if (lineItems?.[0]?.unitAmount) {
+      let data = {
+        ...formData,
+        startDate: formatDate(formData['months']?.[0], true),
+        endDate: formatDate(formData['months']?.[1], true),
+        dueDate: formatDate(formData.dueDate, true),
+        issueDate: formatDate(formData.issueDate, true),
+        lineItems,
+      };
+      console.log(formData)
+      if (visible === true){
+          createInvoice(data).then((res) => {
+            if (res.success) {
+                callBack()
             }
-            console.log(data)
-            createInvoice(data).then(res=>{
-                if(res.success){
-                    close()
-                }
-            })
-        }else{
-            message.error('Empty Invoice Not Allowed', 3)
-        }
-    };
+          });
+      }else{
+        updateInvoice(visible.id, data).then((res) => {
+            if (res.success) {
+              callBack()
+            }
+          });
+      }
+    } else {
+      message.error('Empty Invoice Not Allowed', 3);
+    }
+  };
 
   return (
     <Modal
@@ -477,7 +517,7 @@ const InvoiceModal = ({ visible, close, callBack }) => {
       >
         <FormItems FormFields={fields} />
       </Form>
-      <Row justify="end" gutter={[0, 20]} style={{ marginTop: 10 }}>
+      <Row justify="end" gutter={[0, 20]} style={{ marginTop: 20 }}>
         <Col span={24}>
           <ATable rowKey="id" dataSource={lineItems} columns={columns} />
         </Col>
@@ -491,18 +531,18 @@ const InvoiceModal = ({ visible, close, callBack }) => {
               color: '#404756',
             }}
           >
-            <Descriptions.Item label="Subtotal">
-              {formatCurrency(totalData.subtotal)}
+            <Descriptions.Item label="subTotal">
+              {formatCurrency(totalAmounts.subTotal)}
             </Descriptions.Item>
             <Descriptions.Item label="Total GST">
-              {formatCurrency(totalData.totalTaxAmount)}
+              {formatCurrency(totalAmounts.totalTax)}
             </Descriptions.Item>
             <Descriptions.Item style={{ borderTop: '1px solid' }} />
             <Descriptions.Item
               label="Total"
               contentStyle={{ fontSize: 18, fontWeight: 900 }}
             >
-              {formatCurrency(totalData.totalAmount)}
+              {formatCurrency(totalAmounts.total)}
             </Descriptions.Item>
           </Descriptions>
         </Col>
