@@ -5,51 +5,58 @@ import { Api, apiErrorRes, headers, jwtExpired, setToken } from './constant';
 
 const url = `${Api}/financial-years`;
 
-export const getAllFY = () => {
-    messageAlert.loading({ content: 'Loading...', key: 1 }, 3);
-    return axios
-      .get(url, { headers: headers() })
-        .then((res) => {
-        const { success, message, data } = res.data;
-        jwtExpired(message);
-        messageAlert.destroy()
-        setToken(res.headers && res.headers.authorization);
+export const getAllFY = (option) => {
+  messageAlert.loading({ content: 'Loading...', key: 1 }, 3);
+  return axios
+    .get(url, { headers: headers() })
+    .then((res) => {
+      const { success, message, data } = res.data;
+      jwtExpired(message);
+      messageAlert.destroy();
+      setToken(res.headers && res.headers.authorization);
 
-        return { success, data }
+      if (option) {
+        option = data.forEach((year) => ({
+          value: year.id,
+          label: year.label,
+          start: year.startDate,
+          end: year.endDate,
+        }));
+      }
 
-      })
-      .catch((err) => {
-        messageAlert.error({ content: 'Error!', key: 1 }, 5);
-        return {
-          error: 'Please login again!',
-          status: false,
-          message: err.message,
-        };
-      });
+      return { success, data, option };
+    })
+    .catch((err) => {
+      messageAlert.error({ content: 'Error!', key: 1 }, 5);
+      return {
+        error: 'Please login again!',
+        status: false,
+        message: err.message,
+      };
+    });
 };
 
 export const createFY = (data) => {
-    messageAlert.loading({ content: 'Creating FY...', key: 1 }, 5);
-    return axios
-      .post(url, data, { headers: headers() })
-        .then((res) => {
-        const { success, message, data } = res.data;
-        jwtExpired(message);
-        messageAlert.success({ content: message, key: 1 }, 5);
-        setToken(res.headers && res.headers.authorization);
+  messageAlert.loading({ content: 'Creating FY...', key: 1 }, 5);
+  return axios
+    .post(url, data, { headers: headers() })
+    .then((res) => {
+      const { success, message, data } = res.data;
+      jwtExpired(message);
+      messageAlert.success({ content: message, key: 1 }, 5);
+      setToken(res.headers && res.headers.authorization);
 
-        return { success, data }
-
-      })
-      .catch((err) => {
-        return apiErrorRes(err, 1, 5);
-      });
+      return { success, data };
+    })
+    .catch((err) => {
+      return apiErrorRes(err, 1, 5);
+    });
 };
 
 export const updateFY = (fyId, data) => {
   messageAlert.loading({ content: 'Updating FY...', key: fyId }, 5);
   return axios
-    .put(`${url}/${fyId}`, data,{ headers: headers() })
+    .put(`${url}/${fyId}`, data, { headers: headers() })
     .then((res) => {
       const { success, data, message } = res.data;
       jwtExpired(message);
@@ -63,14 +70,14 @@ export const updateFY = (fyId, data) => {
     });
 };
 
-export const closingFY = (fyId, query='') => {
+export const closingFY = (fyId, query = '') => {
   messageAlert.loading({ content: 'Closing FY...', key: 1 }, 5);
   return axios
     .patch(`${url}/${fyId}/closeYear${query}`, {}, { headers: headers() })
     .then((res) => {
       const { success, data, message } = res.data;
       jwtExpired(message);
-      messageAlert.destroy()
+      messageAlert.destroy();
       setToken(res.headers && res.headers.authorization);
 
       return { success, data };

@@ -9,7 +9,7 @@ import { Api, dateClosed, localStore, R_STATUS, STATUS_COLOR } from "../../servi
 
 import "../styles/button.css";
 import TimeSheetPDF from "./Modals/TimeSheetPDF";
-import { Tag_s } from "../../components/Core/Custom/Index";
+import { Tag_s } from "../../components/Core/Custom";
 
 const { Title, Link: Tlink, Text } = Typography;
 //inTable insert

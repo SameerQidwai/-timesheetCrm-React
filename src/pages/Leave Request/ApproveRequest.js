@@ -7,7 +7,7 @@ import AddRequestModal from './Modals/AddRequestModal';
 import { getMilestones } from '../../service/timesheet';
 import { getLineEmployees, getManageProjects } from '../../service/constant-Apis';
 import { tableSorter, tableTitleFilter } from '../../components/Core/Table/TableFilter';
-import {Tag_s} from '../../components/Core/Custom/Index';
+import {Tag_s} from '../../components/Core/Custom';
 
 const { Title, Text } = Typography
 let modal = ''

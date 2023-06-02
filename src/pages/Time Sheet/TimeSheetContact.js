@@ -12,7 +12,7 @@ import { localStore, Api, thumbUrl, STATUS_COLOR, R_STATUS, formatFloat, getModu
 import moment from "moment";
 import "../styles/button.css";
 import TimeSheetPDF from "./Modals/TimeSheetPDF";
-import { Tag_s } from "../../components/Core/Custom/Index";
+import { Tag_s } from "../../components/Core/Custom";
 import BulkModal from "./Modals/BulkModal";
 
 const { Title, Link: Tlink, Text} = Typography;

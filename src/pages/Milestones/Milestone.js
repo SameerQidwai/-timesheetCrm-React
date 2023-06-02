@@ -20,7 +20,7 @@ import { getMilestones, getProjectDetail } from '../../service/Milestone-Apis';
 import { getRecord } from '../../service/opportunities';
 import { generalDelete } from "../../service/delete-Api's";
 import { tableSorter } from '../../components/Core/Table/TableFilter';
-import { Tag_s } from '../../components/Core/Custom/Index';
+import { Tag_s } from '../../components/Core/Custom';
 
 const { Item } = Descriptions;
 

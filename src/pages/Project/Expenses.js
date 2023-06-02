@@ -37,7 +37,7 @@ import { getMilestone } from '../../service/Milestone-Apis';
 import AuthError from '../../components/Core/AuthError';
 import ExpenseModal from './Modals/ExpenseModal';
 import { getListAlt as getExpenseList } from '../../service/expenseType-Apis';
-import { Tag_s } from '../../components/Core/Custom/Index';
+import { Tag_s } from '../../components/Core/Custom';
 
 const { Item } = Descriptions;
 

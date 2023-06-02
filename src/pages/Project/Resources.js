@@ -39,7 +39,7 @@ import { getPanelSkills } from '../../service/constant-Apis';
 import { generalDelete } from "../../service/delete-Api's";
 import { getMilestone } from '../../service/Milestone-Apis';
 import AuthError from '../../components/Core/AuthError';
-import { Tag_s } from '../../components/Core/Custom/Index';
+import { Tag_s } from '../../components/Core/Custom';
 
 const { Item } = Descriptions;
 

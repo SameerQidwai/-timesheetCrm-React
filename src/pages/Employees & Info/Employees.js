@@ -11,7 +11,7 @@ import { getList, delList } from '../../service/Employees';
 import { localStore } from '../../service/constant';
 import { Filtertags, TableModalFilter, tableSorter, tableSummaryFilter, tableTitleFilter, } from '../../components/Core/Table/TableFilter';
 import { generalDelete } from "../../service/delete-Api's";
-import { Tag_s } from '../../components/Core/Custom/Index';
+import { Tag_s } from '../../components/Core/Custom';
 import { EmployeeAdvaceFilter, EmployeeFilterColumns, EmployeeFilterFields, EmployeeModalUseEffect } from '../../components/Core/Table/';
 import { getRoles, getStates } from '../../service/constant-Apis';
 

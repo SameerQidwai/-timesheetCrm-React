@@ -29,7 +29,7 @@ import {
 import AddRequestModal from './Modals/AddRequestModal';
 import { getRequests } from '../../service/leaveRequest-Apis';
 import LeaveBalance from '../../components/Core/LeaveBalance';
-import {Tag_s} from '../../components/Core/Custom/Index';
+import {Tag_s} from '../../components/Core/Custom';
 
 import { generalDelete } from "../../service/delete-Api's";
 const { Title } = Typography;

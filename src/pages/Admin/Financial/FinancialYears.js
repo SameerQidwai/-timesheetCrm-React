@@ -6,7 +6,7 @@ import { localStore, formatDate } from '../../../service/constant';
 import { closingFY, getAllFY } from '../../../service/financial-year-apis';
 import FYModal from './Modals/FYModal';
 import { tableSorter } from '../../../components/Core/Table/TableFilter';
-import { Tag_s } from '../../../components/Core/Custom/Index';
+import { Tag_s } from '../../../components/Core/Custom';
 import moment from 'moment'
 import './styles.css'
 import FYCloseModal from './Modals/FYCloseModal';

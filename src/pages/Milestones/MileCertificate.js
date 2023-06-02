@@ -11,7 +11,7 @@ import { getManageProjects } from "../../service/constant-Apis";
 import { getApprovalMilestones, milestoneActions, milestoneUplaodDelete, milestoneUpload } from "../../service/Milestone-Apis";
 import { addFiles } from "../../service/Attachment-Apis";
 import './styles.css'
-import { Tag_s } from "../../components/Core/Custom/Index";
+import { Tag_s } from "../../components/Core/Custom";
 
 
 class MileCertificate extends Component {
