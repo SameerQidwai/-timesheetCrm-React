@@ -8,7 +8,7 @@ import { getListOfExpenses } from '../../service/expense-Apis';
 import { generalDelete } from "../../service/delete-Api\'s";
 import { dateClosed, formatCurrency, formatDate, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
 import { tableSorter, tableTitleFilter } from '../../components/Core/Table/TableFilter';
-import {Tag_s} from '../../components/Core/Custom';
+import {Tag_s} from '../../components/Core/Custom/Index';
 
 const { Title } =  Typography
 

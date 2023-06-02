@@ -16,11 +16,12 @@ export const getAllFY = (option) => {
       setToken(res.headers && res.headers.authorization);
 
       if (option) {
-        option = data.forEach((year) => ({
+        option = data.map((year) => ({
           value: year.id,
           label: year.label,
           start: year.startDate,
           end: year.endDate,
+          closed: year.closed
         }));
       }
 

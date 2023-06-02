@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { Select } from 'antd';
 import { getAllFY } from '../../../service/financial-year-apis';
 import { CalendarOutlined } from '@ant-design/icons';
+import { formatDate, getFiscalYear } from '../../../service/constant';
 
 function FYSelect({
   placeholder = 'Financaial Year',
   size = 'small',
   suffixIcon = <CalendarOutlined />,
   style,
+  callBack,
   ...rest
 }) {
   const [FYears, setFYears] = useState([]);
@@ -23,7 +25,7 @@ function FYSelect({
 
   return (
     <Select
-      value={fYear}
+    //   value={fYear}
       placeholder={placeholder}
       allowClear
       size={size}
@@ -31,8 +33,25 @@ function FYSelect({
       suffixIcon={suffixIcon}
       style={{ ...style, width: '100%' }}
       {...rest}
+      onChange={(value, record) => {
+        // selectFYear(value);
+        console.time('timing');
+        let select = record ?? getFiscalYear('dates')
+        callBack({
+          closed: select?.closed,
+          start: formatDate(select.start),
+          end: formatDate(select.end),
+        });
+      }}
+    //   onSelect={(_, record) => {
+    //     let select = record ?? getFiscalYear('dates')
+    //     callBack({
+    //       start: formatDate(select.start),
+    //       end: formatDate(select.end),
+    //     });
+    //   }}
     />
   );
 }
 
-export default FYSelect
+export default FYSelect;

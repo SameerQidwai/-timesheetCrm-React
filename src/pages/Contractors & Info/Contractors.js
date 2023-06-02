@@ -35,7 +35,7 @@ import {
   tableTitleFilter,
 } from '../../components/Core/Table/TableFilter';
 import { generalDelete } from "../../service/delete-Api's";
-import { Tag_s } from '../../components/Core/Custom';
+import { Tag_s } from '../../components/Core/Custom/Index';
 
 const { Title } = Typography;
 

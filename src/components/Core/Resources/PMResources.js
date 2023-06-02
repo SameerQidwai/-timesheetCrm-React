@@ -10,7 +10,7 @@ import {
 } from '../../../service/constant';
 import { tableSorter } from '../Table/TableFilter';
 import { getHierarchy } from '../../../service/projects';
-import { Tag_s } from '../Custom';
+import { Tag_s } from '../Custom/Index';
 
 const milestoneColmuns = [
   {

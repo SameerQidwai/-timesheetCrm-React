@@ -28,7 +28,7 @@ import { getSchedules, } from '../../service/projects';
 import { getProjectDetail } from '../../service/Milestone-Apis';
 import { generalDelete } from "../../service/delete-Api's";
 import { tableSorter } from '../../components/Core/Table/TableFilter';
-import { Tag_s } from '../../components/Core/Custom';
+import { Tag_s } from '../../components/Core/Custom/Index';
 
 const { Item } = Descriptions;
 

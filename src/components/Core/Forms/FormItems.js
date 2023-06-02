@@ -247,7 +247,7 @@ class FormItems extends Component {
             ]}
             showSearch
             filterOption={(input, option) => {
-              //custom filter
+              //Custom/Index filter
               const labelKey = fieldNames?.label ?? 'label';
               const valueKey = fieldNames?.value ?? 'value';
 

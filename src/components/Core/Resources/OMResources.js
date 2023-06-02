@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import { formatDate, formatCurrency, localStore, formatFloat } from "../../../service/constant";
 import { tableSorter } from "../Table/TableFilter";
 import { getHierarchy } from "../../../service/opportunities";
-import { Tag_s } from "../Custom";
+import { Tag_s } from "../Custom/Index";
 
 const milestoneColmuns = [
     {

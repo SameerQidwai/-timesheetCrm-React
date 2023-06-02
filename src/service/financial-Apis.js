@@ -6,15 +6,13 @@ import moment from "moment"
 const url = `${Api}/reports`
 
 
-export const getWorkInHandForecast = (queryParam) => {
-    let {start, end} = getFiscalYear('dates')
+export const getWorkInHandForecast = (FY) => {
+    let {start, end} = FY??getFiscalYear('dates')
     return axios
       .get(
         `${url}/work-in-hand-forecast?fiscalYearStart=${start.format(
           'YYYY-MM-DD'
-        )}&fiscalYearEnd=${end.format('YYYY-MM-DD')}${
-          queryParam ? '&' + queryParam : ''
-        }`,
+        )}&fiscalYearEnd=${end.format('YYYY-MM-DD')}`,
         { headers: headers() }
       )
       .then((res) => {
@@ -32,11 +30,13 @@ export const getWorkInHandForecast = (queryParam) => {
       });
 };
 
-export const getSaveForecast = (queryParam) => {
-    let {start, end} = getFiscalYear('dates')
+export const getSaveForecast = (FY) => {
+    let {start, end} = FY??getFiscalYear('dates')
     return axios
       .get(
-        `${Api}/forecastReportLabel/`,
+        `${Api}/forecastReportLabel/getReport?fiscalYearStart=${start.format(
+          'YYYY-MM-DD'
+        )}&fiscalYearEnd=${end.format('YYYY-MM-DD')}`,
         { headers: headers() }
       )
       .then((res) => {
@@ -60,11 +60,14 @@ export const getSaveForecast = (queryParam) => {
       });
 };
 
-export const updateSaveForecast = (data, queryParam) => {
+export const updateSaveForecast = (data, FY) => {
   messageAlert.loading({ content: 'Updating Forecast', key: 1 });
+  let {start, end} = FY??getFiscalYear('dates')
     // let {start, end} = getFiscalYear('dates')
     return axios
-      .put(`${Api}/forecastReportLabel/updateReport/`, data, {
+      .put(`${Api}/forecastReportLabel/updateReport?fiscalYearStart=${start.format(
+        'YYYY-MM-DD'
+      )}&fiscalYearEnd=${end.format('YYYY-MM-DD')}`, data, {
         headers: headers(),
       })
       .then((res) => {
@@ -81,11 +84,13 @@ export const updateSaveForecast = (data, queryParam) => {
       });
 };
 
-export const getSaveBudget = (queryParam) => {
-  let {start, end} = getFiscalYear('dates')
+export const getSaveBudget = (FY) => {
+  let {start, end} = FY??getFiscalYear('dates')
   return axios
     .get(
-      `${Api}/budgetReportLabel/`,
+      `${Api}/budgetReportLabel?fiscalYearStart=${start.format(
+        'YYYY-MM-DD'
+      )}&fiscalYearEnd=${end.format('YYYY-MM-DD')}`,
       { headers: headers() }
     )
     .then((res) => {
@@ -130,9 +135,9 @@ export const updateSaveBudget = (data, queryParam) => {
       });
 };
 
-export const getSaveCashFlow = (queryParam) => {
+export const getSaveCashFlow = (FY) => {
   messageAlert.loading({ content: 'Calculating Cash Flow', key: 1 });
-  let {start, end} = getFiscalYear('dates')
+  let {start, end} = FY??getFiscalYear('dates')
   return axios
     .get(
       `${Api}/cashflowReportLabel/getReport`,

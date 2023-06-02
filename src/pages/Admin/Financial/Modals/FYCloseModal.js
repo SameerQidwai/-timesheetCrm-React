@@ -5,7 +5,7 @@ import { closingFY } from '../../../../service/financial-year-apis';
 import { ExclamationCircleOutlined } from '@ant-design/icons'; //Icons
 import '../styles.css';
 import { Link } from 'react-router-dom';
-import { Tag_s } from '../../../../components/Core/Custom';
+import { Tag_s } from '../../../../components/Core/Custom/Index';
 import ATable from '../../../../components/Core/Table/TableFilter';
 const { Step } = Steps;
 const { Title, Paragraph } = Typography
