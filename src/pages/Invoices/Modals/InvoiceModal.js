@@ -34,6 +34,7 @@ import {
   updateInvoice,
 } from '../../../service/invoice-Apis';
 import '../../styles/modal.css';
+import { entityProjects } from '../../../service/constant-Apis';
 const { Text } = Typography;
 
 const InvoiceModal = ({ visible, close, callBack }) => {
@@ -41,13 +42,14 @@ const InvoiceModal = ({ visible, close, callBack }) => {
   const [lineItems, setLineItems] = useState([{}]);
   const [totalAmounts, setTotalAmounts] = useState({});
   const [fields, setFields] = useState([
+    
     {
-      Placeholder: 'Organization',
-      rangeMin: true,
-      fieldCol: 12,
-      size: 'small',
-      type: 'Text',
-      // itemStyle:{marginBottom:'10px'},
+        Placeholder: 'Project',
+        // rangeMin: true,
+        fieldCol: 12,
+        size: 'small',
+        type: 'Text',
+        // itemStyle:{marginBottom:'10px'},
     },
     {
       Placeholder: 'Reference',
@@ -58,18 +60,18 @@ const InvoiceModal = ({ visible, close, callBack }) => {
       // itemStyle:{marginBottom:'10px'},
     },
     {
-      object: 'basic',
-      fieldCol: 12,
-      key: 'organization',
-      size: 'small',
-      rules: [{ required: true, message: 'type is Required' }],
-      data: [],
-      type: 'Select',
-      customValue: (_, option) => option,
-      getValueProps: (value)=>  ({value: value?.id}),
-      fieldNames: { value: 'id', label: 'name' },
-      onChange: (value) => getProjects(value),
-    },
+        object: 'basic',
+        fieldCol: 12,
+        key: 'projectId',
+        size: 'small',
+        rules: [{ required: true, message: 'type is Required' }],
+        data: [],
+        type: 'Select',
+        // fieldNames: { value: 'id', label: 'title' },
+        onChange: (value, record) => {
+          changeTypeFields(value, record);
+        },
+      },
     {
       object: 'basic',
       fieldCol: 12,
@@ -79,15 +81,14 @@ const InvoiceModal = ({ visible, close, callBack }) => {
       initialValue: null,
       type: 'Input',
     },
-
     {
-      Placeholder: 'Project',
-      // rangeMin: true,
-      fieldCol: 12,
-      size: 'small',
-      type: 'Text',
-      // itemStyle:{marginBottom:'10px'},
-    },
+        Placeholder: 'Months',
+        // rangeMin: true,
+        fieldCol: 12,
+        size: 'small',
+        type: 'Text',
+        // itemStyle:{marginBottom:'10px'},
+      },
     {
       Placeholder: 'Invoice Number',
       // rangeMin: true,
@@ -97,18 +98,18 @@ const InvoiceModal = ({ visible, close, callBack }) => {
       // itemStyle:{marginBottom:'10px'},
     },
     {
-      object: 'basic',
-      fieldCol: 12,
-      key: 'projectId',
-      size: 'small',
-      rules: [{ required: true, message: 'type is Required' }],
-      data: [],
-      type: 'Select',
-      fieldNames: { value: 'id', label: 'name' },
-      onChange: (value, record) => {
-        changeTypeFields(value, record);
+        object: 'basic',
+        fieldCol: 12,
+        key: 'months',
+        mode: 'month',
+        size: 'small',
+        disabled: true,
+        rules: [{ required: true, message: 'Month Are Required' }],
+        type: 'RangePicker',
+        onChange: () => {
+          invoiceData();
+        },
       },
-    },
     {
       object: 'basic',
       fieldCol: 12,
@@ -118,13 +119,13 @@ const InvoiceModal = ({ visible, close, callBack }) => {
       type: 'Input',
     },
     {
-      Placeholder: 'Months',
-      // rangeMin: true,
-      fieldCol: 12,
-      size: 'small',
-      type: 'Text',
-      // itemStyle:{marginBottom:'10px'},
-    },
+        Placeholder: 'Account',
+        // rangeMin: true,
+        fieldCol: 12,
+        size: 'small',
+        type: 'Text',
+        // itemStyle:{marginBottom:'10px'},
+      },
     {
       Placeholder: 'Issue Date',
       rangeMin: true,
@@ -134,18 +135,18 @@ const InvoiceModal = ({ visible, close, callBack }) => {
       // itemStyle:{marginBottom:'10px'},
     },
     {
-      object: 'basic',
-      fieldCol: 12,
-      key: 'months',
-      mode: 'month',
-      size: 'small',
-      disabled: true,
-      rules: [{ required: true, message: 'Month Are Required' }],
-      type: 'RangePicker',
-      onChange: () => {
-        invoiceData();
+        object: 'basic',
+        fieldCol: 12,
+        key: 'accountCode',
+        size: 'small',
+        rules: [{ required: true, message: 'type is Required' }],
+        data: [],
+        fieldNames: { value: 'code', label: 'name' },
+        type: 'Select',
+        onChange: () => {
+          setTableData();
+        },
       },
-    },
     {
       object: 'basic',
       fieldCol: 12,
@@ -156,12 +157,10 @@ const InvoiceModal = ({ visible, close, callBack }) => {
       fieldStyle: { width: '100%' },
     },
     {
-      Placeholder: 'Account',
-      // rangeMin: true,
-      fieldCol: 12,
-      size: 'small',
-      type: 'Text',
-      // itemStyle:{marginBottom:'10px'},
+        Placeholder: 'Tax Code',
+        fieldCol: 12,
+        size: 'small',
+        type: 'Text',
     },
     {
       Placeholder: 'Due Date',
@@ -170,40 +169,6 @@ const InvoiceModal = ({ visible, close, callBack }) => {
       size: 'small',
       type: 'Text',
       // itemStyle:{marginBottom:'10px'},
-    },
-    {
-      object: 'basic',
-      fieldCol: 12,
-      key: 'accountCode',
-      size: 'small',
-      rules: [{ required: true, message: 'type is Required' }],
-      data: [],
-      fieldNames: { value: 'code', label: 'name' },
-      type: 'Select',
-      onChange: () => {
-        setTableData();
-      },
-    },
-    {
-      object: 'basic',
-      fieldCol: 12,
-      key: 'dueDate',
-      size: 'small',
-      rules: [{ required: true, message: 'Date is Required' }],
-      type: 'DatePicker',
-      fieldStyle: { width: '100%' },
-    },
-    {
-      Placeholder: 'Tax Rates',
-      fieldCol: 12,
-      size: 'small',
-      type: 'Text',
-    },
-    {
-      Placeholder: 'Amounts Are',
-      fieldCol: 12,
-      size: 'small',
-      type: 'Text',
     },
     {
       object: 'basic',
@@ -217,6 +182,21 @@ const InvoiceModal = ({ visible, close, callBack }) => {
       onChange: (_, record) => {
         setTableData(undefined, record?.effectiveRate);
       },
+    },
+    {
+      object: 'basic',
+      fieldCol: 12,
+      key: 'dueDate',
+      size: 'small',
+      rules: [{ required: true, message: 'Date is Required' }],
+      type: 'DatePicker',
+      fieldStyle: { width: '100%' },
+    },
+    {
+      Placeholder: 'Amounts Are',
+      fieldCol: 24,
+      size: 'small',
+      type: 'Text',
     },
     {
       object: 'basic',
@@ -324,27 +304,27 @@ const InvoiceModal = ({ visible, close, callBack }) => {
       taxType: 'CanApplyToRevenue=true AND status=="ACTIVE"',
     };
     Promise.all([
-      getToolOrganizations('xero'), //call organization 
+      entityProjects('helpers/work?type=P', true), //call organization 
       getToolAssets('xero', toolsQuery), //get all assets belong from ttol
       visible !== true && getInvoice(visible.id), //for Edit api get Invoice
     ]).then((res) => {
       let tempFields = fields;
-      tempFields[2].data = res[0].success ? res[0].data : []; //set data in select box
-      tempFields[14].data = res[1].success ? res[1]?.data?.accounts ?? [] : [];//set data in select box
-      tempFields[18].data = res[1].success ? res[1]?.data?.taxRates ?? [] : []; //set data in select box
+      tempFields[2].data = res[0].success ? res[0].options : []; //set data in select box
+      tempFields[10].data = res[1].success ? res[1]?.data?.accounts ?? [] : [];//set data in select box
+      tempFields[14].data = res[1].success ? res[1]?.data?.taxRates ?? [] : []; //set data in select box
 
       //if getInvoice api hit
       if (res?.[2]?.success) {
         // give temporary data to project to avoid delay response
-        tempFields[6].data = [res[2]?.data?.project];
+        // tempFields[2].data = [res[2]?.data?.project];
 
         //testing project type for scheule or Range picker field select
         let projectType = res[2]?.data?.project?.type
 
         //If project is milestone change scheduleId
         if (projectType ===1){
-            tempFields[8] = projectTypeField[1]['label'];
-            tempFields[10] = projectTypeField[1]['field'];
+            tempFields[4] = projectTypeField[1]['label'];
+            tempFields[6] = projectTypeField[1]['field'];
             tempFields[10].data = res[2]?.data?.lineItems // set tempoary field change to this field
         }
         //setting form field
@@ -356,10 +336,12 @@ const InvoiceModal = ({ visible, close, callBack }) => {
         setTotalAmounts(res[2]?.data?.totalAmounts);
 
         // simultaneously getting real project data after avoiding delay response
-        getProjects(res[2]?.data?.organization, true)
+        // getProjects(res[2]?.data?.organization, true)
         if (projectType ===1){
             // simultaneously getting real project data after avoiding delay response if project is milestone
             invoiceData(1)
+        }else{
+          tempFields[6].disabled = true
         }
       }
 
@@ -368,38 +350,13 @@ const InvoiceModal = ({ visible, close, callBack }) => {
     });
   };
 
-  const getProjects = (orgId, noReset) => {
-    if (orgId) {
-      getOrgProjects(orgId).then((res) => {
-        if (res.success) {
-          let tempFields = fields;
-          tempFields[6].data = res.data;
-        //   tempFields[10].disabled = true;
-          setFields([...tempFields]);
-        }
-      });
-    }
-    if (!noReset){
-        let { basic } = form.getFieldsValue();
-        form.setFieldsValue({
-          basic: {
-            ...basic,
-            projectId: null,
-            months: [null, null],
-            scheduleId: null,
-          },
-        });
-        setTotalAmounts({})
-        setLineItems([{}]);
-    }
-  };
-
   const changeTypeFields = (value, record) => {
     let tempFields = fields;
     if (record) {
       let { type } = record;
-      tempFields[8] = projectTypeField[type]['label'];
-      tempFields[10] = projectTypeField[type]['field'];
+      console.log(type)
+      tempFields[4] = projectTypeField[type]['label'];
+      tempFields[6] = projectTypeField[type]['field'];
       setFields([...tempFields]); //change project fields based on type // projectTypeField
       setLineItems([{}]);
       if (type === 1) {
@@ -421,7 +378,7 @@ const InvoiceModal = ({ visible, close, callBack }) => {
         if (res.success) {
           if (type === 1) {
             let tempFields = fields;
-            tempFields[10].data = res.data; // if api called on milestone add schedule to select schedule
+            tempFields[6].data = res.data; // if api called on milestone add schedule to select schedule
             setFields([...tempFields]);
           } else {
             setTableData(res.data); // Else if api called for timebase (after selecting date range) //show data to table
