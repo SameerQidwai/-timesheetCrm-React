@@ -27,3 +27,7 @@
 .instructions-fy .ant-typography ul li.ps-note span{
     color: red
 }
+
+.fy-modal .ant-tag{
+    margin-right: 1px !important;
+}
