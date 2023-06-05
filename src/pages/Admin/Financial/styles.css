@@ -16,9 +16,14 @@
     padding-top: 10px
 }
 .instructions-fy{
-    padding-top: 2%
+    padding-top: 2%;
+    width: 60%
 }
 
 .instructions-fy .ant-typography ul li {
     padding-top: 10px
+}
+
+.instructions-fy .ant-typography ul li.ps-note span{
+    color: red
 }

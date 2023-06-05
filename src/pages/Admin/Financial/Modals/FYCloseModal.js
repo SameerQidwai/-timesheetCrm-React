@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, Steps, message, Spin, Typography } from 'antd';
+import { Modal, Steps, message, Spin, Typography, Col, Row } from 'antd';
 import { formatDate } from '../../../../service/constant';
 import { closingFY } from '../../../../service/financial-year-apis';
 import { ExclamationCircleOutlined } from '@ant-design/icons'; //Icons
@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 import { Tag_s } from '../../../../components/Core/Custom/Index';
 import ATable from '../../../../components/Core/Table/TableFilter';
 const { Step } = Steps;
-const { Title, Paragraph } = Typography
+const { Title, Paragraph } = Typography;
 
 const stepsInitial = [
   {
@@ -240,6 +240,12 @@ const leaveColumns = [
     key: 'endDate',
     render: (text) => formatDate(text, true, 'DD-MM-YYYY'),
   },
+  {
+    title: 'Status',
+    dataIndex: 'status',
+    key: 'status',
+    render: (text) => <Tag_s text={text}/>,
+  },
 ];
 const expenseColumns = [
   {
@@ -288,30 +294,57 @@ const expenseColumns = [
 
 const FYCloseModal = ({ visible, close, callBack }) => {
   const [loading, setLoading] = useState(true);
-  const [closeData, setCloseData] = useState([{
-    title: 'Instruction',
-    key: 0,
-    content: (
-      <div className='instructions-fy'>
-        <Title level={4}>
-          Closing Financial Year{' '}
-          {formatDate(visible.startDate, true, 'DD-MM-YYYY')}-
-          {formatDate(visible.endDate, true, 'DD-MM-YYYY')}
-        </Title>
-        <Paragraph>
+  const [closeData, setCloseData] = useState([
+    {
+      title: 'Instruction',
+      key: 0,
+      content: (
+        <div className="instructions-fy">
+          <Title level={4}>
+            Closing Financial Year
+            {formatDate(visible.startDate, true, 'DD-MM-YYYY')}-
+            {formatDate(visible.endDate, true, 'DD-MM-YYYY')}
+          </Title>
+          <Paragraph>
             <ul>
-              <li>Once FY is locked, undo is not possible</li>
-              <li>All project ending in closing FY will also be closed </li>
-              <li>All pending timesheet (submitted) requests will be rejected or freezed as per global settings </li>
-              <li>All pending leave (submitted) requests will be rejected or freezed as per global settings </li>
-              <li>All pending expsense (submitted) request will be rejected or freezed as per global settings </li>
-              <li>Leave requests spanning across closing fananical year will be broken down in to two requests</li>
-              <li>Employment contracts ending in closing Fy will be closed</li>
+              <li>
+                In Timewize, you may 'lock’ a financial year or reporting period
+                after you have completed reconciliations for that period. This
+                ensures the integrity of your data by preventing further changes
+                or entries in that period.
+              </li>
+              <li>
+                This process involves a scan of all entries to determine which
+                should be closed or frozen within the closing financial period.
+              </li>
+              <li>
+                Before completing the closure, review the "Auto reject
+                'Submitted' requests on FY Closing" setting in your Timewize
+                Admin Control Panel.
+              </li>
+              <li>
+                In the following steps, we will explain the impacts of the
+                financial period closure in more detail, allowing you to make
+                necessary adjustments.
+              </li>
+              <li>
+                At the end of the process and before you confirm the financial
+                period closure, Timewize will show you a final summary of all
+                changes that will be made following your adjustments.
+              </li>
+              <li className="ps-note">
+                <b>Please note:</b>
+                <span>
+                  Once complete, closing the financial period <b>cannot</b> be undone.
+                </span>
+              </li>
             </ul>
-        </Paragraph>
-      </div>
-    ),
-  },{}]);
+          </Paragraph>
+        </div>
+      ),
+    },
+    {},
+  ]);
   const [steps, setSteps] = useState(0);
 
   useEffect(() => {
@@ -340,43 +373,57 @@ const FYCloseModal = ({ visible, close, callBack }) => {
         } = data;
         // setCloseData(stepsInitial)
 
-        createSteps[0] = {
-          title: 'Instruction',
-          key: 0,
-          content: (
-            <div className='instructions-fy'>
-              <Title level={4}>
-                Closing Financial Year{' '}
-                {formatDate(visible.startDate, true, 'DD-MM-YYYY')}-
-                {formatDate(visible.endDate, true, 'DD-MM-YYYY')}
-              </Title>
-              <Paragraph>
-                  <ul>
-                    <li>Once FY is locked, undo is not possible</li>
-                    <li>All project ending in closing FY will also be closed </li>
-                    <li>All pending timesheet (submitted) requests will be rejected or freezed as per global settings </li>
-                    <li>All pending leave (submitted) requests will be rejected or freezed as per global settings </li>
-                    <li>All pending expsense (submitted) request will be rejected or freezed as per global settings </li>
-                    <li>Leave requests spanning across closing fananical year will be broken down in to two requests</li>
-                    <li>Employment contracts ending in closing Fy will be closed</li>
-                  </ul>
-              </Paragraph>
-            </div>
-          ),
-        };
+        createSteps[0] = closeData[0];
 
         createSteps[1] = {
           title: 'Project',
           key: 1,
           content: (
-            <ATable
-              rowKey="id"
-              sticky={true}
-              scroll={{ y: 'calc(100vh - 235px)' }}
-              columns={projectColumns}
-              dataSource={projects}
-              pagination={false}
-            />
+            <Row>
+              <Col span={18}>
+                <Paragraph>
+                  <ul>
+                    <li>
+                      The status of the following “Open” Projects with an End
+                      Date in the closing financial period will be changed to
+                      “Closed”.
+                    </li>
+                    <li>
+                      Users will <b>not</b> be able to create new Projects with
+                      Start and End dates within the closed financial period.
+                      <ul>
+                        <li>
+                          Make sure any projects that started the closing
+                          financial period for which work will continue in the
+                          new financial period have been created
+                        </li>
+                      </ul>
+                    </li>
+                    <li>
+                      Users will <b>not</b> be able to edit financial
+                      information about Projects within the financial period
+                      once closed.
+                    </li>
+                    <li>
+                      When you close the financial period, Timewize will make
+                      the following changes. Please make adjustments as
+                      necessary. You will have a chance to review the impacts
+                      once you’ve made your adjustments in the final step.
+                    </li>
+                  </ul>
+                </Paragraph>
+              </Col>
+              <Col span={24}>
+                <ATable
+                  rowKey="id"
+                  sticky={true}
+                  scroll={{ y: 'calc(100vh - 235px)' }}
+                  columns={projectColumns}
+                  dataSource={projects}
+                  pagination={false}
+                />
+              </Col>
+            </Row>
           ),
         };
 
@@ -384,14 +431,35 @@ const FYCloseModal = ({ visible, close, callBack }) => {
           title: 'Milestone',
           key: 2,
           content: (
-            <ATable
-              rowKey="id"
-              sticky={true}
-              scroll={{ y: 'calc(100vh - 235px)' }}
-              columns={milestoneColumns}
-              dataSource={milestones}
-              pagination={false}
-            />
+            <Row>
+              <Col span={18}>
+                <Paragraph>
+                  <ul>
+                    <li>
+                      The status of the following “Open” Milestones with an End
+                      Date in the closing financial period will be changed to
+                      “Closed”.
+                    </li>
+                    <li>
+                      When you close the financial period, Timewize will make
+                      the following changes. Please make adjustments as
+                      necessary. You will have a chance to review the impacts
+                      once you’ve made your adjustments in the final step.
+                    </li>
+                  </ul>
+                </Paragraph>
+              </Col>
+              <Col span={24}>
+                <ATable
+                  rowKey="id"
+                  sticky={true}
+                  scroll={{ y: 'calc(100vh - 235px)' }}
+                  columns={milestoneColumns}
+                  dataSource={milestones}
+                  pagination={false}
+                />
+              </Col>
+            </Row>
           ),
         };
 
@@ -399,14 +467,44 @@ const FYCloseModal = ({ visible, close, callBack }) => {
           title: 'Timesheet',
           key: 3,
           content: (
-            <ATable
-              rowKey="id"
-              sticky={true}
-              scroll={{ y: 'calc(100vh - 235px)' }}
-              columns={timesheetColumns}
-              dataSource={timesheets}
-              pagination={false}
-            />
+            <Row>
+              <Col span={18}>
+                <Paragraph>
+                  <ul>
+                    <li>
+                      All timesheets within the period with the status
+                      “Submitted” will be frozen or changed to “Rejected” in
+                      accordance with the “Auto reject” setting in the Admin
+                      Control Panel.
+                    </li>
+                    <li>
+                      Users may still upload documents to or export timesheets
+                      from a closed financial period.
+                    </li>
+                    <li>
+                      Users will <b>not</b> be able to create or edit timesheets
+                      in the financial period once closed.
+                    </li>
+                    <li>
+                      When you close the financial period, Timewize will make
+                      the following changes. Please make adjustments as
+                      necessary. You will have a chance to review the impacts
+                      once you’ve made your adjustments in the final step.
+                    </li>
+                  </ul>
+                </Paragraph>
+              </Col>
+              <Col span={24}>
+                <ATable
+                  rowKey="id"
+                  sticky={true}
+                  scroll={{ y: 'calc(100vh - 235px)' }}
+                  columns={timesheetColumns}
+                  dataSource={timesheets}
+                  pagination={false}
+                />
+              </Col>
+            </Row>
           ),
         };
 
@@ -414,14 +512,40 @@ const FYCloseModal = ({ visible, close, callBack }) => {
           title: 'Contracts',
           key: 4,
           content: (
-            <ATable
-              rowKey="id"
-              sticky={true}
-              scroll={{ y: 'calc(100vh - 235px)' }}
-              columns={contractColumns}
-              dataSource={contracts}
-              pagination={false}
-            />
+            <Row>
+              <Col span={18}>
+                <Paragraph>
+                  <ul>
+                    <li>
+                      The status of “Open” Employment Contracts with an End Date
+                      in the designated financial period will be changed to
+                      “Closed”.
+                    </li>
+                    <li>
+                      Users will <b>not</b> be able to create or edit “Closed”
+                      contracts with Start and End dates within the financial
+                      period once closed.
+                    </li>
+                    <li>
+                      When you close the financial period, Timewize will make
+                      the following changes. Please make adjustments as
+                      necessary. You will have a chance to review the impacts
+                      once you’ve made your adjustments in the final step.
+                    </li>
+                  </ul>
+                </Paragraph>
+              </Col>
+              <Col span={24}>
+                <ATable
+                  rowKey="id"
+                  sticky={true}
+                  scroll={{ y: 'calc(100vh - 235px)' }}
+                  columns={contractColumns}
+                  dataSource={contracts}
+                  pagination={false}
+                />
+              </Col>
+            </Row>
           ),
         };
 
@@ -429,14 +553,55 @@ const FYCloseModal = ({ visible, close, callBack }) => {
           title: 'Leave',
           key: 5,
           content: (
-            <ATable
-              rowKey="id"
-              sticky={true}
-              scroll={{ y: 'calc(100vh - 235px)' }}
-              columns={leaveColumns}
-              dataSource={leaveRequests}
-              pagination={false}
-            />
+            <Row>
+              <Col span={18}>
+                <Paragraph>
+                  <ul>
+                    <li>
+                      All pending leave requests with the status “Submitted”
+                      will be frozen or changed to “Rejected” in accordance with
+                      the “Auto reject” setting in the Admin Control Panel.
+                    </li>
+                    <li>
+                      If a leave request with the status “Submitted” spans the
+                      closing financial period and an open financial year, it
+                      will be split into two requests:
+                      <ul>
+                        <li>
+                          The request in the closing financial period will be
+                          rejected or frozen as per the “Auto reject” setting in
+                          the Admin Control Panel.
+                        </li>
+                        <li>
+                          The request in the open financial period will keep the
+                          status “Submitted”.
+                        </li>
+                      </ul>
+                    </li>
+                    <li>
+                      Users will <b>not</b> be able to create or edit leave requests in
+                      the financial period once closed.
+                    </li>
+                    <li>
+                      When you close the financial period, Timewize will make
+                      the following changes. Please make adjustments as
+                      necessary. You will have a chance to review all changes
+                      once you’ve made your adjustments in the final step.
+                    </li>
+                  </ul>
+                </Paragraph>
+              </Col>
+              <Col span={24}>
+                <ATable
+                  rowKey="id"
+                  sticky={true}
+                  scroll={{ y: 'calc(100vh - 235px)' }}
+                  columns={leaveColumns}
+                  dataSource={leaveRequests}
+                  pagination={false}
+                />
+              </Col>
+            </Row>
           ),
         };
 
@@ -444,14 +609,43 @@ const FYCloseModal = ({ visible, close, callBack }) => {
           title: 'Expense',
           key: 6,
           content: (
-            <ATable
-              rowKey="id"
-              sticky={true}
-              scroll={{ y: 'calc(100vh - 235px)' }}
-              columns={expenseColumns}
-              dataSource={expenseSheets}
-              pagination={false}
-            />
+            <Row>
+              <Col span={18}>
+                <Paragraph>
+                  <ul>
+                    <li>
+                      All pending Expense Sheets within the period with the
+                      status “Submitted” will be rejected or frozen as per the
+                      “Auto reject” setting in the Admin Control Panel.
+                    </li>
+                    <li>
+                      Expense Items (the entries that users group together and
+                      submit as an Expense Sheet) will <b>not</b> be affected.
+                    </li>
+                    <li>
+                      Users will <b>not</b> be able to create or edit Expense
+                      Sheets in the financial period once closed.
+                    </li>
+                    <li>
+                      When you close the financial period, Timewize will make
+                      the following changes. Please make adjustments as
+                      necessary. You will have a chance to review all changes
+                      once you’ve made your adjustments in the final step.
+                    </li>
+                  </ul>
+                </Paragraph>
+              </Col>
+              <Col span={24}>
+                <ATable
+                  rowKey="id"
+                  sticky={true}
+                  scroll={{ y: 'calc(100vh - 235px)' }}
+                  columns={expenseColumns}
+                  dataSource={expenseSheets}
+                  pagination={false}
+                />
+              </Col>
+            </Row>
           ),
         };
 
@@ -496,7 +690,7 @@ const FYCloseModal = ({ visible, close, callBack }) => {
     <Modal
       title={
         <span>
-          <ExclamationCircleOutlined /> Do you wish to close "{visible.label}"{' '}
+          <ExclamationCircleOutlined /> Do you wish to close "{visible.label}"
           <b>
             ({formatDate(visible.startDate, true, 'DD-MM-YYYY')}) - (
             {formatDate(visible.endDate, true, 'DD-MM-YYYY')})
@@ -505,39 +699,48 @@ const FYCloseModal = ({ visible, close, callBack }) => {
       }
       visible={visible}
       okButtonProps={{ danger: cond1, loading }}
-      cancelButtonProps={{ loading }}
+      cancelButtonProps={{ loading, id: 'discardButton' }}
       okText={cond1 ? 'CLOSE FY' : 'Next'}
       cancelText={cond2 ? 'Prev' : 'Cancel'}
       onOk={() => {
         if (cond1) {
           onOkay();
         } else {
+          let calll = document?.getElementsByClassName('ant-modal-body')?.[0]?.scrollTo(0, 0)
+          calll = document?.getElementsByClassName('ant-table-body')?.[0]?.scrollTo(0, 0)
           setSteps(steps + 1);
         }
       }}
-      onCancel={() => {
-        if (cond2) {
-          setSteps(steps - 1);
+      onCancel={(e) => {
+        if (e.currentTarget.id === 'discardButton') {
+          if (cond2) {
+            let calll = document?.getElementsByClassName('ant-modal-body')[0]?.scrollTo(0, 0)
+            calll = document?.getElementsByClassName('ant-table-body')[0]?.scrollTo(0, 0)
+            setSteps(steps - 1);
+          } else {
+            close();
+          }
         } else {
           close();
         }
       }}
       className="fy-modal"
+      destroyOnClose
       // onCancel={close}
     >
-        <div>
-          <Steps current={steps} items={stepsInitial} size="small">
-            {closeData.map((item, index) => (
-              <Step key={index} title={item.title} />
-            ))}
-          </Steps>
-        </div>
-        <div className="steps-content">
-          {closeData?.[steps]?.content && closeData[steps].content}
-        </div>
-        <div style={{margin: 'auto', width:1}}>
-          <Spin spinning={loading} size="large"/>
-        </div>
+      <div>
+        <Steps current={steps} items={stepsInitial} size="small">
+          {closeData.map((item, index) => (
+            <Step key={index} title={item.title} />
+          ))}
+        </Steps>
+      </div>
+      <div className="steps-content">
+        {closeData?.[steps]?.content && closeData[steps].content}
+      </div>
+      <div style={{ margin: 'auto', width: 1 }}>
+        <Spin spinning={loading} size="large" />
+      </div>
     </Modal>
   );
 };
