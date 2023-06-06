@@ -392,6 +392,7 @@ const FYCloseModal = ({ visible, close, callBack }) => {
           leaveRequestBalances = '',
           leaveRequests = [],
         } = data;
+
         // setCloseData(stepsInitial)
 
         createSteps[0] = closeData[0];
@@ -412,7 +413,7 @@ const FYCloseModal = ({ visible, close, callBack }) => {
                         objName={'O_PHASE'}
                       />{' '}
                       Projects with an End Date in the closing financial period
-                      will be changed to
+                      will be changed to{' '}
                       <Tag_s
                         text={'false'}
                         colorName={'O_PHASE_COLORS'}
@@ -446,6 +447,8 @@ const FYCloseModal = ({ visible, close, callBack }) => {
               <Col span={24}>
                 <ATable
                   rowKey="id"
+                  appendIndex={true}
+                  id="projects"
                   sticky={true}
                   scroll={{ y: 'calc(100vh - 235px)' }}
                   columns={projectColumns}
@@ -473,7 +476,7 @@ const FYCloseModal = ({ visible, close, callBack }) => {
                         objName={'O_PHASE'}
                       />{' '}
                       Milestones with an End Date in the closing financial
-                      period will be changed to
+                      period will be changed to{' '}
                       <Tag_s
                         text={'false'}
                         colorName={'O_PHASE_COLORS'}
@@ -494,7 +497,9 @@ const FYCloseModal = ({ visible, close, callBack }) => {
               </Col>
               <Col span={24}>
                 <ATable
+                  id="milestones"
                   rowKey="id"
+                  appendIndex={true}
                   sticky={true}
                   scroll={{ y: 'calc(100vh - 235px)' }}
                   columns={milestoneColumns}
@@ -538,7 +543,9 @@ const FYCloseModal = ({ visible, close, callBack }) => {
               </Col>
               <Col span={24}>
                 <ATable
+                  id="timesheet"
                   rowKey="id"
+                  appendIndex={true}
                   sticky={true}
                   scroll={{ y: 'calc(100vh - 235px)' }}
                   columns={timesheetColumns}
@@ -566,7 +573,7 @@ const FYCloseModal = ({ visible, close, callBack }) => {
                         objName={'O_PHASE'}
                       />{' '}
                       Employment Contracts with an End Date in the designated
-                      financial period will be changed to
+                      financial period will be changed to{' '}
                       <Tag_s
                         text={'false'}
                         colorName={'O_PHASE_COLORS'}
@@ -593,7 +600,9 @@ const FYCloseModal = ({ visible, close, callBack }) => {
               </Col>
               <Col span={24}>
                 <ATable
+                  id="contracts"
                   rowKey="id"
+                  appendIndex={true}
                   sticky={true}
                   scroll={{ y: 'calc(100vh - 235px)' }}
                   columns={contractColumns}
@@ -648,7 +657,9 @@ const FYCloseModal = ({ visible, close, callBack }) => {
               </Col>
               <Col span={24}>
                 <ATable
+                  id="leaves"
                   rowKey="id"
+                  appendIndex={true}
                   sticky={true}
                   scroll={{ y: 'calc(100vh - 235px)' }}
                   columns={leaveColumns}
@@ -691,7 +702,9 @@ const FYCloseModal = ({ visible, close, callBack }) => {
               </Col>
               <Col span={24}>
                 <ATable
+                  id="expsneses"
                   rowKey="id"
+                  appendIndex={true}
                   sticky={true}
                   scroll={{ y: 'calc(100vh - 235px)' }}
                   columns={expenseColumns}
@@ -830,7 +843,7 @@ const FYCloseModal = ({ visible, close, callBack }) => {
         </Steps>
       </div>
       <div className="steps-content">
-        {closeData?.[steps]?.content && closeData[steps].content}
+        {closeData?.[steps]?.content}
       </div>
       <div style={{ margin: 'auto', width: 1 }}>
         <Spin spinning={loading} size="large" />
