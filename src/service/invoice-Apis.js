@@ -28,7 +28,7 @@ export const getInvoiceData = (projectId, startDate, endDate) => {
       jwtExpired(message);
       // messageAlert.success({ content: message, key: 1 });
       setToken(res?.headers?.authorization);
-      return { success, data };
+      return { success, ...data };
     })
     .catch((err) => {
       return apiErrorRes(err, 1);

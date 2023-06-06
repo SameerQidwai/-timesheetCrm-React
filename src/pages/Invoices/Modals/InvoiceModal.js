@@ -40,6 +40,7 @@ const { Text } = Typography;
 const InvoiceModal = ({ visible, close, callBack }) => {
   const [form] = Form.useForm();
   const [lineItems, setLineItems] = useState([{}]);
+  const [attachments, seAttachments] = useState([]);
   const [totalAmounts, setTotalAmounts] = useState({});
   const [fields, setFields] = useState([
     
@@ -365,6 +366,7 @@ const InvoiceModal = ({ visible, close, callBack }) => {
       setFields([...tempFields]); //change project fields based on type // projectTypeField
       setLineItems([{}]);
       let { basic } = form.getFieldsValue();
+      console.log(form, basic)
       form.setFieldsValue({
         basic: {
           ...basic,
@@ -385,16 +387,17 @@ const InvoiceModal = ({ visible, close, callBack }) => {
       //else wait for date range for timebase
       getInvoiceData(
         projectId,
-        formatDate(months?.[0], true),
-        formatDate(months?.[1], true)
+        formatDate(months?.[0], true, 'YYYY-MM-DD'),
+        formatDate(months?.[1], true, 'YYYY-MM-DD')
       ).then((res) => {
         if (res.success) {
           if (type === 1) {
             let tempFields = fields;
-            tempFields[6].data = res.data; // if api called on milestone add schedule to select schedule
+            tempFields[6].data = res.resources; // if api called on milestone add schedule to select schedule
             setFields([...tempFields]);
           } else {
-            setTableData(res.data); // Else if api called for timebase (after selecting date range) //show data to table
+            setTableData(res.resources); // Else if api called for timebase (after selecting date range) //show data to table
+            seAttachments(res.attachments??[])
           }
         }
       });
@@ -487,9 +490,35 @@ const InvoiceModal = ({ visible, close, callBack }) => {
       >
         <FormItems FormFields={fields} />
       </Form>
-      <Row justify="end" gutter={[0, 20]} style={{ marginTop: 20 }}>
+      <Row justify="space-between" gutter={[0, 20]} style={{ marginTop: 20 }}>
         <Col span={24}>
           <ATable rowKey="id" dataSource={lineItems} columns={columns} />
+        </Col>
+        <Col span={10}>
+          <Row justify="space-between">
+            <Col>File name</Col>
+            <Col>Send with invoice</Col>
+          </Row>
+          <Upload
+            // customRequest={(option) => handleUpload(option, 'tfnFile')}
+            listType="text"
+            // maxCount={1}
+            fileList={attachments}
+            name={`TFN Declaration`}
+            // onRemove={() => onRemove('tfnFile')}
+            itemRender={(originNode, file, fileList, actions) => (
+              <Row justify="space-between" align='center'>
+                <Col span={18}>{originNode}</Col>
+                <Col span={3}>✅</Col>
+              </Row>
+            )}
+          >
+            {/* {files.tfnFile.length < 1 && (
+              <Button icon={<UploadOutlined />} loading={files.tfnFile_loading}>
+                Upload TFN Declaration
+              </Button>
+            )} */}
+          </Upload>
         </Col>
         <Col span={10}>
           <Descriptions
