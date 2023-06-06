@@ -220,29 +220,34 @@ const InvoiceModal = ({ visible, close, callBack }) => {
       title: 'Description',
       dataIndex: 'description',
       key: 'description',
+      width: '40%'
     },
     {
-      title: 'Qty.',
-      dataIndex: 'quantity',
-      key: 'quantity',
-      render: (value) => formatFloat(value),
+      title: 'Hours',
+      dataIndex: 'hours',
+      key: 'hours',
+      align: 'right',
+      render: (value) => value === '-' ?value :formatFloat(value),
     },
     {
-      title: 'Price',
+      title: 'Sell Rate',
       dataIndex: 'unitAmount',
       key: 'unitAmount',
+      align: 'right',
       render: (value) => formatCurrency(value),
     },
     {
       title: 'Tax Amount',
       dataIndex: 'taxAmount',
       key: 'taxAmount',
+      align: 'right',
       render: (value) => formatCurrency(value),
     },
     {
-      title: 'Amount.',
+      title: 'Amount',
       dataIndex: 'lineAmount',
       key: 'lineAmount',
+      align: 'right',
       render: (value) => formatCurrency(value),
     },
   ];
@@ -359,6 +364,14 @@ const InvoiceModal = ({ visible, close, callBack }) => {
       tempFields[6] = projectTypeField[type]['field'];
       setFields([...tempFields]); //change project fields based on type // projectTypeField
       setLineItems([{}]);
+      let { basic } = form.getFieldsValue();
+      form.setFieldsValue({
+        basic: {
+          ...basic,
+          months: [null, null],
+          scheduleId: null,
+        },
+      });
       if (type === 1) {
         invoiceData(type); // if project is milestone call the api
       }
@@ -368,12 +381,12 @@ const InvoiceModal = ({ visible, close, callBack }) => {
   const invoiceData = (type) => {
     let { projectId, months = [] } = form.getFieldsValue().basic;
     //check if project type is milestone call api
-    if (type || (months[0] && months[1])) {
+    if (type || (months?.[0] && months?.[1])) {
       //else wait for date range for timebase
       getInvoiceData(
         projectId,
-        formatDate(months[0], true),
-        formatDate(months[1], true)
+        formatDate(months?.[0], true),
+        formatDate(months?.[1], true)
       ).then((res) => {
         if (res.success) {
           if (type === 1) {
@@ -488,10 +501,10 @@ const InvoiceModal = ({ visible, close, callBack }) => {
               color: '#404756',
             }}
           >
-            <Descriptions.Item label="subTotal">
+            <Descriptions.Item label="Subtotal">
               {formatCurrency(totalAmounts.subTotal)}
             </Descriptions.Item>
-            <Descriptions.Item label="Total GST">
+            <Descriptions.Item label="GST">
               {formatCurrency(totalAmounts.totalTax)}
             </Descriptions.Item>
             <Descriptions.Item style={{ borderTop: '1px solid' }} />

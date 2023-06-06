@@ -11,7 +11,7 @@ export const getInvoices = () => {
     .then((res) => {
       const { success, message,data } = res?.data;
       jwtExpired(message);
-      messageAlert.success({ content: message, key: 1 });
+      messageAlert.destroy(1)
       setToken(res?.headers?.authorization);
       return { success, data };
     })
@@ -66,7 +66,6 @@ export const getInvoice = (id) => {
         data['issueDate'] = formatDate(data['issueDate'])
         // data['organization'] = data['organizationId']
       }
-      console.log(data)
       return { success, data };
     })
     .catch((err) => {

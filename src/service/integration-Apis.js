@@ -76,13 +76,13 @@ export const getToolOrganizations = (toolName) => {
 };
 
 export const getToolAssets = (toolName, data) => {
-  messageAlert.loading({ content: 'Loading...', key: 1 });
+  messageAlert.loading({ content: 'Loading...', key: `${toolName}/tool-assets`, duration: 0});
   return axios
     .post(`${url}/${toolName}/tool-assets`,data, { headers: headers() })
     .then((res) => {
       const { success, message,data } = res?.data;
       jwtExpired(message);
-      messageAlert.success({ content: message, key: 1 });
+      messageAlert.destroy(`${toolName}/tool-assets`)
       setToken(res?.headers?.authorization);
       return { success, data};
     })
