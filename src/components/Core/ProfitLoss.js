@@ -47,10 +47,10 @@ class ProfitLoss extends Component {
     };
   }
   componentDidMount = () => {
-    this.getRenderData()
+    this.getRenderData();
   };
 
-  getRenderData = () =>{
+  getRenderData = () => {
     const { parent, id } = this.props;
     const { fiscalYear } = this.state;
     if (parent === 'P') {
@@ -80,7 +80,7 @@ class ProfitLoss extends Component {
         }
       });
     }
-  }
+  };
 
   getWeekdays = (startDate, endDate, holidays) => {
     return formatDate(new Date()).isoWeekdayCalc({
@@ -443,11 +443,29 @@ class ProfitLoss extends Component {
         </Col>
         <Col xs={10} sm={10} md={8} lg={6} style={{ marginLeft: 'auto' }}>
           <FYSelect
+            
             callBack={({ start, end }) => {
-                data[0] = { key: 'W', label: 'Working Days', total: 0 }
-              this.setState({fiscalYear: { start, end, }, data}, ()=> {
-                this.getRenderData();
-            });
+              this.setState(
+                {
+                  fiscalYear: { start, end },
+                  data: [
+                    { key: 'W', label: 'Working Days', total: 0 },
+                    {
+                      key: 'R',
+                      label: `Revenue \n ${
+                        props['parent'] === 'O' ? '(discounted value)' : ''
+                      }`,
+                      total: 0,
+                    },
+                    { key: 'C', label: 'Cost of sale/services', total: 0 },
+                    { key: '$', label: 'CM $', total: 0 },
+                    { key: '%', label: 'CM %', total: 0 },
+                  ],
+                },
+                () => {
+                  this.getRenderData();
+                }
+              );
             }}
           />
         </Col>

@@ -10,6 +10,7 @@ function FYSelect({
   suffixIcon = <CalendarOutlined />,
   style,
   callBack,
+  defaultValue,
   ...rest
 }) {
   const [FYears, setFYears] = useState([]);
@@ -18,6 +19,9 @@ function FYSelect({
   useEffect(() => {
     getAllFY(true).then((res) => {
       if (res.success) {
+        if (defaultValue){
+          selectFYear(res.option?.[0]??null)
+        }
         setFYears(res.option);
       }
     });
@@ -25,7 +29,7 @@ function FYSelect({
 
   return (
     <Select
-    //   value={fYear}
+      value={fYear}
       placeholder={placeholder}
       allowClear
       size={size}
@@ -34,8 +38,7 @@ function FYSelect({
       style={{ ...style, width: '100%' }}
       {...rest}
       onChange={(value, record) => {
-        // selectFYear(value);
-        console.time('timing');
+        selectFYear(value);
         let select = record ?? getFiscalYear('dates')
         callBack({
           closed: select?.closed,
