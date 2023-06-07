@@ -17,6 +17,7 @@ import '../styles.css';
 import { Link } from 'react-router-dom';
 import { Tag_s } from '../../../../components/Core/Custom/Index';
 import ATable from '../../../../components/Core/Table/TableFilter';
+import moment from 'moment'
 const { Step } = Steps;
 const { Title, Paragraph } = Typography;
 
@@ -115,13 +116,11 @@ const milestoneColumns = [
     title: 'Start Date',
     dataIndex: 'startDate',
     key: 'startDate',
-    render: (text) => formatDate(text, true, 'DD-MM-YYYY'),
   },
   {
     title: 'End Date',
     dataIndex: 'endDate',
     key: 'endDate',
-    render: (text) => formatDate(text, true, 'DD-MM-YYYY'),
   },
 ];
 const timesheetColumns = [
@@ -161,7 +160,7 @@ const timesheetColumns = [
     title: 'Month',
     dataIndex: 'startDate',
     key: 'startDate',
-    render: (text) => formatDate(text).format('MMM'),
+    render: (text) => formatDate(text).format('MMMM'),
   },
   {
     title: 'Status',
@@ -377,7 +376,7 @@ const FYCloseModal = ({ visible, close, callBack }) => {
   }, []);
 
   const getData = async () => {
-    try {
+    // try {
       message.loading({ content: 'Getting Information', key: 1 }, 0);
       let { success, data } = await closingFY(visible.id);
       setLoading(false);
@@ -393,6 +392,16 @@ const FYCloseModal = ({ visible, close, callBack }) => {
           leaveRequests = [],
         } = data;
 
+        let tempContract = []
+        // debugger
+        contracts.forEach(contract=>{
+          if (contract.endDate ){
+            if(moment(contract.endDate).isSameOrBefore(formatDate(visible.endDate), 'day')){
+              tempContract.push(contract) 
+            }
+          }
+        })
+        contracts = tempContract
         // setCloseData(stepsInitial)
 
         createSteps[0] = closeData[0];
@@ -718,9 +727,9 @@ const FYCloseModal = ({ visible, close, callBack }) => {
 
         setCloseData(createSteps);
       }
-    } catch {
-      console.log('this action cant be perform');
-    }
+    // } catch {
+    //   console.log('this action cant be perform');
+    // }
   };
 
   const onOkay = () => {
