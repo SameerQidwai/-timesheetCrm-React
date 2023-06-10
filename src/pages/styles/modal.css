@@ -13,3 +13,9 @@
 .modal-top .ant-modal-content {
     max-height: 98vh !important
 }
+
+.invoice-upload div.ant-upload-list{
+    max-height: 120px !important;
+    overflow-y: scroll !important;
+    position: relative !important;
+}

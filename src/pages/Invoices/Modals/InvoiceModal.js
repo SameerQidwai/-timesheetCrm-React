@@ -449,6 +449,10 @@ const InvoiceModal = ({ visible, close, callBack }) => {
         dueDate: formatDate(formData.dueDate, true),
         issueDate: formatDate(formData.issueDate, true),
         lineItems,
+        attachments: attachments.map(file=>{
+          file.includeOnline =  true;
+          return file
+        })
       };
       console.log(formData)
       if (visible === true){
@@ -494,14 +498,16 @@ const InvoiceModal = ({ visible, close, callBack }) => {
         <Col span={24}>
           <ATable rowKey="id" dataSource={lineItems} columns={columns} />
         </Col>
-        <Col span={10}>
+        <Col span={10} style={{maxWidth: 300}}>
           <Row justify="space-between">
             <Col>File name</Col>
             <Col>Send with invoice</Col>
           </Row>
           <Upload
             // customRequest={(option) => handleUpload(option, 'tfnFile')}
+            style={{maxHeight: 120, position: 'relative', overflowY: 'scroll'}}
             listType="text"
+            className="invoice-upload"
             // maxCount={1}
             fileList={attachments}
             name={`TFN Declaration`}
