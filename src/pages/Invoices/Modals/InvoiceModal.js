@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
+  Checkbox,
   Col,
   DatePicker,
   Descriptions,
@@ -42,8 +43,7 @@ const InvoiceModal = ({ visible, close, callBack }) => {
   const [lineItems, setLineItems] = useState([{}]);
   const [attachments, seAttachments] = useState([]);
   const [totalAmounts, setTotalAmounts] = useState({});
-  const [fields, setFields] = useState([
-    
+  const [fields, setFields] = useState([ 
     {
         Placeholder: 'Project',
         // rangeMin: true,
@@ -329,9 +329,9 @@ const InvoiceModal = ({ visible, close, callBack }) => {
 
         //If project is milestone change scheduleId
         if (projectType ===1){
-            tempFields[4] = projectTypeField[1]['label'];
-            tempFields[6] = projectTypeField[1]['field'];
-            tempFields[10].data = res[2]?.data?.lineItems // set tempoary field change to this field
+          tempFields[4] = projectTypeField[1]['label'];
+          tempFields[6] = projectTypeField[1]['field'];
+          tempFields[10].data = res[2]?.data?.lineItems // set tempoary field change to this field
         }
         //setting form field
         form.setFieldsValue({ basic: res[2]?.data });
@@ -340,7 +340,7 @@ const InvoiceModal = ({ visible, close, callBack }) => {
 
         //setting total amount to show below table
         setTotalAmounts(res[2]?.data?.totalAmounts);
-
+        seAttachments(res[2]?.data?.attachments??[])
         // simultaneously getting real project data after avoiding delay response
         // getProjects(res[2]?.data?.organization, true)
         if (projectType ===1){
@@ -441,7 +441,7 @@ const InvoiceModal = ({ visible, close, callBack }) => {
 
   // on submit
   const onFinish = ({basic: formData}) => {
-    if (lineItems?.[0]?.unitAmount) {
+    if (Object.keys(lineItems?.[0]).length !== 0) {
       let data = {
         ...formData,
         startDate: formatDate(formData['months']?.[0], true),
@@ -449,10 +449,7 @@ const InvoiceModal = ({ visible, close, callBack }) => {
         dueDate: formatDate(formData.dueDate, true),
         issueDate: formatDate(formData.issueDate, true),
         lineItems,
-        attachments: attachments.map(file=>{
-          file.includeOnline =  true;
-          return file
-        })
+        attachments,
       };
       console.log(formData)
       if (visible === true){
@@ -472,6 +469,13 @@ const InvoiceModal = ({ visible, close, callBack }) => {
       message.error('Empty Invoice Not Allowed', 3);
     }
   };
+
+  const selectFiles=(key, fileObj) => {
+    let index = attachments.findIndex(file=> file.fileId === fileObj.fileId)
+    let tempAttachment =attachments
+    tempAttachment[index][key] = !tempAttachment[index][key]
+    seAttachments([...tempAttachment])
+  }
 
   return (
     <Modal
@@ -498,14 +502,19 @@ const InvoiceModal = ({ visible, close, callBack }) => {
         <Col span={24}>
           <ATable rowKey="id" dataSource={lineItems} columns={columns} />
         </Col>
-        <Col span={10} style={{maxWidth: 300}}>
+        <Col span={10}>
           <Row justify="space-between">
-            <Col>File name</Col>
-            <Col>Send with invoice</Col>
+            <Col span={13}>File name</Col>
+            <Col >Send</Col>
+            <Col style={{marginRight: 10}}>Attach</Col>
           </Row>
           <Upload
             // customRequest={(option) => handleUpload(option, 'tfnFile')}
-            style={{maxHeight: 120, position: 'relative', overflowY: 'scroll'}}
+            style={{
+              maxHeight: 120,
+              position: 'relative',
+              overflowY: 'scroll',
+            }}
             listType="text"
             className="invoice-upload"
             // maxCount={1}
@@ -513,9 +522,21 @@ const InvoiceModal = ({ visible, close, callBack }) => {
             name={`TFN Declaration`}
             // onRemove={() => onRemove('tfnFile')}
             itemRender={(originNode, file, fileList, actions) => (
-              <Row justify="space-between" align='center'>
-                <Col span={18}>{originNode}</Col>
-                <Col span={3}>✅</Col>
+              <Row justify="space-between" align="center" key={file.fileId}>
+                <Col span={13}>{originNode}</Col>
+                <Col style={{textAlign: 'right'}}>
+                  <Checkbox
+                    checked={file.includeOnline}
+                    disabled={!file.attachXero}
+                    onChange={()=>selectFiles('includeOnline', file)}
+                  />
+                </Col>
+                <Col style={{textAlign: 'center', marginRight:10}}>
+                  <Checkbox
+                    checked={file.attachXero}
+                    onChange={()=>selectFiles('attachXero', file)}
+                  />
+                </Col>
               </Row>
             )}
           >
