@@ -114,13 +114,13 @@ const EditableCell = ({
 
 function WorkInHand() {
   const [form] = Form.useForm();
-  let { start: currFYStart, end: currFYEnd } = getFiscalYear('dates');
-  const [year, setYear] = useState({
-    start: currFYStart,
-    end: currFYEnd,
-    fiscal: moment(currFYEnd).format('[FY]YY'),
-    month: moment().subtract(1, 'month').endOf('month'),
-  });
+  // let { start: currFYStart, end: currFYEnd } = getFiscalYear('dates');
+  // const [year, setYear] = useState({
+  //   start: currFYStart,
+  //   end: currFYEnd,
+  //   fiscal: moment(currFYEnd).format('[FY]YY'),
+  // });
+  const [year, setYear] = useState(null);
   const [dataSource, setDataSource] = useState([]);
   const [incomeTaxRates, setIncomeTaxRates] = useState(undefined);
 
@@ -145,32 +145,43 @@ function WorkInHand() {
       fixed: 'left',
     },
     {
-      title: `${year.fiscal} Forecast`,
+      title: `Forecast`,
       children: [
         {
           title: 'Revenue AU$',
           children: [],
         },
       ],
-    },
+    }
   ]);
 
   useEffect(() => {
-    creatingCol();
-    console.timeEnd('timing');
-    Promise.all([getSaveForecast(year), getWorkInHandForecast(year)]).then(
-      (res) => {
-        let saveForecast = res[0].success ? res[0].data : {};
-        let forecast = res[1].success ? res[1].data : {};
-        structureData(forecast, saveForecast);
-        setIncomeTaxRates(forecast.INCOME_TAX_RATES ?? {});
-        form.setFieldsValue(saveForecast);
-      }
-    );
+    if (year){
+      creatingCol();
+      console.timeEnd('timing');
+      Promise.all([getSaveForecast(year), getWorkInHandForecast(year)]).then(
+        (res) => {
+          let saveForecast = res[0].success ? res[0].data : {};
+          let forecast = res[1].success ? res[1].data : {};
+          structureData(forecast, saveForecast);
+          setIncomeTaxRates(forecast.INCOME_TAX_RATES ?? {});
+          form.setFieldsValue(saveForecast);
+        }
+      );
+    }
   }, [year]);
 
   const creatingCol = () => {
     let newColumns = [...columns];
+    newColumns[1] = {
+      title: `${year?.fiscal} Forecast`,
+      children: [
+        {
+          title: 'Revenue AU$',
+          children: [],
+        },
+      ],
+    }; 
     let monthColumns = [
       monthCol({
         year: 'YTD',
@@ -180,8 +191,8 @@ function WorkInHand() {
     ];
     // let endDate = '06/30/2021'
     for (
-      var iDate = parseDate(year.start);
-      iDate.isSameOrBefore(year.end);
+      var iDate = parseDate(year?.start);
+      iDate.isSameOrBefore(year?.end);
       iDate.add(1, 'months')
     ) {
       let el = {
@@ -191,7 +202,7 @@ function WorkInHand() {
       monthColumns.push(monthCol(el, updateField));
     } // forecast-total
     monthColumns.push(
-      monthCol({ year: year.fiscal, era: 'Forcast', totalKey: 'total' })
+      monthCol({ year: year?.fiscal, era: 'Forcast', totalKey: 'total' })
     );
     newColumns[1]['children'][0]['children'] = monthColumns;
     setColumns(newColumns);
@@ -420,7 +431,7 @@ function WorkInHand() {
                 level={5}
                 style={{ color: '#fff', marginBottom: 0, paddingLeft: 5 }}
               >
-                Forecast {year.fiscal} - {year.month.format('MMMM')} Month End
+                Forecast {year?.fiscal} - {year?.month.format('MMMM')} Month End
               </Title>
             </Col>
             <Col span={24}>
@@ -428,7 +439,7 @@ function WorkInHand() {
                 level={5}
                 style={{ color: '#fff', marginBottom: 0, paddingLeft: 5 }}
               >
-                Profit & Loss Statement - {year.month.format('DD MMMM YYYY')}
+                Profit & Loss Statement - {year?.month.format('DD MMMM YYYY')}
               </Title>
             </Col>
           </Row>
@@ -437,6 +448,7 @@ function WorkInHand() {
           <Row gutter={20} justify="end">
             <Col xs={12} sm={12} md={14} lg={10}>
               <FYSelect
+                defaultValue
                 callBack={({ start, end, closed }) => {
                   setLoading(true);
                   let currentDate = moment();
@@ -461,10 +473,10 @@ function WorkInHand() {
                 onConfirm={() => form.submit()}
                 okText="Yes"
                 cancelText="No"
-                disabled={year.closed}
+                disabled={year?.closed}
               >
                 <Button 
-                  disabled={year.closed}
+                  disabled={year?.closed}
                   type="primary" 
                   size="small"
                 >

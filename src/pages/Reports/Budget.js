@@ -108,12 +108,13 @@ const EditableCell = ({
 
 function Budget() {
   const [form] = Form.useForm();
-  let { start: currFYStart, end: currFYEnd } = getFiscalYear('dates');
-  const [year, setYear] = useState({
-    start: currFYStart,
-    end: currFYEnd,
-    fiscal: moment(currFYEnd).format('[FY]YY'),
-  });
+  // let { start: currFYStart, end: currFYEnd } = getFiscalYear('dates');
+  // const [year, setYear] = useState({
+  //   start: currFYStart,
+  //   end: currFYEnd,
+  //   fiscal: moment(currFYEnd).format('[FY]YY'),
+  // });
+  const [year, setYear] = useState(null);
   const [dataSource, setDataSource] = useState([]);
   const [loading, setLoading] = useState(false);
   const [columns, setColumns] = useState([
@@ -136,31 +137,42 @@ function Budget() {
       fixed: 'left',
     },
     {
-      title: `${year.fiscal} Budget`,
+      title: `Budget`,
       children: [
         {
           title: 'Revenue AU$',
           children: [],
         },
       ],
-    },
+    }
   ]);
 
   useEffect(() => {
-    
-    creatingCol();
-    console.timeEnd('timing');
-    getSaveBudget(year).then((res) => {
-      if (res.success) {
-        structureData(res.data);
-        form.setFieldsValue(res.data);
-      }
-    });
+    if (year){
+      creatingCol();
+      console.timeEnd('timing');
+      getSaveBudget(year).then((res) => {
+        if (res.success) {
+          structureData(res.data);
+          form.setFieldsValue(res.data);
+        }
+      });
+    }
     // dummyStructureData()
   }, [year]);
 
   const creatingCol = () => {
     let newColumns = [...columns];
+    newColumns[1] =  {
+      title: `${year?.fiscal} Budget`,
+      children: [
+        {
+          title: 'Revenue AU$',
+          children: [],
+        },
+      ],
+    };
+
     let monthColumns = [
       monthCol({
         year: 'YTD',
@@ -170,8 +182,8 @@ function Budget() {
     ];
     // let endDate = '06/30/2021'
     for (
-      var iDate = parseDate(year.start);
-      iDate.isSameOrBefore(year.end);
+      var iDate = parseDate(year?.start);
+      iDate.isSameOrBefore(year?.end);
       iDate.add(1, 'months')
     ) {
       let el = {
@@ -181,7 +193,7 @@ function Budget() {
       monthColumns.push(monthCol(el, updateField));
     } // forecast-total
     monthColumns.push(
-      monthCol({ year: year.fiscal, era: 'Forcast', totalKey: 'total' })
+      monthCol({ year: year?.fiscal, era: 'Forcast', totalKey: 'total' })
     );
     newColumns[1]['children'][0]['children'] = monthColumns;
     setColumns(newColumns);
@@ -384,7 +396,7 @@ function Budget() {
                 level={5}
                 style={{ color: '#fff', marginBottom: 0, paddingLeft: 5 }}
               >
-                Budget {year.fiscal}
+                Budget {year?.fiscal}
               </Title>
             </Col>
             <Col span={24}>
@@ -401,6 +413,7 @@ function Budget() {
           <Row gutter={20} justify="end">
             <Col xs={12} sm={12} md={14} lg={10}>
               <FYSelect
+                defaultValue
                 callBack={({ start, end, closed }) => {
                   setLoading(true);
                   let currentDate = moment();
@@ -425,10 +438,10 @@ function Budget() {
                 onConfirm={() => form.submit()}
                 okText="Yes"
                 cancelText="No"
-                disabled={year.closed}
+                disabled={year?.closed}
               >
                 <Button 
-                  disabled={year.closed}
+                  disabled={year?.closed}
                   type="primary" 
                   size="small"
                 >
@@ -483,7 +496,7 @@ const monthCol = ({ year, era, totalKey }) => ({
       width: 100,
       align: 'center',
       onCell: (record) => {
-        return { className: year.startsWith('FY') ? 'fin-total' : '' };
+        return { className: year?.startsWith('FY') ? 'fin-total' : '' };
       },
       render: (text, record, index) => {
         if (record.render) {

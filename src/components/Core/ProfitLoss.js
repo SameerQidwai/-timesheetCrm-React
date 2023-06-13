@@ -30,7 +30,7 @@ class ProfitLoss extends Component {
     this.state = {
       billing: {},
       columns: [],
-      fiscalYear: getFiscalYear('dates'),
+      fiscalYear: {},
       data: [
         { key: 'W', label: 'Working Days', total: 0 },
         {
@@ -47,7 +47,7 @@ class ProfitLoss extends Component {
     };
   }
   componentDidMount = () => {
-    this.getRenderData();
+    // this.getRenderData();
   };
 
   getRenderData = () => {
@@ -443,7 +443,7 @@ class ProfitLoss extends Component {
         </Col>
         <Col xs={10} sm={10} md={8} lg={6} style={{ marginLeft: 'auto' }}>
           <FYSelect
-            
+            defaultValue
             callBack={({ start, end }) => {
               this.setState(
                 {
@@ -453,7 +453,7 @@ class ProfitLoss extends Component {
                     {
                       key: 'R',
                       label: `Revenue \n ${
-                        props['parent'] === 'O' ? '(discounted value)' : ''
+                        this?.props?.['parent'] === 'O' ? '(discounted value)' : ''
                       }`,
                       total: 0,
                     },

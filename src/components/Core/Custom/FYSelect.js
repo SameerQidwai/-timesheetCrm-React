@@ -20,7 +20,25 @@ function FYSelect({
     getAllFY(true).then((res) => {
       if (res.success) {
         if (defaultValue){
-          selectFYear(res.option?.[0]??null)
+          let currentFy = res.option?.[0]?? null
+          for(let fy of res.option??[]){
+            if (
+              formatDate(new Date()).isBetween(
+                formatDate(fy.start),
+                formatDate(fy.end)
+              )
+            ) {
+              currentFy = fy;
+              break;
+            }
+          }
+          console.log(currentFy)
+          selectFYear(currentFy.value)
+          callBack({
+            closed: currentFy?.closed,
+            start: formatDate(currentFy.start),
+            end: formatDate(currentFy.end),
+          });
         }
         setFYears(res.option);
       }

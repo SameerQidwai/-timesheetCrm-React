@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Menu, Button, Dropdown, Table, Tag } from 'antd';
+import { Menu, Button, Dropdown, Table, Tag, Row, Col } from 'antd';
 import { SettingOutlined, DownOutlined } from '@ant-design/icons'; //Icons
 import { Link } from 'react-router-dom';
 import {
@@ -12,6 +12,7 @@ import {
 import { tableSorter } from '../Table/TableFilter';
 import { getHierarchy, getProjectTracking } from '../../../service/projects';
 import moment from 'moment';
+import FYSelect from '../Custom/FYSelect';
 
 const resourceColumns = [
   {
@@ -184,6 +185,7 @@ class ProjectTracking extends Component {
     super();
 
     this.state = {
+      fiscalYear: {},
       leadId: false,
       data: [],
       desc: {},
@@ -195,8 +197,12 @@ class ProjectTracking extends Component {
   }
 
   componentDidMount = () => {
+    // this.getRenderData()
+  };
+
+  getRenderData = () =>{
     const { id } = this.props;
-    const {start, end} = getFiscalYear('dates')
+    const {start, end} = this.state.fiscalYear
     getProjectTracking(id, {
       startDate:start.format('DD-MM-YYYY'),
       endDate: end.format('DD-MM-YYYY'),
@@ -209,89 +215,107 @@ class ProjectTracking extends Component {
         });
       }
     });
-  };
+  }
 
   render() {
     const { desc, data, leadId, permissions } = this.state;
     return (
       //will remove it in near future will be using NestedTable Function here as well
-      <Table
-        bordered
-        pagination={{ pageSize: localStore().pageSize }}
-        rowKey={(record) => record.employeeId}
-        columns={resourceColumns}
-        dataSource={data}
-        size="small"
-        className="fs-small"
-        expandable={{
-          rowExpandable: (record) => record?.currentYear?.length > 0,
-          expandedRowRender: (record) => {
-            return (
-              <NestedTable
-                data={record.currentYear}
-                columns={trackingColumn}
-                expandable={true}
-                checked={false}
-              />
-            );
-          },
-        }}
-        summary={(data) => {
-          console.log(data);
-          let totalHours = 0;
-          let utilizedHours = 0;
-          let remainingHours = 0;
-          let totalRevenue = 0;
-          let totalCost = 0;
-          let totalCm$ = 0;
-          let totalCmPercent = 0;
-          let rowCount = 0;
+      <Row justify="end">
+        <Col xs={10} sm={10} md={8} lg={6}>
+          <FYSelect
+            defaultValue
+            callBack={({ start, end }) => {
+              this.setState({
+                  fiscalYear: { start, end },
+                },
+                () => {
+                  this.getRenderData();
+                }
+              );
+            }}
+          />
+        </Col>
+        <Col span={24}>
+          <Table
+            bordered
+            pagination={{ pageSize: localStore().pageSize }}
+            rowKey={(record) => record.employeeId}
+            columns={resourceColumns}
+            dataSource={data}
+            size="small"
+            className="fs-small"
+            expandable={{
+              rowExpandable: (record) => record?.currentYear?.length > 0,
+              expandedRowRender: (record) => {
+                return (
+                  <NestedTable
+                    data={record.currentYear}
+                    columns={trackingColumn}
+                    expandable={true}
+                    checked={false}
+                  />
+                );
+              },
+            }}
+            summary={(data) => {
+              console.log(data);
+              let totalHours = 0;
+              let utilizedHours = 0;
+              let remainingHours = 0;
+              let totalRevenue = 0;
+              let totalCost = 0;
+              let totalCm$ = 0;
+              let totalCmPercent = 0;
+              let rowCount = 0;
 
-          data.forEach((row) => {
-            totalHours += parseFloat(row.total.totalHours ?? 0);
-            utilizedHours += parseFloat(row.total.utilizedHours ?? 0);
-            remainingHours += parseFloat(row.total.remainingHours ?? 0);
-            totalRevenue += parseFloat(row.total.actualRevenue ?? 0);
-            totalCost += parseFloat(row.total.actualCost ?? 0);
-            totalCm$ += parseFloat(row.total.cm$ ?? 0);
-            totalCmPercent += parseFloat(row.total.cmPercent ?? 0);
-            if (row.total.cmPercent && row.total.cmPercent > 0) rowCount++;
-          });
+              data.forEach((row) => {
+                totalHours += parseFloat(row.total.totalHours ?? 0);
+                utilizedHours += parseFloat(row.total.utilizedHours ?? 0);
+                remainingHours += parseFloat(row.total.remainingHours ?? 0);
+                totalRevenue += parseFloat(row.total.actualRevenue ?? 0);
+                totalCost += parseFloat(row.total.actualCost ?? 0);
+                totalCm$ += parseFloat(row.total.cm$ ?? 0);
+                totalCmPercent += parseFloat(row.total.cmPercent ?? 0);
+                if (row.total.cmPercent && row.total.cmPercent > 0) rowCount++;
+              });
 
-          let averageCmPercent = 0;
-          if (totalCmPercent > 0) averageCmPercent = totalCmPercent / rowCount;
+              let averageCmPercent = 0;
+              if (totalCmPercent > 0) averageCmPercent = totalCmPercent / rowCount;
 
-          return (
-            <Table.Summary fixed="bottom">
-              <Table.Summary.Row>
-                <Table.Summary.Cell index={0}>-</Table.Summary.Cell>
-                <Table.Summary.Cell index={1}>Total</Table.Summary.Cell>
-                <Table.Summary.Cell index={2}>
-                  {formatFloat(totalHours)}
-                </Table.Summary.Cell>
-                <Table.Summary.Cell index={3}>
-                  {formatFloat(utilizedHours)}
-                </Table.Summary.Cell>
-                <Table.Summary.Cell index={4}>
-                  {formatFloat(remainingHours)}
-                </Table.Summary.Cell>
-                <Table.Summary.Cell index={5}>
-                  {formatCurrency(totalRevenue)}
-                </Table.Summary.Cell>
-                <Table.Summary.Cell index={6}>
-                  {formatCurrency(totalCost)}
-                </Table.Summary.Cell>
-                <Table.Summary.Cell index={7}>
-                  {formatCurrency(totalCm$)}
-                </Table.Summary.Cell>
-                <Table.Summary.Cell index={8}>
-                  {formatFloat(averageCmPercent)} %
-                </Table.Summary.Cell>
-              </Table.Summary.Row>
-            </Table.Summary>
-          );
-        }}
-      />
+              return (
+                <Table.Summary fixed="bottom">
+                  <Table.Summary.Row>
+                    <Table.Summary.Cell index={0}>-</Table.Summary.Cell>
+                    <Table.Summary.Cell index={1}>Total</Table.Summary.Cell>
+                    <Table.Summary.Cell index={2}>
+                      {formatFloat(totalHours)}
+                    </Table.Summary.Cell>
+                    <Table.Summary.Cell index={3}>
+                      {formatFloat(utilizedHours)}
+                    </Table.Summary.Cell>
+                    <Table.Summary.Cell index={4}>
+                      {formatFloat(remainingHours)}
+                    </Table.Summary.Cell>
+                    <Table.Summary.Cell index={5}>
+                      {formatCurrency(totalRevenue)}
+                    </Table.Summary.Cell>
+                    <Table.Summary.Cell index={6}>
+                      {formatCurrency(totalCost)}
+                    </Table.Summary.Cell>
+                    <Table.Summary.Cell index={7}>
+                      {formatCurrency(totalCm$)}
+                    </Table.Summary.Cell>
+                    <Table.Summary.Cell index={8}>
+                      {formatFloat(averageCmPercent)} %
+                    </Table.Summary.Cell>
+                  </Table.Summary.Row>
+                </Table.Summary>
+              );
+            }}
+          />
+        </Col>  
+      </Row>
     );
   }
 }
