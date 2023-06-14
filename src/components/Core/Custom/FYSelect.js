@@ -32,7 +32,6 @@ function FYSelect({
               break;
             }
           }
-          console.log(currentFy)
           selectFYear(currentFy.value)
           callBack({
             closed: currentFy?.closed,
@@ -49,7 +48,7 @@ function FYSelect({
     <Select
       value={fYear}
       placeholder={placeholder}
-      allowClear
+      allowClear={!defaultValue}
       size={size}
       options={FYears}
       suffixIcon={suffixIcon}

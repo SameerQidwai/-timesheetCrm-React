@@ -145,13 +145,13 @@ const EditableCell = ({
 
 function CashFlow() {
   const [form] = Form.useForm();
-  let { start: currFYStart, end: currFYEnd } = getFiscalYear('dates');
-  const [year, setYear] = useState({
-    start: currFYStart,
-    end: currFYEnd,
-    fiscal: moment(currFYEnd).format('[FY]YY'),
-  });
-  // const forecastMonth = moment().subtract(1, 'month').endOf("month")
+  // let { start: currFYStart, end: currFYEnd } = getFiscalYear('dates');
+  // const [year, setYear] = useState({
+  //   start: currFYStart,
+  //   end: currFYEnd,
+  //   fiscal: moment(currFYEnd).format('[FY]YY'),
+  // });
+  const [year, setYear] = useState(null);
   const [dataSource, setDataSource] = useState([])
   const [loading, setLoading] = useState(true)
   const [columns, setColumns] = useState([
@@ -185,6 +185,7 @@ function CashFlow() {
   ] )
 
   useEffect(() => {
+    if (year){
       creatingCol()
       getSaveCashFlow(year).then(res=>{
           if(res.success){
@@ -192,11 +193,22 @@ function CashFlow() {
             form.setFieldsValue(res.data)
           }
       })
+    }
       // dummyStructureData()
   }, [year])
 
   const creatingCol = () =>{
       let newColumns = [...columns]
+      newColumns[1] = {
+        title: ``,
+        children: [
+            {
+                title: '',
+                children: []
+            }
+        ]
+      };
+
       let monthColumns = [
         monthCol({
           year: 'Comments',
@@ -204,7 +216,7 @@ function CashFlow() {
         })
       ]
       // let endDate = '06/30/2021'
-      for (var iDate = parseDate(year.start); iDate.isSameOrBefore(year.end); iDate.add(1, 'months')) {
+      for (var iDate = parseDate(year?.start); iDate.isSameOrBefore(year?.end); iDate.add(1, 'months')) {
           let el = {
             year: parseDate(iDate, 'MMM YY'),
             era: iDate.isBefore(moment(), 'month') ? 'Actual': 'Forecast',
@@ -332,7 +344,7 @@ function CashFlow() {
                 level={5}
                 style={{ color: '#fff', marginBottom: 0, paddingLeft: 5 }}
               >
-                Cashflow Forecast {year.fiscal}
+                Cashflow Forecast {year?.fiscal}
               </Title>
             </Col>
           </Row>
@@ -341,6 +353,7 @@ function CashFlow() {
           <Row gutter={20} justify="end">
             <Col xs={12} sm={12} md={14} lg={10}>
               <FYSelect
+                defaultValue
                 callBack={({ start, end, closed }) => {
                   setLoading(true);
                   let currentDate = moment();
@@ -365,9 +378,9 @@ function CashFlow() {
                 onConfirm={() => form.submit()}
                 okText="Yes"
                 cancelText="No"
-                disabled={year.closed}
+                disabled={year?.closed}
               >
-                <Button disabled={year.closed} type="primary" a size="small">
+                <Button disabled={year?.closed} type="primary" a size="small">
                   Save
                 </Button>
               </Popconfirm>
@@ -418,13 +431,13 @@ const monthCol = ({year, era, totalKey})=>({
       width: year ==='Comments'?200:100,
       align: 'center',
       onCell: (record)=> {
-          return {className: year.startsWith('FY') ? 'fin-total': ''} 
+          return {className: year?.startsWith('FY') ? 'fin-total': ''} 
       },
       render: (text,record, index) =>{
           if(record.render){
               return record.render(year, record)
           }
-          if(year.startsWith('FY')){
+          if(year?.startsWith('FY')){
             
               return record[totalKey] ? formatNegativeValue(record[totalKey]) : '-'
           }
