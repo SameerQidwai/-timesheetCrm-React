@@ -87,3 +87,19 @@ export const closingFY = (fyId, query = '') => {
       return apiErrorRes(err, fyId, 5);
     });
 };
+export const revertFY = (fyId, query = '') => {
+  messageAlert.loading({ content: 'Reverting FY...', key: 1 }, 0);
+  return axios
+    .patch(`${url}/${fyId}/revertYear${query}`, {}, { headers: headers() })
+    .then((res) => {
+      const { success, data, message } = res.data;
+      jwtExpired(message);
+      messageAlert.destroy();
+      setToken(res.headers && res.headers.authorization);
+
+      return { success, data };
+    })
+    .catch((err) => {
+      return apiErrorRes(err, fyId, 0);
+    });
+};

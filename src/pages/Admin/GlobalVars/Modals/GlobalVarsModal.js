@@ -8,7 +8,7 @@ import {
   localStore,
 } from '../../../../service/constant';
 import FormItems from '../../../../components/Core/Forms/FormItems';
-import { upadteVariables, updateValue } from '../../../../service/global-apis';
+import { createValue, upadteVariables, updateValue } from '../../../../service/global-apis';
 
 const GlobalVarsModal = ({ visible, onClose, callBack, minDate, keyName }) => {
   const [form] = Form.useForm();
@@ -105,26 +105,28 @@ const GlobalVarsModal = ({ visible, onClose, callBack, minDate, keyName }) => {
 
   const onFinish = ({taxes}) =>{
     if (visible.id){
+      console.log(visible.id)
       taxes = {
+        name: keyName,
         value: taxes.value,
         startDate: formatDate(taxes.startDate, true),
         endDate: formatDate(taxes.endDate, true),
       }
       updateValue(visible.id, taxes).then(res=>{
         if (res.success){
-          callBack(taxes, visible.index)
+          callBack(res.data, visible.index)
         }
       })
     }else{
-      let variables = [{
+      let variables = {
         name: keyName,
         value: taxes.value,
         startDate: formatDate(taxes.startDate, true),
         endDate: formatDate(taxes.endDate, true),
-      }]
-      upadteVariables({variables}).then(res=>{
+      }
+      createValue(variables).then(res=>{
         if(res.success){
-          callBack(taxes)
+          callBack(res.data)
         }
       })
       // console.log(taxes)

@@ -121,17 +121,36 @@ export const upadteVariables = (data) => {
             return apiErrorRes(err, 1, 5)
         });
 };
+
+export const createValue = (data) => {
+    messageAlert.loading({ content: 'Loading...', key: 1 },5)
+    return axios
+        .post(`${var_url}/`, data, {headers:headers()})
+        .then((res) => {
+            const { success, message, data } = res.data;
+            jwtExpired(message)
+            messageAlert.success({ content: message, key: 1},5)
+            setToken(res?.headers?.authorization)
+            let variables= {}
+            if (success) {
+            }
+            return { success, data };
+        })
+        .catch((err) => {
+            return apiErrorRes(err, 1, 5)
+        });
+};
+
 export const updateValue = (id, data) => {
     messageAlert.loading({ content: 'Loading...', key: id },5)
     return axios
-        .put(`${var_url}/updateValue/${id}`, data, {headers:headers()})
+        .put(`${var_url}/values/${id}`, data, {headers:headers()})
         .then((res) => {
-            const { success, message } = res.data;
+            const { success, message, data } = res.data;
             jwtExpired(message)
             messageAlert.success({ content: message, key: id},5)
             setToken(res?.headers?.authorization)
-            let variables= {}
-            return { success, data: variables };
+            return { success, data };
         })
         .catch((err) => {
             return apiErrorRes(err, id, 5)

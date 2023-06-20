@@ -3,7 +3,7 @@ import { Button, Col, Collapse, Descriptions, Dropdown, Menu, Modal, Popconfirm,
 // import { formatDate } from '../../service/constant';
 import { ExclamationCircleOutlined, SettingOutlined } from "@ant-design/icons"; //Icons
 import { localStore, formatDate } from '../../../service/constant';
-import { closingFY, getAllFY } from '../../../service/financial-year-apis';
+import { closingFY, getAllFY, revertFY } from '../../../service/financial-year-apis';
 import FYModal from './Modals/FYModal';
 import { tableSorter } from '../../../components/Core/Table/TableFilter';
 import { Tag_s } from '../../../components/Core/Custom/Index';
@@ -23,7 +23,7 @@ function FinancialYears(props) {
   const [loading, setLoading] = useState(false)
   const [visibleModal, setVisibleModal] = useState(false)
   const [visibleConfirm, setVisibleConfirm] = useState(false)
-  const [lastFY, setLastFY] = useState(0)
+  const [lastFY, setLastFY] = useState({ created: 0, closed: null})
 
   
     const columns = [
@@ -94,22 +94,22 @@ function FinancialYears(props) {
                   >
                     Edit
                   </Menu.Item>
-                  <Menu.Item
+                  { lastFY.created === record.id && <Menu.Item
                     key="delete"
                     danger
                     className="pop-confirm-menu"
-                    disabled={record.closed|| lastFY !== record.id}
+                    disabled={record.closed}
                   >
                     <Popconfirm
                       title="Are you sure you want to delete ?"
                       onConfirm={() => handleDelete(record.id, index)}
                       okText="Yes"
                       cancelText="No"
-                      disabled={record.closed|| lastFY !== record.id}
+                      disabled={record.closed}
                     >
                       <div> Delete </div>
                     </Popconfirm>
-                  </Menu.Item>
+                  </Menu.Item>}
                   <Menu.Item 
                     disabled={record.closed}
                     key="Closing" 
@@ -118,6 +118,20 @@ function FinancialYears(props) {
                   >
                       Close
                   </Menu.Item>
+                  { lastFY.closed === record.id && <Menu.Item
+                    key="delete"
+                    danger
+                    className="pop-confirm-menu"
+                  >
+                    <Popconfirm
+                      title="Are you sure you want to delete ?"
+                      onConfirm={() => revert(record.id)}
+                      okText="Yes"
+                      cancelText="No"
+                    >
+                      <div> Revert </div>
+                    </Popconfirm>
+                  </Menu.Item>}
                 </Menu>
               }
             >
@@ -138,13 +152,17 @@ function FinancialYears(props) {
         if (success){
           let highestEndDate =null
           let highestEndDateId= 0
-          data.forEach(({id, endDate}) => {
+          let highestClosedId = null
+          data.forEach(({id, endDate, closed}) => {
             if (!highestEndDate || highestEndDate.isBefore(endDate)){
               highestEndDate= moment(endDate) 
               highestEndDateId = id
+              if(closed){
+                highestClosedId =id
+              }
             }
           });
-          setLastFY(highestEndDateId)
+          setLastFY({created: highestEndDateId, closed: highestClosedId})
           setData(data)
         }
     }
@@ -384,6 +402,14 @@ function FinancialYears(props) {
         onCancel: () => {
           confirmModal.destroy();
         },
+      })
+    }
+
+    const revert = (fyId) =>{
+      revertFY(fyId).then(res=>{
+        if(res.success){
+          // window.location.reload();
+        }
       })
     }
 
