@@ -33,6 +33,11 @@ const NavItem = [
         link: "/projects",
         key: "PROJECTS"
     },
+    {
+        text: "Invoices",
+        link: "/invoice",
+        key: "PROJECTS"
+    },
 ];
 
 class Navbar extends Component {
@@ -138,7 +143,7 @@ class Navbar extends Component {
                     className="collapse navbar-collapse justify-content-md-center"
                     id="navbarsExample10"
                 >
-                    <Row justify="space-between">
+                    <Row justify="space-between" style={{marginRight: 16}}>
                         <Col>{this.getNavMenuItems(allowedNavItem)}</Col>
                         {permissions['ADMIN_OPTIONS'] && permissions['ADMIN_OPTIONS']['READ'] ? <Col xs={{ span: 2 }} md={{ span: 2 }}>
                             <Space size="large">

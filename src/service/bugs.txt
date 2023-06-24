@@ -1,17 +1,4 @@
 $env:NODE_OPTIONS = "--openssl-legacy-provider"
-ONELM CRM live
-    project_tracking
-        project tracking month //
-    bench
-        eccludeProject //
-    profit and loss 
-        AHQ - CALL Land 135 - Robotic & Autonomous Systems //
-    LEAVE_summary
-        -- Leave summary report david only one leave is showing only 
-        leave summary doing round on calculating daily hours //
-        karien gremshiush December leave type problem //
-        Saved to rejected //
-
 ONELEM
     line 38 certificatepdf
     line 76 certificatepdf

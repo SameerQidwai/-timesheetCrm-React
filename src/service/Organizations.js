@@ -157,3 +157,26 @@ export const editList = (data) => {
             return apiErrorRes(err, data.id, 5)
         });
 };
+
+export const getOrgProjects = (id) => {
+    return axios
+        .get(`${Api}/invoice/client-project/${id}`, {headers:headers()})
+        .then((res) => {
+            const { success, data, message } = res.data;
+            jwtExpired(message)
+            setToken(res?.headers?.authorization)
+            return { success, data }
+        })
+        .catch((err) => {
+            if (err.response?.data){
+                const { status } = err.response
+                const { message, success } = err.response?.data
+                return { authError: message === "Not Authorized!", status, success, message, };
+            }
+            return {
+                error: "Please login again!",
+                status: false,
+                message: err.message,
+            };
+        });
+};

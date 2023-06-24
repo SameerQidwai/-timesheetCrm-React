@@ -371,7 +371,7 @@ export const entityProjects = (url, options) =>{
         const { success, data } = res.data;
         setToken(res?.headers?.authorization)
         if (options) {
-            options = data.map((el) => ({ value: el.id, label: el.title}));
+            options = data.map((el) => ({ value: el.id, label: el.title, type: el.type}));
         }
         if (success) return { success: success, data: data??[], options: options?? []};
     })

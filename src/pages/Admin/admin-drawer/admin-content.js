@@ -19,6 +19,7 @@ import Skills from '../skill & level/Skills.js';
 import ImportExport from '../ImportExport';
 import ExpenseTypes from '../ExpenseTypes/ExpenseTypes';
 import FinancialYears from '../Financial/FinancialYears';
+import Integration from './Integration';
 
 
 // import check from "../admin-drawer/admin-sidebar";
@@ -84,6 +85,10 @@ const pageLinks = [
   {
     component: FinancialYears,
     link: '/admin/financial-year',
+  },
+  {
+    component: Integration,
+    link: '/admin/integration',
   },
 ];
 
