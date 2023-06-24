@@ -164,6 +164,7 @@ export const formatDate = (date, string, format) => {
         ? moment.utc(date).format(format === true ? 'ddd DD MMM yyyy' : format)
         : // check if format is true return default format or prop format
           moment(date).utcOffset(0, true).format()
+          // moment.utc(date).format()
       : moment.utc(date))
   );
 };
@@ -257,24 +258,30 @@ export const apiErrorRes = (err, id, duration, style) => {
   return { error: err.message, status, message, success };
 };
 
-export const dateRange = (current, selectedDate, isDate, pDates) => {
+export const dateRange = (current, selectedDate, isDate, pDates,dateFY) => {
+  let  [startYear =null, endYear =null] = dateFY??[]
   if (current) {
     const startDate =
       pDates?.startDate ?? formatDate(new Date()).subtract(10, 'years');
     const endDate = pDates?.endDate ?? formatDate(new Date()).add(10, 'years');
 
     return (
-      (isDate === 'start' && selectedDate //checking if ut call from startDate
+      (selectedDate? isDate === 'start' //checking if ut call from startDate
         ? current >= selectedDate //disable after
-        : isDate === 'end' &&
-          selectedDate && //checking if it call from endtDate
-          current <= selectedDate) || //disable Before // disable Before, // disable After
+        : isDate === 'end' ? current <= selectedDate :false //checking if it call from endtDate
+      : false) || //disable Before // disable Before, // disable After
       !current.isBetween(
         formatDate(startDate),
         formatDate(endDate),
         'day',
         '[]'
-      )
+      ) || // checking if date doesn't falls into financial year
+      ((endYear ) &&
+        current.isBefore(
+        formatDate(endYear).format(),
+        'day',
+        // '()'
+      ))
     );
   }
 };
@@ -376,3 +383,31 @@ export const getNumberOfWeekdays = (
     //when I get holidays
   });
 };
+
+export const dateClosed = (endDate, startDate)=>{
+  let isClosed = false
+  let yearClosed = localStore().closedYears
+    yearClosed = yearClosed ? JSON.parse(yearClosed):[]
+  const [start, end]  = yearClosed
+  if (end){
+    if (startDate) {
+      isClosed =
+        moment.utc(end).isAfter(moment.utc(endDate)) &&
+        moment.utc(end).isAfter(moment.utc(startDate));
+    } else {
+      if (endDate) {
+        isClosed = moment.utc(end).isAfter(moment.utc(endDate));
+      }
+    }
+  }
+  return isClosed
+}
+
+export const disableAllFields = (fields) =>{
+  return (fields??[]).map((el) => {
+    if (el.key) {
+      el.disabled = true;
+    }
+    return el;
+  });
+}

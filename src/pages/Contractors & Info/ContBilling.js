@@ -7,7 +7,7 @@ import BillModal from "./Modals/BillModal";
 import { getRecord as subContRecord } from "../../service/contractors"
 import { getList } from "../../service/subContrators-contracts";
 
-import { formatCurrency, localStore, DURATION, formatDate } from "../../service/constant";
+import { formatCurrency, localStore, DURATION, formatDate, dateClosed } from "../../service/constant";
 import { tableSorter, tableTitleFilter } from "../../components/Core/Table/TableFilter";
 import { generalDelete } from "../../service/delete-Api's";
 
@@ -72,10 +72,11 @@ class EmpBilling extends Component {
                                 <Menu.Item
                                     key="delete" 
                                     danger
-                                    disabled={!DELETE}
+                                    disabled={!DELETE || dateClosed(record.startDate)}
                                     className="pop-confirm-menu"
-                                >
+                                    >
                                     <Popconfirm
+                                        disabled={!DELETE || dateClosed(record.startDate)}
                                         title="Are you sure you want to delete ?"
                                         onConfirm={() => this.handleDelete(record.id, index) }
                                         okText="Yes"

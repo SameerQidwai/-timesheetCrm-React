@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from 'react'
-import { Row, Button, Space, Popconfirm, Divider, Form } from "antd";
+import { Row, Button, Space, Popconfirm, Divider, Form, Spin } from "antd";
 import { getSettings, getVariables, upadteSettings, upadteVariables } from "../../service/global-apis"
 import FormItems from "../../components/Core/Forms/FormItems";
 import { getleaveRequestTypes, getStates } from '../../service/constant-Apis';
 import { formatDate, STATES } from '../../service/constant';
+import GlobalHistory from './GlobalVars/Modals/GlobalHistory';
 
-function GlobalVars(props) {
+function GlobalVars(item) {
     const [form] = Form.useForm();
+    const [openHistory, setOpenHistory] = useState(false)
     const [formValues, setFormValues] = useState({settings: {}, variables: {}})
-    const [rateFields, setRateFields] = useState([
+    const [rateFields, setRateFields] = useState([])
+    const [loading, setLoading] = useState(false)
+    let constantFields = [
         {
             fieldCol: 6,
             Placeholder: "Rate",
@@ -26,11 +30,19 @@ function GlobalVars(props) {
             style: { textDecoration: "underline" },
         },
         {
-            fieldCol: 5,
+            fieldCol: 6,
             Placeholder: "Finish Date",
             type: "Title",
             mode: 4,
             fieldStyle:{textAlign: 'center'}, 
+            style: { textDecoration: "underline" },
+        },
+        {
+            fieldCol: 4,
+            Placeholder: "Action",
+            type: "Title",
+            mode: 4,
+            // fieldStyle:{textAlign: 'right'}, 
             style: { textDecoration: "underline" },
         },
         {
@@ -102,7 +114,12 @@ function GlobalVars(props) {
         },
         {
             fieldCol: 4,
+            Placeholder: <a>History</a>,
             type: "Text",
+            itemStyle:{textAlign: ''},
+            onClick:()=>{
+                setOpenHistory('GST')
+            }
         },
         {
             fieldCol: 4,
@@ -167,6 +184,11 @@ function GlobalVars(props) {
         {
             fieldCol: 4,
             type: "Text",
+            Placeholder: <a>History</a>,
+            itemStyle:{textAlign: ''},
+            onClick:()=>{
+                setOpenHistory('income_tax')
+            }
         },
         {
             fieldCol: 24,
@@ -238,9 +260,14 @@ function GlobalVars(props) {
         {
             fieldCol: 4,
             type: "Text",
+            Placeholder: <a>History</a>,
+            itemStyle:{textAlign: ''},
+            onClick:()=>{
+                setOpenHistory('Superannuation')
+            }
         },
-    ])
-
+    ]
+    
     const otherFields = [
         {
             // object:'global',
@@ -251,7 +278,7 @@ function GlobalVars(props) {
             style: { textDecoration: "underline" },
         },
         {
-            fieldCol: 4, // this is only label 1
+            fieldCol: 7, // this is only label 1
             size: "small",
             Placeholder: "Records Per Page",
             type: "Text",
@@ -259,7 +286,7 @@ function GlobalVars(props) {
         },
         {
             object: "settings",
-            fieldCol: 20,
+            fieldCol: 12,
             key: "recordsPerPage",
             size: "small",
             // rules:[{ required: true, message: 'Insert your Password Please' }],
@@ -270,7 +297,7 @@ function GlobalVars(props) {
             // hidden: false
         },
         {
-            fieldCol: 4, // this is only label 1
+            fieldCol: 7, // this is only label 1
             size: "small",
             Placeholder: "Display Email",
             rangeMin: true,
@@ -279,7 +306,7 @@ function GlobalVars(props) {
         },
         {
             object: "settings",
-            fieldCol: 20,
+            fieldCol: 12,
             key: "displayEmail",
             Placeholder: "Display Name In Email",
             size: "small",
@@ -290,8 +317,9 @@ function GlobalVars(props) {
             itemStyle: { marginBottom: 20 },
             // hidden: false
         },
+        
         {
-            fieldCol: 4, // this is only label 1
+            fieldCol: 7, // this is only label 1
             size: "small",
             Placeholder: "From Email",
             rangeMin: true,
@@ -300,7 +328,7 @@ function GlobalVars(props) {
         },
         {
             object: "settings",
-            fieldCol: 20,
+            fieldCol: 12,
             key: "fromEmail",
             Placeholder: "From Email Address",
             size: "small",
@@ -309,6 +337,28 @@ function GlobalVars(props) {
             labelCol: { span: 3 },
             labelAlign: "right",
             itemStyle: { marginBottom: 20 },
+            // hidden: false
+        },
+        {
+            fieldCol: 7, // this is only label 1
+            size: "small",
+            Placeholder: "Auto Reject Submitted Requests On FY Closing",
+            rangeMin: true,
+            type: "Text",
+            labelAlign: "left",
+        },
+        {
+            object: "settings",
+            // fieldCol: ,
+            valuePropName:"checked",
+            key: "forceStatusChange",
+            // Placeholder: "Display Name In Email",
+            size: "small",
+            // rules:[{ required: true, message: 'Insert your Password Please' }],
+            type: "Switch",
+            // labelCol: { span: 3 },
+            labelAlign: "right",
+            // itemStyle: { marginBottom: 20 },
             // hidden: false
         },
         {
@@ -327,6 +377,7 @@ function GlobalVars(props) {
     }, [])
 
     const fetchAll = ()=>{
+        setLoading(true)
         Promise.all([getStates(), getleaveRequestTypes(), getSettings(), getVariables()]).then(res=>{
             if(res[2].success){
                 form.setFieldsValue({settings: res[2].data, ...res[3].data});
@@ -337,6 +388,7 @@ function GlobalVars(props) {
             let leavetypes = res[1].success ? res[1].data : []
             setFormValues({settings: res[2].data, variable: res[3].data})
             addGlobalFields([ workCover, ...leavetypes, publicHolidays], states)
+            setLoading(false)
         })
         .catch(err => console.log(err))
     }
@@ -404,9 +456,14 @@ function GlobalVars(props) {
         },
         {
             object: key,
-            fieldCol: 5,
+            fieldCol: 4,
+            Placeholder: <a>History</a>,
             size: "small",
-            type: "Text"
+            type: "Text",
+            itemStyle:{textAlign: ''},
+            onClick:()=>{
+                setOpenHistory(key)
+            }
         }
     ]
     }
@@ -424,7 +481,7 @@ function GlobalVars(props) {
         if (lables.length>0){
             setRateFields(prevFields => {
                 return [
-                    ...prevFields,
+                    ...constantFields,
                     ...newFields,
                     {
                         fieldCol: 24,
@@ -436,7 +493,7 @@ function GlobalVars(props) {
                     },
                     ...stateFields,
                     {
-                        fieldCol: 20,
+                        fieldCol: 12,
                         mode: "horizontal",
                         type: "Divider",
                         itemStyle: { padding: "0px", margin: "0px" },
@@ -473,8 +530,21 @@ function GlobalVars(props) {
         .catch(err => console.log(err))
     }
 
+    const onHistoryClose =() =>{
+        setOpenHistory(false)
+        setLoading(true)
+        Promise.all([getSettings(), getVariables()]).then(res=>{
+            if(res[0].success){
+                form.setFieldsValue({settings: res[0].data, ...res[1].data});
+            }
+            setFormValues({settings: res[0].data, variable: res[1].data})
+            setLoading(false)
+        })
+        .catch(err => console.log(err))
+    }
+
     return (
-        <>
+        <Spin spinning={loading}>
         <Form
             id={'my-form'}
             form={form}
@@ -506,7 +576,11 @@ function GlobalVars(props) {
                 </Button>
             </Space>
         </Row>
-        </>
+        {openHistory&&<GlobalHistory
+            visible={openHistory}
+            onClose={()=>onHistoryClose()}
+        />}
+        </Spin>
     )
 }
 

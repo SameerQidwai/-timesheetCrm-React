@@ -168,6 +168,12 @@ const pageLinks = [
     permission: 'READ',
   },
   {
+    component: Admin,
+    link: '/admin/financial-year',
+    key: 'ADMIN_OPTIONS',
+    permission: 'READ',
+  },
+  {
     component: Organizations,
     link: '/organisations',
     key: 'ORGANIZATIONS',

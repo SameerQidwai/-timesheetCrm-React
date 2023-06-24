@@ -1,7 +1,7 @@
 import { Button, Checkbox, Col, Form, Modal, Popover, Row, Table, Typography, Upload } from 'antd'
 import { PlusOutlined, CheckOutlined } from "@ant-design/icons"; //Icons
 import React, { useEffect, useState } from 'react'
-import { Api, formatCurrency, formatDate, formatFloat, localStore } from '../../../service/constant';
+import { Api, dateClosed, formatCurrency, formatDate, formatFloat, localStore } from '../../../service/constant';
 import FormItems from '../../../components/Core/Forms/FormItems';
 import { getProjects, getUserProjects } from '../../../service/constant-Apis';
 // import { expensesData as dummyExpensesData } from '../../DummyData';
@@ -11,7 +11,10 @@ import { tableSorter } from '../../../components/Core/Table/TableFilter';
 const {Text, Title} = Typography;
 
 const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) => {
-  let editDisabled = ['AP', 'SB'].includes(visible.status)
+  let editDisabled = ['AP', 'SB'].includes(visible.status)||
+  dateClosed(visible.submittedAt) ||
+  dateClosed(visible.approvedAt) ||
+  dateClosed(visible.rejectedAt)
 
   const [form] = Form.useForm();
   const [filteredExpenses, setfilteredExpenses] = useState([]);
@@ -161,6 +164,7 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) =>
   useEffect(() => {
     if (visible !== true) {
       form.setFieldsValue({ basic: visible })
+      
     }
     getData()
 
@@ -175,7 +179,6 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) =>
         basic[3].data = res[0]?.success ? res[0].data : []
         setBasicFields([...basic]); 
         setFileList(res[1]?.success ? res[1].fileList : [])
-
         if (adminView) {
         setfilteredExpenses(visible?.expenseSheetExpenses)
         setSelectedRowKeys(visible?.expenseSheetExpensesIds)

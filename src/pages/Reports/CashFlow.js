@@ -5,6 +5,7 @@ import { getSaveCashFlow, updateSaveCashFlow } from '../../service/financial-Api
 import "../../../src/components/Styles/table.css"
 import { cash_inflows, cash_outflows, closing_cashflows, formatNegativeValue, getValueWithCondition, nextFocus } from '../../components/Core/ReportFilters/CashFlowData';
 import moment from 'moment'
+import {FYSelect} from '../../components/Core/Custom/Index';
 import { formatter, parser } from '../../components/Core/Forms/FormItems';
 const {Title} = Typography
 const EditableContext = React.createContext(null);
@@ -144,9 +145,13 @@ const EditableCell = ({
 
 function CashFlow() {
   const [form] = Form.useForm();
-  let {start, end} = getFiscalYear('dates')
-  const fiscal = moment(end).format('[FY]YY')
-  // const forecastMonth = moment().subtract(1, 'month').endOf("month")
+  // let { start: currFYStart, end: currFYEnd } = getFiscalYear('dates');
+  // const [year, setYear] = useState({
+  //   start: currFYStart,
+  //   end: currFYEnd,
+  //   fiscal: moment(currFYEnd).format('[FY]YY'),
+  // });
+  const [year, setYear] = useState(null);
   const [dataSource, setDataSource] = useState([])
   const [loading, setLoading] = useState(true)
   const [columns, setColumns] = useState([
@@ -180,18 +185,30 @@ function CashFlow() {
   ] )
 
   useEffect(() => {
+    if (year){
       creatingCol()
-      getSaveCashFlow().then(res=>{
+      getSaveCashFlow(year).then(res=>{
           if(res.success){
             structureData(res.data)
             form.setFieldsValue(res.data)
           }
       })
+    }
       // dummyStructureData()
-  }, [])
+  }, [year])
 
   const creatingCol = () =>{
       let newColumns = [...columns]
+      newColumns[1] = {
+        title: ``,
+        children: [
+            {
+                title: '',
+                children: []
+            }
+        ]
+      };
+
       let monthColumns = [
         monthCol({
           year: 'Comments',
@@ -199,7 +216,7 @@ function CashFlow() {
         })
       ]
       // let endDate = '06/30/2021'
-      for (var iDate = parseDate(start); iDate.isSameOrBefore(end); iDate.add(1, 'months')) {
+      for (var iDate = parseDate(year?.start); iDate.isSameOrBefore(year?.end); iDate.add(1, 'months')) {
           let el = {
             year: parseDate(iDate, 'MMM YY'),
             era: iDate.isBefore(moment(), 'month') ? 'Actual': 'Forecast',
@@ -315,31 +332,60 @@ function CashFlow() {
     
   return (
     <>
-      <Row style={{ backgroundColor: '#0463AC', paddingRight: 15 }} justify="space-between" align="middle" >
-        <Col span={20}>
+      <Row
+        style={{ backgroundColor: '#0463AC', paddingRight: 15 }}
+        justify="space-between"
+        align="middle"
+      >
+        <Col xs={24} sm={24} md={12} lg={12}>
           <Row style={{ height: '48px' }} align="middle">
             <Col span={24}>
               <Title
                 level={5}
                 style={{ color: '#fff', marginBottom: 0, paddingLeft: 5 }}
               >
-                Cashflow Forecast {fiscal}
+                Cashflow Forecast {year?.fiscal}
               </Title>
             </Col>
           </Row>
         </Col>
-        <Col>
-          <Popconfirm
-            placement="bottom"
-            title="Are you sure want to save new Settings?"
-            onConfirm={() => form.submit()}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button type="primary" size="small">
-              Save
-            </Button>
-          </Popconfirm>
+        <Col xs={24} sm={24} md={12} lg={12}>
+          <Row gutter={20} justify="end">
+            <Col xs={12} sm={12} md={14} lg={10}>
+              <FYSelect
+                defaultValue
+                callBack={({ start, end, closed }) => {
+                  setLoading(true);
+                  let currentDate = moment();
+                  setYear({
+                    start,
+                    end,
+                    closed,
+                    fiscal: end.format('[FY]YY'),
+                    month: currentDate.isBetween(start, end)
+                      ? currentDate
+                      : currentDate.isBefore(start)
+                      ? start
+                      : end,
+                  });
+                }}
+              />
+            </Col>
+            <Col>
+              <Popconfirm
+                placement="bottom"
+                title="Are you sure want to save new Settings?"
+                onConfirm={() => form.submit()}
+                okText="Yes"
+                cancelText="No"
+                disabled={year?.closed}
+              >
+                <Button disabled={year?.closed} type="primary" a size="small">
+                  Save
+                </Button>
+              </Popconfirm>
+            </Col>
+          </Row>
         </Col>
       </Row>
       <Row>
@@ -385,13 +431,13 @@ const monthCol = ({year, era, totalKey})=>({
       width: year ==='Comments'?200:100,
       align: 'center',
       onCell: (record)=> {
-          return {className: year.startsWith('FY') ? 'fin-total': ''} 
+          return {className: year?.startsWith('FY') ? 'fin-total': ''} 
       },
       render: (text,record, index) =>{
           if(record.render){
               return record.render(year, record)
           }
-          if(year.startsWith('FY')){
+          if(year?.startsWith('FY')){
             
               return record[totalKey] ? formatNegativeValue(record[totalKey]) : '-'
           }

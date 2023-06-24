@@ -22,6 +22,7 @@ import {
   localStore,
   R_STATUS,
   STATUS_COLOR,
+  dateClosed,
 } from '../../service/constant';
 import { getSchedules, } from '../../service/projects';
 import { getProjectDetail } from '../../service/Milestone-Apis';
@@ -102,7 +103,7 @@ class Schedule extends Component {
                   <Menu.Item
                     key="delete"
                     danger
-                    disabled={!this?.state?.permissions?.['DELETE']}
+                    disabled={!this?.state?.permissions?.['DELETE'] || this?.state?.disabledFY}
                     className="pop-confirm-menu"
                   >
                     <Popconfirm
@@ -110,6 +111,7 @@ class Schedule extends Component {
                       onConfirm={() => this.handleDelete(record.id, index)}
                       okText="Yes"
                       cancelText="No"
+                      disabled={!this?.state?.permissions?.['DELETE'] || this?.state?.disabledFY}
                     >
                       <div> Delete </div>
                     </Popconfirm>
@@ -157,6 +159,7 @@ class Schedule extends Component {
           columns: [...columns],
           proId: id,
           permissions: PROJECTS,
+          disabledFY:  res[0].success && dateClosed(res[0]?.data?.startDate, res[0]?.data?.endDate)
         });
       })
       .catch((e) => {
@@ -197,7 +200,6 @@ class Schedule extends Component {
     } else {
       data.push(milestone);
     }
-    console.log(data)
     this.setState({
       data: [...data],
       infoModal: false,
@@ -206,7 +208,7 @@ class Schedule extends Component {
   };
 
   render() {
-    const { desc, data, infoModal, editMile, proId, permissions, columns, pDates } = this.state;
+    const { desc, data, infoModal, editMile, proId, permissions, columns, pDates, disabledFY } = this.state;
     return (
       <>
         <Descriptions
@@ -240,7 +242,6 @@ class Schedule extends Component {
               />
             }
           </Item>
-          {/* <Item label="Gender">{data.gender}</Item> */}
         </Descriptions>
         <Row justify="end">
           <Col>
@@ -249,7 +250,7 @@ class Schedule extends Component {
               size="small"
               onClick={() => this.openModal(false)}
               //checking if project is close
-              disabled={!permissions['ADD'] || desc?.phase === false}
+              disabled={!permissions['ADD'] || desc?.phase === false || disabledFY}
             >
               Add Schedule
             </Button>

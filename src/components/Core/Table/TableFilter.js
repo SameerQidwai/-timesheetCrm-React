@@ -7,7 +7,7 @@ import { getFiscalYear, localStore } from '../../../service/constant';
 
 
 //an idea for small data 
-const ATable = ({size= 'small', title, columns=[], dataSource=[], rowKey='id', rowSelection=false, bordered=true, className= 'fs-small', style , pagination, rowClassName, ...rest})=>{
+const ATable = ({size= 'small', title, columns=[], dataSource=[], rowKey='id', appendIndex, rowSelection=false, bordered=true, className= 'fs-small', style , pagination, rowClassName, ...rest})=>{
     let {
         current: pageNo =1,
         onChange: onPaginationChange = false,
@@ -50,7 +50,7 @@ const ATable = ({size= 'small', title, columns=[], dataSource=[], rowKey='id', r
             showSizeChanger: showPageSizeChanger
         } : false
     }
-    rowKey={(data, index)=> rowKey === 'index'? index: data[rowKey]}
+    rowKey={(data, index)=> !appendIndex ?rowKey === 'index'? index: data[rowKey] : `${index}-${data[rowKey]}`}
     rowSelection={rowSelection}
     columns={columns}
     dataSource={dataSource}

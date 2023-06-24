@@ -98,9 +98,9 @@ class AttachModal extends Component{
     }
 
     render (){
-        const { visible, editTime, loading, close, timeObj } = this.props
+        const { visible, editTime, loading, close, timeObj, yearClosed } = this.props
         const {  fileList, notes } = this.state;
-        const disabled =  false //(timeObj.status === 'SB' || timeObj.status === 'AP') 
+        const disabled =  yearClosed //(timeObj.status === 'SB' || timeObj.status === 'AP') 
         return(
             <Modal
                 title={editTime ? "Edit Attachments & Notes" : "Add Attachments & Notes"}
@@ -108,8 +108,8 @@ class AttachModal extends Component{
                 centered
                 visible={visible}
                 onOk={() => { this.addNotes() }}
-                okButtonProps={{ disabled: loading, disabled: disabled  }}
-                okText={loading ?<LoadingOutlined /> :"Save"}
+                okButtonProps={{ loading: loading, disabled: disabled   }}
+                okText={"Save"}
                 onCancel={close}
                 width={540}
                 // footer={}
@@ -141,6 +141,7 @@ class AttachModal extends Component{
                         <TextArea
                             placeholder="Enter Your Notes...."
                             autoSize={{ minRows: 3, maxRows: 5 }}
+                            disabled={disabled}
                             allowClear
                             onChange={(e)=>{
                                 this.setState({

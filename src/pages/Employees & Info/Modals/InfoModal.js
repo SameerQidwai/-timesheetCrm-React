@@ -29,13 +29,15 @@ import {
 import { getContactRecord } from '../../../service/conatct-person';
 import { addList, getRecord, editList } from '../../../service/Employees';
 import { addAttachments, addFiles } from '../../../service/Attachment-Apis';
-import { formatDate } from '../../../service/constant';
+import { dateClosed, dateRange, disableAllFields, formatDate, localStore } from '../../../service/constant';
 
 const { TabPane } = Tabs;
 
 class InfoModal extends Component {
   constructor() {
     super();
+    let yearClosed = localStore().closedYears
+    yearClosed = yearClosed && JSON.parse(yearClosed)
     this.formRef = React.createRef();
 
     this.state = {
@@ -47,6 +49,9 @@ class InfoModal extends Component {
       files: {contract: [], superannuation: [], bankAccount: [], tfn: []},
       fileIds: {contract: null, superannuation: null, bankAccount: null, tfn: null},
       activeKey: 'basic',
+
+      disabledFY:false,
+      disabledSY: false, //disable start Year
 
       BasicFields: [
         {
@@ -666,7 +671,7 @@ class InfoModal extends Component {
           itemStyle: { marginBottom: 10 },
           rangeMin: (current) => {
             const { billing } = this.formRef.current.getFieldValue();
-            return billing.endDate && current > billing.endDate;
+            return dateRange(current, billing.endDate, 'start', undefined, yearClosed);
           },
         },
         {
@@ -696,7 +701,7 @@ class InfoModal extends Component {
           itemStyle: { marginBottom: 1 },
           rangeMax: (current) => {
             const { billing } = this.formRef.current.getFieldValue();
-            return billing.startDate && current < billing.startDate;
+          return dateRange(current, billing.startDate, 'end', undefined, yearClosed);
           },
         },
         {
@@ -886,12 +891,10 @@ class InfoModal extends Component {
     });
   };
 
-  
-
   getRecord = async(id) => {
     return await getRecord(id).then((res) => {
       if (res.success) {
-        const { BillingFields } = this.state;
+        let { BillingFields, disabledFY, disabledSY } = this.state; //disable start Year
         this.formRef.current.setFieldsValue({
           basic: res.basic,
           detail: res.detail,
@@ -900,11 +903,26 @@ class InfoModal extends Component {
           billing: res.billing,
           train: res.train,
         });
+
         BillingFields[13].Placeholder =
           res?.billing?.type === 1
             ? 'Hourly Base Salary'
             : 'Annual Base Salary';
+
+        disabledFY =  dateClosed(res.billing?.endDate, res.billing?.startDate);
+
+        if (disabledFY) {
+            BillingFields = disableAllFields(BillingFields)
+        }else{
+            disabledSY = dateClosed(res.billing?.startDate)
+            if (disabledSY)
+            BillingFields = disableAllFields(BillingFields)
+            BillingFields[14].disabled = false
+        }
+        
         this.setState({
+          disabledFY,
+          disabledSY,
           fileIds: {
             contact: res.billing.fileId,
             superannuation: res.detail.superannuationFileId,
@@ -923,8 +941,7 @@ class InfoModal extends Component {
         return true;
       }
     });
-  };
-  
+  };  
 
   onContact = (value) => {
     if (value) {
@@ -1241,6 +1258,8 @@ class InfoModal extends Component {
       loading,
       files,
       activeKey,
+      disabledFY,
+      disabledSY
     } = this.state;
     return (
       <Modal
@@ -1335,6 +1354,7 @@ class InfoModal extends Component {
                   this.handleUpload(options, 'contract')
                 }
                 // listType="picture"
+                disabled={disabledFY||disabledSY}
                 listType="picture-card"
                 maxCount={1}
                 fileList={files.contract}

@@ -1,0 +1,33 @@
+.fy-modal{
+    width: 100vw !important;
+    padding-bottom: 0px !important;
+    top: 0px !important;
+    max-width: calc(100vw - 4px) !important;
+} 
+.fy-modal .ant-modal-body{
+    overflow-y: scroll !important;
+    position: relative !important;
+    height: calc(100vh - 110px) !important;
+}
+.fy-modal .ant-modal-content {
+    height: 100vh !important
+}
+.steps-content{
+    padding-top: 10px
+}
+.instructions-fy{
+    padding-top: 2%;
+    width: 60%
+}
+
+.instructions-fy .ant-typography ul li {
+    padding-top: 10px
+}
+
+.instructions-fy .ant-typography ul li.ps-note span{
+    color: red
+}
+
+.fy-modal .ant-tag{
+    margin-right: 1px !important;
+}
