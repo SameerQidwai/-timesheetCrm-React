@@ -28,7 +28,7 @@ export const getInvoiceData = (projectId, startDate, endDate) => {
       jwtExpired(message);
       // messageAlert.success({ content: message, key: 1 });
       setToken(res?.headers?.authorization);
-      return { success, data };
+      return { success, ...data };
     })
     .catch((err) => {
       return apiErrorRes(err, 1);
@@ -36,7 +36,7 @@ export const getInvoiceData = (projectId, startDate, endDate) => {
 };
 
 export const createInvoice = (data) => {
-  messageAlert.loading({ content: 'Loading...', key: 1 });
+  messageAlert.loading({ content: 'Loading...', key: 1, duration:0 });
   return axios
     .post(url+ '/', data, { headers: headers() })
     .then((res) => {
@@ -52,7 +52,7 @@ export const createInvoice = (data) => {
 };
 
 export const getInvoice = (id) => {
-  messageAlert.loading({ content: 'Loading...', key: 1 });
+  messageAlert.loading({ content: 'Loading...', key: 1, duration:0 });
   return axios
     .get(`${url}/${id}`, { headers: headers() })
     .then((res) => {
@@ -79,6 +79,21 @@ export const updateInvoice = (id, data) => {
     .put(`${url}/${id}`, data, { headers: headers() })
     .then((res) => {
       const { success, message,data } = res?.data;
+      jwtExpired(message);
+      messageAlert.success({ content: message, key: 1 });
+      setToken(res?.headers?.authorization);
+      return { success };
+    })
+    .catch((err) => {
+      return apiErrorRes(err, 1);
+    });
+};
+export const actionInvoice = (id, action) => {
+  messageAlert.loading({ content: 'Loading...', key: 1 });
+  return axios
+    .delete(`${url}/${id}/${action}`, { headers: headers() })
+    .then((res) => {
+      const { success, message } = res?.data;
       jwtExpired(message);
       messageAlert.success({ content: message, key: 1 });
       setToken(res?.headers?.authorization);

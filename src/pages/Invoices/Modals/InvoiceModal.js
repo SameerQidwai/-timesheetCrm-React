@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
+  Checkbox,
   Col,
   DatePicker,
   Descriptions,
@@ -40,9 +41,9 @@ const { Text } = Typography;
 const InvoiceModal = ({ visible, close, callBack }) => {
   const [form] = Form.useForm();
   const [lineItems, setLineItems] = useState([{}]);
+  const [attachments, seAttachments] = useState([]);
   const [totalAmounts, setTotalAmounts] = useState({});
-  const [fields, setFields] = useState([
-    
+  const [fields, setFields] = useState([ 
     {
         Placeholder: 'Project',
         // rangeMin: true,
@@ -328,9 +329,9 @@ const InvoiceModal = ({ visible, close, callBack }) => {
 
         //If project is milestone change scheduleId
         if (projectType ===1){
-            tempFields[4] = projectTypeField[1]['label'];
-            tempFields[6] = projectTypeField[1]['field'];
-            tempFields[10].data = res[2]?.data?.lineItems // set tempoary field change to this field
+          tempFields[4] = projectTypeField[1]['label'];
+          tempFields[6] = projectTypeField[1]['field'];
+          tempFields[10].data = res[2]?.data?.lineItems // set tempoary field change to this field
         }
         //setting form field
         form.setFieldsValue({ basic: res[2]?.data });
@@ -339,7 +340,7 @@ const InvoiceModal = ({ visible, close, callBack }) => {
 
         //setting total amount to show below table
         setTotalAmounts(res[2]?.data?.totalAmounts);
-
+        seAttachments(res[2]?.data?.attachments??[])
         // simultaneously getting real project data after avoiding delay response
         // getProjects(res[2]?.data?.organization, true)
         if (projectType ===1){
@@ -365,6 +366,7 @@ const InvoiceModal = ({ visible, close, callBack }) => {
       setFields([...tempFields]); //change project fields based on type // projectTypeField
       setLineItems([{}]);
       let { basic } = form.getFieldsValue();
+      console.log(form, basic)
       form.setFieldsValue({
         basic: {
           ...basic,
@@ -385,16 +387,17 @@ const InvoiceModal = ({ visible, close, callBack }) => {
       //else wait for date range for timebase
       getInvoiceData(
         projectId,
-        formatDate(months?.[0], true),
-        formatDate(months?.[1], true)
+        formatDate(months?.[0], true, 'YYYY-MM-DD'),
+        formatDate(months?.[1], true, 'YYYY-MM-DD')
       ).then((res) => {
         if (res.success) {
           if (type === 1) {
             let tempFields = fields;
-            tempFields[6].data = res.data; // if api called on milestone add schedule to select schedule
+            tempFields[6].data = res.resources; // if api called on milestone add schedule to select schedule
             setFields([...tempFields]);
           } else {
-            setTableData(res.data); // Else if api called for timebase (after selecting date range) //show data to table
+            setTableData(res.resources); // Else if api called for timebase (after selecting date range) //show data to table
+            seAttachments(res.attachments??[])
           }
         }
       });
@@ -438,7 +441,7 @@ const InvoiceModal = ({ visible, close, callBack }) => {
 
   // on submit
   const onFinish = ({basic: formData}) => {
-    if (lineItems?.[0]?.unitAmount) {
+    if (Object.keys(lineItems?.[0]).length !== 0) {
       let data = {
         ...formData,
         startDate: formatDate(formData['months']?.[0], true),
@@ -446,6 +449,7 @@ const InvoiceModal = ({ visible, close, callBack }) => {
         dueDate: formatDate(formData.dueDate, true),
         issueDate: formatDate(formData.issueDate, true),
         lineItems,
+        attachments,
       };
       console.log(formData)
       if (visible === true){
@@ -465,6 +469,13 @@ const InvoiceModal = ({ visible, close, callBack }) => {
       message.error('Empty Invoice Not Allowed', 3);
     }
   };
+
+  const selectFiles=(key, fileObj) => {
+    let index = attachments.findIndex(file=> file.fileId === fileObj.fileId)
+    let tempAttachment =attachments
+    tempAttachment[index][key] = !tempAttachment[index][key]
+    seAttachments([...tempAttachment])
+  }
 
   return (
     <Modal
@@ -487,9 +498,54 @@ const InvoiceModal = ({ visible, close, callBack }) => {
       >
         <FormItems FormFields={fields} />
       </Form>
-      <Row justify="end" gutter={[0, 20]} style={{ marginTop: 20 }}>
+      <Row justify="space-between" gutter={[0, 20]} style={{ marginTop: 20 }}>
         <Col span={24}>
           <ATable rowKey="id" dataSource={lineItems} columns={columns} />
+        </Col>
+        <Col span={10}>
+          <Row justify="space-between">
+            <Col span={13}>File name</Col>
+            <Col >Send</Col>
+            <Col style={{marginRight: 10}}>Attach</Col>
+          </Row>
+          <Upload
+            // customRequest={(option) => handleUpload(option, 'tfnFile')}
+            style={{
+              maxHeight: 120,
+              position: 'relative',
+              overflowY: 'scroll',
+            }}
+            listType="text"
+            className="invoice-upload"
+            // maxCount={1}
+            fileList={attachments}
+            name={`TFN Declaration`}
+            // onRemove={() => onRemove('tfnFile')}
+            itemRender={(originNode, file, fileList, actions) => (
+              <Row justify="space-between" align="center" key={file.fileId}>
+                <Col span={13}>{originNode}</Col>
+                <Col style={{textAlign: 'right'}}>
+                  <Checkbox
+                    checked={file.includeOnline}
+                    disabled={!file.attachXero}
+                    onChange={()=>selectFiles('includeOnline', file)}
+                  />
+                </Col>
+                <Col style={{textAlign: 'center', marginRight:10}}>
+                  <Checkbox
+                    checked={file.attachXero}
+                    onChange={()=>selectFiles('attachXero', file)}
+                  />
+                </Col>
+              </Row>
+            )}
+          >
+            {/* {files.tfnFile.length < 1 && (
+              <Button icon={<UploadOutlined />} loading={files.tfnFile_loading}>
+                Upload TFN Declaration
+              </Button>
+            )} */}
+          </Upload>
         </Col>
         <Col span={10}>
           <Descriptions
