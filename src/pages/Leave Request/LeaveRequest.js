@@ -24,6 +24,7 @@ import {
   localStore,
   R_STATUS,
   STATUS_COLOR,
+  dateClosed,
 } from '../../service/constant';
 import AddRequestModal from './Modals/AddRequestModal';
 import { getRequests } from '../../service/leaveRequest-Apis';
@@ -33,7 +34,7 @@ import {Tag_s} from '../../components/Core/Custom/Index';
 import { generalDelete } from "../../service/delete-Api's";
 const { Title } = Typography;
 
-class LeaveRequest extends Component {
+class LeaveRequest extends Component {  
   constructor(props) {
     super(props);
     this.typeColumns = [
@@ -134,11 +135,15 @@ class LeaveRequest extends Component {
                   danger
                   disabled={
                     !this?.state?.permissions?.['DELETE'] ||
-                    record.status === 'AP'
+                    record.status === 'AP' || dateClosed(record.startDate)
                   }
                   className="pop-confirm-menu"
                 >
                   <Popconfirm
+                  disabled={
+                    !this?.state?.permissions?.['DELETE'] ||
+                    record.status === 'AP' || dateClosed(record.startDate)
+                  }
                     title="Are you sure you want to delete ?"
                     onConfirm={() => this.handleDelete(record.id, index)}
                     okText="Yes"
@@ -154,7 +159,7 @@ class LeaveRequest extends Component {
                     this.setState({
                       openModal: true,
                       editRequest: record.id,
-                      readOnly: record.status,
+                      readOnly: dateClosed(record.endDate)||record.status,
                       // editIndex: index
                     });
                   }}
@@ -294,7 +299,7 @@ class LeaveRequest extends Component {
             close={this.closeModal}
             edit={editRequest}
             callBack={this.getData}
-            readOnly={readOnly === 'AP'}
+            readOnly={readOnly === true || readOnly === 'AP'}
             showDetails={!readOnly || readOnly === 'SB' || readOnly === 'RJ'}
           />
         )}

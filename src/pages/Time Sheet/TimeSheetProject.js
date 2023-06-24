@@ -5,7 +5,7 @@ import { DownloadOutlined, SaveOutlined, ExclamationCircleOutlined, PaperClipOut
 import moment from "moment";
 import AttachModal from "./Modals/AttachModal";
 import {  getList, reviewTimeSheet, getMilestones, getUsersTimesheet  } from "../../service/timesheet"
-import { Api, localStore, R_STATUS, STATUS_COLOR } from "../../service/constant";
+import { Api, dateClosed, localStore, R_STATUS, STATUS_COLOR } from "../../service/constant";
 
 import "../styles/button.css";
 import TimeSheetPDF from "./Modals/TimeSheetPDF";
@@ -417,147 +417,181 @@ class TimeSheetProject extends Component {
     }
 
     render() {
-        const {  data,   columns,  timeObj,  milestones, sMilestone, isAttach, isDownload, eData, sTimesheet, permissions } = this.state
+        const {  data,   columns,  timeObj,  milestones, sMilestone, isAttach, isDownload, eData, sTimesheet, permissions, sheetDates } = this.state
         return (
-            <>
-                <Row justify="space-between" >
-                    <Col>
-                        <Title level={4}>Timesheet Approval</Title>
-                    </Col>
-                    <Col  >
-                        <Select
-                            placeholder="Select Project"
-                            style={{ width: 300 }}
-                            // allowClear
-                            options={milestones}
-                            value={sMilestone}           
-                            showSearch
-                            optionFilterProp={["label", "value"]}
-                            filterOption={
-                                (input, option) =>{
-                                    const label = option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                                    const value = option.value.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0
-                                        return label || value
-                                }
-                            }
-                            onSelect={(value, option)=>{
-                                this.setState({
-                                    sMilestone: value
-                                },()=>{
-                                    this.getSheet()
-                                })
-                            }}
-                        />
-                    </Col>
-                    <Col >
-                        <DatePicker
-                            mode="month"
-                            picker="month"
-                            format="MMM-YYYY"
-                            onChange={(value)=>{
-                                this.setState({
-                                    sheetDates : {
-                                        cMonth: value ?? moment(),
-                                        startDate: moment(value ?? moment()).startOf("month"),
-                                        endDate: moment(value ?? moment()).endOf("month")
-                                    }
-                                },()=>{
-
-                                    this.getSheet()
-                                })
-                            }}
-                            defaultValue={moment()}
-                        />
-                    </Col>
-                </Row>
-                <Table
-                    sticky
-                    size="small"
-                    style={{maxHeight: 'fit-content'}}
-                    className="timeSheet-table fs-small"
-                    rowSelection={{ //multiple select commented
-                        selectedRowKeys: sTimesheet.keys,
-                        fixed:true,
-                        onChange:(selectedRowKeys, selectedRows)=>{this.milestoneSelect(selectedRowKeys, selectedRows )},
-                        getCheckboxProps: (record) => ({
-                            disabled: (record.timesheetStatus === 'SV' || record.timesheetStatus === 'RJ'  ||record.timesheetStatus === 'NC') || (!permissions['UNAPPROVAL'] && record.timesheetStatus === 'AP') || (record.phase===false), // Column configuration not to be checked
-                          }),
-                    }}
-                    scroll={{
-                        // x: "calc(700px + 100%)",
-                        x: "'max-content'",
-                    }}
-                    bordered
-                    pagination={false}
-                    rowKey={'milestoneEntryId'}
-                    // rowClassName={(record) => this.highlightRow(record)}
-                    columns={columns}
-                    dataSource={[...data]}
-                    summary={ columnData => this.summaryFooter(columnData)}
+          <>
+            <Row justify="space-between">
+              <Col>
+                <Title level={4}>Timesheet Approval</Title>
+              </Col>
+              <Col>
+                <Select
+                  placeholder="Select Project"
+                  style={{ width: 300 }}
+                  // allowClear
+                  options={milestones}
+                  value={sMilestone}
+                  showSearch
+                  optionFilterProp={['label', 'value']}
+                  filterOption={(input, option) => {
+                    const label =
+                      option.label.toLowerCase().indexOf(input.toLowerCase()) >=
+                      0;
+                    const value =
+                      option.value
+                        .toString()
+                        .toLowerCase()
+                        .indexOf(input.toLowerCase()) >= 0;
+                    return label || value;
+                  }}
+                  onSelect={(value, option) => {
+                    this.setState(
+                      {
+                        sMilestone: value,
+                      },
+                      () => {
+                        this.getSheet();
+                      }
+                    );
+                  }}
                 />
-                <Row justify="end" gutter={[20,200]}>
-                    <Col>
-                    {/* || sTimesheet.approved|| sTimesheet.rejected */} {/* ???? whats the hell is this*/}
-                        <Button 
-                            disabled={ sTimesheet.keys.length<1 }
-                            onClick={()=>this.openAttachModal()}
-                        >
-                            Import
-                        </Button>
-                    </Col>
-                    <Col>
-                        <Button 
-                            type="primary" 
-                            disabled={ sTimesheet.keys.length<1}
-                            onClick={()=>{this.exporPDF(sTimesheet.keys)}}
-                        >
-                            Export
-                        </Button>
-                    </Col>
-                    <Col>
-                        <Button 
-                            type="primary" 
-                            danger
-                            disabled={ sTimesheet.keys.length<1 || !permissions['APPROVAL'] || sTimesheet.cantReject}
-                            onClick={()=>this.multiAction('Reject')}
-                        > 
-                            Reject
-                        </Button>
-                    </Col>
-                    <Col>
-                        <Button
-                            className={'success'}
-                            disabled={ sTimesheet.keys.length<1 || !permissions['APPROVAL'] || sTimesheet.cantApprove}
-                            onClick={()=> this.multiAction('Approve')}
-                        >
-                            Approve
-                        </Button>
-                    </Col>
-                    <Col>
-                        <Button
-                            className={'not-success'}
-                            disabled={ sTimesheet.keys.length<1 || !permissions['UNAPPROVAL'] || sTimesheet.cantUnapprove}
-                            onClick={()=> this.multiAction('Unapprove')}
-                        >
-                            Unapprove
-                        </Button>
-                    </Col>
-                </Row>
-                {isAttach && (
-                    <AttachModal
-                        visible={isAttach}
-                        timeObj={timeObj}
-                        callBack={this.attachCallBack}
-                        close={()=>this.setState({isAttach: false, timeObj: false})}
-                    />
-                )}
-                {isDownload && (
-                    <TimeSheetPDF
-                        milestoneEntryId={eData}
-                        close={()=>this.setState({isDownload: false})}
-                    />
-                )}
-            </>
+              </Col>
+              <Col>
+                <DatePicker
+                  mode="month"
+                  picker="month"
+                  format="MMM-YYYY"
+                  onChange={(value) => {
+                    this.setState(
+                      {
+                        sheetDates: {
+                          cMonth: value ?? moment(),
+                          startDate: moment(value ?? moment()).startOf('month'),
+                          endDate: moment(value ?? moment()).endOf('month'),
+                        },
+                      },
+                      () => {
+                        this.getSheet();
+                      }
+                    );
+                  }}
+                  defaultValue={moment()}
+                />
+              </Col>
+            </Row>
+            <Table
+              sticky
+              size="small"
+              style={{ maxHeight: 'fit-content' }}
+              className="timeSheet-table fs-small"
+              rowSelection={{
+                //multiple select commented
+                selectedRowKeys: sTimesheet.keys,
+                fixed: true,
+                onChange: (selectedRowKeys, selectedRows) => {
+                  this.milestoneSelect(selectedRowKeys, selectedRows);
+                },
+                getCheckboxProps: (record) => ({
+                  disabled:
+                    record.timesheetStatus === 'SV' ||
+                    record.timesheetStatus === 'RJ' ||
+                    record.timesheetStatus === 'NC' ||
+                    (!permissions['UNAPPROVAL'] &&
+                      record.timesheetStatus === 'AP') ||
+                    record.phase === false || dateClosed(sheetDates?.endDate)
+                    // Column configuration not to be checked
+                }),
+              }}
+              scroll={{
+                // x: "calc(700px + 100%)",
+                x: "'max-content'",
+              }}
+              bordered
+              pagination={false}
+              rowKey={'milestoneEntryId'}
+              // rowClassName={(record) => this.highlightRow(record)}
+              columns={columns}
+              dataSource={[...data]}
+              summary={(columnData) => this.summaryFooter(columnData)}
+            />
+            <Row justify="end" gutter={[20, 200]}>
+              <Col>
+                {/* || sTimesheet.approved|| sTimesheet.rejected */}{' '}
+                {/* ???? whats the hell is this*/}
+                <Button
+                  disabled={sTimesheet.keys.length < 1}
+                  onClick={() => this.openAttachModal()}
+                >
+                  Import
+                </Button>
+              </Col>
+              <Col>
+                <Button
+                  type="primary"
+                  disabled={sTimesheet.keys.length < 1}
+                  onClick={() => {
+                    this.exporPDF(sTimesheet.keys);
+                  }}
+                >
+                  Export
+                </Button>
+              </Col>
+              <Col>
+                <Button
+                  type="primary"
+                  danger
+                  disabled={
+                    sTimesheet.keys.length < 1 ||
+                    !permissions['APPROVAL'] ||
+                    sTimesheet.cantReject
+                  }
+                  onClick={() => this.multiAction('Reject')}
+                >
+                  Reject
+                </Button>
+              </Col>
+              <Col>
+                <Button
+                  className={'success'}
+                  disabled={
+                    sTimesheet.keys.length < 1 ||
+                    !permissions['APPROVAL'] ||
+                    sTimesheet.cantApprove
+                  }
+                  onClick={() => this.multiAction('Approve')}
+                >
+                  Approve
+                </Button>
+              </Col>
+              <Col>
+                <Button
+                  className={'not-success'}
+                  disabled={
+                    sTimesheet.keys.length < 1 ||
+                    !permissions['UNAPPROVAL'] ||
+                    sTimesheet.cantUnapprove
+                  }
+                  onClick={() => this.multiAction('Unapprove')}
+                >
+                  Unapprove
+                </Button>
+              </Col>
+            </Row>
+            {isAttach && (
+              <AttachModal
+                visible={isAttach}
+                timeObj={timeObj}
+                callBack={this.attachCallBack}
+                close={() => this.setState({ isAttach: false, timeObj: false })}
+              />
+            )}
+            {isDownload && (
+              <TimeSheetPDF
+                milestoneEntryId={eData}
+                close={() => this.setState({ isDownload: false })}
+              />
+            )}
+          </>
         );
     }
 }

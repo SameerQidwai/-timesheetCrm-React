@@ -172,7 +172,7 @@ class TimeModal extends Component {
                 centered
                 visible={popup}
                 onOk={() => { this.submit(); }}
-                okButtonProps={{ disabled: loading }}
+                okButtonProps={{ loading }}
                 onCancel={close}
                 width={540}
                 footer={[

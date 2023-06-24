@@ -24,7 +24,7 @@ import {
   getSingleRequest,
 } from '../../../service/leaveRequest-Apis';
 import moment from 'moment';
-import { formatDate, formatFloat, localStore } from '../../../service/constant';
+import { dateRange, formatDate, formatFloat, localStore } from '../../../service/constant';
 
 import '../styles.css';
 
@@ -33,9 +33,10 @@ const { Text } = Typography;
 class AddRequestModal extends Component {
   constructor(props) {
     super(props);
+    let yearClosed = localStore().closedYears
+    yearClosed = yearClosed && JSON.parse(yearClosed)
     this.formRef = React.createRef();
     this.attachRef = React.createRef();
-
     this.columns = [
       {
         title: 'Date',
@@ -149,7 +150,8 @@ class AddRequestModal extends Component {
           rangeMin: (current) => {
             const { dates } = this.formRef.current.getFieldsValue();
             const { endDate } = dates;
-            return endDate && current > endDate;
+            // return endDate && current > endDate;
+            return dateRange(current, endDate, 'start', undefined, yearClosed)
           },
         },
         {
@@ -177,7 +179,8 @@ class AddRequestModal extends Component {
           rangeMax: (current) => {
             const { dates } = this.formRef.current.getFieldsValue();
             const { startDate } = dates;
-            return startDate && current < startDate;
+            // return startDate && current < startDate;
+            return dateRange(current, startDate, 'end', undefined, yearClosed)
           },
         },
         {
@@ -201,7 +204,7 @@ class AddRequestModal extends Component {
     };
   }
   componentDidMount = () => {
-    const { approval } = this.props;
+    const { approval, readOnly } = this.props;
     if (approval) {
       this.getApprovingData();
     } else {
@@ -245,7 +248,7 @@ class AddRequestModal extends Component {
   getDateArray = (start, end, LeaveRequestType, entries) => {
     //try to put your condition to put closer to eachother if they link to eachother
     //so it will be easy to track conditions
-    console.log({ LeaveRequestType });
+    // console.log({ LeaveRequestType });
     const { showDetails, readOnly } = this.props;
     let { BasicFields, contractDetails, holidays, data, hoursEntry } =
       this.state;

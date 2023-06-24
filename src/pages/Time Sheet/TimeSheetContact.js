@@ -7,7 +7,7 @@ import TimeModal from "./Modals/TimeModal"
 import AttachModal from "./Modals/AttachModal";
 import {  getList, reviewTimeSheet, getUsers, deleteTime,  } from "../../service/timesheet"
 import { getUserMilestones } from "../../service/constant-Apis";
-import { localStore, Api, thumbUrl, STATUS_COLOR, R_STATUS, formatFloat, getModulePermissions } from "../../service/constant";
+import { localStore, Api, thumbUrl, STATUS_COLOR, R_STATUS, formatFloat, getModulePermissions, dateClosed } from "../../service/constant";
     
 import moment from "moment";
 import "../styles/button.css";
@@ -379,7 +379,7 @@ class TimeSheetContact extends Component {
                   record.status === 'RJ' ||
                   !record.status) &&
                 record.phase !== false &&
-                sUser === loginId;
+                sUser === loginId && !dateClosed(endDate)
               if (value) {
                 // I didn't put the conditon for column previos or next month because this column won't have any value for now
                 let breakHours = moment.duration(value['breakHours'], 'hours');
@@ -876,7 +876,7 @@ class TimeSheetContact extends Component {
     const canDelete =
       sTMilestones.keys.length < 1 &&
       (sUser === loginId || !!permissions?.['DELETE']); //Check this thing please if permission mei koi masla aye
-    const { sWeek, startDate, endDate } = this.state.sheetDates;
+    const { sWeek, startDate, endDate, cMonth } = this.state.sheetDates;
     return (
       <>
         <Row justify="space-between" gutter={20}>
@@ -940,8 +940,8 @@ class TimeSheetContact extends Component {
           <Col >
             <Button
               type="primary"
-              disabled={sUser !== loginId}
-              style={{backgroundColor: '#f37748' , border: '#f37748'}}
+              disabled={sUser !== loginId || dateClosed(endDate)}
+              className="orange-color"
               onClick={() => { this.openBulkModal(); }}
             >
               Bulk Entries
@@ -950,7 +950,7 @@ class TimeSheetContact extends Component {
           <Col >
             <Button
               type="primary"
-              disabled={sUser !== loginId}
+              disabled={sUser !== loginId || dateClosed(endDate)}
               onClick={() => {
                 this.getProjects(sUser, startDate, endDate);
                 this.setState({ proVisible: true });
@@ -997,7 +997,8 @@ class TimeSheetContact extends Component {
                 record.status === 'SB' ||
                 record.status === 'AP' ||
                 record.leaveRequest ||
-                record.phase === false,
+                record.phase === false ||
+                dateClosed(endDate)
               // Column configuration not to be checked
             }),
           }}
@@ -1058,6 +1059,7 @@ class TimeSheetContact extends Component {
           <AttachModal
             visible={isAttach}
             timeObj={timeObj}
+            yearClosed={dateClosed(endDate)}
             close={() =>
               this.setState({
                 isAttach: false,

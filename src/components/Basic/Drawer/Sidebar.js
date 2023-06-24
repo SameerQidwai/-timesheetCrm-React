@@ -4,7 +4,7 @@ import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons"; //Icon
 
 import "../../Styles/sidebar.css";
 
-// import Calender from '../../Calender/Calender' //Custom component
+// import Calender from '../../Calender/Calender' //Custom/Index component
 import Menus from "./Menus";
 import Navbar from "../Navbar";
 import PrivateRoute from "../Content/PrivateRoute";

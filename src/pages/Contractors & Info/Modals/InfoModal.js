@@ -6,13 +6,15 @@ import { addList, getRecord, editList } from "../../../service/contractors";
 import { getContactRecord } from "../../../service/conatct-person";
 import { getOrganizations, getOrgPersons, getRoles, getStates } from "../../../service/constant-Apis";
 import { addFiles } from "../../../service/Attachment-Apis";
-import { DURATION, formatDate } from "../../../service/constant";
+import { DURATION, dateClosed, dateRange, disableAllFields, formatDate, localStore } from "../../../service/constant";
 
 const { TabPane } = Tabs;
 
 class InfoModal extends Component {
     constructor() {
         super();
+        let yearClosed = localStore().closedYears
+        yearClosed = yearClosed && JSON.parse(yearClosed)
         this.formRef = React.createRef();
 
         this.state = {
@@ -27,6 +29,9 @@ class InfoModal extends Component {
             activeKey: 'basic',
             fileIds: null,
             fileList: [],
+
+            disabledFY:false,
+            disabledSY: false, //disable start Year
 
             data: {},
 
@@ -359,7 +364,8 @@ class InfoModal extends Component {
                     itemStyle: { marginBottom: 1 },
                     rangeMin: (current)=>{
                         const { billing } = this.formRef.current.getFieldValue();
-                        return  billing.endDate && current > billing.endDate
+                        return dateRange(current, billing?.endDate, 'start', undefined, yearClosed);
+
                     }
                 },
                 {
@@ -378,7 +384,8 @@ class InfoModal extends Component {
                     itemStyle: { marginBottom: 1 },
                     rangeMax: (current)=>{
                         const { billing } = this.formRef.current.getFieldValue();
-                        return  billing.startDate && current < billing.startDate
+                        return dateRange(current, billing?.startDate, 'end', undefined, yearClosed);
+
                     }
                 },
             
@@ -532,20 +539,20 @@ class InfoModal extends Component {
         };
     }
 
-    componentDidMount = () => {
-        const { editCont } = this.state
-        if (editCont) {
-            this.getRecord(editCont);
-        }
+    // componentDidMount = () => {
+    //     const { editCont } = this.state
+    //     if (editCont) {
+    //         this.getRecord(editCont);
+    //     }
 
-        getOrganizations().then(res=>{
-            if (res.success){
-                this.setState({
-                    ORGS: res.data.filter((item) => item.value !== 1)
-                })
-            }
-        })
-    };
+    //     getOrganizations().then(res=>{
+    //         if (res.success){
+    //             this.setState({
+    //                 ORGS: res.data.filter((item) => item.value !== 1)
+    //             })
+    //         }
+    //     })
+    // };
 
     componentDidMount = () => {
         const { editCont } = this.props
@@ -616,11 +623,27 @@ class InfoModal extends Component {
     getRecord = (id) => {
         return getRecord(id).then(res=>{
             if (res.success){
+                let { BillingFields, disabledFY, disabledSY } = this.state; //disable start Year
+
                 const {basic, kin, billing } = res
                 this.formRef.current.setFieldsValue({ basic, kin, billing });
+
+                disabledFY =  dateClosed(res.billing?.endDate, res.billing?.startDate);
+                if (disabledFY) {
+                    BillingFields = disableAllFields(BillingFields)
+                }else{
+                    disabledSY = dateClosed(billing.startDate)
+                    if (disabledSY)
+                    BillingFields = disableAllFields(BillingFields)
+                    BillingFields[4].disabled = false
+                }
+
                 this.setState({
                     fileIds: billing.fileId,
-                    fileList: billing.file
+                    fileList: billing.file,
+                    BillingFields, 
+                    disabledFY, 
+                    disabledSY
                 })
                 return {username: basic.username, paymentBase: billing.remunerationAmountPer}
             }
