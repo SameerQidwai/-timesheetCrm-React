@@ -62,6 +62,7 @@ import ExpenseSheet from '../../../pages/Expenses/ExpenseSheet';
 import { localStore } from '../../../service/constant';
 import { PermanentCalculator } from '../../Core/Cost Calculator/PermanentCalculator';
 import { BenchResources, Positions, WorkForceAllocation, WorkforceSkills, ProjectRevenueAnalysis, ClientRevenueAnalysis, TimesheetSummary, LeaveSummary, WorkInHand, Budget, CashFlow } from '../../../pages/Reports';
+import Invoice from '../../../pages/Invoices/invoice';
 
 const { Content } = Layout;
 
@@ -170,6 +171,12 @@ const pageLinks = [
   {
     component: Admin,
     link: '/admin/financial-year',
+    key: 'ADMIN_OPTIONS',
+    permission: 'READ',
+  },
+  {
+    component: Admin,
+    link: '/admin/integration',
     key: 'ADMIN_OPTIONS',
     permission: 'READ',
   },
@@ -462,6 +469,12 @@ const pageLinks = [
     link: '/financial-outlook/cash-flow',
     key: 'FORECASTING',
     permission: 'READ',
+  },
+  {
+    component: Invoice,
+    link: '/invoice',
+    key: 'INVOICE',
+    permission: 'ALLOWED',
   },
 ];
 

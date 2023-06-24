@@ -360,7 +360,7 @@ class FormItems extends Component {
             disabledDate={min ?? max}
             size={size}
             ranges={ranges}
-            style={style}
+            style={{ width: '100%', ...style }}
             onBlur={onBlur}
             onChange={onChange}
             format={'ddd DD MMM yyyy'} //donot change yet
