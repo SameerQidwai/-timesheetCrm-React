@@ -12,7 +12,11 @@ export const getSettings = () => {
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
-            if (success) setToken(res?.headers?.authorization)
+            if (success) {
+                data.forceStatusChange = !!parseInt(data.forceStatusChange)
+            }
+            console.log(data)
+            setToken(res?.headers?.authorization)
             return { success, data };
         })
         .catch((err) => {
