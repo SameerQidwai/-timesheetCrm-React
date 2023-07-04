@@ -32,12 +32,14 @@ function FYSelect({
               break;
             }
           }
-          selectFYear(currentFy.value)
-          callBack({
-            closed: currentFy?.closed,
-            start: formatDate(currentFy.start),
-            end: formatDate(currentFy.end),
-          });
+          if (currentFy?.value){
+            selectFYear(currentFy.value)
+            callBack({
+              closed: currentFy?.closed,
+              start: formatDate(currentFy.start),
+              end: formatDate(currentFy.end),
+            });
+          }
         }
         setFYears(res.option);
       }
