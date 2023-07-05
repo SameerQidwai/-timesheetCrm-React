@@ -77,7 +77,7 @@ const GlobalVarsModal = ({ visible, onClose, callBack, minDate, keyName }) => {
       key: 'value',
       size: 'small',
       rangeMin: 0,
-      rangeMax: 24,
+      // rangeMax: 24,
       rules: [{ required: true, message: 'Value is Required' }],
       type: 'InputNumber',
       fieldStyle: { width: '100%' },

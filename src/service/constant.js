@@ -81,7 +81,7 @@ export const STATES = {
   'South Australia': 'SA',
   'Western Australia': 'WA',
   'Northern Territory': 'NT',
-  Tasmania: 'TSA',
+  Tasmania: 'TAS',
 };
 
 export const toTruncate = (num, fixed) => { //not using as for now using INTL method
