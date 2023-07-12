@@ -86,6 +86,11 @@ const GlobalHistory = ({ visible, onClose }) => {
     }else{
       setData([...data, value])
     }
+    // setMinStartDate(
+    //   data?.length > 0 
+    //   ? moment.max(data?.map(obj => moment(obj.endDate)))
+    //   : null
+    // )
     setOpenModal(false)
   }
 

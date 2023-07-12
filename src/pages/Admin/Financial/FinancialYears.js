@@ -24,7 +24,7 @@ function FinancialYears(props) {
   const [visibleModal, setVisibleModal] = useState(false)
   const [visibleConfirm, setVisibleConfirm] = useState(false)
   const [lastFY, setLastFY] = useState({ created: 0, closed: null})
-
+  const [disableDates, setDisabledDates] =useState({startDate:null, endDate:null})
   
     const columns = [
       // {
@@ -89,7 +89,7 @@ function FinancialYears(props) {
                     key="edit"
                     disabled={record.closed}
                     onClick={() => {
-                      setVisibleModal({ ...record, rowIndex: index })
+                      openModal(record, index)
                     }}
                   >
                     Edit
@@ -167,14 +167,8 @@ function FinancialYears(props) {
         }
     }
     
-    const onFYAdd = (newEntry, rowIndex) =>{
-      if (rowIndex>=0){
-        let tempData = data
-        tempData[rowIndex] = newEntry
-        setData([...tempData])
-      }else{
-        setData([...data, newEntry])
-      }
+    const onFYAddAndUpdate = (newEntry, rowIndex) =>{
+      getData()
       setVisibleModal(false)
     }
 
@@ -413,13 +407,54 @@ function FinancialYears(props) {
       })
     }
 
+    const openModal = (record, rowIndex) =>{
+      let tempData = [...data]
+      let startDate = null
+      let endDate = null
+
+      //checking if new record was created there any redcord created before this
+      if (record===true){
+        if (tempData.length>0){
+          moment.max(tempData?.map((obj) => {
+            startDate = obj.startDate
+            endDate = obj.endDate
+            return moment(obj.endDate)
+          }))
+        }
+       
+      }else if (rowIndex>=0){ // this is to get startDate and endDate if 
+        if (tempData.length>0){ // any Financial year get edit to stop overlapping
+          let lastDates = {
+            start: formatDate(tempData[rowIndex].startDate).subtract(1, "days"),
+            end: formatDate(tempData[rowIndex].endDate).add(1, "days")
+          }
+          tempData.forEach((obj) => { 
+            //checking if before this finanacial year was exist
+            if (lastDates.start.isSame(obj.endDate, 'days')){
+              startDate = obj.endDate
+            }
+            // checking if after this finanacial year was exist
+            if (lastDates.end.isSame(obj.startDate, 'days')){
+              endDate = obj.startDate
+            }
+          })
+        }
+      }
+
+      setDisabledDates({
+        startDate: startDate ? formatDate(startDate): null,
+        endDate: startDate?endDate? formatDate(endDate): moment().add(10, "years"): null
+      })
+      setVisibleModal(record===true ? true: { ...record, rowIndex })
+    }
+
     return (
       <Row justify="end" gutter={[0, 10]}>
         <Col>
           <Button 
             size="small" 
             type="primary"
-            onClick={()=>setVisibleModal(true)}
+            onClick={()=>openModal(true)}
             >Create FY</Button>
         </Col>
         <Col span={24}>
@@ -437,12 +472,13 @@ function FinancialYears(props) {
         {visibleModal&& <FYModal //visible true means to add new
           visible={visibleModal} // visble anydata means to edit this
           close={()=>setVisibleModal(false)}
-          callBack={onFYAdd}
+          disableDates={disableDates}
+          callBack={onFYAddAndUpdate}
         />}
         {visibleConfirm&& <FYCloseModal //visible true means to add new
           visible={visibleConfirm} // visble anydata means to edit this
           close={()=>setVisibleConfirm(false)}
-          // callBack={onFYAdd}
+          // callBack={onFYAddAndUpdate}
         />}
       </Row>
     )

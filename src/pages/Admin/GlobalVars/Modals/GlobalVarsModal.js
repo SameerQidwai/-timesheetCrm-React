@@ -45,8 +45,8 @@ const GlobalVarsModal = ({ visible, onClose, callBack, minDate, keyName }) => {
       fieldStyle: { width: '100%' },
       rangeMin: (current) => {
         const { taxes: { endDate } } = form.getFieldValue();
-        return dateRange(current, endDate, 'start', undefined, yearClosed) ||
-        dateRange(current, minDate, 'end', undefined)
+        return dateRange(current, endDate, 'end', undefined, yearClosed) //||
+        // dateRange(current, minDate, 'end', undefined)
       },
     },
     {
@@ -59,7 +59,7 @@ const GlobalVarsModal = ({ visible, onClose, callBack, minDate, keyName }) => {
       fieldStyle: { width: '100%' },
       rangeMax: (current) => {
         const { taxes: { startDate }, } = form.getFieldValue();
-        return dateRange(current, startDate??minDate, 'end', undefined, yearClosed);
+        return dateRange(current, startDate, 'start', undefined, yearClosed);
       },
     },
     {
@@ -105,7 +105,6 @@ const GlobalVarsModal = ({ visible, onClose, callBack, minDate, keyName }) => {
 
   const onFinish = ({taxes}) =>{
     if (visible.id){
-      console.log(visible.id)
       taxes = {
         name: keyName,
         value: taxes.value,
@@ -124,6 +123,7 @@ const GlobalVarsModal = ({ visible, onClose, callBack, minDate, keyName }) => {
         startDate: formatDate(taxes.startDate, true),
         endDate: formatDate(taxes.endDate, true),
       }
+      
       createValue(variables).then(res=>{
         if(res.success){
           callBack(res.data)

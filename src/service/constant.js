@@ -1,7 +1,7 @@
 import moment from 'moment';
 import 'moment-weekday-calc';
 import { message as messageAlert } from 'antd';
-export const Api = 'http://localhost:3301/api/v1';
+// export const Api = 'http://localhost:3301/api/v1';
 
 // export const Api = "http://onelmcrm.gaamatech.com:8000/api/v1";
 // export const Api = "http://192.168.0.243:3000/api/v1"; // Shahzaib/
@@ -9,7 +9,7 @@ export const Api = 'http://localhost:3301/api/v1';
 // export const Api = "https://a067-111-88-150-124.ngrok.io/api/v1"; // Shahzaib/ tunnel
 // export const Api = 'http://192.168.0.147:3301/api/v1'; // Me
 
-// export const Api = 'http://3.89.162.49:8000/api/v1'; //Test
+export const Api = 'http://3.85.204.62:8000/api/v1'; //Test
 // export const Api = 'http://54.174.229.28:8000/api/v1'; //Demo...
 
 // export const Api = "http://192.168.0.110:3301/api/v1"; // TrunRajPal Home
@@ -244,23 +244,26 @@ export const apiErrorRes = (err, id, duration, style) => {
   return { error: err.message, status, message, success };
 };
 
-export const dateRange = (current, selectedDate, isDate, pDates,dateFY) => {
+export const dateRange = (current, selectedDate, isDate, pDates,dateFY, granularity ='[]') => {
   let  [startYear =null, endYear =null] = dateFY??[]
   if (current) {
+    current = formatDate(current.format('YYYY-MM-DDTHH:mm:ss.SSSS'))
+    selectedDate = selectedDate? formatDate(selectedDate.format('YYYY-MM-DDTHH:mm:ss.SSSS')):null
+
     const startDate =
-      pDates?.startDate ?? formatDate(new Date()).subtract(10, 'years');
+    pDates?.startDate ?? formatDate(new Date()).subtract(10, 'years');
     const endDate = pDates?.endDate ?? formatDate(new Date()).add(10, 'years');
 
     return (
       (selectedDate? isDate === 'start' //checking if ut call from startDate
-        ? current >= selectedDate //disable after
-        : isDate === 'end' ? current <= selectedDate :false //checking if it call from endtDate
+        ? current.isSameOrAfter(selectedDate, 'days') //disable after
+        : isDate === 'end' ? current.isSameOrBefore(selectedDate, 'days') :false //checking if it call from endtDate
       : false) || //disable Before // disable Before, // disable After
       !current.isBetween(
         formatDate(startDate),
         formatDate(endDate),
-        'day',
-        '[]'
+        'days',
+        granularity
       ) || // checking if date doesn't falls into financial year
       ((endYear ) &&
         current.isBefore(
