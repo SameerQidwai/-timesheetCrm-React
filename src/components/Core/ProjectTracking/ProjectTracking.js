@@ -259,7 +259,6 @@ class ProjectTracking extends Component {
               },
             }}
             summary={(data) => {
-              console.log(data);
               let totalHours = 0;
               let utilizedHours = 0;
               let remainingHours = 0;

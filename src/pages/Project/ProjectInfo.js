@@ -257,7 +257,6 @@ class ProjectInfo extends Component {
           size="small"
           bordered
           layout="horizontal"
-          contentStyle={{width: '33%'}}
           // extra={<Button type="primary">Edit</Button>}
         >
           <Item label="Project Name">{data.title}</Item>
@@ -265,6 +264,9 @@ class ProjectInfo extends Component {
             <Row justify="space-between" align="middle">
               {formatCurrency(data.value)}
             </Row>
+          </Item>
+          <Item label="Start Date">
+            {formatDate(data.startDate, true, true)}
           </Item>
           <Item label="Organisation">
             {data.organizationName ? (
@@ -280,14 +282,6 @@ class ProjectInfo extends Component {
               'No Organisation'
             )}
           </Item>
-          <Item label="Delegate Contact">
-            {basic ? basic.ContactName : null}
-          </Item>
-          <Item label="Start Date">
-            {formatDate(data.startDate, true, true)}
-          </Item>
-          <Item label="End Date">{formatDate(data.endDate, true, true)}</Item>
-          {/* <Item label="Bid Date">{formatDate(data.bidDate, true, true)}</Item> */}
           <Item label="Status">
             {
               <Tag color={!basic.phase ? 'red' : 'green'}>
@@ -295,7 +289,12 @@ class ProjectInfo extends Component {
               </Tag>
             }
           </Item>
-          {/* <Item label="Gender">{data.gender}</Item> */}
+          <Item label="End Date">{formatDate(data.endDate, true, true)}</Item>
+          <Item label="Delegate Contact">
+            {basic ? basic.ContactName : null}
+          </Item>
+          
+          
         </Descriptions>
         {renderTabs && (
           <Tabs

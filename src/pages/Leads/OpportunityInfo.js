@@ -96,7 +96,6 @@ class OpportunityInfo extends Component {
     const { OPPORTUNITIES } = JSON.parse(localStore().permissions);
     getRecord(id).then((res) => {
       if (res.success) {
-        console.log(res.data);
         this.setState({
           data: res.data,
           basic: res.basic,
@@ -253,8 +252,7 @@ class OpportunityInfo extends Component {
                   }}
                   disabled={!permissions['UPDATE']}
                 >
-                  {' '}
-                  Edit{' '}
+                  Edit
                 </Menu.Item>
                 {(basic && basic.type) === 1 ? ( //if condition
                   <Menu.Item>
@@ -297,8 +295,8 @@ class OpportunityInfo extends Component {
           layout="horizontal"
           // extra={<Button type="primary">Edit</Button>}
         >
-          <Item label="Project Name">{data.title}</Item>
-          <Item label="Estimated Value">
+          <Item label="Project Name" >{data.title}</Item>
+          <Item label="Estimated Value" contentStyle={{width:'15%'}}>
             <Row justify="space-between" align="middle">
               <Col>{formatCurrency(data.value)}</Col>
               {data.value !== calculatedValue ? (
@@ -332,7 +330,8 @@ class OpportunityInfo extends Component {
               )}
             </Row>
           </Item>
-          <Item label="Organisation">
+          <Item label="Bid Date">{formatDate(data.bidDate, true, true)}</Item>
+          <Item label="Organisation" contentStyle={{width:'30%'}}>
             {data.organization ? (
               <Link
                 to={{
@@ -346,18 +345,24 @@ class OpportunityInfo extends Component {
               'No Organisation'
             )}
           </Item>
-          <Item label="Delegate Contact">
-            {' '}
-            {basic ? basic.ContactName : ''}
+          <Item label="GO/Get">
+            {billing.goget} %
           </Item>
           <Item label="Start Date">
-            {formatDate(data.startDate, true, true)}{' '}
+            {formatDate(data.startDate, true, true)}
+          </Item>
+          <Item label="Delegate Contact">
+            {basic ? basic.ContactName : ''}
+          </Item>
+          
+          <Item label="Discounted Value">
+            {formatCurrency(billing.discount)}
           </Item>
           <Item label="End Date">{formatDate(data.endDate, true, true)}</Item>
-          <Item label="Bid Date">{formatDate(data.bidDate, true, true)}</Item>
           <Item label="Status">
             {basic.status ? O_STATUS[basic.status] : ''}
           </Item>
+          
           {/* <Item label="Gender">{data.gender}</Item> */}
         </Descriptions>
         {renderTabs && (

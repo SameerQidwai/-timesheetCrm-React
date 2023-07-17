@@ -155,11 +155,26 @@ function WorkInHand() {
     }
   ]);
 
+  // useEffect(() => {
+  //   if (year){
+  //     creatingCol()
+  //     console.timeEnd('timing');
+  //     setTimeout(() => {
+  //       Promise.all([getSaveForecast(year), getWorkInHandForecast(year)], ).then(
+  //         (res) => {
+  //           let saveForecast = res[0].success ? res[0].data : {};
+  //           let forecast = res[1].success ? res[1].data : {};
+  //           structureData(forecast, saveForecast);
+  //           setIncomeTaxRates(forecast.INCOME_TAX_RATES ?? {});
+  //           form.setFieldsValue(saveForecast);
+  //         }
+  //       );
+  //     }, 4000);
+  //   }
+  // }, [year]);
   useEffect(() => {
-    if (year){
-      creatingCol();
-      console.timeEnd('timing');
-      Promise.all([getSaveForecast(year), getWorkInHandForecast(year)]).then(
+    if (columns?.[1]?.['children']?.[0]?.['children']?.length){
+      Promise.all([getSaveForecast(year), getWorkInHandForecast(year)], ).then(
         (res) => {
           let saveForecast = res[0].success ? res[0].data : {};
           let forecast = res[1].success ? res[1].data : {};
@@ -168,6 +183,12 @@ function WorkInHand() {
           form.setFieldsValue(saveForecast);
         }
       );
+    }
+  }, [columns]);
+
+  useEffect(() => {
+    if (year){
+      creatingCol()
     }
   }, [year]);
 
@@ -202,7 +223,7 @@ function WorkInHand() {
       monthColumns.push(monthCol(el, updateField));
     } // forecast-total
     monthColumns.push(
-      monthCol({ year: year?.fiscal, era: 'Forcast', totalKey: 'total' })
+      monthCol({ year: year?.fiscal, era: iDate.isAfter(moment(), 'day')? 'Actual' : 'Forecast', totalKey: 'total' })
     );
     newColumns[1]['children'][0]['children'] = monthColumns;
     setColumns(newColumns);
@@ -265,9 +286,11 @@ function WorkInHand() {
 
   const calculate_col_total = (updatedData, INCOME_TAX_RATES = {}) => {
     let newData = [...updatedData];
+    // console.log(newData)
     let columName = columns?.[1]?.['children']?.[0]?.['children'] || [];
 
-    columName.forEach(({ children: [{ dataIndex }] }) => {
+    console.log(columns)
+    columName.forEach(({ children: [{ dataIndex, name }] }) => {
       newData[8][dataIndex] = 0; /**Revenue */
       newData[31][dataIndex] = 0; /**COST */
       newData[56][dataIndex] = 0; /**DOH */
@@ -308,6 +331,7 @@ function WorkInHand() {
         }
       }
     });
+    console.log(newData[8])
     /**
      * 33 = CM
      * 35 = CM%
