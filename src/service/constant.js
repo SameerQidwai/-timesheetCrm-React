@@ -1,7 +1,7 @@
 import moment from 'moment';
 import 'moment-weekday-calc';
 import { message as messageAlert } from 'antd';
-// export const Api = 'http://localhost:3301/api/v1';
+export const Api = 'http://localhost:3301/api/v1';
 
 // export const Api = "http://onelmcrm.gaamatech.com:8000/api/v1";
 // export const Api = "http://192.168.0.243:3000/api/v1"; // Shahzaib/
@@ -15,7 +15,7 @@ import { message as messageAlert } from 'antd';
 // export const Api = "http://192.168.0.110:3301/api/v1"; // TrunRajPal Home
 // export const Api = "http://192.168.0.244:3301/api/v1"; // TrunRajPal Office
 
-export const Api = "http://3.239.21.153:8000/api/v1"; //live api
+// export const Api = "http://3.239.21.153:8000/api/v1"; //live api
 
 export const O_STAGE = {
   L: 'Lead',
@@ -84,12 +84,19 @@ export const STATES = {
   Tasmania: 'TAS',
 };
 
-export const toTruncate = (num, fixed) => { //not using as for now using INTL method
-  if (num && !isNaN(num)){
-      return num.toString().match(new RegExp('^-?\\d+(?:\.\\d{0,' + (fixed || -1) + '})?'))?.[0] || '0.00'
+export const toTruncate = (num, fixed) => {
+  //not using as for now using INTL method
+  if (num && !isNaN(num)) {
+    return (
+      parseFloat(
+        num
+          .toString()
+          .match(new RegExp('^-?\\d+(?:.\\d{0,' + (fixed || -1) + '})?'))?.[0]
+      ).toFixed(fixed) || '0.00'
+    );
   }
-  return '0.00'
-}
+  return '0.00';
+};
 
 export const formatCurrency = (amount, fixed) => { 
   //console.log('=== === === formatCurrency === === ===');

@@ -389,7 +389,7 @@ class AddRequestModal extends Component {
     getSingleRequest(edit).then((srRes) => {
       if (srRes.success) {
         const { data, data: { workId, typeId, work, type, holidays, contractDetails, startDate, endDate, }, entries, fileIds, fileList, } = srRes;
-        console.log(type.id);
+        // console.log(type.id);
         BasicFields[3].data = workId
           ? [{ value: workId, label: work?.title }]
           : []; //set projects to select box
@@ -502,7 +502,7 @@ class AddRequestModal extends Component {
     const { data, fileIds } = this.state;
 
     const newVal = {
-      desc: dates.desc ?? '',
+      description: dates.desc ?? '',
       typeId: dates.typeId || 0,
       workId: dates.workId,
       entries: data,
@@ -529,17 +529,18 @@ class AddRequestModal extends Component {
   };
 
   getTableSummary = (data) => {
-    let total = 0;
+    let scaledTotal = 0;
+    let factor = 100;
     data.forEach(({ hours }) => {
-      total += parseFloat(hours ?? 0);
+      scaledTotal += parseFloat(hours ?? 0) * factor;
     });
-
+    let exactTotal = scaledTotal / factor 
     return (
       <Table.Summary fixed="top">
         <Table.Summary.Row>
           <Table.Summary.Cell index={0}>Total</Table.Summary.Cell>
           <Table.Summary.Cell index={1}>
-            {formatFloat(total)}
+            {formatFloat(exactTotal)}
           </Table.Summary.Cell>
         </Table.Summary.Row>
       </Table.Summary>
