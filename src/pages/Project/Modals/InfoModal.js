@@ -35,7 +35,6 @@ class InfoModal extends Component {
           size: 'small',
           type: 'Text',
           labelAlign: 'right',
-          // itemStyle:{marginBottom:'10px'},
         },
         {
           Placeholder: 'Organisation',
@@ -44,7 +43,6 @@ class InfoModal extends Component {
           size: 'small',
           type: 'Text',
           labelAlign: 'right',
-          // itemStyle:{marginBottom:'10px'},
         },
         {
           object: 'basic',
@@ -89,23 +87,20 @@ class InfoModal extends Component {
           size: 'small',
           type: 'Text',
           labelAlign: 'right',
-          // itemStyle:{marginBottom:'10px'},
         },
         {
-          Placeholder: 'Name',
+          Placeholder: 'Title',
           rangeMin: true,
           fieldCol: 12,
           size: 'small',
           type: 'Text',
           labelAlign: 'right',
-          // itemStyle:{marginBottom:'10px'},
         },
         {
           object: 'basic',
           fieldCol: 12,
           key: 'contactPersonId',
           size: 'small',
-          // rules:[{ required: true }],
           data: [],
           type: 'Select',
         },
@@ -124,7 +119,6 @@ class InfoModal extends Component {
           size: 'small',
           type: 'Text',
           labelAlign: 'right',
-          // itemStyle:{marginBottom:'10px'},
         },
         {
           Placeholder: 'State',
@@ -132,7 +126,6 @@ class InfoModal extends Component {
           size: 'small',
           type: 'Text',
           labelAlign: 'right',
-          // itemStyle:{marginBottom:'10px'},
         },
         {
           object: 'basic',
@@ -151,60 +144,23 @@ class InfoModal extends Component {
           fieldCol: 12,
           key: 'stateId',
           size: 'small',
-          // rules:[{ required: true }],
           data: [],
           type: 'Select',
           itemStyle: { marginBottom: '10px' },
         },
         {
-          Placeholder: 'Qualified Ops',
-          fieldCol: 12,
-          size: 'small',
-          type: 'Text',
-          labelAlign: 'right',
-          // itemStyle:{marginBottom:'10px'},
-        },
-        {
           Placeholder: 'Linked Project',
-          fieldCol: 12,
+          fieldCol: 24,
           size: 'small',
           type: 'Text',
           labelAlign: 'right',
-          // itemStyle:{marginBottom:'10px'},
-        },
-        {
-          object: 'basic',
-          fieldCol: 12,
-          key: 'qualifiedOps',
-          // label: "Qualified Ops",
-          size: 'small',
-          data: [
-            { label: 'True', value: true },
-            { label: 'False', value: false },
-          ],
-          // rules: [
-          //     {
-          //         required: true,
-          //         message: "Gender is Obviously required",
-          //     },
-          // ],
-          itemStyle: { marginBottom: 1 },
-          // rules:[{ required: true }],
-          type: 'Select',
         },
         {
           object: 'basic',
           fieldCol: 12,
           key: 'linkedWorkId',
-          // label: "Qualified Ops",
           size: 'small',
           data: [],
-          // rules: [
-          //     {
-          //         required: true,
-          //         message: "Gender is Obviously required",
-          //     },
-          // ],
           itemStyle: { marginBottom: 1 },
           type: 'Select',
         },
@@ -217,7 +173,6 @@ class InfoModal extends Component {
           size: 'small',
           type: 'Text',
           labelAlign: 'right',
-          // itemStyle:{marginBottom:'10px'},
         },
         {
           Placeholder: 'Tender Number',
@@ -225,14 +180,12 @@ class InfoModal extends Component {
           fieldCol: 12,
           type: 'Text',
           labelAlign: 'right',
-          // itemStyle:{marginBottom:'10px'},
         },
         {
           object: 'tender',
           fieldCol: 12,
           key: 'tender',
           size: 'small',
-          // rules:[{ required: true }],
           type: 'Input',
         },
         {
@@ -240,7 +193,6 @@ class InfoModal extends Component {
           fieldCol: 12,
           key: 'tenderNumber',
           size: 'small',
-          // rules:[{ required: true }],
           type: 'Input',
         },
       ],
@@ -252,7 +204,6 @@ class InfoModal extends Component {
           size: 'small',
           type: 'Text',
           labelAlign: 'right',
-          // itemStyle:{marginBottom:'10px'},
         },
         {
           Placeholder: 'Contribution Margin as a %',
@@ -260,7 +211,6 @@ class InfoModal extends Component {
           fieldCol: 12,
           type: 'Text',
           labelAlign: 'right',
-          // itemStyle:{marginBottom:'10px'},
         },
         {
           object: 'billing',
@@ -268,7 +218,6 @@ class InfoModal extends Component {
           key: 'value',
           size: 'small',
           shape: '$',
-          // rules:[{ required: true }],
           type: 'InputNumber',
           onChange: (value) => {
             const { billing } = this.formRef.current.getFieldsValue();
@@ -291,7 +240,6 @@ class InfoModal extends Component {
           key: 'cmPercentage',
           size: 'small',
           shape: '%',
-          // rules:[{ required: true }],
           type: 'InputNumber',
           rangeMin: 0,
           rangeMax: 100,
@@ -310,7 +258,6 @@ class InfoModal extends Component {
           fieldCol: 24,
           type: 'Text',
           labelAlign: 'right',
-          // itemStyle:{marginBottom:'10px'},
         },
         {
           object: 'billing',
@@ -319,11 +266,9 @@ class InfoModal extends Component {
           size: 'small',
           shape: '$',
           readOnly: true,
-          // rules:[{ required: true }],
           type: 'InputNumber',
           fieldStyle: { width: '100%' },
         },
-        // {
       ],
 
       DatesFields: [
@@ -334,7 +279,6 @@ class InfoModal extends Component {
           size: 'small',
           type: 'Text',
           labelAlign: 'right',
-          // itemStyle:{marginBottom:'10px'},
         },
         {
           Placeholder: 'End Date',
@@ -343,7 +287,6 @@ class InfoModal extends Component {
           size: 'small',
           type: 'Text',
           labelAlign: 'right',
-          // itemStyle:{marginBottom:'10px'},
         },
         {
           object: 'dates',
@@ -379,7 +322,6 @@ class InfoModal extends Component {
           size: 'small',
           type: 'Text',
           labelAlign: 'right',
-          // itemStyle:{marginBottom:'10px'},
         },
         {
           Placeholder: 'Entry Date',
@@ -387,7 +329,6 @@ class InfoModal extends Component {
           size: 'small',
           type: 'Text',
           labelAlign: 'right',
-          // itemStyle:{marginBottom:'10px'},
         },
         {
           object: 'dates',
@@ -486,7 +427,7 @@ class InfoModal extends Component {
         BasicFields[3].data = res[1].success ? res[1].data : [];
         BasicFields[11].data = res[2].success ? res[2].data : [];
         BasicFields[6].data = res[4].success ? res[4].data : [];
-        BasicFields[15].data = res[5].success ? res[5].data : [];
+        BasicFields[13].data = res[5].success ? res[5].data : [];
 
         ManageFields[2].data = res[3].success ? res[3].data : [];
         ManageFields[3].data = res[3].success ? res[3].data : [];
@@ -536,7 +477,6 @@ class InfoModal extends Component {
       title: basic.title ?? '',
       type: basic.type ?? '',
       stateId: basic.stateId ?? null,
-      qualifiedOps: basic.qualifiedOps ?? false,
       linkedWorkId: basic.linkedWorkId ?? null,
 
       tender: tender.tender ?? '',

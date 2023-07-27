@@ -327,13 +327,6 @@ class Opportunities extends Component {
           showInColumn: false,
           disabled: false,
         },
-        qualifiedOps: {
-          type: 'none',
-          value: '',
-          label: 'Qualified Ops',
-          showInColumn: false,
-          disabled: false,
-        },
       },
 
       filterFields: [
@@ -370,7 +363,7 @@ class Opportunities extends Component {
           type: 'Select',
         },
         {
-          Placeholder: 'Name',
+          Placeholder: 'Title',
           fieldCol: 12,
           size: 'small',
           type: 'Text',
@@ -683,9 +676,6 @@ class Opportunities extends Component {
             `${el.type ?? ''}`
               .toLowerCase()
               .includes(search['type']['value'].toLowerCase()) &&
-            `${el.qualifiedOps ?? ''}`
-              .toLowerCase()
-              .includes(search['qualifiedOps']['value'].toLowerCase()) &&
             // multi Select Search
 
             (search['organization']['value'].length > 0

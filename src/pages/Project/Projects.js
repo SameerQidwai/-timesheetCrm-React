@@ -323,13 +323,6 @@ class Projects extends Component {
           showInColumn: false,
           disabled: false,
         },
-        qualifiedOps: {
-          type: 'Select',
-          value: '',
-          label: 'Qualified Ops',
-          showInColumn: false,
-          disabled: false,
-        },
         phase: {
           type: 'Select',
           value: '',
@@ -372,7 +365,7 @@ class Projects extends Component {
           type: 'Select',
         },
         {
-          Placeholder: 'Name',
+          Placeholder: 'Title',
           fieldCol: 12,
           size: 'small',
           type: 'Text',
@@ -408,7 +401,7 @@ class Projects extends Component {
           type: 'Text',
         },
         {
-          Placeholder: 'Qualified Ops',
+          Placeholder: 'Estimated Value',
           fieldCol: 12,
           size: 'small',
           type: 'Text',
@@ -426,20 +419,11 @@ class Projects extends Component {
         {
           object: 'obj',
           fieldCol: 12,
-          key: 'qualifiedOps',
-          // label: "Qualified Ops",
+          key: 'revenue',
           size: 'small',
-          data: [
-            { label: 'True', value: 'True' },
-            { label: 'False', value: 'False' },
-          ],
-          type: 'Select',
-        },
-        {
-          Placeholder: 'Estimated Value',
-          fieldCol: 12,
-          size: 'small',
-          type: 'Text',
+          shape: '$',
+          type: 'InputNumber',
+          fieldStyle: { width: '100%' },
         },
         {
           Placeholder: 'Start Date',
@@ -448,13 +432,10 @@ class Projects extends Component {
           type: 'Text',
         },
         {
-          object: 'obj',
+          Placeholder: 'End Date',
           fieldCol: 12,
-          key: 'revenue',
           size: 'small',
-          shape: '$',
-          type: 'InputNumber',
-          fieldStyle: { width: '100%' },
+          type: 'Text',
         },
         {
           object: 'obj',
@@ -465,18 +446,6 @@ class Projects extends Component {
           fieldStyle: { width: '100%' },
         },
         {
-          Placeholder: 'End Date',
-          fieldCol: 12,
-          size: 'small',
-          type: 'Text',
-        },
-        {
-          Placeholder: 'Entry Date',
-          fieldCol: 12,
-          size: 'small',
-          type: 'Text',
-        },
-        {
           object: 'obj',
           fieldCol: 12,
           key: 'endDate',
@@ -485,18 +454,24 @@ class Projects extends Component {
           fieldStyle: { width: '100%' },
         },
         {
+          Placeholder: 'Entry Date',
+          fieldCol: 12,
+          size: 'small',
+          type: 'Text',
+        },
+        {
+          Placeholder: 'Status',
+          fieldCol: 12,
+          size: 'small',
+          type: 'Text',
+        },
+        {
           object: 'obj',
           fieldCol: 12,
           key: 'entryDate',
           size: 'small',
           type: 'RangePicker',
           fieldStyle: { width: '100%' },
-        },
-        {
-          Placeholder: 'Status',
-          fieldCol: 24,
-          size: 'small',
-          type: 'Text',
         },
         {
           object: 'obj',
@@ -638,9 +613,6 @@ class Projects extends Component {
             `${el.phase ?? ''}`
               .toLowerCase()
               .includes(search['phase']['value'].toLowerCase()) &&
-            `${el.qualifiedOps ?? ''}`
-              .toLowerCase()
-              .includes(search['qualifiedOps']['value'].toLowerCase()) &&
             // multi Select Search
 
             (search['organization']['value'].length > 0
@@ -742,8 +714,8 @@ class Projects extends Component {
           <Col>
             <Title level={4}>Projects</Title>
           </Col>
-          <Col style={{ textAlign: 'end' }} span={4}>
-            <Row justify="space-between">
+          <Col style={{ marginLeft: 'auto' }}>
+            <Row justify="space-between" gutter={'15'}>
               <Col>
                 <Button
                   type="default"
