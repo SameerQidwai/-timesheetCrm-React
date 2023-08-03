@@ -292,8 +292,8 @@ function WorkInHand() {
     console.log(columns)
     columName.forEach(({ children: [{ dataIndex, name }] }) => {
       newData[8][dataIndex] = 0; /**Revenue */
-      newData[31][dataIndex] = 0; /**COST */
-      newData[56][dataIndex] = 0; /**DOH */
+      newData[32][dataIndex] = 0; /**COST */
+      newData[57][dataIndex] = 0; /**DOH */
       // newData[62][dataIndex]=0; /**TAX */
       // newData[66][dataIndex]=0; /**Profit */
 
@@ -307,14 +307,14 @@ function WorkInHand() {
               i,
               dataIndex
             );
-          } else if (i > 8 && i < 31) {
-            newData[31][dataIndex] += getValueWithCondition(
+          } else if (i > 8 && i < 32) {
+            newData[32][dataIndex] += getValueWithCondition(
               newData,
               i,
               dataIndex
             );
-          } else if (i > 35 && i < 56) {
-            newData[56][dataIndex] += getValueWithCondition(
+          } else if (i > 36 && i < 57) {
+            newData[57][dataIndex] += getValueWithCondition(
               newData,
               i,
               dataIndex
@@ -331,7 +331,7 @@ function WorkInHand() {
         }
       }
     });
-    console.log(newData[8])
+    console.log(newData[9])
     /**
      * 33 = CM
      * 35 = CM%
@@ -340,7 +340,7 @@ function WorkInHand() {
      * 66 = "Income Tax Expense"
      * 68 = "NET PROFIT"
      */
-    let calculate_indexes = [33, 35, 58, 64, 66, 68];
+    let calculate_indexes = [34, 36, 59, 65, 67, 69];
     columName.forEach(({ children: [{ dataIndex }] }) => {
       calculate_indexes.forEach((index) => {
         newData[index] = {
