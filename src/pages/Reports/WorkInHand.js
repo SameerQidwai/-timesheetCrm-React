@@ -233,6 +233,8 @@ function WorkInHand() {
     {
       MILESTONE_BASE,
       TIME_BASE,
+      LEAD_COST,
+      LEAD_TIME_BASE,
       PERMANENT_SALARIES,
       PERMANENT_SUPER,
       CASUAL_SALARIES,
@@ -243,7 +245,15 @@ function WorkInHand() {
     },
     saveForecast
   ) => {
-    income_revenue[1] = { ...income_revenue[1], ...TIME_BASE };
+
+    let REVENUES = {}
+    
+    //merging lead and project revenue together
+    for(let key of Object.keys(LEAD_TIME_BASE)){
+      REVENUES[key] = TIME_BASE[key] + LEAD_TIME_BASE[key]
+    }
+
+    income_revenue[1] = { ...income_revenue[1], ...REVENUES };
     income_revenue[2] = { ...income_revenue[2], ...MILESTONE_BASE };
     // income_revenue[8] = { ...income_revenue[8], ...TOTAL_REVENUE };
 
@@ -252,7 +262,10 @@ function WorkInHand() {
     cost_of_sale[4] = { ...cost_of_sale[4], ...PERMANENT_SUPER };
     cost_of_sale[5] = { ...cost_of_sale[5], ...CASUAL_SUPER };
     cost_of_sale[5] = { ...cost_of_sale[5], ...CASUAL_SUPER };
+    cost_of_sale[20] = { ...cost_of_sale[20], ...LEAD_COST };
     // cost_of_sale[21] = { ...cost_of_sale[21], ...TOTAL_COST };
+
+
 
     direct_overhead_expense[2] = {
       ...direct_overhead_expense[2],
