@@ -122,3 +122,15 @@ border: 1px solid #434343;
     font-size: 12px;
     border: 0px; 
 }
+
+.table-background-row-color tr.actual {
+background-color: #a0df7d;
+}
+
+.table-background-row-color tr.actual:hover {
+background-color: #a0df7d !important;
+}
+
+.table-background-row-color tr.actual:hover .ant-table-cell-row-hover {
+background-color: #a0df7d;
+}

@@ -35,6 +35,7 @@ import moment from 'moment';
 import { formatter, parser } from '../../components/Core/Forms/FormItems';
 import '../../../src/components/Styles/table.css';
 import { FYSelect } from '../../components/Core/Custom/Index';
+import DrawerView from '../../components/Core/DrawerView';
 const { Title } = Typography;
 const EditableContext = React.createContext(null);
 const nextFocusFor = nextFocus();
@@ -123,6 +124,7 @@ function WorkInHand() {
   const [year, setYear] = useState(null);
   const [dataSource, setDataSource] = useState([]);
   const [incomeTaxRates, setIncomeTaxRates] = useState(undefined);
+  const [revenueDetail, setRevenueDetail] = useState({open: false, projects: {}, opportunities:{}})
 
   const [loading, setLoading] = useState(true);
   const [columns, setColumns] = useState([
@@ -247,11 +249,18 @@ function WorkInHand() {
   ) => {
 
     let REVENUES = {}
-    
+    setRevenueDetail({projects: TIME_BASE, opportunities:LEAD_TIME_BASE})
     //merging lead and project revenue together
-    for(let key of Object.keys(LEAD_TIME_BASE)){
-      REVENUES[key] = TIME_BASE[key] + LEAD_TIME_BASE[key]
+    for (
+      var iDate = parseDate(year?.start);
+      iDate.isSameOrBefore(year?.end);
+      iDate.add(1, 'months')
+    ) {
+      let key = parseDate(iDate, 'MMM YY')
+      REVENUES[key] = (TIME_BASE[key]??0) + (LEAD_TIME_BASE[key]??0)
     }
+    
+    console.log(REVENUES)
 
     income_revenue[1] = { ...income_revenue[1], ...REVENUES };
     income_revenue[2] = { ...income_revenue[2], ...MILESTONE_BASE };
@@ -302,7 +311,6 @@ function WorkInHand() {
     // console.log(newData)
     let columName = columns?.[1]?.['children']?.[0]?.['children'] || [];
 
-    console.log(columns)
     columName.forEach(({ children: [{ dataIndex, name }] }) => {
       newData[8][dataIndex] = 0; /**Revenue */
       newData[32][dataIndex] = 0; /**COST */
@@ -344,14 +352,13 @@ function WorkInHand() {
         }
       }
     });
-    console.log(newData[9])
     /**
-     * 33 = CM
-     * 35 = CM%
-     * 58 =EBIT
-     * 64 = "PROFIT BEFORE TAX"
-     * 66 = "Income Tax Expense"
-     * 68 = "NET PROFIT"
+     * 34 = CM
+     * 36 = CM%
+     * 59 =EBIT
+     * 65 = "PROFIT BEFORE TAX"
+     * 67 = "Income Tax Expense"
+     * 69 = "NET PROFIT"
      */
     let calculate_indexes = [34, 36, 59, 65, 67, 69];
     columName.forEach(({ children: [{ dataIndex }] }) => {
@@ -446,6 +453,7 @@ function WorkInHand() {
         handleSave: updateField,
       }),
     };
+
     if (col.children) {
       newCol.children = col.children.map(mapColumns);
     }
@@ -453,6 +461,10 @@ function WorkInHand() {
   };
 
   const re_column = columns.map(mapColumns);
+
+  const showRevenueDetail = (open) =>{
+    setRevenueDetail((prev) => ({ ...prev, open, year }));
+  }
 
   return (
     <>
@@ -512,11 +524,7 @@ function WorkInHand() {
                 cancelText="No"
                 disabled={year?.closed}
               >
-                <Button 
-                  disabled={year?.closed}
-                  type="primary" 
-                  size="small"
-                >
+                <Button disabled={year?.closed} type="primary" size="small">
                   Save
                 </Button>
               </Popconfirm>
@@ -532,7 +540,6 @@ function WorkInHand() {
                 components={components}
                 bordered
                 loading={loading}
-                // loading={true}
                 size="small"
                 pagination={false}
                 rowKey={(row) => row.key ?? row.name}
@@ -544,11 +551,29 @@ function WorkInHand() {
                   x: 'max-content',
                   y: '65vh',
                 }}
+                onRow={(record, rowIndex) => {
+                  if (record.key === 'Revenue - T&M Basis'){
+                    return {
+                      onDoubleClick: () => {showRevenueDetail(true) }, // double click row
+                    };
+                  }
+                }}
               />
             </EditableContext.Provider>
           </Form>
         </Col>
       </Row>
+      {revenueDetail.open &&<DrawerView
+        visible={revenueDetail.open}
+        onClose={() => showRevenueDetail(false)}
+        placement="right"
+        width={640}
+        content={{
+          title: 'Revenue Breakdown',
+          key: 'workInHandForecast',
+          data: revenueDetail,
+        }}
+      />}
     </>
   );
 }

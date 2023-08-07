@@ -40,7 +40,6 @@ import ProjectTracking from '../../components/Core/ProjectTracking/ProjectTracki
 
 import './styles.css';
 import ShutdownPeriods from '../../components/Core/ShutdownPeriods';
-import Shutdown from '../../components/Core/Shutdown';
 
 const { Item } = Descriptions;
 const { TabPane } = Tabs;
