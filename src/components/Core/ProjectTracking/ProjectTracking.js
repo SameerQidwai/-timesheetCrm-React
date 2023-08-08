@@ -1,17 +1,12 @@
 import React, { Component } from 'react';
-import { Menu, Button, Dropdown, Table, Tag, Row, Col } from 'antd';
-import { SettingOutlined, DownOutlined } from '@ant-design/icons'; //Icons
-import { Link } from 'react-router-dom';
+import { Table, Row, Col } from 'antd';
 import {
-  formatDate,
   formatCurrency,
   localStore,
   formatFloat,
-  getFiscalYear,
 } from '../../../service/constant';
 import { tableSorter } from '../Table/TableFilter';
-import { getHierarchy, getProjectTracking } from '../../../service/projects';
-import moment from 'moment';
+import { getProjectTracking } from '../../../service/projects';
 import FYSelect from '../Custom/FYSelect';
 
 const resourceColumns = [
@@ -49,36 +44,36 @@ const resourceColumns = [
     title: 'Total Remaining Hours',
     dataIndex: ['total', 'remainingHours'],
     key: 'remaining',
-    render: (record) => record && formatFloat(record),
+    render: (record) =>  formatFloat(record),
     ...tableSorter('total.remainingHours', 'number'),
   },
   {
-    title: 'Total Actual Revenue',
-    dataIndex: ['total', 'actualRevenue'],
+    title: 'Current Actual Revenue',
+    dataIndex: ['current', 'actualRevenue'],
     key: 'actualRevenue',
-    render: (record) => record && formatCurrency(record),
-    ...tableSorter('total.actualRevenue', 'number'),
+    render: (record) =>  formatCurrency(record),
+    ...tableSorter('current.actualRevenue', 'number'),
   },
   {
-    title: 'Total Actual Cost',
-    dataIndex: ['total', 'actualCost'],
+    title: 'Current Actual Cost',
+    dataIndex: ['current', 'actualCost'],
     key: 'actualCost',
-    render: (record) => record && formatCurrency(record),
-    ...tableSorter('total.actualCost', 'number'),
+    render: (record) =>  formatCurrency(record),
+    ...tableSorter('current.actualCost', 'number'),
   },
   {
     title: 'CM$',
-    dataIndex: ['total', 'cm$'],
+    dataIndex: ['current', 'cm$'],
     key: 'cm$',
-    render: (record) => record && formatCurrency(record),
-    ...tableSorter('total.cm$', 'number'),
+    render: (record) =>  formatCurrency(record),
+    ...tableSorter('current.cm$', 'number'),
   },
   {
     title: 'CM%',
-    dataIndex: ['total', 'cmPercent'],
+    dataIndex: ['current', 'cmPercent'],
     key: 'cmPercent',
     render: (record) => `${formatFloat(record ?? '-')} %`,
-    ...tableSorter('total.cmPercent', 'number'),
+    ...tableSorter('current.cmPercent', 'number'),
   },
 
   // {
