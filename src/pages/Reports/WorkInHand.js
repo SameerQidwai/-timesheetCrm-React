@@ -35,6 +35,7 @@ import moment from 'moment';
 import { formatter, parser } from '../../components/Core/Forms/FormItems';
 import '../../../src/components/Styles/table.css';
 import { FYSelect } from '../../components/Core/Custom/Index';
+import DrawerView from '../../components/Core/DrawerView';
 const { Title } = Typography;
 const EditableContext = React.createContext(null);
 const nextFocusFor = nextFocus();
@@ -123,6 +124,7 @@ function WorkInHand() {
   const [year, setYear] = useState(null);
   const [dataSource, setDataSource] = useState([]);
   const [incomeTaxRates, setIncomeTaxRates] = useState(undefined);
+  const [revenueDetail, setRevenueDetail] = useState({open: false, projects: {}, opportunities:{}})
 
   const [loading, setLoading] = useState(true);
   const [columns, setColumns] = useState([
@@ -155,11 +157,26 @@ function WorkInHand() {
     }
   ]);
 
+  // useEffect(() => {
+  //   if (year){
+  //     creatingCol()
+  //     console.timeEnd('timing');
+  //     setTimeout(() => {
+  //       Promise.all([getSaveForecast(year), getWorkInHandForecast(year)], ).then(
+  //         (res) => {
+  //           let saveForecast = res[0].success ? res[0].data : {};
+  //           let forecast = res[1].success ? res[1].data : {};
+  //           structureData(forecast, saveForecast);
+  //           setIncomeTaxRates(forecast.INCOME_TAX_RATES ?? {});
+  //           form.setFieldsValue(saveForecast);
+  //         }
+  //       );
+  //     }, 4000);
+  //   }
+  // }, [year]);
   useEffect(() => {
-    if (year){
-      creatingCol();
-      console.timeEnd('timing');
-      Promise.all([getSaveForecast(year), getWorkInHandForecast(year)]).then(
+    if (columns?.[1]?.['children']?.[0]?.['children']?.length){
+      Promise.all([getSaveForecast(year), getWorkInHandForecast(year)], ).then(
         (res) => {
           let saveForecast = res[0].success ? res[0].data : {};
           let forecast = res[1].success ? res[1].data : {};
@@ -168,6 +185,12 @@ function WorkInHand() {
           form.setFieldsValue(saveForecast);
         }
       );
+    }
+  }, [columns]);
+
+  useEffect(() => {
+    if (year){
+      creatingCol()
     }
   }, [year]);
 
@@ -202,7 +225,7 @@ function WorkInHand() {
       monthColumns.push(monthCol(el, updateField));
     } // forecast-total
     monthColumns.push(
-      monthCol({ year: year?.fiscal, era: 'Forcast', totalKey: 'total' })
+      monthCol({ year: year?.fiscal, era: iDate.isAfter(moment(), 'day')? 'Actual' : 'Forecast', totalKey: 'total' })
     );
     newColumns[1]['children'][0]['children'] = monthColumns;
     setColumns(newColumns);
@@ -212,6 +235,8 @@ function WorkInHand() {
     {
       MILESTONE_BASE,
       TIME_BASE,
+      LEAD_COST,
+      LEAD_TIME_BASE,
       PERMANENT_SALARIES,
       PERMANENT_SUPER,
       CASUAL_SALARIES,
@@ -222,7 +247,22 @@ function WorkInHand() {
     },
     saveForecast
   ) => {
-    income_revenue[1] = { ...income_revenue[1], ...TIME_BASE };
+
+    let REVENUES = {}
+    setRevenueDetail({projects: TIME_BASE, opportunities:LEAD_TIME_BASE})
+    //merging lead and project revenue together
+    for (
+      var iDate = parseDate(year?.start);
+      iDate.isSameOrBefore(year?.end);
+      iDate.add(1, 'months')
+    ) {
+      let key = parseDate(iDate, 'MMM YY')
+      REVENUES[key] = (TIME_BASE[key]??0) + (LEAD_TIME_BASE[key]??0)
+    }
+    
+    console.log(REVENUES)
+
+    income_revenue[1] = { ...income_revenue[1], ...REVENUES };
     income_revenue[2] = { ...income_revenue[2], ...MILESTONE_BASE };
     // income_revenue[8] = { ...income_revenue[8], ...TOTAL_REVENUE };
 
@@ -231,7 +271,10 @@ function WorkInHand() {
     cost_of_sale[4] = { ...cost_of_sale[4], ...PERMANENT_SUPER };
     cost_of_sale[5] = { ...cost_of_sale[5], ...CASUAL_SUPER };
     cost_of_sale[5] = { ...cost_of_sale[5], ...CASUAL_SUPER };
+    cost_of_sale[20] = { ...cost_of_sale[20], ...LEAD_COST };
     // cost_of_sale[21] = { ...cost_of_sale[21], ...TOTAL_COST };
+
+
 
     direct_overhead_expense[2] = {
       ...direct_overhead_expense[2],
@@ -265,12 +308,13 @@ function WorkInHand() {
 
   const calculate_col_total = (updatedData, INCOME_TAX_RATES = {}) => {
     let newData = [...updatedData];
+    // console.log(newData)
     let columName = columns?.[1]?.['children']?.[0]?.['children'] || [];
 
-    columName.forEach(({ children: [{ dataIndex }] }) => {
+    columName.forEach(({ children: [{ dataIndex, name }] }) => {
       newData[8][dataIndex] = 0; /**Revenue */
-      newData[31][dataIndex] = 0; /**COST */
-      newData[56][dataIndex] = 0; /**DOH */
+      newData[32][dataIndex] = 0; /**COST */
+      newData[57][dataIndex] = 0; /**DOH */
       // newData[62][dataIndex]=0; /**TAX */
       // newData[66][dataIndex]=0; /**Profit */
 
@@ -284,14 +328,14 @@ function WorkInHand() {
               i,
               dataIndex
             );
-          } else if (i > 8 && i < 31) {
-            newData[31][dataIndex] += getValueWithCondition(
+          } else if (i > 8 && i < 32) {
+            newData[32][dataIndex] += getValueWithCondition(
               newData,
               i,
               dataIndex
             );
-          } else if (i > 35 && i < 56) {
-            newData[56][dataIndex] += getValueWithCondition(
+          } else if (i > 36 && i < 57) {
+            newData[57][dataIndex] += getValueWithCondition(
               newData,
               i,
               dataIndex
@@ -309,14 +353,14 @@ function WorkInHand() {
       }
     });
     /**
-     * 33 = CM
-     * 35 = CM%
-     * 58 =EBIT
-     * 64 = "PROFIT BEFORE TAX"
-     * 66 = "Income Tax Expense"
-     * 68 = "NET PROFIT"
+     * 34 = CM
+     * 36 = CM%
+     * 59 =EBIT
+     * 65 = "PROFIT BEFORE TAX"
+     * 67 = "Income Tax Expense"
+     * 69 = "NET PROFIT"
      */
-    let calculate_indexes = [33, 35, 58, 64, 66, 68];
+    let calculate_indexes = [34, 36, 59, 65, 67, 69];
     columName.forEach(({ children: [{ dataIndex }] }) => {
       calculate_indexes.forEach((index) => {
         newData[index] = {
@@ -409,6 +453,7 @@ function WorkInHand() {
         handleSave: updateField,
       }),
     };
+
     if (col.children) {
       newCol.children = col.children.map(mapColumns);
     }
@@ -416,6 +461,11 @@ function WorkInHand() {
   };
 
   const re_column = columns.map(mapColumns);
+
+  const showRevenueDetail = (open) =>{
+    setRevenueDetail((prev) => ({ ...prev, open, year }));
+  }
+
   return (
     <>
       <Row
@@ -474,11 +524,7 @@ function WorkInHand() {
                 cancelText="No"
                 disabled={year?.closed}
               >
-                <Button 
-                  disabled={year?.closed}
-                  type="primary" 
-                  size="small"
-                >
+                <Button disabled={year?.closed} type="primary" size="small">
                   Save
                 </Button>
               </Popconfirm>
@@ -494,7 +540,6 @@ function WorkInHand() {
                 components={components}
                 bordered
                 loading={loading}
-                // loading={true}
                 size="small"
                 pagination={false}
                 rowKey={(row) => row.key ?? row.name}
@@ -506,11 +551,29 @@ function WorkInHand() {
                   x: 'max-content',
                   y: '65vh',
                 }}
+                onRow={(record, rowIndex) => {
+                  if (record.key === 'Revenue - T&M Basis'){
+                    return {
+                      onDoubleClick: () => {showRevenueDetail(true) }, // double click row
+                    };
+                  }
+                }}
               />
             </EditableContext.Provider>
           </Form>
         </Col>
       </Row>
+      {revenueDetail.open &&<DrawerView
+        visible={revenueDetail.open}
+        onClose={() => showRevenueDetail(false)}
+        placement="right"
+        width={640}
+        content={{
+          title: 'Revenue Breakdown',
+          key: 'workInHandForecast',
+          data: revenueDetail,
+        }}
+      />}
     </>
   );
 }

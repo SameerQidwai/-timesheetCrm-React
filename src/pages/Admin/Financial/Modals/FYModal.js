@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { Form, Modal } from 'antd'
 import FormItems from '../../../../components/Core/Forms/FormItems'
 import { createFY, updateFY } from '../../../../service/financial-year-apis';
-import { formatDate } from '../../../../service/constant';
+import { dateRange, formatDate } from '../../../../service/constant';
 
-const FYModal = ({ visible, close, callBack }) => {
+const FYModal = ({ visible, close, callBack, disableDates }) => {
 
     const [loading, setLoading] = useState();
     const [form] = Form.useForm();
@@ -40,9 +40,16 @@ const FYModal = ({ visible, close, callBack }) => {
             fieldCol: 20,
             key: 'dates',
             rangeMin: (current) => {
-            //   return (
-            //     current && !current.isBetween(monthStart, monthEnd, 'day', '[]')
-            //   );
+                if (visible === true){
+                    return (
+                        dateRange(current, disableDates.endDate, 'start')
+                    );
+                }else{
+                    return (
+                        dateRange(current, null, null, disableDates, null, '()')
+                    );
+                }
+              
             },
             size: 'small',
             type: 'RangePicker',

@@ -86,7 +86,7 @@ class InfoModal extends Component {
                     // itemStyle:{marginBottom:'10px'},
                 },
                 {
-                    Placeholder: "Name",
+                    Placeholder: "Title",
                     rangeMin: true,
                     fieldCol: 12,
                     size: "small",
@@ -107,7 +107,7 @@ class InfoModal extends Component {
                     fieldCol: 12,
                     key: "title",
                     size: "small",
-                    rules:[{ required: true, message: 'Name is Required' }],
+                    rules:[{ required: true, message: 'Title is Required' }],
                     type: "Input",
                 },
                 {
@@ -146,13 +146,6 @@ class InfoModal extends Component {
                     itemStyle: { marginBottom: "10px" },
                 },
                 {
-                    Placeholder: "Qualified Ops",
-                    fieldCol: 12,
-                    size: "small",
-                    type: "Text",
-                    // itemStyle:{marginBottom:'10px'},
-                },
-                {
                     Placeholder: "Stage",
                     fieldCol: 12,
                     size: "small",
@@ -160,24 +153,12 @@ class InfoModal extends Component {
                     // itemStyle:{marginBottom:'10px'},
                 },
                 {
-                    object: "basic",
+                    Placeholder: "Linked Project",
                     fieldCol: 12,
-                    key: "qualifiedOps",
-                    // label: "Qualified Ops",
                     size: "small",
-                    data: [
-                        { label: "True", value: true },
-                        { label: "False", value: false },
-                    ],
-                    // rules: [
-                    //     {
-                    //         required: true,
-                    //         message: "Gender is Obviously required",
-                    //     },
-                    // ],
-                    itemStyle: { marginBottom: 1 },
-                    type: "Select",
-                },       
+                    type: "Text",
+                    // itemStyle:{marginBottom:'10px'},
+                },
                 {
                     object: "basic",
                     fieldCol: 12,
@@ -189,35 +170,16 @@ class InfoModal extends Component {
                         { label: "Bid Development", value: 'BD' },
                         { label: "Bid Submitted", value: 'BS' },
                     ],
-                    // rules: [
-                    //     {
-                    //         required: true,
-                    //         message: "Gender is Obviously required",
-                    //     },
-                    // ],
                     itemStyle: { marginBottom: 1 },
                     type: "Select",
                 },       
-                {
-                    Placeholder: "Linked Project",
-                    fieldCol: 24,
-                    size: "small",
-                    type: "Text",
-                    // itemStyle:{marginBottom:'10px'},
-                },
+                
                 {
                     object: "basic",
                     fieldCol: 12,
                     key: "linkedWorkId",
-                    // label: "Qualified Ops",
                     size: "small",
                     data: [ ],
-                    // rules: [
-                    //     {
-                    //         required: true,
-                    //         message: "Gender is Obviously required",
-                    //     },
-                    // ],
                     itemStyle: { marginBottom: 1 },
                     type: "Select",
                 },            
@@ -637,7 +599,7 @@ class InfoModal extends Component {
             BasicFields[3].data = res[1].success? res[1].data : [];
             BasicFields[11].data = res[2].success? res[2].data : [];
             BasicFields[6].data = res[4].success? res[4].data : [];
-            BasicFields[17].data = res[5].success? res[5].data : [];
+            BasicFields[15].data = res[5].success? res[5].data : [];
     
             ManageFields[2].data = res[3].success ? res[3].data: [];
             ManageFields[3].data = res[3].success ? res[3].data: [];
@@ -664,7 +626,6 @@ class InfoModal extends Component {
             title: basic.title ?? '',
             type: basic.type ?? '',
             stateId: basic.stateId ?? null,
-            qualifiedOps: basic.qualifiedOps ?? false,
             stage: basic.stage?? null,
             linkedWorkId: basic.linkedWorkId?? null,
 
