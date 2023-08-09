@@ -65,7 +65,6 @@ export const getRecord = (id) => {
               data.contactPerson.lastName ?? ''
             } - ${data.contactPerson.phoneNumber ?? ''}`,
           contactPersonId: data.contactPersonId,
-          qualifiedOps: data.qualifiedOps,
           type: data.type,
           status: data.status,
           // value: data.value? data.value: 0,

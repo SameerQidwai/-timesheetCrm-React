@@ -211,7 +211,14 @@ class CalendarHolidays extends Component {
         }
       });
     } else {
-      this.setState({ openModal: status, editTimeoff: false });
+      this.setState({
+        openModal: status,
+        editTimeoff: false,
+        FormFields: {
+          ...this.state.FormFields,
+          initialValues: { obj: {} },
+        },
+      });
     }
 
     // this.holidayForm.current.refs.form.resetFields(); // to reset file
