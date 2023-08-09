@@ -1,7 +1,7 @@
 import axios from "axios";
 import { message as messageAlert} from "antd";
 
-import { Api, headers, jwtExpired, setToken, thumbUrl } from "./constant";
+import { Api, apiErrorRes, headers, jwtExpired, setToken, thumbUrl } from "./constant";
 
 const url = `${Api}/employment-contracts`;
 
@@ -15,11 +15,7 @@ export const getList = (id) => {
             return { success, data };
         })
         .catch((err) => {
-            return {
-                error: "Please login again!",
-                success: false,
-                message: err.message,
-            };
+            return apiErrorRes(err, 1, 5);
         });
 };
 
@@ -46,11 +42,7 @@ export const getRecord = (id) => {
             return { success, data };
         })
         .catch((err) => {
-            return {
-                error: "Please login again!",
-                status: false,
-                message: err.message,
-            };
+            return apiErrorRes(err, 1, 5);
         });
 };
 
@@ -66,12 +58,7 @@ export const addList = (data) => {
             return {success};
         })
         .catch((err) => {
-            messageAlert.error({ content: err.message, key: 1})
-            return {
-                error: "Please login again!",
-                status: false,
-                message: err.message,
-            };
+            return apiErrorRes(err, 1, 5);
         });
 };
 
@@ -87,11 +74,7 @@ export const delList = (id) => {
             return {success};
         })
         .catch((err) => {
-            return {
-                error: "Please login again!",
-                status: false,
-                message: err.message,
-            };
+            return apiErrorRes(err, 1, 5);
         });
 };
 
@@ -109,11 +92,6 @@ export const editList = (id, data) => {
             return {success};
         })
         .catch((err) => {
-            messageAlert.error({ content: err.message, key: id})
-            return {
-                error: "Please login again!",
-                status: false,
-                message: err.message,
-            };
+            return apiErrorRes(err, 1, 5);
         });
 };

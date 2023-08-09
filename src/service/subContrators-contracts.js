@@ -1,7 +1,7 @@
 import { message as messageAlert } from "antd";
 import axios from "axios";
 
-import { Api, headers, jwtExpired, setToken, thumbUrl } from "./constant";
+import { Api, apiErrorRes, headers, jwtExpired, setToken, thumbUrl } from "./constant";
 
 const url = `${Api}/sub-contractors-contracts`;
 
@@ -64,12 +64,7 @@ export const addList = (data) => {
             return {success};
         })
         .catch((err) => {
-            messageAlert.error({ content: err.message, key: 1})
-            return {
-                error: "Please login again!",
-                status: false,
-                message: err.message,
-            };
+            return apiErrorRes(err, 1, 5);
         });
 };
 
@@ -105,11 +100,6 @@ export const editList = (id, data) => {
             return {success};
         })
         .catch((err) => {
-            messageAlert.error({ content: err.message, key: id})
-            return {
-                error: "Please login again!",
-                status: false,
-                message: err.message,
-            };
+            return apiErrorRes(err, 1, 5);
         });
 };
