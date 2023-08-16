@@ -109,7 +109,7 @@ const Invoice = (props) => {
                   <div> Voided </div>
                 </Popconfirm>
               </Menu.Item>}
-              {(record.status !== 'DELETE' && record.status !== 'VOIDED') && <Menu.Item
+              {/* {(record.status !== 'DELETE' && record.status !== 'VOIDED') && <Menu.Item
                 key="delete"
                 // danger
                 className="pop-confirm-menu"
@@ -122,7 +122,7 @@ const Invoice = (props) => {
                 >
                   <div> Send Email </div>
                 </Popconfirm>
-              </Menu.Item>}
+              </Menu.Item>} */}
               <Menu.Item
                 key="edit"
                 onClick={() => {

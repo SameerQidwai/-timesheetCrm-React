@@ -47,6 +47,7 @@ export const createInvoice = (data) => {
       return { success };
     })
     .catch((err) => {
+      console.log(err)
       return apiErrorRes(err, 1);
     });
 };
