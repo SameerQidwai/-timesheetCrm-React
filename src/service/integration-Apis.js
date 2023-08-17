@@ -76,7 +76,7 @@ export const getToolOrganizations = (toolName) => {
 };
 
 export const getToolAssets = (toolName, data) => {
-  messageAlert.loading({ content: 'Loading...', key: `${toolName}/tool-assets`, duration: 0});
+  messageAlert.loading({ content: 'Loading...', key: 1, duration: 0});
   return axios
     .post(`${url}/${toolName}/tool-assets`,data, { headers: headers() })
     .then((res) => {

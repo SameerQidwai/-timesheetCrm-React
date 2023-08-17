@@ -74,6 +74,7 @@ const InvoiceModal = ({ visible, close, callBack }) => {
       object: 'basic',
       fieldCol: 12,
       key: 'projectId',
+      disabled: disabled,
       size: 'small',
       rules: [{ required: true, message: 'Project is Required' }],
       data: [],
@@ -113,7 +114,7 @@ const InvoiceModal = ({ visible, close, callBack }) => {
       key: 'months',
       mode: 'month',
       size: 'small',
-      disabled: true,
+      disabled: disabled,
       rules: [{ required: true, message: 'Months Are Required' }],
       type: 'RangePicker',
       onChange: () => {
@@ -125,6 +126,7 @@ const InvoiceModal = ({ visible, close, callBack }) => {
       fieldCol: 12,
       key: 'purchaseOrderId',
       size: 'small',
+      disabled: disabled,
       rules: [{ required: true, message: 'Purchase Order is Required' }],
       data: [],
       type: 'Select',
@@ -154,7 +156,8 @@ const InvoiceModal = ({ visible, close, callBack }) => {
       fieldCol: 12,
       key: 'accountCode',
       size: 'small',
-      // rules: [{ required: true, message: 'Account is Required' }],
+      disabled: disabled,
+      rules: [{ required: true, message: 'Account is Required' }],
       data: [],
       fieldNames: { value: 'code', label: 'name' },
       type: 'Select',
@@ -166,6 +169,7 @@ const InvoiceModal = ({ visible, close, callBack }) => {
       object: 'basic',
       fieldCol: 12,
       key: 'reference',
+      disabled: disabled,
       size: 'small',
       rules: [{ required: true, message: 'Reference is Required' }],
       initialValue: null,
@@ -192,14 +196,15 @@ const InvoiceModal = ({ visible, close, callBack }) => {
       fieldCol: 12,
       key: 'taxType',
       size: 'small',
-      // rules: [{ required: true, message: 'Tax Code is Required' }],
+      disabled: disabled,
+      rules: [{ required: true, message: 'Tax Code is Required' }],
       data: [],
       type: 'Select',
       fieldNames: { value: 'taxType', label: 'name' },
       onChange: (_, record) => {
         setUpdateData((prev) => ({
           ...prev,
-          effectiveRate: record?.effectiveRate,
+          effectiveGst: record?.effectiveRate,
           refresh: true,
         }));
       },
@@ -209,6 +214,7 @@ const InvoiceModal = ({ visible, close, callBack }) => {
       fieldCol: 12,
       key: 'issueDate',
       size: 'small',
+      disabled: disabled,
       rules: [{ required: true, message: 'Issue Date is Required' }],
       type: 'DatePicker',
       fieldStyle: { width: '100%' },
@@ -232,6 +238,7 @@ const InvoiceModal = ({ visible, close, callBack }) => {
       object: 'basic',
       fieldCol: 12,
       key: 'lineAmountTypes',
+      disabled: disabled,
       size: 'small',
       rules: [{ required: true, message: 'Required' }],
       data: [
@@ -248,6 +255,7 @@ const InvoiceModal = ({ visible, close, callBack }) => {
       object: 'basic',
       fieldCol: 12,
       key: 'dueDate',
+      disabled: disabled,
       size: 'small',
       rules: [{ required: true, message: 'Due Date is Required' }],
       type: 'DatePicker',
@@ -426,6 +434,9 @@ const InvoiceModal = ({ visible, close, callBack }) => {
           tempFields[6] = projectTypeField[1]['field'];
           tempFields[6].data = res[2]?.data?.lineItems; // set tempoary field change to this field
         }
+        let POdata = res[2]?.data?.purchaseOrder
+        tempFields[7].data = [{value: POdata.id, label:POdata.orderNo }]; //adding data to purchase order dropdown
+
         //setting form field
         form.setFieldsValue({ basic: res[2]?.data });
         //setting table data to show invoice line
@@ -660,6 +671,7 @@ const InvoiceModal = ({ visible, close, callBack }) => {
           </Row>
           <Upload
             // customRequest={(option) => handleUpload(option, 'tfnFile')}
+            disabled={disabled}
             style={{
               maxHeight: 120,
               position: 'relative',
@@ -677,13 +689,13 @@ const InvoiceModal = ({ visible, close, callBack }) => {
                 <Col style={{ textAlign: 'right' }}>
                   <Checkbox
                     checked={file.includeOnline}
-                    disabled={!file.attachXero}
+                    disabled={!file.attachXero || disabled}
                     onChange={() => selectFiles('includeOnline', file)}
                   />
                 </Col>
                 <Col style={{ textAlign: 'center', marginRight: 10 }}>
                   <Checkbox
-                    checked={file.attachXero}
+                    checked={file.attachXero || disabled}
                     onChange={() => selectFiles('attachXero', file)}
                   />
                 </Col>

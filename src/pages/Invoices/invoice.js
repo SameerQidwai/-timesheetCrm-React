@@ -124,7 +124,7 @@ const Invoice = (props) => {
                 </Popconfirm>
               </Menu.Item>} */}
               <Menu.Item
-                key="edit"
+                key="View"
                 onClick={() => {
                   setOpenModal({
                     id: value,
@@ -133,7 +133,7 @@ const Invoice = (props) => {
                 }}
                 // disabled={this.state && !this.state.permissions['UPDATE']}
               >
-                Edit
+                View
               </Menu.Item>
             </Menu>
           }
@@ -153,7 +153,7 @@ const Invoice = (props) => {
   const getData = () => {
     getInvoices().then((res) => {
       if (res.success) {
-        setData(res.data);
+        setData([...res.data]);
         setOpenModal(false)
       }
     });
