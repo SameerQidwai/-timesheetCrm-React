@@ -48,6 +48,7 @@ const InvoiceModal = ({ visible, close, callBack }) => {
     rateKey: 0,
     visible: false,
     rateLable: 'Hourly Sell Rate',
+    disableDropDown: false,
   });
   const [attachments, seAttachments] = useState([]);
   const [totalAmounts, setTotalAmounts] = useState({});
@@ -282,7 +283,7 @@ const InvoiceModal = ({ visible, close, callBack }) => {
       title: updateData.rateLable,
       filterSearch: false,
       filterDropdownVisible: updateData.visible,
-      filterDropdown: !disabled&&(
+      filterDropdown: updateData.disableDropDown &&(
         <Menu>
           <Menu.Item
             key="1"
@@ -314,7 +315,7 @@ const InvoiceModal = ({ visible, close, callBack }) => {
           </Menu.Item>
         </Menu>
       ),
-      filterIcon: (filtered) => !disabled&&(
+      filterIcon: (filtered) => updateData.disableDropDown &&(
         <CaretDownOutlined
           onClick={() =>
             setUpdateData((prev) => ({ ...prev, visible: !prev.visible }))
@@ -356,6 +357,7 @@ const InvoiceModal = ({ visible, close, callBack }) => {
         fieldCol: 12,
         key: 'scheduleId',
         size: 'small',
+        disabled: disabled,
         rules: [{ required: true, message: 'Schedule is Required' }],
         data: [],
         type: 'Select',
@@ -384,6 +386,7 @@ const InvoiceModal = ({ visible, close, callBack }) => {
         object: 'basic',
         fieldCol: 12,
         key: 'months',
+        disabled: disabled,
         // mode: 'month',
         size: 'small',
         rules: [{ required: true, message: 'Months Are Required' }],
@@ -429,7 +432,7 @@ const InvoiceModal = ({ visible, close, callBack }) => {
         let projectType = res[2]?.data?.project?.type;
 
         //If project is milestone change scheduleId
-        if (projectType === 1) {
+        if (projectType == 1) {
           tempFields[4] = projectTypeField[1]['label'];
           tempFields[6] = projectTypeField[1]['field'];
           tempFields[6].data = res[2]?.data?.lineItems; // set tempoary field change to this field
@@ -443,13 +446,20 @@ const InvoiceModal = ({ visible, close, callBack }) => {
         setLineItems(res[2]?.data?.lineItems);
 
         //setting total amount to show below table
-        setTotalAmounts(res[2]?.data?.totalAmounts);
+        setTotalAmounts({...res[2]?.data?.totalAmounts, type: parseInt(projectType)});
         seAttachments(res[2]?.data?.attachments ?? []);
+        setUpdateData({
+          refresh: false,
+          disableDropDown: false,
+          rateLable: 'Sell Rate',
+          rateKey: 2,
+          // type: parseInt(projectType),
+        }); // Else if api called for timebase (after selecting date range) //show data to table
         // simultaneously getting real project data after avoiding delay response
         // getProjects(res[2]?.data?.organization, true)
-        if (projectType === 1) {
+        if (projectType == 1) {
           // simultaneously getting real project data after avoiding delay response if project is milestone
-          invoiceData(1);
+          // invoiceData(1);
         } else {
           tempFields[6].disabled = true;
         }
@@ -494,15 +504,26 @@ const InvoiceModal = ({ visible, close, callBack }) => {
       ).then((res) => {
         if (res.success) {
           let tempFields = fields;
-          if (type === 1) {
+          if (type == 1) {
             tempFields[6].data = res.resources; // if api called on milestone add schedule to select schedule
-          } else {
+            setUpdateData({
+              refresh: true,
+              hours: res.hoursPerDay,
+              rateKey: 2,
+              visible: false,
+              disableDropDown: false,
+              rateLable: 'Sell Rate',
+              type,
+            }); // Else if api called for timebase (after selecting date range) //show data to table
+          } 
+          else {
             setUpdateData({
               refresh: true,
               records: res.resources,
-              hours: res.noOfHours,
+              hours: res.hoursPerDay,
               rateKey: 0,
               visible: false,
+              disableDropDown:!disabled,
               rateLable: 'Hourly Sell Rate',
             }); // Else if api called for timebase (after selecting date range) //show data to table
             seAttachments(res.attachments ?? []);
@@ -514,47 +535,61 @@ const InvoiceModal = ({ visible, close, callBack }) => {
     }
   };
 
-  const setTableData = ({ records, effectiveGst, selectedKeys, hours, rateKey }) => {
+  const setTableData = ({ records, effectiveGst, selectedKeys, hours, rateKey, type }) => {
     // can call a function from two ways after api called after selecting dateRange for timebase
     // OR
     // if selecting schedule from selectbox
     let { basic } = form.getFieldsValue();
     let { accountCode, lineAmountTypes, taxType } = basic;
-    let { gstRate = 0, workingHours = 8 } = totalAmounts;
+    let { gstRate = 0, workingHours = 8, projectType } = totalAmounts;
 
     gstRate = (effectiveGst ?? 0) / 100 || gstRate;
     workingHours = hours || workingHours;
     let selected = selectedKeys ?? selectedLineItems;
     let tableItems = records ?? lineItems;
+    projectType = type ?? projectType
 
     let subTotal = 0;
     let totalTax = 0;
     let total = 0;
 
     tableItems = tableItems.map((record) => {
-      record.hours = parseFloat(record.hours)
-      record.perHours = parseFloat(record.perHours)
-      
-      if (rateKey === 2) {
-        // daily rates
+      let lineAmount = 0;
+      let taxAmount = 0;
+
+      if (projectType === 1){ // for milestone project 
+        record.hours = parseFloat(record.hours) 
+        record.unitAmount = parseFloat(record.unitAmount) 
+        lineAmount = record.hours * record.unitAmount;
+
+      }else{ // for timebase project 
+        record.hours = parseFloat(record.hours)
+        record.perHours = parseFloat(record.perHours)
+        if (rateKey === 2) { 
+          // daily rates calculation
+          record.quantity = record.hours / workingHours;
+          record.unitAmount = record.perHours * workingHours;
+  
+        } else if (rateKey === 1) {
+          //hourly rates calculation
+          record.quantity = record.hours 
+          record.unitAmount = record.perHours
+
+        }
+          lineAmount = record.perHours * record.hours;
+        }
+
+        taxAmount =
+          lineAmountTypes !== 'NoTax' ? lineAmount * parseFloat(gstRate) : 0;
+
         
-        record.quantity = record.hours / workingHours;
-        record.unitAmount = record.perHours * workingHours;
-
-      } else if (rateKey === 1) {
-        //hourly rates
-        record.quantity = record.hours 
-        record.unitAmount = record.perHours
-      }
-      let lineAmount = record.perHours * record.hours;
-      let taxAmount =
-        lineAmountTypes !== 'NoTax' ? lineAmount * parseFloat(gstRate) : 0;
-
+      
         if (selected.includes(record.id)) {
         subTotal += lineAmount;
         totalTax += taxAmount;
         total += lineAmount + (lineAmountTypes === 'Exclusive' ? taxAmount : 0);
       }
+      
 
       return {
         ...record,
@@ -567,13 +602,14 @@ const InvoiceModal = ({ visible, close, callBack }) => {
     // console.log(selected)
 
     setLineItems([...tableItems]);
-    setTotalAmounts({ subTotal, totalTax, total, gstRate, workingHours });
+    setTotalAmounts({ subTotal, totalTax, total, gstRate, workingHours, projectType });
     setSelectedLineItems(selected);
     setUpdateData((prev) => ({
       refresh: false,
       visible:false,
       rateKey: prev.rateKey,
       rateLable: prev.rateLable,
+      disableDropDown: prev.disableDropDown
     }));
   };
 
@@ -586,9 +622,14 @@ const InvoiceModal = ({ visible, close, callBack }) => {
         endDate: formatDate(formData['months']?.[1], true),
         dueDate: formatDate(formData.dueDate, true),
         issueDate: formatDate(formData.issueDate, true),
-        lineItems: lineItems.filter((item) =>
-          selectedLineItems.includes(item.id)
-        ),
+        lineItems: lineItems.filter((item) =>{
+          if (selectedLineItems.includes(item.id)){
+            if(totalAmounts.projectType ===1){
+              item.quantity = item.hours
+            }
+            return item
+          }
+        }),
         attachments,
       };
       // console.log(data)
