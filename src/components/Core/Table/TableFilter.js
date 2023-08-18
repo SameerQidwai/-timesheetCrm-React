@@ -114,23 +114,44 @@ export const tableFilter = (dataIndex, searchFunction) => ({ // filter on the he
 //     defaultSortOrder: sortOrder && 'ascend' 
 // })
                                     //filterObj    //filterFunction
-export const tableSorter = (dataIndex, type, sortOrder, pin) => ({ //sorter on the head
-    sorter: (a, b) => { 
-        let valueA = leaf(a, dataIndex)
-        let valueB = leaf(b, dataIndex) 
-        valueA = (pin && valueA === pin) ? 'AA' : valueA
-        valueB = (pin && valueB === pin) ? 'AA' : valueB
-        // if(valueA && valueB){
-            if(type=== 'number'){
-                return valueA -  valueB 
-            }else if(type === 'string'){
-                return `${valueA}`.localeCompare(`${valueB}`)
-            }else if (type === 'date'){
-                return moment(valueA ? valueA :'2011 11 10' ).unix() - moment(valueB ? valueB : '2011 11 10').unix()
+export const tableSorter = (dataIndex, type, sortOrder, pin, multiple) => ({ //sorter on the head
+    
+    //dataIndex Name of the key or arra of key
+    // type date number or string
+    // sotrOrder asend or desend
+    //pin can be string or object i.e {valueOfCell: orderNumber i.e 1,2,3}  
+            // only string column can be pin
+    sorter: {
+        multiple,
+        compare: (a, b) => { 
+            let valueA = leaf(a, dataIndex)
+            let valueB = leaf(b, dataIndex)
+
+            if (pin){ // checking if pin is given
+                if (typeof pin === 'object'){ // if I want to have items in order in this squence
+                    console.log(valueA === pin, valueA, pin)
+                    valueA = pin[valueA] ?? valueA
+                    valueB = pin[valueB] ?? valueB
+                    console.log(valueA, valueB)
+                    
+                }else{//if want to pin only One Item on top
+                    valueA = valueA === pin ? 'AA' : valueA
+                    valueB = valueB === pin ? 'AA' : valueB
+                    
+                }
             }
-        // }
+            // if(valueA && valueB){
+                if(type=== 'number'){
+                    return valueA -  valueB 
+                }else if(type === 'string'){
+                    return `${valueA}`.localeCompare(`${valueB}`)
+                }else if (type === 'date'){
+                    return moment(valueA ? valueA :'2011 11 10' ).unix() - moment(valueB ? valueB : '2011 11 10').unix()
+                }
+            // }
+        },
     },
-    defaultSortOrder: sortOrder && 'ascend' 
+    defaultSortOrder: sortOrder && 'ascend',    
 })
 
                                     //filterObj    //filterFunction

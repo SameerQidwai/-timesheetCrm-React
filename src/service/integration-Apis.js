@@ -82,7 +82,7 @@ export const getToolAssets = (toolName, data) => {
     .then((res) => {
       const { success, message,data } = res?.data;
       jwtExpired(message);
-      messageAlert.destroy(`${toolName}/tool-assets`)
+      messageAlert.destroy(1)
       setToken(res?.headers?.authorization);
       return { success, data};
     })

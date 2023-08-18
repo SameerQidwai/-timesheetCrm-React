@@ -84,6 +84,15 @@ export const STATES = {
   Tasmania: 'TSA',
 };
 
+export const INVOICE_PIN_SEQ = {
+  'DRAFT': 'A',
+  'SUBMITTED': 'B',
+  'AUTHORISED': 'C',
+  'PAID': 'D',
+  'VOIDED': 'E',
+  'DELETED': 'F',
+}
+
 export const toTruncate = (num, fixed) => { //not using as for now using INTL method
   if (num && !isNaN(num)){
       return num.toString().match(new RegExp('^-?\\d+(?:\.\\d{0,' + (fixed || -1) + '})?'))?.[0] || '0.00'

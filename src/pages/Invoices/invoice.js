@@ -12,8 +12,8 @@ import {
 } from 'antd';
 import { PlusSquareOutlined, SettingOutlined } from '@ant-design/icons'; //Icons
 import { actionInvoice, getInvoices } from '../../service/invoice-Apis';
-import ATable from '../../components/Core/Table/TableFilter';
-import { formatDate } from '../../service/constant';
+import ATable, { tableSorter } from '../../components/Core/Table/TableFilter';
+import { INVOICE_PIN_SEQ, formatDate } from '../../service/constant';
 import InvoiceModal from './Modals/InvoiceModal';
 
 const Invoice = (props) => {
@@ -24,38 +24,47 @@ const Invoice = (props) => {
       title: 'Number',
       dataIndex: 'invoiceNumber',
       key: 'invoiceNumber',
+      ...tableSorter('invoiceNumber', 'string', false, false,  1),
     },
     {
       title: 'Reference',
       dataIndex: 'reference',
       key: 'reference',
+      ...tableSorter('reference', 'string'),
     },
     {
       title: 'To',
       dataIndex: ['organization', 'name'],
       key: 'organization',
+      width: '20%',
+      ...tableSorter('organization.name', 'string'),
     },
     {
       title: 'Project',
       dataIndex: ['project', 'name'],
       key: 'project',
+      width: '20%',
+      ...tableSorter('project.name', 'string'),
     },
     {
       title: 'Date',
       dataIndex: 'issueDate',
       key: 'issueDate',
       render: (text) => formatDate(text, true, true),
+      ...tableSorter('issueDate', 'date', true, false, 2),
     },
     {
       title: 'Due',
       dataIndex: 'dueDate',
       key: 'dueDate',
       render: (text) => formatDate(text, true, true),
+      ...tableSorter('dueDate', 'date'),
     },
     {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
+      ...tableSorter('status', 'string', true, INVOICE_PIN_SEQ, 3),
     },
     {
       title: '...',
@@ -82,7 +91,7 @@ const Invoice = (props) => {
                 </Popconfirm>
               </Menu.Item>}
               {record.status === 'DRAFT' && <Menu.Item
-                key="delete"
+                key="authorised"
                 // danger
                 className="pop-confirm-menu"
               >
@@ -96,7 +105,7 @@ const Invoice = (props) => {
                 </Popconfirm>
               </Menu.Item>}
               {record.status === 'AUTHORISED' && <Menu.Item
-                key="delete"
+                key="voided"
                 danger
                 className="pop-confirm-menu"
               >
@@ -124,7 +133,7 @@ const Invoice = (props) => {
                 </Popconfirm>
               </Menu.Item>} */}
               <Menu.Item
-                key="View"
+                key="view"
                 onClick={() => {
                   setOpenModal({
                     id: value,
@@ -153,8 +162,8 @@ const Invoice = (props) => {
   const getData = () => {
     getInvoices().then((res) => {
       if (res.success) {
-        setData([...res.data]);
         setOpenModal(false)
+        setData([...res.data]);
       }
     });
   };
