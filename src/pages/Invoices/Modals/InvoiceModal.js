@@ -283,7 +283,7 @@ const InvoiceModal = ({ visible, close, callBack }) => {
       title: updateData.rateLable,
       filterSearch: false,
       filterDropdownVisible: updateData.visible,
-      filterDropdown: updateData.disableDropDown &&(
+      filterDropdown: !updateData.disableDropDown &&(
         <Menu>
           <Menu.Item
             key="1"
@@ -294,6 +294,7 @@ const InvoiceModal = ({ visible, close, callBack }) => {
                 visible: true,
                 rateLable: 'Hourly Sell Rate',
                 refresh: true,
+                disableDropDown: false
               })
             }
           >
@@ -308,6 +309,7 @@ const InvoiceModal = ({ visible, close, callBack }) => {
                 visible: true,
                 rateLable: 'Daily Sell Rate',
                 refresh: true,
+                disableDropDown: false
               })
             }
           >
@@ -315,7 +317,7 @@ const InvoiceModal = ({ visible, close, callBack }) => {
           </Menu.Item>
         </Menu>
       ),
-      filterIcon: (filtered) => updateData.disableDropDown &&(
+      filterIcon: (filtered) => !updateData.disableDropDown &&(
         <CaretDownOutlined
           onClick={() =>
             setUpdateData((prev) => ({ ...prev, visible: !prev.visible }))
@@ -450,7 +452,7 @@ const InvoiceModal = ({ visible, close, callBack }) => {
         seAttachments(res[2]?.data?.attachments ?? []);
         setUpdateData({
           refresh: false,
-          disableDropDown: false,
+          disableDropDown: true,
           rateLable: 'Sell Rate',
           rateKey: 2,
           // type: parseInt(projectType),
@@ -511,7 +513,7 @@ const InvoiceModal = ({ visible, close, callBack }) => {
               hours: res.hoursPerDay,
               rateKey: 2,
               visible: false,
-              disableDropDown: false,
+              disableDropDown: true,
               rateLable: 'Sell Rate',
               type,
             }); // Else if api called for timebase (after selecting date range) //show data to table
@@ -523,7 +525,7 @@ const InvoiceModal = ({ visible, close, callBack }) => {
               hours: res.hoursPerDay,
               rateKey: 0,
               visible: false,
-              disableDropDown:!disabled,
+              disableDropDown: disabled,
               rateLable: 'Hourly Sell Rate',
             }); // Else if api called for timebase (after selecting date range) //show data to table
             seAttachments(res.attachments ?? []);
@@ -563,28 +565,34 @@ const InvoiceModal = ({ visible, close, callBack }) => {
         lineAmount = record.hours * record.unitAmount;
 
       }else{ // for timebase project 
+        console.log('here', rateKey)
         record.hours = parseFloat(record.hours)
         record.perHours = parseFloat(record.perHours)
         if (rateKey === 2) { 
           // daily rates calculation
+          console.log('daily rate')
           record.quantity = record.hours / workingHours;
           record.unitAmount = record.perHours * workingHours;
+          record.description = record?.description?.replace('Hourly Rate', 'Daily Rate')
+          console.log({...record, workingHours})
   
-        } else if (rateKey === 1) {
+        } else {
           //hourly rates calculation
+          console.log('hourly rate')
           record.quantity = record.hours 
           record.unitAmount = record.perHours
-
+          record.description = record?.description?.replace('Daily Rate', 'Hourly Rate')
+          console.log({...record, workingHours})
         }
           lineAmount = record.perHours * record.hours;
-        }
+      }
 
         taxAmount =
           lineAmountTypes !== 'NoTax' ? lineAmount * parseFloat(gstRate) : 0;
 
         
       
-        if (selected.includes(record.id)) {
+      if (selected.includes(record.id)) {
         subTotal += lineAmount;
         totalTax += taxAmount;
         total += lineAmount + (lineAmountTypes === 'Exclusive' ? taxAmount : 0);

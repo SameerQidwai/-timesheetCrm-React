@@ -129,10 +129,8 @@ export const tableSorter = (dataIndex, type, sortOrder, pin, multiple) => ({ //s
 
             if (pin){ // checking if pin is given
                 if (typeof pin === 'object'){ // if I want to have items in order in this squence
-                    console.log(valueA === pin, valueA, pin)
                     valueA = pin[valueA] ?? valueA
                     valueB = pin[valueB] ?? valueB
-                    console.log(valueA, valueB)
                     
                 }else{//if want to pin only One Item on top
                     valueA = valueA === pin ? 'AA' : valueA
