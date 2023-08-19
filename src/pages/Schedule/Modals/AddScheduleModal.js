@@ -102,7 +102,7 @@ class AddScheduleModal extends Component {
           fieldCol: 16,
           key: 'paymentDate',
           size: 'small',
-          mode: 'month',
+          // mode: 'month',
           type: 'DatePicker',
         },
         {
