@@ -6,7 +6,7 @@ import { DownloadOutlined, SaveOutlined, LoadingOutlined, PlusCircleOutlined, Mo
 import TimeModal from "./Modals/TimeModal"
 import AttachModal from "./Modals/AttachModal";
 import {  getList, reviewTimeSheet, getUsers, deleteTime,  } from "../../service/timesheet"
-import { getUserMilestones } from "../../service/constant-Apis";
+import { getCalendarHolidaysFormat, getUserMilestones } from "../../service/constant-Apis";
 import { localStore, Api, thumbUrl, STATUS_COLOR, R_STATUS, formatFloat, getModulePermissions, dateClosed } from "../../service/constant";
     
 import moment from "moment";
@@ -43,6 +43,7 @@ class TimeSheetContact extends Component {
       comments: null,
       sMilestone: {},
       permissions: {},
+      holidays: {},
       milestones: [],
       sTMilestones: {
         milestones: [],
@@ -213,15 +214,15 @@ class TimeSheetContact extends Component {
   };
 
   fetchAll = () => {
-    getUsers()
-      .then((res) => {
+    Promise.all([getUsers(), getCalendarHolidaysFormat()])
+      .then(([userRes, holidayRes]) => {
         let value = 0;
         const { anyPermissions: permissions, userLoginId: loginId } =
           getModulePermissions('TIMESHEETS');
 
-        if (res.success && res.data.length > 0) {
-          value = res.data.value;
-          res.data.forEach((el) => {
+        if (userRes.success && userRes.data.length > 0) {
+          value = userRes.data.value;
+          userRes.data.forEach((el) => {
             if (el.value === loginId) {
               value = el.value; //selecting the login user from users array
             }
@@ -230,11 +231,12 @@ class TimeSheetContact extends Component {
 
         this.setState(
           {
-            USERS: res.success ? res.data : [],
+            USERS: userRes.success ? userRes.data : [],
             sUser: value,
             permissions: permissions,
             loginId,
-            // USERS: res[1].success? res[1].data : [],
+            holidays: holidayRes.success ? holidayRes.data : {},
+            // USERS: userRes[1].success? userRes[1].data : [],
           },
           () => {
             this.columns();
@@ -292,7 +294,7 @@ class TimeSheetContact extends Component {
   columns = () => {
     // create table column and add date as colmumn name for selected month
     const { sWeek, startDate, endDate } = this.state.sheetDates;
-    let { columns, sUser, loginId, permissions } = this.state;
+    let { columns, sUser, loginId, permissions, holidays } = this.state;
     let date = undefined;
     let key = undefined;
     columns = [columns[0], columns[1]];
@@ -311,6 +313,14 @@ class TimeSheetContact extends Component {
           <span>
             <div>{date.format('ddd')}</div>
             <div> {date.format('DD MMM')} </div>
+            {holidays[date.format('YYYY-MM-DD')] && (
+              <Text
+                ellipsis={{ tooltip: holidays[date.format('YYYY-MM-DD')] }}
+                style={{ fontSize: 10, color: 'red' }}
+              >
+                {holidays[date.format('YYYY-MM-DD')]}
+              </Text>
+            )}
           </span>
         ),
         heading: <span>{date.format('dddd - DD MM YYYY')}</span>,

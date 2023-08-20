@@ -216,7 +216,12 @@ const ExpenseSheet = (props) => {
     //send true if you need to call expenses for expense sheet
     getListOfExpenses(true, open?.id).then(res=>{
       if (res.success){
-        setExpenses(res.data)
+        let data = (res.data??[]).filter(exp=>{
+          if(!exp?.isInSheet?.id){
+            return true
+          }
+        })
+        setExpenses(data)
       }
       setOpenModal(open)
     })

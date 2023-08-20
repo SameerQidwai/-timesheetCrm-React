@@ -39,7 +39,7 @@ const Profile = ()=>{
                 setClearance(res.sClearance)
                 setResourceSkill(res.resourceSkill)
             }
-            console.log(res.billing)
+            // console.log(res.billing)
         })
     }
     return (

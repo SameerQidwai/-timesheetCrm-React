@@ -10,6 +10,7 @@ import { Api, dateClosed, localStore, R_STATUS, STATUS_COLOR } from "../../servi
 import "../styles/button.css";
 import TimeSheetPDF from "./Modals/TimeSheetPDF";
 import { Tag_s } from "../../components/Core/Custom/Index";
+import { getCalendarHolidaysFormat } from "../../service/constant-Apis";
 
 const { Title, Link: Tlink, Text } = Typography;
 //inTable insert
@@ -32,6 +33,7 @@ class TimeSheetProject extends Component {
             loginId: null,
             data: [ ],
             permissions: {},
+            holidays: {},
             milestones: [], // users Time Sheet
             actionNotes: '',
             sTimesheet: { // selected timesheets 
@@ -154,16 +156,16 @@ class TimeSheetProject extends Component {
     };
 
     fetchAll = () =>{
-        Promise.all([ getMilestones() ])
-        .then(res => {
+        Promise.all([ getMilestones(), getCalendarHolidaysFormat() ])
+        .then(([userRes, holidayRes]) => {
             let value = 0
             const { id, permissions } = localStore()
             const loginId = parseInt(id)
             const { TIMESHEETS } = JSON.parse(permissions)
 
-            if(res[0].success && res[0].data.length>0){
-                value = res[0].data[0].value
-                res[0].data.forEach(el=>{
+            if(userRes.success && userRes.data.length>0){
+                value = userRes.data.value
+                userRes.data.forEach(el=>{
                     if(el.value === loginId){
                         value= el.value
                     }
@@ -171,9 +173,10 @@ class TimeSheetProject extends Component {
             }
 
             this.setState({
-                milestones: res[0].success? res[0].data : [],
+                milestones: userRes.success? userRes.data : [],
                 permissions: TIMESHEETS ?? {},
                 loginId,
+                holidays: holidayRes.success ? holidayRes.data : {},
             },()=>{
                 this.columns() 
                 this.getSheet()
@@ -205,35 +208,79 @@ class TimeSheetProject extends Component {
 
     columns = () =>{
         const { startDate, endDate } = this.state.sheetDates
-        let { columns }  = this.state
+        let { columns, holidays }  = this.state
         let date = undefined
         columns = [columns[0],columns[1]]
         for (let i = startDate.format('D') ; i <= endDate.format('D'); i++) {
             date = date ?? moment(startDate.format())
             columns.push({
-                title: <span>
-                    <div>{date.format('ddd')}</div>
-                    <div> {date.format('DD MMM')} </div>
-                </span>,
-                heading: <span>{date.format('dddd - DD MM YYYY')}</span>,
-                dataIndex: date.format('D/M'),
-                key: date.format('D/M'),
-                width: 200,
-                editable: true,
-                align: "center",
-                render: (value, record, rowIndex) =>{
-                    if(value){
-                        let breakHours = moment.duration(value["breakHours"],'hours')
-                        breakHours = breakHours && moment(moment().hours(breakHours.hours()).minutes(breakHours.minutes())).format("HH:mm")
-                    {return <Tooltip title={value['notes'] && `Note: ${value['notes'] }`} ><Row style={{ border: "1px solid" }}>
-                            <Col span={24}>Start Time: {value["startTime"]&& moment(value["startTime"], ["HH:mm"]).format("h:mm A")}</Col>
-                            <Col span={24}>End Time: {value["endTime"] && moment(value["endTime"], ["HH:mm"]).format("h:mm A")}</Col>
-                            <Col span={24}>Break: {breakHours && breakHours}</Col>
-                            <Col span={24}>Total Hours: {value["actualHours"] && value["actualHours"]}</Col>
-                        </Row> </Tooltip>}
-                    }
-                },
-            })
+              title: (
+                <span>
+                  <div>{date.format('ddd')}</div>
+                  <div> {date.format('DD MMM')} </div>
+                  {holidays[date.format('YYYY-MM-DD')] && (
+                    <Text
+                      ellipsis={{
+                        tooltip: holidays[date.format('YYYY-MM-DD')],
+                      }}
+                      style={{ fontSize: 10, color: 'red' }}
+                    >
+                      {holidays[date.format('YYYY-MM-DD')]}
+                    </Text>
+                  )}
+                </span>
+              ),
+              heading: <span>{date.format('dddd - DD MM YYYY')}</span>,
+              dataIndex: date.format('D/M'),
+              key: date.format('D/M'),
+              width: 200,
+              editable: true,
+              align: 'center',
+              render: (value, record, rowIndex) => {
+                if (value) {
+                  let breakHours = moment.duration(
+                    value['breakHours'],
+                    'hours'
+                  );
+                  breakHours =
+                    breakHours &&
+                    moment(
+                      moment()
+                        .hours(breakHours.hours())
+                        .minutes(breakHours.minutes())
+                    ).format('HH:mm');
+                  {
+                    return (
+                      <Tooltip
+                        title={value['notes'] && `Note: ${value['notes']}`}
+                      >
+                        <Row style={{ border: '1px solid' }}>
+                          <Col span={24}>
+                            Start Time:{' '}
+                            {value['startTime'] &&
+                              moment(value['startTime'], ['HH:mm']).format(
+                                'h:mm A'
+                              )}
+                          </Col>
+                          <Col span={24}>
+                            End Time:{' '}
+                            {value['endTime'] &&
+                              moment(value['endTime'], ['HH:mm']).format(
+                                'h:mm A'
+                              )}
+                          </Col>
+                          <Col span={24}>Break: {breakHours && breakHours}</Col>
+                          <Col span={24}>
+                            Total Hours:{' '}
+                            {value['actualHours'] && value['actualHours']}
+                          </Col>
+                        </Row>{' '}
+                      </Tooltip>
+                    );
+                  }
+                }
+              },
+            });
             date = date.add(1, 'days')
         }
         this.setState({columns})

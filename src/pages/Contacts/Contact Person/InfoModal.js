@@ -359,44 +359,44 @@ class InfoModal extends Component {
             // rules: [ { required: true, message: "Gender is Obviously required", }, ],
             type: 'Select',
             itemStyle: { marginBottom: 10 },
-            onChange: (value) => {
-              const { fields } = this.state.SecurityFields;
-              if (value) {
-                fields[1].rangeMin = true;
-                fields[4].rangeMin = true;
-                fields[5].rangeMin = true;
-                fields[8].rangeMin = true;
+            // onChange: (value) => {
+            //   const { fields } = this.state.SecurityFields;
+            //   if (value) {
+            //     fields[1].rangeMin = true;
+            //     fields[4].rangeMin = true;
+            //     fields[5].rangeMin = true;
+            //     fields[8].rangeMin = true;
 
-                fields[3].rules = [
-                  { required: true, message: 'Date Granted is required' },
-                ];
-                fields[6].rules = [
-                  { required: true, message: 'Expiry Date is required' },
-                ];
-                fields[7].rules = [
-                  { required: true, message: 'Current Sponsor is required' },
-                ];
-                fields[9].rules = [
-                  { required: true, message: 'CS # is required' },
-                ];
-              } else {
-                fields[1].rangeMin = false;
-                fields[4].rangeMin = false;
-                fields[5].rangeMin = false;
-                fields[8].rangeMin = false;
+            //     fields[3].rules = [
+            //       { required: true, message: 'Date Granted is required' },
+            //     ];
+            //     fields[6].rules = [
+            //       { required: true, message: 'Expiry Date is required' },
+            //     ];
+            //     fields[7].rules = [
+            //       { required: true, message: 'Current Sponsor is required' },
+            //     ];
+            //     fields[9].rules = [
+            //       { required: true, message: 'CS # is required' },
+            //     ];
+            //   } else {
+            //     fields[1].rangeMin = false;
+            //     fields[4].rangeMin = false;
+            //     fields[5].rangeMin = false;
+            //     fields[8].rangeMin = false;
 
-                fields[3].rules = [{ required: false, message: '' }];
-                fields[6].rules = [{ required: false, message: '' }];
-                fields[7].rules = [{ required: false, message: '' }];
-                fields[9].rules = [{ required: false, message: '' }];
-              }
-              this.setState({
-                SecurityFields: {
-                  ...this.state.SecurityFields,
-                  fields: [...fields],
-                },
-              });
-            },
+            //     fields[3].rules = [{ required: false, message: '' }];
+            //     fields[6].rules = [{ required: false, message: '' }];
+            //     fields[7].rules = [{ required: false, message: '' }];
+            //     fields[9].rules = [{ required: false, message: '' }];
+            //   }
+            //   this.setState({
+            //     SecurityFields: {
+            //       ...this.state.SecurityFields,
+            //       fields: [...fields],
+            //     },
+            //   });
+            // },
           },
           {
             object: 'sec',
