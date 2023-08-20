@@ -5,14 +5,16 @@ import {
   DatePicker,
   Descriptions,
   Divider,
+  Dropdown,
   Form,
+  Menu,
   Modal,
   Row,
   Typography,
   Upload,
   message,
 } from 'antd';
-import { PlusOutlined } from '@ant-design/icons'; //Icons
+import { PlusOutlined, CaretDownOutlined } from '@ant-design/icons'; //Icons
 import FormItems from '../../../components/Core/Forms/FormItems';
 
 import {
@@ -25,9 +27,9 @@ import {
 import ATable from '../../../components/Core/Table/TableFilter';
 import {
   getToolAssets,
-  getToolOrganizations,
+  // getToolOrganizations,
 } from '../../../service/integration-Apis';
-import { getOrgProjects } from '../../../service/Organizations';
+// import { getOrgProjects } from '../../../service/Organizations';
 import {
   createInvoice,
   getInvoice,
@@ -36,60 +38,30 @@ import {
 } from '../../../service/invoice-Apis';
 import '../../styles/modal.css';
 import { entityProjects } from '../../../service/constant-Apis';
-const { Text } = Typography;
 
 const InvoiceModal = ({ visible, close, callBack }) => {
+  const disabled = visible !== true
   const [form] = Form.useForm();
   const [lineItems, setLineItems] = useState([{}]);
+  const [updateData, setUpdateData] = useState({
+    refresh: false,
+    rateKey: 0,
+    visible: false,
+    rateLable: 'Hourly Sell Rate',
+    disableDropDown: false,
+  });
   const [attachments, seAttachments] = useState([]);
   const [totalAmounts, setTotalAmounts] = useState({});
-  const [fields, setFields] = useState([ 
+  const [selectedLineItems, setSelectedLineItems] = useState([]);
+  const [fields, setFields] = useState([
     {
-        Placeholder: 'Project',
-        // rangeMin: true,
-        fieldCol: 12,
-        size: 'small',
-        type: 'Text',
-        // itemStyle:{marginBottom:'10px'},
-    },
-    {
-      Placeholder: 'Reference',
-      // rangeMin: true,
+      Placeholder: 'Project',
+      rangeMin: true,
       fieldCol: 12,
       size: 'small',
       type: 'Text',
       // itemStyle:{marginBottom:'10px'},
     },
-    {
-        object: 'basic',
-        fieldCol: 12,
-        key: 'projectId',
-        size: 'small',
-        rules: [{ required: true, message: 'type is Required' }],
-        data: [],
-        type: 'Select',
-        // fieldNames: { value: 'id', label: 'title' },
-        onChange: (value, record) => {
-          changeTypeFields(value, record);
-        },
-      },
-    {
-      object: 'basic',
-      fieldCol: 12,
-      key: 'reference',
-      size: 'small',
-      rules: [{ required: true, message: 'type is Required' }],
-      initialValue: null,
-      type: 'Input',
-    },
-    {
-        Placeholder: 'Months',
-        // rangeMin: true,
-        fieldCol: 12,
-        size: 'small',
-        type: 'Text',
-        // itemStyle:{marginBottom:'10px'},
-      },
     {
       Placeholder: 'Invoice Number',
       // rangeMin: true,
@@ -98,19 +70,21 @@ const InvoiceModal = ({ visible, close, callBack }) => {
       type: 'Text',
       // itemStyle:{marginBottom:'10px'},
     },
+
     {
-        object: 'basic',
-        fieldCol: 12,
-        key: 'months',
-        mode: 'month',
-        size: 'small',
-        disabled: true,
-        rules: [{ required: true, message: 'Month Are Required' }],
-        type: 'RangePicker',
-        onChange: () => {
-          invoiceData();
-        },
+      object: 'basic',
+      fieldCol: 12,
+      key: 'projectId',
+      disabled: disabled,
+      size: 'small',
+      rules: [{ required: true, message: 'Project is Required' }],
+      data: [],
+      type: 'Select',
+      // fieldNames: { value: 'id', label: 'title' },
+      onChange: (value, record) => {
+        changeTypeFields(value, record);
       },
+    },
     {
       object: 'basic',
       fieldCol: 12,
@@ -120,13 +94,96 @@ const InvoiceModal = ({ visible, close, callBack }) => {
       type: 'Input',
     },
     {
-        Placeholder: 'Account',
-        // rangeMin: true,
-        fieldCol: 12,
-        size: 'small',
-        type: 'Text',
-        // itemStyle:{marginBottom:'10px'},
+      Placeholder: 'Months',
+      rangeMin: true,
+      fieldCol: 12,
+      size: 'small',
+      type: 'Text',
+      // itemStyle:{marginBottom:'10px'},
+    },
+    {
+      Placeholder: 'Purchase Order',
+      rangeMin: true,
+      fieldCol: 12,
+      size: 'small',
+      type: 'Text',
+      // itemStyle:{marginBottom:'10px'},
+    },
+    {
+      object: 'basic',
+      fieldCol: 12,
+      key: 'months',
+      mode: 'month',
+      size: 'small',
+      disabled: disabled,
+      rules: [{ required: true, message: 'Months Are Required' }],
+      type: 'RangePicker',
+      onChange: () => {
+        invoiceData();
       },
+    },
+    {
+      object: 'basic',
+      fieldCol: 12,
+      key: 'purchaseOrderId',
+      size: 'small',
+      disabled: disabled,
+      rules: [{ required: true, message: 'Purchase Order is Required' }],
+      data: [],
+      type: 'Select',
+      onChange: (value, record) => {
+        let { basic } = form.getFieldsValue();
+        form.setFieldsValue({ basic: { ...basic, reference: record.label } });
+      },
+    },
+    {
+      Placeholder: 'Account',
+      rangeMin: true,
+      fieldCol: 12,
+      size: 'small',
+      type: 'Text',
+      // itemStyle:{marginBottom:'10px'},
+    },
+    {
+      Placeholder: 'Reference',
+      rangeMin: true,
+      fieldCol: 12,
+      size: 'small',
+      type: 'Text',
+      // itemStyle:{marginBottom:'10px'},
+    },
+    {
+      object: 'basic',
+      fieldCol: 12,
+      key: 'accountCode',
+      size: 'small',
+      disabled: disabled,
+      rules: [{ required: true, message: 'Account is Required' }],
+      data: [],
+      fieldNames: { value: 'code', label: 'name' },
+      type: 'Select',
+      onChange: () => {
+        setUpdateData((prev) => ({ ...prev, refresh: true }));
+      },
+    },
+    {
+      object: 'basic',
+      fieldCol: 12,
+      key: 'reference',
+      disabled: disabled,
+      size: 'small',
+      rules: [{ required: true, message: 'Reference is Required' }],
+      initialValue: null,
+      type: 'Input',
+    },
+    {
+      Placeholder: 'Tax Code',
+      rangeMin: true,
+      fieldCol: 12,
+      size: 'small',
+      type: 'Text',
+    },
+
     {
       Placeholder: 'Issue Date',
       rangeMin: true,
@@ -136,32 +193,39 @@ const InvoiceModal = ({ visible, close, callBack }) => {
       // itemStyle:{marginBottom:'10px'},
     },
     {
-        object: 'basic',
-        fieldCol: 12,
-        key: 'accountCode',
-        size: 'small',
-        rules: [{ required: true, message: 'type is Required' }],
-        data: [],
-        fieldNames: { value: 'code', label: 'name' },
-        type: 'Select',
-        onChange: () => {
-          setTableData();
-        },
+      object: 'basic',
+      fieldCol: 12,
+      key: 'taxType',
+      size: 'small',
+      disabled: disabled,
+      rules: [{ required: true, message: 'Tax Code is Required' }],
+      data: [],
+      type: 'Select',
+      fieldNames: { value: 'taxType', label: 'name' },
+      onChange: (_, record) => {
+        setUpdateData((prev) => ({
+          ...prev,
+          effectiveGst: record?.effectiveRate,
+          refresh: true,
+        }));
       },
+    },
     {
       object: 'basic',
       fieldCol: 12,
       key: 'issueDate',
       size: 'small',
-      rules: [{ required: true, message: 'Date is Required' }],
+      disabled: disabled,
+      rules: [{ required: true, message: 'Issue Date is Required' }],
       type: 'DatePicker',
       fieldStyle: { width: '100%' },
     },
     {
-        Placeholder: 'Tax Code',
-        fieldCol: 12,
-        size: 'small',
-        type: 'Text',
+      Placeholder: 'Amounts Are',
+      rangeMin: true,
+      fieldCol: 12,
+      size: 'small',
+      type: 'Text',
     },
     {
       Placeholder: 'Due Date',
@@ -174,37 +238,10 @@ const InvoiceModal = ({ visible, close, callBack }) => {
     {
       object: 'basic',
       fieldCol: 12,
-      key: 'taxType',
-      size: 'small',
-      rules: [{ required: true, message: 'type is Required' }],
-      data: [],
-      type: 'Select',
-      fieldNames: { value: 'taxType', label: 'name' },
-      onChange: (_, record) => {
-        setTableData(undefined, record?.effectiveRate);
-      },
-    },
-    {
-      object: 'basic',
-      fieldCol: 12,
-      key: 'dueDate',
-      size: 'small',
-      rules: [{ required: true, message: 'Date is Required' }],
-      type: 'DatePicker',
-      fieldStyle: { width: '100%' },
-    },
-    {
-      Placeholder: 'Amounts Are',
-      fieldCol: 24,
-      size: 'small',
-      type: 'Text',
-    },
-    {
-      object: 'basic',
-      fieldCol: 12,
       key: 'lineAmountTypes',
+      disabled: disabled,
       size: 'small',
-      rules: [{ required: true, message: 'type is Required' }],
+      rules: [{ required: true, message: 'Required' }],
       data: [
         { label: 'Tax Exclusive', value: 'Exclusive' },
         { label: 'Tax Inclusive', value: 'Inclusive' },
@@ -212,26 +249,81 @@ const InvoiceModal = ({ visible, close, callBack }) => {
       ],
       type: 'Select',
       onChange: () => {
-        setTableData();
+        setUpdateData((prev) => ({ ...prev, refresh: true }));
       },
     },
+    {
+      object: 'basic',
+      fieldCol: 12,
+      key: 'dueDate',
+      disabled: disabled,
+      size: 'small',
+      rules: [{ required: true, message: 'Due Date is Required' }],
+      type: 'DatePicker',
+      fieldStyle: { width: '100%' },
+    },
   ]);
+
   const columns = [
     {
       title: 'Description',
       dataIndex: 'description',
       key: 'description',
-      width: '40%'
+      width: '40%',
     },
     {
-      title: 'Hours',
-      dataIndex: 'hours',
-      key: 'hours',
+      title: updateData.rateKey ===2 ? 'Days' : 'Hours',
+      dataIndex: 'quantity',
+      key: 'quantity',
       align: 'right',
-      render: (value) => value === '-' ?value :formatFloat(value),
+      render: (value) => (value === '-' ? value : formatFloat(value)),
     },
     {
-      title: 'Sell Rate',
+      // title: 'Sell Rate',
+      title: updateData.rateLable,
+      filterSearch: false,
+      filterDropdownVisible: updateData.visible,
+      filterDropdown: !updateData.disableDropDown &&(
+        <Menu>
+          <Menu.Item
+            key="1"
+            className="pop-confirm-menu"
+            onClick={() =>
+              setUpdateData({
+                rateKey: 1,
+                visible: true,
+                rateLable: 'Hourly Sell Rate',
+                refresh: true,
+                disableDropDown: false
+              })
+            }
+          >
+            Hourly Sell Rate
+          </Menu.Item>
+          <Menu.Item
+            key="2"
+            className="pop-confirm-menu"
+            onClick={() =>
+              setUpdateData({
+                rateKey: 2,
+                visible: true,
+                rateLable: 'Daily Sell Rate',
+                refresh: true,
+                disableDropDown: false
+              })
+            }
+          >
+            Daily Sell Rate
+          </Menu.Item>
+        </Menu>
+      ),
+      filterIcon: (filtered) => !updateData.disableDropDown &&(
+        <CaretDownOutlined
+          onClick={() =>
+            setUpdateData((prev) => ({ ...prev, visible: !prev.visible }))
+          }
+        />
+      ),
       dataIndex: 'unitAmount',
       key: 'unitAmount',
       align: 'right',
@@ -252,10 +344,12 @@ const InvoiceModal = ({ visible, close, callBack }) => {
       render: (value) => formatCurrency(value),
     },
   ];
+
   let projectTypeField = {
     1: {
       label: {
         Placeholder: 'Schedule',
+        rangeMin: true,
         fieldCol: 12,
         size: 'small',
         type: 'Text',
@@ -265,21 +359,26 @@ const InvoiceModal = ({ visible, close, callBack }) => {
         fieldCol: 12,
         key: 'scheduleId',
         size: 'small',
-        rules: [{ required: true, message: 'type is Required' }],
+        disabled: disabled,
+        rules: [{ required: true, message: 'Schedule is Required' }],
         data: [],
         type: 'Select',
         fieldNames: { value: 'id', label: 'description' },
         onChange: (value, record) => {
           let recordArray = record ? [record] : [];
           //if record is not null put it in array to save
-          setTableData(recordArray);
+          setUpdateData((prev) => ({
+            ...prev,
+            records: recordArray,
+            refresh: true,
+          }));
         },
       },
     },
     2: {
       label: {
         Placeholder: 'Months',
-        // rangeMin: true,
+        rangeMin: true,
         fieldCol: 12,
         size: 'small',
         type: 'Text',
@@ -289,9 +388,10 @@ const InvoiceModal = ({ visible, close, callBack }) => {
         object: 'basic',
         fieldCol: 12,
         key: 'months',
+        disabled: disabled,
         // mode: 'month',
         size: 'small',
-        rules: [{ required: true, message: 'Month Are Required' }],
+        rules: [{ required: true, message: 'Months Are Required' }],
         type: 'RangePicker',
         onChange: () => {
           invoiceData();
@@ -304,19 +404,25 @@ const InvoiceModal = ({ visible, close, callBack }) => {
     getData();
   }, []);
 
+  useEffect(() => {
+    if (updateData.refresh) {
+      setTableData(updateData);
+    }
+  }, [updateData]);
+
   const getData = () => {
     const toolsQuery = {
       account: 'Class=="REVENUE"',
       taxType: 'CanApplyToRevenue=true AND status=="ACTIVE"',
     };
     Promise.all([
-      entityProjects('helpers/work?type=P', true), //call organization 
+      entityProjects('helpers/work?type=P', true), //call organization
       getToolAssets('xero', toolsQuery), //get all assets belong from ttol
       visible !== true && getInvoice(visible.id), //for Edit api get Invoice
     ]).then((res) => {
       let tempFields = fields;
       tempFields[2].data = res[0].success ? res[0].options : []; //set data in select box
-      tempFields[10].data = res[1].success ? res[1]?.data?.accounts ?? [] : [];//set data in select box
+      tempFields[10].data = res[1].success ? res[1]?.data?.accounts ?? [] : []; //set data in select box
       tempFields[14].data = res[1].success ? res[1]?.data?.taxRates ?? [] : []; //set data in select box
 
       //if getInvoice api hit
@@ -325,29 +431,39 @@ const InvoiceModal = ({ visible, close, callBack }) => {
         // tempFields[2].data = [res[2]?.data?.project];
 
         //testing project type for scheule or Range picker field select
-        let projectType = res[2]?.data?.project?.type
+        let projectType = res[2]?.data?.project?.type;
 
         //If project is milestone change scheduleId
-        if (projectType ===1){
+        if (projectType == 1) {
           tempFields[4] = projectTypeField[1]['label'];
           tempFields[6] = projectTypeField[1]['field'];
-          tempFields[10].data = res[2]?.data?.lineItems // set tempoary field change to this field
+          tempFields[6].data = res[2]?.data?.lineItems; // set tempoary field change to this field
         }
+        let POdata = res[2]?.data?.purchaseOrder
+        tempFields[7].data = [{value: POdata.id, label:POdata.orderNo }]; //adding data to purchase order dropdown
+
         //setting form field
         form.setFieldsValue({ basic: res[2]?.data });
         //setting table data to show invoice line
         setLineItems(res[2]?.data?.lineItems);
 
         //setting total amount to show below table
-        setTotalAmounts(res[2]?.data?.totalAmounts);
-        seAttachments(res[2]?.data?.attachments??[])
+        setTotalAmounts({...res[2]?.data?.totalAmounts, type: parseInt(projectType)});
+        seAttachments(res[2]?.data?.attachments ?? []);
+        setUpdateData({
+          refresh: false,
+          disableDropDown: true,
+          rateLable: 'Sell Rate',
+          rateKey: 2,
+          // type: parseInt(projectType),
+        }); // Else if api called for timebase (after selecting date range) //show data to table
         // simultaneously getting real project data after avoiding delay response
         // getProjects(res[2]?.data?.organization, true)
-        if (projectType ===1){
-            // simultaneously getting real project data after avoiding delay response if project is milestone
-            invoiceData(1)
-        }else{
-          tempFields[6].disabled = true
+        if (projectType == 1) {
+          // simultaneously getting real project data after avoiding delay response if project is milestone
+          // invoiceData(1);
+        } else {
+          tempFields[6].disabled = true;
         }
       }
 
@@ -360,13 +476,11 @@ const InvoiceModal = ({ visible, close, callBack }) => {
     let tempFields = fields;
     if (record) {
       let { type } = record;
-      console.log(type)
       tempFields[4] = projectTypeField[type]['label'];
       tempFields[6] = projectTypeField[type]['field'];
       setFields([...tempFields]); //change project fields based on type // projectTypeField
       setLineItems([{}]);
       let { basic } = form.getFieldsValue();
-      console.log(form, basic)
       form.setFieldsValue({
         basic: {
           ...basic,
@@ -391,91 +505,182 @@ const InvoiceModal = ({ visible, close, callBack }) => {
         formatDate(months?.[1], true, 'YYYY-MM-DD')
       ).then((res) => {
         if (res.success) {
-          if (type === 1) {
-            let tempFields = fields;
+          let tempFields = fields;
+          if (type == 1) {
             tempFields[6].data = res.resources; // if api called on milestone add schedule to select schedule
-            setFields([...tempFields]);
-          } else {
-            setTableData(res.resources); // Else if api called for timebase (after selecting date range) //show data to table
-            seAttachments(res.attachments??[])
+            setUpdateData({
+              refresh: true,
+              hours: res.hoursPerDay,
+              rateKey: 2,
+              visible: false,
+              disableDropDown: true,
+              rateLable: 'Sell Rate',
+              type,
+            }); // Else if api called for timebase (after selecting date range) //show data to table
+          } 
+          else {
+            setUpdateData({
+              refresh: true,
+              records: res.resources,
+              hours: res.hoursPerDay,
+              rateKey: 0,
+              visible: false,
+              disableDropDown: disabled,
+              rateLable: 'Hourly Sell Rate',
+            }); // Else if api called for timebase (after selecting date range) //show data to table
+            seAttachments(res.attachments ?? []);
           }
+          tempFields[7].data = res.purchaseOrders; // setting up purchaseOrders in dopdown
+          setFields([...tempFields]);
         }
       });
     }
   };
 
-  const setTableData = (records, effectiveGst) => {
+  const setTableData = ({ records, effectiveGst, selectedKeys, hours, rateKey, type }) => {
     // can call a function from two ways after api called after selecting dateRange for timebase
     // OR
     // if selecting schedule from selectbox
     let { basic } = form.getFieldsValue();
     let { accountCode, lineAmountTypes, taxType } = basic;
-    setTotalAmounts((prev) => {
-      let gstRate = (effectiveGst ?? 0) / 100 || prev.gstRate || 0;
-      let subTotal = 0;
-      let totalTax = 0;
-      let total = 0;
-      setLineItems((previousRecords) => {
-        return (records ?? previousRecords).map((record) => {
-          console.log(record);
-          let lineAmount =
-            parseFloat(record.unitAmount) * parseFloat(record.quantity);
-          let taxAmount =
-            lineAmountTypes !== 'NoTax' ? lineAmount * parseFloat(gstRate) : 0;
-          subTotal += lineAmount;
-          totalTax += taxAmount;
-          total +=
-            lineAmount + (lineAmountTypes === 'Exclusive' ? taxAmount : 0);
-          return {
-            ...record,
-            taxAmount: taxAmount,
-            accountCode: accountCode,
-            lineAmount: lineAmount,
-            taxType: taxType,
-          };
-        });
-      });
-      return { subTotal, totalTax, total, gstRate };
+    let { gstRate = 0, workingHours = 8, projectType } = totalAmounts;
+
+    gstRate = (effectiveGst ?? 0) / 100 || gstRate;
+    workingHours = hours || workingHours;
+    let selected = selectedKeys ?? selectedLineItems;
+    let tableItems = records ?? lineItems;
+    projectType = type ?? projectType
+
+    let subTotal = 0;
+    let totalTax = 0;
+    let total = 0;
+
+    tableItems = tableItems.map((record) => {
+      let lineAmount = 0;
+      let taxAmount = 0;
+
+      if (projectType === 1){ // for milestone project 
+        record.hours = parseFloat(record.hours) 
+        record.unitAmount = parseFloat(record.unitAmount) 
+        lineAmount = record.hours * record.unitAmount;
+
+      }else{ // for timebase project 
+        console.log('here', rateKey)
+        record.hours = parseFloat(record.hours)
+        record.perHours = parseFloat(record.perHours)
+        if (rateKey === 2) { 
+          // daily rates calculation
+          console.log('daily rate')
+          record.quantity = record.hours / workingHours;
+          record.unitAmount = record.perHours * workingHours;
+          record.description = record?.description?.replace('Hourly Rate', 'Daily Rate')
+          console.log({...record, workingHours})
+  
+        } else {
+          //hourly rates calculation
+          console.log('hourly rate')
+          record.quantity = record.hours 
+          record.unitAmount = record.perHours
+          record.description = record?.description?.replace('Daily Rate', 'Hourly Rate')
+          console.log({...record, workingHours})
+        }
+          lineAmount = record.perHours * record.hours;
+      }
+
+        taxAmount =
+          lineAmountTypes !== 'NoTax' ? lineAmount * parseFloat(gstRate) : 0;
+
+        
+      
+      if (selected.includes(record.id)) {
+        subTotal += lineAmount;
+        totalTax += taxAmount;
+        total += lineAmount + (lineAmountTypes === 'Exclusive' ? taxAmount : 0);
+      }
+      
+
+      return {
+        ...record,
+        taxAmount: taxAmount,
+        accountCode: accountCode,
+        lineAmount: lineAmount,
+        taxType: taxType,
+      };
     });
+    // console.log(selected)
+
+    setLineItems([...tableItems]);
+    setTotalAmounts({ subTotal, totalTax, total, gstRate, workingHours, projectType });
+    setSelectedLineItems(selected);
+    setUpdateData((prev) => ({
+      refresh: false,
+      visible:false,
+      rateKey: prev.rateKey,
+      rateLable: prev.rateLable,
+      disableDropDown: prev.disableDropDown
+    }));
   };
 
   // on submit
-  const onFinish = ({basic: formData}) => {
-    if (Object.keys(lineItems?.[0]).length !== 0) {
+  const onFinish = ({ basic: formData }) => {
+    if (selectedLineItems.length) {
       let data = {
         ...formData,
         startDate: formatDate(formData['months']?.[0], true),
         endDate: formatDate(formData['months']?.[1], true),
         dueDate: formatDate(formData.dueDate, true),
         issueDate: formatDate(formData.issueDate, true),
-        lineItems,
+        lineItems: lineItems.filter((item) =>{
+          if (selectedLineItems.includes(item.id)){
+            if(totalAmounts.projectType ===1){
+              item.quantity = item.hours
+            }
+            return item
+          }
+        }),
         attachments,
       };
-      console.log(formData)
-      if (visible === true){
-          createInvoice(data).then((res) => {
-            if (res.success) {
-                callBack()
-            }
-          });
-      }else{
+      // console.log(data)
+      if (visible === true) {
+        createInvoice(data).then((res) => {
+          if (res.success) {
+            callBack();
+          }
+        });
+      } else {
         updateInvoice(visible.id, data).then((res) => {
-            if (res.success) {
-              callBack()
-            }
-          });
+          if (res.success) {
+            callBack();
+          }
+        });
       }
     } else {
       message.error('Empty Invoice Not Allowed', 3);
     }
   };
 
-  const selectFiles=(key, fileObj) => {
-    let index = attachments.findIndex(file=> file.fileId === fileObj.fileId)
-    let tempAttachment =attachments
-    tempAttachment[index][key] = !tempAttachment[index][key]
-    seAttachments([...tempAttachment])
-  }
+  const selectFiles = (key, fileObj) => {
+    let index = attachments.findIndex((file) => file.fileId === fileObj.fileId);
+    let tempAttachment = attachments;
+    tempAttachment[index][key] = !tempAttachment[index][key];
+    seAttachments([...tempAttachment]);
+  };
+
+  const onSelectChange = (rowKeys) => {
+    // setSelectedLineItems(selectedRows);
+    setUpdateData((prev) => ({
+      ...prev,
+      refresh: true,
+      selectedKeys: rowKeys,
+    }));
+  };
+
+  const rowSelection = {
+    selectedLineItems,
+    onChange: onSelectChange,
+    preserveSelectedRowKeys: false,
+    getCheckboxProps: (item) => ({ disabled: !item.id }),
+  };
 
   return (
     <Modal
@@ -500,16 +705,22 @@ const InvoiceModal = ({ visible, close, callBack }) => {
       </Form>
       <Row justify="space-between" gutter={[0, 20]} style={{ marginTop: 20 }}>
         <Col span={24}>
-          <ATable rowKey="id" dataSource={lineItems} columns={columns} />
+          <ATable
+            rowKey="id"
+            dataSource={lineItems}
+            columns={columns}
+            rowSelection={!disabled&& rowSelection }
+          />
         </Col>
         <Col span={10}>
           <Row justify="space-between">
             <Col span={13}>File name</Col>
-            <Col >Send</Col>
-            <Col style={{marginRight: 10}}>Attach</Col>
+            <Col>Send</Col>
+            <Col style={{ marginRight: 10 }}>Attach</Col>
           </Row>
           <Upload
             // customRequest={(option) => handleUpload(option, 'tfnFile')}
+            disabled={disabled}
             style={{
               maxHeight: 120,
               position: 'relative',
@@ -524,17 +735,17 @@ const InvoiceModal = ({ visible, close, callBack }) => {
             itemRender={(originNode, file, fileList, actions) => (
               <Row justify="space-between" align="center" key={file.fileId}>
                 <Col span={13}>{originNode}</Col>
-                <Col style={{textAlign: 'right'}}>
+                <Col style={{ textAlign: 'right' }}>
                   <Checkbox
                     checked={file.includeOnline}
-                    disabled={!file.attachXero}
-                    onChange={()=>selectFiles('includeOnline', file)}
+                    disabled={!file.attachXero || disabled}
+                    onChange={() => selectFiles('includeOnline', file)}
                   />
                 </Col>
-                <Col style={{textAlign: 'center', marginRight:10}}>
+                <Col style={{ textAlign: 'center', marginRight: 10 }}>
                   <Checkbox
-                    checked={file.attachXero}
-                    onChange={()=>selectFiles('attachXero', file)}
+                    checked={file.attachXero || disabled}
+                    onChange={() => selectFiles('attachXero', file)}
                   />
                 </Col>
               </Row>
