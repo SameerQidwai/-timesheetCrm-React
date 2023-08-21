@@ -545,7 +545,7 @@ const InvoiceModal = ({ visible, close, callBack }) => {
     let { accountCode, lineAmountTypes, taxType } = basic;
     let { gstRate = 0, workingHours = 8, projectType } = totalAmounts;
 
-    gstRate = (effectiveGst ?? 0) / 100 || gstRate;
+    gstRate = parseFloat(((effectiveGst ?? 0) / 100) || gstRate);
     workingHours = hours || workingHours;
     let selected = selectedKeys ?? selectedLineItems;
     let tableItems = records ?? lineItems;
@@ -560,36 +560,34 @@ const InvoiceModal = ({ visible, close, callBack }) => {
       let taxAmount = 0;
 
       if (projectType === 1){ // for milestone project 
-        record.hours = parseFloat(record.hours) 
-        record.unitAmount = parseFloat(record.unitAmount) 
+        record.hours = parseFloat(record.hours);
+        record.unitAmount = floatRound(record.unitAmount);
         lineAmount = record.hours * record.unitAmount;
 
+        taxAmount =
+          lineAmountTypes !== 'NoTax' ? floatRound(lineAmount * gstRate) : 0;
+
       }else{ // for timebase project 
-        console.log('here', rateKey)
-        record.hours = parseFloat(record.hours)
-        record.perHours = parseFloat(record.perHours)
+        record.hours = parseFloat(record.hours);
+        record.perHours = parseFloat(record.perHours);
         if (rateKey === 2) { 
           // daily rates calculation
-          console.log('daily rate')
-          record.quantity = record.hours / workingHours;
-          record.unitAmount = record.perHours * workingHours;
-          record.description = record?.description?.replace('Hourly Rate', 'Daily Rate')
-          console.log({...record, workingHours})
+          record.quantity = floatRound(record.hours / workingHours);
+          record.unitAmount = floatRound(record.perHours * workingHours);
+          record.description = record?.description?.replace('Hourly Rate', 'Daily Rate');
   
         } else {
           //hourly rates calculation
-          console.log('hourly rate')
-          record.quantity = record.hours 
-          record.unitAmount = record.perHours
-          record.description = record?.description?.replace('Daily Rate', 'Hourly Rate')
-          console.log({...record, workingHours})
+          record.quantity = floatRound(record.hours);
+          record.unitAmount = floatRound(record.perHours);
+          record.description = record?.description?.replace('Daily Rate', 'Hourly Rate');
         }
-          lineAmount = record.perHours * record.hours;
-      }
+
+        lineAmount = floatRound(record.quantity * record.unitAmount);
 
         taxAmount =
-          lineAmountTypes !== 'NoTax' ? lineAmount * parseFloat(gstRate) : 0;
-
+          lineAmountTypes !== 'NoTax' ? floatRound(record.quantity * record.unitAmount * gstRate) : 0;
+      }
         
       
       if (selected.includes(record.id)) {
@@ -707,6 +705,7 @@ const InvoiceModal = ({ visible, close, callBack }) => {
         <Col span={24}>
           <ATable
             rowKey="id"
+            rowClassName={()=> 'multiline'}
             dataSource={lineItems}
             columns={columns}
             rowSelection={!disabled&& rowSelection }
@@ -789,3 +788,7 @@ const InvoiceModal = ({ visible, close, callBack }) => {
 };
 
 export default InvoiceModal;
+
+function floatRound (value){
+  return parseFloat(formatFloat(value, 2, true))
+}
