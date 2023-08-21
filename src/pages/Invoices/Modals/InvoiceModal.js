@@ -689,7 +689,7 @@ const InvoiceModal = ({ visible, close, callBack }) => {
       //   width={800}
       onCancel={close}
       okText={'Save'}
-      okButtonProps={{ htmlType: 'submit', form: 'my-invoive' }}
+      okButtonProps={{ htmlType: 'submit', form: 'my-invoive', disabled: disabled }}
       className="modal-top"
     >
       <Form
