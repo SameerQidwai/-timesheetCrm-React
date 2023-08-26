@@ -1,41 +1,41 @@
 import React, { useState } from 'react';
 import { BellFilled, BellTwoTone, BellOutlined } from '@ant-design/icons'; //Icons
-import { Avatar, Badge, List, Popover } from 'antd';
+import { Avatar, Badge, Divider, List, Popover } from 'antd';
 import './style.css';
 import { Link } from 'react-router-dom';
 
 function NotificationIcon() {
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(199);
 
   const notifications = [
     {
       id: 1,
-      message: 'New post in a subreddit.',
+      message: 'Salman Comment on Project',
       time: '1 hour ago',
     },
     {
       id: 2,
-      message: 'Comment on your post.',
+      message: 'Sameer Submit Timesheet',
       time: '2 hours ago',
     },
     {
       id: 3,
-      message: 'Comment on your post.',
+      message: 'Timesheet is Approved',
       time: '2 hours ago',
     },
     {
       id: 4,
-      message: 'Comment on your post.',
+      message: 'Sohail Submit Leave',
       time: '2 hours ago',
     },
     {
       id: 5,
-      message: 'Comment on your post.',
+      message: 'New Project Created',
       time: '2 hours ago',
     },
     {
       id: 6,
-      message: 'Comment on your post.',
+      message: 'New Expense Added',
       time: '2 hours ago',
     },
     // Add more notification items as needed
@@ -61,8 +61,9 @@ function NotificationIcon() {
             </Link>
         )}
       />
+      <Divider />
       <a className="btn-seeAll" href="#">
-        See all incoming activity
+        Load More
       </a>
     </div>
   );
@@ -70,23 +71,23 @@ function NotificationIcon() {
     // <div className="notification-dropdown">
     <h5 className="notification-title">
       <span className="notification-title-text">Notifications</span>
-      <Badge count={3} />
+      <a className="notification-title-text read">Read All</a>
+      {/* <Badge count={count} /> */}
     </h5>
     //   </div>
   );
   return (
     <div>
-      <Popover content={content} title={title} trigger="click">
+      <Popover content={content} 
+      title={title} 
+      placement="bottomRight"
+      trigger="click">
         {count ? (
-          <Badge count={count} size="small">
+          <Badge count={count} size="small" className='notify-bagde' offset={[count> 9 ? 5: 0, 0]}>
             <a>
               <BellTwoTone />
             </a>
           </Badge>
-        ) : count === false ? (
-          <a>
-            <BellFilled />
-          </a>
         ) : (
           <a>
             <BellOutlined />

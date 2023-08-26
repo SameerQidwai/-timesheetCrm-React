@@ -1,18 +1,19 @@
 /* Add your custom CSS to match your original styling */
 .notification-dropdown {
     width: 300px;
+    
 }
   
 .notification-title {
     background: #f4f5f7;
     width: 100%;
-    margin-bottom: 5px;
+    margin-bottom: 0px;
     border-radius: 6px;
     font-size: 14px;
     font-weight: 500;
-    min-height: 50px;
+    min-height: 30px;
     display: inline-flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     line-height: 22px;
   }
@@ -21,7 +22,7 @@
     scroll-behavior: smooth;
     overflow-y: auto;
     height: 260px;
-    padding: 0 10px;
+    scrollbar-width: 2px;
   }
   
   .notification-dropdown .notification-link {
@@ -29,7 +30,7 @@
     display: block; /* Ensure the link takes the full width */
     color: inherit; /* Use the default text color */
     text-decoration: none; /*Remove default underline */
-    padding-right: 5px;
+    padding: 0 10px;
   }
   
   .notification-dropdown .notification-link:hover {
@@ -39,37 +40,34 @@
 
   .notification-title-text {
     margin-right: 10px;
+    padding-left: 5px;
+  }
+
+  .notification-title-text.read{
+    font-size: 12px;
+    transition: 0.3s;
+    font-weight: 400;
   }
   
   
+  
   .notification-dropdown .btn-seeAll {
-    /* position: relative;
-    width: calc(100% + 30px);
-    left: -15px;
-    right: -15px;
-    height: calc(100% + 15px);
-    bottom: -15px; */
-    /* text-align: center;
-    font-size: 13px;
-    font-weight: 500;
-    padding: 15px 0;
-    border-radius: 0 0 6px 6px;
-    justify-content: center;
-    background: #fff;
-    transition: 0.3s;
-    color: #1890ff; */
     display: inline-flex;
     justify-content: center;
     align-items: center;
     background: #fff;
     transition: 0.3s;
     color: #1890ff;
-    padding: 15px 0;
+    padding-top: 15px;
     width: 100%;
+    font-size: 12px;
   }
+
+  
   
   .notification-dropdown .btn-seeAll:hover {
     color: #40a9ff;
+    
   }
   
   .notification-dropdown .ant-avatar {
@@ -93,9 +91,17 @@
   }
   
   .notification-dropdown .ant-list-item-meta-title {
-    font-weight: bold;
+    font-weight: 500;
+    font-size: 12px;
   }
   
   .notification-dropdown .ant-list-item-meta-description {
     color: #999;
+    font-size: 12px;
   }
+.notify-bagde .ant-badge-count-sm {
+    font-size: 8px !important;
+}
+.notification-dropdown .ant-divider.ant-divider-horizontal{
+    margin: 0px 0px;
+}
