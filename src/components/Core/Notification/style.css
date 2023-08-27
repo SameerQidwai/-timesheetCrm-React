@@ -39,7 +39,7 @@
   }
 
   .notification-title-text {
-    margin-right: 10px;
+    /* margin-right: 10px; */
     padding-left: 5px;
   }
 
@@ -104,4 +104,7 @@
 }
 .notification-dropdown .ant-divider.ant-divider-horizontal{
     margin: 0px 0px;
+}
+.notification-spin{
+  width: 100%
 }
