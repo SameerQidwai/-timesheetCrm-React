@@ -78,9 +78,7 @@ function NotificationIcon() {
               <List.Item.Meta
                 avatar={<Avatar icon={<BellOutlined />} />}
                 title={item.title}
-                description={moment(
-                  formatDate(item.createdAt, true, 'YYYY-MM-DDTHH:mm:ss')
-                ).fromNow()}
+                description={ formatDate(item.createdAt).fromNow()}
               />
               <div className="notification-status">
                 <Badge dot />
