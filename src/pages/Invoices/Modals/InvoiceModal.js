@@ -517,6 +517,7 @@ const InvoiceModal = ({ visible, close, callBack }) => {
               rateLable: 'Sell Rate',
               type,
             }); // Else if api called for timebase (after selecting date range) //show data to table
+            seAttachments(res.attachments ?? []);
           } 
           else {
             setUpdateData({
