@@ -1,13 +1,13 @@
-import { message as messageAlert } from "antd";
+import { notification } from "antd";
 import axios from "axios";
+import { Api, formatDate, headers, jwtExpired, parseDate, setToken } from "./constant";
+import moment from 'moment'
 
-import { Api, headers, jwtExpired, setToken } from "./constant";
-
-const url = `${Api}/notifications`;
+const url = `${Api}/auth`;
 
 export const getNotifications = (query) => {
     return axios
-        .get(`${url}?${query}`, {headers:headers()})
+        .get(`${url}/notifications?${query}`, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -24,61 +24,75 @@ export const getNotifications = (query) => {
         });
 };
 
-export const addList = (data) => {
-            messageAlert.loading({ content: 'Loading...', key: 1 },5)
+export const getRecentNotifications = (redirect) => {
+    
     return axios
-        .post(url, data, {headers:headers()})
+        .get(`${url}/unclearedNotifications`, {headers:headers()})
+        .then((res) => {
+            let { success, data, message } = res.data;
+            jwtExpired(message)
+            let counter = 0
+            if (success){
+                counter = data.length
+                data= data.filter(notify => {
+                    if(Math.abs(moment().utcOffset(0, true).diff(formatDate(notify.createdAt)), 'seconds')  <= 10000){
+                        notification.info({
+                            message: notify.title,
+                            description: notify.content,
+                            onClick:()=>{redirect.push(notify.url)},
+                            className: 'mouse-pointer'
+                        })
+                        return true
+                    }else{
+                        return false
+                    }
+                });
+            }  
+            setToken(res?.headers?.authorization)
+            return { success, data, counter };
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                success: false,
+                message: err.message,
+            };
+        });
+};
+
+export const markAsRead = (notificationIds=[]) => {
+    return axios
+        .patch(`${url}/readNotifications?notificationIds=${notificationIds}`,{}, {headers:headers()})
         .then((res) => {
             const { success, message } = res.data;
             jwtExpired(message)
-            messageAlert.success({ content: message, key: 1},5)
             if (success)  setToken(res?.headers?.authorization)
-            return {success};
+
+            return { success: success};
         })
         .catch((err) => {
-                        messageAlert.error({ content: 'Error!', key: 1},5)
             return {
                 error: "Please login again!",
-                status: false,
+                success: false,
                 message: err.message,
             };
         });
 };
 
-export const delLabel = (id) => {
+export const clearNotification = () => {
     return axios
-        .delete(url + `/${id}`, {headers:headers()})
+        .patch(`${url}/clearNotifications`,{}, {headers:headers()})
         .then((res) => {
-            const { success,message } = res.data;
+            const { success, data, message } = res.data;
             jwtExpired(message)
-            setToken(res?.headers?.authorization)
-            if (success) return success;
-        })
-        .catch((err) => {
-            return {
-                error: "Please login again!",
-                status: false,
-                message: err.message,
-            };
-        });
-};
+            if (success)  setToken(res?.headers?.authorization)
 
-export const editLabel = (data) => {
-            messageAlert.loading({ content: 'Loading...', key: data.id })
-    return axios
-        .put(url + `/${data.id}`, data, {headers:headers()})
-        .then((res) => {
-            const { success, message } = res.data;
-            jwtExpired(message)
-            messageAlert.success({ content: message, key: data.id},5)
-            setToken(res?.headers?.authorization)
-            if (success) return success;
+            return { success: success };
         })
         .catch((err) => {
-            messageAlert.error({ content: 'Error!', key: data.id})
             return {
                 error: "Please login again!",
-                status: false,
+                success: false,
                 message: err.message,
             };
         });

@@ -2,66 +2,78 @@ import React, { useEffect, useState } from 'react';
 import { BellFilled, BellTwoTone, BellOutlined } from '@ant-design/icons'; //Icons
 import { Avatar, Badge, Button, Divider, List, Popover, Spin } from 'antd';
 import './style.css';
-import { Link } from 'react-router-dom';
-import { getNotifications } from '../../../service/notification-Apis';
+import { Link, useHistory } from 'react-router-dom';
+import { clearNotification, getNotifications, getRecentNotifications, markAsRead } from '../../../service/notification-Apis';
 import { formatDate } from '../../../service/constant';
 import moment from 'moment';
 
 function NotificationIcon() {
+  const history = useHistory()
   const [count, setCount] = useState(0);
   const [meta, setMeta] = useState({ limit: 5, page: 1});
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [readLoading, setReadLoading] = useState(false)
   const [notify, setNotify] = useState([]);
 
   useEffect(() => {
     get();
+
+    const intervalId = setInterval(() => {
+      getRecentNotifications(history).then(res=>{
+        if(res.success){
+          setCount(res.counter)
+          setNotify((prev) => [...res.data, ...prev]);
+        }
+      })
+    }, 10000);
+
+    return () => {
+      clearInterval(intervalId); // Clear the interval when the component unmounts
+    };
   }, [meta]);
 
   const get = () => {
     const { limit, page } = meta;
     const query = `limit=${limit}&page=${page}`;
     getNotifications(query).then((res) => {
+      setLoading(false)
       if (res.success) {
         const { records } = res.data;
         setNotify((prev) => [...prev, ...records]);
-        setLoading(false)
       }
     });
   };
+  
 
-  // const notifications = [
-  //   {
-  //     id: 1,
-  //     message: 'Salman Comment on Project',
-  //     time: '1 hour ago',
-  //   },
-  //   {
-  //     id: 2,
-  //     message: 'Sameer Submit Timesheet',
-  //     time: '2 hours ago',
-  //   },
-  //   {
-  //     id: 3,
-  //     message: 'Timesheet is Approved',
-  //     time: '2 hours ago',
-  //   },
-  //   {
-  //     id: 4,
-  //     message: 'Sohail Submit Leave',
-  //     time: '2 hours ago',
-  //   },
-  //   {
-  //     id: 5,
-  //     message: 'New Project Created',
-  //     time: '2 hours ago',
-  //   },
-  //   {
-  //     id: 6,
-  //     message: 'New Expense Added',
-  //     time: '2 hours ago',
-  //   },
-  //   // Add more notification items as needed
-  // ];
+  const markRead = (id, item) =>{
+    setReadLoading(true)
+    markAsRead(id).then((res)=>{
+      setNotify(prev => prev.map(no=>{
+        if (id == no.id){
+          no.readAt = true;
+        };
+        return no;
+      }));
+      setReadLoading(false)
+    });
+
+    if(id){
+      history.push(`/time-sheet`)
+    }
+  }
+
+  const clear = () =>{
+    clearNotification().then(res=>{
+      if(res.success){
+        setCount(0)
+      }
+    })
+  }
+
+  // const openNotification = () =>{
+
+  // }
+
 
   const content = (
     <div className="notification-dropdown">
@@ -70,19 +82,18 @@ function NotificationIcon() {
         dataSource={notify}
         renderItem={(item) => (
           <Link
-            to={{ pathname: item.url }}
+            to={{ pathname: `/time-sheet` }}
             className="notification-link"
-            target="_blank"
           >
-            <List.Item key={item.id}>
+            <List.Item key={item.id} onClick={()=>{markRead([item.id], item)}}>
               <List.Item.Meta
                 avatar={<Avatar icon={<BellOutlined />} />}
                 title={item.title}
-                description={ formatDate(item.createdAt).fromNow()}
+                description={moment(formatDate(item.createdAt, true, "YYYY-MM-DDTHH:mm:ss")).fromNow()}
               />
-              <div className="notification-status">
+              {!item.readAt&&<div className="notification-status">
                 <Badge dot />
-              </div>
+              </div>}
             </List.Item>
           </Link>
         )}
@@ -92,6 +103,7 @@ function NotificationIcon() {
       <Button
         type="link"
         className="btn-seeAll"
+        loading={loading}
         onClick={() => {
           setMeta((prev) => ({ ...prev, page: prev.page + 1 }))
           setLoading(true)
@@ -101,21 +113,21 @@ function NotificationIcon() {
       </Button>
     </div>
   );
+
   const title = (
-    // <div className="notification-dropdown">
     <h5 className="notification-title">
       <span className="notification-title-text">Notifications</span>
       <Button
         type="link"
         className="notification-title-text read"
-        onClick={() => console.log('see More')}
+        onClick={() => markRead()}
+        loading={readLoading}
       >
         Read All
       </Button>
-      {/* <Badge count={count} /> */}
     </h5>
-    //   </div>
   );
+
   return (
     <div>
       <Popover
@@ -123,6 +135,11 @@ function NotificationIcon() {
         title={title}
         placement="bottomRight"
         trigger="click"
+        onVisibleChange={(visible)=>{
+          if(count){
+            clear()
+          }
+        }}
       >
         {count ? (
           <Badge
