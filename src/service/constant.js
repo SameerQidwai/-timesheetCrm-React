@@ -405,3 +405,15 @@ export const disableAllFields = (fields) =>{
     return el;
   });
 }
+
+export const getParams = (params)=>{
+  let urlParams = new URLSearchParams(params);
+  let allParams = {};
+  urlParams = urlParams?? '';
+
+  urlParams.forEach((value, key) => {
+    allParams[key] = value;
+  });
+
+  return allParams
+}
