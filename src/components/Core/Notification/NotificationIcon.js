@@ -57,9 +57,12 @@ function NotificationIcon() {
       setReadLoading(false)
     });
 
-    if(id){
-      history.push(`/time-sheet`)
-    }
+    // if(id){
+    //   console.log(item.url)
+    //   // history.push({
+    //   //   pathname: `${item.url}`,
+    //   // })
+    // }
   }
 
   const clear = () =>{
@@ -82,7 +85,7 @@ function NotificationIcon() {
         dataSource={notify}
         renderItem={(item) => (
           <Link
-            to={{ pathname: `/time-sheet` }}
+            to={`${item.url}`}
             className="notification-link"
           >
             <List.Item key={item.id} onClick={()=>{markRead([item.id], item)}}>
