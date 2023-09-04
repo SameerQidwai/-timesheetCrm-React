@@ -240,6 +240,7 @@ function WorkInHand() {
       PERMANENT_SALARIES,
       PERMANENT_SUPER,
       CASUAL_SALARIES,
+      SUB_SALARIES,
       CASUAL_SUPER,
       DOH_SALARIES,
       DOH_SUPER,
@@ -260,7 +261,6 @@ function WorkInHand() {
       REVENUES[key] = (TIME_BASE[key]??0) + (LEAD_TIME_BASE[key]??0)
     }
     
-    console.log(REVENUES)
 
     income_revenue[1] = { ...income_revenue[1], ...REVENUES };
     income_revenue[2] = { ...income_revenue[2], ...MILESTONE_BASE };
@@ -268,10 +268,11 @@ function WorkInHand() {
 
     cost_of_sale[2] = { ...cost_of_sale[2], ...PERMANENT_SALARIES };
     cost_of_sale[3] = { ...cost_of_sale[3], ...CASUAL_SALARIES };
-    cost_of_sale[4] = { ...cost_of_sale[4], ...PERMANENT_SUPER };
-    cost_of_sale[5] = { ...cost_of_sale[5], ...CASUAL_SUPER };
-    cost_of_sale[5] = { ...cost_of_sale[5], ...CASUAL_SUPER };
-    cost_of_sale[20] = { ...cost_of_sale[20], ...LEAD_COST };
+    cost_of_sale[4] = { ...cost_of_sale[4], ...SUB_SALARIES };
+    cost_of_sale[5] = { ...cost_of_sale[5], ...PERMANENT_SUPER };
+    cost_of_sale[6] = { ...cost_of_sale[6], ...CASUAL_SUPER };
+    // cost_of_sale[5] = { ...cost_of_sale[5], ...CASUAL_SUPER };
+    cost_of_sale[21] = { ...cost_of_sale[21], ...LEAD_COST };
     // cost_of_sale[21] = { ...cost_of_sale[21], ...TOTAL_COST };
 
 
@@ -313,8 +314,8 @@ function WorkInHand() {
 
     columName.forEach(({ children: [{ dataIndex, name }] }) => {
       newData[8][dataIndex] = 0; /**Revenue */
-      newData[32][dataIndex] = 0; /**COST */
-      newData[57][dataIndex] = 0; /**DOH */
+      newData[33][dataIndex] = 0; /**COST */
+      newData[58][dataIndex] = 0; /**DOH */
       // newData[62][dataIndex]=0; /**TAX */
       // newData[66][dataIndex]=0; /**Profit */
 
@@ -328,14 +329,14 @@ function WorkInHand() {
               i,
               dataIndex
             );
-          } else if (i > 8 && i < 32) {
-            newData[32][dataIndex] += getValueWithCondition(
+          } else if (i > 8 && i < 33) {
+            newData[33][dataIndex] += getValueWithCondition(
               newData,
               i,
               dataIndex
             );
-          } else if (i > 36 && i < 57) {
-            newData[57][dataIndex] += getValueWithCondition(
+          } else if (i > 37 && i < 58) {
+            newData[58][dataIndex] += getValueWithCondition(
               newData,
               i,
               dataIndex
@@ -360,7 +361,7 @@ function WorkInHand() {
      * 67 = "Income Tax Expense"
      * 69 = "NET PROFIT"
      */
-    let calculate_indexes = [34, 36, 59, 65, 67, 69];
+    let calculate_indexes = [35, 37, 60, 66, 68, 70];
     columName.forEach(({ children: [{ dataIndex }] }) => {
       calculate_indexes.forEach((index) => {
         newData[index] = {
