@@ -1,0 +1,110 @@
+/* Add your custom CSS to match your original styling */
+.notification-dropdown {
+    width: 300px;
+    
+}
+  
+.notification-title {
+    background: #f4f5f7;
+    width: 100%;
+    margin-bottom: 0px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    min-height: 30px;
+    display: inline-flex;
+    justify-content: space-between;
+    align-items: center;
+    line-height: 22px;
+  }
+
+  .notification-dropdown .notify-list{
+    scroll-behavior: smooth;
+    overflow-y: auto;
+    height: 260px;
+    scrollbar-width: 2px;
+  }
+  
+  .notification-dropdown .notification-link {
+    width: 100%; /* Make the entire area clickable */
+    display: block; /* Ensure the link takes the full width */
+    color: inherit; /* Use the default text color */
+    text-decoration: none; /*Remove default underline */
+    padding: 0 10px;
+  }
+  
+  .notification-dropdown .notification-link:hover {
+    background-color: #f5f5f5;
+    cursor: pointer;
+  }
+
+  .notification-title-text {
+    /* margin-right: 10px; */
+    padding-left: 5px;
+  }
+
+  .notification-title-text.read{
+    font-size: 12px;
+    transition: 0.3s;
+    font-weight: 400;
+  }
+  
+  
+  
+  .notification-dropdown .btn-seeAll {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    background: #fff;
+    transition: 0.3s;
+    color: #1890ff;
+    padding-top: 15px;
+    width: 100%;
+    font-size: 12px;
+  }
+
+  
+  
+  .notification-dropdown .btn-seeAll:hover {
+    color: #40a9ff;
+    
+  }
+  
+  .notification-dropdown .ant-avatar {
+    background-color: #1890ff;
+  }
+  
+  .notification-dropdown .notification-status {
+    margin-left: auto;
+  }
+  
+  .notification-dropdown .ant-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  .notification-dropdown .ant-list-item:last-child {
+    border-bottom: none;
+  }
+  
+  .notification-dropdown .ant-list-item-meta-title {
+    font-weight: 500;
+    font-size: 12px;
+  }
+  
+  .notification-dropdown .ant-list-item-meta-description {
+    color: #999;
+    font-size: 12px;
+  }
+.notify-bagde .ant-badge-count-sm {
+    font-size: 8px !important;
+}
+.notification-dropdown .ant-divider.ant-divider-horizontal{
+    margin: 0px 0px;
+}
+.notification-spin{
+  width: 100%
+}
