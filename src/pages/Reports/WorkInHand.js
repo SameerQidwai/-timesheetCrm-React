@@ -315,7 +315,7 @@ function WorkInHand() {
     columName.forEach(({ children: [{ dataIndex, name }] }) => {
       newData[8][dataIndex] = 0; /**Revenue */
       newData[33][dataIndex] = 0; /**COST */
-      newData[58][dataIndex] = 0; /**DOH */
+      newData[60][dataIndex] = 0; /**DOH */
       // newData[62][dataIndex]=0; /**TAX */
       // newData[66][dataIndex]=0; /**Profit */
 
@@ -335,8 +335,8 @@ function WorkInHand() {
               i,
               dataIndex
             );
-          } else if (i > 37 && i < 58) {
-            newData[58][dataIndex] += getValueWithCondition(
+          } else if (i > 37 && i < 60) {
+            newData[60][dataIndex] += getValueWithCondition(
               newData,
               i,
               dataIndex
@@ -354,14 +354,14 @@ function WorkInHand() {
       }
     });
     /**
-     * 34 = CM
-     * 36 = CM%
-     * 59 =EBIT
-     * 65 = "PROFIT BEFORE TAX"
-     * 67 = "Income Tax Expense"
-     * 69 = "NET PROFIT"
+     * 35 = CM
+     * 37 = CM%
+     * 62 =EBIT
+     * 68 = "PROFIT BEFORE TAX"
+     * 70 = "Income Tax Expense"
+     * 72 = "NET PROFIT"
      */
-    let calculate_indexes = [35, 37, 60, 66, 68, 70];
+    let calculate_indexes = [35, 37, 62, 68, 70, 72];
     columName.forEach(({ children: [{ dataIndex }] }) => {
       calculate_indexes.forEach((index) => {
         newData[index] = {
