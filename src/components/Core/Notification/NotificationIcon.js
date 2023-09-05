@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { BellFilled, BellTwoTone, BellOutlined } from '@ant-design/icons'; //Icons
-import { Avatar, Badge, Button, Divider, List, Popover, Spin } from 'antd';
+import { Avatar, Badge, Button, Divider, List, Popover, Spin, notification } from 'antd';
 import './style.css';
 import { Link, useHistory } from 'react-router-dom';
 import { clearNotification, getNotifications, getRecentNotifications, markAsRead } from '../../../service/notification-Apis';
@@ -47,6 +47,7 @@ function NotificationIcon() {
 
   const markRead = (id, item) =>{
     setReadLoading(true)
+    notification.destroy();
     markAsRead(id).then((res)=>{
       setNotify(prev => prev.map(no=>{
         if (id == no.id){

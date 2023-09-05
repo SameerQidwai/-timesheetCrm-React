@@ -39,7 +39,10 @@ export const getRecentNotifications = (redirect) => {
                         notification.info({
                             message: notify.title,
                             description: notify.content,
-                            onClick:()=>{redirect.push(notify.url)},
+                            onClick:()=>{
+                                notification.destroy();
+                                redirect.push(notify.url);
+                            },
                             className: 'mouse-pointer',
                             placement: 'bottomRight'
                         })
