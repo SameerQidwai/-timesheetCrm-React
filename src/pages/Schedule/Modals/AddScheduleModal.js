@@ -17,9 +17,9 @@ class AddScheduleModal extends Component {
     super(props);
     this.formRef = React.createRef();
     let yearClosed = localStore().closedYears
-    yearClosed = yearClosed && JSON.parse(yearClosed)
-    this.yearClosed = yearClosed
-    
+    yearClosed = yearClosed && JSON.parse(yearClosed) 
+    this.yearClosed = yearClosed ?? [null, null]
+
     this.state = {
       data: [],
       amountEntry: {}, //need to remeber hours if date is change for now it is setting it to defualt if any date selected
@@ -102,7 +102,7 @@ class AddScheduleModal extends Component {
           fieldCol: 16,
           key: 'paymentDate',
           size: 'small',
-          mode: 'month',
+          // mode: 'month',
           type: 'DatePicker',
         },
         {

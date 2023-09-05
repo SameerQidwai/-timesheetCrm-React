@@ -336,6 +336,7 @@ function ViewDetails({data}) {
         <p style={{marginTop: 10, marginBottom: 2}}>Signed Contract</p>
         <Upload
             // listType="picture"
+            disabled={true}
             listType="picture-card"
             maxCount={1}
             fileList={fileList}
