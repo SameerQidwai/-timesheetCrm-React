@@ -19,3 +19,7 @@
     overflow-y: scroll !important;
     position: relative !important;
 }
+
+.multiline{
+    white-space: pre-line;
+}
