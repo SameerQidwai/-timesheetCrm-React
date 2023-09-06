@@ -44,26 +44,22 @@ function NotificationIcon() {
     });
   };
   
-
   const markRead = (id, item) =>{
     setReadLoading(true)
     notification.destroy();
     markAsRead(id).then((res)=>{
       setNotify(prev => prev.map(no=>{
-        if (id == no.id){
-          no.readAt = true;
-        };
+        if (id){
+          if (id == no.id){
+            no.readAt = true;
+          };
+        }else{
+          no.readAt = true
+        }
         return no;
       }));
       setReadLoading(false)
     });
-
-    // if(id){
-    //   console.log(item.url)
-    //   // history.push({
-    //   //   pathname: `${item.url}`,
-    //   // })
-    // }
   }
 
   const clear = () =>{
@@ -73,11 +69,6 @@ function NotificationIcon() {
       }
     })
   }
-
-  // const openNotification = () =>{
-
-  // }
-
 
   const content = (
     <div className="notification-dropdown">
