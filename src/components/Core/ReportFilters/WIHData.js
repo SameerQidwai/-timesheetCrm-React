@@ -83,13 +83,6 @@ export const cost_of_sale = [
     className: 'data-title-row',
   },
   {
-    name: 'Salaries & Wages - Subcontractor',
-    key: 'Salaries & Wages - Subcontractor cos',
-    identifier: 'cost_total',
-    className: 'data-title-row',
-    default: 0
-  },
-  {
     name: 'Superannuation - Permanent',
     key: 'Superannuation - Permanent cos',
     identifier: 'cost_total',
@@ -155,7 +148,7 @@ export const cost_of_sale = [
     key: 'Subcontractor Services cos',
     identifier: 'cost_total',
     className: 'data-title-row',
-    editable: true,
+    default: 0
   },
   {
     name: 'Payroll Tax',
@@ -220,7 +213,7 @@ export const contribution_margin = [
     key: 'CONTRIBUTION MARGIN',
     renderCalculation: (record, key) =>{
       key = key.startsWith('FY')? 'total' : key
-      return getValueWithCondition(record, 8, key)  - getValueWithCondition(record, 33, key)
+      return getValueWithCondition(record, 8, key)  - getValueWithCondition(record, 32, key)
     },
     render:(key, record)=>{
       key = key.startsWith('FY')? 'total' : key
@@ -235,7 +228,7 @@ export const contribution_margin = [
     renderCalculation: (record, key) =>{
       key = key.startsWith('FY')? 'total' : key
       let revenue = getValueWithCondition(record, 8, key)
-      return revenue ? ((revenue - getValueWithCondition(record, 33, key)) /revenue) *100: 0.00
+      return revenue ? ((revenue - getValueWithCondition(record, 32, key)) /revenue) *100: 0.00
     },
     render:(key, record)=>{
       key = key.startsWith('FY')? 'total' : key
@@ -375,8 +368,8 @@ export const income_tax = [
     renderCalculation: (record, key) =>{
       key = key.startsWith('FY')? 'total' : key
       return getValueWithCondition(record, 8, key) -
-      getValueWithCondition(record, 33, key) -
-      getValueWithCondition(record, 60, key);
+      getValueWithCondition(record, 32, key) -
+      getValueWithCondition(record, 59, key);
     },
     render:(key, record)=>{
       key = key.startsWith('FY')? 'total' : key
@@ -419,11 +412,11 @@ export const net_profit = [
     key: 'PROFIT BEFORE TAX profit',
     renderCalculation: (record, key) =>{
       key = key.startsWith('FY')? 'total' : key
-      return getValueWithCondition(record, 62, key) +
+      return getValueWithCondition(record, 61, key) +
+      getValueWithCondition(record, 63, key) -
       getValueWithCondition(record, 64, key) -
-      getValueWithCondition(record, 65, key) -
-      getValueWithCondition(record, 66, key) +
-      getValueWithCondition(record, 67, key) 
+      getValueWithCondition(record, 65, key) +
+      getValueWithCondition(record, 66, key) 
     },
     render:(key, record)=>{
       key = key.startsWith('FY')? 'total' : key
@@ -437,7 +430,7 @@ export const net_profit = [
     className: 'data-title-row',
     renderCalculation: (record, key, incomeTax) =>{
       key = key.startsWith('FY')? 'total' : key
-      return getValueWithCondition(record, 68, key) * incomeTax
+      return getValueWithCondition(record, 67, key) * incomeTax
       
     },
     render:(key, record)=>{
@@ -452,8 +445,8 @@ export const net_profit = [
     key: 'NET PROFIT profit',
     renderCalculation: (record, key, incomeTax) =>{
       key = key.startsWith('FY')? 'total' : key
-      return getValueWithCondition(record, 68, key) -
-      (getValueWithCondition(record, 68, key) * incomeTax)
+      return getValueWithCondition(record, 67, key) -
+      (getValueWithCondition(record, 67, key) * incomeTax)
     },
     render:(key, record)=>{
       key = key.startsWith('FY')? 'total' : key
