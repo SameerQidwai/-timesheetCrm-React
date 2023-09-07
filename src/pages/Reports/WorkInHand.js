@@ -237,6 +237,7 @@ function WorkInHand() {
       TIME_BASE,
       LEAD_COST,
       LEAD_TIME_BASE,
+      LEAD_MILESTONE_BASE,
       PERMANENT_SALARIES,
       PERMANENT_SUPER,
       CASUAL_SALARIES,
@@ -249,8 +250,15 @@ function WorkInHand() {
     saveForecast
   ) => {
 
-    let REVENUES = {}
-    setRevenueDetail({projects: TIME_BASE, opportunities:LEAD_TIME_BASE})
+    let TIME_REVENUES = {}
+    let MILESTONE_REVENUES = {}
+    setRevenueDetail({
+      'Revenue - T&M Basis': { projects: TIME_BASE, opportunities: LEAD_TIME_BASE },
+      'Revenue - Milestone Basis': {
+        projects: MILESTONE_BASE,
+        opportunities: LEAD_MILESTONE_BASE,
+      },
+    });
     //merging lead and project revenue together
     for (
       var iDate = parseDate(year?.start);
@@ -258,21 +266,22 @@ function WorkInHand() {
       iDate.add(1, 'months')
     ) {
       let key = parseDate(iDate, 'MMM YY')
-      REVENUES[key] = (TIME_BASE[key]??0) + (LEAD_TIME_BASE[key]??0)
+      TIME_REVENUES[key] = (TIME_BASE[key]??0) + (LEAD_TIME_BASE[key]??0)
+      MILESTONE_REVENUES[key] = (MILESTONE_BASE[key]??0) + (LEAD_MILESTONE_BASE[key]??0)
     }
     
 
-    income_revenue[1] = { ...income_revenue[1], ...REVENUES };
-    income_revenue[2] = { ...income_revenue[2], ...MILESTONE_BASE };
+    income_revenue[1] = { ...income_revenue[1], ...TIME_REVENUES };
+    income_revenue[2] = { ...income_revenue[2], ...MILESTONE_REVENUES };
     // income_revenue[8] = { ...income_revenue[8], ...TOTAL_REVENUE };
 
     cost_of_sale[2] = { ...cost_of_sale[2], ...PERMANENT_SALARIES };
     cost_of_sale[3] = { ...cost_of_sale[3], ...CASUAL_SALARIES };
-    cost_of_sale[4] = { ...cost_of_sale[4], ...SUB_SALARIES };
-    cost_of_sale[5] = { ...cost_of_sale[5], ...PERMANENT_SUPER };
-    cost_of_sale[6] = { ...cost_of_sale[6], ...CASUAL_SUPER };
+    cost_of_sale[4] = { ...cost_of_sale[4], ...PERMANENT_SUPER };
+    cost_of_sale[5] = { ...cost_of_sale[5], ...CASUAL_SUPER };
     // cost_of_sale[5] = { ...cost_of_sale[5], ...CASUAL_SUPER };
-    cost_of_sale[21] = { ...cost_of_sale[21], ...LEAD_COST };
+    cost_of_sale[13] = { ...cost_of_sale[13], ...SUB_SALARIES };
+    cost_of_sale[20] = { ...cost_of_sale[20], ...LEAD_COST };
     // cost_of_sale[21] = { ...cost_of_sale[21], ...TOTAL_COST };
 
 
@@ -314,8 +323,8 @@ function WorkInHand() {
 
     columName.forEach(({ children: [{ dataIndex, name }] }) => {
       newData[8][dataIndex] = 0; /**Revenue */
-      newData[33][dataIndex] = 0; /**COST */
-      newData[60][dataIndex] = 0; /**DOH */
+      newData[32][dataIndex] = 0; /**COST */
+      newData[59][dataIndex] = 0; /**DOH */
       // newData[62][dataIndex]=0; /**TAX */
       // newData[66][dataIndex]=0; /**Profit */
 
@@ -329,14 +338,14 @@ function WorkInHand() {
               i,
               dataIndex
             );
-          } else if (i > 8 && i < 33) {
-            newData[33][dataIndex] += getValueWithCondition(
+          } else if (i > 8 && i < 32) {
+            newData[32][dataIndex] += getValueWithCondition(
               newData,
               i,
               dataIndex
             );
-          } else if (i > 37 && i < 60) {
-            newData[60][dataIndex] += getValueWithCondition(
+          } else if (i > 36 && i < 59) {
+            newData[59][dataIndex] += getValueWithCondition(
               newData,
               i,
               dataIndex
@@ -354,14 +363,14 @@ function WorkInHand() {
       }
     });
     /**
-     * 35 = CM
-     * 37 = CM%
-     * 62 =EBIT
-     * 68 = "PROFIT BEFORE TAX"
-     * 70 = "Income Tax Expense"
-     * 72 = "NET PROFIT"
+     * 34 = CM
+     * 36 = CM%
+     * 61 =EBIT
+     * 67 = "PROFIT BEFORE TAX"
+     * 69 = "Income Tax Expense"
+     * 71 = "NET PROFIT"
      */
-    let calculate_indexes = [35, 37, 62, 68, 70, 72];
+    let calculate_indexes = [34, 36, 61, 67, 69, 71];
     columName.forEach(({ children: [{ dataIndex }] }) => {
       calculate_indexes.forEach((index) => {
         newData[index] = {
@@ -408,6 +417,7 @@ function WorkInHand() {
           }
         }
       }
+      
       return {
         ...item,
         YTD: actualTotal,
@@ -463,8 +473,8 @@ function WorkInHand() {
 
   const re_column = columns.map(mapColumns);
 
-  const showRevenueDetail = (open) =>{
-    setRevenueDetail((prev) => ({ ...prev, open, year }));
+  const showRevenueDetail = (open, clickedOn) =>{
+    setRevenueDetail((prev) => ({ ...prev, open, year, contentKey: clickedOn }));
   }
 
   return (
@@ -553,9 +563,9 @@ function WorkInHand() {
                   y: '65vh',
                 }}
                 onRow={(record, rowIndex) => {
-                  if (record.key === 'Revenue - T&M Basis'){
+                  if (record.click){
                     return {
-                      onDoubleClick: () => {showRevenueDetail(true) }, // double click row
+                      onDoubleClick: () => {showRevenueDetail(true, record.key) }, // double click row
                     };
                   }
                 }}
@@ -565,12 +575,12 @@ function WorkInHand() {
         </Col>
       </Row>
       {revenueDetail.open &&<DrawerView
-        visible={revenueDetail.open}
+        visible={!!revenueDetail.open}
         onClose={() => showRevenueDetail(false)}
         placement="right"
         width={640}
         content={{
-          title: 'Revenue Breakdown',
+          title: `${revenueDetail?.contentKey??''} Breakdown`,
           key: 'workInHandForecast',
           data: revenueDetail,
         }}
