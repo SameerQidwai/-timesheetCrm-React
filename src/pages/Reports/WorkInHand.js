@@ -267,7 +267,7 @@ function WorkInHand() {
     ) {
       let key = parseDate(iDate, 'MMM YY')
       TIME_REVENUES[key] = (TIME_BASE[key]??0) + (LEAD_TIME_BASE[key]??0)
-      MILESTONE_REVENUES[key] = (MILESTONE_BASE[key]??0) + (LEAD_MILESTONE_BASE[key]??0)
+      MILESTONE_REVENUES[key] = (MILESTONE_BASE?.[key]??0) + (LEAD_MILESTONE_BASE?.[key]??0)
     }
     
 
