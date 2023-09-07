@@ -4,47 +4,42 @@ export const income_revenue = [
   { 
     name: 'INCOME/REVENUE',
     key: 'INCOME/REVENUE',
-    identifier: 'revenue_total',
     className: 'title-row' 
   },
   {
     name: 'Revenue - T&M Basis',
-    identifier: 'revenue_total',
     key: 'Revenue - T&M Basis',
+    click: true,
     className: 'data-title-row',
     default: 0,
   },
   {
     name: 'Revenue - Milestone Basis',
-    identifier: 'revenue_total',
     key: 'Revenue - Milestone Basis',
+    click: true,
     className: 'data-title-row',
     default: 0,
   },
   {
     name: 'Revnue - Other',
-    identifier: 'revenue_total',
     key: 'Revnue - Other',
     className: 'data-title-row',
     editable: true,
   },
   {
     name: 'Revenue - Security Clearance Fee',
-    identifier: 'revenue_total',
     key: 'Revenue - Security Clearance Fee',
     className: 'data-title-row',
     editable: true,
   },
   {
     name: 'Misc Income',
-    identifier: 'revenue_total',
     key: 'Misc Income',
     className: 'data-title-row',
     editable: true,
   },
   {
     name: 'Adjustment',
-    identifier: 'revenue_total',
     key: 'Revenue - Adjustment',
     className: 'data-title-row',
     editable: true,
@@ -53,7 +48,6 @@ export const income_revenue = [
   {
     className: 'total-row',
     name: 'TOTAL REVENUE',
-    identifier: 'revenue_total',
     key: 'TOTAL REVENUE',
     render:(key, record)=>{
       key = key.startsWith('FY')? 'total' : key
@@ -67,86 +61,73 @@ export const cost_of_sale = [
   { 
       name: 'COST OF SALES - COS', 
       key: 'COST OF SALES - COS cos', 
-      identifier: 'cost_total',
       className: 'title-row' 
   },
   {
     name: 'Salaries & Wages - Permanent',
     key: 'Salaries & Wages - Permanent cos',
-    identifier: 'cost_total',
     className: 'data-title-row',
   },
   {
     name: 'Salaries & Wages - Casual',
     key: 'Salaries & Wages - Casual cos',
-    identifier: 'cost_total',
     className: 'data-title-row',
   },
   {
     name: 'Superannuation - Permanent',
     key: 'Superannuation - Permanent cos',
-    identifier: 'cost_total',
     className: 'data-title-row',
   },
   {
     name: 'Superannuation - Casual',
     key: 'Superannuation - Casual cos',
-    identifier: 'cost_total',
     className: 'data-title-row',
   },
   {
     name: 'Bonus/STI',
     key: 'Bonus/STI cos',
     className: 'data-title-row',
-    identifier: 'cost_total',
     editable: true,
   },
   {
     name: 'Superannuation on Bonus/STI',
     key: 'Superannuation on Bonus/STI cos',
-    identifier: 'cost_total',
     className: 'data-title-row',
     editable: true,
   },
   {
     name: 'Employee Leave Entitlements AL/LSL',
     key: 'Employee Leave Entitlements AL/LSL cos',
-    identifier: 'cost_total',
     className: 'data-title-row',
     editable: true,
   },
   {
     name: 'Training & Education',
     key: 'Training & Education cos',
-    identifier: 'cost_total',
     className: 'data-title-row',
     editable: true,
   },
   {
     name: 'Recruitment Expenses',
     key: 'Recruitment Expenses cos',
-    identifier: 'cost_total',
     className: 'data-title-row',
     editable: true,
   },
   {
     name: 'Staff amenities',
     key: 'Staff amenities cos',
-    identifier: 'cost_total',
     className: 'data-title-row',
     editable: true,
   },
   {
     name: 'Fringe Benefits Tax',
     key: 'Fringe Benefits Tax cos',
-    identifier: 'cost_total',
     className: 'data-title-row',
     editable: true,
   },
   {
     name: 'Subcontractor Services',
     key: 'Subcontractor Services cos',
-    identifier: 'cost_total',
     className: 'data-title-row',
     default: 0
   },
@@ -154,7 +135,6 @@ export const cost_of_sale = [
     name: 'Payroll Tax',
     key: 'Payroll Tax cos',
     className: 'data-title-row',
-    identifier: 'cost_total',
     editable: true,
   },
   {
@@ -191,6 +171,7 @@ export const cost_of_sale = [
     name: 'Cost of Opportunities',
     key: 'Cost of Opportunities',
     className: 'data-title-row',
+    default: 0
   },
   {},
   {},

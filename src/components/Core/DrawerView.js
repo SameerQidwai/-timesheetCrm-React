@@ -36,8 +36,7 @@ export default function DrawerView({
 function ForecastRevenueTable({ forecasts }) {
   const [dataSource, setDataSource] = useState([]);
   let {
-    projects,
-    opportunities,
+    contentKey,
     year: { start, end },
   } = forecasts;
   const forecastRevenueColumns = [
@@ -70,6 +69,8 @@ function ForecastRevenueTable({ forecasts }) {
 
   useEffect(() => {
     let tempData = [];
+    let projects = forecasts?.[contentKey]?.projects?? {};
+    let opportunities = forecasts?.[contentKey]?.opportunities??{};
     for (
       var iDate = parseDate(start);
       iDate.isSameOrBefore(end);
