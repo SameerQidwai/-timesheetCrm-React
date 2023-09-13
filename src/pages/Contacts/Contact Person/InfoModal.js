@@ -164,7 +164,6 @@ class InfoModal extends Component {
             object: 'basic',
             fieldCol: 12,
             key: 'gender',
-            rangeMin: true,
             // rules: [{ required: true, message: 'Gender is Required' }],
             size: 'small',
             data: [
