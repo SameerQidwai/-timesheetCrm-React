@@ -272,7 +272,7 @@ class OpportunityInfo extends Component {
                       }}
                       className="nav-link"
                     >
-                      Postions
+                      Positions
                     </Link>
                   </Menu.Item>
                 )}
