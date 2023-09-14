@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { Modal, Tabs, Row, Col, Select, Input, Form, Upload } from "antd";
-import { LoadingOutlined, PlusOutlined } from "@ant-design/icons"; //Icons
+import { Modal, Tabs, Row, Col, Select, Input, Form, Upload, Popconfirm } from "antd";
+import { DeleteOutlined, LoadingOutlined, PlusOutlined } from "@ant-design/icons"; //Icons
 import FormItems, { phoneNormalize } from "../../../components/Core/Forms/FormItems";
 import { addList, getRecord, editList } from "../../../service/contractors";
 import { getContactRecord } from "../../../service/conatct-person";
@@ -854,7 +854,17 @@ class InfoModal extends Component {
                             listType="picture-card"
                             maxCount={1}
                             fileList={fileList}
-                            onRemove= {this.onRemove}
+                            showUploadList={{
+                                removeIcon: (file) => <Popconfirm
+                                title="Are you sure you want to delete ?"
+                                onConfirm={() => this.onRemove(file)}
+                                okText="Yes"
+                                cancelText="No"
+                                placement="bottomRight"
+                              >
+                                <DeleteOutlined />
+                              </Popconfirm>
+                            }}
                         >
                             {!fileIds &&
                                 <div style={{marginTop: 10}} >
