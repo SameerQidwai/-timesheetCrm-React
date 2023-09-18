@@ -562,7 +562,7 @@ class InfoModal extends Component {
     };
 
     fetchAll = (edit) =>{
-        const getManagerUrl = `helpers/contact-persons?organizationId=1`
+        const getManagerUrl = `helpers/contact-persons?organizationId=1&active=1&employee=1`
         Promise.all([ getStates(), getRoles(), edit ? this.getRecord(edit) : getOrganizations(), getOrgPersons(getManagerUrl)])
         .then(res => {
             const { BasicFields, ManagerFields, BillingFields } = this.state
