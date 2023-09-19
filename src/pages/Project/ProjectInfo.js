@@ -223,7 +223,7 @@ class ProjectInfo extends Component {
                       }}
                       className="nav-link"
                     >
-                      Postions
+                      Positions
                     </Link>
                   </Menu.Item>
                 )}

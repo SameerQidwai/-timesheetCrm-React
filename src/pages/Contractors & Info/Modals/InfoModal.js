@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { Modal, Tabs, Row, Col, Select, Input, Form, Upload } from "antd";
-import { LoadingOutlined, PlusOutlined } from "@ant-design/icons"; //Icons
+import { Modal, Tabs, Row, Col, Select, Input, Form, Upload, Popconfirm } from "antd";
+import { DeleteOutlined, LoadingOutlined, PlusOutlined } from "@ant-design/icons"; //Icons
 import FormItems, { phoneNormalize } from "../../../components/Core/Forms/FormItems";
 import { addList, getRecord, editList } from "../../../service/contractors";
 import { getContactRecord } from "../../../service/conatct-person";
@@ -156,6 +156,7 @@ class InfoModal extends Component {
                 },
                 {
                     Placeholder: "Gender",
+                    // rangeMin: true,
                     fieldCol: 12,
                     size: "small",
                     type: "Text",
@@ -164,6 +165,7 @@ class InfoModal extends Component {
                 },
                 {
                     Placeholder: "State For Payroll Tax Purpose",
+                    // rangeMin: true,
                     fieldCol: 12,
                     size: "small",
                     type: "Text",
@@ -181,7 +183,7 @@ class InfoModal extends Component {
                         { label: "Others", value: "O" },
                     ],
                     itemStyle: { marginBottom: 10 },
-                    // rules:[{ required: true }],
+                    // rules: [{ required: true, message: 'Gender is Required' }],
                     type: "Select",
                 },
                 {
@@ -189,7 +191,7 @@ class InfoModal extends Component {
                     fieldCol: 12,
                     key: "stateId",
                     size: "small",
-                    // rules:[{ required: true }],
+                    // rules: [{ required: true, message: 'State is Required' }],
                     type: "Select",
                     data: [],
                     itemStyle: { marginBottom: 10 },
@@ -560,7 +562,7 @@ class InfoModal extends Component {
     };
 
     fetchAll = (edit) =>{
-        const getManagerUrl = `helpers/contact-persons?organizationId=1`
+        const getManagerUrl = `helpers/contact-persons?organizationId=1&active=1&employee=1`
         Promise.all([ getStates(), getRoles(), edit ? this.getRecord(edit) : getOrganizations(), getOrgPersons(getManagerUrl)])
         .then(res => {
             const { BasicFields, ManagerFields, BillingFields } = this.state
@@ -852,7 +854,17 @@ class InfoModal extends Component {
                             listType="picture-card"
                             maxCount={1}
                             fileList={fileList}
-                            onRemove= {this.onRemove}
+                            showUploadList={{
+                                removeIcon: (file) => <Popconfirm
+                                title="Are you sure you want to delete ?"
+                                onConfirm={() => this.onRemove(file)}
+                                okText="Yes"
+                                cancelText="No"
+                                placement="bottomRight"
+                              >
+                                <DeleteOutlined />
+                              </Popconfirm>
+                            }}
                         >
                             {!fileIds &&
                                 <div style={{marginTop: 10}} >

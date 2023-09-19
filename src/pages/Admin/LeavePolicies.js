@@ -280,7 +280,7 @@ class LeavePolicies extends Component {
                     type: "InputNumber",
                     labelAlign: "left",
                     fieldStyle: { width: "100%" },
-                    rules:[{ type: 'number', min: 0 , message: 'Minimum 0' }],
+                    // rules:[{ type: 'number', min: 0 , message: 'Minimum 0' }],
                 },
                 {
                     fieldCol: 1,

@@ -1,6 +1,6 @@
 import React, { Component, createRef } from "react";
-import { Upload, message, Button, Row, Col } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
+import { Upload, message, Button, Row, Col, Popconfirm } from "antd";
+import { DeleteOutlined, UploadOutlined } from "@ant-design/icons";
 import { addFiles, getAttachments , addAttachments, delAttachment} from "../../service/Attachment-Apis";
 
 import "../Styles/attachments.css"
@@ -109,11 +109,20 @@ class Attachments extends Component {
                 <Col span="24">
                     <Upload 
                         multiple={true}
-                        showUploadList= {{showRemoveIcon: true }}
                         listType= {listType??"picture"}
                         fileList={fileList}
                         customRequest={this.handleUpload}
-                        onRemove={this.onRemove}
+                        showUploadList={{
+                            removeIcon: (file) => <Popconfirm
+                            title="Are you sure you want to delete ?"
+                            onConfirm={() => this.onRemove(file)}
+                            okText="Yes"
+                            cancelText="No"
+                            placement="bottomRight"
+                          >
+                            <DeleteOutlined />
+                          </Popconfirm>
+                        }}
                         // className="upload-list-inline"
                         style={{ backgroundColor: "rosybrown" }}
                     >

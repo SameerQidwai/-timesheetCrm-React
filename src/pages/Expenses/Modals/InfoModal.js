@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { DatePicker, Form, Modal, Typography, Upload } from 'antd'
-import { PlusOutlined } from "@ant-design/icons"; //Icons
+import { DatePicker, Form, Modal, Popconfirm, Typography, Upload } from 'antd'
+import { DeleteOutlined, PlusOutlined } from "@ant-design/icons"; //Icons
 import FormItems from '../../../components/Core/Forms/FormItems'
 
 import { getUserProjects } from '../../../service/constant-Apis'
@@ -289,10 +289,20 @@ const InfoModal = ({ visible, close, callBack }) => {
                     customRequest={handleUpload}
                     // listType="picture"
                     listType="picture-card"
+                    disabled={editDisabled}
                     maxCount={4}
                     fileList={fileList}
-                    onRemove= {onRemove}
-                    disabled={editDisabled}
+                    showUploadList={{
+                        removeIcon: (file) => <Popconfirm
+                        title="Are you sure you want to delete ?"
+                        onConfirm={() => onRemove(file)}
+                        okText="Yes"
+                        cancelText="No"
+                        placement="bottomRight"
+                      >
+                        <DeleteOutlined />
+                      </Popconfirm>
+                    }}
                 >
                     {fileList.length < 4 &&
                         <div style={{marginTop: 10}} >
