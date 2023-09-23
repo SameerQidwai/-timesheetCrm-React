@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { Api, headers, jwtExpired, localStore, setToken, thumbUrl } from "./constant";
+import { Api, apiErrorRes, headers, jwtExpired, localStore, setToken, thumbUrl } from "./constant";
 
 const url = `${Api}/attachments/`;
 
@@ -26,8 +26,7 @@ export const addFiles = (data, config) => {
             return { success: false }
         })
         .catch((err) => {
-            console.log(err);
-            return {}
+            return apiErrorRes(err, 1, 5)
             // return {
             //     error: err.response.status,
             //     status: false,
@@ -64,8 +63,7 @@ export const addAttachments = (targetType, targetId, data) => {
             return { success: false }
         })
         .catch((err) => {
-            console.log(err);
-            return {}
+            return apiErrorRes(err, 1, 5)
             // return {
             //     error: err.response.status,
             //     status: false,
