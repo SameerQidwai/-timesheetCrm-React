@@ -1,11 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { BellFilled, BellTwoTone, BellOutlined } from '@ant-design/icons'; //Icons
+import { BellTwoTone, BellOutlined, InfoOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons'; //Icons
 import { Avatar, Badge, Button, Divider, List, Popover, Spin, notification } from 'antd';
 import './style.css';
 import { Link, useHistory } from 'react-router-dom';
 import { clearNotification, getNotifications, getRecentNotifications, markAsRead } from '../../../service/notification-Apis';
-import { formatDate } from '../../../service/constant';
+import { ellipsis, formatDate } from '../../../service/constant';
 import moment from 'moment';
+
+
+const AlertIcon = {
+  1: {icon: <BellOutlined/>, color: ''},
+  2: {icon: <InfoOutlined/>, color: ''},
+  3: {icon: <CheckOutlined />, color: '#4caf50'},
+  4: {icon: <CloseOutlined/>, color: 'red'},
+}
 
 function NotificationIcon() {
   const history = useHistory()
@@ -75,23 +83,29 @@ function NotificationIcon() {
       <List
         className="notify-list"
         dataSource={notify}
-        renderItem={(item) => (
-          <Link
+        renderItem={(item) => {
+          let avatar = AlertIcon[item.type]??{}
+          return (<Link
             to={`${item.url}`}
             className="notification-link"
           >
             <List.Item key={item.id} onClick={()=>{markRead([item.id], item)}}>
               <List.Item.Meta
-                avatar={<Avatar icon={<BellOutlined />} />}
+                avatar={<Avatar icon={avatar.icon} style={{backgroundColor: avatar.color}} />}
                 title={item.title}
-                description={moment(formatDate(item.createdAt, true, "YYYY-MM-DDTHH:mm:ss")).fromNow()}
+                description={
+                  <span>
+                    <div>{ellipsis(item.content, 60)}</div>
+                    <div>{moment(formatDate(item.createdAt, true, "YYYY-MM-DDTHH:mm:ss")).fromNow()}</div>
+                  </span>
+                }
               />
               {!item.readAt&&<div className="notification-status">
                 <Badge dot />
               </div>}
             </List.Item>
           </Link>
-        )}
+        )}}
       />
       <Spin spinning={loading} className='notification-spin'/>
       <Divider />

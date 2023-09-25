@@ -417,3 +417,11 @@ export const getParams = (params)=>{
 
   return allParams
 }
+
+export const ellipsis = (str, fixed)=>{
+  if (str){
+      str = `${str}`
+      return `${str.substring(0,fixed)}${`${str}`.length>fixed ?'\u2026':''}`
+  }
+  return '--'
+}
