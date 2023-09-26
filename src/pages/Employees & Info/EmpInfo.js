@@ -210,7 +210,7 @@ class OrgInfo extends Component {
             style={{ marginTop: '50px' }}
             defaultActiveKey={defaultTabKey}
           >
-            <TabPane tab="Opportunities" key="leads">
+            <TabPane tab="Opportunities" key="opportunities">
               <Opportunities
                   targetId={emp}
                   customUrl={`helpers/work?type=O&employee=${emp}`}

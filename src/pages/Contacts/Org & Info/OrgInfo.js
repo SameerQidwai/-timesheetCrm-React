@@ -19,9 +19,11 @@ const { Item } = Descriptions;
 const { TabPane } = Tabs;
 
 class OrgInfo extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
+        let hash = props.location.hash.substring(1);
         this.state = {
+            defaultTabKey: hash,
             infoModal: false,
             editOrg: false,
             data: { },
@@ -77,7 +79,7 @@ class OrgInfo extends Component {
     };
 
     render() {
-        const { data, bank, infoModal, editOrg, organizationId, basic, notAuth } = this.state;
+        const { data, bank, infoModal, editOrg, organizationId, basic, notAuth, defaultTabKey } = this.state;
         const DescTitle = (
             <Row justify="space-between">
                 <Col>{data && data.name}</Col>
@@ -140,12 +142,12 @@ class OrgInfo extends Component {
                     <Tabs
                         type="card"
                         style={{ marginTop: "50px" }}
-                        // defaultActiveKey="comments"
+                        defaultActiveKey={defaultTabKey}
                     >
                         <TabPane tab="Projects" key="project">
                             <Projects targetId={organizationId} showColumn={true} customUrl={`helpers/work?type=P&organization=${organizationId}`} />
                         </TabPane>
-                        <TabPane tab="Opportunities" key="opportunity">
+                        <TabPane tab="Opportunities" key="opportunities">
                             <Opportunity targetId={organizationId} showColumn={true} customUrl={`helpers/work?type=O&organization=${organizationId}`}  />
                         </TabPane>
                         {/* <TabPane tab="Sub-organization" key="sub">
@@ -158,7 +160,7 @@ class OrgInfo extends Component {
                             <Comments targetId={organizationId} targetType="ORG" />
                         </TabPane>
                         
-                        <TabPane tab="Bank Details" key="Bank">
+                        <TabPane tab="Bank Details" key="bank">
                             <Bank targetId={organizationId} title={data.name} bank={bank} />
                         </TabPane>
                     </Tabs>

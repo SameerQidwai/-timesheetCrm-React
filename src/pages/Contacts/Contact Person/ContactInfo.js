@@ -19,7 +19,9 @@ export class ContactInfo extends Component {
 
     constructor(props){
         super(props)
+        let hash = props.location.hash.substring(1);
         this.state = {
+            defaultTabKey: hash,
             data: {},
             infoModal: false,
             userId: props?.match?.params?.id,
@@ -69,7 +71,7 @@ export class ContactInfo extends Component {
     }
     
     render() {
-        let {data, infoModal, userId, notAuth,} = this.state
+        let {data, infoModal, userId, notAuth, defaultTabKey} = this.state
         const DescTitle = (
             <Row justify="space-between">
                 <Col>Contact Information</Col>
@@ -134,14 +136,15 @@ export class ContactInfo extends Component {
             <Tabs
                 type="card"
                 style={{ marginTop: "50px" }}
+                defaultActiveKey={defaultTabKey}
             >
-                <TabPane tab="Opportunities" key="leads">
+                <TabPane tab="Opportunities" key="opportunities">
                     <Opportunities
                         targetId={userId}
                         customUrl={`helpers/work?type=O&contact=${userId}`}
                     />
                 </TabPane>
-                <TabPane tab="Opportunity Representative" key="r-leads">
+                <TabPane tab="Opportunity Representative" key="r-opportunities">
                     <Opportunities
                         targetId={userId}
                         customUrl={`helpers/work?type=O&delegate=${userId}`}
