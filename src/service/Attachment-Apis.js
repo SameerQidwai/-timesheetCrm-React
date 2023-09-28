@@ -27,7 +27,7 @@ export const addFiles = (data, config) => {
         })
         .catch((err) => {
             if (err?.message === 'Network Error'){
-                _helerError(1)
+                return _helerError(1)
             }else{
                 return apiErrorRes(err, 1, 5)
             }
@@ -63,7 +63,7 @@ export const addAttachments = (targetType, targetId, data) => {
         })
         .catch((err) => {
             if (err?.message === 'Network Error'){
-                _helerError(1)
+               return _helerError(1)
             }else{
                 return apiErrorRes(err, 1, 5)
             }
@@ -134,4 +134,5 @@ const _helerError = (id) =>{
         duration: 5,
         key: id,
     });
+    return {success: false}
 }
