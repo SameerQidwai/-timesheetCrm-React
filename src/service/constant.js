@@ -251,6 +251,7 @@ export const apiErrorRes = (err, id, duration, style) => {
       style: style ?? {},
     });
   }else{
+    console.log('alert cant open')
     messageAlert.error({
       content: 'File size exceeds 10MB',
       duration: 5,
