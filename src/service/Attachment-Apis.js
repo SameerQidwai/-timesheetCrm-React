@@ -1,6 +1,7 @@
 import axios from "axios";
+import { message as messageAlert } from 'antd';
 
-import { Api, headers, jwtExpired, localStore, setToken, thumbUrl } from "./constant";
+import { Api, apiErrorRes, headers, jwtExpired, localStore, setToken, thumbUrl } from "./constant";
 
 const url = `${Api}/attachments/`;
 
@@ -26,13 +27,11 @@ export const addFiles = (data, config) => {
             return { success: false }
         })
         .catch((err) => {
-            console.log(err);
-            return {}
-            // return {
-            //     error: err.response.status,
-            //     status: false,
-            //     message: err.message, 
-            // };
+            if (err?.message === 'Network Error'){
+                return _helerError(1)
+            }else{
+                return apiErrorRes(err, 1, 5)
+            }
         });
 };
 
@@ -64,13 +63,11 @@ export const addAttachments = (targetType, targetId, data) => {
             return { success: false }
         })
         .catch((err) => {
-            console.log(err);
-            return {}
-            // return {
-            //     error: err.response.status,
-            //     status: false,
-            //     message: err.message,
-            // };
+            if (err?.message === 'Network Error'){
+               return _helerError(1)
+            }else{
+                return apiErrorRes(err, 1, 5)
+            }
         });
 };
 
@@ -131,3 +128,12 @@ export const delAttachment = (id,) => {
             };
         });
 };
+
+const _helerError = (id) =>{
+    messageAlert.error({
+        content: 'File size exceeds 10MB',
+        duration: 5,
+        key: id,
+    });
+    return {success: false}
+}

@@ -181,6 +181,7 @@ class InfoModal extends Component {
         },
         {
           Placeholder: 'Gender',
+          // rangeMin: true,
           fieldCol: 12,
           size: 'small',
           type: 'Text',
@@ -189,6 +190,7 @@ class InfoModal extends Component {
         },
         {
           Placeholder: 'State For Payroll Tax Purpose',
+          // rangeMin: true,
           fieldCol: 12,
           size: 'small',
           type: 'Text',
@@ -206,7 +208,7 @@ class InfoModal extends Component {
             { label: 'Other', value: 'O' },
           ],
           itemStyle: { marginBottom: 10 },
-          // rules:[{ required: true }],
+          // rules: [{ required: true, message: 'Gender is Required' }],
           type: 'Select',
           // mode: "button",
           // shape: "solid",
@@ -216,7 +218,7 @@ class InfoModal extends Component {
           fieldCol: 12,
           key: 'stateId',
           size: 'small',
-          // rules:[{ required: true }],
+          // rules: [{ required: true, message: 'State is Required' }],
           type: 'Select',
           data: [],
           itemStyle: { marginBottom: 10 },
@@ -825,7 +827,7 @@ class InfoModal extends Component {
 
   fetchAll = (edit) => {
     const { editEmp } = this.props;
-    const managerUrl = `helpers/contact-persons?organizationId=1&active=1&associated=1`;
+    const managerUrl = `helpers/contact-persons?organizationId=1&active=1&employee=1`;
     const newConatactUrl = `helpers/contact-persons?organizationId=1&active=0&associated=1`;
     Promise.all([
       getStates(),

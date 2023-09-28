@@ -10,8 +10,9 @@ import {
   Input,
   InputNumber,
   message,
+  Popconfirm,
 } from 'antd';
-import { PlusOutlined } from '@ant-design/icons'; //Icons
+import { DeleteOutlined, PlusOutlined } from '@ant-design/icons'; //Icons
 import FormItems from '../../../components/Core/Forms/FormItems';
 import { addFiles } from '../../../service/Attachment-Apis';
 import {
@@ -680,11 +681,21 @@ class AddRequestModal extends Component {
               <Upload
                 customRequest={this.handleUpload}
                 // listType="picture"
+                disabled={readOnly}
                 listType="picture-card"
                 maxCount={4}
                 fileList={fileList}
-                onRemove={this.onRemove}
-                disabled={readOnly}
+                showUploadList={{
+                  removeIcon: (file) => <Popconfirm
+                  title="Are you sure you want to delete ?"
+                  onConfirm={() => this.onRemove(file)}
+                  okText="Yes"
+                  cancelText="No"
+                  placement="bottomRight"
+                >
+                  <DeleteOutlined />
+                </Popconfirm>
+              }}
               >
                 {fileList.length < 4 && (
                   <div style={{ marginTop: 10 }}>

@@ -9,7 +9,7 @@ import { message as messageAlert } from 'antd';
 // export const Api = "https://a067-111-88-150-124.ngrok.io/api/v1"; // Shahzaib/ tunnel
 // export const Api = 'http://192.168.0.147:3301/api/v1'; // Me
 
-// export const Api = 'http://3.85.204.62:8000/api/v1'; //Test
+// export const Api = 'http://54.237.200.86:8000/api/v1'; //Test
 // export const Api = 'http://54.174.229.28:8000/api/v1'; //Demo...
 
 // export const Api = "http://192.168.0.110:3301/api/v1"; // TrunRajPal Home
@@ -260,12 +260,12 @@ export const thumbUrl = (type) => {
 export const apiErrorRes = (err, id, duration, style) => {
   const { status = false, data = {} } = err?.response ?? {};
   const { message, success } = data;
-  messageAlert.error({
-    content: status === 400 ? message : 'Something Went Wrong!',
-    duration: status === 400 ? duration : 5,
-    key: id,
-    style: style ?? {},
-  });
+    messageAlert.error({
+      content: status === 400 ? message : 'Something Went Wrong!',
+      duration: status === 400 ? duration : 5,
+      key: id,
+      style: style ?? {},
+    });
   return { error: err.message, status, message, success };
 };
 

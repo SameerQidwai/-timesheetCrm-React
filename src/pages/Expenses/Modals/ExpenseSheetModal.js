@@ -1,5 +1,5 @@
-import { Button, Checkbox, Col, Form, Modal, Popover, Row, Table, Typography, Upload } from 'antd'
-import { PlusOutlined, CheckOutlined } from "@ant-design/icons"; //Icons
+import { Button, Checkbox, Col, Form, Modal, Popconfirm, Popover, Row, Table, Typography, Upload } from 'antd'
+import { PlusOutlined, CheckOutlined, DeleteOutlined } from "@ant-design/icons"; //Icons
 import React, { useEffect, useState } from 'react'
 import { Api, dateClosed, formatCurrency, formatDate, formatFloat, localStore } from '../../../service/constant';
 import FormItems from '../../../components/Core/Forms/FormItems';
@@ -396,7 +396,17 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) =>
               listType="picture-card"
               maxCount={4}
               fileList={fileList}
-              onRemove= {onRemove}
+              showUploadList={{
+                removeIcon: (file) => <Popconfirm
+                title="Are you sure you want to delete ?"
+                onConfirm={() => onRemove(file)}
+                okText="Yes"
+                cancelText="No"
+                placement="bottomRight"
+              >
+                <DeleteOutlined />
+              </Popconfirm>
+            }}
               // disabled={readOnly}
           >
               {fileList.length < 4 &&

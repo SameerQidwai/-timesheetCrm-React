@@ -144,7 +144,7 @@ class InfoModal extends Component {
           },
           {
             Placeholder: 'Gender',
-            rangeMin: true,
+            // rangeMin: true,
             fieldCol: 12,
             size: 'small',
             type: 'Text',
@@ -153,7 +153,7 @@ class InfoModal extends Component {
           },
           {
             Placeholder: 'State For Payroll Tax Purpose',
-            rangeMin: true,
+            // rangeMin: true,
             fieldCol: 12,
             size: 'small',
             type: 'Text',
@@ -164,8 +164,7 @@ class InfoModal extends Component {
             object: 'basic',
             fieldCol: 12,
             key: 'gender',
-            rangeMin: true,
-            rules: [{ required: true, message: 'Gender is Required' }],
+            // rules: [{ required: true, message: 'Gender is Required' }],
             size: 'small',
             data: [
               { label: 'Male', value: 'M' },
@@ -180,7 +179,7 @@ class InfoModal extends Component {
             object: 'basic',
             fieldCol: 12,
             key: 'stateId',
-            rules: [{ required: true, message: 'State is Required' }],
+            // rules: [{ required: true, message: 'State is Required' }],
             size: 'small',
             // rules:[{ required: true }],
             type: 'Select',

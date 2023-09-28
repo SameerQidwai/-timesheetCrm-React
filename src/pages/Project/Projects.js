@@ -208,7 +208,7 @@ class Projects extends Component {
                       }}
                       className="nav-link"
                     >
-                      Postions
+                      Positions
                     </Link>
                   </Menu.Item>
                 )}

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { Modal, Tabs, Form, Upload } from "antd";
-import { LoadingOutlined, PlusOutlined } from "@ant-design/icons"; //Icons
+import { Modal, Tabs, Form, Upload, Popconfirm } from "antd";
+import { DeleteOutlined, LoadingOutlined, PlusOutlined } from "@ant-design/icons"; //Icons
 
 import FormItems from "../../../components/Core/Forms/FormItems";
 import { addFiles } from "../../../service/Attachment-Apis";
@@ -284,7 +284,17 @@ class OrderModal extends Component {
                     listType="picture-card"
                     maxCount={1}
                     fileList={fileList}
-                    onRemove= {this.onRemove}
+                    showUploadList={{
+                        removeIcon: (file) => <Popconfirm
+                        title="Are you sure you want to delete ?"
+                        onConfirm={() => this.onRemove(file)}
+                        okText="Yes"
+                        cancelText="No"
+                        placement="bottomRight"
+                      >
+                        <DeleteOutlined />
+                      </Popconfirm>
+                    }}
                 >
                     {fileList.length < 1 &&
                         <div style={{marginTop: 10}} >
