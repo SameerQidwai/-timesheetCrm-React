@@ -251,12 +251,12 @@ export const thumbUrl = (type) => {
 export const apiErrorRes = (err, id, duration, style) => {
   const { status = false, data = {} } = err?.response ?? {};
   const { message, success } = data;
-  messageAlert.error({
-    content: status === 400 ? message : 'Something Went Wrong!',
-    duration: status === 400 ? duration : 5,
-    key: id,
-    style: style ?? {},
-  });
+    messageAlert.error({
+      content: status === 400 ? message : 'Something Went Wrong!',
+      duration: status === 400 ? duration : 5,
+      key: id,
+      style: style ?? {},
+    });
   return { error: err.message, status, message, success };
 };
 
