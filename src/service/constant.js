@@ -242,6 +242,7 @@ export const thumbUrl = (type) => {
 export const apiErrorRes = (err, id, duration, style) => {
   const { status = false, data = {} } = err?.response ?? {};
   const { message, success } = data;
+  console.log({status}, err?.response, {message, success} )
   if (status !== 413){
     messageAlert.error({
       content: status === 400 ? message : 'Something Went Wrong!',
