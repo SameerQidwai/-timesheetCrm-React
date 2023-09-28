@@ -242,23 +242,12 @@ export const thumbUrl = (type) => {
 export const apiErrorRes = (err, id, duration, style) => {
   const { status = false, data = {} } = err?.response ?? {};
   const { message, success } = data;
-  console.log({status}, err?.response, {message, success} )
-  if (status !== 413){
     messageAlert.error({
       content: status === 400 ? message : 'Something Went Wrong!',
       duration: status === 400 ? duration : 5,
       key: id,
       style: style ?? {},
     });
-  }else{
-    console.log('alert cant open')
-    messageAlert.error({
-      content: 'File size exceeds 10MB',
-      duration: 5,
-      key: id,
-      style: style ?? {},
-    });
-  }
   return { error: err.message, status, message, success };
 };
 

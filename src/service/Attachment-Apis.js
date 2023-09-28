@@ -26,13 +26,11 @@ export const addFiles = (data, config) => {
             return { success: false }
         })
         .catch((err) => {
-            console.log('catch in addfiles', err.response, err.message)
-            return apiErrorRes(err, 1, 5)
-            // return {
-            //     error: err.response.status,
-            //     status: false,
-            //     message: err.message, 
-            // };
+            if (err?.message === 'Network Error'){
+                _helerError(1)
+            }else{
+                return apiErrorRes(err, 1, 5)
+            }
         });
 };
 
@@ -64,12 +62,11 @@ export const addAttachments = (targetType, targetId, data) => {
             return { success: false }
         })
         .catch((err) => {
-            return apiErrorRes(err, 1, 5)
-            // return {
-            //     error: err.response.status,
-            //     status: false,
-            //     message: err.message,
-            // };
+            if (err?.message === 'Network Error'){
+                _helerError(1)
+            }else{
+                return apiErrorRes(err, 1, 5)
+            }
         });
 };
 
@@ -130,3 +127,11 @@ export const delAttachment = (id,) => {
             };
         });
 };
+
+const _helerError = (id) =>{
+    messageAlert.error({
+        content: 'File size exceeds 10MB',
+        duration: 5,
+        key: id,
+    });
+}
