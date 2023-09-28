@@ -251,7 +251,7 @@ export const apiErrorRes = (err, id, duration, style) => {
     });
   }else{
     messageAlert.error({
-      content: 'File size exceeds 5mb',
+      content: 'File size exceeds 10MB',
       duration: 5,
       key: id,
       style: style ?? {},
