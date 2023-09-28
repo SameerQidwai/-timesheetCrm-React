@@ -26,6 +26,7 @@ export const addFiles = (data, config) => {
             return { success: false }
         })
         .catch((err) => {
+            console.log('catch in addfiles', err)
             return apiErrorRes(err, 1, 5)
             // return {
             //     error: err.response.status,
