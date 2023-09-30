@@ -83,6 +83,25 @@ export const markAsRead = (notificationIds=[]) => {
         });
 };
 
+export const markAsUnRead = (notificationIds=[]) => {
+    return axios
+        .patch(`${url}/unreadNotifications?notificationIds=${notificationIds}`,{}, {headers:headers()})
+        .then((res) => {
+            const { success, message } = res.data;
+            jwtExpired(message)
+            if (success)  setToken(res?.headers?.authorization)
+
+            return { success: success};
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                success: false,
+                message: err.message,
+            };
+        });
+};
+
 export const clearNotification = () => {
     return axios
         .patch(`${url}/clearNotifications`,{}, {headers:headers()})

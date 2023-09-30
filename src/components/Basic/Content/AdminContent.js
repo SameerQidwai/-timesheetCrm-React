@@ -62,6 +62,7 @@ import ExpenseSheet from '../../../pages/Expenses/ExpenseSheet';
 import { localStore } from '../../../service/constant';
 import { PermanentCalculator } from '../../Core/Cost Calculator/PermanentCalculator';
 import { BenchResources, Positions, WorkForceAllocation, WorkforceSkills, ProjectRevenueAnalysis, ClientRevenueAnalysis, TimesheetSummary, LeaveSummary, WorkInHand, Budget, CashFlow } from '../../../pages/Reports';
+import Notifications from '../../../pages/Notification/Notifications';
 
 const { Content } = Layout;
 
@@ -77,6 +78,12 @@ const pageLinks = [
     component: Profile,
     link: '/profile',
     key: 'PROFILE',
+    permission: 'ALLOWED',
+  },
+  {
+    component: Notifications,
+    link: '/notifications',
+    key: 'NOTIFICATIONS',
     permission: 'ALLOWED',
   },
   {

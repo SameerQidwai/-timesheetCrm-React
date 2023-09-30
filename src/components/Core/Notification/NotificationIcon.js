@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { BellTwoTone, BellOutlined, InfoOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons'; //Icons
-import { Avatar, Badge, Button, Divider, List, Popover, Spin, notification } from 'antd';
+import { Avatar, Badge, Button, Divider, Empty, List, Popover, Spin, notification } from 'antd';
 import './style.css';
 import { Link, useHistory } from 'react-router-dom';
 import { clearNotification, getNotifications, getRecentNotifications, markAsRead } from '../../../service/notification-Apis';
@@ -9,7 +9,7 @@ import moment from 'moment';
 
 
 const AlertIcon = {
-  1: {icon: <BellOutlined/>, color: ''},
+  1: {icon: <BellOutlined/>, color: '#1890ff'},
   2: {icon: <InfoOutlined/>, color: ''},
   3: {icon: <CheckOutlined />, color: '#4caf50'},
   4: {icon: <CloseOutlined/>, color: 'red'},
@@ -83,40 +83,67 @@ function NotificationIcon() {
       <List
         className="notify-list"
         dataSource={notify}
+        locale={{
+          emptyText: (
+            <Empty
+              description="No Unread Notifications"
+              image={Empty.PRESENTED_IMAGE_SIMPLE}
+            />
+          ),
+        }}
         renderItem={(item) => {
-          let avatar = AlertIcon[item.type]??{}
-          return (<Link
-            to={`${item.url}`}
-            className="notification-link"
-          >
-            <List.Item key={item.id} onClick={()=>{markRead([item.id], item)}}>
-              <List.Item.Meta
-                avatar={<Avatar icon={avatar.icon} style={{backgroundColor: avatar.color}} />}
-                title={item.title}
-                description={
-                  <span>
-                    <div>{ellipsis(item.content, 60)}</div>
-                    <div>{moment(formatDate(item.createdAt, true, "YYYY-MM-DDTHH:mm:ss")).fromNow()}</div>
-                  </span>
-                }
-              />
-              {!item.readAt&&<div className="notification-status">
-                <Badge dot />
-              </div>}
-            </List.Item>
-          </Link>
-        )}}
+          let avatar = AlertIcon[item.type] ?? {};
+          return (
+            <Link to={`${item.url}`} className="notification-link">
+              <List.Item
+                key={item.id}
+                onClick={() => {
+                  markRead([item.id], item);
+                }}
+              >
+                <List.Item.Meta
+                  avatar={
+                    <Avatar
+                      icon={avatar.icon}
+                      style={{ backgroundColor: avatar.color }}
+                    />
+                  }
+                  title={item.title}
+                  description={
+                    <span>
+                      <div>{ellipsis(item.content, 60)}</div>
+                      <div>
+                        {moment(
+                          formatDate(
+                            item.createdAt,
+                            true,
+                            'YYYY-MM-DDTHH:mm:ss'
+                          )
+                        ).fromNow()}
+                      </div>
+                    </span>
+                  }
+                />
+                {!item.readAt && (
+                  <div className="notification-status">
+                    <Badge dot />
+                  </div>
+                )}
+              </List.Item>
+            </Link>
+          );
+        }}
       />
-      <Spin spinning={loading} className='notification-spin'/>
+      <Spin spinning={loading} className="notification-spin" />
       <Divider />
       <Button
         type="link"
         className="btn-seeAll"
         loading={loading}
         onClick={() => {
-          setMeta((prev) => ({ ...prev, page: prev.page + 1 }))
-          setLoading(true)
-        } }
+          setMeta((prev) => ({ ...prev, page: prev.page + 1 }));
+          setLoading(true);
+        }}
       >
         Load More
       </Button>
@@ -125,6 +152,14 @@ function NotificationIcon() {
 
   const title = (
     <h5 className="notification-title">
+      <Button
+        type="link"
+        className="notification-title-text read"
+        onClick={() => history.push('/notifications')}
+        loading={readLoading}
+      >
+        Show All
+      </Button>
       <span className="notification-title-text">Notifications</span>
       <Button
         type="link"
