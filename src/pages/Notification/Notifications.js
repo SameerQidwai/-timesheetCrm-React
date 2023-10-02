@@ -124,31 +124,32 @@ function Notifications() {
         renderItem={(item) => {
           let avatar = AlertIcon[item.type] ?? {};
           return (
-            <Badge.Ribbon
-            className="notification-status"
-              text={
-                <Tooltip
-                    title={`Mark As ${item.readAt ? 'Unread' : 'Read'}`}
-                    color={item.readAt ? 'red' : '#73d13d'}
-                    onClick={() => {
-                        if (item.readAt) {
-                        markUnRead([item.id], item);
-                        } else {
-                        markRead([item.id], item);
-                        }
-                    }}
-                >
-                  {item.readAt ? 'Read' : 'Unread'}
-                </Tooltip>
-              }
-              color={item.readAt ? '#73d13d' : 'red'}
-            >
+            //text badger 
+            // <Badge.Ribbon
+            // className="notification-status"
+            //   text={
+            //     <Tooltip
+            //         title={`Mark As ${item.readAt ? 'Unread' : 'Read'}`}
+            //         color={item.readAt ? 'red' : '#73d13d'}
+            //         onClick={() => {
+            //             if (item.readAt) {
+            //             markUnRead([item.id], item);
+            //             } else {
+            //             markRead([item.id], item);
+            //             }
+            //         }}
+            //     >
+            //       {item.readAt ? 'Read' : 'Unread'}
+            //     </Tooltip>
+            //   }
+            //   color={item.readAt ? '#73d13d' : 'red'}
+            // >
               <List.Item key={item.id}>
                 <div
                   style={{ width: '100%' }}
-                  onClick={() => {
-                    markRead([item.id], item);
-                  }}
+                //   onClick={() => {
+                //     markRead([item.id], item);
+                //   }}
                 >
                   <Link to={`${item.url}`} className="notification-link">
                     <List.Item.Meta
@@ -176,7 +177,7 @@ function Notifications() {
                     />
                   </Link>
                 </div>
-                {/* <Tooltip
+                <Tooltip
                     title={`Mark As ${item.readAt ? 'Unread' : 'Read'}`}
                     color={item.readAt ? 'red' : '#73d13d'}
                 >
@@ -193,9 +194,9 @@ function Notifications() {
                         }}
                     />
                     </div>
-                </Tooltip> */}
+                </Tooltip>
               </List.Item>
-            </Badge.Ribbon>
+            // </Badge.Ribbon>
           );
         }}
       />

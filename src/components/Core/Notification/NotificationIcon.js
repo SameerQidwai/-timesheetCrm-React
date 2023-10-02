@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { BellTwoTone, BellOutlined, InfoOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons'; //Icons
-import { Avatar, Badge, Button, Divider, Empty, List, Popover, Spin, notification } from 'antd';
+import { Avatar, Badge, Button, Divider, Empty, List, Popover, Spin, Tooltip, notification } from 'antd';
 import './style.css';
 import { Link, useHistory } from 'react-router-dom';
-import { clearNotification, getNotifications, getRecentNotifications, markAsRead } from '../../../service/notification-Apis';
+import { clearNotification, getNotifications, getRecentNotifications, markAsRead, markAsUnRead } from '../../../service/notification-Apis';
 import { ellipsis, formatDate } from '../../../service/constant';
 import moment from 'moment';
 
@@ -78,6 +78,24 @@ function NotificationIcon() {
     })
   }
 
+  const markUnRead = (id, item) => {
+    setReadLoading(true);
+    notification.destroy();
+    markAsUnRead(id).then((res) => {
+      setNotify((prev) =>
+        prev.map((no) => {
+          if (id) {
+            if (id == no.id) {
+              no.readAt = false;
+            }
+          }
+          return no;
+        })
+      );
+      setReadLoading(false);
+    });
+  };
+
   const content = (
     <div className="notification-dropdown">
       <List
@@ -94,43 +112,58 @@ function NotificationIcon() {
         renderItem={(item) => {
           let avatar = AlertIcon[item.type] ?? {};
           return (
-            <Link to={`${item.url}`} className="notification-link">
-              <List.Item
-                key={item.id}
-                onClick={() => {
-                  markRead([item.id], item);
-                }}
+            <List.Item key={item.id} >
+              <div
+                style={{ width: '95%' }}
+                //   onClick={() => {
+                //     markRead([item.id], item);
+                //   }}
               >
-                <List.Item.Meta
-                  avatar={
-                    <Avatar
-                      icon={avatar.icon}
-                      style={{ backgroundColor: avatar.color }}
+                <Link to={`${item.url}`} className="notification-link">
+                  <List.Item.Meta
+                    avatar={
+                      <Avatar
+                        icon={avatar.icon}
+                        style={{ backgroundColor: avatar.color }}
+                      />
+                    }
+                    title={item.title}
+                    description={
+                      <span>
+                        <div>{ellipsis(item.content, 60)}</div>
+                        <div>
+                          {moment(
+                            formatDate(
+                              item.createdAt,
+                              true,
+                              'YYYY-MM-DDTHH:mm:ss'
+                            )
+                          ).fromNow()}
+                        </div>
+                      </span>
+                    }
+                  />
+                </Link>
+              </div>
+              <Tooltip
+                    title={`Mark As ${item.readAt ? 'Unread' : 'Read'}`}
+                    color={item.readAt ? 'red' : '#73d13d'}
+                >
+                    <div className="notification-status">
+                    <Badge
+                        dot
+                        status={item.readAt ? 'default' : 'error'}
+                        onClick={() => {
+                        if (item.readAt) {
+                            markUnRead([item.id], item);
+                        } else {
+                            markRead([item.id], item);
+                        }
+                        }}
                     />
-                  }
-                  title={item.title}
-                  description={
-                    <span>
-                      <div>{ellipsis(item.content, 60)}</div>
-                      <div>
-                        {moment(
-                          formatDate(
-                            item.createdAt,
-                            true,
-                            'YYYY-MM-DDTHH:mm:ss'
-                          )
-                        ).fromNow()}
-                      </div>
-                    </span>
-                  }
-                />
-                {!item.readAt && (
-                  <div className="notification-status">
-                    <Badge dot />
-                  </div>
-                )}
-              </List.Item>
-            </Link>
+                    </div>
+                </Tooltip>
+            </List.Item>
           );
         }}
       />
