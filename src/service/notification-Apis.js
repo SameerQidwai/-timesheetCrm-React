@@ -36,19 +36,19 @@ export const getRecentNotifications = (redirect) => {
                 counter = data.length
                 data= data.filter(notify => {
                     if(Math.abs(moment().utcOffset(0, true).diff(formatDate(notify.createdAt)), 'seconds')  <= 10000){
-                        notification.info({
-                            message: notify.title,
-                            description: notify.content,
-                            onClick:()=>{
-                                notification.destroy();
-                                redirect.push(notify.url);
-                            },
-                            className: 'mouse-pointer',
-                            placement: 'bottomRight'
-                        })
+                    notification.info({
+                        message: notify.title,
+                        description: notify.content,
+                        onClick:()=>{
+                            notification.destroy();
+                            redirect.push(notify.url);
+                        },
+                        className: 'mouse-pointer',
+                        placement: 'bottomRight'
+                    })
                         return true
-                    }else{
-                        return false
+                    // }else{
+                    //     return false
                     }
                 });
             }  

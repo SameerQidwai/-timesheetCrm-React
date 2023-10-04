@@ -61,7 +61,7 @@
   .notification-dropdown .btn-seeAll {
     display: inline-flex;
     justify-content: center;
-    align-items: center;
+    align-items: stretch;
     background: #fff;
     transition: 0.3s;
     color: #1890ff;
@@ -86,6 +86,11 @@
   
   .notification-status {
     margin-left: auto;
+    align-self: center;
+  }
+
+  .notification-status:hover {
+    background-color: #f5f5f5;
     cursor: pointer;
   }
   

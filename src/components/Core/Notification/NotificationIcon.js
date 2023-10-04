@@ -9,10 +9,10 @@ import moment from 'moment';
 
 
 const AlertIcon = {
-  1: {icon: <BellOutlined/>, color: '#1890ff'},
-  2: {icon: <InfoOutlined/>, color: ''},
-  3: {icon: <CheckOutlined />, color: '#4caf50'},
-  4: {icon: <CloseOutlined/>, color: 'red'},
+  0: {icon: <BellOutlined/>, color: '#1890ff'},
+  1: {icon: <InfoOutlined/>, color: ''},
+  2: {icon: <CheckOutlined />, color: '#4caf50'},
+  3: {icon: <CloseOutlined/>, color: 'red'},
 }
 
 function NotificationIcon() {
@@ -42,7 +42,7 @@ function NotificationIcon() {
 
   const get = () => {
     const { limit, page } = meta;
-    const query = `limit=${limit}&page=${page}`;
+    const query = `limit=${limit}&page=${page}&unread=${1}`;
     getNotifications(query).then((res) => {
       setLoading(false)
       if (res.success) {
@@ -146,8 +146,8 @@ function NotificationIcon() {
                 </Link>
               </div>
               <Tooltip
-                    title={`Mark As ${item.readAt ? 'Unread' : 'Read'}`}
-                    color={item.readAt ? 'red' : '#73d13d'}
+                  title={`Mark As ${item.readAt ? 'Unread' : 'Read'}`}
+                  color={item.readAt ? 'red' : '#73d13d'}
                 >
                     <div className="notification-status">
                     <Badge
