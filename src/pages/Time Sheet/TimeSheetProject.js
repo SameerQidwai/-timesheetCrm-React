@@ -20,7 +20,7 @@ let modal = ""
 class TimeSheetProject extends Component {
     constructor() {
         super();
-        let {startDate, endDate, milestoneId} = getParams(window.location.search)
+        let {startDate, endDate, milestoneId, timesheetId} = getParams(window.location.search)
         this.state = {
             isAttach: false,
             sheetDates: {
@@ -29,6 +29,7 @@ class TimeSheetProject extends Component {
               cMonth: endDate? moment(endDate, 'DD-MM-YYYY') : moment(),
             },
             timeObj: false,
+            paramTimesheetId: timesheetId??null,
             eData: [],
             sMilestone: milestoneId? parseInt(milestoneId): null,
             loginId: null,
@@ -190,7 +191,7 @@ class TimeSheetProject extends Component {
     }
 
     getSheet = () =>{
-      const { sMilestone } = this.state
+      let { sMilestone, paramTimesheetId, timesheet, keys } = this.state
       let { startDate, endDate } = this.state.sheetDates
       startDate= startDate.format('DD-MM-YYYY');
       endDate= endDate.format('DD-MM-YYYY');
@@ -203,12 +204,25 @@ class TimeSheetProject extends Component {
           }
         )
           getUsersTimesheet({mileId: sMilestone, startDate, endDate}).then(res=>{
+            timesheet = []
+            keys = []
+            let length = res?.data?.length ?? 0
+            if (paramTimesheetId){ //selecting timesheet from queryparams
+              for(let i = 0; i<length; i++){
+                let data = res?.data?.[i] ?? {}
+                if (data.id == paramTimesheetId && (data.status === "AP" || data.status === "SB")){
+                  timesheet.push(data)
+                  keys.push(data.id)
+                  break; //break if timesheet found
+                }
+              }
+            }
               this.setState({
                   // timesheet: res.success ? res.data: {},
                   data: (res.success && res.data) ? res.data?? []: [],
                   sTimesheet: { // selected timesheet 
-                      timesheet: [], //  Timesheet Object 
-                      keys: [] // TimeSheet keys
+                      timesheet, //  Timesheet Object 
+                      keys // TimeSheet keys
                   },
               })
           })
