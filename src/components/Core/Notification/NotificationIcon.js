@@ -1,11 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { BellFilled, BellTwoTone, BellOutlined } from '@ant-design/icons'; //Icons
-import { Avatar, Badge, Button, Divider, List, Popover, Spin, notification } from 'antd';
+import { BellTwoTone, BellOutlined, InfoOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons'; //Icons
+import { Avatar, Badge, Button, Divider, Empty, List, Popover, Spin, Tooltip, notification } from 'antd';
 import './style.css';
 import { Link, useHistory } from 'react-router-dom';
-import { clearNotification, getNotifications, getRecentNotifications, markAsRead } from '../../../service/notification-Apis';
-import { formatDate } from '../../../service/constant';
+import { clearNotification, getNotifications, getRecentNotifications, markAsRead, markAsUnRead } from '../../../service/notification-Apis';
+import { ellipsis, formatDate } from '../../../service/constant';
 import moment from 'moment';
+
+
+const AlertIcon = {
+  0: {icon: <BellOutlined/>, color: '#1890ff'},
+  1: {icon: <InfoOutlined/>, color: ''},
+  2: {icon: <CheckOutlined />, color: '#4caf50'},
+  3: {icon: <CloseOutlined/>, color: 'red'},
+}
 
 function NotificationIcon() {
   const history = useHistory()
@@ -34,7 +42,7 @@ function NotificationIcon() {
 
   const get = () => {
     const { limit, page } = meta;
-    const query = `limit=${limit}&page=${page}`;
+    const query = `limit=${limit}&page=${page}&unread=${1}`;
     getNotifications(query).then((res) => {
       setLoading(false)
       if (res.success) {
@@ -70,39 +78,105 @@ function NotificationIcon() {
     })
   }
 
+  const markUnRead = (id, item) => {
+    setReadLoading(true);
+    notification.destroy();
+    markAsUnRead(id).then((res) => {
+      setNotify((prev) =>
+        prev.map((no) => {
+          if (id) {
+            if (id == no.id) {
+              no.readAt = false;
+            }
+          }
+          return no;
+        })
+      );
+      setReadLoading(false);
+    });
+  };
+
   const content = (
     <div className="notification-dropdown">
       <List
         className="notify-list"
         dataSource={notify}
-        renderItem={(item) => (
-          <Link
-            to={`${item.url}`}
-            className="notification-link"
-          >
-            <List.Item key={item.id} onClick={()=>{markRead([item.id], item)}}>
-              <List.Item.Meta
-                avatar={<Avatar icon={<BellOutlined />} />}
-                title={item.title}
-                description={moment(formatDate(item.createdAt, true, "YYYY-MM-DDTHH:mm:ss")).fromNow()}
-              />
-              {!item.readAt&&<div className="notification-status">
-                <Badge dot />
-              </div>}
+        locale={{
+          emptyText: (
+            <Empty
+              description="No Unread Notifications"
+              image={Empty.PRESENTED_IMAGE_SIMPLE}
+            />
+          ),
+        }}
+        renderItem={(item) => {
+          let avatar = AlertIcon[item.type] ?? {};
+          return (
+            <List.Item key={item.id} >
+              <div
+                style={{ width: '95%' }}
+                //   onClick={() => {
+                //     markRead([item.id], item);
+                //   }}
+              >
+                <Link to={`${item.url}`} className="notification-link">
+                  <List.Item.Meta
+                    avatar={
+                      <Avatar
+                        icon={avatar.icon}
+                        style={{ backgroundColor: avatar.color }}
+                      />
+                    }
+                    title={item.title}
+                    description={
+                      <span>
+                        <div>{ellipsis(item.content, 60)}</div>
+                        <div>
+                          {moment(
+                            formatDate(
+                              item.createdAt,
+                              true,
+                              'YYYY-MM-DDTHH:mm:ss'
+                            )
+                          ).fromNow()}
+                        </div>
+                      </span>
+                    }
+                  />
+                </Link>
+              </div>
+              <Tooltip
+                  title={`Mark As ${item.readAt ? 'Unread' : 'Read'}`}
+                  color={item.readAt ? 'red' : '#73d13d'}
+                >
+                    <div className="notification-status">
+                    <Badge
+                        dot
+                        status={item.readAt ? 'default' : 'error'}
+                        onClick={() => {
+                        if (item.readAt) {
+                            markUnRead([item.id], item);
+                        } else {
+                            markRead([item.id], item);
+                        }
+                        }}
+                    />
+                    </div>
+                </Tooltip>
             </List.Item>
-          </Link>
-        )}
+          );
+        }}
       />
-      <Spin spinning={loading} className='notification-spin'/>
+      <Spin spinning={loading} className="notification-spin" />
       <Divider />
       <Button
         type="link"
         className="btn-seeAll"
         loading={loading}
         onClick={() => {
-          setMeta((prev) => ({ ...prev, page: prev.page + 1 }))
-          setLoading(true)
-        } }
+          setMeta((prev) => ({ ...prev, page: prev.page + 1 }));
+          setLoading(true);
+        }}
       >
         Load More
       </Button>
@@ -111,6 +185,14 @@ function NotificationIcon() {
 
   const title = (
     <h5 className="notification-title">
+      <Button
+        type="link"
+        className="notification-title-text read"
+        onClick={() => history.push('/notifications')}
+        loading={readLoading}
+      >
+        Show All
+      </Button>
       <span className="notification-title-text">Notifications</span>
       <Button
         type="link"

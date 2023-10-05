@@ -36,19 +36,19 @@ export const getRecentNotifications = (redirect) => {
                 counter = data.length
                 data= data.filter(notify => {
                     if(Math.abs(moment().utcOffset(0, true).diff(formatDate(notify.createdAt)), 'seconds')  <= 10000){
-                        notification.info({
-                            message: notify.title,
-                            description: notify.content,
-                            onClick:()=>{
-                                notification.destroy();
-                                redirect.push(notify.url);
-                            },
-                            className: 'mouse-pointer',
-                            placement: 'bottomRight'
-                        })
+                    notification.info({
+                        message: notify.title,
+                        description: notify.content,
+                        onClick:()=>{
+                            notification.destroy();
+                            redirect.push(notify.url);
+                        },
+                        className: 'mouse-pointer',
+                        placement: 'bottomRight'
+                    })
                         return true
-                    }else{
-                        return false
+                    // }else{
+                    //     return false
                     }
                 });
             }  
@@ -67,6 +67,25 @@ export const getRecentNotifications = (redirect) => {
 export const markAsRead = (notificationIds=[]) => {
     return axios
         .patch(`${url}/readNotifications?notificationIds=${notificationIds}`,{}, {headers:headers()})
+        .then((res) => {
+            const { success, message } = res.data;
+            jwtExpired(message)
+            if (success)  setToken(res?.headers?.authorization)
+
+            return { success: success};
+        })
+        .catch((err) => {
+            return {
+                error: "Please login again!",
+                success: false,
+                message: err.message,
+            };
+        });
+};
+
+export const markAsUnRead = (notificationIds=[]) => {
+    return axios
+        .patch(`${url}/unreadNotifications?notificationIds=${notificationIds}`,{}, {headers:headers()})
         .then((res) => {
             const { success, message } = res.data;
             jwtExpired(message)

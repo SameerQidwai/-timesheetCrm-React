@@ -3,8 +3,9 @@ import { SettingOutlined, CheckCircleOutlined, AuditOutlined, CheckOutlined} fro
 import React, { useEffect, useState } from 'react'
 import { entityProjects, getManageProjects, getUserProjects } from '../../service/constant-Apis';
 import { expenseSheetActions, getApprovalExpenseSheets, getExpenseSheet } from '../../service/expenseSheet-Apis';
-import { dateClosed, formatCurrency, formatDate, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
+import { dateClosed, formatCurrency, formatDate, getParams, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
 // import { expensesData as dummyExpensesData } from '../DummyData';
+import moment from 'moment'
 import ExpenseSheetModal from './Modals/ExpenseSheetModal';
 import { tableSorter } from '../../components/Core/Table/TableFilter';
 import {Tag_s} from '../../components/Core/Custom/Index';
@@ -14,7 +15,8 @@ const { RangePicker } = DatePicker
 let modal = ""
 
 const ExpenseApproval = () => {
-	
+	let {startDate, endDate, projectId, sheetId} = getParams(window.location.search)
+
 	const [projects, setProjects] = useState([]);
 	const [selectedRows, setSelectedRows] = useState({keys: [], data: []});
 	const [expenseData, setExpenseData] = useState();
@@ -23,9 +25,9 @@ const ExpenseApproval = () => {
 	// const [adminView, setAdminView] = useState(false);
 	// const [disableSubmit, setDisableSubmit] = useState(true);
 	const [queryRequest, setQueryRequest] = useState({
-		filterSatrtDate: formatDate(new Date()).startOf("month"),
-		filterEndDate: formatDate(new Date()).endOf("month"),
-		filterProject: null
+		filterSatrtDate: startDate? moment(startDate, 'DD-MM-YYYY')  :moment().startOf('month'),
+		filterEndDate: endDate? moment(endDate, 'DD-MM-YYYY'): moment().endOf('month'),
+		filterProject: projectId? parseInt(projectId): null,
 	});  
 	const { filterSatrtDate, filterEndDate, filterProject } = queryRequest
 
@@ -177,6 +179,16 @@ const ExpenseApproval = () => {
 		getApprovalExpenseSheets(filters).then((res) => {
 			if (res.success) {
 				setExpenseData(res.data); 
+				let length = res.data.length
+				if (sheetId){ //selecting timesheet from queryparams
+					for(let i = 0; i<length; i++){
+						let data = res?.data?.[i] ?? {}
+						if (data.id == sheetId){
+							onSelectChange([data.id], [data])
+							break; //break if timesheet found
+						}
+					}
+				}
 			}
 		})
 	}
@@ -275,6 +287,7 @@ const ExpenseApproval = () => {
 					placeholder="Select Project"
 					style={{ width: 300 }}
 					allowClear
+					value={filterProject}
 					options={projects}
 					showSearch
 					optionFilterProp={["label", "value"]}
@@ -286,6 +299,7 @@ const ExpenseApproval = () => {
 						}
 					}
 					onChange={(ind) => { 
+						console.log(ind)
 						setQueryRequest((prev)=>(
 							{...prev, filterProject: ind}
 						)) 
