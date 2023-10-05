@@ -201,7 +201,8 @@ const ExpenseSheetModal = ({ visible, close, expenses, callBack, adminView }) =>
         return ele.projectId == projectId;
       });
     }
-    setfilteredExpenses([...filteredProject]); 
+    let includedExpenses = visible?.expenseSheetExpenses ?? []
+    setfilteredExpenses([...includedExpenses,...filteredProject]); 
     setSelectedRowKeys(codes)
   }
 
