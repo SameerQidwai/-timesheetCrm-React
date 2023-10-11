@@ -162,7 +162,7 @@ class Navbar extends Component {
                                 </Dropdown>
                             </Space>
                         </Col>: 
-                        <Col xs={{ span: 1 }} md={{ span: 1 }}>
+                        <Col>
                             <Space size="large">
                                 <Link
                                     to= {{ pathname:"https://timewize.au/help-centre/"}}
