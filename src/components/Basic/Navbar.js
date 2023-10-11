@@ -169,7 +169,7 @@ class Navbar extends Component {
                                 </Dropdown>
                             </Space>
                         </Col>: 
-                        <Col xs={{ span: 1 }} md={{ span: 1 }}>
+                        <Col>
                             <Space size="large">
                                 <NotificationIcon/>
                                 <Link
