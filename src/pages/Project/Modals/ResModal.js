@@ -130,7 +130,10 @@ class ResModal extends Component {
           rules:[{ required: true, message: 'Resource is Required' }],
           data: [],
           type: "Select",
-          onChange: (value, option)=> { this.checkRates(value, option) }
+          onChange: (value, option)=> { 
+            const { obj: { startDate }, } = this.formRef.current.getFieldValue();
+            this.checkRates(value, option, startDate) 
+          }
         },
         {
           Placeholder: "Start Date",
@@ -296,12 +299,12 @@ class ResModal extends Component {
   }
   // end 
 
-  checkRates = (value, option)=>{
+  checkRates = (value, option, startDate)=>{
     if (value){
       if (option.label.includes('Employee')){
-        this.getRates('employees', value)
+        this.getRates('employees', value, startDate)
       }else if (option.label.includes('Sub Contractor')){
-        this.getRates('sub-contractors', value)
+        this.getRates('sub-contractors', value, startDate)
       }else{
         this.setRates('No Active Contract', 'No Active Contract')
       }
@@ -311,9 +314,9 @@ class ResModal extends Component {
     
   }
 
-  getRates = (crud, id) =>{
+  getRates = (crud, id, allocationStartDate) =>{
     const {cmRate} = this.props
-    buyCost(crud, id, 'contactPerson').then(res=>{
+    buyCost(crud, id, 'contactPerson', allocationStartDate).then(res=>{
       if(res.success){
           let {employeeBuyRate} = res.data
           this.setRates(formatCurrency(employeeBuyRate), formatCurrency(employeeBuyRate/(1- (cmRate/100))))
