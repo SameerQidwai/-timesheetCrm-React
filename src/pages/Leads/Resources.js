@@ -138,7 +138,8 @@ class Resources extends Component {
                       false,
                       index,
                       record.panelSkillStandardLevelId,
-                      record.panelSkillStandardLevel
+                      record.panelSkillStandardLevel,
+                      record.startDate
                     );
                   }}
                   disabled={!this?.state?.permissions?.['ADD']}
@@ -321,17 +322,19 @@ class Resources extends Component {
     editRex,
     tableIndex,
     levelId,
-    panelSkillLevel
+    panelSkillLevel,
+    allocationStartDate
   ) => {
     const { startDate, endDate } = this.state.mileDesc;
     this.setState({
       pDates: { startDate, endDate },
-      infoModal: infoModal,
-      skillId: skillId,
-      levelId: levelId,
-      resource: resource,
-      editRex: editRex,
-      tableIndex: tableIndex,
+      infoModal,
+      skillId,
+      levelId,
+      resource,
+      allocationStartDate,
+      editRex,
+      tableIndex,
       ceil: panelSkillLevel && {
         short: panelSkillLevel.shortTermCeil,
         long: panelSkillLevel.longTermCeil,
@@ -501,6 +504,7 @@ class Resources extends Component {
       mileDesc,
       pDates,
       ceil,
+      allocationStartDate
     } = this.state;
     return (
       <>
@@ -603,6 +607,7 @@ class Resources extends Component {
                   levelId={record.panelSkillStandardLevelId}
                   leadId={leadId}
                   mileId={mileId}
+                  allocationStartDate={record.startDate}
                   crud={crud}
                   cmRate={desc.cmPercentage ?? 0}
                   history={this.props.history}
@@ -637,6 +642,7 @@ class Resources extends Component {
             editRex={editRex}
             skillId={skillId}
             levelId={levelId}
+            allocationStartDate={allocationStartDate}
             leadId={leadId}
             hours={desc?.hoursPerDay}
             cmRate={desc.cmPercentage ?? 0}
@@ -787,6 +793,7 @@ function NestedTable(props) {
           editRex={editRex}
           cmRate={props.cmRate}
           skillId={props.skill}
+          allocationStartDate={props.allocationStartDate}
           leadId={props.leadId}
           levelId={props.levelId}
           panelId={props.panelId}
