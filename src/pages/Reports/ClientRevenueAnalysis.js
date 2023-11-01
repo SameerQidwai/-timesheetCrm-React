@@ -119,7 +119,7 @@ function ClientRevenueAnalysis() {
         <Col>
             <Row justify="end" gutter={5}>
                 <Col >
-                    <Button size="small" onClick={()=>exportData}>Download CSV</Button>
+                    <Button size="small" onClick={exportData}>Download CSV</Button>
                 </Col>
                 <Col>
                     <Button size="small" onClick={() => setVisible(true)}>
