@@ -181,10 +181,17 @@ export const getApprovalMilestones = (project) => {
         });
 };
 
-export const milestoneActions = (crud, data) => {
+export const milestoneActions = (crud, data, method='patch') => {
     messageAlert.loading({ content: 'Loading...', key: crud })
-    return axios
-        .patch(`${url}${crud}`, data, {headers:headers()})
+
+    const axiosPromise = axios({
+        method: method.toLowerCase(),
+        url: `${url}${crud}`,
+        data: method.toLowerCase() !== 'get' ? data : undefined,
+        headers: headers(),
+    });
+    
+    return axiosPromise
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
