@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { BellTwoTone, BellOutlined, InfoOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons'; //Icons
 import { Avatar, Badge, Button, Divider, Empty, List, Popover, Spin, Tooltip, notification } from 'antd';
 import './style.css';
@@ -16,6 +16,7 @@ const AlertIcon = {
 }
 
 function NotificationIcon() {
+  const indicatorTimeout = useRef(null);
   const history = useHistory()
   const [count, setCount] = useState(0);
   const [meta, setMeta] = useState({ limit: 5, page: 1});
@@ -25,20 +26,35 @@ function NotificationIcon() {
 
   useEffect(() => {
     get();
-
-    const intervalId = setInterval(() => {
-      getRecentNotifications(history).then(res=>{
-        if(res.success){
-          setCount(res.counter)
-          setNotify((prev) => [...res.data, ...prev]);
-        }
-      })
-    }, 10000);
+    Indicator();
+    // const intervalId = setInterval(() => {
+    //   getRecentNotifications(history).then(res=>{
+    //     if(res.success){
+    //       setCount(res.counter)
+    //       setNotify((prev) => [...res.data, ...prev]);
+    //     }
+    //   })
+    // }, 10000);
 
     return () => {
-      clearInterval(intervalId); // Clear the interval when the component unmounts
+      // clearInterval(intervalId); // Clear the interval when the component unmounts
+      clearTimeout(indicatorTimeout.current); // Clear the timeout when the component unmounts
     };
   }, [meta]);
+
+  const Indicator = () =>{
+    getRecentNotifications(history).then(res=>{
+      if(res.success){
+        setCount(res.counter)
+        setNotify((prev) => [...res.data, ...prev]);
+      };
+      indicatorTimeout.current = setTimeout(() => {
+        Indicator()
+      }, 100000);
+    });
+  };
+
+  
 
   const get = () => {
     const { limit, page } = meta;
