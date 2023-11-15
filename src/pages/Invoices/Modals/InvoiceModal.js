@@ -437,7 +437,7 @@ const InvoiceModal = ({ visible, close, callBack }) => {
         if (projectType == 1) {
           tempFields[4] = projectTypeField[1]['label'];
           tempFields[6] = projectTypeField[1]['field'];
-          tempFields[6].data = res[2]?.data?.lineItems; // set tempoary field change to this field
+          tempFields[6].data = [res[2]?.data?.lineItems?.[0]]; // set tempoary field change to this field
         }
         let POdata = res[2]?.data?.purchaseOrder
         tempFields[7].data = [{value: POdata.id, label:POdata.orderNo }]; //adding data to purchase order dropdown
@@ -517,6 +517,7 @@ const InvoiceModal = ({ visible, close, callBack }) => {
               rateLable: 'Sell Rate',
               type,
             }); // Else if api called for timebase (after selecting date range) //show data to table
+            seAttachments(res.attachments ?? []);
           } 
           else {
             setUpdateData({
@@ -743,7 +744,8 @@ const InvoiceModal = ({ visible, close, callBack }) => {
                 </Col>
                 <Col style={{ textAlign: 'center', marginRight: 10 }}>
                   <Checkbox
-                    checked={file.attachXero || disabled}
+                    checked={file.attachXero}
+                    disabled={disabled}
                     onChange={() => selectFiles('attachXero', file)}
                   />
                 </Col>
