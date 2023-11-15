@@ -11,7 +11,7 @@ const CertificatePdf = (props) =>{
 
     useEffect(() => {
             let crud = `/${props.mileId}/export`
-            milestoneActions(crud).then(res=>{
+            milestoneActions(crud, undefined, 'get').then(res=>{
                 if (res.success){
                     setData(res.data)
                     // setDetail(res.milestoneInfo)

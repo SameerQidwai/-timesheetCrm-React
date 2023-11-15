@@ -51,7 +51,7 @@ class ResModal extends Component {
           rules: [{ required: true, message: "Resource is Required" }],
           data: [],
           type: "Select",
-          onChange: (value, option)=> { this.checkRates(value, option) }
+          onChange: (value, option)=> { this.checkRates(option) }
         },
         {
           object: "obj",
@@ -276,7 +276,8 @@ class ResModal extends Component {
         ResourceFields[7].hint = this.ceilHint(ceil.short, ceil.long);
         this.setState({ ResourceFields },()=>{
           if (editRex?.role) {
-            this.checkRates(editRex?.contactPersonId, {label: editRex?.role})
+            let resource = {value: editRex?.contactPersonId, label: editRex?.role};
+            this.checkRates(resource);
           }else{
             this.setRates('No Active Contract', 'No Active Contract')
           }
@@ -287,39 +288,45 @@ class ResModal extends Component {
       });
   };
 
-  checkRates = (value, option)=>{
-    if (value){
-      if (option.label.includes('Employee')){
-        this.getRates('employees', value)
-      }else if (option.label.includes('Sub Contractor')){
-        this.getRates('sub-contractors', value)
+  checkRates = (resource)=>{
+    if (resource?.value){
+      if (resource.label.includes('Employee')){
+        this.getRates('employees', resource);
+      }else if (resource.label.includes('Sub Contractor')){
+        this.getRates('sub-contractors', resource);
       }else{
-        this.setRates('No Active Contract', 'No Active Contract')
+        this.setRates('No Active Contract', 'No Active Contract');
       }
     }else{
-      this.setRates(undefined, undefined)
+      this.setRates(undefined, undefined);
     }
     
   }
 
-  getRates = (crud, id) =>{
-    const {cmRate} = this.props
-    console.log(cmRate, 'cRate')
-    buyCost(crud, id, 'contactPerson').then(res=>{
+  getRates = (crud, resouce) =>{
+    let {cmRate, allocationStartDate} = this.props;
+    let id = resouce?.value;
+    allocationStartDate = formatDate(allocationStartDate, true, 'YYYY-MM-DD');
+
+    buyCost(crud, id, 'contactPerson', allocationStartDate).then(res=>{
       if(res.success){
-          let {employeeBuyRate} = res.data
-          this.setRates(formatCurrency(employeeBuyRate), formatCurrency(employeeBuyRate/(1- (cmRate/100))))
+          let {employeeBuyRate} = res.data;
+          let buyRate = formatCurrency(employeeBuyRate);
+          let sellRate = formatCurrency(employeeBuyRate/(1- (cmRate/100)));
+
+          this.setRates(buyRate, sellRate, allocationStartDate);
       }else{
-        this.setRates('No Active Contract', 'No Active Contract')
+        this.setRates('No Active Contract', 'No Active Contract');
       }
     })
   }
 
   setRates = (buy, sell) =>{
-    const {ResourceFields} = this.state
-    ResourceFields[4].suggestion = buy
-    ResourceFields[5].suggestion = sell
-    this.setState({ResourceFields: [...ResourceFields] })
+    const {ResourceFields} = this.state;
+    ResourceFields[4].suggestion = buy;
+    ResourceFields[5].suggestion = sell;
+
+    this.setState({ResourceFields: [...ResourceFields]});
   }
 
   ceilHint = (stceil, ltceil) =>{
