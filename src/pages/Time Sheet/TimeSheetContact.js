@@ -7,7 +7,7 @@ import TimeModal from "./Modals/TimeModal"
 import AttachModal from "./Modals/AttachModal";
 import {  getList, reviewTimeSheet, getUsers, deleteTime,  } from "../../service/timesheet"
 import { getCalendarHolidaysFormat, getUserMilestones } from "../../service/constant-Apis";
-import { localStore, Api, thumbUrl, STATUS_COLOR, R_STATUS, formatFloat, getModulePermissions, dateClosed } from "../../service/constant";
+import { localStore, Api, thumbUrl, STATUS_COLOR, R_STATUS, formatFloat, getModulePermissions, dateClosed, getParams } from "../../service/constant";
     
 import moment from "moment";
 import "../styles/button.css";
@@ -21,16 +21,16 @@ const { Title, Link: Tlink, Text} = Typography;
 class TimeSheetContact extends Component {
   constructor() {
     super();
-
+    let {startDate, endDate} = getParams(window.location.search)
     this.state = {
       isVisible: false,
       proVisible: false,
       isAttach: false,
       sheetDates: {
-        startDate: moment().startOf('month'),
-        endDate: moment().endOf('month'),
-        cMonth: moment(),
-        sWeek: moment(),
+        startDate: startDate? moment(startDate, 'DD-MM-YYYY')  :moment().startOf('month'),
+        endDate: endDate? moment(endDate, 'DD-MM-YYYY'): moment().endOf('month'),
+        cMonth: endDate? moment(endDate, 'DD-MM-YYYY') : moment(),
+        sWeek: startDate? moment(startDate, 'DD-MM-YYYY') :moment(),
       },
       timeObj: false,
       editTime: false,
@@ -208,7 +208,7 @@ class TimeSheetContact extends Component {
     };
   }
 
-  componentDidMount = () => {
+  componentDidMount = () => {    
     this.fetchAll();
     // this.columns()
   };
@@ -269,12 +269,21 @@ class TimeSheetContact extends Component {
   getSheet = () => {
     // get timesheet for the employee withe date
     const { sUser, sheetDates } = this.state;
-    const { startDate, endDate } = sheetDates;
+    let { startDate, endDate } = sheetDates;
+    startDate= startDate.format('DD-MM-YYYY');
+    endDate= endDate.format('DD-MM-YYYY');
+
+    this.props.history.push(
+      {
+        pathname: 'time-sheet',
+        search: `?startDate=${startDate}&endDate=${endDate}&userId=${sUser}`
+      }
+    )
+
     if (sUser) {
       getList({
         userId: sUser,
-        startDate: startDate.format('DD-MM-YYYY'),
-        endDate: endDate.format('DD-MM-YYYY'),
+        startDate, endDate,
       }).then((res) => {
         // if (res.success){
         this.setState({
@@ -928,6 +937,7 @@ class TimeSheetContact extends Component {
               mode="month"
               picker="month"
               format="MMM-YYYY"
+              value={cMonth}
               onChange={(value) => {
                 this.setState(
                   {

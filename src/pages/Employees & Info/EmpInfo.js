@@ -37,13 +37,15 @@ const { Item } = Descriptions;
 const { TabPane } = Tabs;
 
 class OrgInfo extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+    let hash = props.location.hash.substring(1);
     this.state = {
       infoModal: false,
       emp: false,
       data: {},
       bank: {},
+      defaultTabKey: hash,
       contract: {},
       permissions: {},
       notAuth: false,
@@ -51,6 +53,7 @@ class OrgInfo extends Component {
   }
   componentDidMount = () => {
     const { id } = this.props.match.params;
+    console.log(this.props.location.hash)
     this.getRecord(id);
   };
 
@@ -102,7 +105,7 @@ class OrgInfo extends Component {
   };
 
   render() {
-    const { data, infoModal, emp, bank, notAuth, contract, permissions } =
+    const { data, infoModal, emp, bank, notAuth, contract, permissions, defaultTabKey } =
       this.state;
     const DescTitle = (
       <Row justify="space-between">
@@ -205,9 +208,9 @@ class OrgInfo extends Component {
           <Tabs
             type="card"
             style={{ marginTop: '50px' }}
-            // defaultActiveKey="cost-calculator"
+            defaultActiveKey={defaultTabKey}
           >
-            <TabPane tab="Opportunities" key="leads">
+            <TabPane tab="Opportunities" key="opportunities">
               <Opportunities
                   targetId={emp}
                   customUrl={`helpers/work?type=O&employee=${emp}`}
@@ -233,7 +236,7 @@ class OrgInfo extends Component {
                 bank={bank}
               />
             </TabPane>
-            <TabPane tab="Leave Balance" key="leaveBalance">
+            <TabPane tab="Leave Balance" key="leave-balance">
               <LeaveBalance empId={emp} editable={true} />
             </TabPane>
             <TabPane tab="Cost Calculator" key="cost-calculator">

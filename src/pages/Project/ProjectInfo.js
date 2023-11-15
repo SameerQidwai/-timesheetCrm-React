@@ -45,9 +45,11 @@ const { Item } = Descriptions;
 const { TabPane } = Tabs;
 
 class ProjectInfo extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+    let hash = props.location.hash.substring(1);
     this.state = {
+      defaultTabKey: hash,
       valueSpin: false,
       updateEnabled: true,
       calculatedValue: 0,
@@ -128,7 +130,8 @@ class ProjectInfo extends Component {
       notAuth,
       valueSpin,
       updateEnabled,
-      disabledFY
+      disabledFY,
+      defaultTabKey
     } = this.state;
 
     const DescTitle = (
@@ -299,7 +302,7 @@ class ProjectInfo extends Component {
           <Tabs
             type="card"
             style={{ marginTop: '50px' }}
-            // defaultActiveKey="profitloss"
+            defaultActiveKey={defaultTabKey}
           >
             <TabPane tab="Comments" key="comments">
               <Comments
@@ -321,7 +324,7 @@ class ProjectInfo extends Component {
             {/* <TabPane tab="Bank Account" key="account">
                             <Bank id={leadId} title={data.name} />
                         </TabPane> */}
-            <TabPane tab="Projected Profit & Loss" key="profitloss">
+            <TabPane tab="Projected Profit & Loss" key="profit-loss">
               <ProfitLoss
                 id={leadId}
                 parent={'P'}
@@ -338,7 +341,7 @@ class ProjectInfo extends Component {
               )}
             </TabPane>
             {basic.type === 2 && (
-            <TabPane tab="Project Tracking" key="projectTracking">
+            <TabPane tab="Project Tracking" key="project-tracking">
               <ProjectTracking id={leadId} data={data} />
             </TabPane>)}
             <TabPane tab="Shutdown Periods" key="shutdown">

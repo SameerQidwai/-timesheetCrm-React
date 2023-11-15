@@ -1,13 +1,14 @@
 import React, {Component} from 'react'
 import { Table, Button, Row, Col, Typography, Menu, Dropdown, DatePicker, Tag, Select, Modal, Form, Input, Tooltip, Space} from 'antd'
 import { DownOutlined, SettingOutlined, ExclamationCircleOutlined, CheckCircleOutlined, AuditOutlined} from '@ant-design/icons';
-import { formatDate, formatFloat, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
+import { formatDate, formatFloat, getParams, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
 import { getApprovalRequests, manageLeaveRequests } from '../../service/leaveRequest-Apis';
 import AddRequestModal from './Modals/AddRequestModal';
 import { getMilestones } from '../../service/timesheet';
 import { getLineEmployees, getManageProjects } from '../../service/constant-Apis';
 import { tableSorter, tableTitleFilter } from '../../components/Core/Table/TableFilter';
 import {Tag_s} from '../../components/Core/Custom/Index';
+import moment from "moment";
 
 const { Title, Text } = Typography
 let modal = ''
@@ -15,6 +16,7 @@ let modal = ''
 class ApproveRequest extends Component {
     constructor(props) {
         super(props);
+        let {startDate, endDate, projectId, userId, requestId} = getParams(window.location.search)
         this.requestColumns = [
             {
                 title: 'Resource',
@@ -118,6 +120,7 @@ class ApproveRequest extends Component {
             filterRequest : [],
             readRequest: false,
             canApprove: false,
+            paramRequestId: requestId??null,
             loginId: {},
             permissions: {},
             sRequest: { // selected request 
@@ -127,10 +130,10 @@ class ApproveRequest extends Component {
             WORKS: [],
             USERS: [],
             queryRequest : {
-                startDate: formatDate(new Date()).startOf("month"),
-                endDate: formatDate(new Date()).endOf("month"), 
-                workId: null, 
-                userId: null, 
+                startDate: startDate? moment(startDate, 'DD-MM-YYYY')  :moment().startOf('month'),
+                endDate: endDate? moment(endDate, 'DD-MM-YYYY'): moment().endOf('month'), 
+                workId: projectId? parseInt(projectId): null,
+                userId: userId? parseInt(userId): null, 
             }
         }   
     }
@@ -140,15 +143,28 @@ class ApproveRequest extends Component {
     }
 
     fetchAll = () =>{
-        const { startDate, endDate, workId, userId } = this.state.queryRequest
-        const query = { startDate: formatDate(startDate, true, 'DD-MM-YYYY'), endDate: formatDate(endDate, true, 'DD-MM-YYYY'), workId, userId, }
-        const { id, permissions } = localStore()
-        const loginId = parseInt(id)
-        const { LEAVE_REQUESTS } = JSON.parse(permissions)
-        const queryParams = `startDate=${query?.startDate}&endDate=${query?.endDate}&userId=${query?.userId}&workId=${query?.workId}`
+        const { paramRequestId, queryRequest } = this.state;
+        const { startDate, endDate, workId, userId } = queryRequest;
+        const query = { startDate: formatDate(startDate, true, 'DD-MM-YYYY'), endDate: formatDate(endDate, true, 'DD-MM-YYYY'), workId, userId, };
+        const { id, permissions } = localStore();
+        const loginId = parseInt(id);
+        const { LEAVE_REQUESTS } = JSON.parse(permissions);
+        const queryParams = `startDate=${query?.startDate}&endDate=${query?.endDate}&userId=${query?.userId}&workId=${query?.workId}`;
 
         Promise.all([ getManageProjects('LEAVE_REQUESTS'), getApprovalRequests(queryParams), getLineEmployees() ])
         .then(res => {
+
+            if(paramRequestId && res[1].success){ //selecting timesheet from queryparams
+                let length = res[1].data.length ?? 0
+                for(let i = 0; i<length; i++){
+                let data = res?.data?.[i] ?? {}
+                    if (data.id == paramRequestId ){
+                        this.requestSelect([data.id], [data])
+                        break; //break if timesheet found
+                    }
+                }
+            }
+
             this.setState({
                 WORKS: res[0].success? res[0].data : [],
                 loginId,
@@ -157,13 +173,13 @@ class ApproveRequest extends Component {
                 filterRequest: res[1].success? res[1].data : [],
                 USERS: res[2].success? res[2].data : [],
                 readRequest: false,
-            })
+            });
             
         })
         .catch(e => {
             console.log(e);
-        })
-    }
+        });
+    };
 
 
     getData = () =>{

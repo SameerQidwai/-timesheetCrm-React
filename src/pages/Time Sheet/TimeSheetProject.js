@@ -5,7 +5,7 @@ import { DownloadOutlined, SaveOutlined, ExclamationCircleOutlined, PaperClipOut
 import moment from "moment";
 import AttachModal from "./Modals/AttachModal";
 import {  getList, reviewTimeSheet, getMilestones, getUsersTimesheet  } from "../../service/timesheet"
-import { Api, dateClosed, localStore, R_STATUS, STATUS_COLOR } from "../../service/constant";
+import { Api, dateClosed, getParams, localStore, R_STATUS, STATUS_COLOR } from "../../service/constant";
 
 import "../styles/button.css";
 import TimeSheetPDF from "./Modals/TimeSheetPDF";
@@ -20,16 +20,18 @@ let modal = ""
 class TimeSheetProject extends Component {
     constructor() {
         super();
+        let {startDate, endDate, milestoneId, timesheetId} = getParams(window.location.search)
         this.state = {
             isAttach: false,
             sheetDates: {
-                startDate: moment().startOf("month"), 
-                endDate: moment().endOf("month"),
-                cMonth: moment()
+              startDate: startDate? moment(startDate, 'DD-MM-YYYY')  :moment().startOf('month'),
+              endDate: endDate? moment(endDate, 'DD-MM-YYYY'): moment().endOf('month'),
+              cMonth: endDate? moment(endDate, 'DD-MM-YYYY') : moment(),
             },
             timeObj: false,
+            paramTimesheetId: timesheetId??null,
             eData: [],
-            sMilestone: null,
+            sMilestone: milestoneId? parseInt(milestoneId): null,
             loginId: null,
             data: [ ],
             permissions: {},
@@ -189,21 +191,43 @@ class TimeSheetProject extends Component {
     }
 
     getSheet = () =>{
-        const { sMilestone } = this.state
-        const { startDate, endDate } = this.state.sheetDates
-        if(sMilestone){
-            getUsersTimesheet({mileId: sMilestone, startDate: startDate.format('DD-MM-YYYY'), endDate: endDate.format('DD-MM-YYYY')}).then(res=>{
-                this.setState({
-                    // timesheet: res.success ? res.data: {},
-                    data: (res.success && res.data) ? res.data?? []: [],
-                    sTimesheet: { // selected timesheet 
-                        timesheet: [], //  Timesheet Object 
-                        keys: [] // TimeSheet keys
-                    },
-                })
-            })
-        }
-        this.columns()
+      let { sMilestone, paramTimesheetId, timesheet, keys } = this.state
+      let { startDate, endDate } = this.state.sheetDates
+      startDate= startDate.format('DD-MM-YYYY');
+      endDate= endDate.format('DD-MM-YYYY');
+
+      if(sMilestone){
+        this.props.history.push(
+          {
+            pathname: 'time-sheet-approval',
+            search: `?startDate=${startDate}&endDate=${endDate}&milestoneId=${sMilestone}`
+          }
+        )
+          getUsersTimesheet({mileId: sMilestone, startDate, endDate}).then(res=>{
+            timesheet = []
+            keys = []
+            let length = res?.data?.length ?? 0
+            if (paramTimesheetId){ //selecting timesheet from queryparams
+              for(let i = 0; i<length; i++){
+                let data = res?.data?.[i] ?? {}
+                if (data.id == paramTimesheetId && (data.status === "AP" || data.status === "SB")){
+                  timesheet.push(data)
+                  keys.push(data.id)
+                  break; //break if timesheet found
+                }
+              }
+            }
+              this.setState({
+                  // timesheet: res.success ? res.data: {},
+                  data: (res.success && res.data) ? res.data?? []: [],
+                  sTimesheet: { // selected timesheet 
+                      timesheet, //  Timesheet Object 
+                      keys // TimeSheet keys
+                  },
+              })
+          })
+      }
+      this.columns()
     }
 
     columns = () =>{
@@ -313,7 +337,6 @@ class TimeSheetProject extends Component {
     };
 
     openAttachModal = (record, index) =>{
-        console.log(record, index);
         let timeObj = {}
         if(index >= 0){
             timeObj = {
@@ -508,6 +531,7 @@ class TimeSheetProject extends Component {
                   mode="month"
                   picker="month"
                   format="MMM-YYYY"
+                  value={sheetDates.cMonth}
                   onChange={(value) => {
                     this.setState(
                       {

@@ -5,6 +5,7 @@ import { Link, Redirect, withRouter } from "react-router-dom";
 
 import "../Styles/Navbar.css";
 import { localStore } from "../../service/constant";
+import NotificationIcon from "../Core/Notification/NotificationIcon";
 
 const NavItem = [
     {
@@ -145,8 +146,9 @@ class Navbar extends Component {
                 >
                     <Row justify="space-between" style={{marginRight: 16}}>
                         <Col>{this.getNavMenuItems(allowedNavItem)}</Col>
-                        {permissions['ADMIN_OPTIONS'] && permissions['ADMIN_OPTIONS']['READ'] ? <Col xs={{ span: 2 }} md={{ span: 2 }}>
+                        {permissions['ADMIN_OPTIONS'] && permissions['ADMIN_OPTIONS']['READ'] ? <Col >
                             <Space size="large">
+                                <NotificationIcon/>
                                 <Link
                                     to={{ pathname:"https://timewize.au/help-centre/"}}
                                     target='_blank'
@@ -169,6 +171,7 @@ class Navbar extends Component {
                         </Col>: 
                         <Col>
                             <Space size="large">
+                                <NotificationIcon/>
                                 <Link
                                     to= {{ pathname:"https://timewize.au/help-centre/"}}
                                     target='_blank'

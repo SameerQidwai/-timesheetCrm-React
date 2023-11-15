@@ -425,3 +425,23 @@ export const disableAllFields = (fields) =>{
     return el;
   });
 }
+
+export const getParams = (params)=>{
+  let urlParams = new URLSearchParams(params);
+  let allParams = {};
+  urlParams = urlParams?? '';
+
+  urlParams.forEach((value, key) => {
+    allParams[key] = value;
+  });
+
+  return allParams
+}
+
+export const ellipsis = (str, fixed)=>{
+  if (str){
+      str = `${str}`
+      return `${str.substring(0,fixed)}${`${str}`.length>fixed ?'\u2026':''}`
+  }
+  return '--'
+}

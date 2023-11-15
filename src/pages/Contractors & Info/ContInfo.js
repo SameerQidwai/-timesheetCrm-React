@@ -34,9 +34,11 @@ const { Item } = Descriptions;
 const { TabPane } = Tabs;
 
 class ContInfo extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+    let hash = props.location.hash.substring(1);
     this.state = {
+      defaultTabKey: hash,
       infoModal: false,
       editCont: false,
       data: {},
@@ -96,7 +98,7 @@ class ContInfo extends Component {
   };
 
   render() {
-    const { data, infoModal, editCont, permissions, notAuth } = this.state;
+    const { data, infoModal, editCont, permissions, notAuth, defaultTabKey } = this.state;
     const DescTitle = (
       <Row justify="space-between">
         <Col>Basic Information</Col>
@@ -202,7 +204,7 @@ class ContInfo extends Component {
           <Tabs
             type="card"
             style={{ marginTop: '50px' }}
-            // defaultActiveKey="1"
+            defaultActiveKey={defaultTabKey}
           >
             <TabPane tab="Projects" key="projects">
               <Projects

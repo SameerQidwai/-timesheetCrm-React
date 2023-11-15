@@ -6,13 +6,14 @@ import { expensesData } from './DummyData';
 import { expenseSheetActions, getExpenseSheets } from '../../service/expenseSheet-Apis';
 import { getListOfExpenses } from '../../service/expense-Apis';
 import { generalDelete } from "../../service/delete-Api\'s";
-import { dateClosed, formatCurrency, formatDate, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
+import { dateClosed, formatCurrency, formatDate, getParams, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
 import { tableSorter, tableTitleFilter } from '../../components/Core/Table/TableFilter';
 import {Tag_s} from '../../components/Core/Custom/Index';
 
 const { Title } =  Typography
 
 const ExpenseSheet = (props) => {
+  let {sheetId} = getParams(window.location.search)
   const [selectedRows, setSelectedRows] = useState({keys: [], data: []});
   const [openModal, setOpenModal] = useState(false);
   const [expenseSheet, setExpenseSheet] = useState({data:[], filtered: []});
