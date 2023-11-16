@@ -52,7 +52,6 @@ export const getRecentNotifications = (redirect) => {
                     }
                 });
             }  
-            setToken(res?.headers?.authorization)
             return { success, data, counter };
         })
         .catch((err) => {
