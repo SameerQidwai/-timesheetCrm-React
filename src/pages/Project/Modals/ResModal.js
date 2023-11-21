@@ -130,7 +130,10 @@ class ResModal extends Component {
           rules:[{ required: true, message: 'Resource is Required' }],
           data: [],
           type: "Select",
-          onChange: (value, option)=> { this.checkRates(value, option) }
+          onChange: (value, option)=> { 
+            const { obj: { startDate }, } = this.formRef.current.getFieldValue();
+            this.checkRates(option, startDate) 
+          }
         },
         {
           Placeholder: "Start Date",
@@ -167,7 +170,9 @@ class ResModal extends Component {
             const {
               obj: { startDate, endDate, effortRate },
             } = this.formRef.current.getFieldValue();
-            this.setBilHouRate(startDate, endDate, effortRate);;
+
+            this.setBilHouRate(startDate, endDate, effortRate);
+            this.checkRates(this?.state?.selectedRes, startDate);
           }
         },
         {
@@ -187,6 +192,7 @@ class ResModal extends Component {
             const {
               obj: { startDate, endDate, effortRate },
             } = this.formRef.current.getFieldValue();
+
             this.setBilHouRate(startDate, endDate, effortRate);
           }
         },
@@ -296,14 +302,14 @@ class ResModal extends Component {
   }
   // end 
 
-  checkRates = (value, option)=>{
-    if (value){
-      if (option.label.includes('Employee')){
-        this.getRates('employees', value)
-      }else if (option.label.includes('Sub Contractor')){
-        this.getRates('sub-contractors', value)
+  checkRates = (resource, startDate)=>{
+    if (resource?.value){
+      if (resource.label.includes('Employee')){
+        this.getRates('employees', resource, startDate)
+      }else if (resource.label.includes('Sub Contractor')){
+        this.getRates('sub-contractors', resource, startDate)
       }else{
-        this.setRates('No Active Contract', 'No Active Contract')
+        this.setRates('No Active Contract', 'No Active Contract', resource)
       }
     }else{
       this.setRates(undefined, undefined)
@@ -311,21 +317,27 @@ class ResModal extends Component {
     
   }
 
-  getRates = (crud, id) =>{
+  getRates = (crud, resource, allocationStartDate) =>{
     const {cmRate} = this.props
-    buyCost(crud, id, 'contactPerson').then(res=>{
+    let id = resource?.value
+    allocationStartDate = formatDate(allocationStartDate, true, 'YYYY-MM-DD')
+    buyCost(crud, id, 'contactPerson', allocationStartDate).then(res=>{
       if(res.success){
           let {employeeBuyRate} = res.data
-          this.setRates(formatCurrency(employeeBuyRate), formatCurrency(employeeBuyRate/(1- (cmRate/100))))
+          let buyRate = formatCurrency(employeeBuyRate)
+          let sellRate = formatCurrency(employeeBuyRate/(1- (cmRate/100)))
+
+          this.setRates(buyRate, sellRate, resource)
       }
     })
   }
 
-  setRates = (buy, sell) =>{
+  setRates = (buy, sell, option) =>{
     const {ResourceFields} = this.state
     ResourceFields[16].suggestion = buy
     ResourceFields[17].suggestion = sell
-    this.setState({ResourceFields: [...ResourceFields] })
+
+    this.setState({ ResourceFields: [...ResourceFields], selectedRes: option });
   }
 
   openModal = () => {
@@ -424,7 +436,7 @@ class ResModal extends Component {
 
           this.setState({ ResourceFields, allocationId: allocationId, disabledFY},()=>{
             if (role) {
-              this.checkRates(contactPersonId, {label: role})
+              this.checkRates({value: contactPersonId,label: role}, startDate)
             }else{
               this.setRates('No Active Contract', 'No Active Contract')
             }

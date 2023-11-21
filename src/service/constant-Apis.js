@@ -513,9 +513,9 @@ export const getCalendarHolidaysFormat = () => {
 };
 
 
-export const buyCost = (url, id, searchIn) => {
+export const buyCost = (url, id, searchIn, allocationStartDate) => {
     return axios
-        .get(`${Api}/${url}/${id}/buy-cost?searchIn=${searchIn}`, {headers:headers()})
+        .get(`${Api}/${url}/${id}/buy-cost?searchIn=${searchIn}&startDate=${allocationStartDate}`, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
