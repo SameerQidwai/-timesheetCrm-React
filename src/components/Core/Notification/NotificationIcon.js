@@ -6,6 +6,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { clearNotification, getNotifications, getRecentNotifications, markAsRead, markAsUnRead } from '../../../service/notification-Apis';
 import { ellipsis, formatDate } from '../../../service/constant';
 import moment from 'moment';
+import { loggedIn } from '../../../service/Login-Apis';
 
 
 const AlertIcon = {
@@ -25,16 +26,10 @@ function NotificationIcon() {
   const [notify, setNotify] = useState([]);
 
   useEffect(() => {
-    get();
-    Indicator();
-    // const intervalId = setInterval(() => {
-    //   getRecentNotifications(history).then(res=>{
-    //     if(res.success){
-    //       setCount(res.counter)
-    //       setNotify((prev) => [...res.data, ...prev]);
-    //     }
-    //   })
-    // }, 10000);
+    if (loggedIn === true){
+      get();
+      Indicator();
+    }
 
     return () => {
       // clearInterval(intervalId); // Clear the interval when the component unmounts
