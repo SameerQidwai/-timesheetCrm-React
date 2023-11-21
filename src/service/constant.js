@@ -178,8 +178,11 @@ export const formatDate = (date, string, format) => {
 // Login and Api's
 
 export const setToken = (token) => {
-  localStorage.setItem('accessToken', token ?? localStore().accessToken);
-  localStorage.setItem('jwtTimer', new Date().getTime());
+  let {accessToken } = localStore()
+  if (token || accessToken){
+    localStorage.setItem('accessToken', token ?? accessToken);
+    localStorage.setItem('jwtTimer', new Date().getTime());
+  }
 };
 
 export const localStore = () => {

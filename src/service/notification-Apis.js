@@ -35,7 +35,7 @@ export const getRecentNotifications = (redirect) => {
             if (success){
                 counter = data.length
                 data= data.filter(notify => {
-                    if(Math.abs(moment().utcOffset(0, true).diff(formatDate(notify.createdAt)), 'seconds')  <= 10000){
+                    if(Math.abs(moment().utcOffset(0, true).diff(formatDate(notify.createdAt)), 'seconds')  <= 60000){
                     notification.info({
                         message: notify.title,
                         description: notify.content,
@@ -52,7 +52,6 @@ export const getRecentNotifications = (redirect) => {
                     }
                 });
             }  
-            setToken(res?.headers?.authorization)
             return { success, data, counter };
         })
         .catch((err) => {
