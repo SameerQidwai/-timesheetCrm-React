@@ -26,7 +26,7 @@ function NotificationIcon() {
   const [notify, setNotify] = useState([]);
 
   useEffect(() => {
-    if (loggedIn === true){
+    if (loggedIn() === true){
       get();
       Indicator();
     }
@@ -45,7 +45,7 @@ function NotificationIcon() {
       };
       indicatorTimeout.current = setTimeout(() => {
         Indicator()
-      }, 100000);
+      }, 60000);
     });
   };
 
