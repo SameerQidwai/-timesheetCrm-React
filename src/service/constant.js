@@ -15,7 +15,7 @@ import { message as messageAlert } from 'antd';
 // export const Api = "http://192.168.0.110:3301/api/v1"; // TrunRajPal Home
 // export const Api = "http://192.168.0.244:3301/api/v1"; // TrunRajPal Office
 
-export const Api = "http://3.239.21.153:8000/api/v1"; //live api
+export const Api = "http://3.233.222.83:8000/api/v1"; //live api
 
 export const O_STAGE = {
   L: 'Lead',
