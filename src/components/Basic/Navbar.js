@@ -182,7 +182,7 @@ class Navbar extends Component {
                         
                     </Row>
                 </div>
-                {logout && <Redirect to={{ pathname: '/'}} /> }
+                {logout && <Redirect to={{ pathname: '/logout'}} /> }
             </nav>
         );
     }

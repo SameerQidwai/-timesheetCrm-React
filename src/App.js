@@ -1,5 +1,5 @@
 import React, { createContext } from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'; // Route Library
+import { BrowserRouter as Router, Route, Switch, useLocation } from 'react-router-dom'; // Route Library
 import Layout from './components/Basic/Drawer/Sidebar';
 import Login from './pages/Login/Login';
 import ForgotPassword from './pages/ResetPassword/ForgotPassword';
@@ -11,7 +11,7 @@ function App() {
   const appRoutes = [
     {
       name: 'Login',
-      path: '/',
+      path: '/login',
       component: <Login />,
     },
     {
