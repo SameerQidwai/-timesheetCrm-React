@@ -45,7 +45,7 @@ function ActivityCounter(props) {
                     style={{textAlign: "center"}} valueStyle={{color: "red"}} 
                     />
             </Modal>
-            {logout && <Redirect to={{ pathname: '/'}} /> }
+            {logout && <Redirect to={{ pathname: '/logout'}} /> }
         </div>
     )
 }
