@@ -5,7 +5,7 @@ import { DownloadOutlined, SaveOutlined, LoadingOutlined, PlusCircleOutlined, Mo
     LeftOutlined, RightOutlined,ExclamationCircleOutlined, CheckCircleOutlined, PaperClipOutlined, AuditOutlined, DiffFilled } from "@ant-design/icons"; //Icons
 import TimeModal from "./Modals/TimeModal"
 import AttachModal from "./Modals/AttachModal";
-import {  getList, reviewTimeSheet, getUsers, deleteTime,  } from "../../service/timesheet"
+import {  getList, reviewTimeSheet, getUsers, deleteTime, getPdf,  } from "../../service/timesheet"
 import { getCalendarHolidaysFormat, getUserMilestones } from "../../service/constant-Apis";
 import { localStore, Api, thumbUrl, STATUS_COLOR, R_STATUS, formatFloat, getModulePermissions, dateClosed } from "../../service/constant";
     
@@ -14,6 +14,7 @@ import "../styles/button.css";
 import TimeSheetPDF from "./Modals/TimeSheetPDF";
 import { Tag_s } from "../../components/Core/Custom/Index";
 import BulkModal from "./Modals/BulkModal";
+import { downloadReportFile } from "../../service/reports-Apis";
 
 const { Title, Link: Tlink, Text} = Typography;
 //inTable insert
@@ -24,6 +25,7 @@ class TimeSheetContact extends Component {
 
     this.state = {
       isVisible: false,
+      inProgress: false,
       proVisible: false,
       isAttach: false,
       sheetDates: {
@@ -696,14 +698,24 @@ class TimeSheetContact extends Component {
 
   exporPDF = (entryId) => {
     const keys = entryId ? [entryId] : this.state?.sTimesheet?.keys;
-    if (keys) {
-      this.setState({
-        eData: keys,
-        isDownload: true,
-      });
-    } else {
-      this.exportUploadError();
-    }
+    const data = {milestoneEntryIds: keys}
+    // if (keys) {
+    //   this.setState({
+    //     eData: keys,
+    //     isDownload: true,
+    //   });
+    // } else {
+    //   this.exportUploadError();
+    // }
+    getPdf(data).then(res=>{
+      this.setState({inProgress: true})
+      if(res.success){
+        downloadReportFile(res.data, res.name)
+        this.setState({inProgress: false})
+      }
+    }).catch(err =>{
+      this.setState({inProgress: false})
+    })
   };
 
   summaryFooter = (data) => {
@@ -881,7 +893,7 @@ class TimeSheetContact extends Component {
 
 
   render() {
-    const { loading, data, isVisible, proVisible, columns, editTime, timeObj, sheetDates, milestones, sMilestone, isAttach, isBulk, isDownload, eData, USERS, sUser, loginId, sTMilestones, permissions, } = this.state;
+    const { loading, data, isVisible, proVisible, columns, editTime, timeObj, sheetDates, milestones, sMilestone, isAttach, isBulk, isDownload, eData, USERS, sUser, loginId, sTMilestones, permissions, inProgress } = this.state;
     // delete button disable condition
     const canDelete =
       sTMilestones.keys.length < 1 &&
@@ -995,6 +1007,7 @@ class TimeSheetContact extends Component {
           size="small"
           style={{ maxHeight: 'fit-content' }}
           className="timeSheet-table fs-small"
+          loading={inProgress}
           rowSelection={{
             //multiple select commented
             onChange: (selectedRowKeys, selectedRows) => {
@@ -1088,12 +1101,12 @@ class TimeSheetContact extends Component {
             close={() => this.setState({ isBulk: false })}
           />
         )}
-        {isDownload && (
+        {/* {isDownload && (
           <TimeSheetPDF
             milestoneEntryId={eData}
             close={() => this.setState({ isDownload: false })}
           />
-        )}
+        )} */}
         {proVisible && ( // if Project gets remove remove this
           <Modal
             title="Add Project"

@@ -4,13 +4,14 @@ import { Row, Col, Table, Button, Select, Typography, Modal, DatePicker, Space, 
 import { DownloadOutlined, SaveOutlined, ExclamationCircleOutlined, PaperClipOutlined, CheckCircleOutlined, AuditOutlined } from "@ant-design/icons"; //Icons
 import moment from "moment";
 import AttachModal from "./Modals/AttachModal";
-import {  getList, reviewTimeSheet, getMilestones, getUsersTimesheet  } from "../../service/timesheet"
+import {  getList, reviewTimeSheet, getMilestones, getUsersTimesheet, getPdf  } from "../../service/timesheet"
 import { Api, dateClosed, localStore, R_STATUS, STATUS_COLOR } from "../../service/constant";
 
 import "../styles/button.css";
 import TimeSheetPDF from "./Modals/TimeSheetPDF";
 import { Tag_s } from "../../components/Core/Custom/Index";
 import { getCalendarHolidaysFormat } from "../../service/constant-Apis";
+import { downloadReportFile } from "../../service/reports-Apis";
 
 const { Title, Link: Tlink, Text } = Typography;
 //inTable insert
@@ -22,6 +23,7 @@ class TimeSheetProject extends Component {
         super();
         this.state = {
             isAttach: false,
+            inProgress: false,
             sheetDates: {
                 startDate: moment().startOf("month"), 
                 endDate: moment().endOf("month"),
@@ -338,11 +340,21 @@ class TimeSheetProject extends Component {
     }
 
     exporPDF = (entryIds) =>{
-        console.log(entryIds);
-        this.setState({
-            eData:  entryIds,
-            isDownload: true
-        })   
+        // console.log(entryIds);
+        // this.setState({
+        //     eData:  entryIds,
+        //     isDownload: true
+        // })   
+        const data = {milestoneEntryIds: entryIds}
+        getPdf(data).then(res=>{
+          this.setState({inProgress: true})
+          if(res.success){
+            downloadReportFile(res.data, res.name)
+            this.setState({inProgress: false})
+          }
+        }).catch(err =>{
+          this.setState({inProgress: false})
+        })
     }
 
     summaryFooter = (data) =>{
@@ -464,7 +476,7 @@ class TimeSheetProject extends Component {
     }
 
     render() {
-        const {  data,   columns,  timeObj,  milestones, sMilestone, isAttach, isDownload, eData, sTimesheet, permissions, sheetDates } = this.state
+        const {  data,   columns,  timeObj,  milestones, sMilestone, isAttach, isDownload, eData, sTimesheet, permissions, sheetDates, inProgress } = this.state
         return (
           <>
             <Row justify="space-between">
@@ -531,6 +543,7 @@ class TimeSheetProject extends Component {
               size="small"
               style={{ maxHeight: 'fit-content' }}
               className="timeSheet-table fs-small"
+              loading={inProgress}
               rowSelection={{
                 //multiple select commented
                 selectedRowKeys: sTimesheet.keys,
@@ -632,12 +645,12 @@ class TimeSheetProject extends Component {
                 close={() => this.setState({ isAttach: false, timeObj: false })}
               />
             )}
-            {isDownload && (
+            {/* {isDownload && (
               <TimeSheetPDF
                 milestoneEntryId={eData}
                 close={() => this.setState({ isDownload: false })}
               />
-            )}
+            )} */}
           </>
         );
     }
