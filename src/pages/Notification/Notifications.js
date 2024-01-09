@@ -29,10 +29,10 @@ import { ellipsis, formatDate } from '../../service/constant';
 import moment from 'moment';
 
 const AlertIcon = {
-  1: { icon: <BellOutlined />, color: '#1890ff' },
-  2: { icon: <InfoOutlined />, color: '' },
-  3: { icon: <CheckOutlined />, color: '#4caf50' },
-  4: { icon: <CloseOutlined />, color: 'red' },
+  0: { icon: <BellOutlined />, color: '#1890ff' },
+  1: { icon: <InfoOutlined />, color: '#1890ff' },
+  2: { icon: <CheckOutlined />, color: '#4caf50' },
+  3: { icon: <CloseOutlined />, color: 'red' },
 };
 
 function Notifications() {
