@@ -2,15 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { Link, NavLink, Redirect, useLocation } from 'react-router-dom';
 import { Row, Col, Typography, Input, Button, Form } from 'antd';
 import { login, loggedIn } from '../../service/Login-Apis';
-import { localStore } from '../../service/constant';
+import { getParams, localStore } from '../../service/constant';
 import { getSettings } from '../../service/global-apis';
 import { getAllFY } from '../../service/financial-year-apis';
 const { Title, Text } = Typography;
 const { Password } = Input;
 
 function Login(props) {
-  const { state } = useLocation();
-  const { from } = state || { from: { pathname: '/dashboard' } };
+  const location = useLocation();
+  const  from =location?.search?.replace("?redirect=/", "") ?? '/dashboard';
   const [redirectToReferrer, setRedirectToReferrer] = useState(false);
 
   useEffect(() => {
@@ -40,7 +40,7 @@ function Login(props) {
             });
             localStorage.setItem('closedYears', JSON.stringify(closedYears));
           }
-          window.location.href = '/dashboard';
+          window.location.href = `/${from}`;
         });
       }
     });

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Redirect } from "react-router-dom"; // Route Library
+import { Redirect, useLocation } from "react-router-dom"; // Route Library
 import { Layout } from "antd";
 import AdminContent from './AdminContent'
 import { loggedIn, refreshToken } from "../../../service/Login-Apis";
@@ -11,9 +11,12 @@ const { Content } = Layout;
 
 // class PrivateRoute extends Component {
 function PrivateRoute (props) {
-    const [ lastActivity, setLastActivity ] = useState(false)
-    const [login, setLogin ] =useState(false)
-    const [openLogin, setOpenLogin ] =useState(false)
+    const location = useLocation();
+    let redirect = `${location?.pathname ?? ''}${location?.search ?? ''}`;
+    const [ lastActivity, setLastActivity ] = useState(false);
+    const [login, setLogin ] =useState(false);
+    const [openLogin, setOpenLogin ] =useState(false);
+
 
     useEffect(() => {
         // gotta do it to check right after the page is refreshed
@@ -36,59 +39,66 @@ function PrivateRoute (props) {
     const refresh = () => {
         refreshToken().then(res=>{
             if(res.success){
-                setLastActivity(false)
+                setLastActivity(false);
             }else{
-                localStorage.clear()
-                setLogin(true)
-                setOpenLogin(false)
-                setLogin(false)
+                localStorage.clear();
+                setLogin(true);
+                setOpenLogin(false);
+                setLogin(false);
             }
-        })
+        });
     }
     
     const ActivityTimeOut = () =>{
-        setLogin(true)
-        setLastActivity(false)
-        setOpenLogin(false)
-        setLogin(false)
+        setLogin(true);
+        setLastActivity(false);
+        setOpenLogin(false);
+        setLogin(false);
     }
 
 
     const closeLogin = () =>{
-        localStorage.removeItem('jwtExpired')
-        setLogin(true)
-        setOpenLogin(false)
-        setLogin(false)
+        localStorage.removeItem('jwtExpired');
+        setLogin(true);
+        setOpenLogin(false);
+        setLogin(false);
     }
 
     return (
-        <div className="site-layour-frame">
-            <Content
-                className="site-layout-background layout-content-custom"
-            >
-            {loggedIn() ==='jwtExpired' || loggedIn() === true ? 
-                <AdminContent /> 
-                :
-                <Redirect to={{ pathname: '/'}} /> }
-                {/* {!stopTime&&restActivity()} */}
-
-
-                {lastActivity && 
-                    <ActivityCounter 
-                        visible={lastActivity}
-                        refresh={()=>refresh()} 
-                        timeOut={()=>ActivityTimeOut()}
-                    /> 
-                }
-
-                {/* {loggedIn() ==='jwtExpired'&& */} {/** if activity login do something fuzzy uncomment this */}
-                    <ActivityLogin 
-                        visible={loggedIn() ==='jwtExpired' || openLogin} 
-                        close={()=>{closeLogin()}}
-                    /> 
-                {/* } */}
-            </Content>
-        </div>
+      <div className="site-layour-frame">
+        <Content className="site-layout-background layout-content-custom">
+          {loggedIn() === 'jwtExpired' || loggedIn() === true ? (
+            <AdminContent />
+          ) : (
+            <Redirect
+              to={{
+                pathname: '/login',
+                search:
+                  location?.pathname !== '/logout'
+                    ? `?redirect=${redirect}`
+                    : '',
+              }}
+            />
+          )}
+          {/* {!stopTime&&restActivity()} */}
+          {lastActivity && (
+            <ActivityCounter
+              visible={lastActivity}
+              refresh={() => refresh()}
+              timeOut={() => ActivityTimeOut()}
+            />
+          )}
+          {/* {loggedIn() ==='jwtExpired'&& */}{' '}
+          {/** if activity login do something fuzzy uncomment this */}
+          <ActivityLogin
+            visible={loggedIn() === 'jwtExpired' || openLogin}
+            close={() => {
+              closeLogin();
+            }}
+          />
+          {/* } */}
+        </Content>
+      </div>
     );
 }
 export default PrivateRoute;
