@@ -349,7 +349,11 @@ class TimeSheetProject extends Component {
         getPdf(data).then(res=>{
           this.setState({inProgress: true})
           if(res.success){
-            downloadReportFile(res.data, res.name)
+            let {files: fileUrl, timesheets} = res.data
+            let timesheet = timesheets?.[0] ?? {}
+            let employee = timesheets?.length === 1 ? timesheet.employee : 'timesheets'
+            let name = `${employee} - ${timesheet.period}__`
+            downloadReportFile(fileUrl, name)
             this.setState({inProgress: false})
           }
         }).catch(err =>{

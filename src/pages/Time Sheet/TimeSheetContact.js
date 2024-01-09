@@ -710,7 +710,10 @@ class TimeSheetContact extends Component {
     getPdf(data).then(res=>{
       this.setState({inProgress: true})
       if(res.success){
-        downloadReportFile(res.data, res.name)
+        let {files: fileUrl, timesheets} = res.data
+        let timesheet = timesheets?.[0]
+        let name = `${timesheet.employee} - ${timesheet.period}__`
+        downloadReportFile(fileUrl, name)
         this.setState({inProgress: false})
       }
     }).catch(err =>{
