@@ -73,7 +73,7 @@ const CertificatePdf = (props) =>{
                         </Descriptions>
                     </Col>
                     <Col span={11}>                 {/* <!--Name__Logo-->*/}
-                        <Typography.Title level={5}>P. Ventures Representative:</Typography.Title> 
+                        <Typography.Title level={5}>Tower Representative:</Typography.Title> 
                         <Descriptions column={1} bordered className='certficate-describe representative small'>
                             <Item label="Title and Name:" > </Item>
                             <Item label="Task Position:" ></Item>
