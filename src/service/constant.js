@@ -1,7 +1,7 @@
 import moment from 'moment';
 import 'moment-weekday-calc';
 import { message as messageAlert } from 'antd';
-export const Api = 'http://localhost:3301/api/v1';
+// export const Api = 'http://localhost:3301/api/v1';
 
 // export const Api = "http://onelmcrm.gaamatech.com:8000/api/v1";
 // export const Api = "http://192.168.0.243:3000/api/v1"; // Shahzaib/
@@ -15,8 +15,8 @@ export const Api = 'http://localhost:3301/api/v1';
 // export const Api = "http://192.168.0.110:3301/api/v1"; // TrunRajPal Home
 // export const Api = "http://192.168.0.244:3301/api/v1"; // TrunRajPal Office
 
-// export const Api = 'http://54.252.219.4:8000/api/v1'; //profectus api
-// export const Api = 'https://api-profectus-ventures.timewize.com.au/api/v1'; //profectus api
+export const Api = 'http://54.79.212.236:8000/api/v1'; //tower api
+// export const Api = 'https://api-tower-ventures.timewize.com.au/api/v1'; //profectus api
 
 export const O_STAGE = {
   L: 'Lead',
