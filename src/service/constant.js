@@ -15,8 +15,8 @@ import { message as messageAlert } from 'antd';
 // export const Api = "http://192.168.0.110:3301/api/v1"; // TrunRajPal Home
 // export const Api = "http://192.168.0.244:3301/api/v1"; // TrunRajPal Office
 
-export const Api = 'http://54.79.212.236:8000/api/v1'; //tower api
-// export const Api = 'https://api-towers-group.timewize.com.au/api/v1'; //profectus api
+// export const Api = 'http://54.79.212.236:8000/api/v1'; //tower api
+export const Api = 'https://api-towers-group.timewize.com.au/api/v1'; //towers api
 
 export const O_STAGE = {
   L: 'Lead',
