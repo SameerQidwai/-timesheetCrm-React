@@ -1,3 +1,4 @@
+check <!--Name__Logo--> before pushing for each branch
 $env:NODE_OPTIONS = "--openssl-legacy-provider"
 ONELEM
     line 38 certificatepdf

@@ -15,7 +15,7 @@ class TimeModal extends Component {
 
         this.state = {
             loading: false,
-            permissions: {},
+            // permissions: {},
             TimeFields:{
                 // Add new Time break and table in time-sheet
                 formId: "time_form",
@@ -87,13 +87,13 @@ class TimeModal extends Component {
     }
 
     componentDidMount = () => {
-        const { editTime, userId } = this.props
-        const { TIMESHEETS }= JSON.parse(localStore().permissions)
-        this.setState({ permissions: TIMESHEETS },()=>{
-            if (TIMESHEETS['UPDATE']) {
-                this.getRecord(userId, editTime ? editTime :{startTime: moment('9:00', ["HH:mm"]), endTime: moment('18:00', ["HH:mm"])} );
-            }
-        })
+        const { editTime, userId, canUpdate } = this.props
+        // const { TIMESHEETS }= JSON.parse(localStore().permissions)
+        // this.setState({ permissions: TIMESHEETS },()=>{
+        if (canUpdate) {
+            this.getRecord(userId, editTime ? editTime :{startTime: moment('9:00', ["HH:mm"]), endTime: moment('18:00', ["HH:mm"])} );
+        }
+        // })
     };
 
     submit = () => {
@@ -159,9 +159,9 @@ class TimeModal extends Component {
 
  
     render() {
-        const { editTime, visible, close, timeObj } = this.props;
-        const { TimeFields, loading, permissions } = this.state;
-        const popup = editTime? permissions['UPDATE']&& visible: permissions['ADD']&& visible
+        const { editTime, visible, close, timeObj, canUpdate, canAdd } = this.props;
+        const { TimeFields, loading } = this.state;
+        const popup = editTime? (canUpdate&& visible): (canAdd&& visible)
         return (
             <Modal
                 title={<Row>
@@ -176,10 +176,8 @@ class TimeModal extends Component {
                 onCancel={close}
                 width={540}
                 footer={[
-                    // <Button type="primary"  danger disabled={!editTime || !permissions['DELETE']} style={{float: "left"}} onClick={this.handleDelete}> Delete </Button>,
                     <Button key="cancel" onClick={close}> Cancel </Button>,
-                    <Button key="ok" type="primary" loading={loading}  onClick={() => { this.submit(); }}> Save </Button>,
-                    
+                    <Button key="ok" type="primary" loading={loading} disabled={!canUpdate|| !canAdd} onClick={() => { this.submit(); }}> Save </Button>,                    
                   ]}
             >
                 <Form
