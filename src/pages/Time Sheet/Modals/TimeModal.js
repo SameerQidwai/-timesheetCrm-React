@@ -87,7 +87,8 @@ class TimeModal extends Component {
     }
 
     componentDidMount = () => {
-        const { editTime, userId, canUpdate } = this.props
+        const { editTime, userId, canUpdate, visible } = this.props
+        console.log(canUpdate)
         // const { TIMESHEETS }= JSON.parse(localStore().permissions)
         // this.setState({ permissions: TIMESHEETS },()=>{
         if (canUpdate) {

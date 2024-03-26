@@ -4,7 +4,7 @@ import { DeleteOutlined, LoadingOutlined, PlusOutlined } from "@ant-design/icons
 import FormItems, { phoneNormalize } from "../../../components/Core/Forms/FormItems";
 import { addList, getRecord, editList } from "../../../service/contractors";
 import { getContactRecord } from "../../../service/conatct-person";
-import { getOrganizations, getOrgPersons, getRoles, getStates } from "../../../service/constant-Apis";
+import { getCalendars, getOrganizations, getOrgPersons, getRoles, getStates } from "../../../service/constant-Apis";
 import { addFiles } from "../../../service/Attachment-Apis";
 import { DURATION, dateClosed, dateRange, disableAllFields, formatDate, localStore } from "../../../service/constant";
 
@@ -344,7 +344,7 @@ class InfoModal extends Component {
                     Placeholder: "Contract End Date",
                     fieldCol: 12,
                     size: "small",
-                    rangeMin: true,
+                    // rangeMin: true,
                     type: "Text",
                     labelAlign: "right",
                     
@@ -377,12 +377,12 @@ class InfoModal extends Component {
                     size: "small",
                     type: "DatePicker",
                     fieldStyle: { width: "100%" },
-                    rules: [
-                        {
-                            required: true,
-                            message: "End Date is Required",
-                        },
-                    ],
+                    // rules: [
+                    //     {
+                    //         required: true,
+                    //         message: "End Date is Required",
+                    //     },
+                    // ],
                     itemStyle: { marginBottom: 1 },
                     rangeMax: (current)=>{
                         const { billing } = this.formRef.current.getFieldValue();
@@ -463,11 +463,18 @@ class InfoModal extends Component {
                 {
                     Placeholder: "Work Days In A Week",
                     rangeMin: true,
-                    fieldCol: 18,
+                    fieldCol: 6,
                     size: "small",
                     type: "Text",
                     labelAlign: "right",
                     // itemStyle:{marginBottom:'10px'},
+                },
+                {
+                    Placeholder: 'Employee Calendar',
+                    fieldCol: 12,
+                    size: 'small',
+                    type: 'Text',
+                    labelAlign: 'right',
                 },
                 {
                     object: "billing",
@@ -499,6 +506,15 @@ class InfoModal extends Component {
                     // ],
                     fieldStyle: { width: "100%" },
                     rules: [ { required: true, message: "Work Days are Required", }, ],
+                    itemStyle: { marginBottom: 10 },
+                },
+                {
+                    object: 'billing',
+                    fieldCol: 12,
+                    key: 'calendarId',
+                    size: 'small',
+                    data: [],
+                    type: 'Select',
                     itemStyle: { marginBottom: 10 },
                 },
                 {
@@ -563,24 +579,34 @@ class InfoModal extends Component {
 
     fetchAll = (edit) =>{
         const getManagerUrl = `helpers/contact-persons?organizationId=1&active=1&employee=1`
-        Promise.all([ getStates(), getRoles(), edit ? this.getRecord(edit) : getOrganizations(), getOrgPersons(getManagerUrl)])
-        .then(res => {
-            const { BasicFields, ManagerFields, BillingFields } = this.state
+        Promise.all([
+          getStates(),
+          getRoles(),
+          edit ? this.getRecord(edit) : getOrganizations(),
+          getOrgPersons(getManagerUrl),
+          getCalendars(),
+        ])
+          .then((res) => {
+            const { BasicFields, ManagerFields, BillingFields } = this.state;
             BasicFields[15].data = res[0].data;
             BasicFields[3].data = res[1].data;
             ManagerFields[1].data = res[3].data;
-            BillingFields[5].Placeholder = edit &&`Total Fee ${DURATION[res[2].paymentBase]}`
-                this.setState({
-                    BasicFields,
-                    ManagerFields,
-                    BillingFields,
-                    sUsername: edit ? res[2].username: null,
-                    ORGS: !edit ? res[2].data.filter((item) => item.value !== 1): [],
-                })
-        })
-        .catch(e => {
+            BillingFields[5].Placeholder = edit ? `Total Fee ${DURATION[res[2].paymentBase]}` : 'Total Fee';
+
+            BillingFields[13].data = res[4].data; // calendar dropdown data
+
+            this.setState({
+              BasicFields,
+              ManagerFields,
+              BillingFields,
+              sUsername: edit ? res[2].username : null,
+              ORGS: !edit ? res[2].data.filter((item) => item.value !== 1) : [],
+            });
+
+          })
+          .catch((e) => {
             console.log(e);
-        })
+          });
     }
     
 

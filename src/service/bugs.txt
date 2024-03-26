@@ -6,59 +6,7 @@ ONELEM
     line 114	timesheetPDF
     line 32 index.html public
 
-New bug Found
-    will need to make parseDate only in constant I did in bug-fixes branch but not here (HIGH)
-        
-    Milestone Certification (status)
 
-    Estimated Value update button (high)
-
-    Filters Form Backend (Low)
-
-    add link in resources, in mileston_view, in project opp list for milestone
-
-    https error !important
-
-    if permission changes or edit... what to do with the person if he is arleady Loggedin 
-        
-    in fields 5px every modal
-
-    logon on login 
-
-    
-
-    change fincial year as per in global if included 
-
-    FiltertagsNew 
-
-    change panelSkill Callback2 function as contactPerson/infoModal SkillCall function
-    change contactPerson/infoModal AssociateCall  function as contactPerson/infoModal SkillCall function
-    change admin/skill skillCall  function as contactPerson/infoModal SkillCall function
-
-
-    Suggestion:
-
-        standard skill name in dialof box opportuninty
-
-        change dateRangeAfter and dateRangeBefore functions with dateRange every range checking
-
-        do not save Leave_request where it is 0 and render into ui when you are getting dates back
-
-        move inline css to stylesheet in comments
-
-        need to create only one or two resource component... generalize them for further use... 
-            {PMResources, OTResources, PTResources, OMResources}
-                make these four component into one or two only....
-
-      29/sep
-        date in profit and loss -> time prase
-        on link organization going to home page
-        others are on whatsapp salman -> 27/sep
-        unselect sideMenu on change link
-        counter in getting wrong
-
-Tagrget
-    Expense
 
 shortcut 
     class component
@@ -93,21 +41,5 @@ tableFilter.js not done
 filters on each page not done
 isoWeekdayCalc not done
 addRequestModal  not done
+ 
 
-
-timesheet permission disable own and manage 
-
-status milestone  (upload)
-    editable status ... from action 
-dashboard  
-miro Expense
-expense module
-Contact person View...
-    opportuninties 
-    comments ( if not on employee id)
-    
-    employee_Id
-    subcontracontor
-bug
-    expense route 
-    

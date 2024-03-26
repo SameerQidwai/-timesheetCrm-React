@@ -6,7 +6,7 @@ import FormItems from "../../../components/Core/Forms/FormItems";
 
 import { addList, editList, getRecord } from "../../../service/employee-contracts";
 import { addAttachments, addFiles } from "../../../service/Attachment-Apis";
-import { getLeavePolicy } from "../../../service/constant-Apis";
+import { getCalendars, getLeavePolicy } from "../../../service/constant-Apis";
 import { dateClosed, dateRange, disableAllFields, formatDate, localStore } from "../../../service/constant";
 
 class BillModal extends Component {
@@ -259,6 +259,22 @@ class BillModal extends Component {
                     itemStyle: { marginBottom: 1 },
                 },
                 {
+                    Placeholder: 'Employee Calendar',
+                    fieldCol: 24,
+                    size: 'small',
+                    type: 'Text',
+                    labelAlign: 'right',
+                },
+                {
+                    object: 'billing',
+                    fieldCol: 12,
+                    key: 'calendarId',
+                    size: 'small',
+                    data: [],
+                    type: 'Select',
+                    itemStyle: { marginBottom: 10 },
+                },
+                {
                     Placeholder: "Comments",
                     fieldCol: 24,
                     size: "small",
@@ -282,46 +298,13 @@ class BillModal extends Component {
         this.getData();
     };
 
-    onFinish = (vake) => {
-        // this will work after  getting the Object from level form
-        this.setState({loading: true,})
-        const {editCntrct, editEmp} = this.props
-        const { fileIds } = this.state
-        let { billing } = vake;
-        billing = { 
-            ...billing,
-            noOfHoursPer: 1,
-            remunerationAmountPer: billing.type === 1 ? 1 : 7,
-            startDate: formatDate(billing.startDate, true),
-            endDate: formatDate(billing.endDate, true),
-            employeeId: editEmp,
-            fileId: fileIds,
-            leaveRequestPolicyId: billing.leaveRequestPolicyId || null,
-    }
-
-        if (!editCntrct) {
-            this.addContract(billing); //add skill
-        } else {
-            this.editRecord(billing); //edit skill
-        }
-    };
-
-    addContract = (data) => {
-        const { callBack } = this.props;
-        addList(data).then(res=>{
-            this.setState({loading: false})
-            if(res.success){
-                callBack();
-            }
-        });
-    };
-
     getData = () => {
         const { editCntrct } = this.props
-        Promise.all([getLeavePolicy(), editCntrct && getRecord(editCntrct)])
+        Promise.all([getLeavePolicy(), editCntrct && getRecord(editCntrct), getCalendars()])
         .then(res => {
             let{BillingFields, disabledFY, disabledSY} = this.state
-            BillingFields[19].data = res[0].success ? res[0].data:[];
+            BillingFields[19].data = res[0].success ? res[0].data: [];
+            BillingFields[21].data = res[2].success ? res[2].data: [];
             const {success, data} = res[1]
             if (success){
                 BillingFields[13].Placeholder = data.type ===1 ? "Hourly Base Salary" : "Annual Base Salary"
@@ -349,6 +332,43 @@ class BillModal extends Component {
             })
         })        
     };
+
+    onFinish = (vake) => {
+        // this will work after  getting the Object from level form
+        this.setState({loading: true,})
+        const {editCntrct, editEmp} = this.props
+        const { fileIds } = this.state
+        let { billing } = vake;
+        billing = { 
+            ...billing,
+            noOfHoursPer: 1,
+            remunerationAmountPer: billing.type === 1 ? 1 : 7,
+            startDate: formatDate(billing.startDate, true),
+            endDate: formatDate(billing.endDate, true),
+            employeeId: editEmp,
+            fileId: fileIds,
+            leaveRequestPolicyId: billing.leaveRequestPolicyId || null,
+    }
+    // console.log(billing)
+
+        if (!editCntrct) {
+            this.addContract(billing); //add skill
+        } else {
+            this.editRecord(billing); //edit skill
+        }
+    };
+
+    addContract = (data) => {
+        const { callBack } = this.props;
+        addList(data).then(res=>{
+            this.setState({loading: false})
+            if(res.success){
+                callBack();
+            }
+        });
+    };
+
+    
 
     editRecord = (data) => {
         const { editCntrct, callBack } = this.props;

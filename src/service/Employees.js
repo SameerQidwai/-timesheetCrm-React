@@ -253,6 +253,7 @@ function reStructure(data) {
     remunerationAmountPer: employmentContracts.remunerationAmountPer,
     comments: employmentContracts.comments,
     leaveRequestPolicyId: employmentContracts.leaveRequestPolicyId ?? 0,
+    calendarId: employmentContracts.calendarId,
     fileId: employmentContracts.fileId,
     file: employmentContracts.fileId
       ? [

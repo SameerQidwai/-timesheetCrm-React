@@ -20,6 +20,7 @@ import {
 import FormItems, { phoneNormalize } from '../../../components/Core/Forms/FormItems';
 
 import {
+  getCalendars,
   getEmpPersons,
   getLeavePolicy,
   getOrgPersons,
@@ -762,6 +763,22 @@ class InfoModal extends Component {
           itemStyle: { marginBottom: 10 },
         },
         {
+          Placeholder: 'Employee Calendar',
+          fieldCol: 24,
+          size: 'small',
+          type: 'Text',
+          labelAlign: 'right',
+        },
+        {
+          object: 'billing',
+          fieldCol: 12,
+          key: 'calendarId',
+          size: 'small',
+          data: [],
+          type: 'Select',
+          itemStyle: { marginBottom: 10 },
+        },
+        {
           Placeholder: 'Comments',
           fieldCol: 24,
           size: 'small',
@@ -834,14 +851,19 @@ class InfoModal extends Component {
       getRoles(),
       edit ? this.getRecord(editEmp) : getOrgPersons(newConatactUrl),
       getLeavePolicy(),
-      getOrgPersons(managerUrl),
+      getCalendars(),
+      getOrgPersons(managerUrl)
     ])
       .then((res) => {
         const { BasicFields, BillingFields, ManagerFields } = this.state;
+
         BasicFields[15].data = res[0].data;
         BasicFields[3].data = res[1].data;
         BillingFields[19].data = res[3].data;
-        ManagerFields[1].data = res[4].data;
+        BillingFields[21].data = res[4].data;
+        ManagerFields[1].data = res[5].data;
+
+
         this.setState({
           BasicFields,
           BillingFields,
@@ -1164,11 +1186,13 @@ class InfoModal extends Component {
       taxFreeThreshold: bank.taxFreeThreshold,
       helpHECS: bank.helpHECS,
     };
+
     if (!this.props.editEmp) {
       this.addEmployee(values); //add skill
     } else {
       this.editRecord(values); //edit skill
     }
+
   };
 
   addEmployee = (data) => {
@@ -1248,21 +1272,9 @@ class InfoModal extends Component {
 
   render() {
     const { editEmp, visible, close } = this.props;
-    const {
-      BasicFields,
-      DetailFields,
-      KinFields,
-      BankFields,
-      BillingFields,
-      TrainFields,
-      ManagerFields,
-      CONTACT,
-      loading,
-      files,
-      activeKey,
-      disabledFY,
-      disabledSY
-    } = this.state;
+    const { BasicFields, DetailFields, KinFields, BankFields, BillingFields,
+      TrainFields, ManagerFields, CONTACT, loading, files, activeKey,
+      disabledFY, disabledSY } = this.state;
     return (
       <Modal
         title={editEmp ? 'Edit Employee' : 'Add Employee'}

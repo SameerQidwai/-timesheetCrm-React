@@ -551,3 +551,26 @@ export const getReverseCostCal = (type) => {
         });
 };
 
+
+export const getCalendars = () => {
+    return axios
+        .get(`${Api}/calendars`, {headers:headers()})
+        .then((res) => {
+            let { success, data= [], message } = res.data;
+            jwtExpired(message)
+            let defaultCalendar = 0
+            data = data.map((el) => {
+                defaultCalendar = el.isDefault ? el.id : defaultCalendar;
+                return {value: el.id, label: el.label}
+            });
+            return { success, data, defaultCalendar };
+        })
+        .catch((err) => {
+            return {
+                error: "Something went wrong while calling calendars to dropdown",
+                success: false,
+                message: err.message,
+                data: []
+            };
+        });
+};

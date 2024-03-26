@@ -42,10 +42,10 @@ const permissionOptions = {
     DELETE: ['ANY'],
   },
   TIMESHEETS: {
-    ADD: ['OWN'],
-    UPDATE: ['OWN'],
+    ADD: ['ANY', 'MANAGE', 'OWN'],
+    UPDATE: ['ANY', 'MANAGE', 'OWN'],
     READ: ['ANY', 'MANAGE', 'OWN'],
-    DELETE: ['OWN'],
+    DELETE: ['ANY', 'MANAGE', 'OWN'],
     APPROVAL: ['ANY', 'MANAGE'],
     UNAPPROVAL: ['ANY', 'MANAGE'],
   },

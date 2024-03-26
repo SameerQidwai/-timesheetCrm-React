@@ -193,6 +193,7 @@ function reStructure(data) {
     noOfHoursPer: employmentContracts.noOfHoursPer,
     remunerationAmount: employmentContracts.remunerationAmount,
     remunerationAmountPer: employmentContracts.remunerationAmountPer,
+    calendarId: employmentContracts.calendarId,
     comments: employmentContracts.comments,
     fileId: employmentContracts.fileId,
     file: employmentContracts.fileId
