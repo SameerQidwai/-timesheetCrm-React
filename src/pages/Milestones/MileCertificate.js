@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {  Menu, Button, Dropdown, Table, Tag, Popconfirm, Modal, Upload, Empty, Col, Select, Row, Typography, Tooltip } from "antd";
+import {  Menu, Button, Dropdown, Table, Tag, Popconfirm, Modal, Upload, Empty, Col, Select, Row, Typography, Tooltip, Checkbox } from "antd";
 import { SettingOutlined, PaperClipOutlined, DeleteOutlined, ExclamationCircleOutlined, CheckCircleOutlined } from "@ant-design/icons"; //Icons
 import { Link } from 'react-router-dom'
 
@@ -198,7 +198,7 @@ class MileCertificate extends Component {
         
     }
     fetchAll = () =>{
-        Promise.all([ getManageProjects('PROJECTS'), getApprovalMilestones() ])
+        Promise.all([ getManageProjects({resource: 'PROJECTS', phase:true}), getApprovalMilestones() ])
         .then(res => {
             const { permissions } = localStore()
             const { TIMESHEETS } = JSON.parse(permissions)
@@ -332,6 +332,16 @@ class MileCertificate extends Component {
             }
         })
     }
+
+    onCheckChanged = async({target}) =>{
+      let value = target.checked
+      let query = {resource: 'PROJECTS'} ;
+      if (!value){
+        query.phase =true
+      }
+      let res = await getManageProjects(query)
+      this.setState({milestones: res.success? res.data : [],})
+    }
     
 
     render() {
@@ -359,6 +369,9 @@ class MileCertificate extends Component {
                         }
                         onChange={(value, option)=>{ this.getProjects(value) }}
                     />
+                <div className='smallcheckpox'>
+                  <Checkbox size ="small" onChange={this.onCheckChanged}/> &nbsp; include closed projects
+                </div>
                 </Col>
             </Row>
                 <Table
@@ -377,6 +390,7 @@ class MileCertificate extends Component {
                     columns={columns}
                     dataSource={data}
                     size="small"
+                    style={{marginTop: '5px'}}
                     className='fs-small'
                 />
                 <Row justify="end" gutter={[20,200]}>

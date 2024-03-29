@@ -166,7 +166,7 @@ const ExpenseApproval = () => {
 		const { id, permissions} = localStore();
 		const { EXPENSES = {}} = JSON.parse(permissions)
 		setPermission(EXPENSES);	
-		getManageProjects('LEAVE_REQUESTS').then((res) => {
+		getManageProjects({resource: 'LEAVE_REQUESTS', phase:true}).then((res) => {
 			if (res.success) {
 				res.data.unshift({value:0, label: 'No Project'})
 				setProjects(res.data); 
@@ -276,6 +276,16 @@ const ExpenseApproval = () => {
 		}
 	})
 	}
+
+	const onCheckChanged = async({target}) =>{
+		let value = target.checked
+		let query = {resource: 'LEAVE_REQUESTS'} ;
+		if (!value){
+		  query.phase =true 
+		}
+		let res = getManageProjects(query)
+		this.setState({milestones: res.success? res.data : [],})
+	  }
 	
 	return (<>
 		<Row justify='space-between'>
@@ -305,6 +315,9 @@ const ExpenseApproval = () => {
 						)) 
 					}}
 				/>
+				<div className='smallcheckpox'>
+					<Checkbox size ="small" onChange={onCheckChanged}/> &nbsp; include closed projects
+				</div>
 			</Col>  
 			<Col >
 				<RangePicker 
@@ -331,6 +344,7 @@ const ExpenseApproval = () => {
 					rowSelection={rowSelection}
 					columns={columns}
 					dataSource={expenseData}
+					style={{marginTop: '5px'}}
 					// onChange={onChange} 
 				/>
 			</Col>

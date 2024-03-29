@@ -173,81 +173,81 @@ const listData = [
     
 const subListData = [ //FundOutlined
     {
-        text: 'Submissions',
-        icon: <PlusCircleOutlined />,
-        key: 'SUBMISSIONS',
-        subMenu: [
-        {
-            text: 'Timesheet Entry',
-            icon: <ClockCircleOutlined />,
-            link: '/time-sheet',
-            key: 'TIMESHEETS ENTRY',
-            permissions: { module: 'TIMESHEETS', key: 'READ' },
-        },
-        {
-            text: 'Leave Request',
-            icon: <CalendarOutlined />,
-            link: '/leave-request',
-            key: 'LEAVE REQUEST',
-            permissions: { module: 'LEAVE_REQUESTS', key: 'READ' },
-        },
-        {
-            text: 'Expense Line',
-            icon: <DollarOutlined />,
-            link: '/expense',
-            key: 'EXPENSE',
-            permissions: { module: 'EXPENSES', key: 'READ' },
-        },
-        {
-            text: 'Expense Sheet',
-            icon: <FileAddOutlined />,
-            link: '/expense-sheets',
-            key: 'EXPENSE SHEET ',
-            permissions: { module: 'EXPENSES', key: 'READ' },
-        },
-        ],
+      text: 'Submissions',
+      icon: <PlusCircleOutlined />,
+      key: 'SUBMISSIONS',
+      subMenu: [
+      {
+          text: 'Timesheet Entry',
+          icon: <ClockCircleOutlined />,
+          link: '/time-sheet',
+          key: 'TIMESHEETS ENTRY',
+          permissions: { module: 'TIMESHEETS', key: 'READ' },
+      },
+      {
+          text: 'Leave Request',
+          icon: <CalendarOutlined />,
+          link: '/leave-request',
+          key: 'LEAVE REQUEST',
+          permissions: { module: 'LEAVE_REQUESTS', key: 'READ' },
+      },
+      {
+          text: 'Expense Line',
+          icon: <DollarOutlined />,
+          link: '/expense',
+          key: 'EXPENSE',
+          permissions: { module: 'EXPENSES', key: 'READ' },
+      },
+      {
+          text: 'Expense Sheet',
+          icon: <FileAddOutlined />,
+          link: '/expense-sheets',
+          key: 'EXPENSE SHEET ',
+          permissions: { module: 'EXPENSES', key: 'READ' },
+      },
+      ],
     },
     {
-    text: 'Approvals',
-    icon: <CheckCircleOutlined />,
-    key: 'APPROVALS',
-    subMenu: [
-        {
-        text: 'Timesheet Approval',
-        icon: <ClockCircleOutlined />,
-        link: '/time-sheet-approval',
-        key: 'TIMESHEETS APPROVAl',
-        permissions: { module: 'TIMESHEETS', key: 'APPROVAL,UNAPPROVAL' },
-        },
-        {
-        text: 'Leave Approval ',
-        icon: <CalendarOutlined />,
-        link: '/approve-request',
-        key: 'APPROVE REQUEST',
-        permissions: { module: 'LEAVE_REQUESTS', key: 'APPROVAL,UNAPPROVAL' },
-        },
-        {
-            text: 'Expense Approval',
-            icon: <FileAddOutlined />,
-            link: '/expense-sheet-approval',
-            key: 'EXPENSE Approval',
-            permissions: { module: 'EXPENSES', key: 'APPROVAL,UNAPPROVAL' },
-        },
-        {
-        text: 'Milestone Approval',
-        icon: <CheckSquareOutlined />,
-        link: '/milestones-certificate',
-        key: 'MILESTONE APPROVAl',
-        permissions: { module: 'TIMESHEETS', key: 'APPROVAL,UNAPPROVAL' },
-        },
-    ],
+      text: 'Approvals',
+      icon: <CheckCircleOutlined />,
+      key: 'APPROVALS',
+      subMenu: [
+          {
+          text: 'Timesheet Approval',
+          icon: <ClockCircleOutlined />,
+          link: '/time-sheet-approval',
+          key: 'TIMESHEETS APPROVAl',
+          permissions: { module: 'TIMESHEETS', key: 'APPROVAL,UNAPPROVAL' },
+          },
+          {
+          text: 'Leave Approval ',
+          icon: <CalendarOutlined />,
+          link: '/approve-request',
+          key: 'APPROVE REQUEST',
+          permissions: { module: 'LEAVE_REQUESTS', key: 'APPROVAL,UNAPPROVAL' },
+          },
+          {
+              text: 'Expense Approval',
+              icon: <FileAddOutlined />,
+              link: '/expense-sheet-approval',
+              key: 'EXPENSE Approval',
+              permissions: { module: 'EXPENSES', key: 'APPROVAL,UNAPPROVAL' },
+          },
+          {
+          text: 'Milestone Approval',
+          icon: <CheckSquareOutlined />,
+          link: '/milestones-certificate',
+          key: 'MILESTONE APPROVAl',
+          permissions: { module: 'TIMESHEETS', key: 'APPROVAL,UNAPPROVAL' },
+          },
+      ],
     },
     {
-    text: 'Reports',
-    icon: <ContainerOutlined />,
-    key: 'REPORTS',
-    // permissions: { module: 'ADMIN_OPTIONS', key: 'READ' },
-    subMenu: [
+      text: 'Reports',
+      icon: <ContainerOutlined />,
+      key: 'REPORTS',
+      // permissions: { module: 'ADMIN_OPTIONS', key: 'READ' },
+      subMenu: [
         {
           text: 'Unallocated Resources',
           icon: <ContactsOutlined />,
@@ -353,21 +353,21 @@ const subListData = [ //FundOutlined
             icon: <ContactsOutlined />,
             link: '/calculator-permanent',
             key: 'PERMANENT_CAL',
-            permissions: { module: 'TIMESHEETS', key: 'READ' }
+            permissions: { module: 'ADMIN_OPTIONS', key: 'READ' }
           },
           {
             text: 'Casual Rate Calculator',
             icon: <IdcardOutlined />,
             link: '/calculator-casual',
             key: 'CASUAL_CAL',
-            permissions: { module: 'TIMESHEETS', key: 'READ' }
+            permissions: { module: 'ADMIN_OPTIONS', key: 'READ' }
           },
           {
             text: 'Contractor Rate Calculator',
             icon: <TeamOutlined />,
             link: '/calculator-contractor',
             key: 'CONTRACTOR_CAL',
-            permissions: { module: 'TIMESHEETS', key: 'READ' }
+            permissions: { module: 'ADMIN_OPTIONS', key: 'READ' }
           },
       ],
     },

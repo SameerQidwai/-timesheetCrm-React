@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Row, Col, Table, Modal, Button, Select, Typography, DatePicker, Space, Tooltip, message, Dropdown, Menu} from "antd";
+import { Row, Col, Table, Modal, Button, Select, Typography, DatePicker, Space, Tooltip, message, Dropdown, Menu, Checkbox} from "antd";
 import { DownloadOutlined, SaveOutlined, LoadingOutlined, PlusCircleOutlined, MoreOutlined, DeleteOutlined, EditOutlined, 
     LeftOutlined, RightOutlined,ExclamationCircleOutlined, CheckCircleOutlined, PaperClipOutlined, AuditOutlined } from "@ant-design/icons"; //Icons
 import TimeModal from "./Modals/TimeModal"
 import AttachModal from "./Modals/AttachModal";
-import {  getList, reviewTimeSheet, getUsers, deleteTime,  } from "../../service/timesheet"
-import { getCalendarHolidaysFormat, getUserMilestones } from "../../service/constant-Apis";
+import {  getList, reviewTimeSheet, deleteTime,  } from "../../service/timesheet"
+import { getCalendarHolidaysFormat, getUserMilestones, getManageEmployees } from "../../service/constant-Apis";
 import {  Api, formatFloat, getModulePermissions, dateClosed, getParams } from "../../service/constant";
     
 import moment from "moment";
@@ -211,14 +211,14 @@ class TimeSheetContact extends Component {
     };
   }
   
-
   componentDidMount = () => {    
     this.fetchAll();
     // this.columns()
   };
 
   fetchAll = () => {
-    Promise.all([getUsers(), getCalendarHolidaysFormat()])
+    
+    Promise.all([getManageEmployees({resource: 'TIMESHEETS', isActive:true}), getCalendarHolidaysFormat()])
       .then(([userRes, holidayRes]) => {
         let {sUser} = this.state;
         const { modulePermission: permissions, userLoginId: loginId } =
@@ -819,6 +819,19 @@ class TimeSheetContact extends Component {
             {milestones.length - 1 > index && ','}
           </div>
         ))}
+        {stage === 'Submit' && (
+          <div className="submit-sensitive">
+            <Text
+              type="danger"
+              italic
+              underline
+              className="sensitive mt-10 lh-1"
+            >
+              Reminder: Once submitted, timesheet will be locked; no further
+              changes permitted.
+            </Text>
+          </div>
+        )}
       </div>
     );
     const modal = Modal.confirm({
@@ -905,6 +918,16 @@ class TimeSheetContact extends Component {
     }
   }
 
+  onCheckChanged = async({target}) =>{
+    let value = target.checked
+    let query = {resource: 'TIMESHEETS'}
+    if (!value){
+      query.isActive = true
+    }
+    let res = await getManageEmployees(query)
+    this.setState({USERS: res.success? res.data: []})
+  }
+
   render() {
     const { loading, data, isVisible, proVisible, columns, editTime, timeObj, sheetDates,
       milestones, sMilestone, isAttach, isBulk, isDownload, eData, USERS, sUser,
@@ -948,6 +971,9 @@ class TimeSheetContact extends Component {
                 );
               }}
             />
+            <div className='smallcheckpox'>
+              <Checkbox size ="small" onChange={this.onCheckChanged}/> &nbsp; include in-active users
+            </div>
           </Col>
           <Col>
             <DatePicker
@@ -1020,7 +1046,7 @@ class TimeSheetContact extends Component {
         <Table
           sticky
           size="small"
-          style={{ maxHeight: 'fit-content' }}
+          style={{ maxHeight: 'fit-content', marginTop: '5px' }}
           className="timeSheet-table fs-small"
           rowSelection={{
             //multiple select commented

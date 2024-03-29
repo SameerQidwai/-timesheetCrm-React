@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { Redirect } from "react-router-dom"; // Route Library
-import { Layout } from "antd";
+import { Layout, Modal } from "antd";
 import AdminContent from './AdminContent'
 import { loggedIn, refreshToken } from "../../../service/Login-Apis";
 import ActivityCounter from "./Modals/ActivityCounter";
 import ActivityLogin from "./Modals/ActivityLogin";
 import '../../Styles/content.css'
+import { getCookie } from "../../../service/constant";
 
 const { Content } = Layout;
-
+let modaling = null
 // class PrivateRoute extends Component {
 function PrivateRoute (props) {
+    let gstRead = getCookie('gstRead')
     const [ lastActivity, setLastActivity ] = useState(false)
     const [login, setLogin ] =useState(false)
     const [openLogin, setOpenLogin ] =useState(false)
@@ -61,6 +63,20 @@ function PrivateRoute (props) {
         setLogin(false)
     }
 
+    const gstModal = () =>{
+        if (!modaling && !gstRead){
+            modaling = Modal.info({
+                title: `Important Pricing Information`,
+                content: 'All prices exclude GST unless explicitly stated otherwise.',
+                okText: "Acknowledged",
+                onOk: () => {
+                    document.cookie = "gstRead=true"
+                    modaling.destroy();
+                  },
+            })
+        }
+    }
+
     return (
         <div className="site-layour-frame">
             <Content
@@ -88,7 +104,10 @@ function PrivateRoute (props) {
                     /> 
                 {/* } */}
             </Content>
+            {gstModal()}
         </div>
     );
 }
 export default PrivateRoute;
+
+

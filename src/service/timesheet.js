@@ -1,7 +1,7 @@
 import { message as messageAlert } from "antd";
 import axios from "axios";
 
-import { Api, apiErrorRes, headers, jwtExpired, setToken } from "./constant";
+import { Api, apiErrorRes, createQueryParams, headers, jwtExpired, setToken } from "./constant";
 
 const url = `${Api}/timesheets/`;
 
@@ -218,9 +218,10 @@ export const getPdf = (entryIds) => {
         });
 };
 
-export const getMilestones = () => {
+export const getMilestones = (query) => {
+    query = createQueryParams(query)
     return axios
-        .get(`${url}milestones`, { headers: headers() })
+        .get(`${url}milestones${query}`, { headers: headers() })
         .then((res) => {
             const { success, data } = res.data;
             if (success) {

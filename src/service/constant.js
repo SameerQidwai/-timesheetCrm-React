@@ -205,6 +205,16 @@ export const localStore = () => {
   return archive;
 };
 
+export const getCookie = (name)=> {
+  const cookies = document.cookie.split('; ');
+  for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].split('=');
+      if (cookie[0] === name) {
+          return cookie[1];
+      }
+  }
+  return null;
+}
 // helper gunction will be using this for permissions and will change everywhere
 export const getModulePermissions = (module) => {
   let { id, permissions } = localStore();
@@ -440,6 +450,18 @@ export const getParams = (params)=>{
 
   return allParams
 }
+
+export const createQueryParams = (params, char = '&') => {
+  let query = '';
+  if (params) {
+    query = Object.entries(params)
+      .filter(([key, value]) => (value && value !== 0 ? true : false))
+      .map(([key, value]) => `${key}=${value}`)
+      .join(char);
+  }
+  return query ? `?${query}` : '';
+};
+
 
 export const ellipsis = (str, fixed)=>{
   if (str){

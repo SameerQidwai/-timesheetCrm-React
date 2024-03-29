@@ -1,16 +1,16 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Row, Col, Table, Button, Select, Typography, Modal, DatePicker, Space, Tag, Tooltip, Input, Form} from "antd";
+import { Row, Col, Table, Button, Select, Typography, Modal, DatePicker, Space, Tag, Tooltip, Input, Form, Checkbox} from "antd";
 import { DownloadOutlined, SaveOutlined, ExclamationCircleOutlined, PaperClipOutlined, CheckCircleOutlined, AuditOutlined } from "@ant-design/icons"; //Icons
 import moment from "moment";
 import AttachModal from "./Modals/AttachModal";
 import {  getList, reviewTimeSheet, getMilestones, getUsersTimesheet  } from "../../service/timesheet"
-import { Api, dateClosed, getParams, localStore, R_STATUS, STATUS_COLOR } from "../../service/constant";
+import { Api, createQueryParams, dateClosed, getParams, localStore, R_STATUS, STATUS_COLOR } from "../../service/constant";
 
 import "../styles/button.css";
 import TimeSheetPDF from "./Modals/TimeSheetPDF";
 import { Tag_s } from "../../components/Core/Custom/Index";
-import { getCalendarHolidaysFormat } from "../../service/constant-Apis";
+import { getCalendarHolidaysFormat, getManageEmployees } from "../../service/constant-Apis";
 
 const { Title, Link: Tlink, Text } = Typography;
 //inTable insert
@@ -20,7 +20,7 @@ let modal = ""
 class TimeSheetProject extends Component {
     constructor() {
         super();
-        let {startDate, endDate, milestoneId, timesheetId} = getParams(window.location.search)
+        let {startDate, endDate, milestoneId, timesheetId, userId} = getParams(window.location.search)
         this.state = {
             isAttach: false,
             sheetDates: {
@@ -32,6 +32,7 @@ class TimeSheetProject extends Component {
             paramTimesheetId: timesheetId??null,
             eData: [],
             sMilestone: milestoneId? parseInt(milestoneId): null,
+            sUser: userId? parseInt(userId): null,
             loginId: null,
             data: [ ],
             permissions: {},
@@ -158,24 +159,19 @@ class TimeSheetProject extends Component {
     };
 
     fetchAll = () =>{
-        Promise.all([ getMilestones(), getCalendarHolidaysFormat() ])
-        .then(([userRes, holidayRes]) => {
+        Promise.all([ getMilestones({phase:true}), getCalendarHolidaysFormat(), getManageEmployees({
+          resource: 'TIMESHEETS',
+          isActive: true
+        })])
+        .then(([mileRes, holidayRes, userRes]) => {
             let value = 0
             const { id, permissions } = localStore()
             const loginId = parseInt(id)
             const { TIMESHEETS } = JSON.parse(permissions)
 
-            if(userRes.success && userRes.data.length>0){
-                value = userRes.data.value
-                userRes.data.forEach(el=>{
-                    if(el.value === loginId){
-                        value= el.value
-                    }
-                }) 
-            }
-
             this.setState({
-                milestones: userRes.success? userRes.data : [],
+                milestones: mileRes.success? mileRes.data : [],
+                // USERS: userRes.success? userRes.data : [],
                 permissions: TIMESHEETS ?? {},
                 loginId,
                 holidays: holidayRes.success ? holidayRes.data : {},
@@ -191,19 +187,27 @@ class TimeSheetProject extends Component {
     }
 
     getSheet = () =>{
-      let { sMilestone, paramTimesheetId, timesheet, keys } = this.state
+      let { sMilestone, paramTimesheetId, timesheet, keys, sUser } = this.state
       let { startDate, endDate } = this.state.sheetDates
       startDate= startDate.format('DD-MM-YYYY');
       endDate= endDate.format('DD-MM-YYYY');
 
       if(sMilestone){
+        
+        let queryString = createQueryParams({
+          startDate,
+          endDate,
+          milestoneId: sMilestone,
+          userId: sUser
+        })
+          
         this.props.history.push(
           {
             pathname: 'time-sheet-approval',
-            search: `?startDate=${startDate}&endDate=${endDate}&milestoneId=${sMilestone}`
+            search: queryString
           }
         )
-          getUsersTimesheet({mileId: sMilestone, startDate, endDate}).then(res=>{
+          getUsersTimesheet({mileId: sMilestone, startDate, endDate, userId: sUser}).then(res=>{
             timesheet = []
             keys = []
             let length = res?.data?.length ?? 0
@@ -486,8 +490,18 @@ class TimeSheetProject extends Component {
         }
     }
 
+    onCheckChanged = async({target}) =>{
+      let value = target.checked
+      let query = '' ;
+      if (!value){
+        query = {phase:true}
+      }
+      let res = await getMilestones(query)
+      this.setState({milestones: res.success? res.data : [],})
+    }
+
     render() {
-        const {  data,   columns,  timeObj,  milestones, sMilestone, isAttach, isDownload, eData, sTimesheet, permissions, sheetDates } = this.state
+        const {  data,   columns,  timeObj,  milestones, sMilestone, isAttach, isDownload, eData, sTimesheet, permissions, sheetDates, USERS, sUser } = this.state
         return (
           <>
             <Row justify="space-between">
@@ -496,8 +510,8 @@ class TimeSheetProject extends Component {
               </Col>
               <Col>
                 <Select
-                  placeholder="Select Project"
-                  style={{ width: 300 }}
+                  placeholder="Select Project/Milestones"
+                  style={{ width: 250 }}
                   // allowClear
                   options={milestones}
                   value={sMilestone}
@@ -525,7 +539,36 @@ class TimeSheetProject extends Component {
                     );
                   }}
                 />
+                <div className='smallcheckpox'>
+                    <Checkbox size ="small" onChange={this.onCheckChanged}/> &nbsp; include closed projects
+                </div>
               </Col>
+              {/* Users dropdown uncomment this */}
+              {/* <Col>
+                <Select
+                  allowClear
+                  placeholder="Select User"
+                  options={USERS}
+                  value={sUser}           
+                  style={{ width: 250 }}
+                  showSearch
+                  optionFilterProp={["label", "value"]}
+                  filterOption={
+                      (input, option) =>{
+                          const label = option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                          const value = option.value.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0
+                              return label || value
+                      }
+                  }
+                  onChange={(value, option)=>{
+                      this.setState({
+                        sUser: value,
+                      },()=>{
+                          this.getSheet()
+                      })
+                  }}
+                />
+                </Col> */}
               <Col>
                 <DatePicker
                   mode="month"
@@ -553,7 +596,7 @@ class TimeSheetProject extends Component {
             <Table
               sticky
               size="small"
-              style={{ maxHeight: 'fit-content' }}
+              style={{ maxHeight: 'fit-content', marginTop: '5px' }}
               className="timeSheet-table fs-small"
               rowSelection={{
                 //multiple select commented

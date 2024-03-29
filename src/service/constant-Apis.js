@@ -1,7 +1,7 @@
 import axios from "axios";
 import { message as messageAlert } from "antd";
 
-import { Api, headers, jwtExpired, setToken, sorting } from "./constant";
+import { Api, createQueryParams, headers, jwtExpired, setToken, sorting } from "./constant";
 
 export const getStates = () => {
     return axios
@@ -435,9 +435,10 @@ export const getUserLeaveType = () => {
         });
 };
 
-export const getLineEmployees = () =>{
+export const getManageEmployees = (userQuery) =>{
+    userQuery = createQueryParams(userQuery)
     return axios
-    .get(`${Api}/auth/users`, {headers:headers()})
+    .get(`${Api}/auth/users${userQuery}`, {headers:headers()})
     .then((res) => {
         const { success, data } = res.data;
         setToken(res?.headers?.authorization)
@@ -452,9 +453,10 @@ export const getLineEmployees = () =>{
     });
 }
 
-export const getManageProjects = (resourcePermission) =>{
+export const getManageProjects = (query) =>{
+    query = createQueryParams(query)
     return axios
-    .get(`${Api}/auth/projects?resource=${resourcePermission}`, {headers:headers()})
+    .get(`${Api}/auth/projects${query}`, {headers:headers()})
     .then((res) => {
         const { success, data } = res.data;
         setToken(res?.headers?.authorization)
