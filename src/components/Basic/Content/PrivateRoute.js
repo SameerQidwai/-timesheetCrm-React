@@ -104,7 +104,7 @@ function PrivateRoute (props) {
                     /> 
                 {/* } */}
             </Content>
-            {gstModal()}
+            {loggedIn() ==='jwtExpired' || loggedIn() === true && gstModal()}
         </div>
     );
 }
