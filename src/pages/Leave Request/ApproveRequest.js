@@ -322,10 +322,9 @@ class ApproveRequest extends Component {
                     query.isActive = true
                 }
             }
-            let res =
-              (await key) === 'WORKS'
-                ? getManageProjects(query)
-                : getManageEmployees(query);
+            let res = key === 'WORKS'
+                ? await getManageProjects(query)
+                : await getManageEmployees(query);
             this.setState({ [key]: res.success ? res.data : [] });
         // }
     }

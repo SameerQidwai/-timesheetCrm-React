@@ -7,7 +7,7 @@ import TimeModal from "./Modals/TimeModal"
 import AttachModal from "./Modals/AttachModal";
 import {  getList, reviewTimeSheet, deleteTime,  } from "../../service/timesheet"
 import { getCalendarHolidaysFormat, getUserMilestones, getManageEmployees } from "../../service/constant-Apis";
-import {  Api, formatFloat, getModulePermissions, dateClosed, getParams } from "../../service/constant";
+import {  Api, formatFloat, getModulePermissions, dateClosed, getParams, createQueryParams } from "../../service/constant";
     
 import moment from "moment";
 import "../styles/button.css";
@@ -285,18 +285,21 @@ class TimeSheetContact extends Component {
     startDate= startDate.format('DD-MM-YYYY');
     endDate= endDate.format('DD-MM-YYYY');
 
+    let queryString = createQueryParams({
+      startDate,
+      endDate,
+      userId: sUser
+    })
+
     this.props.history.push(
       {
         pathname: 'time-sheet',
-        search: `?startDate=${startDate}&endDate=${endDate}&userId=${sUser}`
+        search: queryString ?? ''
       }
     )
 
     if (sUser) {
-      getList({
-        userId: sUser,
-        startDate, endDate,
-      }).then((res) => {
+      getList(queryString).then((res) => {
         // if (res.success){
         this.setState({
           timesheet: res.data ?? {},

@@ -171,7 +171,7 @@ class TimeSheetProject extends Component {
 
             this.setState({
                 milestones: mileRes.success? mileRes.data : [],
-                // USERS: userRes.success? userRes.data : [],
+                USERS: userRes.success? userRes.data : [],
                 permissions: TIMESHEETS ?? {},
                 loginId,
                 holidays: holidayRes.success ? holidayRes.data : {},
@@ -192,7 +192,7 @@ class TimeSheetProject extends Component {
       startDate= startDate.format('DD-MM-YYYY');
       endDate= endDate.format('DD-MM-YYYY');
 
-      if(sMilestone){
+      if(sMilestone || sUser){
         
         let queryString = createQueryParams({
           startDate,
@@ -207,7 +207,8 @@ class TimeSheetProject extends Component {
             search: queryString
           }
         )
-          getUsersTimesheet({mileId: sMilestone, startDate, endDate, userId: sUser}).then(res=>{
+          // getUsersTimesheet({mileId: sMilestone, startDate, endDate, userId: sUser}).then(res=>{
+          getUsersTimesheet(queryString).then(res=>{
             timesheet = []
             keys = []
             let length = res?.data?.length ?? 0
@@ -490,14 +491,32 @@ class TimeSheetProject extends Component {
         }
     }
 
-    onCheckChanged = async({target}) =>{
+    // onCheckChanged = async({target}) =>{
+    //   let value = target.checked
+    //   let query = '' ;
+    //   if (!value){
+    //     query = {phase:true}
+    //   }
+    //   let res = await getMilestones(query)
+    //   this.setState({milestones: res.success? res.data : [],})
+    // }
+    onCheckChanged = async({target}, key) =>{
       let value = target.checked
-      let query = '' ;
-      if (!value){
-        query = {phase:true}
-      }
-      let res = await getMilestones(query)
-      this.setState({milestones: res.success? res.data : [],})
+      let query = key === 'USERS' ? {resource: 'TIMESHEETS'} : {}
+      // if (key !== 'USERS'){
+          if (!value){
+              if (key ==='milestones'){
+                  query.phase= true
+              }else if (key === 'USERS'){
+                  query.isActive = true
+              }
+          }
+          let res =  key === 'milestones'
+              ? await getMilestones(query)
+              : await getManageEmployees(query);
+              
+          this.setState({ [key]: res.success ? res.data : [] });
+      // }
     }
 
     render() {
@@ -510,9 +529,9 @@ class TimeSheetProject extends Component {
               </Col>
               <Col>
                 <Select
-                  placeholder="Select Project/Milestones"
+                  placeholder="Select Project/Milestone"
                   style={{ width: 250 }}
-                  // allowClear
+                  allowClear
                   options={milestones}
                   value={sMilestone}
                   showSearch
@@ -540,11 +559,11 @@ class TimeSheetProject extends Component {
                   }}
                 />
                 <div className='smallcheckpox'>
-                    <Checkbox size ="small" onChange={this.onCheckChanged}/> &nbsp; include closed projects
+                    <Checkbox size ="small" onChange={(event)=>this.onCheckChanged(event, 'milestones')}/> &nbsp; include closed projects
                 </div>
               </Col>
               {/* Users dropdown uncomment this */}
-              {/* <Col>
+              <Col>
                 <Select
                   allowClear
                   placeholder="Select User"
@@ -568,7 +587,10 @@ class TimeSheetProject extends Component {
                       })
                   }}
                 />
-                </Col> */}
+                <div className='smallcheckpox'>
+                    <Checkbox size ="small" onChange={(event)=>this.onCheckChanged(event, 'USERS')}/> &nbsp; include inavtive users
+                </div>
+                </Col>
               <Col>
                 <DatePicker
                   mode="month"
