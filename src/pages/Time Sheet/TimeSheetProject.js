@@ -366,11 +366,11 @@ class TimeSheetProject extends Component {
     }
 
     exporPDF = (entryIds) =>{
-        console.log(entryIds);
-        this.setState({
-            eData:  entryIds,
-            isDownload: true
-        })   
+      console.log(entryIds);
+      this.setState({
+          eData:  entryIds,
+          isDownload: true
+      })   
     }
 
     summaryFooter = (data) =>{

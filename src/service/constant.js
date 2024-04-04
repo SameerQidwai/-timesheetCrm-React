@@ -273,9 +273,18 @@ export const thumbUrl = (type) => {
 export const apiErrorRes = (err, id, duration, style) => {
   const { status = false, data = {} } = err?.response ?? {};
   const { message, success } = data;
+  let errMessage = 'Something Went Wrong!';
+  let errDurtion = 5;
+  if (status === 400){
+    errMessage = message;
+    errDurtion = duration;
+  }
+  if (message.includes('ER_DUP_ENTRY:')){
+    errMessage = "Duplicate Entry."
+  }
     messageAlert.error({
-      content: status === 400 ? message : 'Something Went Wrong!',
-      duration: status === 400 ? duration : 5,
+      content: errMessage,
+      duration: errDurtion,
       key: id,
       style: style ?? {},
     });

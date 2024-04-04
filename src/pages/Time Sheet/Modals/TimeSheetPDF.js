@@ -11,7 +11,6 @@ const TimeSheetPDF = (props) => {
     const componentRef = useRef();
     
     const [data, setData] = useState([])
-    const [details, setDetail] = useState({})
     const column = [
         {
             title:'Date',
@@ -90,7 +89,8 @@ const TimeSheetPDF = (props) => {
         const data = {milestoneEntryIds: props.milestoneEntryId}
         getPdf(data).then(res=>{
             if(res.success){
-                setData(res.data)
+                console.log('replace with this if download from server', res.data?.files)
+                setData(res.data?.timesheets || [])
                 // setDetail(res.milestoneInfo)
                 handlePrint()
                 props.close()
@@ -98,7 +98,6 @@ const TimeSheetPDF = (props) => {
         })
         return true
     }
-
     return (
         // style={{display: 'none'}}
         // <div>

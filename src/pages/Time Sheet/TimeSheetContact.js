@@ -312,7 +312,7 @@ class TimeSheetContact extends Component {
         // }
       });
     }
-    this.columns();
+      this.columns();
   };
 
   columns = () => {
@@ -898,14 +898,19 @@ class TimeSheetContact extends Component {
 
   bulkCallBack = () =>{
     // get timesheet for the employee withe date
+
     const { sUser, sheetDates } = this.state;
-    const { startDate, endDate } = sheetDates;
+    let { startDate, endDate } = sheetDates;
+    startDate= startDate.format('DD-MM-YYYY');
+    endDate= endDate.format('DD-MM-YYYY');
+
+    let queryString = createQueryParams({
+      startDate,
+      endDate,
+      userId: sUser
+    })
     if (sUser) {
-      getList({
-        userId: sUser,
-        startDate: startDate.format('DD-MM-YYYY'),
-        endDate: endDate.format('DD-MM-YYYY'),
-      }).then((res) => {
+      getList(queryString).then((res) => {
         // if (res.success){
         this.setState({
           timesheet: res.data ?? {},
