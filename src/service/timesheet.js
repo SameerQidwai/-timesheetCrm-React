@@ -1,13 +1,13 @@
 import { message as messageAlert } from "antd";
 import axios from "axios";
 
-import { Api, apiErrorRes, headers, jwtExpired, setToken } from "./constant";
+import { Api, apiErrorRes, createQueryParams, headers, jwtExpired, setToken } from "./constant";
 
-const url = `${Api}/timesheets/`;
+const url = `${Api}/timesheets`;
 
-export const getList = (keys) => {
+export const getList = (query) => {
     return axios
-        .get(url + `${keys.startDate}&${keys.endDate}&${keys.userId}`, {headers:headers()})
+        .get(url + `${query}`, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -28,7 +28,7 @@ export const getList = (keys) => {
 export const addTime = (keys ,data) => {
     messageAlert.loading({ content: 'Loading...', key: 1 })
     return axios
-        .post(url +`${keys.startDate}&${keys.endDate}&${keys.userId}`, data, {headers:headers()})
+        .post(url +`/${keys.startDate}&${keys.endDate}&${keys.userId}`, data, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -47,7 +47,7 @@ export const addTime = (keys ,data) => {
 export const addBulkTime = (keys ,data) => {
     messageAlert.loading({ content: 'Loading...', key: 1 })
     return axios
-        .post(url +`bulkEntry/${keys.monthStart}&${keys.monthEnd}&${keys.userId}`, data, {headers:headers()})
+        .post(url +`/bulkEntry/${keys.monthStart}&${keys.monthEnd}&${keys.userId}`, data, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -67,7 +67,7 @@ export const addBulkTime = (keys ,data) => {
 export const editTime = (entryId ,data) => {
     messageAlert.loading({ content: 'Loading...', key: 1 })
     return axios
-        .put(url +`entries/${entryId}`, data, {headers:headers()})
+        .put(url +`/entries/${entryId}`, data, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -87,7 +87,7 @@ export const editTime = (entryId ,data) => {
 export const deleteTime = (entryId ) => {
     messageAlert.loading({ content: 'Loading...', key: 1 })
     return axios
-        .delete(url +`entries/${entryId}`, {headers:headers()})
+        .delete(url +`/entries/${entryId}`, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -108,7 +108,7 @@ export const deleteTime = (entryId ) => {
 export const reviewTimeSheet = (keys, stage, data) => {
     messageAlert.loading({ content: 'Loading...', key: 1 })
     return axios
-        .post(url + `${keys.startDate}&${keys.endDate}&${keys.userId}/milestoneEntries${stage}`, data, {headers:headers()})
+        .post(url + `/${keys.startDate}&${keys.endDate}&${keys.userId}/milestoneEntries${stage}`, data, {headers:headers()})
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -129,7 +129,7 @@ export const reviewTimeSheet = (keys, stage, data) => {
 export const editLabel = (data) => {
     messageAlert.loading({ content: 'Loading...', key: data.id })
     return axios
-        .put(url + `${data.id}`, data, {headers:headers()})
+        .put(url + `/${data.id}`, data, {headers:headers()})
         .then((res) => {
             const { success, message } = res.data;
             jwtExpired(message)
@@ -150,7 +150,7 @@ export const editLabel = (data) => {
 export const addMilestoneTimesheetNote = (id, data) => {
     messageAlert.loading({ content: 'Loading...', key: id })
     return axios
-        .patch(url + `milestoneEntriesUpdate`, data, {headers:headers()})
+        .patch(url + `/milestoneEntriesUpdate`, data, {headers:headers()})
         .then((res) => {
             const { success, message, data } = res.data;
             jwtExpired(message)
@@ -178,7 +178,7 @@ export const addMilestoneTimesheetNote = (id, data) => {
 
 export const getUsers = () => {
     return axios
-        .get(`${url}users`, { headers: headers() })
+        .get(`${url}/users`, { headers: headers() })
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -198,7 +198,7 @@ export const getUsers = () => {
 
 export const getPdf = (entryIds) => {
     return axios
-        .post(`${url}print/milestoneEntries`,entryIds,{ headers: headers() })
+        .post(`${url}/print/milestoneEntries`,entryIds,{ headers: headers() })
         .then((res) => {
             const { success, data, message } = res.data;
             jwtExpired(message)
@@ -218,9 +218,10 @@ export const getPdf = (entryIds) => {
         });
 };
 
-export const getMilestones = () => {
+export const getMilestones = (query) => {
+    query = createQueryParams(query)
     return axios
-        .get(`${url}milestones`, { headers: headers() })
+        .get(`${url}/milestones${query}`, { headers: headers() })
         .then((res) => {
             const { success, data } = res.data;
             if (success) {
@@ -237,9 +238,9 @@ export const getMilestones = () => {
         });
 };
 
-export const getUsersTimesheet = (keys) => {
+export const getUsersTimesheet = (query) => {
     return axios
-        .get(`${url}milestone` +`/${keys.startDate}&${keys.endDate}&${keys.mileId??0}`, { headers: headers() })
+        .get(`${url}/approvals${query}` , { headers: headers() })
         .then((res) => {
             const { success, data } = res.data;
             let newData = []

@@ -75,6 +75,15 @@ class Employees extends Component {
         key: 'email',
       },
       {
+        title: 'Role',
+        dataIndex: ['role', 'label'],
+        key: 'role',
+        ...tableSorter(
+          'role.label',
+          'string'
+        ),
+      },
+      {
         title: 'Status',
         dataIndex: "active",
         key: 'status',
@@ -167,403 +176,6 @@ class Employees extends Component {
       permissions: {},
       filterData: [],
       openSearch: false,
-      // will remove if seperate component works fine
-      // searchedColumn: {
-      //   id: { type: 'Input', value: '', label: 'Code', showInColumn: true },
-      //   firstName: {
-      //     type: 'Input',
-      //     value: '',
-      //     label: 'First Name',
-      //     showInColumn: true,
-      //   },
-      //   lastName: {
-      //     type: 'Input',
-      //     value: '',
-      //     label: 'Last Name',
-      //     showInColumn: true,
-      //   },
-      //   phoneNumber: {
-      //     type: 'Input',
-      //     value: '',
-      //     label: 'Phone Number',
-      //     showInColumn: true,
-      //   },
-      //   email: {
-      //     type: 'Input',
-      //     value: '',
-      //     label: 'Personal Email',
-      //     showInColumn: true,
-      //   },
-      //   Action: {
-      //     type: 'Input',
-      //     value: '',
-      //     label: '',
-      //     showInColumn: true,
-      //     disabled: true,
-      //   },
-      //   stateId: {
-      //     type: 'none',
-      //     multi: true,
-      //     value: [],
-      //     label: 'State',
-      //     showInColumn: false,
-      //     disabled: false,
-      //   },
-      //   clearanceLevel: {
-      //     type: 'none',
-      //     multi: true,
-      //     value: [],
-      //     label: 'clearanceLevel',
-      //     showInColumn: false,
-      //     disabled: false,
-      //   },
-      //   gender: {
-      //     type: 'Select',
-      //     multi: true,
-      //     value: [],
-      //     label: 'Gender',
-      //     showInColumn: false,
-      //   },
-      //   address: {
-      //     type: 'none',
-      //     value: '',
-      //     label: 'Residential Address',
-      //     showInColumn: false,
-      //     disabled: false,
-      //   },
-      //   role: {
-      //     type: 'none',
-      //     multi: true,
-      //     value: [],
-      //     label: 'Role',
-      //     showInColumn: false,
-      //     disabled: false,
-      //   },
-      //   employeeStatus: {
-      //     type: 'none',
-      //     multi: true,
-      //     value: [],
-      //     label: 'Employee Status',
-      //     showInColumn: false,
-      //     disabled: false,
-      //   },
-      //   leavePloicy: {
-      //     type: 'none',
-      //     multi: true,
-      //     value: [],
-      //     label: 'Leave Policy',
-      //     showInColumn: false,
-      //     disabled: false,
-      //   },
-      //   contractStartDate: {
-      //     type: 'Date',
-      //     value: null,
-      //     label: 'Contract Start Date',
-      //     showInColumn: true,
-      //   },
-      //   contractEndDate: {
-      //     type: 'Date',
-      //     value: null,
-      //     label: 'Contract End Date',
-      //     showInColumn: true,
-      //     disabled: true,
-      //   },
-      //   salary: {
-      //     type: 'Input',
-      //     value: '',
-      //     label: 'Anual Base Salary',
-      //     showInColumn: true,
-      //   },
-      //   payFreuency: {
-      //     type: 'none',
-      //     multi: true,
-      //     value: [],
-      //     label: 'Pay Frequency',
-      //     showInColumn: false,
-      //     disabled: false,
-      //   },
-      //   lineManager: {
-      //     type: 'none',
-      //     multi: true,
-      //     value: [],
-      //     label: 'Line Manager',
-      //     showInColumn: false,
-      //     disabled: false,
-      //   },
-      // },
-      // filterFields: [
-      //   {
-      //     fieldCol: 12, // this is only label 5
-      //     size: 'small',
-      //     Placeholder: 'First Name',
-      //     type: 'Text',
-      //     labelAlign: 'left',
-      //   },
-      //   {
-      //     Placeholder: 'Last Name',
-      //     fieldCol: 12, // this is only label 8
-      //     size: 'small',
-      //     type: 'Text',
-      //     labelAlign: 'left',
-      //   },
-      //   {
-      //     object: 'obj', //this is field 7
-      //     fieldCol: 12,
-      //     key: 'firstName',
-      //     size: 'small',
-      //     type: 'Input',
-      //     labelAlign: 'left',
-      //   },
-      //   {
-      //     object: 'obj', //this is field 9
-      //     fieldCol: 12,
-      //     key: 'lastName',
-      //     size: 'small',
-      //     type: 'Input',
-      //     labelAlign: 'left',
-      //   },
-      //   {
-      //     Placeholder: 'Phone',
-      //     fieldCol: 12,
-      //     size: 'small',
-      //     type: 'Text',
-      //     labelAlign: 'right',
-      //   },
-      //   {
-      //     fieldCol: 12, // this is only label 4
-      //     size: 'small',
-      //     Placeholder: 'Personal Email',
-
-      //     type: 'Text',
-      //     labelAlign: 'left',
-      //   },
-      //   {
-      //     object: 'obj',
-      //     fieldCol: 12,
-      //     key: 'phoneNumber',
-      //     size: 'small',
-      //     type: 'input',
-      //   },
-      //   {
-      //     object: 'obj', //this is field 6
-      //     fieldCol: 12,
-      //     key: 'email',
-      //     size: 'small',
-      //     type: 'Input',
-      //   },
-      //   {
-      //     Placeholder: 'Gender',
-      //     fieldCol: 12,
-      //     size: 'small',
-      //     type: 'Text',
-      //     labelAlign: 'right',
-      //   },
-      //   {
-      //     Placeholder: 'State For Payroll Tax Purpose',
-      //     fieldCol: 12,
-      //     size: 'small',
-      //     type: 'Text',
-      //     labelAlign: 'right',
-      //   },
-      //   {
-      //     object: 'obj',
-      //     fieldCol: 12,
-      //     key: 'gender',
-      //     mode: 'multiple',
-      //     customValue: (value, option) => option,
-      //     size: 'small',
-      //     data: [
-      //       { label: 'Male', value: 'M' },
-      //       { label: 'Female', value: 'F' },
-      //       { label: 'Other', value: 'O' },
-      //     ],
-      //     type: 'Select',
-      //   },
-      //   {
-      //     object: 'obj',
-      //     fieldCol: 12,
-      //     mode: 'multiple',
-      //     customValue: (value, option) => option,
-      //     key: 'stateId',
-      //     size: 'small',
-      //     type: 'Select',
-      //     data: [],
-      //   },
-      //   {
-      //     Placeholder: 'Role',
-      //     fieldCol: 12,
-      //     size: 'small',
-      //     type: 'Text',
-      //     labelAlign: 'right',
-      //   },
-      //   {
-      //     Placeholder: 'Clearance Level',
-      //     fieldCol: 12,
-      //     size: 'small',
-      //     type: 'Text',
-      //   },
-      //   {
-      //     object: 'obj',
-      //     fieldCol: 12,
-      //     mode: 'multiple',
-      //     key: 'role',
-      //     customValue: (value, option) => option,
-      //     size: 'small',
-      //     type: 'Select',
-      //     data: [],
-      //   },
-      //   {
-      //     object: 'obj',
-      //     fieldCol: 12,
-      //     key: 'clearanceLevel',
-      //     size: 'small',
-      //     mode: 'multiple',
-      //     customValue: (value, option) => option,
-      //     data: [
-      //       { label: 'BV - Baseline Vetting', value: 'BV' },
-      //       { label: 'NV1 - Negative Vetting 1', value: 'NV1' },
-      //       { label: 'NV2 - Negative Vetting 2', value: 'NV2' },
-      //       { label: 'PV - Positive Vetting', value: 'PV' },
-      //       { label: 'No clearance', value: 'NC' },
-      //     ],
-      //     type: 'Select',
-      //   },
-      //   {
-      //     Placeholder: 'Employment Status',
-      //     fieldCol: 12,
-      //     size: 'small',
-      //     type: 'Text',
-      //   },
-      //   {
-      //     Placeholder: 'Leave Policy',
-      //     fieldCol: 12,
-      //     size: 'small',
-      //     type: 'Text',
-      //   },
-      //   {
-      //     object: 'obj',
-      //     fieldCol: 12,
-      //     key: 'employeeStatus',
-      //     size: 'small',
-      //     mode: 'multiple',
-      //     customValue: (value, option) => option,
-      //     data: [
-      //       { label: 'Casual', value: 1 },
-      //       { label: 'Part Time', value: 2 },
-      //       { label: 'Full Time', value: 3 },
-      //     ],
-      //     type: 'Select',
-      //   },
-      //   {
-      //     object: 'obj',
-      //     fieldCol: 12,
-      //     key: 'leavePloicy',
-      //     size: 'small',
-      //     mode: 'multiple',
-      //     customValue: (value, option) => option,
-      //     data: [ ],
-      //     type: 'Select',
-      //   },
-      //   {
-      //     Placeholder: 'Contract Start Date',
-      //     fieldCol: 12,
-      //     size: 'small',
-      //     type: 'Text',
-      //   },
-      //   {
-      //     Placeholder: 'Contract End Date',
-      //     fieldCol: 12,
-      //     size: 'small',
-      //     type: 'Text',
-      //   },
-      //   {
-      //     object: 'obj',
-      //     fieldCol: 12,
-      //     key: 'contractStartDate',
-      //     size: 'small',
-      //     type: 'RangePicker',
-      //     fieldStyle: { width: '100%' },
-      //   },
-      //   {
-      //     object: 'obj',
-      //     fieldCol: 12,
-      //     key: 'contractEndDate',
-      //     size: 'small',
-      //     type: 'RangePicker',
-      //     fieldStyle: { width: '100%' },
-      //   },
-      //   {
-      //     Placeholder: 'Pay Frequency',
-      //     fieldCol: 12,
-      //     size: 'small',
-      //     type: 'Text',
-      //   },
-      //   {
-      //     Placeholder: 'Annual Base Salary',
-      //     fieldCol: 12,
-      //     size: 'small',
-      //     type: 'Text',
-      //   },
-      //   {
-      //     object: 'obj',
-      //     fieldCol: 12,
-      //     key: 'payFreuency',
-      //     size: 'small',
-      //     mode: 'multiple',
-      //     customValue: (value, option) => option,
-      //     data: [{ label: 'Hourly', value: 1 },
-      //     { label: 'Daily', value: 2 },
-      //     { label: 'Weekly', value: 3 },
-      //     { label: 'Fortnightly', value: 4 },
-      //     { label: 'Monthly', value: 5 }
-      //     ],
-      //     type: 'Select',
-      //   },
-      //   {
-      //     object: 'obj',
-      //     fieldCol: 12,
-      //     key: 'salary',
-      //     size: 'small',
-      //     shape: '$',
-      //     type: 'InputNumber',
-      //     fieldStyle: { width: '100%' },
-      //   },
-      //   {
-      //     Placeholder: 'Employee Manager',
-      //     fieldCol: 24,
-      //     size: 'small',
-      //     type: 'Text',
-      //   },
-      //   {
-      //     object: 'obj',
-      //     fieldCol: 12,
-      //     key: 'lineManager',
-      //     size: 'small',
-      //     mode: 'multiple',
-      //     customValue: (value, option) => option,
-      //     data: [{ label: 'Hourly', value: 1 },
-      //     { label: 'Daily', value: 2 },
-      //     { label: 'Weekly', value: 3 },
-      //     { label: 'Fortnightly', value: 4 },
-      //     { label: 'Monthly', value: 5 }
-      //     ],
-      //     type: 'Select',
-      //   },
-      //   {
-      //     Placeholder: 'Residential Address',
-      //     fieldCol: 24,
-      //     size: 'small',
-      //     type: 'Text',
-      //     labelAlign: 'right',
-      //   },
-      //   {
-      //     object: 'obj',
-      //     fieldCol: 24,
-      //     key: 'address',
-      //     size: 'small',
-      //     type: 'Input',
-      //   },
-      // ],
       searchedColumn: EmployeeFilterColumns,
       filterFields: EmployeeFilterFields,
     };
@@ -624,15 +236,17 @@ class Employees extends Component {
       value = value.replace(/\s+/g, '').toLowerCase()
       this.setState({
         filterData: data.filter((el) => {
-          let { firstName: elfirstName, lastName: ellastName, email, phoneNumber, id } =
+          let { firstName: elfirstName, lastName: ellastName, email, phoneNumber, id, role:{label:role} } =
             el.contactPersonOrganization.contactPerson;
             let firstName = `${elfirstName ? elfirstName : ''} ${ellastName ? ellastName : ''}`
             let lastName = `${ellastName ? ellastName : ''} ${elfirstName ? elfirstName : ''}`
+            // console.log(role)
           return (
             `Emp-00${id.toString()}`.replace(/\s+/g, '').includes(value) ||
             (firstName.toLowerCase().replace(/\s+/g, '').includes(value.toLowerCase())) ||
             (lastName.toLowerCase().replace(/\s+/g, '').includes(value.toLowerCase())) ||
             (email && email.toLowerCase().replace(/\s+/g, '').includes(value.toLowerCase())) ||
+            (role && role.toLowerCase().replace(/\s+/g, '').includes(value.toLowerCase())) ||
             (phoneNumber && phoneNumber.startsWith(value))
           );
         }),
@@ -662,9 +276,9 @@ class Employees extends Component {
       search['gender']['value'].length > 0 ||
       search['stateId']['value'].length > 0 ||
       search['isActive']['value'].length > 0 ||
-      search['address']['value']
-      // search['clearanceLevel']['value'].length > 0 ||
-      // search['role']['value'].length > 0 ||
+      search['role']['value'].length > 0 ||
+      search['clearanceLevel']['value'].length > 0 ||
+      search['address']['value'] 
       // search['employeeStatus']['value'].length > 0 
     ) {
       this.setState({

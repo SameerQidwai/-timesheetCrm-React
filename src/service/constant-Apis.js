@@ -1,7 +1,7 @@
 import axios from "axios";
 import { message as messageAlert } from "antd";
 
-import { Api, headers, jwtExpired, setToken, sorting } from "./constant";
+import { Api, createQueryParams, headers, jwtExpired, setToken, sorting } from "./constant";
 
 export const getStates = () => {
     return axios
@@ -435,9 +435,10 @@ export const getUserLeaveType = () => {
         });
 };
 
-export const getLineEmployees = () =>{
+export const getManageEmployees = (userQuery) =>{
+    userQuery = createQueryParams(userQuery)
     return axios
-    .get(`${Api}/auth/users`, {headers:headers()})
+    .get(`${Api}/auth/users${userQuery}`, {headers:headers()})
     .then((res) => {
         const { success, data } = res.data;
         setToken(res?.headers?.authorization)
@@ -452,9 +453,10 @@ export const getLineEmployees = () =>{
     });
 }
 
-export const getManageProjects = (resourcePermission) =>{
+export const getManageProjects = (query) =>{
+    query = createQueryParams(query)
     return axios
-    .get(`${Api}/auth/projects?resource=${resourcePermission}`, {headers:headers()})
+    .get(`${Api}/auth/projects${query}`, {headers:headers()})
     .then((res) => {
         const { success, data } = res.data;
         setToken(res?.headers?.authorization)
@@ -551,3 +553,26 @@ export const getReverseCostCal = (type) => {
         });
 };
 
+
+export const getCalendars = () => {
+    return axios
+        .get(`${Api}/calendars`, {headers:headers()})
+        .then((res) => {
+            let { success, data= [], message } = res.data;
+            jwtExpired(message)
+            let defaultCalendar = 0
+            data = data.map((el) => {
+                defaultCalendar = el.isDefault ? el.id : defaultCalendar;
+                return {value: el.id, label: el.label}
+            });
+            return { success, data, defaultCalendar };
+        })
+        .catch((err) => {
+            return {
+                error: "Something went wrong while calling calendars to dropdown",
+                success: false,
+                message: err.message,
+                data: []
+            };
+        });
+};

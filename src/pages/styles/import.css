@@ -38,3 +38,13 @@
 .mt-30{
     margin-top: 30px;
 }
+
+.lh-1{
+    line-height: 1.2;
+}
+
+.submit-sensitive{
+    height: 55px;
+    display: flex;
+    align-items: center;
+}

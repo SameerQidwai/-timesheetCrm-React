@@ -86,6 +86,11 @@ div.ant-row.ant-form-item.ant-form-item-with-help.ant-form-item-has-error{
   margin-bottom: 0px;
 }
 
+div.smallcheckpox{
+  font-size: 12px;
+  padding-left: 5px;
+}
+
 @media all {
   .page-break {
     display: none;

@@ -16,6 +16,8 @@ import { message as messageAlert } from 'antd';
 // export const Api = "http://192.168.0.244:3301/api/v1"; // TrunRajPal Office
 
 export const Api = "http://3.219.31.245:8000/api/v1"; //live api
+// export const Api = 'http://54.79.212.236:8000/api/v1'; //tower api
+// export const Api = 'https://api-towers-group.timewize.com.au/api/v1'; //towers api
 
 export const O_STAGE = {
   L: 'Lead',
@@ -55,7 +57,13 @@ export const R_STATUS = {
   RJ: 'Rejected',
 }; //Request Status
 
-export const STATUS_COLOR = { CM: 'geekblue', AP: 'green', SB: 'cyan', RJ: 'red', R: 'red' }; //Request Status
+export const STATUS_COLOR = {
+  CM: 'geekblue',
+  AP: 'green',
+  SB: 'cyan',
+  RJ: 'red',
+  R: 'red',
+}; //Request Status
 
 export const O_TYPE = { 1: 'Milestone', 2: 'Time' };
 
@@ -107,20 +115,20 @@ export const toTruncate = (num, fixed) => {
   return '0.00';
 };
 
-export const formatCurrency = (amount, fixed) => { 
+export const formatCurrency = (amount, fixed) => {
   //console.log('=== === === formatCurrency === === ===');
   if (!isNaN(amount)) {
     var formatter = new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
-      maximumFractionDigits: fixed??2, 
-      roundingMode: 'trunc'
+      maximumFractionDigits: fixed ?? 2,
+      roundingMode: 'trunc',
     });
-    return formatter.format(amount).replace(/^(\D+)/, '$1 ')
+    return formatter.format(amount).replace(/^(\D+)/, '$1 ');
     // .replace(/\D00(?=\D*$)/, ''))
   }
   // amount = toTruncate(amount, 2)
-  return  '$ 0.00' ;
+  return '$ 0.00';
 }; //end
 
 export const formatFloat = (number, fixed, round) => { 
@@ -149,14 +157,16 @@ export const formatFloat = (number, fixed, round) => {
 //   return date && moment.utc(date).format(format ??'ddd DD MMM yyyy')
 // }
 
-export const parseDate = (date, format)=>{
-    if (date){
-        if (format){
-            return moment.parseZone(date).format(format === true ? 'ddd DD MMM yyyy' : format)
-        }
-        return moment.parseZone(date)
+export const parseDate = (date, format) => {
+  if (date) {
+    if (format) {
+      return moment
+        .parseZone(date)
+        .format(format === true ? 'ddd DD MMM yyyy' : format);
     }
-}
+    return moment.parseZone(date);
+  }
+};
 
 export const formatDate = (date, string, format) => {
   return (
@@ -196,21 +206,31 @@ export const localStore = () => {
   return archive;
 };
 
-// helper gunction will be using this for permissions and will change everywhere
-export const getModulePermissions = (module) =>{
-  let { id, permissions } = localStore() 
-  const { [module]: modulePermission } = JSON.parse(permissions)
-  let anyPermissions = {}
-  Object.entries(modulePermission).map( ([actionKey, action]) => {
-    for (const [roleKey, role] of Object.entries(action)) {
-      anyPermissions[actionKey] = role
-        if (role){
-            break;
-        }
+export const getCookie = (name)=> {
+  const cookies = document.cookie.split('; ');
+  for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].split('=');
+      if (cookie[0] === name) {
+          return cookie[1];
       }
-  });
-  return {anyPermissions, modulePermission, userLoginId: parseInt(id)}
+  }
+  return null;
 }
+// helper gunction will be using this for permissions and will change everywhere
+export const getModulePermissions = (module) => {
+  let { id, permissions } = localStore();
+  const { [module]: modulePermission } = JSON.parse(permissions);
+  let anyPermissions = {};
+  Object.entries(modulePermission).map(([actionKey, action]) => {
+    for (const [roleKey, role] of Object.entries(action)) {
+      anyPermissions[actionKey] = role;
+      if (role) {
+        break;
+      }
+    }
+  });
+  return { anyPermissions, modulePermission, userLoginId: parseInt(id) };
+};
 
 export const jwtExpired = (message) => {
   // Authentication Expired or Invalid
@@ -254,9 +274,18 @@ export const thumbUrl = (type) => {
 export const apiErrorRes = (err, id, duration, style) => {
   const { status = false, data = {} } = err?.response ?? {};
   const { message, success } = data;
+  let errMessage = 'Something Went Wrong!';
+  let errDurtion = 5;
+  if (status === 400){
+    errMessage = message;
+    errDurtion = duration;
+  }
+  if (message.includes('ER_DUP_ENTRY:')){
+    errMessage = "Duplicate Entry."
+  }
     messageAlert.error({
-      content: status === 400 ? message : 'Something Went Wrong!',
-      duration: status === 400 ? duration : 5,
+      content: errMessage,
+      duration: errDurtion,
       key: id,
       style: style ?? {},
     });
@@ -317,7 +346,7 @@ export const dateRange = (current, selectedDate, isDate, pDates,dateFY, granular
 
 export const getFiscalYear = (request, date, dateFormat) => {
   let fiscalStartYear = undefined;
-  date = date ? moment(date, dateFormat) :moment()
+  date = date ? moment(date, dateFormat) : moment();
   if (parseInt(moment(date).format('M')) < 7) {
     fiscalStartYear = moment(date).subtract(1, 'y').format('YYYY');
   } else {
@@ -334,7 +363,7 @@ export const getFiscalYear = (request, date, dateFormat) => {
     },
     years: { start: fiscalStartYear, end: parseInt(fiscalStartYear) + 1 },
   };
-  return request? fiscalYear[request] : fiscalYear;
+  return request ? fiscalYear[request] : fiscalYear;
 };
 
 export const dateRangeAfter = (current, eDate, pDates) => {
@@ -371,7 +400,9 @@ export const sorting = (data, key) => {
 // for regex
 export const isPhone = (phoneNumber) => {
   const cleanedPhoneNumber = phoneNumber.replace(/-|\s/g, ''); // Remove spaces and hyphens before performing test
-  const pattern = new RegExp('^(?:\\+?(61))? ?(?:\\((?=.*\\)))?(0?[2-57-8])\\)? ?(\\d\\d(?:[- ](?=\\d{3})|(?!\\d\\d[- ]?\\d[- ]))\\d\\d[- ]?\\d[- ]?\\d{3})$');
+  const pattern = new RegExp(
+    '^(?:\\+?(61))? ?(?:\\((?=.*\\)))?(0?[2-57-8])\\)? ?(\\d\\d(?:[- ](?=\\d{3})|(?!\\d\\d[- ]?\\d[- ]))\\d\\d[- ]?\\d[- ]?\\d{3})$'
+  );
   return pattern.test(cleanedPhoneNumber);
 };
 
@@ -429,6 +460,18 @@ export const getParams = (params)=>{
 
   return allParams
 }
+
+export const createQueryParams = (params, char = '&') => {
+  let query = '';
+  if (params) {
+    query = Object.entries(params)
+      .filter(([key, value]) => (value && value !== 0 ? true : false))
+      .map(([key, value]) => `${key}=${value}`)
+      .join(char);
+  }
+  return query ? `?${query}` : '';
+};
+
 
 export const ellipsis = (str, fixed)=>{
   if (str){

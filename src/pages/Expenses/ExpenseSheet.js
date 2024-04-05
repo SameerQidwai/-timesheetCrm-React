@@ -67,7 +67,7 @@ const ExpenseSheet = (props) => {
       ...tableSorter('status', 'string', true, 'SB')
     },
     {
-      title: 'Submited At',
+      title: 'Submitted At',
       dataIndex: 'submittedAt',
       align: 'center',
       render: (text)=> formatDate(text, true, true),

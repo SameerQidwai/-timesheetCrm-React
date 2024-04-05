@@ -1,11 +1,11 @@
 import React, {Component} from 'react'
-import { Table, Button, Row, Col, Typography, Menu, Dropdown, DatePicker, Tag, Select, Modal, Form, Input, Tooltip, Space} from 'antd'
+import { Table, Button, Row, Col, Typography, Menu, Dropdown, DatePicker, Tag, Select, Modal, Form, Input, Tooltip, Space, Switch, Checkbox} from 'antd'
 import { DownOutlined, SettingOutlined, ExclamationCircleOutlined, CheckCircleOutlined, AuditOutlined} from '@ant-design/icons';
 import { formatDate, formatFloat, getParams, localStore, R_STATUS, STATUS_COLOR } from '../../service/constant';
 import { getApprovalRequests, manageLeaveRequests } from '../../service/leaveRequest-Apis';
 import AddRequestModal from './Modals/AddRequestModal';
 import { getMilestones } from '../../service/timesheet';
-import { getLineEmployees, getManageProjects } from '../../service/constant-Apis';
+import { getManageEmployees, getManageProjects } from '../../service/constant-Apis';
 import { tableSorter, tableTitleFilter } from '../../components/Core/Table/TableFilter';
 import {Tag_s} from '../../components/Core/Custom/Index';
 import moment from "moment";
@@ -151,7 +151,7 @@ class ApproveRequest extends Component {
         const { LEAVE_REQUESTS } = JSON.parse(permissions);
         const queryParams = `startDate=${query?.startDate}&endDate=${query?.endDate}&userId=${query?.userId}&workId=${query?.workId}`;
 
-        Promise.all([ getManageProjects('LEAVE_REQUESTS'), getApprovalRequests(queryParams), getLineEmployees() ])
+        Promise.all([ getManageProjects({resource:'LEAVE_REQUESTS', phase:true}), getApprovalRequests(queryParams), getManageEmployees({isActive: true}) ])
         .then(res => {
 
             if(paramRequestId && res[1].success){ //selecting timesheet from queryparams
@@ -311,6 +311,24 @@ class ApproveRequest extends Component {
         }
     }
 
+    onCheckChanged = async({target}, key) =>{
+        let value = target.checked
+        let query = {resource: 'LEAVE_REQUESTS'}
+        // if (key !== 'USERS'){
+            if (!value){
+                if (key ==='WORKS'){
+                    query.phase= true
+                }else if (key === 'USERS'){
+                    query.isActive = true
+                }
+            }
+            let res = key === 'WORKS'
+                ? await getManageProjects(query)
+                : await getManageEmployees(query);
+            this.setState({ [key]: res.success ? res.data : [] });
+        // }
+    }
+
     render(){
         const { request, filterRequest, sRequest, openModal, readRequest, queryRequest, WORKS, USERS, permissions} = this.state;
         const { startDate, endDate, workId, userId } = queryRequest
@@ -347,6 +365,9 @@ class ApproveRequest extends Component {
                                 })
                             }}
                         />
+                        <div className='smallcheckpox'>
+                            <Checkbox size ="small" onChange={(event)=>this.onCheckChanged(event, 'WORKS')}/> &nbsp; include closed projects
+                        </div>
                     </Col>
                     <Col>
                         <Select
@@ -375,6 +396,9 @@ class ApproveRequest extends Component {
                                 })
                             }}
                         />
+                        <div className='smallcheckpox'>
+                            <Checkbox size ="small" onChange={(event)=>this.onCheckChanged(event, 'USERS')}/> &nbsp; include in-active users
+                        </div>
                     </Col>
                     <Col>
                         <DatePicker
@@ -410,6 +434,7 @@ class ApproveRequest extends Component {
                                 // x: "calc(700px + 100%)",
                                 x: "'max-content'",
                             }}
+                            style={{marginTop: '5px'}}
                             pagination={{pageSize: localStore().pageSize}}
                             bordered
                             rowKey={(data) => data.id} 

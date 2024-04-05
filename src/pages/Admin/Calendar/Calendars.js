@@ -9,6 +9,7 @@ import {
   Col,
   Typography,
   Modal,
+  Form
 } from 'antd';
 import {
   DownOutlined,
@@ -18,7 +19,7 @@ import {
 } from '@ant-design/icons'; //Icons
 import { Link } from 'react-router-dom';
 
-import Form from '../../../components/Core/Forms/Form';
+// import Form from '../../../components/Core/Forms/Form';
 
 import { getList, addList, editLabel } from '../../../service/calendar';
 import { localStore } from '../../../service/constant';
@@ -26,6 +27,7 @@ import {
   tableSorter,
   tableTitleFilter,
 } from '../../../components/Core/Table/TableFilter';
+import FormItems from '../../../components/Core/Forms/FormItems';
 
 const { Title } = Typography;
 
@@ -33,7 +35,7 @@ class Calendars extends Component {
   constructor(props) {
     super(props);
 
-    // this.calenderForm =  React.createRef();
+    this.calenderForm = React.createRef();
 
     this.columns = [
       {
@@ -41,6 +43,13 @@ class Calendars extends Component {
         dataIndex: 'label',
         key: 'label',
         ...tableSorter('label', 'string'),
+      },
+      {
+        title: 'Default',
+        dataIndex: 'isDefault',
+        key: 'isDefault',
+        align: 'right',
+        render: (text) => (text ? 'Yes' : 'No'),
       },
       {
         title: 'Status',
@@ -92,49 +101,70 @@ class Calendars extends Component {
 
     this.state = {
       data: [],
-      calenderForm: React.createRef(),
+      // calenderForm: React.createRef(),
       openModal: false,
       filterData: [],
 
-      FormFields: {
-        formId: 'calenderId',
-        justify: 'center',
-        FormCol: 20,
-        FieldSpace: { xs: 12, sm: 16, md: 122 },
-        layout: { labelCol: { span: 12 } },
-        justifyField: 'center',
-        size: 'middle',
-        initialValues: { obj: { isActive: true } },
-        fields: [
-          {
-            object: 'obj',
-            fieldCol: 20,
-            layout: {
-              labelCol: { span: 4 },
-              wrapperCol: { span: 0 },
+      FormFields: [
+        {
+          Placeholder: 'Title',
+          rangeMin: true,
+          fieldCol: 4,
+          size: 'small',
+          type: 'Text',
+          labelAlign: 'right',
+        },
+        {
+          object: 'obj',
+          fieldCol: 20,
+          key: 'label',
+          size: 'small',
+          type: 'input',
+          itemStyle: { marginBottom: 20 },
+          rules: [
+            {
+              required: true,
+              message: 'Title is required',
             },
-            key: 'label',
-            label: 'Title',
-            size: 'small',
-            // rules:[{ required: true }],
-            type: 'input',
-            labelAlign: 'left',
-          },
-          {
-            object: 'obj',
-            fieldCol: 20,
-            key: 'isActive',
-            label: 'Status',
-            size: 'small',
-            // rules:[{ required: true, message: 'Insert your Password Please' }],
-            type: 'Switch',
-            layout: { labelCol: { span: 4 } },
-            labelAlign: 'left',
-            valuePropName: 'checked',
-            // hidden: false
-          },
-        ],
-      },
+          ],
+        },
+        {
+          Placeholder: 'Status',
+          fieldCol: 4,
+          rangeMin: true,
+          size: 'small',
+          type: 'Text',
+          labelAlign: 'right',
+          // itemStyle:{marginBottom:'10px'},
+        },
+        {
+          object: 'obj',
+          fieldCol: 6,
+          key: 'isActive',
+          size: 'small',
+          type: 'Switch',
+          valuePropName: 'checked',
+          // itemStyle: { marginBottom: 10 },
+        },
+        {
+          Placeholder: 'Default',
+          fieldCol: 4,
+          rangeMin: true,
+          size: 'small',
+          type: 'Text',
+          labelAlign: 'right',
+          // itemStyle:{marginBottom:'10px'},
+        },
+        {
+          object: 'obj',
+          fieldCol: 6,
+          key: 'isDefault',
+          size: 'small',
+          type: 'Switch',
+          valuePropName: 'checked',
+          // itemStyle: { marginBottom: 10 },
+        },
+      ],
     };
   }
 
@@ -149,10 +179,6 @@ class Calendars extends Component {
         this.setState({
           data: res.data,
           filterData: res.data,
-          FormFields: {
-            ...this.state.FormFields,
-            initialValues: {},
-          },
           openModal: false,
           editTimeoff: false,
           loading: false,
@@ -162,18 +188,7 @@ class Calendars extends Component {
   };
 
   toggelModal = (status) => {
-    if (status) {
-      this.setState({ openModal: status });
-    } else {
-      this.setState({
-        FormFields: {
-          ...this.state.FormFields,
-          initialValues: {},
-        },
-        openModal: false,
-        editTimeoff: false,
-      });
-    }
+    this.setState({ openModal: status });
   };
 
   Callback = (vake) => {
@@ -195,14 +210,15 @@ class Calendars extends Component {
   };
 
   getRecord = (data, text) => {
-    this.setState({
-      FormFields: {
-        ...this.state.FormFields,
-        initialValues: { obj: data },
+    this.setState(
+      {
+        editTimeoff: data.id,
+        openModal: true,
       },
-      editTimeoff: data.id,
-      openModal: true,
-    });
+      () => {
+        this.calenderForm.current.setFieldsValue({ obj: data });
+      }
+    );
   };
 
   editRecord = (obj) => {
@@ -216,9 +232,9 @@ class Calendars extends Component {
     });
   };
 
-  submit = () => {
-    this.state.calenderForm.current.refs.calenderId.submit();
-  };
+  // submit = () => {
+  //   this.state.calenderForm.current.refs.calenderId.submit();
+  // };
 
   generalFilter = (value) => {
     const { data } = this.state;
@@ -283,31 +299,39 @@ class Calendars extends Component {
             />
           </Col>
         </Row>
-        {
-          openModal ? (
-            <Modal
-              title={editTimeoff ? 'Edit Calendar' : 'Add Calendar'}
-              maskClosable={false}
-              centered
-              visible={openModal}
-              onOk={() => {
-                this.submit();
-              }}
-              okButtonProps={{ disabled: loading }}
-              okText={loading ? <LoadingOutlined /> : 'Save'}
-              onCancel={() => {
-                this.toggelModal(false);
-              }}
-              width={600}
-            >
-              <Form
-                ref={calenderForm}
-                Callback={this.Callback}
-                FormFields={FormFields}
-              />
-            </Modal>
-          ) : null //adding a commit
-        }
+        {openModal&&<Modal
+          title={editTimeoff ? 'Edit Calendar' : 'Add Calendar'}
+          maskClosable={false}
+          centered
+          destroyOnClose
+          visible={openModal}
+          okButtonProps={{
+            disabled: loading,
+            htmlType: 'submit',
+            form: 'my-form',
+          }}
+          okText={loading ? <LoadingOutlined /> : 'Save'}
+          onCancel={() => {
+            this.toggelModal(false);
+          }}
+          width={600}
+        >
+          <Form
+            id={'my-form'}
+            ref={this.calenderForm}
+            onFinish={this.Callback}
+            scrollToFirstError={true}
+            size="small"
+            layout="inline"
+          >
+            <FormItems FormFields={FormFields} />
+          </Form>
+          {/* <Form
+              ref={calenderForm}
+              Callback={this.Callback}
+              FormFields={FormFields}
+            /> */}
+        </Modal>}
       </>
     );
   }

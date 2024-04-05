@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Row, Col, Table, Modal, Button, Select, Typography, Popconfirm, DatePicker, Space, Tag, Tooltip, message, Dropdown, Menu, Radio} from "antd";
+import { Row, Col, Table, Modal, Button, Select, Typography, DatePicker, Space, Tooltip, message, Dropdown, Menu, Checkbox} from "antd";
 import { DownloadOutlined, SaveOutlined, LoadingOutlined, PlusCircleOutlined, MoreOutlined, DeleteOutlined, EditOutlined, 
-    LeftOutlined, RightOutlined,ExclamationCircleOutlined, CheckCircleOutlined, PaperClipOutlined, AuditOutlined, DiffFilled } from "@ant-design/icons"; //Icons
+    LeftOutlined, RightOutlined,ExclamationCircleOutlined, CheckCircleOutlined, PaperClipOutlined, AuditOutlined } from "@ant-design/icons"; //Icons
 import TimeModal from "./Modals/TimeModal"
 import AttachModal from "./Modals/AttachModal";
-import {  getList, reviewTimeSheet, getUsers, deleteTime, getPdf,  } from "../../service/timesheet"
-import { getCalendarHolidaysFormat, getUserMilestones } from "../../service/constant-Apis";
-import { localStore, Api, thumbUrl, STATUS_COLOR, R_STATUS, formatFloat, getModulePermissions, dateClosed, getParams } from "../../service/constant";
+import {  getList, reviewTimeSheet, getUsers, deleteTime, getPdf } from "../../service/timesheet"
+import { getCalendarHolidaysFormat, getUserMilestones, getManageEmployees } from "../../service/constant-Apis";
+import {  localStore, Api, formatFloat, getModulePermissions, dateClosed, getParams, createQueryParams } from "../../service/constant";
     
 import moment from "moment";
 import "../styles/button.css";
@@ -22,7 +22,7 @@ const { Title, Link: Tlink, Text} = Typography;
 class TimeSheetContact extends Component {
   constructor() {
     super();
-    let {startDate, endDate} = getParams(window.location.search)
+    let {startDate, endDate, userId} = getParams(window.location.search)
     this.state = {
       isVisible: false,
       inProgress: false,
@@ -39,8 +39,11 @@ class TimeSheetContact extends Component {
       loading: false,
       eData: [],
       USERS: [],
-      sUser: null,
+      sUser: userId,
       loginId: null,
+      canAdd: false,
+      canUpdate: false,
+      canDelete: false,
       data: [],
       comments: null,
       sMilestone: {},
@@ -209,24 +212,28 @@ class TimeSheetContact extends Component {
       ],
     };
   }
-
+  
   componentDidMount = () => {    
     this.fetchAll();
     // this.columns()
   };
 
   fetchAll = () => {
-    Promise.all([getUsers(), getCalendarHolidaysFormat()])
+    
+    Promise.all([getManageEmployees({resource: 'TIMESHEETS', isActive:true}), getCalendarHolidaysFormat()])
       .then(([userRes, holidayRes]) => {
-        let value = 0;
-        const { anyPermissions: permissions, userLoginId: loginId } =
+        let {sUser} = this.state;
+        const { modulePermission: permissions, userLoginId: loginId } =
           getModulePermissions('TIMESHEETS');
 
-        if (userRes.success && userRes.data.length > 0) {
-          value = userRes.data.value;
+          let {ADD={}, UPDATE={}, DELETE={}} = permissions?? {};
+
+        if (!sUser && userRes.success && userRes.data.length > 0) {
+          sUser = userRes.data.value;
           userRes.data.forEach((el) => {
             if (el.value === loginId) {
-              value = el.value; //selecting the login user from users array
+              console.log('here')
+              sUser = el.value; //selecting the login user from users array
             }
           });
         }
@@ -234,10 +241,15 @@ class TimeSheetContact extends Component {
         this.setState(
           {
             USERS: userRes.success ? userRes.data : [],
-            sUser: value,
-            permissions: permissions,
-            loginId,
             holidays: holidayRes.success ? holidayRes.data : {},
+            sUser: parseInt(sUser),
+            loginId,
+            permissions: permissions,
+
+            canAdd: ((ADD.OWN && sUser === loginId) || ADD.ANY || ADD.MANAGE),
+            canUpdate: ((UPDATE.OWN && sUser === loginId) || UPDATE.ANY || UPDATE.MANAGE),
+            canDelete: ((DELETE.OWN && sUser === loginId) || DELETE.ANY || DELETE.MANAGE),
+
             // USERS: userRes[1].success? userRes[1].data : [],
           },
           () => {
@@ -275,18 +287,21 @@ class TimeSheetContact extends Component {
     startDate= startDate.format('DD-MM-YYYY');
     endDate= endDate.format('DD-MM-YYYY');
 
+    let queryString = createQueryParams({
+      startDate,
+      endDate,
+      userId: sUser
+    })
+
     this.props.history.push(
       {
         pathname: 'time-sheet',
-        search: `?startDate=${startDate}&endDate=${endDate}&userId=${sUser}`
+        search: queryString ?? ''
       }
     )
 
     if (sUser) {
-      getList({
-        userId: sUser,
-        startDate, endDate,
-      }).then((res) => {
+      getList(queryString).then((res) => {
         // if (res.success){
         this.setState({
           timesheet: res.data ?? {},
@@ -299,13 +314,14 @@ class TimeSheetContact extends Component {
         // }
       });
     }
-    this.columns();
+      this.columns();
   };
 
   columns = () => {
     // create table column and add date as colmumn name for selected month
     const { sWeek, startDate, endDate } = this.state.sheetDates;
-    let { columns, sUser, loginId, permissions, holidays } = this.state;
+    // let { columns, sUser, loginId, permissions, holidays } = this.state;
+    let { columns, canAdd, canUpdate, canDelete, holidays } = this.state;
     let date = undefined;
     let key = undefined;
     columns = [columns[0], columns[1]];
@@ -391,16 +407,26 @@ class TimeSheetContact extends Component {
                 }
               }
             } else {
-              const canAdd =
-                (!permissions?.['ADD'] || sUser === loginId) &&
-                col.dateObj.isSameOrAfter(startDate) &&
+              // let {ADD=false, UPDATE=false, DELETE=false} = permissions?? {};
+              // const canAdd =
+              //   ((ADD.OWN && sUser === loginId) || ADD.ANY || ADD.MANAGE);
+
+              // const canUpdated =
+              //   ((UPDATE.OWN && sUser === loginId) || UPDATE.ANY || UPDATE.MANAGE);
+
+              // const canDelete =
+              //   ((DELETE.OWN && sUser === loginId) || DELETE.ANY || DELETE.MANAGE);
+
+                const isOpen = col.dateObj.isSameOrAfter(startDate) &&
                 col.dateObj.isSameOrBefore(endDate); //checking if project is close
+
               const clickable =
                 (record.status === 'SV' ||
                   record.status === 'RJ' ||
                   !record.status) &&
                 record.phase !== false &&
-                sUser === loginId && !dateClosed(endDate)
+              !dateClosed(endDate)
+
               if (value) {
                 // I didn't put the conditon for column previos or next month because this column won't have any value for now
                 let breakHours = moment.duration(value['breakHours'], 'hours');
@@ -433,10 +459,7 @@ class TimeSheetContact extends Component {
                               overlay={
                                 <Menu onClick={this.handleMenuClick}>
                                   <Menu.Item
-                                    disabled={
-                                      !permissions?.['UPDATE'] &&
-                                      sUser !== loginId
-                                    }
+                                    disabled={!canUpdate}
                                     key="Edit"
                                     onClick={() => {
                                       //data //index    //col key      //Col heading to show on Modal
@@ -452,10 +475,7 @@ class TimeSheetContact extends Component {
                                   </Menu.Item>
                                   <Menu.Item
                                     key="delete" //checking delete permission   // only admin and loggedin user will see the menu  icon //checking if project is close
-                                    disabled={
-                                      !permissions?.['DELETE'] &&
-                                      sUser !== loginId
-                                    }
+                                    disabled={!canDelete}
                                     onClick={() => {
                                       this.deleteRecord(
                                         value,
@@ -493,7 +513,7 @@ class TimeSheetContact extends Component {
                 // to not show add button if column month doesn't match with  selected month
                 return (
                   clickable &&
-                  canAdd && (
+                  canAdd && isOpen && (
                     <PlusCircleOutlined
                       style={{ fontSize: 24, color: '#1890ff' }}
                       onClick={() => {
@@ -545,10 +565,10 @@ class TimeSheetContact extends Component {
       var duration = moment.duration(breakHours, 'hours');
       let obj = {
         entryId: record[colKey].entryId,
-        startTime: moment(record[colKey].startTime, 'HH:mm')._isValid
+        startTime: moment(record[colKey].startTime, 'HH:mm').isValid
           ? moment(record[colKey].startTime, 'HH:mm')
           : null,
-        endTime: moment(record[colKey].endTime, 'HH:mm')._isValid
+        endTime: moment(record[colKey].endTime, 'HH:mm').isValid
           ? moment(record[colKey].endTime, 'HH:mm')
           : null,
         breakHours:
@@ -817,6 +837,19 @@ class TimeSheetContact extends Component {
             {milestones.length - 1 > index && ','}
           </div>
         ))}
+        {stage === 'Submit' && (
+          <div className="submit-sensitive">
+            <Text
+              type="danger"
+              italic
+              underline
+              className="sensitive mt-10 lh-1"
+            >
+              Reminder: Once submitted, timesheet will be locked; no further
+              changes permitted.
+            </Text>
+          </div>
+        )}
       </div>
     );
     const modal = Modal.confirm({
@@ -880,14 +913,19 @@ class TimeSheetContact extends Component {
 
   bulkCallBack = () =>{
     // get timesheet for the employee withe date
+
     const { sUser, sheetDates } = this.state;
-    const { startDate, endDate } = sheetDates;
+    let { startDate, endDate } = sheetDates;
+    startDate= startDate.format('DD-MM-YYYY');
+    endDate= endDate.format('DD-MM-YYYY');
+
+    let queryString = createQueryParams({
+      startDate,
+      endDate,
+      userId: sUser
+    })
     if (sUser) {
-      getList({
-        userId: sUser,
-        startDate: startDate.format('DD-MM-YYYY'),
-        endDate: endDate.format('DD-MM-YYYY'),
-      }).then((res) => {
+      getList(queryString).then((res) => {
         // if (res.success){
         this.setState({
           timesheet: res.data ?? {},
@@ -903,14 +941,24 @@ class TimeSheetContact extends Component {
     }
   }
 
+  onCheckChanged = async({target}) =>{
+    let value = target.checked
+    let query = {resource: 'TIMESHEETS'}
+    if (!value){
+      query.isActive = true
+    }
+    let res = await getManageEmployees(query)
+    this.setState({USERS: res.success? res.data: []})
+  }
 
   render() {
-    const { loading, data, isVisible, proVisible, columns, editTime, timeObj, sheetDates, milestones, sMilestone, isAttach, isBulk, isDownload, eData, USERS, sUser, loginId, sTMilestones, permissions, inProgress } = this.state;
-    // delete button disable condition
-    const canDelete =
-      sTMilestones.keys.length < 1 &&
-      (sUser === loginId || !!permissions?.['DELETE']); //Check this thing please if permission mei koi masla aye
+    const { loading, data, isVisible, proVisible, columns, editTime, timeObj, sheetDates,
+      milestones, sMilestone, isAttach, isBulk, isDownload, eData, USERS, sUser,
+      sTMilestones, canAdd, canUpdate, canDelete, inProgress } = this.state;
     const { sWeek, startDate, endDate, cMonth } = this.state.sheetDates;
+    
+    const isDateClose = dateClosed(endDate)
+
     return (
       <>
         <Row justify="space-between" gutter={20}>
@@ -946,6 +994,9 @@ class TimeSheetContact extends Component {
                 );
               }}
             />
+            <div className='smallcheckpox'>
+              <Checkbox size ="small" onChange={this.onCheckChanged}/> &nbsp; include in-active users
+            </div>
           </Col>
           <Col>
             <DatePicker
@@ -975,7 +1026,7 @@ class TimeSheetContact extends Component {
           <Col >
             <Button
               type="primary"
-              disabled={sUser !== loginId || dateClosed(endDate)}
+              disabled={!canAdd || isDateClose}
               className="orange-color"
               onClick={() => { this.openBulkModal(); }}
             >
@@ -985,7 +1036,7 @@ class TimeSheetContact extends Component {
           <Col >
             <Button
               type="primary"
-              disabled={sUser !== loginId || dateClosed(endDate)}
+              disabled={!canAdd || isDateClose}
               onClick={() => {
                 this.getProjects(sUser, startDate, endDate);
                 this.setState({ proVisible: true });
@@ -1018,7 +1069,7 @@ class TimeSheetContact extends Component {
         <Table
           sticky
           size="small"
-          style={{ maxHeight: 'fit-content' }}
+          style={{ maxHeight: 'fit-content', marginTop: '5px' }}
           className="timeSheet-table fs-small"
           loading={inProgress}
           rowSelection={{
@@ -1029,12 +1080,12 @@ class TimeSheetContact extends Component {
             getCheckboxProps: (record) => ({
               //checking if project is close
               disabled:
-                sUser !== loginId ||
+                !canAdd ||
                 record.status === 'SB' ||
                 record.status === 'AP' ||
                 record.leaveRequest ||
                 record.phase === false ||
-                dateClosed(endDate)
+                isDateClose
               // Column configuration not to be checked
             }),
           }}
@@ -1054,7 +1105,7 @@ class TimeSheetContact extends Component {
           <Col>
             <Button
               className={'success'}
-              disabled={sUser !== loginId || sTMilestones.keys.length < 1}
+              disabled={canAdd && sTMilestones.keys.length < 1}
               onClick={() => this.multiAction('Submit')}
             >
               Submit
@@ -1065,8 +1116,7 @@ class TimeSheetContact extends Component {
               type="primary"
               danger
               disabled={
-                sTMilestones.keys.length < 1 &&
-                (sUser !== loginId || !permissions?.['DELETE']?.['ANY'])
+                sTMilestones.keys.length < 1 && canDelete
               }
               onClick={() => this.multiAction('Delete')}
             >
@@ -1081,6 +1131,8 @@ class TimeSheetContact extends Component {
             editTime={editTime}
             sheetDates={sheetDates}
             user={sUser}
+            canAdd={canAdd}
+            canUpdate={canUpdate}
             close={() =>
               this.setState({
                 isVisible: false,
@@ -1095,7 +1147,7 @@ class TimeSheetContact extends Component {
           <AttachModal
             visible={isAttach}
             timeObj={timeObj}
-            yearClosed={dateClosed(endDate)}
+            yearClosed={isDateClose}
             close={() =>
               this.setState({
                 isAttach: false,
@@ -1114,12 +1166,12 @@ class TimeSheetContact extends Component {
             close={() => this.setState({ isBulk: false })}
           />
         )}
-        {/* {isDownload && (
+        {isDownload && (
           <TimeSheetPDF
             milestoneEntryId={eData}
             close={() => this.setState({ isDownload: false })}
           />
-        )} */}
+        )}
         {proVisible && ( // if Project gets remove remove this
           <Modal
             title="Add Project"

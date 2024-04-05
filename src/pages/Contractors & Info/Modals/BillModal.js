@@ -6,6 +6,7 @@ import { dateClosed, dateRange, disableAllFields, formatDate, headers, localStor
 
 import { addList, editList, getRecord } from "../../../service/subContrators-contracts";
 import { addFiles } from "../../../service/Attachment-Apis";
+import { getCalendars } from "../../../service/constant-Apis";
 
 class BillModal extends Component {
     constructor() {
@@ -38,6 +39,7 @@ class BillModal extends Component {
                 {
                     Placeholder: "Contract End Date",
                     fieldCol: 12,
+                    // rangeMin: true,
                     size: "small",
                     type: "Text",
                     labelAlign: "right",
@@ -126,11 +128,18 @@ class BillModal extends Component {
                 {
                     Placeholder: "Work Days In A Week",
                     rangeMin: true,
-                    fieldCol: 18,
+                    fieldCol: 6,
                     size: "small",
                     type: "Text",
                     labelAlign: "right",
                     // itemStyle:{marginBottom:'10px'},
+                },
+                {
+                    Placeholder: 'Employee Calendar',
+                    fieldCol: 12,
+                    size: 'small',
+                    type: 'Text',
+                    labelAlign: 'right',
                 },
                 {
                     object: "billing",
@@ -167,6 +176,15 @@ class BillModal extends Component {
                     itemStyle: { marginBottom: 10 },
                 },
                 {
+                    object: 'billing',
+                    fieldCol: 12,
+                    key: 'calendarId',
+                    size: 'small',
+                    data: [],
+                    type: 'Select',
+                    itemStyle: { marginBottom: 10 },
+                },
+                {
                     Placeholder: "Comments",
                     fieldCol: 24,
                     size: "small",
@@ -186,11 +204,49 @@ class BillModal extends Component {
     }
 
     componentDidMount = () => {
-        const { editCntrct } = this.props
-        if (editCntrct) {
-            this.getRecord(editCntrct);
-        }
+        this.getData()
     };
+
+    getData = () => {
+        const { editCntrct } = this.props
+        Promise.all([editCntrct && getRecord(editCntrct), getCalendars()])
+        .then(res => {
+            const {success, data} = res[0]
+            let { BillingFields, disabledFY, disabledSY } = this.state
+            BillingFields[13].data = res[1].data // calendar
+            
+            if (success){
+                data.startDate = formatDate(data.startDate)
+                data.endDate =  formatDate(data.endDate)
+                disabledFY =  dateClosed(data.endDate, data.startDate);
+
+                if (disabledFY) {
+                    BillingFields = disableAllFields(BillingFields)
+                }else{
+                    disabledSY = dateClosed(data.startDate)
+                    if (disabledSY)
+                    BillingFields = disableAllFields(BillingFields)
+                    BillingFields[3].disabled = false
+                }
+
+                this.formRef.current.setFieldsValue({ billing: data, });
+                this.setState({
+                    fileIds: data.fileId,
+                    fileList: data.file,
+                    BillingFields,
+                    disabledFY,
+                    disabledSY
+                })
+            }
+        })
+    }
+
+    // getRecord = (data) => {
+    //     getRecord(data).then(res=>{
+            
+    //     })        
+    // };
+
 
     onFinish = (vake) => {
         // this will work after  getting the Object from level form
@@ -223,36 +279,6 @@ class BillModal extends Component {
                 callBack();
             }
         });
-    };
-
-    getRecord = (data) => {
-        getRecord(data).then(res=>{
-            const {success, data} = res
-            let { BillingFields, disabledFY, disabledSY } = this.state
-            if (success){
-                data.startDate = formatDate(data.startDate)
-                data.endDate =  formatDate(data.endDate)
-                disabledFY =  dateClosed(data.endDate, data.startDate);
-
-                if (disabledFY) {
-                    BillingFields = disableAllFields(BillingFields)
-                }else{
-                    disabledSY = dateClosed(data.startDate)
-                    if (disabledSY)
-                    BillingFields = disableAllFields(BillingFields)
-                    BillingFields[3].disabled = false
-                }
-
-                this.formRef.current.setFieldsValue({ billing: data, });
-                this.setState({
-                    fileIds: data.fileId,
-                    fileList: data.file,
-                    BillingFields,
-                    disabledFY,
-                    disabledSY
-                })
-            }
-        })        
     };
 
     editRecord = (data) => {

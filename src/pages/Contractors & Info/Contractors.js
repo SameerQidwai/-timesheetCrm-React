@@ -115,6 +115,15 @@ class Contractors extends Component {
         key: 'email',
       },
       {
+        title: 'Role',
+        dataIndex: ['role', 'label'],
+        key: 'role',
+        ...tableSorter(
+          'role.label',
+          'string'
+        ),
+      },
+      {
         title: 'Status',
         dataIndex: "active",
         key: 'status',

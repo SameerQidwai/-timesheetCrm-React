@@ -223,9 +223,10 @@ class LeavePolicies extends Component {
                     labelAlign: "left",
                     data: [
                         { value: "M", label: "Monthly" },
+                        { value: "F", label: "Fortnightly" },
                         { value: "Y", label: "Yearly" },
-                        { value: "A", label: "Anniversary" },
-                        { value: "MA", label: "Monthly Anniversary" },
+                        // { value: "A", label: "Anniversary" },
+                        // { value: "MA", label: "Monthly Anniversary" },
                         { value: "N", label: "NEVER" },
                     ],
                 },
@@ -247,9 +248,10 @@ class LeavePolicies extends Component {
                     labelAlign: "left",
                     data: [
                         { value: "M", label: "Monthly" },
+                        { value: "F", label: "Fortnightly" },
                         { value: "Y", label: "Yearly" },
-                        { value: "A", label: "Anniversary" },
-                        { value: "MA", label: "Monthly Anniversary" },
+                        // { value: "A", label: "Anniversary" },
+                        // { value: "MA", label: "Monthly Anniversary" },
                         { value: "N", label: "NEVER" },
                     ],
                 },
@@ -313,6 +315,7 @@ class LeavePolicies extends Component {
             }
         });
     };
+
     getData = () => {
         getList().then((res) => {
             if (res.success) {
@@ -326,7 +329,6 @@ class LeavePolicies extends Component {
             }
         });
     };
-
 
     handleDelete = (id) => {
         delLabel(id).then((res) => {

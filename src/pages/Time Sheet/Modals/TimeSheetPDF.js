@@ -11,7 +11,6 @@ const TimeSheetPDF = (props) => {
     const componentRef = useRef();
     
     const [data, setData] = useState([])
-    const [details, setDetail] = useState({})
     const column = [
         {
             title:'Date',
@@ -90,7 +89,8 @@ const TimeSheetPDF = (props) => {
         const data = {milestoneEntryIds: props.milestoneEntryId}
         getPdf(data).then(res=>{
             if(res.success){
-                setData(res.data)
+                console.log('replace with this if download from server', res.data?.files)
+                setData(res.data?.timesheets || [])
                 // setDetail(res.milestoneInfo)
                 handlePrint()
                 props.close()
@@ -98,7 +98,6 @@ const TimeSheetPDF = (props) => {
         })
         return true
     }
-
     return (
         // style={{display: 'none'}}
         // <div>
@@ -113,7 +112,7 @@ const TimeSheetPDF = (props) => {
                             <Row justify="space-between" align="middle" >
                                 <Col ><Typography.Title level={2} style={{margin: 0}}> Timesheet </Typography.Title></Col>
                                                                                         {/* <!--Name__Logo-->*/}
-                                <Col style={{ width: '60%', textAlign: 'right'}}><img src={'/onelm.png'} width={200} /></Col>
+                                <Col style={{ width: '60%', textAlign: 'right'}}><img src={'/z-cp-logo.png'} width={200} /></Col>
                             </Row>
                             <Row>
                                 {details &&<Descriptions column={2} bordered size={"small"} style={{margin:'15px 0px', width: '100%'}} className="describe">

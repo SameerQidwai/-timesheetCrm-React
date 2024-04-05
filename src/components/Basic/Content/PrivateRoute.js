@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { Redirect, useLocation } from "react-router-dom"; // Route Library
-import { Layout } from "antd";
+import { Layout, Modal } from "antd";
 import AdminContent from './AdminContent'
 import { loggedIn, refreshToken } from "../../../service/Login-Apis";
 import ActivityCounter from "./Modals/ActivityCounter";
 import ActivityLogin from "./Modals/ActivityLogin";
 import '../../Styles/content.css'
+import { getCookie } from "../../../service/constant";
 
 const { Content } = Layout;
-
+let modaling = null
 // class PrivateRoute extends Component {
 function PrivateRoute (props) {
+    let gstRead = getCookie('gstRead')
     const location = useLocation();
     let redirect = `${location?.pathname ?? ''}${location?.search ?? ''}`;
     const [ lastActivity, setLastActivity ] = useState(false);
@@ -64,10 +66,26 @@ function PrivateRoute (props) {
         setLogin(false);
     }
 
+    const gstModal = () =>{
+        if (!modaling && !gstRead){
+            modaling = Modal.info({
+                title: `Important Pricing Information`,
+                content: 'All prices exclude GST unless explicitly stated otherwise.',
+                okText: "Acknowledged",
+                onOk: () => {
+                    document.cookie = "gstRead=true"
+                    modaling.destroy();
+                  },
+            })
+        }
+    }
+
     return (
-      <div className="site-layour-frame">
-        <Content className="site-layout-background layout-content-custom">
-          {loggedIn() === 'jwtExpired' || loggedIn() === true ? (
+        <div className="site-layour-frame">
+            <Content
+                className="site-layout-background layout-content-custom"
+            >
+            {loggedIn() === 'jwtExpired' || loggedIn() === true ? (
             <AdminContent />
           ) : (
             <Redirect
@@ -80,25 +98,25 @@ function PrivateRoute (props) {
               }}
             />
           )}
-          {/* {!stopTime&&restActivity()} */}
-          {lastActivity && (
-            <ActivityCounter
-              visible={lastActivity}
-              refresh={() => refresh()}
-              timeOut={() => ActivityTimeOut()}
-            />
-          )}
-          {/* {loggedIn() ==='jwtExpired'&& */}{' '}
-          {/** if activity login do something fuzzy uncomment this */}
-          <ActivityLogin
-            visible={loggedIn() === 'jwtExpired' || openLogin}
-            close={() => {
-              closeLogin();
-            }}
-          />
-          {/* } */}
-        </Content>
-      </div>
+                {lastActivity && 
+                    <ActivityCounter 
+                        visible={lastActivity}
+                        refresh={()=>refresh()} 
+                        timeOut={()=>ActivityTimeOut()}
+                    /> 
+                }
+
+                {/* {loggedIn() ==='jwtExpired'&& */} {/** if activity login do something fuzzy uncomment this */}
+                    <ActivityLogin 
+                        visible={loggedIn() ==='jwtExpired' || openLogin} 
+                        close={()=>{closeLogin()}}
+                    /> 
+                {/* } */}
+            </Content>
+            {loggedIn() ==='jwtExpired' || loggedIn() === true && gstModal()}
+        </div>
     );
 }
 export default PrivateRoute;
+
+
