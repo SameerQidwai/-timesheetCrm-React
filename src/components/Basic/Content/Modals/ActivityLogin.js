@@ -62,7 +62,7 @@ function ActivityLogin(props) {
                         </Form.Item>
                     </Form>
             </Modal>
-            {logout && <Redirect to={{ pathname: '/'}} />}
+            {logout && <Redirect to={{ pathname: '/logout'}} />}
         </div>
     )
 }
