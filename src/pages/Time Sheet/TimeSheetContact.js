@@ -5,15 +5,16 @@ import { DownloadOutlined, SaveOutlined, LoadingOutlined, PlusCircleOutlined, Mo
     LeftOutlined, RightOutlined,ExclamationCircleOutlined, CheckCircleOutlined, PaperClipOutlined, AuditOutlined } from "@ant-design/icons"; //Icons
 import TimeModal from "./Modals/TimeModal"
 import AttachModal from "./Modals/AttachModal";
-import {  getList, reviewTimeSheet, deleteTime,  } from "../../service/timesheet"
+import {  getList, reviewTimeSheet, getUsers, deleteTime, getPdf } from "../../service/timesheet"
 import { getCalendarHolidaysFormat, getUserMilestones, getManageEmployees } from "../../service/constant-Apis";
-import {  Api, formatFloat, getModulePermissions, dateClosed, getParams, createQueryParams } from "../../service/constant";
+import {  localStore, Api, formatFloat, getModulePermissions, dateClosed, getParams, createQueryParams } from "../../service/constant";
     
 import moment from "moment";
 import "../styles/button.css";
 import TimeSheetPDF from "./Modals/TimeSheetPDF";
 import { Tag_s } from "../../components/Core/Custom/Index";
 import BulkModal from "./Modals/BulkModal";
+import { downloadReportFile } from "../../service/reports-Apis";
 
 const { Title, Link: Tlink, Text} = Typography;
 //inTable insert
@@ -24,6 +25,7 @@ class TimeSheetContact extends Component {
     let {startDate, endDate, userId} = getParams(window.location.search)
     this.state = {
       isVisible: false,
+      inProgress: false,
       proVisible: false,
       isAttach: false,
       sheetDates: {
@@ -725,6 +727,7 @@ class TimeSheetContact extends Component {
 
   exporPDF = (entryId) => {
     const keys = entryId ? [entryId] : this.state?.sTimesheet?.keys;
+    const data = {milestoneEntryIds: keys}
     if (keys) {
       this.setState({
         eData: keys,
@@ -733,6 +736,18 @@ class TimeSheetContact extends Component {
     } else {
       this.exportUploadError();
     }
+    // getPdf(data).then(res=>{
+    //   this.setState({inProgress: true})
+    //   if(res.success){
+    //     let {files: fileUrl, timesheets} = res.data
+    //     let timesheet = timesheets?.[0]
+    //     let name = `${timesheet.employee} - ${timesheet.period}__`
+    //     downloadReportFile(fileUrl, name)
+    //     this.setState({inProgress: false})
+    //   }
+    // }).catch(err =>{
+    //   this.setState({inProgress: false})
+    // })
   };
 
   summaryFooter = (data) => {
@@ -939,7 +954,7 @@ class TimeSheetContact extends Component {
   render() {
     const { loading, data, isVisible, proVisible, columns, editTime, timeObj, sheetDates,
       milestones, sMilestone, isAttach, isBulk, isDownload, eData, USERS, sUser,
-      sTMilestones, canAdd, canUpdate, canDelete } = this.state;
+      sTMilestones, canAdd, canUpdate, canDelete, inProgress } = this.state;
     const { sWeek, startDate, endDate, cMonth } = this.state.sheetDates;
     
     const isDateClose = dateClosed(endDate)
@@ -1056,6 +1071,7 @@ class TimeSheetContact extends Component {
           size="small"
           style={{ maxHeight: 'fit-content', marginTop: '5px' }}
           className="timeSheet-table fs-small"
+          loading={inProgress}
           rowSelection={{
             //multiple select commented
             onChange: (selectedRowKeys, selectedRows) => {

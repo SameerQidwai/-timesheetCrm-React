@@ -4,13 +4,14 @@ import { Row, Col, Table, Button, Select, Typography, Modal, DatePicker, Space, 
 import { DownloadOutlined, SaveOutlined, ExclamationCircleOutlined, PaperClipOutlined, CheckCircleOutlined, AuditOutlined } from "@ant-design/icons"; //Icons
 import moment from "moment";
 import AttachModal from "./Modals/AttachModal";
-import {  getList, reviewTimeSheet, getMilestones, getUsersTimesheet  } from "../../service/timesheet"
 import { Api, createQueryParams, dateClosed, getParams, localStore, R_STATUS, STATUS_COLOR } from "../../service/constant";
+import {  getList, reviewTimeSheet, getMilestones, getUsersTimesheet, getPdf  } from "../../service/timesheet"
 
 import "../styles/button.css";
 import TimeSheetPDF from "./Modals/TimeSheetPDF";
 import { Tag_s } from "../../components/Core/Custom/Index";
 import { getCalendarHolidaysFormat, getManageEmployees } from "../../service/constant-Apis";
+import { downloadReportFile } from "../../service/reports-Apis";
 
 const { Title, Link: Tlink, Text } = Typography;
 //inTable insert
@@ -23,6 +24,7 @@ class TimeSheetProject extends Component {
         let {startDate, endDate, milestoneId, timesheetId, userId} = getParams(window.location.search)
         this.state = {
             isAttach: false,
+            inProgress: false,
             sheetDates: {
               startDate: startDate? moment(startDate, 'DD-MM-YYYY')  :moment().startOf('month'),
               endDate: endDate? moment(endDate, 'DD-MM-YYYY'): moment().endOf('month'),
@@ -371,6 +373,20 @@ class TimeSheetProject extends Component {
           eData:  entryIds,
           isDownload: true
       })   
+        // const data = {milestoneEntryIds: entryIds}
+        // getPdf(data).then(res=>{
+        //   this.setState({inProgress: true})
+        //   if(res.success){
+        //     let {files: fileUrl, timesheets} = res.data
+        //     let timesheet = timesheets?.[0] ?? {}
+        //     let employee = timesheets?.length === 1 ? timesheet.employee : 'timesheets'
+        //     let name = `${employee} - ${timesheet.period}__`
+        //     downloadReportFile(fileUrl, name)
+        //     this.setState({inProgress: false})
+        //   }
+        // }).catch(err =>{
+        //   this.setState({inProgress: false})
+        // })
     }
 
     summaryFooter = (data) =>{
@@ -520,7 +536,7 @@ class TimeSheetProject extends Component {
     }
 
     render() {
-        const {  data,   columns,  timeObj,  milestones, sMilestone, isAttach, isDownload, eData, sTimesheet, permissions, sheetDates, USERS, sUser } = this.state
+        const {  data,   columns,  timeObj,  milestones, sMilestone, isAttach, isDownload, eData, sTimesheet, permissions, sheetDates, USERS, sUser , inProgress} = this.state
         return (
           <>
             <Row justify="space-between">
@@ -620,6 +636,7 @@ class TimeSheetProject extends Component {
               size="small"
               style={{ maxHeight: 'fit-content', marginTop: '5px' }}
               className="timeSheet-table fs-small"
+              loading={inProgress}
               rowSelection={{
                 //multiple select commented
                 selectedRowKeys: sTimesheet.keys,
