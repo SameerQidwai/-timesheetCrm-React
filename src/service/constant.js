@@ -217,7 +217,7 @@ export const getCookie = (name)=> {
 }
 // helper gunction will be using this for permissions and will change everywhere
 export const getModulePermissions = (module) => {
-  let { id, permissions } = localStore();
+  let { id, permissions = '{}' } = localStore();
   const { [module]: modulePermission ={} } = JSON.parse(permissions);
   let anyPermissions = {};
   Object.entries(modulePermission).map(([actionKey, action]) => {
