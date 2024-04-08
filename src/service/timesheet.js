@@ -252,7 +252,6 @@ export const getUsersTimesheet = (query) => {
                     });      
                 setToken(res?.headers?.authorization)
             }
-            console.log(newData);
             return { success: success, data: newData };
         })
         .catch((err) => {

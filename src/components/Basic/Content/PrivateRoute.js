@@ -6,13 +6,15 @@ import { loggedIn, refreshToken } from "../../../service/Login-Apis";
 import ActivityCounter from "./Modals/ActivityCounter";
 import ActivityLogin from "./Modals/ActivityLogin";
 import '../../Styles/content.css'
-import { getCookie } from "../../../service/constant";
+import { getCookie, getModulePermissions } from "../../../service/constant";
 
 const { Content } = Layout;
 let modaling = null
 // class PrivateRoute extends Component {
 function PrivateRoute (props) {
     let gstRead = getCookie('gstRead')
+    const { modulePermission: {READ: admin = false}} = getModulePermissions('ADMIN_OPTIONS');
+
     const [ lastActivity, setLastActivity ] = useState(false)
     const [login, setLogin ] =useState(false)
     const [openLogin, setOpenLogin ] =useState(false)
@@ -64,7 +66,7 @@ function PrivateRoute (props) {
     }
 
     const gstModal = () =>{
-        if (!modaling && !gstRead){
+        if (!modaling && !gstRead && admin){
             modaling = Modal.info({
                 title: `Important Pricing Information`,
                 content: 'All prices exclude GST unless explicitly stated otherwise.',

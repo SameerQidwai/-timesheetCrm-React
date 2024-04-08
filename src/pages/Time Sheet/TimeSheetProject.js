@@ -4,7 +4,7 @@ import { Row, Col, Table, Button, Select, Typography, Modal, DatePicker, Space, 
 import { DownloadOutlined, SaveOutlined, ExclamationCircleOutlined, PaperClipOutlined, CheckCircleOutlined, AuditOutlined } from "@ant-design/icons"; //Icons
 import moment from "moment";
 import AttachModal from "./Modals/AttachModal";
-import {  getList, reviewTimeSheet, getMilestones, getUsersTimesheet  } from "../../service/timesheet"
+import {   reviewTimeSheet, getMilestones, getUsersTimesheet  } from "../../service/timesheet"
 import { Api, createQueryParams, dateClosed, getParams, localStore, R_STATUS, STATUS_COLOR } from "../../service/constant";
 
 import "../styles/button.css";
@@ -29,6 +29,7 @@ class TimeSheetProject extends Component {
               cMonth: endDate? moment(endDate, 'DD-MM-YYYY') : moment(),
             },
             timeObj: false,
+            loading: false, 
             paramTimesheetId: timesheetId??null,
             eData: [],
             sMilestone: milestoneId? parseInt(milestoneId): null,
@@ -187,51 +188,63 @@ class TimeSheetProject extends Component {
     }
 
     getSheet = () =>{
+      this.setState({loading: true})
       let { sMilestone, paramTimesheetId, timesheet, keys, sUser } = this.state
       let { startDate, endDate } = this.state.sheetDates
       startDate= startDate.format('DD-MM-YYYY');
       endDate= endDate.format('DD-MM-YYYY');
 
-      if(sMilestone || sUser){
+      let queryString = createQueryParams({
+        startDate,
+        endDate,
+        milestoneId: sMilestone,
+        userId: sUser
+      })
         
-        let queryString = createQueryParams({
-          startDate,
-          endDate,
-          milestoneId: sMilestone,
-          userId: sUser
-        })
-          
-        this.props.history.push(
-          {
-            pathname: 'time-sheet-approval',
-            search: queryString
-          }
-        )
-          // getUsersTimesheet({mileId: sMilestone, startDate, endDate, userId: sUser}).then(res=>{
-          getUsersTimesheet(queryString).then(res=>{
-            timesheet = []
-            keys = []
-            let length = res?.data?.length ?? 0
-            if (paramTimesheetId){ //selecting timesheet from queryparams
-              for(let i = 0; i<length; i++){
-                let data = res?.data?.[i] ?? {}
-                if (data.id == paramTimesheetId && (data.status === "AP" || data.status === "SB")){
-                  timesheet.push(data)
-                  keys.push(data.id)
-                  break; //break if timesheet found
-                }
-              }
+      this.props.history.push(
+        {
+          pathname: 'time-sheet-approval',
+          search: queryString
+        }
+      )
+
+      // if(sMilestone || sUser){
+        
+        // getUsersTimesheet({mileId: sMilestone, startDate, endDate, userId: sUser}).then(res=>{
+      getUsersTimesheet(queryString).then(res=>{
+        timesheet = []
+        keys = []
+        let length = res?.data?.length ?? 0
+        if (paramTimesheetId){ //selecting timesheet from queryparams
+          for(let i = 0; i<length; i++){
+            let data = res?.data?.[i] ?? {}
+            if (data.id == paramTimesheetId && (data.status === "AP" || data.status === "SB")){
+              timesheet.push(data)
+              keys.push(data.id)
+              break; //break if timesheet found
             }
-              this.setState({
-                  // timesheet: res.success ? res.data: {},
-                  data: (res.success && res.data) ? res.data?? []: [],
-                  sTimesheet: { // selected timesheet 
-                      timesheet, //  Timesheet Object 
-                      keys // TimeSheet keys
-                  },
-              })
+          }
+        }
+          this.setState({
+              // timesheet: res.success ? res.data: {},
+              data: (res.success && res.data) ? res.data?? []: [],
+              sTimesheet: { // selected timesheet 
+                timesheet, //  Timesheet Object 
+                keys // TimeSheet keys
+              },
+              loading: false
           })
-      }
+      })
+      // }else{
+      //   this.setState({
+      //     loading: false,
+      //     data: [],
+      //     sTimesheet: {
+      //       timesheet, //  Timesheet Object
+      //       keys, // TimeSheet keys
+      //     },
+      //   });
+      // }
       this.columns()
     }
 
@@ -520,7 +533,7 @@ class TimeSheetProject extends Component {
     }
 
     render() {
-        const {  data,   columns,  timeObj,  milestones, sMilestone, isAttach, isDownload, eData, sTimesheet, permissions, sheetDates, USERS, sUser } = this.state
+        const {  data,   columns,  timeObj,  milestones, sMilestone, isAttach, isDownload, eData, sTimesheet, permissions, sheetDates, USERS, sUser, loading } = this.state
         return (
           <>
             <Row justify="space-between">
@@ -547,7 +560,7 @@ class TimeSheetProject extends Component {
                         .indexOf(input.toLowerCase()) >= 0;
                     return label || value;
                   }}
-                  onSelect={(value, option) => {
+                  onChange={(value, option) => {
                     this.setState(
                       {
                         sMilestone: value,
@@ -618,6 +631,7 @@ class TimeSheetProject extends Component {
             <Table
               sticky
               size="small"
+              loading={loading}
               style={{ maxHeight: 'fit-content', marginTop: '5px' }}
               className="timeSheet-table fs-small"
               rowSelection={{
