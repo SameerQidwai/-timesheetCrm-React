@@ -236,7 +236,8 @@ class Employees extends Component {
       value = value.replace(/\s+/g, '').toLowerCase()
       this.setState({
         filterData: data.filter((el) => {
-          let { firstName: elfirstName, lastName: ellastName, email, phoneNumber, id, role:{label:role} } =
+          let {role:{label:role}}= el
+          let { firstName: elfirstName, lastName: ellastName, email, phoneNumber, id } =
             el.contactPersonOrganization.contactPerson;
             let firstName = `${elfirstName ? elfirstName : ''} ${ellastName ? ellastName : ''}`
             let lastName = `${ellastName ? ellastName : ''} ${elfirstName ? elfirstName : ''}`
