@@ -25,7 +25,7 @@ class TimeSheetContact extends Component {
     let {startDate, endDate, userId} = getParams(window.location.search)
     this.state = {
       isVisible: false,
-      inProgress: false,
+      loading: false,
       proVisible: false,
       isAttach: false,
       sheetDates: {
@@ -231,13 +231,13 @@ class TimeSheetContact extends Component {
         if (!sUser && userRes.success && userRes.data.length > 0) {
           sUser = userRes.data.value;
           userRes.data.forEach((el) => {
-            if (el.value === loginId) {
+            if (el.value == loginId) {
               console.log('here')
               sUser = el.value; //selecting the login user from users array
             }
           });
         }
-
+        console.log(ADD.OWN, sUser, loginId)
         this.setState(
           {
             USERS: userRes.success ? userRes.data : [],
@@ -246,7 +246,7 @@ class TimeSheetContact extends Component {
             loginId,
             permissions: permissions,
 
-            canAdd: ((ADD.OWN && sUser === loginId) || ADD.ANY || ADD.MANAGE),
+            canAdd: ((ADD.OWN && sUser == loginId) || ADD.ANY || ADD.MANAGE),
             canUpdate: ((UPDATE.OWN && sUser === loginId) || UPDATE.ANY || UPDATE.MANAGE),
             canDelete: ((DELETE.OWN && sUser === loginId) || DELETE.ANY || DELETE.MANAGE),
 
@@ -282,6 +282,7 @@ class TimeSheetContact extends Component {
 
   getSheet = () => {
     // get timesheet for the employee withe date
+    this.setState({loading: true})
     const { sUser, sheetDates } = this.state;
     let { startDate, endDate } = sheetDates;
     startDate= startDate.format('DD-MM-YYYY');
@@ -306,6 +307,7 @@ class TimeSheetContact extends Component {
         this.setState({
           timesheet: res.data ?? {},
           data: res?.data?.milestones ?? [],
+          loading:false, 
           sTMilestones: {
             milestones: [],
             keys: [],
@@ -533,7 +535,7 @@ class TimeSheetContact extends Component {
           },
         };
       });
-      this.setState({ columns });
+      this.setState({ columns});
     });
   };
 
@@ -736,17 +738,17 @@ class TimeSheetContact extends Component {
     // } else {
     //   this.exportUploadError();
     // }
+      this.setState({loading: true})
     getPdf(data).then(res=>{
-      this.setState({inProgress: true})
       if(res.success){
         let {files: fileUrl, timesheets} = res.data
         let timesheet = timesheets?.[0]
         let name = `${timesheet.employee} - ${timesheet.period}__`
         downloadReportFile(fileUrl, name)
-        this.setState({inProgress: false})
+        this.setState({loading: false})
       }
     }).catch(err =>{
-      this.setState({inProgress: false})
+      this.setState({loading: false})
     })
   };
 
@@ -913,7 +915,7 @@ class TimeSheetContact extends Component {
 
   bulkCallBack = () =>{
     // get timesheet for the employee withe date
-
+    this.setState({loading: true})
     const { sUser, sheetDates } = this.state;
     let { startDate, endDate } = sheetDates;
     startDate= startDate.format('DD-MM-YYYY');
@@ -934,6 +936,7 @@ class TimeSheetContact extends Component {
             milestones: [],
             keys: [],
           },
+          loading:false,
           isBulk: false 
         });
         // }
@@ -954,10 +957,11 @@ class TimeSheetContact extends Component {
   render() {
     const { loading, data, isVisible, proVisible, columns, editTime, timeObj, sheetDates,
       milestones, sMilestone, isAttach, isBulk, isDownload, eData, USERS, sUser,
-      sTMilestones, canAdd, canUpdate, canDelete, inProgress } = this.state;
+      sTMilestones, canAdd, canUpdate, canDelete, addingProject=false } = this.state;
     const { sWeek, startDate, endDate, cMonth } = this.state.sheetDates;
     
     const isDateClose = dateClosed(endDate)
+
 
     return (
       <>
@@ -1071,7 +1075,7 @@ class TimeSheetContact extends Component {
           size="small"
           style={{ maxHeight: 'fit-content', marginTop: '5px' }}
           className="timeSheet-table fs-small"
-          loading={inProgress}
+          loading={loading}
           rowSelection={{
             //multiple select commented
             onChange: (selectedRowKeys, selectedRows) => {
@@ -1178,13 +1182,14 @@ class TimeSheetContact extends Component {
             maskClosable={false}
             centered
             visible={proVisible}
-            okButtonProps={{ disabled: loading }}
-            okText={loading ? <LoadingOutlined /> : 'Add'}
+            okButtonProps={{ disabled: addingProject  }}
+            okText={addingProject ? <LoadingOutlined /> : 'Add'}
             width={550}
             onCancel={() => {
               this.setState({ proVisible: false, sMilestone: {} });
             }}
             onOk={() => {
+              this.setState({addingProject: true})
               const { data, sMilestone } = this.state;
               const findMilestone = data.findIndex(
                 (el) => el.milestoneId === sMilestone.value
@@ -1210,6 +1215,7 @@ class TimeSheetContact extends Component {
                 proVisible: false,
                 data: [...data],
                 sMilestone: {},
+                addingProject: false
               });
             }}
           >

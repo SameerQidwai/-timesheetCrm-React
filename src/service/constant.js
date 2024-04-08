@@ -1,7 +1,7 @@
 import moment from 'moment';
 import 'moment-weekday-calc';
 import { message as messageAlert } from 'antd';
-// export const Api = 'http://localhost:3301/api/v1';
+export const Api = 'http://localhost:3301/api/v1';
 
 // export const Api = "http://onelmcrm.gaamatech.com:8000/api/v1";
 // export const Api = "http://192.168.0.243:3000/api/v1"; // Shahzaib/
@@ -15,7 +15,7 @@ import { message as messageAlert } from 'antd';
 // export const Api = "http://192.168.0.110:3301/api/v1"; // TrunRajPal Home
 // export const Api = "http://192.168.0.244:3301/api/v1"; // TrunRajPal Office
 
-export const Api = "http://3.219.31.245:8000/api/v1"; //live api
+// export const Api = "http://3.219.31.245:8000/api/v1"; //live api
 // export const Api = 'http://54.79.212.236:8000/api/v1'; //tower api
 // export const Api = 'https://api-towers-group.timewize.com.au/api/v1'; //towers api
 
@@ -219,7 +219,7 @@ export const getCookie = (name)=> {
 // helper gunction will be using this for permissions and will change everywhere
 export const getModulePermissions = (module) => {
   let { id, permissions } = localStore();
-  const { [module]: modulePermission } = JSON.parse(permissions);
+  const { [module]: modulePermission ={} } = JSON.parse(permissions);
   let anyPermissions = {};
   Object.entries(modulePermission).map(([actionKey, action]) => {
     for (const [roleKey, role] of Object.entries(action)) {

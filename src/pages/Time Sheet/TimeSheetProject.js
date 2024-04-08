@@ -4,8 +4,8 @@ import { Row, Col, Table, Button, Select, Typography, Modal, DatePicker, Space, 
 import { DownloadOutlined, SaveOutlined, ExclamationCircleOutlined, PaperClipOutlined, CheckCircleOutlined, AuditOutlined } from "@ant-design/icons"; //Icons
 import moment from "moment";
 import AttachModal from "./Modals/AttachModal";
+import {   reviewTimeSheet, getMilestones, getUsersTimesheet, getPdf  } from "../../service/timesheet"
 import { Api, createQueryParams, dateClosed, getParams, localStore, R_STATUS, STATUS_COLOR } from "../../service/constant";
-import {  getList, reviewTimeSheet, getMilestones, getUsersTimesheet, getPdf  } from "../../service/timesheet"
 
 import "../styles/button.css";
 import TimeSheetPDF from "./Modals/TimeSheetPDF";
@@ -24,13 +24,14 @@ class TimeSheetProject extends Component {
         let {startDate, endDate, milestoneId, timesheetId, userId} = getParams(window.location.search)
         this.state = {
             isAttach: false,
-            inProgress: false,
+            loading: false,
             sheetDates: {
               startDate: startDate? moment(startDate, 'DD-MM-YYYY')  :moment().startOf('month'),
               endDate: endDate? moment(endDate, 'DD-MM-YYYY'): moment().endOf('month'),
               cMonth: endDate? moment(endDate, 'DD-MM-YYYY') : moment(),
             },
             timeObj: false,
+            loading: false, 
             paramTimesheetId: timesheetId??null,
             eData: [],
             sMilestone: milestoneId? parseInt(milestoneId): null,
@@ -189,51 +190,63 @@ class TimeSheetProject extends Component {
     }
 
     getSheet = () =>{
+      this.setState({loading: true})
       let { sMilestone, paramTimesheetId, timesheet, keys, sUser } = this.state
       let { startDate, endDate } = this.state.sheetDates
       startDate= startDate.format('DD-MM-YYYY');
       endDate= endDate.format('DD-MM-YYYY');
 
-      if(sMilestone || sUser){
+      let queryString = createQueryParams({
+        startDate,
+        endDate,
+        milestoneId: sMilestone,
+        userId: sUser
+      })
         
-        let queryString = createQueryParams({
-          startDate,
-          endDate,
-          milestoneId: sMilestone,
-          userId: sUser
-        })
-          
-        this.props.history.push(
-          {
-            pathname: 'time-sheet-approval',
-            search: queryString
-          }
-        )
-          // getUsersTimesheet({mileId: sMilestone, startDate, endDate, userId: sUser}).then(res=>{
-          getUsersTimesheet(queryString).then(res=>{
-            timesheet = []
-            keys = []
-            let length = res?.data?.length ?? 0
-            if (paramTimesheetId){ //selecting timesheet from queryparams
-              for(let i = 0; i<length; i++){
-                let data = res?.data?.[i] ?? {}
-                if (data.id == paramTimesheetId && (data.status === "AP" || data.status === "SB")){
-                  timesheet.push(data)
-                  keys.push(data.id)
-                  break; //break if timesheet found
-                }
-              }
+      this.props.history.push(
+        {
+          pathname: 'time-sheet-approval',
+          search: queryString
+        }
+      )
+
+      // if(sMilestone || sUser){
+        
+        // getUsersTimesheet({mileId: sMilestone, startDate, endDate, userId: sUser}).then(res=>{
+      getUsersTimesheet(queryString).then(res=>{
+        timesheet = []
+        keys = []
+        let length = res?.data?.length ?? 0
+        if (paramTimesheetId){ //selecting timesheet from queryparams
+          for(let i = 0; i<length; i++){
+            let data = res?.data?.[i] ?? {}
+            if (data.id == paramTimesheetId && (data.status === "AP" || data.status === "SB")){
+              timesheet.push(data)
+              keys.push(data.id)
+              break; //break if timesheet found
             }
-              this.setState({
-                  // timesheet: res.success ? res.data: {},
-                  data: (res.success && res.data) ? res.data?? []: [],
-                  sTimesheet: { // selected timesheet 
-                      timesheet, //  Timesheet Object 
-                      keys // TimeSheet keys
-                  },
-              })
+          }
+        }
+          this.setState({
+              // timesheet: res.success ? res.data: {},
+              data: (res.success && res.data) ? res.data?? []: [],
+              sTimesheet: { // selected timesheet 
+                timesheet, //  Timesheet Object 
+                keys // TimeSheet keys
+              },
+              loading: false
           })
-      }
+      })
+      // }else{
+      //   this.setState({
+      //     loading: false,
+      //     data: [],
+      //     sTimesheet: {
+      //       timesheet, //  Timesheet Object
+      //       keys, // TimeSheet keys
+      //     },
+      //   });
+      // }
       this.columns()
     }
 
@@ -374,18 +387,18 @@ class TimeSheetProject extends Component {
       //     isDownload: true
       // })   
         const data = {milestoneEntryIds: entryIds}
+          this.setState({loading: true})
         getPdf(data).then(res=>{
-          this.setState({inProgress: true})
           if(res.success){
             let {files: fileUrl, timesheets} = res.data
             let timesheet = timesheets?.[0] ?? {}
             let employee = timesheets?.length === 1 ? timesheet.employee : 'timesheets'
             let name = `${employee} - ${timesheet.period}__`
             downloadReportFile(fileUrl, name)
-            this.setState({inProgress: false})
+            this.setState({loading: false})
           }
         }).catch(err =>{
-          this.setState({inProgress: false})
+          this.setState({loading: false})
         })
     }
 
@@ -536,7 +549,7 @@ class TimeSheetProject extends Component {
     }
 
     render() {
-        const {  data,   columns,  timeObj,  milestones, sMilestone, isAttach, isDownload, eData, sTimesheet, permissions, sheetDates, USERS, sUser , inProgress} = this.state
+        const {  data,   columns,  timeObj,  milestones, sMilestone, isAttach, isDownload, eData, sTimesheet, permissions, sheetDates, USERS, sUser, loading } = this.state
         return (
           <>
             <Row justify="space-between">
@@ -563,7 +576,7 @@ class TimeSheetProject extends Component {
                         .indexOf(input.toLowerCase()) >= 0;
                     return label || value;
                   }}
-                  onSelect={(value, option) => {
+                  onChange={(value, option) => {
                     this.setState(
                       {
                         sMilestone: value,
@@ -634,9 +647,9 @@ class TimeSheetProject extends Component {
             <Table
               sticky
               size="small"
+              loading={loading}
               style={{ maxHeight: 'fit-content', marginTop: '5px' }}
               className="timeSheet-table fs-small"
-              loading={inProgress}
               rowSelection={{
                 //multiple select commented
                 selectedRowKeys: sTimesheet.keys,
