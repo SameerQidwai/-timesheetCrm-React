@@ -76,7 +76,7 @@ export const PermanentCalculator = (props) => {
     const sumValue = () => {
         let val = 0;
         variables.map((ele) => {
-            if (ele.apply === "Yes") {
+            if (ele && ele.apply === "Yes") {
                 val += ele.value
             }
         })
@@ -381,9 +381,10 @@ export const PermanentCalculator = (props) => {
                 <Col span={12} className="item"></Col>
                 <Col span={12}>
                   {variables?.map((el, index) => (
-                    <Col span={24} key={index}>
+                    el && <Col span={24} key={index}>
                       <Row>
                         <Col span={16} className="label">
+                          {console.log(el)}
                           {STATES[el.name]
                             ? `Payroll Tax - ${STATES[el.name]}`
                             : el.name}
