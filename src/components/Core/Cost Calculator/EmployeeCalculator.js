@@ -10,7 +10,7 @@ import '../../Styles/buycost.css'
 import { buyCost } from "../../../service/constant-Apis";
 
 
-const EmployeeCalculator = (props) =>{
+const EmployeeCalculator = ({empId}) =>{
     const [contract, setContract] = useState({})
     const [variables, setVariables] = useState([])
     const [buyRate, setBuyRate] = useState(0)
@@ -21,7 +21,7 @@ const EmployeeCalculator = (props) =>{
     useEffect(() => {
         let fiscalYear = getFiscalYear('years')
         
-        buyCost('employees', props.empId).then(res=>{
+        buyCost('employees', empId, 'employees').then(res=>{
             if(res.success){
                 let {contract, golobalVariables, employeeBuyRate} = res.data
                 /** calculating noOfDays from contract not in use  */
@@ -40,23 +40,7 @@ const EmployeeCalculator = (props) =>{
                 /**will remove isoWeekdayCalc later  and put constant workDaysPerAnum*/
 
                 contract.workDaysPerAnum = workdays
-                // contract.dailyHours = contract?.noOfHours / contract?.noOfDays
-                // contract.hourlyBaseRate = (contract.type=== 1 ? 
-                //     contract?.remunerationAmount : 
-                //     (contract?.remunerationAmount / 52 / contract?.noOfHours)
-                // ) /** hourlyBaseRate expression Annual hours / 52 * weekly hours  */
-                    /** 52 is a number of weeks in a year, noOfHours are weekly our  */
-                // let count = 0
-                // golobalVariables = golobalVariables.map((el, index)=> {
-                //     if (index === 0){
-                //         el.amount = contract?.hourlyBaseRate * el?.value/100
-                //     }else{
-                //         el.amount = ((contract?.hourlyBaseRate + golobalVariables?.[0].amount) * el.value )/100
-                //     }
-                //     el.apply = 'Yes'
-                //     count += el.amount
-                //     return el
-                // })
+                
                 setBuyRate(employeeBuyRate)
                 setContract(contract)
                 setVariables(golobalVariables)
@@ -75,12 +59,14 @@ const EmployeeCalculator = (props) =>{
         changeVariables[index]['apply'] = value
         let count = contract.hourlyBaseRate
         changeVariables = changeVariables.map((el, index)=> {
-            if (index === 0){// if applicable              // caluclation                     
-                el.amount = el.apply === 'Yes' ? (contract?.hourlyBaseRate * el.value/100) : 0
-            }else{           // if applicable              // caluclation             
-                el.amount = el.apply === 'Yes' ? (((contract?.hourlyBaseRate + changeVariables[0].amount) * el.value )/100) : 0
+            if (el){
+                if (index === 0){// if applicable              // caluclation                     
+                    el.amount = el.apply === 'Yes' ? (contract?.hourlyBaseRate * el.value/100) : 0
+                }else{           // if applicable              // caluclation             
+                    el.amount = el.apply === 'Yes' ? (((contract?.hourlyBaseRate + changeVariables[0].amount) * el.value )/100) : 0
+                }
+                count += el.amount
             }
-            count += el.amount
             return el
         })
         setBuyRate(count)
@@ -89,7 +75,7 @@ const EmployeeCalculator = (props) =>{
 
     return ( 
         <div>{
-            contract.hourlyBaseRate ?
+            contract.hourlyBaseRate>= 0 ?
                 <Row className="buy-sell-calculator">
                     <Col span={12} className="buy-cost calculator">
                         <Row> 
@@ -114,7 +100,7 @@ const EmployeeCalculator = (props) =>{
                             <Col span={8}  className="item my-10" >{formatCurrency(contract?.hourlyBaseRate)}</Col>
                             <Col span={5} offset={16} className="item"><Typography.Text underline strong >Applicable</Typography.Text></Col>
 
-                            {variables.map((el, index)=>  <Col span={24} key={index}>
+                            {variables.map((el, index)=>  el && <Col span={24} key={index}>
                                 <Row>
                                     <Col span={12} className="label">
                                         { STATES[el.name]?
