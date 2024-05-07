@@ -465,6 +465,23 @@ const InvoiceModal = ({ visible, close, callBack }) => {
         } else {
           tempFields[6].disabled = true;
         }
+      }else{
+        //setting default form field
+        form.setFieldsValue({
+          basic: {
+            lineAmountTypes: 'Exclusive',
+            taxType: res[1]?.data?.taxRates?.length && 'OUTPUT',
+          },
+        });
+
+        let defaultTaxCode = (res?.[1]?.data?.taxRates ||[]).filter(el=> el.taxType === 'OUTPUT')
+        //set gst for calculation for deault tax code
+        setUpdateData((prev) => ({
+          ...prev,
+          effectiveGst: defaultTaxCode[0]?.effectiveRate || 0,
+          refresh: true,
+        }));
+
       }
 
       //set useState fields
