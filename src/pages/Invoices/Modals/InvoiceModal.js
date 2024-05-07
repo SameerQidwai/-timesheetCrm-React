@@ -501,8 +501,8 @@ const InvoiceModal = ({ visible, close, callBack }) => {
       //else wait for date range for timebase
       getInvoiceData(
         projectId,
-        formatDate(months?.[0], true, 'YYYY-MM-DD'),
-        formatDate(months?.[1], true, 'YYYY-MM-DD')
+        months?.[0]? months?.[0].format('YYYY-MM-DD'): null,
+        months?.[1]? months?.[1].format('YYYY-MM-DD'): null,
       ).then((res) => {
         if (res.success) {
           let tempFields = fields;

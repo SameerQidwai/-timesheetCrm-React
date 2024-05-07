@@ -1,7 +1,7 @@
 import moment from 'moment';
 import 'moment-weekday-calc';
 import { message as messageAlert } from 'antd';
-export const Api = 'http://localhost:3302/api/v1';
+export const Api = 'http://localhost:3301/api/v1';
 
 // export const Api = "http://onelmcrm.gaamatech.com:8000/api/v1";
 // export const Api = "http://192.168.0.243:3000/api/v1"; // Shahzaib/
