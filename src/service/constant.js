@@ -272,7 +272,7 @@ export const thumbUrl = (type) => {
 
 export const apiErrorRes = (err, id, duration, style) => {
   const { status = false, data = {} } = err?.response ?? {};
-  const { message, success } = data;
+  const { message = "", success } = data;
   let errMessage = 'Something Went Wrong!';
   let errDurtion = 5;
   if (status === 400){
