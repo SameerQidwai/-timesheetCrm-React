@@ -601,7 +601,7 @@ class TimeSheetProject extends Component {
                   }}
                 />
                 <div className='smallcheckpox'>
-                    <Checkbox size ="small" onChange={(event)=>this.onCheckChanged(event, 'USERS')}/> &nbsp; include inavtive users
+                    <Checkbox size ="small" onChange={(event)=>this.onCheckChanged(event, 'USERS')}/> &nbsp; include inactive users
                 </div>
                 </Col>
               <Col>
