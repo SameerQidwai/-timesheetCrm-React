@@ -64,23 +64,32 @@ class TimeSheetProject extends Component {
                                             <Text>{`${value}`} </Text>
                                         </Link>
                                     </Col>
-                                        {/* {!this?.state?.sMilestone &&<Col span={20}> 
-                                            {record.projectType === 2 ? record.project && <div>
-                                                    <Tlink to={{ pathname: `/projects/${record.projectId}/info`}} className="nav-Tlink"> 
-                                                        <Text ellipsis={{ tooltip: value }}>{record.project}</Text>  
-                                                    </Tlink> 
-                                                </div>
-                                                    :
-                                                record.milestone && <div>
-                                                    <Tlink 
-                                                        to={{ pathname: `/projects/${record.projectId}/milestones/${record.milestoneId}/resources`}} 
-                                                        className="nav-Tlink"
-                                                    >
-                                                        <Text ellipsis={{ tooltip: record.milestone }}>({record.milestone})</Text>
-                                                    </Tlink>
-                                                </div>
-                                            } 
-                                        </Col>} */}
+                                    <Col span={19}>
+                                        <div>
+                                          <Link
+                                            to={{
+                                              pathname: `/projects/${record.projectId}/info`,
+                                            }}
+                                            className="nav-link"
+                                          >
+                                            <Text ellipsis={{ tooltip: record.project }}>{record.project}</Text>
+                                          </Link>
+                                        </div>
+                                        {record.projectType === 1 && (
+                                          <div>
+                                            <Link
+                                              to={{
+                                                pathname: `/projects/${record.projectId}/milestones/${record.milestoneId}/resources`,
+                                              }}
+                                              className="nav-link"
+                                            >
+                                              <Text ellipsis={{ tooltip: record.milestone }}>
+                                                ({record.milestone})
+                                              </Text>
+                                            </Link>
+                                          </div>
+                                        )}
+                                      </Col>
                                      <Col style={{marginLeft: 'auto'}}> 
                                      <Tooltip 
                                             placement="top"
@@ -617,7 +626,7 @@ class TimeSheetProject extends Component {
                   }}
                 />
                 <div className='smallcheckpox'>
-                    <Checkbox size ="small" onChange={(event)=>this.onCheckChanged(event, 'USERS')}/> &nbsp; include inavtive users
+                    <Checkbox size ="small" onChange={(event)=>this.onCheckChanged(event, 'USERS')}/> &nbsp; include inactive users
                 </div>
                 </Col>
               <Col>
