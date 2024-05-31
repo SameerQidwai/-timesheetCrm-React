@@ -1,7 +1,7 @@
 import moment from 'moment';
 import 'moment-weekday-calc';
 import { message as messageAlert } from 'antd';
-export const Api = 'http://localhost:3301/api/v1';
+// export const Api = 'http://localhost:3301/api/v1';
 
 // export const Api = "http://onelmcrm.gaamatech.com:8000/api/v1";
 // export const Api = "http://192.168.0.243:3000/api/v1"; // Shahzaib/
@@ -15,7 +15,7 @@ export const Api = 'http://localhost:3301/api/v1';
 // export const Api = "http://192.168.0.110:3301/api/v1"; // TrunRajPal Home
 // export const Api = "http://192.168.0.244:3301/api/v1"; // TrunRajPal Office
 
-// export const Api = 'http://54.79.212.236:8000/api/v1'; //tower api
+export const Api = 'http://13.211.163.72:8000/api/v1'; //canada-demo api
 // export const Api = 'https://api-towers-group.timewize.com.au/api/v1'; //towers api
 
 export const O_STAGE = {
@@ -81,14 +81,16 @@ export const DURATION = {
 export const GENDER = { M: 'Male', F: 'Female', O: 'Other' };
 
 export const STATES = {
-  'Australian Capital Territory': 'ACT',
-  'New South Wales': 'NSW',
-  Victoria: 'VIC',
-  Queensland: 'QLD',
-  'South Australia': 'SA',
-  'Western Australia': 'WA',
-  'Northern Territory': 'NT',
-  Tasmania: 'TAS',
+  'Alberta': 'AB',
+  'British Columbia': 'BC',
+  'Manitoba': 'MB',
+  'New Brunswick': 'NB',
+  'Newfoundland and Labrador': 'NL',
+  'Nova Scotia': 'NS',
+  'Ontario': 'ON',
+  'Prince Edward Island': 'PEI', 
+  'Quebec': 'QC',
+  'Saskatchewan': 'SK'
 };
 
 export const INVOICE_PIN_SEQ = {

@@ -4,7 +4,7 @@ import { getSettings, upadteSettings } from "../../service/global-apis"
 import FormItems from "../../components/Core/Forms/FormItems";
 import { getleaveRequestTypes, getStates } from '../../service/constant-Apis';
 
-let states = ['ACT','NSW','VIC','QLD','SA','WA','NT','TSA']
+let states = ['AB','BC','MB','NB','NL','NS','ON','PEI','QC','SK']
 
 function GlobalVars(props) {
     const [form] = Form.useForm();
