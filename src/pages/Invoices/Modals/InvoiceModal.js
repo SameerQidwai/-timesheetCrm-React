@@ -465,6 +465,23 @@ const InvoiceModal = ({ visible, close, callBack }) => {
         } else {
           tempFields[6].disabled = true;
         }
+      }else{
+        //setting default form field
+        form.setFieldsValue({
+          basic: {
+            lineAmountTypes: 'Exclusive',
+            taxType: res[1]?.data?.taxRates?.length && 'OUTPUT',
+          },
+        });
+
+        let defaultTaxCode = (res?.[1]?.data?.taxRates ||[]).filter(el=> el.taxType === 'OUTPUT')
+        //set gst for calculation for deault tax code
+        setUpdateData((prev) => ({
+          ...prev,
+          effectiveGst: defaultTaxCode[0]?.effectiveRate || 0,
+          refresh: true,
+        }));
+
       }
 
       //set useState fields
@@ -501,8 +518,8 @@ const InvoiceModal = ({ visible, close, callBack }) => {
       //else wait for date range for timebase
       getInvoiceData(
         projectId,
-        formatDate(months?.[0], true, 'YYYY-MM-DD'),
-        formatDate(months?.[1], true, 'YYYY-MM-DD')
+        months?.[0]? months?.[0].format('YYYY-MM-DD'): null,
+        months?.[1]? months?.[1].format('YYYY-MM-DD'): null,
       ).then((res) => {
         if (res.success) {
           let tempFields = fields;

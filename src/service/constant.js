@@ -2,6 +2,7 @@ import moment from 'moment';
 import 'moment-weekday-calc';
 import { message as messageAlert } from 'antd';
 // export const Api = 'http://localhost:3301/api/v1';
+// export const Api = 'http://localhost:3301/api/v1';
 
 // export const Api = "http://onelmcrm.gaamatech.com:8000/api/v1";
 // export const Api = "http://192.168.0.243:3000/api/v1"; // Shahzaib/
@@ -82,14 +83,16 @@ export const DURATION = {
 export const GENDER = { M: 'Male', F: 'Female', O: 'Other' };
 
 export const STATES = {
-  'Australian Capital Territory': 'ACT',
-  'New South Wales': 'NSW',
-  Victoria: 'VIC',
-  Queensland: 'QLD',
-  'South Australia': 'SA',
-  'Western Australia': 'WA',
-  'Northern Territory': 'NT',
-  Tasmania: 'TAS',
+  'Alberta': 'AB',
+  'British Columbia': 'BC',
+  'Manitoba': 'MB',
+  'New Brunswick': 'NB',
+  'Newfoundland and Labrador': 'NL',
+  'Nova Scotia': 'NS',
+  'Ontario': 'ON',
+  'Prince Edward Island': 'PEI', 
+  'Quebec': 'QC',
+  'Saskatchewan': 'SK'
 };
 
 export const INVOICE_PIN_SEQ = {
@@ -273,7 +276,7 @@ export const thumbUrl = (type) => {
 
 export const apiErrorRes = (err, id, duration, style) => {
   const { status = false, data = {} } = err?.response ?? {};
-  const { message, success } = data;
+  const { message = "", success } = data;
   let errMessage = 'Something Went Wrong!';
   let errDurtion = 5;
   if (status === 400){
